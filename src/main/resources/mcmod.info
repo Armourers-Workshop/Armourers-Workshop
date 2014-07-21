@@ -1,0 +1,16 @@
+[
+{
+  "modid": "armorersWorkshop",
+  "name": "Armorer's Workshop",
+  "description": "Minecraft armour customization mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["RiskyKen"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
