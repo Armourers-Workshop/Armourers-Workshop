@@ -17,6 +17,9 @@ public class BlockArmourerChest extends AbstractModBlock implements ITileEntityP
 		super(LibBlockNames.ARMORER_CHEST);
 	}
 	
+	
+	
+	@SideOnly(Side.CLIENT)
 	private IIcon sideIcon;
 	
 	@SideOnly(Side.CLIENT)
