@@ -1,20 +1,22 @@
 package riskyken.armorersWorkshop.common.blocks;
 
-import riskyken.armorersWorkshop.common.lib.LibBlockNames;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import riskyken.armorersWorkshop.common.lib.LibBlockNames;
+import riskyken.armorersWorkshop.common.tileentities.TileEntityArmorerChest;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
 
-	//public static Block testBlock;
+	public static Block armorerChest;
 	
 	public static void init()
 	{
-		//testBlock = new BlockTestBlock();
+		armorerChest = new BlockArmorerChest();
 	}
 	
 	public static void registerTileEntities() {
-		//registerTileEntity(TileEntityTestBlock.class, LibBlockNames.TEST_BLOCK);
+		registerTileEntity(TileEntityArmorerChest.class, LibBlockNames.ARMORER_CHEST);
 	}
 	
 	public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {

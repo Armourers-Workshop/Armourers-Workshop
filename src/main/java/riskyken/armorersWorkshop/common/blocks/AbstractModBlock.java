@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import riskyken.armorersWorkshop.ArmorersWorkshop;
 import riskyken.armorersWorkshop.common.lib.LibModInfo;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public abstract class AbstractModBlock extends Block {
 
@@ -13,6 +14,12 @@ public abstract class AbstractModBlock extends Block {
 		setHardness(3.0F);
 		setStepSound(soundTypeMetal);
 		setBlockName(name);
+	}
+	
+	@Override
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, "block." + name);
+		return super.setBlockName(name);
 	}
 	
 	public AbstractModBlock(String name, Material material, SoundType soundType) {
