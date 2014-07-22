@@ -18,8 +18,8 @@ buildscript {
 apply plugin: 'forge'
 
 version = "1.7.10-0.0.1"
-group= "riskyken.armorersWorkshop" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "ArmorersWorkshop"
+group= "riskyken.armourersWorkshop" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "Armourers-Workshop"
 
 minecraft {
     version = "1.7.10-10.13.0.1187"
