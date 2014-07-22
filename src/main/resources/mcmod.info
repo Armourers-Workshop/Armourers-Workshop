@@ -1,7 +1,7 @@
 [
 {
-  "modid": "armorersWorkshop",
-  "name": "Armorer's Workshop",
+  "modid": "armourersWorkshop",
+  "name": "Armourer's Workshop",
   "description": "Minecraft armour customization mod.",
   "version": "${version}",
   "mcversion": "${mcversion}",
