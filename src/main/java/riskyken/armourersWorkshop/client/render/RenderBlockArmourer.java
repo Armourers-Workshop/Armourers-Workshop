@@ -18,12 +18,11 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
-		
 		this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
 		
 		GL11.glPushMatrix();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-		GL11.glTranslated(x, y + 6, z + 4);
+		GL11.glTranslated(x - 3, y + 6, z + 4);
 		GL11.glScalef(-1, -1, 1);
 		GL11.glScalef(16, 16, 16);
 		modelChest.render();
