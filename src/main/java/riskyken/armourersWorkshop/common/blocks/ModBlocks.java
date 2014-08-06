@@ -1,9 +1,10 @@
 package riskyken.armourersWorkshop.common.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerChest;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
@@ -12,11 +13,11 @@ public class ModBlocks {
 	
 	public static void init()
 	{
-		armorerChest = new BlockArmourerChest();
+		armorerChest = new BlockArmourer();
 	}
 	
 	public static void registerTileEntities() {
-		registerTileEntity(TileEntityArmourerChest.class, LibBlockNames.ARMORER_CHEST);
+		registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMORER_CHEST);
 	}
 	
 	public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {

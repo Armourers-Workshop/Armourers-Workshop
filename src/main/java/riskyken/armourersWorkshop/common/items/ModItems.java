@@ -1,11 +1,14 @@
 package riskyken.armourersWorkshop.common.items;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
+
 public class ModItems {
 
-	//public static Item testItem;
+	public static Item customArmour;
 	
 	public static void init()
 	{
-		//testItem = new ItemTestItem();
+		customArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 1);
 	}
 }

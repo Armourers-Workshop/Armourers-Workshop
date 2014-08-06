@@ -16,12 +16,6 @@ public abstract class AbstractModBlock extends Block {
 		setBlockName(name);
 	}
 	
-	@Override
-	public Block setBlockName(String name) {
-		GameRegistry.registerBlock(this, "block." + name);
-		return super.setBlockName(name);
-	}
-	
 	public AbstractModBlock(String name, Material material, SoundType soundType) {
 		super(material);
 		setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);

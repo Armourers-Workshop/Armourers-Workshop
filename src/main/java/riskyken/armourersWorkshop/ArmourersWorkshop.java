@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -50,7 +51,7 @@ public class ArmourersWorkshop {
 		
 		//new GuiHandler();
 		
-	    //PacketHandler.init();
+	    PacketHandler.init();
 	    proxy.postInit();
 	    
 	    MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());

@@ -1,18 +1,20 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 
-public abstract class AbstractModItem extends Item {
-
-	public AbstractModItem(String name) {
+public abstract class AbstractModItemArmor extends ItemArmor {
+	
+	public AbstractModItemArmor(String name, ArmorMaterial armorMaterial, int armorType) {
+		super(armorMaterial, 0, armorType);
 		setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
 		setUnlocalizedName(name);
-		setHasSubtypes(false);
-		setNoRepair();
 	}
 	
 	@Override

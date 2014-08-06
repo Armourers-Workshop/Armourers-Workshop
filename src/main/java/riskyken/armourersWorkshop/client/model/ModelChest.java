@@ -13,7 +13,7 @@ public class ModelChest extends ModelBase {
 	
 	public ModelChest() {
 		main = new ModelRenderer(this, 16, 16);
-		main.addBox(-4, -6, -2,
+		main.addBox(-4, -12, -2,
 				8, 12, 4);
 	main.setRotationPoint(0, 0, 0);
 	}
