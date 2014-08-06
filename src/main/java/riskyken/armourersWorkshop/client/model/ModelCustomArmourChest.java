@@ -30,8 +30,6 @@ public class ModelCustomArmourChest extends ModelBiped {
 	
 	@Override
 	public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
-		
-		
 		AbstractCustomArmour armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.CHEST);
 		if (armourData == null) { return; }
 		
@@ -43,46 +41,6 @@ public class ModelCustomArmourChest extends ModelBiped {
 			ArmourBlockData blockData = armourBlockData.get(i);
 			renderArmourPart(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
 		}
-		
-		
-		//if (ClientProxy.getPlayerCustomArmour(entity, ArmourerType.CHEST))
-		
-		
-		/*
-		GL11.glTranslated(0, 9 * p_78088_7_, 2 * p_78088_7_);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(-1 * p_78088_7_, 0, 0);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(-1 * p_78088_7_, 0, 1 * p_78088_7_);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(3 * p_78088_7_, 0, 0);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(1 * p_78088_7_, 0, 0);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(0, 1 * p_78088_7_, 0);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(0, -2 * p_78088_7_, 0);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(-5 * p_78088_7_, 1 * p_78088_7_, 0);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(0, 1 * p_78088_7_, 0);
-		main.render(p_78088_7_);
-		
-		GL11.glTranslated(0, -2 * p_78088_7_, 0);
-		main.render(p_78088_7_);
-		*/
-		
-		
-		// TODO Auto-generated method stub
-		//super.render(p_78088_1_, p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_);
 	}
 	
 	private void renderArmourPart(int x, int y, int z, int colour, float scale) {

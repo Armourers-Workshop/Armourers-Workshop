@@ -36,22 +36,29 @@ public class TileEntityArmourer extends TileEntity {
 		
 		ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
 		
-		for (int ix = 0; ix < 10; ix++) {
+		for (int ix = 0; ix < 14; ix++) {
 			for (int iy = 0; iy < 12; iy++) {
-				for (int iz = 0; iz < 6; iz++) {
-					if (ix == 0 | ix == 9 | iz == 0 | iz == 5) {
-						if (!worldObj.isAirBlock(xCoord + ix - 8, yCoord + iy, zCoord + iz + 3)) {
-							if (worldObj.getBlock(xCoord + ix - 8, yCoord + iy, zCoord + iz + 3) == Blocks.wool) {
-								int colour = worldObj.getBlockMetadata(xCoord + ix - 8, yCoord + iy, zCoord + iz + 3);
+				for (int iz = 0; iz < 10; iz++) {
+					//if (ix == 0 | ix == 9 | iz == 0 | iz == 5) {
+						if (!worldObj.isAirBlock(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1)) {
+							if (worldObj.getBlock(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1) == Blocks.wool) {
+								int colour = worldObj.getBlockMetadata(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1);
 								colour = UtilColour.getMinecraftColor(colour);
-								ArmourBlockData blockData = new ArmourBlockData(3 - (ix - 1), 12 - (iy + 1), 2 - (-iz + 5), colour);
+								ArmourBlockData blockData = new ArmourBlockData(3 - (ix - 3), 12 - (iy + 1), 2 - (-iz + 7), colour);
 								armourBlockData.add(blockData);
 								ModLogger.log(blockData);
 							}
 							
 						}
-						//worldObj.setBlock(xCoord + ix - 8, yCoord + iy, zCoord + iz + 3, Blocks.glass);
-					}
+						if (ix == 0 | ix == 13 | iz == 0 | iz == 9) {
+							if (worldObj.isAirBlock(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1)) {
+								//worldObj.setBlock(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1, Blocks.glass);
+							}
+							
+						}
+						
+						
+					//}
 				}
 			}
 		}
