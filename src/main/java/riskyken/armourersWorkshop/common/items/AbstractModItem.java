@@ -8,31 +8,31 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public abstract class AbstractModItem extends Item {
 
-	public AbstractModItem(String name) {
-		setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
-		setUnlocalizedName(name);
-		setHasSubtypes(false);
-		setNoRepair();
-	}
-	
-	@Override
-	public Item setUnlocalizedName(String name) {
-		GameRegistry.registerItem(this, name);
-		return super.setUnlocalizedName(name);
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return getModdedUnlocalizedName(super.getUnlocalizedName());
-	}
-	
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
-		return getModdedUnlocalizedName(super.getUnlocalizedName(itemStack));
-	}
-	
-	protected String getModdedUnlocalizedName(String unlocalizedName) {
-		String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-		return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
-	}
+    public AbstractModItem(String name) {
+        setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+        setUnlocalizedName(name);
+        setHasSubtypes(false);
+        setNoRepair();
+    }
+
+    @Override
+    public Item setUnlocalizedName(String name) {
+        GameRegistry.registerItem(this, name);
+        return super.setUnlocalizedName(name);
+    }
+
+    @Override
+    public String getUnlocalizedName() {
+        return getModdedUnlocalizedName(super.getUnlocalizedName());
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack) {
+        return getModdedUnlocalizedName(super.getUnlocalizedName(itemStack));
+    }
+
+    protected String getModdedUnlocalizedName(String unlocalizedName) {
+        String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+        return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
+    }
 }

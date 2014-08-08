@@ -2,26 +2,23 @@ package riskyken.armourersWorkshop.common.customarmor;
 
 import java.util.ArrayList;
 
-import javax.vecmath.Vector3d;
-
 import riskyken.armourersWorkshop.common.ArmourerType;
 
 public class CustomArmourChestData extends AbstractCustomArmour {
 
-	private ArrayList<ArmourBlockData> armourData;
-	
-	public CustomArmourChestData(ArrayList armourData) {
-		this.armourData = armourData;
-	}
-	
-	@Override
-	public ArmourerType getArmourType() {
-		return ArmourerType.CHEST;
-	}
+    private ArrayList<ArmourBlockData> armourData;
 
-	@Override
-	public ArrayList<ArmourBlockData> getArmourData() {
-		return armourData;
-	}
+    public CustomArmourChestData(ArrayList armourData) {
+        this.armourData = armourData;
+    }
 
+    @Override
+    public ArmourerType getArmourType() {
+        return ArmourerType.CHEST;
+    }
+
+    @Override
+    public ArrayList<ArmourBlockData> getArmourData() {
+        return armourData;
+    }
 }

@@ -9,21 +9,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class CreativeTabArmourersWorkshop extends CreativeTabs {
 
-	public CreativeTabArmourersWorkshop(int id,String label) {
-		super(id,label);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Item getTabIconItem()
-	{
-		return  Item.getItemFromBlock(Blocks.dirt); 
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-    public String getTranslatedTabLabel()
-    {
+    public CreativeTabArmourersWorkshop(int id, String label) {
+        super(id, label);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Item getTabIconItem() {
+        return Item.getItemFromBlock(Blocks.dirt);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public String getTranslatedTabLabel() {
         return LibModInfo.NAME;
     }
 }

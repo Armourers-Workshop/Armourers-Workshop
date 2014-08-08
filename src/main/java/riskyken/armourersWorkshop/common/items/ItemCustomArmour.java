@@ -12,27 +12,27 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCustomArmour extends AbstractModItemArmor {
 
-	public ItemCustomArmour(ArmorMaterial armorMaterial, int armorType) {
-		super(LibItemNames.CUSTOM_ARMOUR_ITEM, armorMaterial, armorType);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister register) {
-		itemIcon = register.registerIcon(LibModInfo.ID + ":" + "wings");
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
-		ModelBiped armorModel = null;
-		if(itemStack != null) {
-			
-			if(itemStack.getItem() instanceof ItemCustomArmour) {
-				return ClientProxy.customChest;
-			}
-			
-		}
-		return null;
-	}
+    public ItemCustomArmour(ArmorMaterial armorMaterial, int armorType) {
+        super(LibItemNames.CUSTOM_ARMOUR_ITEM, armorMaterial, armorType);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "wings");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
+        ModelBiped armorModel = null;
+        if (itemStack != null) {
+
+            if (itemStack.getItem() instanceof ItemCustomArmour) {
+                return ClientProxy.customChest;
+            }
+
+        }
+        return null;
+    }
 }

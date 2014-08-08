@@ -23,43 +23,43 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class ArmourersWorkshop {
 
-	@Mod.Instance(LibModInfo.ID)
-	public static ArmourersWorkshop instance;
-	
-	@SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
-	public static CommonProxy proxy;
-	
-	public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(),LibModInfo.ID);
-	
-	@Mod.EventHandler
-	public void perInit(FMLPreInitializationEvent event) {
-		ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
-		ConfigHandler.init(event.getSuggestedConfigurationFile());
-		
-		ModItems.init();
-		ModBlocks.init();
-		
-		proxy.init();
-		proxy.initRenderers();
-	}
+    @Mod.Instance(LibModInfo.ID)
+    public static ArmourersWorkshop instance;
 
-	@Mod.EventHandler
-	public void load(FMLInitializationEvent event){
-		CraftingManager.init();
-		
-		ModBlocks.registerTileEntities();
-		
-		//new GuiHandler();
-		
-	    PacketHandler.init();
-	    proxy.postInit();
-	    
-	    MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
-	    FMLCommonHandler.instance().bus().register(new ModFMLEventHandler());
-	}
+    @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
+    public static CommonProxy proxy;
 
-	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		
-	}
+    public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID);
+
+    @Mod.EventHandler
+    public void perInit(FMLPreInitializationEvent event) {
+        ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
+        ConfigHandler.init(event.getSuggestedConfigurationFile());
+
+        ModItems.init();
+        ModBlocks.init();
+
+        proxy.init();
+        proxy.initRenderers();
+    }
+
+    @Mod.EventHandler
+    public void load(FMLInitializationEvent event) {
+        CraftingManager.init();
+
+        ModBlocks.registerTileEntities();
+
+        // new GuiHandler();
+
+        PacketHandler.init();
+        proxy.postInit();
+
+        MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
+        FMLCommonHandler.instance().bus().register(new ModFMLEventHandler());
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+
+    }
 }

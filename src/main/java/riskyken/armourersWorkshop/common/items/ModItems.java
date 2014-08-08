@@ -5,10 +5,9 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 
 public class ModItems {
 
-	public static Item customArmour;
-	
-	public static void init()
-	{
-		customArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 1);
-	}
+    public static Item customArmour;
+
+    public static void init() {
+        customArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 1);
+    }
 }
