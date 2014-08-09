@@ -6,8 +6,8 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.Entity;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
-import riskyken.armourersWorkshop.common.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.AbstractCustomArmour;
+import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import cpw.mods.fml.client.registry.ClientRegistry;
 

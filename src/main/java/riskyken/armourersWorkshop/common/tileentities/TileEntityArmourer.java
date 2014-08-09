@@ -2,13 +2,14 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import riskyken.armourersWorkshop.common.ArmourerType;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
+import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourChestData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -32,42 +33,41 @@ public class TileEntityArmourer extends TileEntity {
     }
 
     public void buildArmourItem(EntityPlayer player) {
-
         ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
-
+        ModLogger.log("");
         for (int ix = 0; ix < 14; ix++) {
             for (int iy = 0; iy < 12; iy++) {
                 for (int iz = 0; iz < 10; iz++) {
-                    // if (ix == 0 | ix == 9 | iz == 0 | iz == 5) {
-                    if (!worldObj.isAirBlock(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1)) {
-                        if (worldObj.getBlock(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1) == Blocks.wool) {
-                            int colour = worldObj.getBlockMetadata(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1);
-                            colour = UtilColour.getMinecraftColor(colour);
-                            ArmourBlockData blockData = new ArmourBlockData(3 - (ix - 3), 12 - (iy + 1), 2 - (-iz + 7), colour);
-                            armourBlockData.add(blockData);
-                            ModLogger.log(blockData);
-                        }
-
-                    }
-                    if (ix == 0 | ix == 13 | iz == 0 | iz == 9) {
-                        if (worldObj.isAirBlock(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1)) {
-                            // worldObj.setBlock(xCoord + ix - 10, yCoord + iy,
-                            // zCoord + iz + 1, Blocks.glass);
-                        }
-
-                    }
-
-                    // }
+                    addArmourToList(xCoord + ix - 10, yCoord + iy, zCoord + iz + 1, ix, iy, iz, armourBlockData);
                 }
             }
         }
-
-        ModLogger.log("");
-
+        
         if (armourBlockData.size() > 0) {
+            ModLogger.log("setting armour data size " + armourBlockData.size());
             CustomArmourChestData armourData = new CustomArmourChestData(armourBlockData);
             ClientProxy.AddCustomArmour(player, ArmourerType.CHEST, armourData);
         }
+    }
+    
+    private void addArmourToList(int x, int y, int z, int ix, int iy, int iz, ArrayList<ArmourBlockData> list) {
+        if (worldObj.isAirBlock(x, y, z)) { return; }
+        Block block = worldObj.getBlock(x, y, z);
+        
+        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
+            int colour = getColourFromTileEntity(x, y, z);
+            ArmourBlockData blockData = new ArmourBlockData(3 - (ix - 3), 12 - (iy + 1), 2 - (-iz + 7), colour, block == ModBlocks.colourableGlowing);
+            list.add(blockData);
+            ModLogger.log(blockData);
+        }
+    }
+    
+    private int getColourFromTileEntity(int x, int y, int z) {
+        TileEntity te = worldObj.getTileEntity(x, y, z);
+        if (te != null & te instanceof TileEntityColourable) {
+            return ((TileEntityColourable)te).getColour();
+        }
+        return UtilColour.getMinecraftColor(0);
     }
 
     public ArmourerType getType() {

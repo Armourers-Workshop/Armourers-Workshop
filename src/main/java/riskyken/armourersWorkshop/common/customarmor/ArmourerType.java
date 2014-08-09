@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common;
+package riskyken.armourersWorkshop.common.customarmor;
 
 public enum ArmourerType {
     NONE, HEAD, CHEST, LEGS, FEET;

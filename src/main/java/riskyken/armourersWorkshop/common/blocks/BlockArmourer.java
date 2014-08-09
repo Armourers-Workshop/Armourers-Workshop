@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.common.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -97,5 +97,10 @@ public class BlockArmourer extends AbstractModBlock implements ITileEntityProvid
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
         return new TileEntityArmourer(ArmourerType.getOrdinal(metadata + 1));
+    }
+    
+    @Override
+    public int damageDropped(int meta) {
+        return meta;
     }
 }

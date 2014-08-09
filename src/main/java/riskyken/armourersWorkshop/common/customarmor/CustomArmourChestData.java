@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.common.customarmor;
 
 import java.util.ArrayList;
 
-import riskyken.armourersWorkshop.common.ArmourerType;
-
 public class CustomArmourChestData extends AbstractCustomArmour {
 
     private ArrayList<ArmourBlockData> armourData;

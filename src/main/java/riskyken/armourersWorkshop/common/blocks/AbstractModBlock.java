@@ -29,8 +29,7 @@ public abstract class AbstractModBlock extends Block {
     }
 
     protected String getModdedUnlocalizedName(String unlocalizedName) {
-        String name = unlocalizedName
-                .substring(unlocalizedName.indexOf(".") + 1);
+        String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
         return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
     }
 }

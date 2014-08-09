@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.AbstractCustomArmour;
 import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
+import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class ModelCustomArmourChest extends ModelBiped {
@@ -32,11 +33,32 @@ public class ModelCustomArmourChest extends ModelBiped {
 
         ArrayList<ArmourBlockData> armourBlockData = armourData.getArmourData();
         bindPlayerTexture();
-
+        
+        GL11.glPushMatrix();
+        
         for (int i = 0; i < armourBlockData.size(); i++) {
             ArmourBlockData blockData = armourBlockData.get(i);
-            renderArmourPart(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+            if (!blockData.glowing) {
+                renderArmourPart(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+            }
         }
+        
+        float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+        float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+        GL11.glDisable(GL11.GL_LIGHTING);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        
+        for (int i = 0; i < armourBlockData.size(); i++) {
+            ArmourBlockData blockData = armourBlockData.get(i);
+            if (blockData.glowing) {
+                renderArmourPart(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+            }
+        }
+        
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        
+        GL11.glPopMatrix();
     }
 
     private void renderArmourPart(int x, int y, int z, int colour, float scale) {

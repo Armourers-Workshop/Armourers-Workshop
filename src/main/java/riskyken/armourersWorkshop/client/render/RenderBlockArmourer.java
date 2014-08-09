@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.model.ModelChest;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
-import riskyken.armourersWorkshop.common.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
