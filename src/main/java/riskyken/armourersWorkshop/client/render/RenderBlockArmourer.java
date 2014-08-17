@@ -11,7 +11,7 @@ import riskyken.armourersWorkshop.client.model.ModelChest;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,7 +26,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
 
-        TileEntityArmourer te = (TileEntityArmourer) tileEntity;
+        TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
         ArmourerType type = te.getType();
 
         this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());

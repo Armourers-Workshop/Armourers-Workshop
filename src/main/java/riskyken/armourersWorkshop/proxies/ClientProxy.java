@@ -8,7 +8,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.common.customarmor.AbstractCustomArmour;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy {
@@ -48,7 +48,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initRenderers() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourer.class, new RenderBlockArmourer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
     }
 
     @Override

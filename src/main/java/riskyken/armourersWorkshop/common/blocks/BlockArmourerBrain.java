@@ -1,51 +1,28 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmourer extends AbstractModBlock implements ITileEntityProvider {
+public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityProvider {
 
-    public BlockArmourer() {
-        super(LibBlockNames.ARMORER_CHEST);
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void getSubBlocks(Item item, CreativeTabs creativeTabs, List list) {
-        for (int i = 0; i < 4; i++) {
-            list.add(new ItemStack(item, 1, i));
-        }
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z,
-            EntityLivingBase entityLivingBase, ItemStack itemStack) {
-        super.onBlockPlacedBy(world, x, y, z, entityLivingBase, itemStack);
+    public BlockArmourerBrain() {
+        super(LibBlockNames.ARMOURER_BRAIN);
     }
 
     @Override
     public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlockWithMetadata.class,
-                "block." + name);
+        GameRegistry.registerBlock(this, "block." + name);
         return super.setBlockName(name);
     }
 
@@ -56,8 +33,8 @@ public class BlockArmourer extends AbstractModBlock implements ITileEntityProvid
             return true;
         }
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null & te instanceof TileEntityArmourer) {
-            ((TileEntityArmourer) te).buildArmourItem(player);
+        if (te != null & te instanceof TileEntityArmourerBrain) {
+            ((TileEntityArmourerBrain) te).buildArmourItem(player);
         }
         return true;
     }
@@ -96,11 +73,6 @@ public class BlockArmourer extends AbstractModBlock implements ITileEntityProvid
 
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
-        return new TileEntityArmourer(ArmourerType.getOrdinal(metadata + 1));
-    }
-    
-    @Override
-    public int damageDropped(int meta) {
-        return meta;
+        return new TileEntityArmourerBrain();
     }
 }

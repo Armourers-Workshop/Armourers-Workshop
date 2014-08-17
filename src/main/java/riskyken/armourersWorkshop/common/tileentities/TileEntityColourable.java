@@ -7,7 +7,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.utils.UtilColour;
 
-public class TileEntityColourable extends TileEntity {
+public class TileEntityColourable extends TileEntity implements IColourable {
 
     private static final String TAG_COLOUR = "colour";
     private int colour;
@@ -46,12 +46,14 @@ public class TileEntityColourable extends TileEntity {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
+    @Override
     public void setColour(int colour) {
         this.colour = colour;
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
+    @Override
     public int getColour() {
         return colour;
     }

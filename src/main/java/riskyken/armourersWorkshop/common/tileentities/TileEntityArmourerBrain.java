@@ -15,23 +15,21 @@ import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilColour;
 
-public class TileEntityArmourer extends TileEntity {
+public class TileEntityArmourerBrain extends TileEntity {
 
     private static final String TAG_TYPE = "type";
+    private static final int MULTI_BLOCK_SIZE = 22;
     private ArmourerType type;
-
-    public TileEntityArmourer() {
+    
+    public TileEntityArmourerBrain() {
+        this.type = ArmourerType.CHEST;
     }
-
-    public TileEntityArmourer(ArmourerType type) {
-        this.type = type;
-    }
-
+    
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
     }
-
+    
     public void buildArmourItem(EntityPlayer player) {
         ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
         ModLogger.log("");
@@ -64,8 +62,8 @@ public class TileEntityArmourer extends TileEntity {
     
     private int getColourFromTileEntity(int x, int y, int z) {
         TileEntity te = worldObj.getTileEntity(x, y, z);
-        if (te != null & te instanceof TileEntityColourable) {
-            return ((TileEntityColourable)te).getColour();
+        if (te != null & te instanceof IColourable) {
+            return ((IColourable)te).getColour();
         }
         return UtilColour.getMinecraftColor(0);
     }
@@ -73,13 +71,13 @@ public class TileEntityArmourer extends TileEntity {
     public ArmourerType getType() {
         return type;
     }
-
+    
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         type = ArmourerType.getOrdinal(compound.getInteger(TAG_TYPE));
     }
-
+    
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
