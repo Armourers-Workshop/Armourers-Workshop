@@ -40,30 +40,24 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
     }
 
     @SideOnly(Side.CLIENT)
-    private IIcon[] sideIcons;
+    private IIcon sideIcon;
 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        sideIcons = new IIcon[4];
         blockIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armour_block");
-        sideIcons[0] = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armour_head");
-        sideIcons[1] = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armour_chest");
-        sideIcons[2] = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armour_legs");
-        sideIcons[3] = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armour_feet");
+                + "frame-side");
+        sideIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
+                + "armourer-brain");
     }
-
+    
+    @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
         if (side < 2) {
             return blockIcon;
         }
-        return sideIcons[meta];
+        return sideIcon;
     }
 
     @Override
