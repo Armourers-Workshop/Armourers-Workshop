@@ -18,6 +18,16 @@ public class BlockBoundingBox extends Block {
     }
     
     @Override
+    public int getRenderType() {
+        return -1;
+    }
+    
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+    
+    @Override
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, "block." + name);
         return super.setBlockName(name);
