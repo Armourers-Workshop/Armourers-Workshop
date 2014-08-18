@@ -280,6 +280,12 @@ public class TileEntityArmourerBrain extends TileEntity {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public void setDirection(ForgeDirection direction) {
+        this.direction = direction;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
