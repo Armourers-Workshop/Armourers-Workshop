@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourChestData;
+import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
@@ -234,7 +234,7 @@ public class TileEntityArmourerBrain extends TileEntity {
         
         if (armourBlockData.size() > 0) {
             ModLogger.log("setting armour data size " + armourBlockData.size() + " type " + type.name());
-            CustomArmourChestData armourData = new CustomArmourChestData(armourBlockData, type);
+            CustomArmourData armourData = new CustomArmourData(armourBlockData, type);
             ClientProxy.AddCustomArmour(player, type, armourData);
         } else {
             ModLogger.log("removing armour data");
