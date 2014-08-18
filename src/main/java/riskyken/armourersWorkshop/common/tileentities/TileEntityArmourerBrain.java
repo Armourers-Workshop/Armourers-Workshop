@@ -146,6 +146,7 @@ public class TileEntityArmourerBrain extends TileEntity {
     
     public void preRemove() {
         removeOldChildren();
+        removeOldBoundingBoxed();
     }
     
     private boolean validMultiBlockPart(int x, int y, int z) {
@@ -223,10 +224,10 @@ public class TileEntityArmourerBrain extends TileEntity {
     public void buildArmourItem(EntityPlayer player) {
         ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
         ModLogger.log("");
-        for (int ix = 0; ix < 14; ix++) {
-            for (int iy = 0; iy < 12; iy++) {
-                for (int iz = 0; iz < 10; iz++) {
-                    addArmourToList(xCoord + ix + xOffset, yCoord + iy, zCoord + iz + zOffset, ix, iy, iz, armourBlockData);
+        for (int ix = 0; ix < MULTI_BLOCK_SIZE - 1; ix++) {
+            for (int iy = 0; iy < MULTI_BLOCK_SIZE - 1; iy++) {
+                for (int iz = 0; iz < MULTI_BLOCK_SIZE - 1; iz++) {
+                    addArmourToList(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz, ix, iy, iz, armourBlockData);
                 }
             }
         }
@@ -247,7 +248,7 @@ public class TileEntityArmourerBrain extends TileEntity {
         
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
             int colour = UtilBlocks.getColourFromTileEntity(worldObj ,x, y, z);
-            ArmourBlockData blockData = new ArmourBlockData(3 - (ix - 3), 12 - (iy + 1), 2 - (-iz + 7), colour, block == ModBlocks.colourableGlowing);
+            ArmourBlockData blockData = new ArmourBlockData((ix - 11), 12 - (iy + 1), (iz - 11), colour, block == ModBlocks.colourableGlowing);
             list.add(blockData);
             ModLogger.log(blockData);
         }

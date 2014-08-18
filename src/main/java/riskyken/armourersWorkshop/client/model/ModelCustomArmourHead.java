@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.model;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -15,7 +16,6 @@ import riskyken.armourersWorkshop.common.customarmor.AbstractCustomArmour;
 import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class ModelCustomArmourHead extends ModelBiped {
     
@@ -29,15 +29,28 @@ public class ModelCustomArmourHead extends ModelBiped {
     
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
+        setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
+        
         AbstractCustomArmour armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.HEAD);
-        ModLogger.log(armourData);
+        //
         if (armourData == null) { return; }
 
+        EntityClientPlayerMP player = (EntityClientPlayerMP) entity;
+        
+        
         ArrayList<ArmourBlockData> armourBlockData = armourData.getArmourData();
         bindPlayerTexture();
         
         GL11.glPushMatrix();
         
+        
+        //ModLogger.log(player.getHe);
+        
+        
+        GL11.glRotatef(p_78088_5_, 0, 1, 0);
+        GL11.glRotatef(p_78088_6_, 1, 0, 0);
+        
+        GL11.glTranslated(0, -12 * scale, 0);
         for (int i = 0; i < armourBlockData.size(); i++) {
             ArmourBlockData blockData = armourBlockData.get(i);
             if (!blockData.glowing) {
@@ -49,6 +62,8 @@ public class ModelCustomArmourHead extends ModelBiped {
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
         GL11.glDisable(GL11.GL_LIGHTING);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        
+        
         
         for (int i = 0; i < armourBlockData.size(); i++) {
             ArmourBlockData blockData = armourBlockData.get(i);
@@ -72,7 +87,7 @@ public class ModelCustomArmourHead extends ModelBiped {
 
         GL11.glColor3f(colourRed, colourGreen, colourBlue);
 
-        ModLogger.log(x + " " + y + " " + z);
+        //ModLogger.log(x + " " + y + " " + z);
         GL11.glTranslated(x * scale, y * scale, z * scale);
         main.render(scale);
         GL11.glPopMatrix();
