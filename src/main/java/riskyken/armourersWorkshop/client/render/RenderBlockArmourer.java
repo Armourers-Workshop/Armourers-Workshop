@@ -44,7 +44,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             
             break;
         case CHEST:
-            GL11.glTranslated(0, 0, -5);
+            //GL11.glTranslated(0, 0, -5);
             break;
         case LEGS:
             break;

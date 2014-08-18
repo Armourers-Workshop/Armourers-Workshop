@@ -39,7 +39,7 @@ public class TileEntityArmourerBrain extends TileEntity {
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
-        this.type = ArmourerType.HEAD;
+        this.type = ArmourerType.LEGS;
         this.formed = false;
     }
     
@@ -111,7 +111,15 @@ public class TileEntityArmourerBrain extends TileEntity {
                 }
             } 
             break;
-
+        case CHEST:
+            for (int ix = 0; ix < 8; ix++) {
+                for (int iy = 0; iy < 12; iy++) {
+                    for (int iz = 0; iz < 4; iz++) {
+                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy, zCoord + zOffset + iz + 4, ModBlocks.boundingBox);
+                    }
+                }
+            } 
+            break;
         default:
             break;
         }
@@ -223,11 +231,21 @@ public class TileEntityArmourerBrain extends TileEntity {
     
     public void buildArmourItem(EntityPlayer player) {
         ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
-        ModLogger.log("");
+        
         for (int ix = 0; ix < MULTI_BLOCK_SIZE - 1; ix++) {
             for (int iy = 0; iy < MULTI_BLOCK_SIZE - 1; iy++) {
                 for (int iz = 0; iz < MULTI_BLOCK_SIZE - 1; iz++) {
-                    addArmourToList(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz, ix, iy, iz, armourBlockData);
+                    switch (type) {
+                    case HEAD:
+                        addArmourToList(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz, ix, iy, iz, armourBlockData);
+                        break;
+                    case CHEST:
+                        addArmourToList(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz - 5, ix, iy, iz, armourBlockData);
+                        break;
+                    default:
+                        break;
+                    }
+                    
                 }
             }
         }
@@ -250,7 +268,6 @@ public class TileEntityArmourerBrain extends TileEntity {
             int colour = UtilBlocks.getColourFromTileEntity(worldObj ,x, y, z);
             ArmourBlockData blockData = new ArmourBlockData((ix - 11), 12 - (iy + 1), (iz - 11), colour, block == ModBlocks.colourableGlowing);
             list.add(blockData);
-            ModLogger.log(blockData);
         }
     }
     
