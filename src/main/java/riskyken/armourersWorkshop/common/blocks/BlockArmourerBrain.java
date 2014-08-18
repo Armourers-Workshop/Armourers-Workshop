@@ -19,6 +19,15 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
     public BlockArmourerBrain() {
         super(LibBlockNames.ARMOURER_BRAIN);
     }
+    
+    @Override
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null & te instanceof TileEntityArmourerBrain) {
+            ((TileEntityArmourerBrain)te).preRemove();
+        }
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
+    }
 
     @Override
     public Block setBlockName(String name) {

@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCustomArmour extends AbstractModItemArmor {
 
     public ItemCustomArmour(ArmorMaterial armorMaterial, int armorType) {
-        super(LibItemNames.CUSTOM_ARMOUR_ITEM, armorMaterial, armorType);
+        super(LibItemNames.CUSTOM_ARMOUR_ITEM + ".type." + armorType, armorMaterial, armorType);
     }
 
     @Override
@@ -27,11 +27,16 @@ public class ItemCustomArmour extends AbstractModItemArmor {
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot) {
         ModelBiped armorModel = null;
         if (itemStack != null) {
-
             if (itemStack.getItem() instanceof ItemCustomArmour) {
-                return ClientProxy.customChest;
+                switch (this.armorType) {
+                case 0:
+                    return ClientProxy.customHead;
+                case 1:
+                    return ClientProxy.customChest;
+                default:
+                    break;
+                }
             }
-
         }
         return null;
     }

@@ -3,19 +3,24 @@ package riskyken.armourersWorkshop.common.blocks;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMultiBlock;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmourerMultiBlock extends AbstractModBlock {
+public class BlockArmourerMultiBlock extends AbstractModBlock implements ITileEntityProvider {
 
     public BlockArmourerMultiBlock() {
         super(LibBlockNames.ARMOURER_MULTI_BLOCK);
@@ -48,6 +53,16 @@ public class BlockArmourerMultiBlock extends AbstractModBlock {
         return blockIcons[meta];
     }
     
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        if (world.isRemote) { return; }
+        ModLogger.log("update " + x + " " + y + " z" + z);
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntityMultiBlock) {
+            ((TileEntityMultiBlock)te).notifyParentOfChange();
+        }
+    }
+    
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubBlocks(Item item, CreativeTabs creativeTabs, List list) {
@@ -65,5 +80,10 @@ public class BlockArmourerMultiBlock extends AbstractModBlock {
     @Override
     public int damageDropped(int meta) {
         return meta;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+        return new TileEntityMultiBlock();
     }
 }

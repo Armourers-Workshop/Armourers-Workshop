@@ -15,6 +15,7 @@ public class BlockBoundingBox extends Block {
         setBlockUnbreakable();
         setStepSound(soundTypeCloth);
         setBlockName(LibBlockNames.BOUNDING_BOX);
+        setLightOpacity(0);
     }
     
     @Override

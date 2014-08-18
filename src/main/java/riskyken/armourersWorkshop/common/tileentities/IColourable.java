@@ -5,5 +5,4 @@ public interface IColourable {
     public void setColour(int colour);
     
     public int getColour();
-    
 }

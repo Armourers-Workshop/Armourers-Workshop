@@ -28,14 +28,35 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
 
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
         ArmourerType type = te.getType();
+        
+        if (!te.isFormed()) { return; }
 
         this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
 
         GL11.glPushMatrix();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        GL11.glTranslated(x - 3, y, z + 6);
+        
+        GL11.glTranslated(x + te.getXOffset() + 11, y, z + te.getZOffset() + 11);
+        
+        
+        switch (type) {
+        case HEAD:
+            
+            break;
+        case CHEST:
+            GL11.glTranslated(0, 0, -5);
+            break;
+        case LEGS:
+            break;
+        case FEET:
+            break;
+        default:
+            break;
+        }
+        
         GL11.glScalef(-1, -1, 1);
         GL11.glScalef(16, 16, 16);
+        
         switch (type) {
         case HEAD:
             modelHead.render();

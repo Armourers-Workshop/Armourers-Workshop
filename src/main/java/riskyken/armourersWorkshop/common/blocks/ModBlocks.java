@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMultiBlock;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
@@ -25,6 +26,7 @@ public class ModBlocks {
 
     public static void registerTileEntities() {
         registerTileEntity(TileEntityArmourerBrain.class, LibBlockNames.ARMOURER_BRAIN);
+        registerTileEntity(TileEntityMultiBlock.class, LibBlockNames.ARMOURER_MULTI_BLOCK);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
     }
 

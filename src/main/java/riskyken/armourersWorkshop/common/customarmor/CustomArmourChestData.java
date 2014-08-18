@@ -5,14 +5,16 @@ import java.util.ArrayList;
 public class CustomArmourChestData extends AbstractCustomArmour {
 
     private ArrayList<ArmourBlockData> armourData;
+    private ArmourerType type;
 
-    public CustomArmourChestData(ArrayList armourData) {
+    public CustomArmourChestData(ArrayList armourData, ArmourerType type) {
         this.armourData = armourData;
+        this.type = type;
     }
 
     @Override
     public ArmourerType getArmourType() {
-        return ArmourerType.CHEST;
+        return this.type;
     }
 
     @Override

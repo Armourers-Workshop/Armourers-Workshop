@@ -1,8 +1,10 @@
 package riskyken.armourersWorkshop.utils;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.common.tileentities.IColourable;
 
 public class UtilBlocks {
     public static int determineOrientation(World world, int x, int y, int z, EntityLivingBase entity) {
@@ -15,5 +17,13 @@ public class UtilBlocks {
 
         int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
+    }
+    
+    public static int getColourFromTileEntity(World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null & te instanceof IColourable) {
+            return ((IColourable)te).getColour();
+        }
+        return UtilColour.getMinecraftColor(0);
     }
 }
