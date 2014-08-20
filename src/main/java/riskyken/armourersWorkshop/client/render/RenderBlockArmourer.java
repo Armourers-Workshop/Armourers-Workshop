@@ -38,22 +38,6 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         GL11.glTranslated(x + te.getXOffset() + 11, y, z + te.getZOffset() + 11);
         
-        
-        switch (type) {
-        case HEAD:
-            
-            break;
-        case CHEST:
-            //GL11.glTranslated(0, 0, -5);
-            break;
-        case LEGS:
-            break;
-        case FEET:
-            break;
-        default:
-            break;
-        }
-        
         GL11.glScalef(-1, -1, 1);
         GL11.glScalef(16, 16, 16);
         
@@ -65,7 +49,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             modelChest.render();
             break;
         case LEGS:
-            modelLegs.render();
+            modelLegs.render(te.isSkirtMode());
             break;
         case FEET:
             // modelFeet.render();

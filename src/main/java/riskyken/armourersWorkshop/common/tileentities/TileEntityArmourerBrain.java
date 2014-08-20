@@ -28,12 +28,14 @@ public class TileEntityArmourerBrain extends TileEntity {
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_TYPE = "type";
     private static final String TAG_FORMED = "formed";
+    private static final String TAG_SKIRT_MODE = "skirtMode";
     private static final String TAG_X_OFFSET = "xOffset";
     private static final String TAG_Z_OFFSET = "zOffset";
     
     private ForgeDirection direction;
     private ArmourerType type;
     private boolean formed;
+    private boolean skirtMode;
     private int xOffset;
     private int zOffset;
     
@@ -279,6 +281,10 @@ public class TileEntityArmourerBrain extends TileEntity {
         return formed;
     }
     
+    public boolean isSkirtMode() {
+        return skirtMode;
+    }
+    
     public int getXOffset() {
         return xOffset;
     }
@@ -303,12 +309,19 @@ public class TileEntityArmourerBrain extends TileEntity {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public void setSkirtMode(boolean skirtMode) {
+        this.skirtMode = skirtMode;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         direction = ForgeDirection.getOrientation(compound.getInteger(TAG_DIRECTION));
         type = ArmourerType.getOrdinal(compound.getInteger(TAG_TYPE));
         formed = compound.getBoolean(TAG_FORMED);
+        skirtMode = compound.getBoolean(TAG_SKIRT_MODE);
         xOffset = compound.getInteger(TAG_X_OFFSET);
         zOffset = compound.getInteger(TAG_Z_OFFSET);
     }
@@ -319,6 +332,7 @@ public class TileEntityArmourerBrain extends TileEntity {
         compound.setInteger(TAG_DIRECTION, direction.ordinal());
         compound.setInteger(TAG_TYPE, type.ordinal());
         compound.setBoolean(TAG_FORMED, formed);
+        compound.setBoolean(TAG_SKIRT_MODE, skirtMode);
         compound.setInteger(TAG_X_OFFSET, xOffset);
         compound.setInteger(TAG_Z_OFFSET, zOffset);
     }
