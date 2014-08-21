@@ -19,7 +19,20 @@ public class ItemCustomArmour extends AbstractModItemArmor {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "wings");
+        switch (this.armorType) {
+        case 0:
+            itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-head");
+            break;
+        case 1:
+            itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-chest");
+            break;
+        case 2:
+            itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-legs");
+            break;
+        case 3:
+            itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-feet");
+            break;
+        }
     }
 
     @Override
@@ -35,8 +48,6 @@ public class ItemCustomArmour extends AbstractModItemArmor {
                     return ClientProxy.customChest;
                 case 2:
                     return ClientProxy.customLegs;
-                default:
-                    break;
                 }
             }
         }
