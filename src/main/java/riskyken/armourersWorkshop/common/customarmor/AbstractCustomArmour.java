@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public abstract class AbstractCustomArmour {
 
     public abstract ArmourerType getArmourType();
+    
+    public abstract ArmourPart getArmourPart();
 
     public abstract ArrayList<ArmourBlockData> getArmourData();
 }

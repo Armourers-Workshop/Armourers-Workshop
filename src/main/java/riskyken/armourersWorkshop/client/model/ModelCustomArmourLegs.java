@@ -18,22 +18,22 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
-public class ModelCustomArmourChest extends ModelBiped {
-
+public class ModelCustomArmourLegs extends ModelBiped {
+    
     private ModelRenderer main;
-
-    public ModelCustomArmourChest() {
+    
+    public ModelCustomArmourLegs() {
         main = new ModelRenderer(this, 28, 20);
         main.addBox(0F, 0F, 0F, 1, 1, 1);
         main.setRotationPoint(0, 0, 0);
     }
-
+    
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
         setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
-        AbstractCustomArmour chestData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.CHEST, ArmourPart.CHEST);
-        AbstractCustomArmour leftArmData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.CHEST, ArmourPart.LEFT_ARM);
-        AbstractCustomArmour rightArmData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
+        AbstractCustomArmour skirtData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.SKIRT);
+        AbstractCustomArmour leftLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
+        AbstractCustomArmour rightLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         EntityClientPlayerMP player = (EntityClientPlayerMP) entity;
         
         this.isSneak = player.isSneaking();
@@ -45,45 +45,45 @@ public class ModelCustomArmourChest extends ModelBiped {
         
         bindPlayerTexture();
         
-        if (chestData != null){
+        if (skirtData != null){
             GL11.glPushMatrix();
             GL11.glColor3f(0F, 0F, 0F);
             
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-            GL11.glTranslated(0, -2 * scale, 0);
-            renderPart(chestData.getArmourData(), scale);
+            GL11.glTranslated(0, 11 * scale, 0);
+            renderPart(skirtData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
         
         
-        if (leftArmData != null){
+        if (leftLegData != null){
             GL11.glPushMatrix();
             
-            GL11.glTranslated(6 * scale, -2 * scale, 0);
-            GL11.glTranslated(0 * scale, 4 * scale, 0 * scale);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftArm.rotateAngleX), 1, 0, 0);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftArm.rotateAngleZ), 0, 0, 1);
-            GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
+            GL11.glTranslated(2 * scale, 11 * scale, 0);
+            //GL11.glTranslated(0 * scale, 4 * scale, 0 * scale);
+            GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
+            GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
+            GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
+            //GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
             GL11.glColor3f(0F, 0F, 0F);
             
-            renderPart(leftArmData.getArmourData(), scale);
+            renderPart(leftLegData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
         
-        if (rightArmData != null){
+        if (rightLegData != null){
             GL11.glPushMatrix();
             GL11.glColor3f(0F, 0F, 0F);
-            GL11.glTranslated(-6 * scale, -2 * scale, 0);
-            GL11.glTranslated(0 * scale, 4 * scale, 0 * scale);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
-            GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
+            GL11.glTranslated(-2 * scale, 11 * scale, 0);
+            //GL11.glTranslated(0 * scale, 4 * scale, 0 * scale);
+            GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
+            GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
+            GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
+            //GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
             
-            renderPart(rightArmData.getArmourData(), scale);
+            renderPart(rightLegData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
         

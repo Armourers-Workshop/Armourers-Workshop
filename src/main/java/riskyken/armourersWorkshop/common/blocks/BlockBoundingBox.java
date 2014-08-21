@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -11,7 +10,7 @@ public class BlockBoundingBox extends Block {
 
     protected BlockBoundingBox() {
         super(Material.cloth);
-        setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+        //setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setBlockUnbreakable();
         setStepSound(soundTypeCloth);
         setBlockName(LibBlockNames.BOUNDING_BOX);

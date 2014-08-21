@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.customarmor.AbstractCustomArmour;
 import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
+import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
@@ -29,9 +30,8 @@ public class ModelCustomArmourHead extends ModelBiped {
     
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
-        setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
-        
-        AbstractCustomArmour armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.HEAD);
+        //setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
+        AbstractCustomArmour armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.HEAD, ArmourPart.HEAD);
         //
         if (armourData == null) { return; }
 
@@ -42,19 +42,16 @@ public class ModelCustomArmourHead extends ModelBiped {
         bindPlayerTexture();
         
         GL11.glPushMatrix();
-        
-        
-        //ModLogger.log(player.getHe);
-        
+        GL11.glColor3f(0F, 0F, 0F);
         
         GL11.glRotatef(p_78088_5_, 0, 1, 0);
         GL11.glRotatef(p_78088_6_, 1, 0, 0);
         
-        GL11.glTranslated(0, -12 * scale, 0);
+        GL11.glTranslated(0, -16 * scale, 0);
         for (int i = 0; i < armourBlockData.size(); i++) {
             ArmourBlockData blockData = armourBlockData.get(i);
             if (!blockData.glowing) {
-                renderArmourPart(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
             }
         }
         
@@ -63,12 +60,10 @@ public class ModelCustomArmourHead extends ModelBiped {
         GL11.glDisable(GL11.GL_LIGHTING);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         
-        
-        
         for (int i = 0; i < armourBlockData.size(); i++) {
             ArmourBlockData blockData = armourBlockData.get(i);
             if (blockData.glowing) {
-                renderArmourPart(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
             }
         }
         
@@ -78,16 +73,13 @@ public class ModelCustomArmourHead extends ModelBiped {
         GL11.glPopMatrix();
     }
     
-    private void renderArmourPart(int x, int y, int z, int colour, float scale) {
+    private void renderArmourBlock(int x, int y, int z, int colour, float scale) {
         float colourRed = (colour >> 16 & 0xff) / 255F;
         float colourGreen = (colour >> 8 & 0xff) / 255F;
         float colourBlue = (colour & 0xff) / 255F;
 
         GL11.glPushMatrix();
-
         GL11.glColor3f(colourRed, colourGreen, colourBlue);
-
-        //ModLogger.log(x + " " + y + " " + z);
         GL11.glTranslated(x * scale, y * scale, z * scale);
         main.render(scale);
         GL11.glPopMatrix();

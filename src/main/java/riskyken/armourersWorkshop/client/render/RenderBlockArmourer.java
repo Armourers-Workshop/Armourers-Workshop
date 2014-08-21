@@ -35,6 +35,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
 
         GL11.glPushMatrix();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        //GL11.glDisable(GL11.GL_LIGHTING);
         
         GL11.glTranslated(x + te.getXOffset() + 11, y, z + te.getZOffset() + 11);
         
@@ -51,12 +52,8 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case LEGS:
             modelLegs.render(te.isSkirtMode());
             break;
-        case FEET:
-            // modelFeet.render();
-            break;
-        default:
-            break;
         }
+        //GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 }

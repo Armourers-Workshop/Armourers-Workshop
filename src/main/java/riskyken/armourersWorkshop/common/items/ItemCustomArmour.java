@@ -33,6 +33,8 @@ public class ItemCustomArmour extends AbstractModItemArmor {
                     return ClientProxy.customHead;
                 case 1:
                     return ClientProxy.customChest;
+                case 2:
+                    return ClientProxy.customLegs;
                 default:
                     break;
                 }

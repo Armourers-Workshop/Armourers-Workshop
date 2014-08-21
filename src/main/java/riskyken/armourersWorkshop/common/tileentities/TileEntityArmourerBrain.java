@@ -11,8 +11,12 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
+import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -53,24 +57,11 @@ public class TileEntityArmourerBrain extends TileEntity {
         checkForValidMultiBlock();
     }
     
-    public Packet getDescriptionPacket() {
-        NBTTagCompound compound = new NBTTagCompound();
-        writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        NBTTagCompound compound = packet.func_148857_g();
-        readFromNBT(compound);
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-    
     public boolean checkForValidMultiBlock() {
         removeOldChildren();
-        removeOldBoundingBoxed();
+        removeBoundingBoxed();
         
-        if (!findMultiBlockCorner()) { return false; }
+        findMultiBlockCorner();
         
         for (int ix = 0; ix < MULTI_BLOCK_SIZE; ix++) {
             for (int iy = 0; iy < MULTI_BLOCK_SIZE; iy++) {
@@ -96,31 +87,62 @@ public class TileEntityArmourerBrain extends TileEntity {
         ModLogger.log("valid " + xCoord + " " + yCoord + " " + zCoord);
         
         formed = true;
-        makeBoundingBoxes();
+        createBoundingBoxes();
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         return true;
     }
     
-    private void makeBoundingBoxes() {
+    private void createBoundingBoxes() {
         switch (type) {
         case HEAD:
             for (int ix = 0; ix < 8; ix++) {
                 for (int iy = 0; iy < 8; iy++) {
                     for (int iz = 0; iz < 8; iz++) {
-                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy, zCoord + zOffset + iz + 7, ModBlocks.boundingBox);
+                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 7, ModBlocks.boundingBox);
                     }
                 }
             } 
             break;
         case CHEST:
+            //Chest
             for (int ix = 0; ix < 8; ix++) {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
-                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy, zCoord + zOffset + iz + 4, ModBlocks.boundingBox);
+                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 4, ModBlocks.boundingBox);
                     }
                 }
             } 
+            for (int ix = 0; ix < 4; ix++) {
+                for (int iy = 0; iy < 12; iy++) {
+                    for (int iz = 0; iz < 4; iz++) {
+                        //Right Arm
+                        worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 14, ModBlocks.boundingBox);
+                        //Left Arm
+                        worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 14, ModBlocks.boundingBox);
+                    }
+                }
+            }
+            break;
+            
+        case LEGS:
+            for (int ix = 0; ix < 4; ix++) {
+                for (int iy = 0; iy < 12; iy++) {
+                    for (int iz = 0; iz < 4; iz++) {
+                        if (!isSkirtMode()) {
+                            //Right Leg
+                            worldObj.setBlock(xCoord + xOffset + ix + 5, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                            //Left Leg
+                            worldObj.setBlock(xCoord + xOffset + ix + 13, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        } else {
+                            //Right Leg
+                            worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                            //Left Leg
+                            worldObj.setBlock(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        }
+                    }
+                }
+            }
             break;
         default:
             break;
@@ -141,7 +163,7 @@ public class TileEntityArmourerBrain extends TileEntity {
         } 
     }
     
-    private void removeOldBoundingBoxed() {
+    private void removeBoundingBoxed() {
         //clear old bounding boxes
         for (int ix = 0; ix < MULTI_BLOCK_SIZE; ix++) {
             for (int iy = 0; iy < MULTI_BLOCK_SIZE; iy++) {
@@ -156,7 +178,7 @@ public class TileEntityArmourerBrain extends TileEntity {
     
     public void preRemove() {
         removeOldChildren();
-        removeOldBoundingBoxed();
+        removeBoundingBoxed();
     }
     
     private boolean validMultiBlockPart(int x, int y, int z) {
@@ -182,7 +204,12 @@ public class TileEntityArmourerBrain extends TileEntity {
         return false;
     }
     
-    private boolean findMultiBlockCorner() {
+    /**
+     * Finds the block with the lowest x and z value in the
+     * multi-block and set the xOffset and zOffset using it.
+     * @return 
+     */
+    private void findMultiBlockCorner() {
         ForgeDirection[] scanDirs =  { ForgeDirection.NORTH, ForgeDirection.WEST };
         
         if (formed) {
@@ -222,8 +249,6 @@ public class TileEntityArmourerBrain extends TileEntity {
                 break;
             }
         }
-        
-        return true;
     }
     
     @Override
@@ -232,43 +257,72 @@ public class TileEntityArmourerBrain extends TileEntity {
     }
     
     public void buildArmourItem(EntityPlayer player) {
+        switch (type) {
+        case HEAD:
+            buildArmourPart(player, ArmourPart.HEAD);
+            break;
+        case CHEST:
+            buildArmourPart(player, ArmourPart.CHEST);
+            buildArmourPart(player, ArmourPart.LEFT_ARM);
+            buildArmourPart(player, ArmourPart.RIGHT_ARM);
+            break;
+        case LEGS:
+            if (this.skirtMode) {
+                buildArmourPart(player, ArmourPart.SKIRT);
+                ClientProxy.RemoveCustomArmour(player, type, ArmourPart.LEFT_LEG);
+                ClientProxy.RemoveCustomArmour(player, type, ArmourPart.RIGHT_LEG);
+            } else {
+                buildArmourPart(player, ArmourPart.LEFT_LEG);
+                buildArmourPart(player, ArmourPart.RIGHT_LEG);
+                ClientProxy.RemoveCustomArmour(player, type, ArmourPart.SKIRT);
+            }
+            
+            break;
+        default:
+            ModLogger.log(Level.WARN, "TileEntityArmourerBrain at X:" + xCoord + " Y:" + yCoord +
+                    " Z:" + zCoord + " has an invalid armour type.");
+            break;
+        }
+    }
+    
+    private void buildArmourPart(EntityPlayer player, ArmourPart part) {
+        //TODO Change later to run on the server
+        if (!this.worldObj.isRemote) { return; }
+        
         ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
         
-        for (int ix = 0; ix < MULTI_BLOCK_SIZE - 1; ix++) {
-            for (int iy = 0; iy < MULTI_BLOCK_SIZE - 1; iy++) {
-                for (int iz = 0; iz < MULTI_BLOCK_SIZE - 1; iz++) {
-                    switch (type) {
-                    case HEAD:
-                        addArmourToList(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz, ix, iy, iz, armourBlockData);
-                        break;
-                    case CHEST:
-                        addArmourToList(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz - 5, ix, iy, iz, armourBlockData);
-                        break;
-                    default:
-                        break;
-                    }
-                    
+        for (int ix = 0; ix < part.getXSize(); ix++) {
+            for (int iy = 0; iy < part.getYSize(); iy++) {
+                for (int iz = 0; iz < part.getZSize(); iz++) {
+                    addArmourToList(
+                            xCoord + xOffset + ix + part.getXOffset(),
+                            yCoord + iy + 1,
+                            zCoord + zOffset + iz + part.getZOffset(),
+                            ix, iy, iz, armourBlockData, part);
                 }
             }
         }
         
         if (armourBlockData.size() > 0) {
-            ModLogger.log("setting armour data size " + armourBlockData.size() + " type " + type.name());
-            CustomArmourData armourData = new CustomArmourData(armourBlockData, type);
-            ClientProxy.AddCustomArmour(player, type, armourData);
+            ModLogger.log("setting armour data size " + armourBlockData.size() + " type " + type.name() + " part " + part.name());
+            CustomArmourData armourData = new CustomArmourData(armourBlockData, type, part);
+            ClientProxy.AddCustomArmour(player, armourData);
         } else {
             ModLogger.log("removing armour data");
-            ClientProxy.RemoveCustomArmour(player, type);
+            ClientProxy.RemoveCustomArmour(player, type, part);
         }
     }
     
-    private void addArmourToList(int x, int y, int z, int ix, int iy, int iz, ArrayList<ArmourBlockData> list) {
+    private void addArmourToList(int x, int y, int z, int ix, int iy, int iz, ArrayList<ArmourBlockData> list, ArmourPart armourPart) {
         if (worldObj.isAirBlock(x, y, z)) { return; }
         Block block = worldObj.getBlock(x, y, z);
-        
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
             int colour = UtilBlocks.getColourFromTileEntity(worldObj ,x, y, z);
-            ArmourBlockData blockData = new ArmourBlockData((ix - 11), 12 - (iy + 1), (iz - 11), colour, block == ModBlocks.colourableGlowing);
+            ArmourBlockData blockData = new ArmourBlockData(
+                    (armourPart.getXSize() / 2 - ix - 1),
+                    (armourPart.getYSize() - iy),
+                    (iz - armourPart.getZSize() / 2),
+                    colour, block == ModBlocks.colourableGlowing);
             list.add(blockData);
         }
     }
@@ -310,8 +364,26 @@ public class TileEntityArmourerBrain extends TileEntity {
     }
     
     public void setSkirtMode(boolean skirtMode) {
+        if (this.worldObj.isRemote) { return; }
+        ModLogger.log("Setting skirt mode " + skirtMode);
         this.skirtMode = skirtMode;
         this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        removeBoundingBoxed();
+        createBoundingBoxes();
+        
+    }
+    
+    public Packet getDescriptionPacket() {
+        NBTTagCompound compound = new NBTTagCompound();
+        writeToNBT(compound);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.func_148857_g();
+        readFromNBT(compound);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
