@@ -29,7 +29,7 @@ public class ArmourersWorkshop {
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_SERVER_CLASS)
     public static IProxy proxy;
 
-    public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID);
+    public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
 
     @Mod.EventHandler
     public void perInit(FMLPreInitializationEvent event) {
