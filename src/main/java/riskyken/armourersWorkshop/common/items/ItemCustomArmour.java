@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCustomArmour extends AbstractModItemArmor {
 
     public ItemCustomArmour(ArmorMaterial armorMaterial, int armorType) {
-        super(LibItemNames.CUSTOM_ARMOUR_ITEM + ".type." + armorType, armorMaterial, armorType);
+        super(LibItemNames.CUSTOM_ARMOUR + ".type." + armorType, armorMaterial, armorType);
     }
 
     @Override

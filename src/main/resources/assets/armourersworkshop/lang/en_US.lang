@@ -4,11 +4,15 @@ tile.armourersworkshop:armourerMultiBlock0.name=Armourer Wall
 tile.armourersworkshop:armourerMultiBlock1.name=Armourer Corner
 tile.armourersworkshop:colourable.name=Armour Cube
 tile.armourersworkshop:colourableGlowing.name=Armour Cube (Glowing)
+tile.armourersworkshop:colourMixer.name=Colour Mixer
 
 item.armourersworkshop:customArmour.type.0.name=Custom Head Armour
 item.armourersworkshop:customArmour.type.1.name=Custom Chest Armour
 item.armourersworkshop:customArmour.type.2.name=Custom Leg Armour
 item.armourersworkshop:customArmour.type.3.name=Custom Foot Armour
+item.armourersworkshop:paintbrush.name=Paintbrush
 
 itemGroup.armourersworkshop=Armourer's Workshop
+
+container.inventory.colourMixer.name=Colour Mixer
 
