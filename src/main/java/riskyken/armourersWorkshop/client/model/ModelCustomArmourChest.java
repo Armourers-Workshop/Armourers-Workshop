@@ -75,7 +75,7 @@ public class ModelCustomArmourChest extends ModelBiped {
         
         if (rightArmData != null){
             GL11.glPushMatrix();
-            GL11.glColor3f(0F, 0F, 0F);
+            
             GL11.glTranslated(-6 * scale, -2 * scale, 0);
             GL11.glTranslated(0 * scale, 4 * scale, 0 * scale);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);

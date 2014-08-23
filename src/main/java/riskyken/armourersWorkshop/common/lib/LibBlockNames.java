@@ -6,4 +6,5 @@ public class LibBlockNames {
     public static final String BOUNDING_BOX = "boundingBox";
     public static final String COLOURABLE = "colourable";
     public static final String COLOURABLE_GLOWING = "colourableGlowing";
+    public static final String COLOUR_MIXER = "colourMixer";
 }

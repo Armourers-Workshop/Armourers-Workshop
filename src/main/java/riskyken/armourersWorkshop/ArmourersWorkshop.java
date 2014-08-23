@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
+import riskyken.armourersWorkshop.common.GuiHandler;
 import riskyken.armourersWorkshop.common.ModFMLEventHandler;
 import riskyken.armourersWorkshop.common.ModForgeEventHandler;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -51,7 +52,7 @@ public class ArmourersWorkshop {
 
         ModBlocks.registerTileEntities();
 
-        // new GuiHandler();
+        new GuiHandler();
 
         PacketHandler.init();
         proxy.postInit();

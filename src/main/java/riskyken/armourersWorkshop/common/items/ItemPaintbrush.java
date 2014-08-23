@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,6 +51,16 @@ public class ItemPaintbrush extends AbstractModItem {
     }
     
     @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
+        super.addInformation(stack, player, list, p_77624_4_);
+        if (brushHasPaint(stack)) {
+            list.add("Colour " + getBrushColour(stack));
+        } else {
+            list.add("No paint");
+        }
+    }
+    
+    @Override
     public boolean requiresMultipleRenderPasses() {
         return true;
     }
@@ -74,7 +86,7 @@ public class ItemPaintbrush extends AbstractModItem {
         return tipIcon;
     }
     
-    private static boolean brushHasPaint(ItemStack stack) {
+    private boolean brushHasPaint(ItemStack stack) {
         NBTTagCompound compound = getCompound(stack);
         if (compound.hasKey(TAG_COLOUR)) {
             return true;
@@ -82,20 +94,20 @@ public class ItemPaintbrush extends AbstractModItem {
         return false;
     }
     
-    private static int getBrushColour(ItemStack stack) {
+    private int getBrushColour(ItemStack stack) {
         NBTTagCompound compound = getCompound(stack);
         if (compound.hasKey(TAG_COLOUR)) {
-            compound.getInteger(TAG_COLOUR);
+            return compound.getInteger(TAG_COLOUR);
         }
         return 16777215;
     }
     
-    private static void setBrushColour(ItemStack stack, int colour) {
+    public void setBrushColour(ItemStack stack, int colour) {
         NBTTagCompound compound = getCompound(stack);
         compound.setInteger(TAG_COLOUR, colour);
     }
     
-    private static NBTTagCompound getCompound(ItemStack stack) {
+    private NBTTagCompound getCompound(ItemStack stack) {
         if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
         }
