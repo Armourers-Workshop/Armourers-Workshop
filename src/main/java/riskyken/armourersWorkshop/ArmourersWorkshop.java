@@ -5,6 +5,7 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.common.ModFMLEventHandler;
 import riskyken.armourersWorkshop.common.ModForgeEventHandler;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.command.CommandCustomArmour;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
@@ -19,6 +20,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class ArmourersWorkshop {
@@ -56,6 +58,11 @@ public class ArmourersWorkshop {
 
         MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
         FMLCommonHandler.instance().bus().register(new ModFMLEventHandler());
+    }
+    
+    @Mod.EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandCustomArmour());
     }
 
     @Mod.EventHandler
