@@ -82,5 +82,4 @@ public class GuiColourMixer extends GuiContainer {
         drawTexturedModalRect(this.guiLeft + 146, this.guiTop + 59, 146, 59, 12, 13);
         GL11.glColor4f(1F, 1F, 1F, 1F);
     }
-
 }
