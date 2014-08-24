@@ -7,9 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,6 +40,16 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!world.isRemote) {
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ARMOURER, world, x, y, z);
+        }
+        return true;
+    }
+    /*
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        
+        
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof TileEntityArmourerBrain) {
             if (!player.isSneaking()) {
@@ -47,7 +60,7 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
         }
         return true;
     }
-
+     */
     @SideOnly(Side.CLIENT)
     private IIcon sideIcon;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -19,11 +20,12 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
+import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
-public class TileEntityArmourerBrain extends TileEntity {
+public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
 
     private static final int MULTI_BLOCK_SIZE = 22;
     private static final long TICK_COOLDOWN = 40L;
@@ -47,6 +49,7 @@ public class TileEntityArmourerBrain extends TileEntity {
         this.direction = ForgeDirection.UNKNOWN;
         this.type = ArmourerType.LEGS;
         this.formed = false;
+        this.items = new ItemStack[2];
     }
     
     @Override
@@ -376,20 +379,32 @@ public class TileEntityArmourerBrain extends TileEntity {
     
     public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
-        writeToNBT(compound);
+        writeBaseToNBT(compound);
+        writeTeToNBT(compound);
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
-        readFromNBT(compound);
+        readBaseFromNBT(compound);
+        readTeFromNBT(compound);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
+        readTeFromNBT(compound);
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        writeTeToNBT(compound);
+    }
+    
+    public void readTeFromNBT(NBTTagCompound compound) {
         direction = ForgeDirection.getOrientation(compound.getInteger(TAG_DIRECTION));
         type = ArmourerType.getOrdinal(compound.getInteger(TAG_TYPE));
         formed = compound.getBoolean(TAG_FORMED);
@@ -398,14 +413,17 @@ public class TileEntityArmourerBrain extends TileEntity {
         zOffset = compound.getInteger(TAG_Z_OFFSET);
     }
     
-    @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
+    public void writeTeToNBT(NBTTagCompound compound) {
         compound.setInteger(TAG_DIRECTION, direction.ordinal());
         compound.setInteger(TAG_TYPE, type.ordinal());
         compound.setBoolean(TAG_FORMED, formed);
         compound.setBoolean(TAG_SKIRT_MODE, skirtMode);
         compound.setInteger(TAG_X_OFFSET, xOffset);
         compound.setInteger(TAG_Z_OFFSET, zOffset);
+    }
+
+    @Override
+    public String getInventoryName() {
+        return LibBlockNames.ARMOURER_BRAIN;
     }
 }
