@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class CustomArmourManager {
@@ -36,7 +37,7 @@ public class CustomArmourManager {
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
         }
-        //PacketHandler.networkWrapper.sendToAll(new MessageServerRemoveArmourData(player.getDisplayName(), type));
+        PacketHandler.networkWrapper.sendToAll(new MessageServerRemoveArmourData(player.getDisplayName(), type, part));
     }
 
     public static void removeAllCustomArmourData(Entity entity) {
