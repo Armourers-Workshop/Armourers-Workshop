@@ -7,7 +7,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class CommandCustomArmour extends CommandBase {
 
@@ -39,7 +38,7 @@ public class CommandCustomArmour extends CommandBase {
         }
         
         if (args[0].equalsIgnoreCase("clear")) {
-            ClientProxy.RemoveAllCustomArmourData(player);
+            //ClientProxy.RemoveAllCustomArmourData(player);
             return;
         }
         

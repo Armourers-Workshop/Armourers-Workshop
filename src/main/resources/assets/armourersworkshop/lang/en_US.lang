@@ -15,4 +15,4 @@ item.armourersworkshop:paintbrush.name=Paintbrush
 itemGroup.armourersworkshop=Armourer's Workshop
 
 container.inventory.colourMixer.name=Colour Mixer
-
+container.inventory.armourerBrain.name=Armourer

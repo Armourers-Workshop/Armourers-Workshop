@@ -45,22 +45,7 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
         }
         return true;
     }
-    /*
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        
-        
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null & te instanceof TileEntityArmourerBrain) {
-            if (!player.isSneaking()) {
-                ((TileEntityArmourerBrain) te).buildArmourItem(player);
-            } else {
-                ((TileEntityArmourerBrain) te).setSkirtMode(!((TileEntityArmourerBrain)te).isSkirtMode());;
-            }
-        }
-        return true;
-    }
-     */
+    
     @SideOnly(Side.CLIENT)
     private IIcon sideIcon;
 

@@ -20,8 +20,8 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
+import riskyken.armourersWorkshop.common.customarmor.CustomArmourManager;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
@@ -272,12 +272,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         case LEGS:
             if (this.skirtMode) {
                 buildArmourPart(player, ArmourPart.SKIRT);
-                ClientProxy.RemoveCustomArmour(player, type, ArmourPart.LEFT_LEG);
-                ClientProxy.RemoveCustomArmour(player, type, ArmourPart.RIGHT_LEG);
+                CustomArmourManager.removeCustomArmour(player, type, ArmourPart.LEFT_LEG);
+                CustomArmourManager.removeCustomArmour(player, type, ArmourPart.RIGHT_LEG);
             } else {
                 buildArmourPart(player, ArmourPart.LEFT_LEG);
                 buildArmourPart(player, ArmourPart.RIGHT_LEG);
-                ClientProxy.RemoveCustomArmour(player, type, ArmourPart.SKIRT);
+                CustomArmourManager.removeCustomArmour(player, type, ArmourPart.SKIRT);
             }
             
             break;
@@ -289,9 +289,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     private void buildArmourPart(EntityPlayer player, ArmourPart part) {
-        //TODO Change later to run on the server
-        if (!this.worldObj.isRemote) { return; }
-        
         ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
         
         for (int ix = 0; ix < part.getXSize(); ix++) {
@@ -309,10 +306,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         if (armourBlockData.size() > 0) {
             ModLogger.log("setting armour data size " + armourBlockData.size() + " type " + type.name() + " part " + part.name());
             CustomArmourData armourData = new CustomArmourData(armourBlockData, type, part);
-            ClientProxy.AddCustomArmour(player, armourData);
+            CustomArmourManager.addCustomArmour(player, armourData);
         } else {
             ModLogger.log("removing armour data");
-            ClientProxy.RemoveCustomArmour(player, type, part);
+            CustomArmourManager.removeCustomArmour(player, type, part);
         }
     }
     
@@ -356,6 +353,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     public void setType(ArmourerType type) {
         this.type = type;
+        if (formed) {
+            removeBoundingBoxed();
+            createBoundingBoxes(); 
+        }
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -372,9 +373,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.skirtMode = skirtMode;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        removeBoundingBoxed();
-        createBoundingBoxes();
-        
+        if (type == ArmourerType.LEGS) {
+            removeBoundingBoxed();
+            createBoundingBoxes(); 
+        }
     }
     
     public Packet getDescriptionPacket() {

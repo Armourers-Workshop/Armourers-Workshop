@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageGuiColourUpdate;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColourUpdate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiSlider;
@@ -52,7 +52,7 @@ public class GuiColourMixer extends GuiContainer {
         ModLogger.log(c);
         ModLogger.log(c.getRGB());
         
-        PacketHandler.networkWrapper.sendToServer(new MessageGuiColourUpdate(c.getRGB()));
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiColourUpdate(c.getRGB()));
     }
     
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {

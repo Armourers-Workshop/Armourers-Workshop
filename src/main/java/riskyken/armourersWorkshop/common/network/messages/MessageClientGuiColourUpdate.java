@@ -9,14 +9,14 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageGuiColourUpdate implements IMessage, IMessageHandler<MessageGuiColourUpdate, IMessage> {
+public class MessageClientGuiColourUpdate implements IMessage, IMessageHandler<MessageClientGuiColourUpdate, IMessage> {
 
     int colour;
 
-    public MessageGuiColourUpdate() {
+    public MessageClientGuiColourUpdate() {
     }
 
-    public MessageGuiColourUpdate(int colour) {
+    public MessageClientGuiColourUpdate(int colour) {
         this.colour = colour;
     }
 
@@ -31,7 +31,7 @@ public class MessageGuiColourUpdate implements IMessage, IMessageHandler<Message
     }
 
     @Override
-    public IMessage onMessage(MessageGuiColourUpdate message, MessageContext ctx) {
+    public IMessage onMessage(MessageClientGuiColourUpdate message, MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 
         if (player == null) {

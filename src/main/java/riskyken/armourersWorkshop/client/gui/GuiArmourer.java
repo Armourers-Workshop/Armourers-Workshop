@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -8,9 +9,13 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,6 +28,17 @@ public class GuiArmourer extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
+        for (int i = 0; i < 3; i++) {
+            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourerType.getOrdinal(i).name()));
+        }
+        buttonList.add(new GuiButtonExt(3, guiLeft + 60, guiTop + 16, 80, 16, "Build Armour"));
+    }
+    
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if (button.id < 4) {
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
+        }
     }
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {

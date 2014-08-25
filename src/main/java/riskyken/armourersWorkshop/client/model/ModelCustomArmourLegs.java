@@ -12,10 +12,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.AbstractCustomArmour;
 import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class ModelCustomArmourLegs extends ModelBiped {
@@ -31,9 +31,9 @@ public class ModelCustomArmourLegs extends ModelBiped {
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
         setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
-        AbstractCustomArmour skirtData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.SKIRT);
-        AbstractCustomArmour leftLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-        AbstractCustomArmour rightLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
+        CustomArmourData skirtData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.SKIRT);
+        CustomArmourData leftLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
+        CustomArmourData rightLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         EntityClientPlayerMP player = (EntityClientPlayerMP) entity;
         
         this.isSneak = player.isSneaking();

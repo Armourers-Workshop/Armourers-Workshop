@@ -15,16 +15,16 @@ public class ContainerArmourer extends Container {
     public ContainerArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
         this.armourerBrain = armourerBrain;
 
-        addSlotToContainer(new SlotCustomArmour(armourerBrain, 0, 144, 39));
-        addSlotToContainer(new SlotOutput(armourerBrain, 1, 144, 80));
+        addSlotToContainer(new SlotCustomArmour(armourerBrain, 0, 148, 19));
+        addSlotToContainer(new SlotOutput(armourerBrain, 1, 148, 60));
 
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 189));
+            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 147));
         }
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 131 + y * 18));
+                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 89 + y * 18));
             }
         }
     }

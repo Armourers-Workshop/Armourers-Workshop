@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.common.command.CommandCustomArmour;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
+import riskyken.armourersWorkshop.common.customarmor.CustomArmourManager;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -41,7 +42,7 @@ public class ArmourersWorkshop {
 
         ModItems.init();
         ModBlocks.init();
-
+        
         proxy.init();
         proxy.initRenderers();
     }
@@ -64,6 +65,7 @@ public class ArmourersWorkshop {
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandCustomArmour());
+        CustomArmourManager.init();
     }
 
     @Mod.EventHandler
