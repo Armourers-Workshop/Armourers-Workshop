@@ -16,14 +16,19 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class ModelCustomArmourHead extends ModelBiped {
     
     private ModelRenderer main;
+    private final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     
     public ModelCustomArmourHead() {
-        main = new ModelRenderer(this, 28, 20);
+        textureWidth = 4;
+        textureHeight = 4;
+        
+        main = new ModelRenderer(this, 0, 0);
         main.addBox(0F, 0F, 0F, 1, 1, 1);
         main.setRotationPoint(0, 0, 0);
     }
@@ -39,7 +44,7 @@ public class ModelCustomArmourHead extends ModelBiped {
         
         
         ArrayList<ArmourBlockData> armourBlockData = armourData.getArmourData();
-        bindPlayerTexture();
+        bindArmourTexture();
         
         GL11.glPushMatrix();
         GL11.glColor3f(0F, 0F, 0F);
@@ -85,8 +90,7 @@ public class ModelCustomArmourHead extends ModelBiped {
         GL11.glPopMatrix();
     }
 
-    private void bindPlayerTexture() {
-        ResourceLocation playerSkin = Minecraft.getMinecraft().thePlayer.getLocationSkin();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(playerSkin);
+    private void bindArmourTexture() {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
 }
