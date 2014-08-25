@@ -3,11 +3,11 @@ package riskyken.armourersWorkshop.client.model;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -40,7 +40,7 @@ public class ModelCustomArmourHead extends ModelBiped {
         //
         if (armourData == null) { return; }
 
-        EntityClientPlayerMP player = (EntityClientPlayerMP) entity;
+        EntityPlayer player = (EntityPlayer) entity;
         
         
         ArrayList<ArmourBlockData> armourBlockData = armourData.getArmourData();

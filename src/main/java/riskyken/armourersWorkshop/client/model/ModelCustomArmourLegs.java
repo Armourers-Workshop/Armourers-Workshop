@@ -3,11 +3,11 @@ package riskyken.armourersWorkshop.client.model;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -39,7 +39,7 @@ public class ModelCustomArmourLegs extends ModelBiped {
         CustomArmourData skirtData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.SKIRT);
         CustomArmourData leftLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
         CustomArmourData rightLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-        EntityClientPlayerMP player = (EntityClientPlayerMP) entity;
+        EntityPlayer player = (EntityPlayer) entity;
         
         this.isSneak = player.isSneaking();
         this.isRiding = player.isRiding();
