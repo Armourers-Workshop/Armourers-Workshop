@@ -27,7 +27,7 @@ import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
 
-    private static final int MULTI_BLOCK_SIZE = 22;
+    public static final int MULTI_BLOCK_SIZE = 22;
     private static final long TICK_COOLDOWN = 40L;
     private static final long TICK_OFFSET = 5L;
     
@@ -352,6 +352,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public void setType(ArmourerType type) {
+        if (this.type == ArmourerType.LEGS & type == ArmourerType.LEGS) {
+            setSkirtMode(!skirtMode);
+        }
         this.type = type;
         if (formed) {
             removeBoundingBoxed();

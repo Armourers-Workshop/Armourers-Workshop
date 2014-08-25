@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -25,7 +26,6 @@ public class CustomArmourManager {
             customArmor.remove(key);
         }
         customArmor.put(key, armourData);
-        
         PacketHandler.networkWrapper.sendToAll(new MessageServerAddArmourData(player.getDisplayName(), armourData));
     }
 
@@ -36,12 +36,13 @@ public class CustomArmourManager {
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
         }
+        //PacketHandler.networkWrapper.sendToAll(new MessageServerRemoveArmourData(player.getDisplayName(), type));
     }
 
     public static void removeAllCustomArmourData(Entity entity) {
         if (!(entity instanceof EntityPlayer)) { return; }
         EntityPlayer player = (EntityPlayer) entity;
-        ModLogger.log("Removing custom armour for " + player.getDisplayName());
+        player.addChatMessage(new ChatComponentText("You're custom armour data was cleared."));
         removeCustomArmour(player, ArmourerType.HEAD, ArmourPart.HEAD);
         removeCustomArmour(player, ArmourerType.CHEST, ArmourPart.CHEST);
         removeCustomArmour(player, ArmourerType.CHEST, ArmourPart.LEFT_ARM);
@@ -49,5 +50,6 @@ public class CustomArmourManager {
         removeCustomArmour(player, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
         removeCustomArmour(player, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         removeCustomArmour(player, ArmourerType.LEGS, ArmourPart.SKIRT);
+        ModLogger.log("Removing custom armour for " + player.getDisplayName());
     }
 }
