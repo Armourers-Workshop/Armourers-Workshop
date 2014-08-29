@@ -12,22 +12,26 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 public class MessageClientGuiColourUpdate implements IMessage, IMessageHandler<MessageClientGuiColourUpdate, IMessage> {
 
     int colour;
+    boolean item;
 
     public MessageClientGuiColourUpdate() {
     }
 
-    public MessageClientGuiColourUpdate(int colour) {
+    public MessageClientGuiColourUpdate(int colour, boolean item) {
         this.colour = colour;
+        this.item = item;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         this.colour = buf.readInt();
+        this.item = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.colour);
+        buf.writeBoolean(item);
     }
 
     @Override
@@ -42,7 +46,7 @@ public class MessageClientGuiColourUpdate implements IMessage, IMessageHandler<M
 
         if (container != null && container instanceof ContainerColourMixer) {
             TileEntityColourMixer colourMixer = ((ContainerColourMixer) container).getTileEntity();
-            colourMixer.receiveColourUpdateMessage(message.colour);
+            colourMixer.receiveColourUpdateMessage(message.colour, message.item);
         }
 
         return null;

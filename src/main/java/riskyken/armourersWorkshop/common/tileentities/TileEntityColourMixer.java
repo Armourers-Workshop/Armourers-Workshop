@@ -5,20 +5,29 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import riskyken.armourersWorkshop.common.items.IColourTool;
+import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class TileEntityColourMixer extends AbstractTileEntityInventory {
     
     private static final String TAG_COLOUR = "colour";
+    private static final String TAG_ITEM_UPDATE = "itemUpdate";
+    
     public int colour;
+    
+    private boolean itemUpdate;
+    private boolean colourUpdate;
     
     public TileEntityColourMixer() {
         items = new ItemStack[2];
         colour = 16777215;
+        colourUpdate = false;
     }
     
     @Override
@@ -35,12 +44,18 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
     private void checkForPaintBrush() {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        if (stackInput != null && stackInput.getItem() == ModItems.paintbrush) {
-            ModLogger.log("Painting brush " + colour);
+        
+        if (stackInput != null && stackInput.getItem() instanceof IColourTool) {
             if (stackOutput != null) { return; }
             setInventorySlotContents(0, null);
             setInventorySlotContents(1, stackInput);
-            ((ItemPaintbrush)stackInput.getItem()).setBrushColour(stackInput, colour);
+            
+            if (stackInput.getItem() == ModItems.paintbrush) {
+                ((ItemPaintbrush)stackInput.getItem()).setToolColour(stackInput, colour);
+            }
+            if (stackInput.getItem() == ModItems.colourPicker) {
+                setColour(((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput), true);
+            }
             markDirty();
         }
     }
@@ -50,7 +65,13 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
         return LibBlockNames.COLOUR_MIXER;
     }
 
-    public void receiveColourUpdateMessage(int colour) {
+    public void receiveColourUpdateMessage(int colour, boolean item) {
+        setColour(colour, item);
+    }
+    
+    public void setColour(int colour, boolean item){
+        if (worldObj.isRemote) { return; }
+        if (item) { itemUpdate = true; }
         this.colour = colour;
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -73,6 +94,8 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         compound.setInteger(TAG_COLOUR, colour);
+        compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
+        if (itemUpdate) { itemUpdate = false; }
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 3, compound);
     }
 
@@ -81,7 +104,18 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
         NBTTagCompound compound = packet.func_148857_g();
         readBaseFromNBT(compound);
         colour = compound.getInteger(TAG_COLOUR);
+        itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        colourUpdate = true;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public boolean getHasItemUpdateAndReset() {
+        if (itemUpdate) {
+            itemUpdate = false;
+            return true;
+        }
+        return false;
     }
 
     public int getColour() {

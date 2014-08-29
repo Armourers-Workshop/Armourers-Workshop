@@ -44,16 +44,31 @@ public class GuiColourMixer extends GuiContainer {
         buttonList.add(blueSlider);
     }
     
+    private void checkForColourUpdates() {
+        if (tileEntityColourMixer.getHasItemUpdateAndReset()) {
+            Color c = new Color(tileEntityColourMixer.getColour());
+            redSlider.setValue(c.getRed());
+            greenSlider.setValue(c.getGreen());
+            blueSlider.setValue(c.getBlue());
+            ModLogger.log("Item update");
+        }
+    }
+    
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int which) {
         super.mouseMovedOrUp(mouseX, mouseY, which);
-        Color c = new Color(redSlider.getValueInt(), greenSlider.getValueInt(), blueSlider.getValueInt());
         
-        ModLogger.log(c);
-        ModLogger.log(c.getRGB());
+        if (which != 0) { return; }
         
-        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiColourUpdate(c.getRGB()));
+        Color colourNew = new Color(redSlider.getValueInt(), greenSlider.getValueInt(), blueSlider.getValueInt());
+        Color colourOld = new Color(tileEntityColourMixer.getColour());
+        
+        if (colourNew.equals(colourOld)) { return; }
+        
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiColourUpdate(colourNew.getRGB(), false));
     }
+    
+    
     
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
@@ -70,15 +85,16 @@ public class GuiColourMixer extends GuiContainer {
     
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        checkForColourUpdates();
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         
-        Color c = new Color(redSlider.getValueInt(), greenSlider.getValueInt(), blueSlider.getValueInt());
         float red = (float) redSlider.getValueInt() / 255;
         float green = (float) greenSlider.getValueInt() / 255;
         float blue = (float) blueSlider.getValueInt() / 255;
         GL11.glColor4f(red, green, blue, 1F);
+        
         drawTexturedModalRect(this.guiLeft + 146, this.guiTop + 59, 146, 59, 12, 13);
         GL11.glColor4f(1F, 1F, 1F, 1F);
     }

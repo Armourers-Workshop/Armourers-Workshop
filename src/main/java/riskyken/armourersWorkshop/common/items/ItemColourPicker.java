@@ -12,26 +12,27 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemPaintbrush extends AbstractModItem implements IColourTool {
+public class ItemColourPicker extends AbstractModItem implements IColourTool {
 
     private static final String TAG_COLOUR = "colour";
     
-    public ItemPaintbrush() {
-        super(LibItemNames.PAINTBRUSH);
+    public ItemColourPicker() {
+        super(LibItemNames.COLOUR_PICKER);
         setMaxStackSize(1);
     }
-
+    
     @SideOnly(Side.CLIENT)
     private IIcon tipIcon;
     
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "paintbrush");
-        tipIcon = register.registerIcon(LibModInfo.ID + ":" + "paintbrush-tip");
+        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "colour-picker");
+        tipIcon = register.registerIcon(LibModInfo.ID + ":" + "colour-picker-tip");
     }
     
     @Override
@@ -39,12 +40,9 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
             int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         
-        if (!getToolHasColour(stack)) {
-            return false;
-        }
-        
         if (block instanceof IWorldColourable) {
-            ((IWorldColourable)block).setColour(world, x, y, z, getToolColour(stack));
+            setToolColour(stack, ((IWorldColourable)block).getColour(world, x, y, z));
+            ModLogger.log("Setting tool colour " + ((IWorldColourable)block).getColour(world, x, y, z));
             return true;
         }
         return false;
@@ -56,7 +54,7 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
         if (getToolHasColour(stack)) {
             list.add("Colour " + getToolColour(stack));
         } else {
-            list.add("No paint");
+            list.add("No colour");
         }
     }
     

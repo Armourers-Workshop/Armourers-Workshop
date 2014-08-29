@@ -10,6 +10,7 @@ public class ModItems {
     public static Item customLegsArmour;
     public static Item customFeetArmour;
     public static Item paintbrush;
+    public static Item colourPicker;
 
     public static void init() {
         customHeadArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 0);
@@ -17,5 +18,6 @@ public class ModItems {
         customLegsArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 2);
         customFeetArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 3);
         paintbrush = new ItemPaintbrush();
+        colourPicker = new ItemColourPicker();
     }
 }

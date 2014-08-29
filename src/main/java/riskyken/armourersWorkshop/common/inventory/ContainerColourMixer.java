@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.items.IColourTool;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 
 public class ContainerColourMixer extends Container {
@@ -16,7 +16,7 @@ public class ContainerColourMixer extends Container {
             TileEntityColourMixer tileEntityColourMixer) {
         this.tileEntityColourMixer = tileEntityColourMixer;
 
-        addSlotToContainer(new SlotPaintbrush(tileEntityColourMixer, 0, 144, 39));
+        addSlotToContainer(new SlotColourTool(tileEntityColourMixer, 0, 144, 39));
         addSlotToContainer(new SlotOutput(tileEntityColourMixer, 1, 144, 80));
 
         for (int x = 0; x < 9; x++) {
@@ -44,7 +44,7 @@ public class ContainerColourMixer extends Container {
                     }
                 }
             } else {
-                if (stack.getItem() == ModItems.paintbrush) {
+                if (stack.getItem() instanceof IColourTool) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) {
                         return null;
                     }
