@@ -53,11 +53,13 @@ public class ModelCustomArmourLegs extends ModelBiped {
         if (skirtData != null){
             GL11.glPushMatrix();
             GL11.glColor3f(0F, 0F, 0F);
-            
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-            GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
+          
             GL11.glTranslated(0, 11 * scale, 0);
+            
+            if (isSneak) {
+                GL11.glTranslated(0, -3 * scale, 4 * scale);
+            }
+            
             renderPart(skirtData.getArmourData(), scale);
             GL11.glPopMatrix();
         }

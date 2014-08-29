@@ -44,6 +44,14 @@ public class ModelCustomArmourHead extends ModelBiped {
         
         
         ArrayList<ArmourBlockData> armourBlockData = armourData.getArmourData();
+        
+        this.isSneak = player.isSneaking();
+        this.isRiding = player.isRiding();
+        this.heldItemRight = 0;
+        if (player.getHeldItem() != null) {
+            this.heldItemRight = 1;
+        }
+        
         bindArmourTexture();
         
         GL11.glPushMatrix();
@@ -52,7 +60,12 @@ public class ModelCustomArmourHead extends ModelBiped {
         GL11.glRotatef(p_78088_5_, 0, 1, 0);
         GL11.glRotatef(p_78088_6_, 1, 0, 0);
         
-        GL11.glTranslated(0, -16 * scale, 0);
+        GL11.glTranslated(0, -18 * scale, 0);
+        
+        if (isSneak) {
+            GL11.glTranslated(0, 1 * scale, 0);
+        }
+        
         for (int i = 0; i < armourBlockData.size(); i++) {
             ArmourBlockData blockData = armourBlockData.get(i);
             if (!blockData.glowing) {
