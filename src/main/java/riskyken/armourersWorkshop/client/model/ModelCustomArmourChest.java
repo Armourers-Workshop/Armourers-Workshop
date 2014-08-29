@@ -53,7 +53,7 @@ public class ModelCustomArmourChest extends ModelBiped {
         
         if (chestData != null){
             GL11.glPushMatrix();
-            GL11.glColor3f(0F, 0F, 0F);
+            GL11.glColor3f(1F, 1F, 1F);
             
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
@@ -103,7 +103,7 @@ public class ModelCustomArmourChest extends ModelBiped {
             renderPart(rightArmData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
-        
+        GL11.glColor3f(1F, 1F, 1F);
     }
     
     private static double RadiansToDegrees(double angle)

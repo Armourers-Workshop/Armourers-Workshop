@@ -2,6 +2,9 @@ package riskyken.armourersWorkshop.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -29,8 +32,10 @@ public class ModelChest extends ModelBase {
 
     public void render() {
         float mult = 0.0625F;
+        GL11.glColor3f(1F, 1F, 1F);
         main.render(mult);
         arm1.render(mult);
         arm2.render(mult);
+        GL11.glColor3f(1F, 1F, 1F);
     }
 }
