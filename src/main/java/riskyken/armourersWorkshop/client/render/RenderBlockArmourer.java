@@ -34,8 +34,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
 
         GL11.glPushMatrix();
+        GL11.glColor3f(1F, 1F, 1F);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        //GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
         
         GL11.glTranslated(x + te.getXOffset() + 11, y, z + te.getZOffset() + 11);
         
@@ -53,7 +54,8 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             modelLegs.render(te.isSkirtMode());
             break;
         }
-        //GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
+        GL11.glColor3f(1F, 1F, 1F);
     }
 }

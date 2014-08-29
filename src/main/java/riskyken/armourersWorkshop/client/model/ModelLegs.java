@@ -2,9 +2,6 @@ package riskyken.armourersWorkshop.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -38,7 +35,6 @@ public class ModelLegs extends ModelBase {
 
     public void render(boolean skirtMode) {
         float mult = 0.0625F;
-        GL11.glColor3f(1F, 1F, 1F);
         if (skirtMode) {
             legClosed1.render(mult);
             legClosed2.render(mult);
@@ -46,6 +42,5 @@ public class ModelLegs extends ModelBase {
             legOpen1.render(mult);
             legOpen2.render(mult);
         }
-        GL11.glColor3f(1F, 1F, 1F);
     }
 }
