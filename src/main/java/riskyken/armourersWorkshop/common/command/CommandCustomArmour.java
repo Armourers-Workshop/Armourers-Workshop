@@ -6,7 +6,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourManager;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -25,7 +24,7 @@ public class CommandCustomArmour extends CommandBase {
 
     @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] args) {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, new String[] {"build", "clear"}) : null;
     }
     
     @Override
@@ -33,11 +32,11 @@ public class CommandCustomArmour extends CommandBase {
         EntityPlayer player = commandSender.getEntityWorld().getPlayerEntityByName(commandSender.getCommandSenderName());
         
         if (args == null | player == null) {
-            throw new WrongUsageException("commands.playerhead.usage", (Object)args);
+            throw new WrongUsageException("commands.customarmour.usage", (Object)args);
         }
         
         if (args.length != 1) {
-            throw new WrongUsageException("commands.playerhead.usage", (Object)args);
+            throw new WrongUsageException("commands.customarmour.usage", (Object)args);
         }
         
         if (args[0].equalsIgnoreCase("clear")) {
@@ -60,7 +59,7 @@ public class CommandCustomArmour extends CommandBase {
         }
         
         
-        throw new WrongUsageException("commands.playerhead.usage", (Object)args);
+        throw new WrongUsageException("commands.customarmour.usage", (Object)args);
     }
 
 }
