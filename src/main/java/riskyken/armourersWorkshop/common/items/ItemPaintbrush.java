@@ -44,7 +44,9 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
         }
         
         if (block instanceof IWorldColourable) {
-            ((IWorldColourable)block).setColour(world, x, y, z, getToolColour(stack));
+            if (!world.isRemote) {
+                ((IWorldColourable)block).setColour(world, x, y, z, getToolColour(stack));
+            }
             return true;
         }
         return false;
