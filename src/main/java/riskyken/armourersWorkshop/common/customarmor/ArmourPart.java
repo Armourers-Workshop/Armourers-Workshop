@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.common.customarmor;
 
 public enum ArmourPart {
-    HEAD(3, 3, 16, 16, 16),
+    HEAD(3, 3, 16, 18, 16),
     CHEST(4, 1, 14, 14, 10),
     LEFT_ARM(2, 12, 8, 18, 8),
     RIGHT_ARM(12, 12, 8, 18, 8),
