@@ -15,7 +15,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColourUpdate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -50,7 +49,9 @@ public class GuiColourMixer extends GuiContainer {
             redSlider.setValue(c.getRed());
             greenSlider.setValue(c.getGreen());
             blueSlider.setValue(c.getBlue());
-            ModLogger.log("Item update");
+            redSlider.updateSlider();
+            greenSlider.updateSlider();
+            blueSlider.updateSlider();
         }
     }
     
