@@ -29,4 +29,9 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void removeAllCustomArmourData(String playerName) {
     }
+
+    @Override
+    public boolean playerHasSkirt(String playerName) {
+        return false;
+    }
 }

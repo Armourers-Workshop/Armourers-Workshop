@@ -17,4 +17,6 @@ public interface IProxy {
     public abstract void removeCustomArmour(String playerName, ArmourerType type, ArmourPart part);
     
     public abstract void removeAllCustomArmourData(String playerName);
+    
+    public abstract boolean playerHasSkirt(String playerName);
 }

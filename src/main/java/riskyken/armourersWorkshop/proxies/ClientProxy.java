@@ -84,4 +84,10 @@ public class ClientProxy extends CommonProxy {
         removeCustomArmour(playerName, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         removeCustomArmour(playerName, ArmourerType.LEGS, ArmourPart.SKIRT);
     }
+
+    @Override
+    public boolean playerHasSkirt(String playerName) {
+        String key = playerName + ":" + ArmourerType.LEGS.name() + ":" + ArmourPart.SKIRT.name();
+        return customArmor.containsKey(key);
+    }
 }
