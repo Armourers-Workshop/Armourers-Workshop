@@ -45,6 +45,10 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             if (message.buttonId == 3) {
                 armourerBrain.buildArmourItem(player);
             }
+            
+            if (message.buttonId == 4) {
+                armourerBrain.toggleGuides();
+            }
         }
         
         return null;

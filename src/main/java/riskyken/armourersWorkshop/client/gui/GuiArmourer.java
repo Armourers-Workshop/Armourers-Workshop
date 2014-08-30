@@ -25,6 +25,8 @@ public class GuiArmourer extends GuiContainer {
     private TileEntityArmourerBrain armourerBrain;
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourer.png");
     
+    private GuiCheckBox checkShowGuides;
+    
     @Override
     public void initGui() {
         super.initGui();
@@ -32,11 +34,13 @@ public class GuiArmourer extends GuiContainer {
             buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourerType.getOrdinal(i).name()));
         }
         buttonList.add(new GuiButtonExt(3, guiLeft + 60, guiTop + 16, 80, 16, "Build Armour"));
+        checkShowGuides = new GuiCheckBox(4, guiLeft + 60, guiTop + 36, "Show Guide", armourerBrain.isShowGuides());
+        buttonList.add(checkShowGuides);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button.id < 4) {
+        if (button.id < 5) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
         }
     }
@@ -56,6 +60,7 @@ public class GuiArmourer extends GuiContainer {
     
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        checkShowGuides.setChecked(armourerBrain.isShowGuides());
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);

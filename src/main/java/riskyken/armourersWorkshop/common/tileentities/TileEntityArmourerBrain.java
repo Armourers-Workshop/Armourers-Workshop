@@ -37,6 +37,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final String TAG_SKIRT_MODE = "skirtMode";
     private static final String TAG_X_OFFSET = "xOffset";
     private static final String TAG_Z_OFFSET = "zOffset";
+    private static final String TAG_SHOW_GUIDES = "showGuides";
     
     private ForgeDirection direction;
     private ArmourerType type;
@@ -44,6 +45,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private boolean skirtMode;
     private int xOffset;
     private int zOffset;
+    private boolean showGuides;
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
@@ -351,6 +353,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return direction;
     }
     
+    public boolean isShowGuides() {
+        return showGuides;
+    }
+    
     public void setType(ArmourerType type) {
         if (this.type == ArmourerType.LEGS & type == ArmourerType.LEGS) {
             setSkirtMode(!skirtMode);
@@ -380,6 +386,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             removeBoundingBoxed();
             createBoundingBoxes(); 
         }
+    }
+    
+    public void toggleGuides() {
+        this.showGuides = !this.showGuides;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public Packet getDescriptionPacket() {
@@ -416,6 +428,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         skirtMode = compound.getBoolean(TAG_SKIRT_MODE);
         xOffset = compound.getInteger(TAG_X_OFFSET);
         zOffset = compound.getInteger(TAG_Z_OFFSET);
+        showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
     }
     
     public void writeTeToNBT(NBTTagCompound compound) {
@@ -425,6 +438,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         compound.setBoolean(TAG_SKIRT_MODE, skirtMode);
         compound.setInteger(TAG_X_OFFSET, xOffset);
         compound.setInteger(TAG_Z_OFFSET, zOffset);
+        compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
     }
 
     @Override
