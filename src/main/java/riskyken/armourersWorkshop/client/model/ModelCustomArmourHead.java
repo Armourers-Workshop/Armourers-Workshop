@@ -60,7 +60,7 @@ public class ModelCustomArmourHead extends ModelBiped {
         GL11.glRotatef(p_78088_5_, 0, 1, 0);
         GL11.glRotatef(p_78088_6_, 1, 0, 0);
         
-        GL11.glTranslated(0, -18 * scale, 0);
+        GL11.glTranslated(0, -20 * scale, 0);
         
         if (isSneak) {
             GL11.glTranslated(0, 1 * scale, 0);
