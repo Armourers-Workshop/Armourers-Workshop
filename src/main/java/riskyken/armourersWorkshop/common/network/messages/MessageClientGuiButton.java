@@ -49,6 +49,10 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             if (message.buttonId == 4) {
                 armourerBrain.toggleGuides();
             }
+            
+            if (message.buttonId == 5) {
+                armourerBrain.toggleSkirtMode();
+            }
         }
         
         return null;

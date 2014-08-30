@@ -358,9 +358,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public void setType(ArmourerType type) {
-        if (this.type == ArmourerType.LEGS & type == ArmourerType.LEGS) {
-            setSkirtMode(!skirtMode);
-        }
         this.type = type;
         if (formed) {
             removeBoundingBoxed();
@@ -392,6 +389,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.showGuides = !this.showGuides;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public void toggleSkirtMode() {
+        setSkirtMode(!skirtMode);
     }
     
     public Packet getDescriptionPacket() {
