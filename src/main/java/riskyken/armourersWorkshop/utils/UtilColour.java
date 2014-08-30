@@ -1,7 +1,33 @@
 package riskyken.armourersWorkshop.utils;
 
+import java.awt.Color;
+
 public class UtilColour {
 
+    public static Color makeColourBighter(Color c, int amount) {
+        int r = c.getRed() + amount;
+        int g = c.getGreen() + amount;
+        int b = c.getBlue() + amount;
+        
+        if (r > 255) { r = 255; }
+        if (g > 255) { g = 255; }
+        if (b > 255) { b = 255; }
+        
+        return new Color(r, g, b);
+    }
+    
+    public static Color makeColourDarker(Color c, int amount) {
+        int r = c.getRed() - amount;
+        int g = c.getGreen() - amount;
+        int b = c.getBlue() - amount;
+        
+        if (r < 0) { r = 0; }
+        if (g < 0) { g = 0; }
+        if (b < 0) { b = 0; }
+        
+        return new Color(r, g, b);
+    }
+    
     public static int getMinecraftColor(int meta) {
         if (meta == 0) {
             return 16777215;

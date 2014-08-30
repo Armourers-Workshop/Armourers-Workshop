@@ -11,6 +11,8 @@ public class ModItems {
     public static Item customFeetArmour;
     public static Item paintbrush;
     public static Item colourPicker;
+    public static Item burnTool;
+    public static Item dodgeTool;
 
     public static void init() {
         customHeadArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 0);
@@ -19,5 +21,7 @@ public class ModItems {
         customFeetArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 3);
         paintbrush = new ItemPaintbrush();
         colourPicker = new ItemColourPicker();
+        burnTool = new ItemBurnTool();
+        dodgeTool = new ItemDodgeTool();
     }
 }
