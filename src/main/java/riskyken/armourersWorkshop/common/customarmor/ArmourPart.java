@@ -5,8 +5,8 @@ public enum ArmourPart {
     CHEST(4, 1, 14, 14, 10),
     LEFT_ARM(2, 12, 8, 18, 8),
     RIGHT_ARM(12, 12, 8, 18, 8),
-    LEFT_LEG(3, 8, 8, 13, 8),
-    RIGHT_LEG(11, 8, 8, 13, 8),
+    LEFT_LEG(2, 7, 8, 13, 8),
+    RIGHT_LEG(12, 7, 8, 13, 8),
     SKIRT(1, 1, 20, 13, 20);
     
     private final int xOffset;

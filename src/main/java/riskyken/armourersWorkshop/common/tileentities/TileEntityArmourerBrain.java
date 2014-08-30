@@ -136,9 +136,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                     for (int iz = 0; iz < 4; iz++) {
                         if (!isSkirtMode()) {
                             //Right Leg
-                            worldObj.setBlock(xCoord + xOffset + ix + 5, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                            worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
                             //Left Leg
-                            worldObj.setBlock(xCoord + xOffset + ix + 13, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                            worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
                         } else {
                             //Right Leg
                             worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);

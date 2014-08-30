@@ -15,12 +15,12 @@ public class ModelLegs extends ModelBase {
     
     public ModelLegs() {
         legOpen1 = new ModelRenderer(this, 0, 16);
-        legOpen1.addBox(-6, -14, -2, 4, 12, 4);
+        legOpen1.addBox(-7, -14, -2, 4, 12, 4);
         legOpen1.setRotationPoint(0, 0, 0);
 
         legOpen2 = new ModelRenderer(this, 0, 16);
         legOpen2.mirror = true;
-        legOpen2.addBox(2, -14, -2, 4, 12, 4);
+        legOpen2.addBox(3, -14, -2, 4, 12, 4);
         legOpen2.setRotationPoint(0, 0, 0);
         
         legClosed1 = new ModelRenderer(this, 0, 16);
