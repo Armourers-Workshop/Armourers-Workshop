@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.utils;
 
 import java.awt.Color;
+import java.util.Random;
 
 public class UtilColour {
 
@@ -24,6 +25,41 @@ public class UtilColour {
         if (r < 0) { r = 0; }
         if (g < 0) { g = 0; }
         if (b < 0) { b = 0; }
+        
+        return new Color(r, g, b);
+    }
+    
+    public static Color addColourNoise(Color c, int amount) {
+        Random rnd = new Random();
+        int r = c.getRed() - amount + rnd.nextInt(amount * 2);
+        int g = c.getGreen() - amount + rnd.nextInt(amount * 2);
+        int b = c.getBlue() - amount + rnd.nextInt(amount * 2);
+        
+        if (r < 0) { r = 0; }
+        if (g < 0) { g = 0; }
+        if (b < 0) { b = 0; }
+        if (r > 255) { r = 255; }
+        if (g > 255) { g = 255; }
+        if (b > 255) { b = 255; }
+        
+        return new Color(r, g, b);
+    }
+    
+    public static Color addShadeNoise(Color c, int amount) {
+        Random rnd = new Random();
+        
+        int shadeAmount = rnd.nextInt(amount * 2);
+        
+        int r = c.getRed() - amount + shadeAmount;
+        int g = c.getGreen() - amount + shadeAmount;
+        int b = c.getBlue() - amount + shadeAmount;
+        
+        if (r < 0) { r = 0; }
+        if (g < 0) { g = 0; }
+        if (b < 0) { b = 0; }
+        if (r > 255) { r = 255; }
+        if (g > 255) { g = 255; }
+        if (b > 255) { b = 255; }
         
         return new Color(r, g, b);
     }

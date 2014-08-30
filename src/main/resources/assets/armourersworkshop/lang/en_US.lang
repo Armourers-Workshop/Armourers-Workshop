@@ -14,6 +14,8 @@ item.armourersworkshop:paintbrush.name=Paintbrush
 item.armourersworkshop:colourPicker.name=Colour Picker
 item.armourersworkshop:burnTool.name=Burn Tool
 item.armourersworkshop:dodgeTool.name=Dodge Tool
+item.armourersworkshop:colourNoiseTool.name=Colour Noise Tool
+item.armourersworkshop:shadeNoiseTool.name=Shade Noise Tool
 
 itemGroup.armourersworkshop=Armourer's Workshop
 
