@@ -12,6 +12,7 @@ public abstract class AbstractModItem extends Item {
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setUnlocalizedName(name);
         setHasSubtypes(false);
+        setMaxStackSize(1);
         setNoRepair();
     }
 

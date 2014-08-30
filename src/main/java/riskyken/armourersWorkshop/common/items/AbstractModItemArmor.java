@@ -13,6 +13,7 @@ public abstract class AbstractModItemArmor extends ItemArmor {
         super(armorMaterial, 0, armorType);
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setUnlocalizedName(name);
+        setMaxStackSize(1);
     }
 
     @Override

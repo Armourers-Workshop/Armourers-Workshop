@@ -21,7 +21,6 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
     
     public ItemPaintbrush() {
         super(LibItemNames.PAINTBRUSH);
-        setMaxStackSize(1);
     }
 
     @SideOnly(Side.CLIENT)

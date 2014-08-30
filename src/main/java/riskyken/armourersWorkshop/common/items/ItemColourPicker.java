@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,7 +21,6 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
     
     public ItemColourPicker() {
         super(LibItemNames.COLOUR_PICKER);
-        setMaxStackSize(1);
     }
     
     @SideOnly(Side.CLIENT)
@@ -42,7 +40,6 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
         
         if (block instanceof IWorldColourable) {
             setToolColour(stack, ((IWorldColourable)block).getColour(world, x, y, z));
-            ModLogger.log("Setting tool colour " + ((IWorldColourable)block).getColour(world, x, y, z));
             return true;
         }
         return false;
