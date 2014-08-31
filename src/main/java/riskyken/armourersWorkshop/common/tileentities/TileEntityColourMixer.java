@@ -7,6 +7,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import riskyken.armourersWorkshop.common.items.IColourTool;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
+import riskyken.armourersWorkshop.common.items.ItemPaintRoller;
 import riskyken.armourersWorkshop.common.items.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -52,6 +53,9 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
             
             if (stackInput.getItem() == ModItems.paintbrush) {
                 ((ItemPaintbrush)stackInput.getItem()).setToolColour(stackInput, colour);
+            }
+            if (stackInput.getItem() == ModItems.paintRoller) {
+                ((ItemPaintRoller)stackInput.getItem()).setToolColour(stackInput, colour);
             }
             if (stackInput.getItem() == ModItems.colourPicker) {
                 setColour(((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput), true);
