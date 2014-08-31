@@ -11,6 +11,7 @@ item.armourersworkshop:customArmour.type.1.name=Custom Chest Armour
 item.armourersworkshop:customArmour.type.2.name=Custom Leg Armour
 item.armourersworkshop:customArmour.type.3.name=Custom Foot Armour
 item.armourersworkshop:paintbrush.name=Paintbrush
+item.armourersworkshop:paintRoller.name=Paint Roller
 item.armourersworkshop:colourPicker.name=Colour Picker
 item.armourersworkshop:burnTool.name=Burn Tool
 item.armourersworkshop:dodgeTool.name=Dodge Tool
