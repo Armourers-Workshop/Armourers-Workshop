@@ -1,19 +1,42 @@
 package riskyken.armourersWorkshop.common;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import riskyken.armourersWorkshop.common.customarmor.PlayerCustomArmourData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ModForgeEventHandler {
     
     @SubscribeEvent
-    public void onRender(RenderPlayerEvent.Pre event) {
-        EntityPlayer player = event.entityPlayer;
-        if (ArmourersWorkshop.proxy.playerHasSkirt(player.getDisplayName())) {
-            if (player.limbSwingAmount > 0.25F) {
-                player.limbSwingAmount = 0.25F;
-            }
+    public void onStartTracking(PlayerEvent.StartTracking event) {
+        if (event.target instanceof EntityPlayerMP) {
+            EntityPlayerMP targetPlayer = (EntityPlayerMP) event.target;
+            PlayerCustomArmourData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer(targetPlayer);
+        }
+    }
+    
+    @SubscribeEvent
+    public void onStopTracking(PlayerEvent.StopTracking event) {
+        if (event.target instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) event.entity;
+        }
+    }
+    
+    @SubscribeEvent
+    public void onEntityConstructing(EntityConstructing event) {
+        if (event.entity instanceof EntityPlayer && PlayerCustomArmourData.get((EntityPlayer) event.entity) == null) {
+            PlayerCustomArmourData.register((EntityPlayer) event.entity);
+        }
+    }
+    
+    @SubscribeEvent
+    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) event.entity;
+            PlayerCustomArmourData.get(player).sendCustomArmourDataToPlayer(player);
         }
     }
 }

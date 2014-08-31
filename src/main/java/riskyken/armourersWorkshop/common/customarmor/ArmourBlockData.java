@@ -1,10 +1,16 @@
 package riskyken.armourersWorkshop.common.customarmor;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class ArmourBlockData {
     
-
+    private static final String TAG_X = "x";
+    private static final String TAG_Y = "y";
+    private static final String TAG_Z = "z";
+    private static final String TAG_COLOUR = "colour";
+    private static final String TAG_GLOWING = "glowing";
+    
     @Override
     public String toString() {
         return "ArmourBlockData [x=" + x + ", y=" + y + ", z=" + z
@@ -40,6 +46,10 @@ public class ArmourBlockData {
         readFromBuf(buf);
     }
     
+    public ArmourBlockData(NBTTagCompound compound) {
+        readFromNBT(compound);
+    }
+    
     public void writeToBuf(ByteBuf buf) {
         buf.writeByte(x);
         buf.writeByte(y);
@@ -54,5 +64,21 @@ public class ArmourBlockData {
         z = buf.readByte();
         colour = buf.readInt();
         glowing = buf.readBoolean();
+    }
+    
+    public void writeToNBT(NBTTagCompound compound) {
+        compound.setByte(TAG_X, x);
+        compound.setByte(TAG_Y, y);
+        compound.setByte(TAG_Z, z);
+        compound.setInteger(TAG_COLOUR, colour);
+        compound.setBoolean(TAG_GLOWING, glowing);
+    }
+    
+    private void readFromNBT(NBTTagCompound compound) {
+        x = compound.getByte(TAG_X);
+        y = compound.getByte(TAG_Y);
+        z = compound.getByte(TAG_Z);
+        colour = compound.getInteger(TAG_COLOUR);
+        glowing = compound.getBoolean(TAG_GLOWING);
     }
 }

@@ -4,8 +4,16 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
+
 public class CustomArmourData {
 
+    private static final String TAG_TYPE = "type";
+    private static final String TAG_PART = "part";
+    private static final String TAG_ARMOUR_DATA = "armourData";
+    
     private ArrayList<ArmourBlockData> armourData;
     private ArmourerType type;
     private ArmourPart part;
@@ -19,6 +27,10 @@ public class CustomArmourData {
 
     public CustomArmourData(ByteBuf buf) {
         readFromBuf(buf);
+    }
+    
+    public CustomArmourData(NBTTagCompound compound) {
+        readFromNBT(compound);
     }
 
     public ArmourerType getArmourType() {
@@ -49,6 +61,32 @@ public class CustomArmourData {
         armourData = new ArrayList<ArmourBlockData>();
         for (int i = 0; i < size; i++) {
             armourData.add(new ArmourBlockData(buf));
+        }
+    }
+    
+    public void writeToNBT(NBTTagCompound compound) {
+        compound.setByte(TAG_TYPE, (byte) type.ordinal());
+        compound.setByte(TAG_PART, (byte) part.ordinal());
+        
+        NBTTagList blockData = new NBTTagList();
+        for (int i = 0; i < armourData.size(); i++) {
+            ArmourBlockData data = armourData.get(i);
+            NBTTagCompound dataNBT = new NBTTagCompound();
+            data.writeToNBT(dataNBT);
+            blockData.appendTag(dataNBT);
+        }
+        compound.setTag(TAG_ARMOUR_DATA, blockData);
+    }
+    
+    private void readFromNBT(NBTTagCompound compound) {
+        type = ArmourerType.getOrdinal(compound.getByte(TAG_TYPE));
+        part = ArmourPart.getOrdinal(compound.getByte(TAG_PART));
+        
+        NBTTagList blockData = compound.getTagList(TAG_ARMOUR_DATA, NBT.TAG_COMPOUND);
+        armourData = new ArrayList<ArmourBlockData>();
+        for (int i = 0; i < blockData.tagCount(); i++) {
+            NBTTagCompound data = (NBTTagCompound)blockData.getCompoundTagAt(i);
+            armourData.add(new ArmourBlockData(data));
         }
     }
 }

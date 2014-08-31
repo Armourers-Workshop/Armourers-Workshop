@@ -306,11 +306,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         }
         
         if (armourBlockData.size() > 0) {
-            ModLogger.log("setting armour data size " + armourBlockData.size() + " type " + type.name() + " part " + part.name());
             CustomArmourData armourData = new CustomArmourData(armourBlockData, type, part);
             CustomArmourManager.addCustomArmour(player, armourData);
         } else {
-            ModLogger.log("removing armour data");
             CustomArmourManager.removeCustomArmour(player, type, part);
         }
     }

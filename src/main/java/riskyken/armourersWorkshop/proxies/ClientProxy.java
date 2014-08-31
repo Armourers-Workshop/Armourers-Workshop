@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
@@ -12,8 +15,8 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy {
 
@@ -22,6 +25,10 @@ public class ClientProxy extends CommonProxy {
     public static ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public static ModelCustomArmourHead customHead = new ModelCustomArmourHead();
     public static ModelCustomArmourLegs customLegs = new ModelCustomArmourLegs();
+    
+    public ClientProxy() {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
     
     public static CustomArmourData getPlayerCustomArmour(Entity entity, ArmourerType type, ArmourPart part) {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
@@ -75,7 +82,6 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void removeAllCustomArmourData(String playerName) {
-        ModLogger.log("Removing custom armour for " + playerName);
         removeCustomArmour(playerName, ArmourerType.HEAD, ArmourPart.HEAD);
         removeCustomArmour(playerName, ArmourerType.CHEST, ArmourPart.CHEST);
         removeCustomArmour(playerName, ArmourerType.CHEST, ArmourPart.LEFT_ARM);
@@ -89,5 +95,15 @@ public class ClientProxy extends CommonProxy {
     public boolean playerHasSkirt(String playerName) {
         String key = playerName + ":" + ArmourerType.LEGS.name() + ":" + ArmourPart.SKIRT.name();
         return customArmor.containsKey(key);
+    }
+    
+    @SubscribeEvent
+    public void onRender(RenderPlayerEvent.Pre event) {
+        EntityPlayer player = event.entityPlayer;
+        if (playerHasSkirt(player.getDisplayName())) {
+            if (player.limbSwingAmount > 0.25F) {
+                player.limbSwingAmount = 0.25F;
+            }
+        }
     }
 }
