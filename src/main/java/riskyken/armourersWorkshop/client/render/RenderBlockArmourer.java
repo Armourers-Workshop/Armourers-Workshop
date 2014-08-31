@@ -37,14 +37,13 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         ArmourerType type = te.getType();
         
         if (!te.isFormed()) { return; }
-
+        
         this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
 
         GL11.glPushMatrix();
-        GL11.glColor3f(1F, 1F, 1F);
+        GL11.glColor3f(0.8F, 0.8F, 0.8F);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         GL11.glDisable(GL11.GL_LIGHTING);
-        
         GL11.glTranslated(x + te.getXOffset() + 11, y, z + te.getZOffset() + 11);
         
         GL11.glScalef(-1, -1, 1);
