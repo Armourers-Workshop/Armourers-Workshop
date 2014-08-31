@@ -67,6 +67,10 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
     
     @Override
     public int getColorFromItemStack(ItemStack stack, int pass) {
+        if (!getToolHasColour(stack)) {
+            return super.getColorFromItemStack(stack, pass);
+        }
+        
         if (pass == 0) {
             return super.getColorFromItemStack(stack, pass);
         }
@@ -75,6 +79,9 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
     
     @Override
     public IIcon getIcon(ItemStack stack, int pass) {
+        if (!getToolHasColour(stack)) {
+            return itemIcon;
+        }
         if (pass == 0) {
             return itemIcon;
         }
