@@ -18,7 +18,10 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ModelCustomArmourChest extends ModelBiped {
 
     private ModelRenderer main;

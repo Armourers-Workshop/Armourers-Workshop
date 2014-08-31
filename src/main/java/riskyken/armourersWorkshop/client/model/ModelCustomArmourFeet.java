@@ -22,12 +22,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelCustomArmourLegs extends ModelBiped {
+public class ModelCustomArmourFeet extends ModelBiped {
     
     private ModelRenderer main;
     private final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     
-    public ModelCustomArmourLegs() {
+    public ModelCustomArmourFeet() {
         textureWidth = 4;
         textureHeight = 4;
         
@@ -39,9 +39,8 @@ public class ModelCustomArmourLegs extends ModelBiped {
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
         setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
-        CustomArmourData skirtData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.SKIRT);
-        CustomArmourData leftLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-        CustomArmourData rightLegData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
+        CustomArmourData leftFootData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
+        CustomArmourData rightFootData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
         EntityPlayer player = (EntityPlayer) entity;
         
         this.isSneak = player.isSneaking();
@@ -50,25 +49,12 @@ public class ModelCustomArmourLegs extends ModelBiped {
         if (player.getHeldItem() != null) {
             this.heldItemRight = 1;
         }
-        
+        if (isSneak) {
+            GL11.glTranslated(0, -3 * scale, 4 * scale);
+        }
         bindArmourTexture();
         
-        if (skirtData != null){
-            GL11.glPushMatrix();
-            GL11.glColor3f(1F, 1F, 1F);
-          
-            GL11.glTranslated(0, 11 * scale, 0);
-            
-            if (isSneak) {
-                GL11.glTranslated(0, -3 * scale, 4 * scale);
-            }
-            
-            renderPart(skirtData.getArmourData(), scale);
-            GL11.glPopMatrix();
-        }
-        
-        
-        if (leftLegData != null){
+        if (leftFootData != null){
             GL11.glPushMatrix();
             GL11.glColor3f(1F, 1F, 1F);
             GL11.glTranslated(2 * scale, 11 * scale, 0);
@@ -78,11 +64,13 @@ public class ModelCustomArmourLegs extends ModelBiped {
             GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
             //GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
             
-            renderPart(leftLegData.getArmourData(), scale);
+            GL11.glTranslated(0, 8 * scale, 0);
+            
+            renderPart(leftFootData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
         
-        if (rightLegData != null){
+        if (rightFootData != null){
             GL11.glPushMatrix();
             GL11.glColor3f(1F, 1F, 1F);
             GL11.glTranslated(-2 * scale, 11 * scale, 0);
@@ -92,7 +80,9 @@ public class ModelCustomArmourLegs extends ModelBiped {
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
             //GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
             
-            renderPart(rightLegData.getArmourData(), scale);
+            GL11.glTranslated(0, 8 * scale, 0);
+            
+            renderPart(rightFootData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
         GL11.glColor3f(1F, 1F, 1F);

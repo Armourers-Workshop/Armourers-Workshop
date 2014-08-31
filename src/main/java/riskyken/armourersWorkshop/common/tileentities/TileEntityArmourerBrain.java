@@ -149,7 +149,17 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                 }
             }
             break;
-        default:
+        case FEET:
+            for (int ix = 0; ix < 4; ix++) {
+                for (int iy = 0; iy < 12; iy++) {
+                    for (int iz = 0; iz < 4; iz++) {
+                        //Right Leg
+                        worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        //Left Leg
+                        worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                    }
+                }
+            }
             break;
         }
     }
@@ -283,6 +293,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             }
             
             break;
+        case FEET:
+            buildArmourPart(player, ArmourPart.LEFT_FOOT);
+            buildArmourPart(player, ArmourPart.RIGHT_FOOT);
+            break;
         default:
             ModLogger.log(Level.WARN, "TileEntityArmourerBrain at X:" + xCoord + " Y:" + yCoord +
                     " Z:" + zCoord + " has an invalid armour type.");
@@ -298,7 +312,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                 for (int iz = 0; iz < part.getZSize(); iz++) {
                     addArmourToList(
                             xCoord + xOffset + ix + part.getXOffset(),
-                            yCoord + iy + 1,
+                            yCoord + iy + 1 + part.getYOffset(),
                             zCoord + zOffset + iz + part.getZOffset(),
                             ix, iy, iz, armourBlockData, part);
                 }

@@ -64,6 +64,8 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         removeCustomArmour(ArmourerType.LEGS, ArmourPart.LEFT_LEG);
         removeCustomArmour(ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         removeCustomArmour(ArmourerType.LEGS, ArmourPart.SKIRT);
+        removeCustomArmour(ArmourerType.FEET, ArmourPart.LEFT_FOOT);
+        removeCustomArmour(ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
@@ -74,6 +76,8 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
         checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.LEGS, ArmourPart.SKIRT);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
     }
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourerType type, ArmourPart part) {
@@ -95,6 +99,8 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         saveKey(compound, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
         saveKey(compound, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         saveKey(compound, ArmourerType.LEGS, ArmourPart.SKIRT);
+        saveKey(compound, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
+        saveKey(compound, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
     }
     
     private void saveKey(NBTTagCompound compound, ArmourerType type, ArmourPart part) {
@@ -115,6 +121,8 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         loadKey(compound, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
         loadKey(compound, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
         loadKey(compound, ArmourerType.LEGS, ArmourPart.SKIRT);
+        loadKey(compound, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
+        loadKey(compound, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
     }
     
     private void loadKey(NBTTagCompound compound, ArmourerType type, ArmourPart part) {

@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.ModelChest;
+import riskyken.armourersWorkshop.client.model.ModelFeet;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
 import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
@@ -28,7 +29,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     private static final ModelHead modelHead = new ModelHead();
     private static final ModelChest modelChest = new ModelChest();
     private static final ModelLegs modelLegs = new ModelLegs();
-    // private static ModelFeet modelFeet = new ModelFeet();
+    private static final ModelFeet modelFeet = new ModelFeet();
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
@@ -59,6 +60,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case LEGS:
             modelLegs.render(te.isSkirtMode());
             break;
+        case FEET:
+            modelFeet.render();
+            break;
         }
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
@@ -88,6 +92,10 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
                 renderGuidePart(ArmourPart.RIGHT_LEG, x, y, z);
             }
             break;
+        case FEET:
+            renderGuidePart(ArmourPart.LEFT_FOOT, x, y, z);
+            renderGuidePart(ArmourPart.RIGHT_FOOT, x, y, z);
+            break;
         }
     }
     
@@ -96,12 +104,12 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_LIGHTING);
-        renderGuideFace(ForgeDirection.SOUTH, x + part.getXOffset(), y + 1, z  + part.getZOffset(), part.getXSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.EAST, x + part.getXOffset(), y + 1, z  + part.getZOffset() + part.getZSize(), part.getZSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.WEST, x + part.getXOffset() + part.getXSize(), y + 1, z  + part.getZOffset(), part.getZSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.NORTH, x + part.getXOffset() + part.getXSize(), y + 1, z  + part.getZOffset() + part.getZSize(), part.getXSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.UP, x + part.getXOffset(), y + 1 + part.getYSize(), z  + part.getZOffset(), part.getXSize(), part.getZSize());
-        renderGuideFace(ForgeDirection.DOWN, x + part.getXOffset(), y + 1, z  + part.getZOffset() + part.getZSize(), part.getXSize(), part.getZSize());
+        renderGuideFace(ForgeDirection.SOUTH, x + part.getXOffset(), y + 1 + part.getYOffset(), z  + part.getZOffset(), part.getXSize(), part.getYSize());
+        renderGuideFace(ForgeDirection.EAST, x + part.getXOffset(), y + 1 + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getZSize(), part.getYSize());
+        renderGuideFace(ForgeDirection.WEST, x + part.getXOffset() + part.getXSize(), y + 1 + part.getYOffset(), z  + part.getZOffset(), part.getZSize(), part.getYSize());
+        renderGuideFace(ForgeDirection.NORTH, x + part.getXOffset() + part.getXSize(), y + 1 + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getXSize(), part.getYSize());
+        renderGuideFace(ForgeDirection.UP, x + part.getXOffset(), y + 1 + part.getYSize()  + part.getYOffset(), z  + part.getZOffset(), part.getXSize(), part.getZSize());
+        renderGuideFace(ForgeDirection.DOWN, x + part.getXOffset(), y + 1  + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getXSize(), part.getZSize());
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();

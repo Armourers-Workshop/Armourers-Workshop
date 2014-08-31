@@ -38,19 +38,19 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
 
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            if (message.buttonId < 3) {
+            if (message.buttonId < 4) {
                 armourerBrain.setType(ArmourerType.getOrdinal(message.buttonId));
             }
             
-            if (message.buttonId == 3) {
+            if (message.buttonId == 4) {
                 armourerBrain.buildArmourItem(player);
             }
             
-            if (message.buttonId == 4) {
+            if (message.buttonId == 5) {
                 armourerBrain.toggleGuides();
             }
             
-            if (message.buttonId == 5) {
+            if (message.buttonId == 6) {
                 armourerBrain.toggleSkirtMode();
             }
         }

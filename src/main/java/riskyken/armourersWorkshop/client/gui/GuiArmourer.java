@@ -31,19 +31,19 @@ public class GuiArmourer extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourerType.getOrdinal(i).name()));
         }
-        buttonList.add(new GuiButtonExt(3, guiLeft + 60, guiTop + 16, 80, 16, "Build Armour"));
-        checkShowGuides = new GuiCheckBox(4, guiLeft + 60, guiTop + 36, "Show Guide", armourerBrain.isShowGuides());
-        checkSkirtMode = new GuiCheckBox(5, guiLeft + 60, guiTop + 56, "Skirt Mode", armourerBrain.isSkirtMode());
+        buttonList.add(new GuiButtonExt(4, guiLeft + 60, guiTop + 16, 80, 16, "Build Armour"));
+        checkShowGuides = new GuiCheckBox(5, guiLeft + 60, guiTop + 36, "Show Guide", armourerBrain.isShowGuides());
+        checkSkirtMode = new GuiCheckBox(6, guiLeft + 60, guiTop + 56, "Skirt Mode", armourerBrain.isSkirtMode());
         buttonList.add(checkShowGuides);
         buttonList.add(checkSkirtMode);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button.id < 6) {
+        if (button.id < 7) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
         }
     }

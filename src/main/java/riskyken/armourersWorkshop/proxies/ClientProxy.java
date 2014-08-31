@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
+import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
@@ -25,6 +26,7 @@ public class ClientProxy extends CommonProxy {
     public static ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public static ModelCustomArmourHead customHead = new ModelCustomArmourHead();
     public static ModelCustomArmourLegs customLegs = new ModelCustomArmourLegs();
+    public static ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
     
     public ClientProxy() {
         MinecraftForge.EVENT_BUS.register(this);
