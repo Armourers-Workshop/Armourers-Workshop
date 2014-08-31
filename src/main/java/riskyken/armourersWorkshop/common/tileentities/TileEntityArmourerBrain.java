@@ -444,4 +444,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     public String getInventoryName() {
         return LibBlockNames.ARMOURER_BRAIN;
     }
+    
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return super.getMaxRenderDistanceSquared() * 10;
+    }
 }
