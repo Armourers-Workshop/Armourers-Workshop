@@ -14,7 +14,7 @@ public abstract class AbstractModBlock extends Block {
         setStepSound(soundTypeMetal);
         setBlockName(name);
     }
-
+    
     public AbstractModBlock(String name, Material material, SoundType soundType) {
         super(material);
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);

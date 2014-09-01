@@ -6,6 +6,13 @@ tile.armourersworkshop:colourable.name=Armour Cube
 tile.armourersworkshop:colourableGlowing.name=Armour Cube (Glowing)
 tile.armourersworkshop:colourMixer.name=Colour Mixer
 
+tile.armourersworkshop:armourerBrain.flavor=Heart of the armourer multi-block
+tile.armourersworkshop:armourerMultiBlock0.flavor=Use as the multi-blocks walls
+tile.armourersworkshop:armourerMultiBlock1.flavor=Use as the multi-blocks corners
+tile.armourersworkshop:colourable.flavor=Main building block for custom armour (paintable)
+tile.armourersworkshop:colourableGlowing.flavor=Glow in the dark armour cubes!
+tile.armourersworkshop:colourMixer.flavor=Mix up colours to paint your armour with
+
 item.armourersworkshop:customArmour.type.0.name=Custom Head Armour
 item.armourersworkshop:customArmour.type.1.name=Custom Chest Armour
 item.armourersworkshop:customArmour.type.2.name=Custom Leg Armour
@@ -20,7 +27,7 @@ item.armourersworkshop:shadeNoiseTool.name=Shade Noise Tool
 
 item.armourersworkshop:paintbrush.flavor=Paints a single block.
 item.armourersworkshop:paintRoller.flavor=Paints block in a 3x3x1 area
-item.armourersworkshop:colourPicker.flavor=used to copy a blocks colour
+item.armourersworkshop:colourPicker.flavor=Used to copy a blocks colour
 item.armourersworkshop:burnTool.flavor=Makes a block darker
 item.armourersworkshop:dodgeTool.flavor=Makes a block lighter
 item.armourersworkshop:colourNoiseTool.flavor=Applies random noise to a block

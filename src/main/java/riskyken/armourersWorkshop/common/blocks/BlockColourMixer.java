@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -25,7 +26,7 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     
     @Override
     public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, "block." + name);
+        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
     }
     

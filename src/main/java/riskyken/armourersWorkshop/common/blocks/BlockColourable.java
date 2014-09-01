@@ -8,6 +8,7 @@ import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IColourable;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
@@ -28,7 +29,7 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     
     @Override
     public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, "block." + name);
+        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
     }
     

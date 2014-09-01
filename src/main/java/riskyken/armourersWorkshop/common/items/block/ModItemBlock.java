@@ -20,26 +20,16 @@ public class ModItemBlock extends ItemBlock {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List par3List, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         String unlocalized;
         String localized;
 
-        unlocalized = itemStack.getUnlocalizedName() + ".lore";
+        unlocalized = itemStack.getUnlocalizedName() + ".flavor";
         localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
-            par3List.add(localized);
+            list.add(localized);
         }
-
-        for (int i = 0; i < 10; i++) {
-            unlocalized = itemStack.getUnlocalizedName() + ".lore" + i;
-            localized = StatCollector.translateToLocal(unlocalized);
-            if (!unlocalized.equals(localized)) {
-                par3List.add(localized);
-            } else {
-                break;
-            }
-        }
-
-        super.addInformation(itemStack, player, par3List, par4);
+        
+        super.addInformation(itemStack, player, list, par4);
     }
 }
