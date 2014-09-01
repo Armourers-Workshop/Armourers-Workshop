@@ -25,7 +25,7 @@ public abstract class AbstractModItem extends Item {
         String unlocalized;
         String localized;
 
-        unlocalized = itemStack.getUnlocalizedName() + ".flavor";
+        unlocalized = itemStack.getUnlocalizedName() + ".flavour";
         localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             list.add(localized);
