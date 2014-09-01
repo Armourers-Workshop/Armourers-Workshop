@@ -52,7 +52,7 @@ public class GuiArmourer extends GuiContainer {
         super(new ContainerArmourer(invPlayer, armourerBrain));
         this.armourerBrain = armourerBrain;
         this.xSize = 176;
-        this.ySize = 170;
+        this.ySize = 197;
     }
     
     @Override
