@@ -1,4 +1,4 @@
-
+# Block names
 tile.armourersworkshop:armourerBrain.name=Armourer Brain
 tile.armourersworkshop:armourerMultiBlock0.name=Armourer Wall
 tile.armourersworkshop:armourerMultiBlock1.name=Armourer Corner
@@ -6,13 +6,15 @@ tile.armourersworkshop:colourable.name=Armour Cube
 tile.armourersworkshop:colourableGlowing.name=Armour Cube (Glowing)
 tile.armourersworkshop:colourMixer.name=Colour Mixer
 
-tile.armourersworkshop:armourerBrain.flavor=Heart of the armourer multi-block..
-tile.armourersworkshop:armourerMultiBlock0.flavor=Use as the multi-block walls
-tile.armourersworkshop:armourerMultiBlock1.flavor=Use as the multi-block corners.
-tile.armourersworkshop:colourable.flavor=Main building block for custom armour. (paintable)
-tile.armourersworkshop:colourableGlowing.flavor=Glow in the dark armour cubes!
-tile.armourersworkshop:colourMixer.flavor=Mix up colours to paint your armour with.
+# Block flavour text
+tile.armourersworkshop:armourerBrain.flavour=Heart of the armourer multi-block.
+tile.armourersworkshop:armourerMultiBlock0.flavour=Use as the multi-block walls.
+tile.armourersworkshop:armourerMultiBlock1.flavour=Use as the multi-block corners.
+tile.armourersworkshop:colourable.flavour=Main building block for custom armour. (paintable)
+tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark armour cubes!
+tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your armour with.
 
+# Item names
 item.armourersworkshop:customArmour.type.0.name=Custom Head Armour
 item.armourersworkshop:customArmour.type.1.name=Custom Chest Armour
 item.armourersworkshop:customArmour.type.2.name=Custom Leg Armour
@@ -26,18 +28,24 @@ item.armourersworkshop:colourNoiseTool.name=Colour Noise Tool
 item.armourersworkshop:shadeNoiseTool.name=Shade Noise Tool
 item.armourersworkshop:guideBook.name=Guide Book
 
-item.armourersworkshop:paintbrush.flavor=Paints a single block..
-item.armourersworkshop:paintRoller.flavor=Paints blocks in a 3x3x1 area.
-item.armourersworkshop:colourPicker.flavor=Used to copy a blocks colour.
-item.armourersworkshop:burnTool.flavor=Makes a block darker.
-item.armourersworkshop:dodgeTool.flavor=Makes a block lighter.
-item.armourersworkshop:colourNoiseTool.flavor=Applies random noise to a block.
-item.armourersworkshop:shadeNoiseTool.flavor=Applies random shading to a block.
-item.armourersworkshop:guideBook.flavor=Your guide to Armourer's Workshop.
+# Item flavour text
+item.armourersworkshop:paintbrush.flavour=Paints a single block.
+item.armourersworkshop:paintRoller.flavour=Paints blocks in a 3x3x1 area.
+item.armourersworkshop:colourPicker.flavour=Used to copy a blocks colour.
+item.armourersworkshop:burnTool.flavour=Makes a block darker.
+item.armourersworkshop:dodgeTool.flavour=Makes a block lighter.
+item.armourersworkshop:colourNoiseTool.flavour=Applies random noise to a block.
+item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
+item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 
-itemGroup.armourersworkshop=Armourer's Workshop
-
-book.armourersworkshop:guideBook.page1.text=Sorry this book is not finished yet. Check back later :)
-
+# Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer
+
+# Creative tab
+itemGroup.armourersworkshop=Armourer's Workshop
+
+# Book pages
+book.armourersworkshop:guideBook.page1.text=Sorry this book is not finished yet. Check back later :)
+
+
