@@ -18,6 +18,14 @@ item.armourersworkshop:dodgeTool.name=Dodge Tool
 item.armourersworkshop:colourNoiseTool.name=Colour Noise Tool
 item.armourersworkshop:shadeNoiseTool.name=Shade Noise Tool
 
+item.armourersworkshop:paintbrush.flavor=Paints a single block.
+item.armourersworkshop:paintRoller.flavor=Paints block in a 3x3x1 area
+item.armourersworkshop:colourPicker.flavor=used to copy a blocks colour
+item.armourersworkshop:burnTool.flavor=Makes a block darker
+item.armourersworkshop:dodgeTool.flavor=Makes a block lighter
+item.armourersworkshop:colourNoiseTool.flavor=Applies random noise to a block
+item.armourersworkshop:shadeNoiseTool.flavor=Applies random shading to a block
+
 itemGroup.armourersworkshop=Armourer's Workshop
 
 container.inventory.colourMixer.name=Colour Mixer

@@ -1,7 +1,11 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -14,6 +18,20 @@ public abstract class AbstractModItem extends Item {
         setHasSubtypes(false);
         setMaxStackSize(1);
         setNoRepair();
+    }
+    
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+        String unlocalized;
+        String localized;
+
+        unlocalized = itemStack.getUnlocalizedName() + ".flavor";
+        localized = StatCollector.translateToLocal(unlocalized);
+        if (!unlocalized.equals(localized)) {
+            list.add(localized);
+        }
+        
+        super.addInformation(itemStack, player, list, par4);
     }
 
     @Override
