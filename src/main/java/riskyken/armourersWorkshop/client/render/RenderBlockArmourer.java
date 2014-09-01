@@ -100,6 +100,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     }
     
     private void renderGuidePart(ArmourPart part, double x, double y, double z) {
+        GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -113,6 +114,11 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
+        /*
+        GL11.glColor3f(1F, 0.5F, 0.5F);
+        renderGuideFace(ForgeDirection.DOWN, x + part.getXOrigin(), y + 0 + part.getYOrigin(), z + 1 + part.getZOrigin(), 1, 1);
+        renderGuideFace(ForgeDirection.UP, x + part.getXOrigin(), y + 1 + part.getYOrigin(), z + part.getZOrigin(), 1, 1);
+        */
     }
     
     private void renderGuideFace(ForgeDirection dir, double x, double y, double z, int sizeX, int sizeY) {

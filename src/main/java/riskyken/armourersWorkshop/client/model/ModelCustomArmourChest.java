@@ -57,12 +57,9 @@ public class ModelCustomArmourChest extends ModelBiped {
         if (chestData != null){
             GL11.glPushMatrix();
             GL11.glColor3f(1F, 1F, 1F);
-            
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-            
-            GL11.glTranslated(0, -2 * scale, 0);
             renderPart(chestData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
@@ -81,8 +78,6 @@ public class ModelCustomArmourChest extends ModelBiped {
             GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftArm.rotateAngleX), 1, 0, 0);
             
-            GL11.glTranslatef(1.0F * scale, -8.0F  * scale, 0);
-            
             renderPart(leftArmData.getArmourData(), scale);
             
             GL11.glPopMatrix();
@@ -100,8 +95,6 @@ public class ModelCustomArmourChest extends ModelBiped {
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
-            
-            GL11.glTranslatef(-1.0F * scale, -8.0F  * scale, 0);
             
             renderPart(rightArmData.getArmourData(), scale);
             GL11.glPopMatrix();
@@ -144,10 +137,7 @@ public class ModelCustomArmourChest extends ModelBiped {
         float colourBlue = (colour & 0xff) / 255F;
 
         GL11.glPushMatrix();
-
         GL11.glColor3f(colourRed, colourGreen, colourBlue);
-
-        // ModLogger.log(x + " " + y + " " + z);
         GL11.glTranslated(x * scale, y * scale, z * scale);
         main.render(scale);
         GL11.glPopMatrix();

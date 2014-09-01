@@ -1,15 +1,23 @@
 package riskyken.armourersWorkshop.common.customarmor;
 
 public enum ArmourPart {
-    HEAD(1, 0, 1,20, 20, 20, 0, 0, 0),
-    CHEST(4, 0, 1, 14, 14, 10, 0, 0, 0),
-    LEFT_ARM(2, 0, 11, 8, 18, 10, 0, 0, 0),
-    RIGHT_ARM(12, 0, 11, 8, 18, 10, 0, 0, 0),
-    LEFT_LEG(2, 5, 7, 8, 8, 8, 0, 0, 0),
-    RIGHT_LEG(12, 5, 7, 8, 8, 8, 0, 0, 0),
-    SKIRT(1, 0, 1, 20, 13, 20, 0, 0, 0),
-    LEFT_FOOT(2, 0, 7, 8, 5, 8, 0, 0, 0),
-    RIGHT_FOOT(12, 0, 7, 8, 5, 8, 0, 0, 0);
+    HEAD(1, 0, 1, 20, 20, 20, 11, 1, 11),
+    
+    CHEST(4, 0, 1, 14, 14, 10, 11, 13, 6),
+    
+    LEFT_ARM(2, 0, 11, 8, 18, 10, 7, 11, 16),
+    
+    RIGHT_ARM(12, 0, 11, 8, 18, 10, 15, 11, 16),
+    
+    LEFT_LEG(2, 5, 7, 8, 8, 8, 6, 14, 11),
+    
+    RIGHT_LEG(12, 5, 7, 8, 8, 8, 16, 14, 11),
+    
+    SKIRT(1, 0, 1, 20, 13, 20, 11, 14, 11),
+    
+    LEFT_FOOT(2, 0, 7, 8, 5, 8, 6, 14, 11),
+    
+    RIGHT_FOOT(12, 0, 7, 8, 5, 8, 16, 14, 11);
     
     private final int xOffset;
     private final int yOffset;

@@ -72,12 +72,9 @@ public class ModelCustomArmourLegs extends ModelBiped {
             GL11.glPushMatrix();
             GL11.glColor3f(1F, 1F, 1F);
             GL11.glTranslated(2 * scale, 11 * scale, 0);
-            //GL11.glTranslated(0 * scale, 4 * scale, 0 * scale);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
-            //GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
-            
             renderPart(leftLegData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
@@ -86,12 +83,9 @@ public class ModelCustomArmourLegs extends ModelBiped {
             GL11.glPushMatrix();
             GL11.glColor3f(1F, 1F, 1F);
             GL11.glTranslated(-2 * scale, 11 * scale, 0);
-            //GL11.glTranslated(0 * scale, 4 * scale, 0 * scale);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
             GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
-            //GL11.glTranslated(0 * scale, -4 * scale, 0 * scale);
-            
             renderPart(rightLegData.getArmourData(), scale);
             GL11.glPopMatrix();
         }
@@ -133,10 +127,7 @@ public class ModelCustomArmourLegs extends ModelBiped {
         float colourBlue = (colour & 0xff) / 255F;
 
         GL11.glPushMatrix();
-
         GL11.glColor3f(colourRed, colourGreen, colourBlue);
-
-        // ModLogger.log(x + " " + y + " " + z);
         GL11.glTranslated(x * scale, y * scale, z * scale);
         main.render(scale);
         GL11.glPopMatrix();

@@ -310,11 +310,20 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         for (int ix = 0; ix < part.getXSize(); ix++) {
             for (int iy = 0; iy < part.getYSize(); iy++) {
                 for (int iz = 0; iz < part.getZSize(); iz++) {
-                    addArmourToList(
-                            xCoord + xOffset + ix + part.getXOffset(),
-                            yCoord + iy + 1 + part.getYOffset(),
-                            zCoord + zOffset + iz + part.getZOffset(),
-                            ix, iy, iz, armourBlockData, part);
+                    
+                    int x = xCoord + xOffset + ix + part.getXOffset();
+                    int y = yCoord + iy + 1 + part.getYOffset();
+                    int z = zCoord + zOffset + iz + part.getZOffset();
+                    
+                    int xOrigin = xCoord + xOffset + part.getXOrigin();
+                    int yOrigin = yCoord + 1 + part.getYOrigin();
+                    int zOrigin = zCoord + zOffset + part.getZOrigin();
+                    
+                    addArmourToList(x, y, z,
+                            -(x - xOrigin) - 1,
+                            -(y - yOrigin) - 1,
+                            z - zOrigin,
+                            armourBlockData, part);
                 }
             }
         }
@@ -332,10 +341,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         Block block = worldObj.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
             int colour = UtilBlocks.getColourFromTileEntity(worldObj ,x, y, z);
-            ArmourBlockData blockData = new ArmourBlockData(
-                    (armourPart.getXSize() / 2 - ix - 1),
-                    (armourPart.getYSize() - iy),
-                    (iz - armourPart.getZSize() / 2),
+            ArmourBlockData blockData = new ArmourBlockData(ix, iy, iz,
                     colour, block == ModBlocks.colourableGlowing);
             list.add(blockData);
         }
