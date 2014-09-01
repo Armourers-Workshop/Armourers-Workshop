@@ -39,5 +39,5 @@ itemGroup.armourersworkshop=Armourer's Workshop
 
 book.armourersworkshop:guideBook.page1.text=Sorry this book is not finished yet. Check back later :)
 
-container.inventory.colourMixer.name=Colour Mixer
-container.inventory.armourerBrain.name=Armourer
+inventory.armourersworkshop:colourMixer.name=Colour Mixer
+inventory.armourersworkshop:armourerBrain.name=Armourer
