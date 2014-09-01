@@ -6,8 +6,10 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
+import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
+import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
@@ -52,6 +54,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.ARMOURER:
                 if (te instanceof TileEntityArmourerBrain){
                     return new GuiArmourer(player.inventory,(TileEntityArmourerBrain)te);
+                }
+                break; 
+            case LibGuiIds.GUIDE_BOOK:
+                if (player.getCurrentEquippedItem().getItem() instanceof ItemGuideBook) {
+                    return new GuiGuideBook(player.getCurrentEquippedItem());
                 }
                 break; 
         }

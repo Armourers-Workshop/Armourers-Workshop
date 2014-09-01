@@ -16,6 +16,7 @@ public class ModItems {
     public static Item dodgeTool;
     public static Item colourNoiseTool;
     public static Item shadeNoiseTool;
+    public static Item guideBook;
     
     public static void init() {
         customHeadArmour = new ItemCustomArmour(ArmorMaterial.DIAMOND, 0);
@@ -29,5 +30,6 @@ public class ModItems {
         dodgeTool = new ItemDodgeTool();
         colourNoiseTool = new ItemColourNoiseTool();
         shadeNoiseTool = new ItemShadeNoiseTool();
+        guideBook = new ItemGuideBook();
     }
 }
