@@ -47,12 +47,12 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
     
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
-        super.addInformation(stack, player, list, p_77624_4_);
         if (getToolHasColour(stack)) {
             list.add("Colour " + getToolColour(stack));
         } else {
             list.add("No colour");
         }
+        super.addInformation(stack, player, list, p_77624_4_);
     }
     
     @Override
