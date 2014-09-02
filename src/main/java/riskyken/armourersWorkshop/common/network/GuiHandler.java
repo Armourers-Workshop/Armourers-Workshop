@@ -1,16 +1,19 @@
-package riskyken.armourersWorkshop.common;
+package riskyken.armourersWorkshop.common.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.gui.GuiArmourCrafter;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
+import riskyken.armourersWorkshop.common.inventory.ContainerArmourCrafter;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -36,7 +39,12 @@ public class GuiHandler implements IGuiHandler {
                 if (te instanceof TileEntityArmourerBrain){
                     return new ContainerArmourer(player.inventory,(TileEntityArmourerBrain)te);
                 }
-                break; 
+                break;
+            case LibGuiIds.ARMOUR_CRAFTER:
+                if (te instanceof TileEntityArmourCrafter){
+                    return new ContainerArmourCrafter(player.inventory,(TileEntityArmourCrafter)te);
+                }
+                break;
         }
         return null;
     }
@@ -55,12 +63,17 @@ public class GuiHandler implements IGuiHandler {
                 if (te instanceof TileEntityArmourerBrain){
                     return new GuiArmourer(player.inventory,(TileEntityArmourerBrain)te);
                 }
-                break; 
+                break;
             case LibGuiIds.GUIDE_BOOK:
                 if (player.getCurrentEquippedItem().getItem() instanceof ItemGuideBook) {
                     return new GuiGuideBook(player.getCurrentEquippedItem());
                 }
-                break; 
+                break;
+            case LibGuiIds.ARMOUR_CRAFTER:
+                if (te instanceof TileEntityArmourCrafter) {
+                    return new GuiArmourCrafter(player.inventory,(TileEntityArmourCrafter)te);
+                }
+                break;
         }
         return null;
     }

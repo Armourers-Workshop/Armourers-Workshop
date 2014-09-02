@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
-import riskyken.armourersWorkshop.common.GuiHandler;
 import riskyken.armourersWorkshop.common.ModFMLEventHandler;
 import riskyken.armourersWorkshop.common.ModForgeEventHandler;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -12,6 +11,7 @@ import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.GuiHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.proxies.IProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;

@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -22,28 +21,23 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiArmourer extends GuiContainer {
 
-    private TileEntityArmourerBrain armourerBrain;
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourer.png");
     
+    private TileEntityArmourerBrain armourerBrain;
     private GuiCheckBox checkShowGuides;
-    private GuiCheckBox checkSkirtMode;
     
     @Override
     public void initGui() {
         super.initGui();
-        for (int i = 0; i < 4; i++) {
-            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourerType.getOrdinal(i).name()));
-        }
-        buttonList.add(new GuiButtonExt(4, guiLeft + 60, guiTop + 16, 80, 16, "Build Armour"));
-        checkShowGuides = new GuiCheckBox(5, guiLeft + 60, guiTop + 36, "Show Guide", armourerBrain.isShowGuides());
-        checkSkirtMode = new GuiCheckBox(6, guiLeft + 60, guiTop + 56, "Skirt Mode", armourerBrain.isSkirtMode());
+        buttonList.add(new GuiButtonExt(0, guiLeft + 5, guiTop + 16, 66, 16, "Save"));
+        buttonList.add(new GuiButtonExt(1, guiLeft + 5, guiTop + 76, 66, 16, "Load"));
+        checkShowGuides = new GuiCheckBox(2, guiLeft + 85, guiTop + 26, "Show Guide", armourerBrain.isShowGuides());
         buttonList.add(checkShowGuides);
-        buttonList.add(checkSkirtMode);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button.id < 7) {
+        if (button.id < 3) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
         }
     }
@@ -64,7 +58,7 @@ public class GuiArmourer extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         checkShowGuides.setChecked(armourerBrain.isShowGuides());
-        checkSkirtMode.setChecked(armourerBrain.isSkirtMode());
+        
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);

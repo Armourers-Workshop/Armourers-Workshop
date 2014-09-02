@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.tileentities;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -12,18 +12,13 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
-import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourManager;
+import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
 
@@ -34,18 +29,19 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_TYPE = "type";
     private static final String TAG_FORMED = "formed";
-    private static final String TAG_SKIRT_MODE = "skirtMode";
     private static final String TAG_X_OFFSET = "xOffset";
     private static final String TAG_Z_OFFSET = "zOffset";
     private static final String TAG_SHOW_GUIDES = "showGuides";
+    private static final String TAG_ARMOUR_DATA = "armourData";
     
     private ForgeDirection direction;
     private ArmourerType type;
     private boolean formed;
-    private boolean skirtMode;
     private int xOffset;
     private int zOffset;
     private boolean showGuides;
+    
+    private boolean loaded;
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
@@ -54,12 +50,68 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.items = new ItemStack[2];
     }
     
+    public void saveArmourItem(EntityPlayerMP player) {
+        if (this.worldObj.isRemote) { return; }
+        
+        ArrayList<CustomArmourData> armourData;
+        ItemStack stackInput = getStackInSlot(0);
+        
+        if (stackInput == null) { return; }
+        if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
+        
+        
+        armourData = ArmourerWorldHelper.buildArmourItem(worldObj, type, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
+        
+        NBTTagCompound dataNBT = new NBTTagCompound();
+        
+        for (int i = 0; i < armourData.size(); i++) {
+            CustomArmourData data = armourData.get(i);
+            String key = data.getArmourType().name() + ":" + data.getArmourPart().name();
+            NBTTagCompound partNBT = new NBTTagCompound();
+            ModLogger.log(key);
+            data.writeToNBT(partNBT);
+            dataNBT.setTag(key, partNBT);
+        }
+        
+        if (!stackInput.hasTagCompound()) {
+            stackInput.setTagCompound(new NBTTagCompound());
+        }
+        stackInput.getTagCompound().setTag(TAG_ARMOUR_DATA, dataNBT);
+    }
+
+    public void loadArmourItem() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void setInventorySlotContents(int slotId, ItemStack stack) {
+        super.setInventorySlotContents(slotId, stack);
+        if (loaded) {
+            checkForTemplateItem();
+        }
+    }
+    
     @Override
     public void updateEntity() {
-        if (this.worldObj.isRemote) { return; }
+        if (this.worldObj.isRemote) {return; }
+        if (!this.loaded) { this.loaded = true; }
         if (this.formed) { return; }
         if ((this.worldObj.getTotalWorldTime() + this.TICK_OFFSET) % TICK_COOLDOWN != 0L) { return; }
         checkForValidMultiBlock();
+    }
+    
+    private void checkForTemplateItem() {
+        if (this.worldObj.isRemote) { return; }
+        ItemStack stackInput = getStackInSlot(0);
+        if (stackInput == null) {
+            setType(ArmourerType.NONE);
+            return;
+        }
+        
+        if (stackInput.getItem() instanceof ItemArmourTemplate) {
+            setType(ArmourerType.getOrdinal(stackInput.getItemDamage() + 1));
+        }
     }
     
     public boolean checkForValidMultiBlock() {
@@ -92,7 +144,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         ModLogger.log("valid " + xCoord + " " + yCoord + " " + zCoord);
         
         formed = true;
-        createBoundingBoxes();
+        //TODO createBoundingBoxes();
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         return true;
@@ -100,6 +152,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     private void createBoundingBoxes() {
         switch (type) {
+        case NONE:
+            break;
         case HEAD:
             for (int ix = 0; ix < 8; ix++) {
                 for (int iy = 0; iy < 8; iy++) {
@@ -129,22 +183,26 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                 }
             }
             break;
-            
         case LEGS:
             for (int ix = 0; ix < 4; ix++) {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
-                        if (!isSkirtMode()) {
-                            //Right Leg
-                            worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
-                            //Left Leg
-                            worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
-                        } else {
-                            //Right Leg
-                            worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
-                            //Left Leg
-                            worldObj.setBlock(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
-                        }
+                        //Right Leg
+                        worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        //Left Leg
+                        worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                    }
+                }
+            }
+            break;
+        case SKIRT:
+            for (int ix = 0; ix < 4; ix++) {
+                for (int iy = 0; iy < 12; iy++) {
+                    for (int iz = 0; iz < 4; iz++) {
+                        //Right Leg
+                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        //Left Leg
+                        worldObj.setBlock(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
                     }
                 }
             }
@@ -271,92 +329,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return INFINITE_EXTENT_AABB;
     }
     
-    public void buildArmourItem(EntityPlayer player) {
-        switch (type) {
-        case HEAD:
-            buildArmourPart(player, ArmourPart.HEAD);
-            break;
-        case CHEST:
-            buildArmourPart(player, ArmourPart.CHEST);
-            buildArmourPart(player, ArmourPart.LEFT_ARM);
-            buildArmourPart(player, ArmourPart.RIGHT_ARM);
-            break;
-        case LEGS:
-            if (this.skirtMode) {
-                buildArmourPart(player, ArmourPart.SKIRT);
-                CustomArmourManager.removeCustomArmour(player, type, ArmourPart.LEFT_LEG);
-                CustomArmourManager.removeCustomArmour(player, type, ArmourPart.RIGHT_LEG);
-            } else {
-                buildArmourPart(player, ArmourPart.LEFT_LEG);
-                buildArmourPart(player, ArmourPart.RIGHT_LEG);
-                CustomArmourManager.removeCustomArmour(player, type, ArmourPart.SKIRT);
-            }
-            
-            break;
-        case FEET:
-            buildArmourPart(player, ArmourPart.LEFT_FOOT);
-            buildArmourPart(player, ArmourPart.RIGHT_FOOT);
-            break;
-        default:
-            ModLogger.log(Level.WARN, "TileEntityArmourerBrain at X:" + xCoord + " Y:" + yCoord +
-                    " Z:" + zCoord + " has an invalid armour type.");
-            break;
-        }
-    }
     
-    private void buildArmourPart(EntityPlayer player, ArmourPart part) {
-        ArrayList<ArmourBlockData> armourBlockData = new ArrayList<ArmourBlockData>();
-        
-        for (int ix = 0; ix < part.getXSize(); ix++) {
-            for (int iy = 0; iy < part.getYSize(); iy++) {
-                for (int iz = 0; iz < part.getZSize(); iz++) {
-                    
-                    int x = xCoord + xOffset + ix + part.getXOffset();
-                    int y = yCoord + iy + 1 + part.getYOffset();
-                    int z = zCoord + zOffset + iz + part.getZOffset();
-                    
-                    int xOrigin = xCoord + xOffset + part.getXOrigin();
-                    int yOrigin = yCoord + 1 + part.getYOrigin();
-                    int zOrigin = zCoord + zOffset + part.getZOrigin();
-                    
-                    addArmourToList(x, y, z,
-                            -(x - xOrigin) - 1,
-                            -(y - yOrigin) - 1,
-                            z - zOrigin,
-                            armourBlockData, part);
-                }
-            }
-        }
-        
-        if (armourBlockData.size() > 0) {
-            CustomArmourData armourData = new CustomArmourData(armourBlockData, type, part);
-            CustomArmourManager.addCustomArmour(player, armourData);
-        } else {
-            CustomArmourManager.removeCustomArmour(player, type, part);
-        }
-    }
-    
-    private void addArmourToList(int x, int y, int z, int ix, int iy, int iz, ArrayList<ArmourBlockData> list, ArmourPart armourPart) {
-        if (worldObj.isAirBlock(x, y, z)) { return; }
-        Block block = worldObj.getBlock(x, y, z);
-        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
-            int colour = UtilBlocks.getColourFromTileEntity(worldObj ,x, y, z);
-            ArmourBlockData blockData = new ArmourBlockData(ix, iy, iz,
-                    colour, block == ModBlocks.colourableGlowing);
-            list.add(blockData);
-        }
-    }
-    
+
     public ArmourerType getType() {
         return type;
     }
     
     public boolean isFormed() {
         return formed;
-    }
-    
-    public boolean isSkirtMode() {
-        return skirtMode;
     }
     
     public int getXOffset() {
@@ -375,11 +355,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return showGuides;
     }
     
-    public void setType(ArmourerType type) {
+    private void setType(ArmourerType type) {
+        if (this.type == type) { return; }
         this.type = type;
         if (formed) {
             removeBoundingBoxed();
-            createBoundingBoxes(); 
+          //TODO createBoundingBoxes(); 
         }
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -391,26 +372,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    public void setSkirtMode(boolean skirtMode) {
-        if (this.worldObj.isRemote) { return; }
-        ModLogger.log("Setting skirt mode " + skirtMode);
-        this.skirtMode = skirtMode;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        if (type == ArmourerType.LEGS) {
-            removeBoundingBoxed();
-            createBoundingBoxes(); 
-        }
-    }
-    
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-    
-    public void toggleSkirtMode() {
-        setSkirtMode(!skirtMode);
     }
     
     public Packet getDescriptionPacket() {
@@ -444,7 +409,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         direction = ForgeDirection.getOrientation(compound.getInteger(TAG_DIRECTION));
         type = ArmourerType.getOrdinal(compound.getInteger(TAG_TYPE));
         formed = compound.getBoolean(TAG_FORMED);
-        skirtMode = compound.getBoolean(TAG_SKIRT_MODE);
         xOffset = compound.getInteger(TAG_X_OFFSET);
         zOffset = compound.getInteger(TAG_Z_OFFSET);
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
@@ -454,7 +418,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         compound.setInteger(TAG_DIRECTION, direction.ordinal());
         compound.setInteger(TAG_TYPE, type.ordinal());
         compound.setBoolean(TAG_FORMED, formed);
-        compound.setBoolean(TAG_SKIRT_MODE, skirtMode);
         compound.setInteger(TAG_X_OFFSET, xOffset);
         compound.setInteger(TAG_Z_OFFSET, zOffset);
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);

@@ -1,9 +1,13 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.util.List;
+
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -11,25 +15,48 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCustomArmour extends AbstractModItemArmor {
-
-    public ItemCustomArmour(ArmorMaterial armorMaterial, int armorType) {
-        super(LibItemNames.CUSTOM_ARMOUR + ".type." + armorType, armorMaterial, armorType);
+    
+    private static final String TAG_ARMOUR_DATA = "armourData";
+    
+    private final ArmourerType type;
+    
+    public ItemCustomArmour(ArmorMaterial armorMaterial, ArmourerType armorType) {
+        super(LibItemNames.CUSTOM_ARMOUR + "." + armorMaterial.name().toLowerCase() + "." + armorType.name().toLowerCase(),
+                armorMaterial, armorType.getSlotId());
+        this.type = armorType;
+    }
+    
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
+        if (stack.hasTagCompound()) {
+            if (stack.getTagCompound().hasKey(TAG_ARMOUR_DATA)) {
+                list.add("Has armour data");
+            }
+        } else {
+            list.add("ERROR NO DATA");
+        }
+        super.addInformation(stack, player, list, p_77624_4_);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        switch (this.armorType) {
-        case 0:
+        switch (type) {
+        case NONE:
+            break;
+        case HEAD:
             itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-head");
             break;
-        case 1:
+        case CHEST:
             itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-chest");
             break;
-        case 2:
+        case LEGS:
             itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-legs");
             break;
-        case 3:
+        case SKIRT:
+            itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-skirt");
+            break;
+        case FEET:
             itemIcon = register.registerIcon(LibModInfo.ID + ":" + "custom-feet");
             break;
         }
@@ -41,14 +68,18 @@ public class ItemCustomArmour extends AbstractModItemArmor {
         ModelBiped armorModel = null;
         if (itemStack != null) {
             if (itemStack.getItem() instanceof ItemCustomArmour) {
-                switch (this.armorType) {
-                case 0:
+                switch (type) {
+                case NONE:
+                    return null;
+                case HEAD:
                     return ClientProxy.customHead;
-                case 1:
+                case CHEST:
                     return ClientProxy.customChest;
-                case 2:
+                case LEGS:
                     return ClientProxy.customLegs;
-                case 3:
+                case SKIRT:
+                    return ClientProxy.customSkirt;
+                case FEET:
                     return ClientProxy.customFeet;
                 }
             }

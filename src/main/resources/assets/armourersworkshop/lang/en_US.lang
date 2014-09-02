@@ -2,6 +2,7 @@
 tile.armourersworkshop:armourerBrain.name=Armourer Brain
 tile.armourersworkshop:armourerMultiBlock0.name=Armourer Wall
 tile.armourersworkshop:armourerMultiBlock1.name=Armourer Corner
+tile.armourersworkshop:armourCrafter.name=Armour Crafter
 tile.armourersworkshop:colourable.name=Armour Cube
 tile.armourersworkshop:colourableGlowing.name=Armour Cube (Glowing)
 tile.armourersworkshop:colourMixer.name=Colour Mixer
@@ -15,10 +16,41 @@ tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark armour cubes!
 tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your armour with.
 
 # Item names
-item.armourersworkshop:customArmour.type.0.name=Custom Head Armour
-item.armourersworkshop:customArmour.type.1.name=Custom Chest Armour
-item.armourersworkshop:customArmour.type.2.name=Custom Leg Armour
-item.armourersworkshop:customArmour.type.3.name=Custom Foot Armour
+item.armourersworkshop:customArmour.cloth.head.name=Custom Leather Head Armour
+item.armourersworkshop:customArmour.cloth.chest.name=Custom Leather Chest Armour
+item.armourersworkshop:customArmour.cloth.legs.name=Custom Leather Leg Armour
+item.armourersworkshop:customArmour.cloth.skirt.name=Custom Leather Skirt Armour
+item.armourersworkshop:customArmour.cloth.feet.name=Custom Leather Foot Armour
+
+item.armourersworkshop:customArmour.chain.head.name=Custom Chain Head Armour
+item.armourersworkshop:customArmour.chain.chest.name=Custom Chain Chest Armour
+item.armourersworkshop:customArmour.chain.legs.name=Custom Chain Leg Armour
+item.armourersworkshop:customArmour.chain.skirt.name=Custom Chain Skirt Armour
+item.armourersworkshop:customArmour.chain.feet.name=Custom Chain Foot Armour
+
+item.armourersworkshop:customArmour.iron.head.name=Custom Iron Head Armour
+item.armourersworkshop:customArmour.iron.chest.name=Custom Iron Chest Armour
+item.armourersworkshop:customArmour.iron.legs.name=Custom Iron Leg Armour
+item.armourersworkshop:customArmour.iron.skirt.name=Custom Iron Skirt Armour
+item.armourersworkshop:customArmour.iron.feet.name=Custom Iron Foot Armour
+
+item.armourersworkshop:customArmour.gold.head.name=Custom Gold Head Armour
+item.armourersworkshop:customArmour.gold.chest.name=Custom Gold Chest Armour
+item.armourersworkshop:customArmour.gold.legs.name=Custom Gold Leg Armour
+item.armourersworkshop:customArmour.gold.skirt.name=Custom Gold Skirt Armour
+item.armourersworkshop:customArmour.gold.feet.name=Custom Gold Foot Armour
+
+item.armourersworkshop:customArmour.diamond.head.name=Custom Diamond Head Armour
+item.armourersworkshop:customArmour.diamond.chest.name=Custom Diamond Chest Armour
+item.armourersworkshop:customArmour.diamond.legs.name=Custom Diamond Leg Armour
+item.armourersworkshop:customArmour.diamond.skirt.name=Custom Diamond Skirt Armour
+item.armourersworkshop:customArmour.diamond.feet.name=Custom Diamond Foot Armour
+
+item.armourersworkshop:armourTemplate.0.name=Head Armour Template
+item.armourersworkshop:armourTemplate.1.name=Chest Armour Template
+item.armourersworkshop:armourTemplate.2.name=Leg Armour Template
+item.armourersworkshop:armourTemplate.3.name=Skirt Armour Template
+item.armourersworkshop:armourTemplate.4.name=Foot Armour Template
 item.armourersworkshop:paintbrush.name=Paintbrush
 item.armourersworkshop:paintRoller.name=Paint Roller
 item.armourersworkshop:colourPicker.name=Colour Picker
@@ -41,6 +73,10 @@ item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer
+inventory.armourersworkshop:armourCrafter.name=Armour Crafter
+
+# Inventory controls
+inventory.armourersworkshop:armourCrafter.create=Create
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop

@@ -51,6 +51,8 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glScalef(16, 16, 16);
         
         switch (type) {
+        case NONE:
+            break;
         case HEAD:
             modelHead.render();
             break;
@@ -58,7 +60,10 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             modelChest.render();
             break;
         case LEGS:
-            modelLegs.render(te.isSkirtMode());
+            modelLegs.render(false);
+            break;
+        case SKIRT:
+            modelLegs.render(true);
             break;
         case FEET:
             modelFeet.render();
@@ -76,6 +81,8 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     private void renderGuide(TileEntityArmourerBrain te, ArmourerType type, double x, double y, double z) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         switch (type) {
+        case NONE:
+            break;
         case HEAD:
             renderGuidePart(ArmourPart.HEAD, x, y, z);
             break;
@@ -85,12 +92,11 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             renderGuidePart(ArmourPart.RIGHT_ARM, x, y, z);
             break;
         case LEGS:
-            if (te.isSkirtMode()) {
-                renderGuidePart(ArmourPart.SKIRT, x, y, z);
-            } else {
-                renderGuidePart(ArmourPart.LEFT_LEG, x, y, z);
-                renderGuidePart(ArmourPart.RIGHT_LEG, x, y, z);
-            }
+            renderGuidePart(ArmourPart.LEFT_LEG, x, y, z);
+            renderGuidePart(ArmourPart.RIGHT_LEG, x, y, z);
+            break;
+        case SKIRT:
+            renderGuidePart(ArmourPart.SKIRT, x, y, z);
             break;
         case FEET:
             renderGuidePart(ArmourPart.LEFT_FOOT, x, y, z);

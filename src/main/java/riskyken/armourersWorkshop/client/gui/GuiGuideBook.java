@@ -55,17 +55,12 @@ public class GuiGuideBook extends GuiScreen {
         drawTexturedModalRect(this.guiLeft + 212, this.guiTop + 156, 3, 194, 18, 10);
         drawTexturedModalRect(this.guiLeft + 26, this.guiTop + 156, 3, 207, 18, 10);
         
-        
         String unlocalized =  "book.armourersworkshop:guideBook.page1" + ".text";
         String localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             fontRendererObj.drawSplitString(localized, this.guiLeft + 16, this.guiTop + 12, 106, UtilColour.getMinecraftColor(7));
         }
-        
-        
     }
-    
-    
     
     @Override
     public boolean doesGuiPauseGame() {

@@ -3,8 +3,9 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.inventory.ContainerArmourCrafter;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -38,20 +39,21 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
 
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            if (message.buttonId < 4) {
-                armourerBrain.setType(ArmourerType.getOrdinal(message.buttonId));
+            if (message.buttonId == 0) {
+                armourerBrain.saveArmourItem(player);
             }
-            
-            if (message.buttonId == 4) {
-                armourerBrain.buildArmourItem(player);
+            if (message.buttonId == 1) {
+                armourerBrain.loadArmourItem();
             }
-            
-            if (message.buttonId == 5) {
+            if (message.buttonId == 2) {
                 armourerBrain.toggleGuides();
             }
-            
-            if (message.buttonId == 6) {
-                armourerBrain.toggleSkirtMode();
+        }
+        
+        if (container != null && container instanceof ContainerArmourCrafter) {
+            TileEntityArmourCrafter armourCrafter = ((ContainerArmourCrafter) container).getTileEntity();
+            if (message.buttonId == 0) {
+                armourCrafter.createArmour(player);
             }
         }
         

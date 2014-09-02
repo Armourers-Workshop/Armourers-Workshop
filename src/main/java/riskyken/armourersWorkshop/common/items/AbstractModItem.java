@@ -47,11 +47,24 @@ public abstract class AbstractModItem extends Item {
 
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
-        return getModdedUnlocalizedName(super.getUnlocalizedName(itemStack));
+        return getModdedUnlocalizedName(super.getUnlocalizedName(itemStack), itemStack);
     }
 
     protected String getModdedUnlocalizedName(String unlocalizedName) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-        return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
+        if (hasSubtypes) {
+            return "item." + LibModInfo.ID.toLowerCase() + ":" + name + ".0";
+        } else {
+            return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
+        }
+    }
+    
+    protected String getModdedUnlocalizedName(String unlocalizedName, ItemStack stack) {
+        String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+        if (hasSubtypes) {
+            return "item." + LibModInfo.ID.toLowerCase() + ":" + name + "." + stack.getItemDamage();
+        } else {
+            return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
+        }
     }
 }

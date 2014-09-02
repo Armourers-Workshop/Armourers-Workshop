@@ -4,19 +4,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
 
-public class ContainerArmourer extends Container {
+public class ContainerArmourCrafter extends Container {
+
+    private TileEntityArmourCrafter armourCrafter;
     
-    private TileEntityArmourerBrain armourerBrain;
+    public ContainerArmourCrafter(InventoryPlayer invPlayer, TileEntityArmourCrafter armourCrafter) {
+        this.armourCrafter = armourCrafter;
 
-    public ContainerArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
-        this.armourerBrain = armourerBrain;
-
-        addSlotToContainer(new Slot(armourerBrain, 0, 7, 45));
-        addSlotToContainer(new SlotOutput(armourerBrain, 1, 50, 45));
+        addSlotToContainer(new SlotArmourTemplate(armourCrafter, 0, 24, 33));
+        addSlotToContainer(new SlotArmour(armourCrafter, 1, 24, 77));
+        addSlotToContainer(new SlotOutput(armourCrafter, 2, 132, 55));
 
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 173));
@@ -28,7 +30,7 @@ public class ContainerArmourer extends Container {
             }
         }
     }
-
+    
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
         Slot slot = getSlot(slotID);
@@ -36,15 +38,19 @@ public class ContainerArmourer extends Container {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
-            if (slotID < 2) {
-                if (!this.mergeItemStack(stack, 11, 38, false)) {
-                    if (!this.mergeItemStack(stack, 2, 11, false)) {
+            if (slotID < 3) {
+                if (!this.mergeItemStack(stack, 12, 39, false)) {
+                    if (!this.mergeItemStack(stack, 3, 12, false)) {
                         return null;
                     }
                 }
             } else {
                 if (stack.getItem() instanceof ItemArmourTemplate) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) {
+                        return null;
+                    }
+                } else if (stack.getItem() instanceof ItemArmor) {
+                    if (!this.mergeItemStack(stack, 1, 2, false)) {
                         return null;
                     }
                 } else {
@@ -65,13 +71,13 @@ public class ContainerArmourer extends Container {
 
         return null;
     }
-
+    
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return armourerBrain.isUseableByPlayer(player);
+        return armourCrafter.isUseableByPlayer(player);
     }
 
-    public TileEntityArmourerBrain getTileEntity() {
-        return armourerBrain;
+    public TileEntityArmourCrafter getTileEntity() {
+        return armourCrafter;
     }
 }

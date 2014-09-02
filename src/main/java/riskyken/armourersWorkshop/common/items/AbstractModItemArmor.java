@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class AbstractModItemArmor extends ItemArmor {
 
@@ -16,6 +18,23 @@ public abstract class AbstractModItemArmor extends ItemArmor {
         setMaxStackSize(1);
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getColorFromItemStack(ItemStack p_82790_1_, int p_82790_2_) {
+        return 16777215;
+    }
+    
+    @Override
+    public int getColor(ItemStack p_82814_1_) {
+        return -1;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean requiresMultipleRenderPasses() {
+        return false;
+    }
+    
     @Override
     public Item setUnlocalizedName(String name) {
         GameRegistry.registerItem(this, name);

@@ -7,16 +7,19 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
+import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy {
@@ -26,6 +29,7 @@ public class ClientProxy extends CommonProxy {
     public static ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public static ModelCustomArmourHead customHead = new ModelCustomArmourHead();
     public static ModelCustomArmourLegs customLegs = new ModelCustomArmourLegs();
+    public static ModelCustomArmourSkirt customSkirt = new ModelCustomArmourSkirt();
     public static ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
     
     public ClientProxy() {
@@ -63,6 +67,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void postInit() {
+        FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
     }
 
     @Override
@@ -90,12 +95,12 @@ public class ClientProxy extends CommonProxy {
         removeCustomArmour(playerName, ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
         removeCustomArmour(playerName, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
         removeCustomArmour(playerName, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-        removeCustomArmour(playerName, ArmourerType.LEGS, ArmourPart.SKIRT);
+        removeCustomArmour(playerName, ArmourerType.SKIRT, ArmourPart.SKIRT);
     }
 
     @Override
     public boolean playerHasSkirt(String playerName) {
-        String key = playerName + ":" + ArmourerType.LEGS.name() + ":" + ArmourPart.SKIRT.name();
+        String key = playerName + ":" + ArmourerType.SKIRT.name() + ":" + ArmourPart.SKIRT.name();
         return customArmor.containsKey(key);
     }
     
