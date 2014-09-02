@@ -46,7 +46,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
-        this.type = ArmourerType.LEGS;
+        this.type = ArmourerType.NONE;
         this.formed = false;
         this.items = new ItemStack[2];
     }
