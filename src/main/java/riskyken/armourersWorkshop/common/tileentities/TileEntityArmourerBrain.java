@@ -33,6 +33,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final String TAG_Z_OFFSET = "zOffset";
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_ARMOUR_DATA = "armourData";
+    private static final String TAG_CUSTOM_NAME = "customName";
     
     private ForgeDirection direction;
     private ArmourerType type;
@@ -50,7 +51,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.items = new ItemStack[2];
     }
     
-    public void saveArmourItem(EntityPlayerMP player) {
+    public void saveArmourItem(EntityPlayerMP player, String name) {
         if (this.worldObj.isRemote) { return; }
         
         ArrayList<CustomArmourData> armourData;
@@ -64,6 +65,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         
         NBTTagCompound dataNBT = new NBTTagCompound();
         
+        if (!name.equals("")) {
+            dataNBT.setString(TAG_CUSTOM_NAME, name);
+        }
+        
         for (int i = 0; i < armourData.size(); i++) {
             CustomArmourData data = armourData.get(i);
             String key = data.getArmourType().name() + ":" + data.getArmourPart().name();
@@ -76,6 +81,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         if (!stackInput.hasTagCompound()) {
             stackInput.setTagCompound(new NBTTagCompound());
         }
+        
         stackInput.getTagCompound().setTag(TAG_ARMOUR_DATA, dataNBT);
     }
 

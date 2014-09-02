@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -16,6 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemArmourTemplate extends AbstractModItem {
     
     private static final String TAG_ARMOUR_DATA = "armourData";
+    private static final String TAG_CUSTOM_NAME = "customName";
     
     public ItemArmourTemplate() {
         super(LibItemNames.ARMOUR_TEMPLATE);
@@ -32,8 +34,14 @@ public class ItemArmourTemplate extends AbstractModItem {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         if (stack.hasTagCompound()) {
-            if (stack.getTagCompound().hasKey(TAG_ARMOUR_DATA)) {
-                list.add("Has armour data");
+            NBTTagCompound itemData = stack.getTagCompound();
+            if (itemData.hasKey(TAG_ARMOUR_DATA)) {
+                NBTTagCompound armourData = itemData.getCompoundTag(TAG_ARMOUR_DATA);
+                if (armourData.hasKey(TAG_CUSTOM_NAME)) {
+                    list.add(armourData.getString(TAG_CUSTOM_NAME)); 
+                } else {
+                    list.add("Has armour data"); 
+                }
             }
         } else {
             list.add("No data");

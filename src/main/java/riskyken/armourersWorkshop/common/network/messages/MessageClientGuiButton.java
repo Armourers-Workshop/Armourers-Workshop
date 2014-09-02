@@ -39,9 +39,6 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
 
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            if (message.buttonId == 0) {
-                armourerBrain.saveArmourItem(player);
-            }
             if (message.buttonId == 1) {
                 armourerBrain.loadArmourItem();
             }

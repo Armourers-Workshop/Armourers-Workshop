@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -17,6 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCustomArmour extends AbstractModItemArmor {
     
     private static final String TAG_ARMOUR_DATA = "armourData";
+    private static final String TAG_CUSTOM_NAME = "customName";
     
     private final ArmourerType type;
     
@@ -29,8 +31,14 @@ public class ItemCustomArmour extends AbstractModItemArmor {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         if (stack.hasTagCompound()) {
-            if (stack.getTagCompound().hasKey(TAG_ARMOUR_DATA)) {
-                list.add("Has armour data");
+            NBTTagCompound itemData = stack.getTagCompound();
+            if (itemData.hasKey(TAG_ARMOUR_DATA)) {
+                NBTTagCompound armourData = itemData.getCompoundTag(TAG_ARMOUR_DATA);
+                if (armourData.hasKey(TAG_CUSTOM_NAME)) {
+                    list.add(armourData.getString(TAG_CUSTOM_NAME)); 
+                } else {
+                    list.add("Has armour data"); 
+                }
             }
         } else {
             list.add("ERROR NO DATA");
