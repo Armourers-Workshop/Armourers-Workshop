@@ -34,11 +34,11 @@ public class BlockArmourerMultiBlock extends AbstractModBlock implements ITileEn
     public void registerBlockIcons(IIconRegister register) {
         blockIcons = new IIcon[2];
         blockIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "frame-side");
+                + "frame");
         blockIcons[0] = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "frame-wall");
+                + "frameWallSide");
         blockIcons[1] = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "frame-corner");
+                + "frameCorner");
     }
     
     @SideOnly(Side.CLIENT)

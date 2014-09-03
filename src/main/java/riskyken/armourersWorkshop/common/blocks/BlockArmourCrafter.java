@@ -31,24 +31,27 @@ public class BlockArmourCrafter extends AbstractModBlock implements ITileEntityP
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon sideIcon;
+    private IIcon topIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon bottomIcon;
 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armourCrafter");
-        sideIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
                 + "armourCrafterSide");
+        topIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
+                + "armourCrafterTop");
+        bottomIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
+                + "armourCrafterBottom");
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        if (side < 2) {
-            return blockIcon;
-        }
-        return sideIcon;
+        if (side == 0) { return bottomIcon; }
+        if (side == 1) { return topIcon; }
+        return blockIcon;
     }
     
     @Override

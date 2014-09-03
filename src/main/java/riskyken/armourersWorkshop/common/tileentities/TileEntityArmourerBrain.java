@@ -39,12 +39,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private ForgeDirection direction;
     private ArmourerType type;
     private boolean formed;
+    private boolean loaded;
     private boolean recheck;
     private int xOffset;
     private int zOffset;
     private boolean showGuides;
-    
-    private boolean loaded;
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
@@ -353,8 +352,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     public AxisAlignedBB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
     }
-    
-    
 
     public ArmourerType getType() {
         return type;

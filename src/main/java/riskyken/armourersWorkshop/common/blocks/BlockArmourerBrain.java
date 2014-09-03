@@ -54,9 +54,9 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "frame-side");
+                + "frame");
         sideIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armourer-brain");
+                + "armourerBrainSide");
     }
     
     @SideOnly(Side.CLIENT)

@@ -31,24 +31,27 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon sideIcon;
+    private IIcon topIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon bottomIcon;
 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "colour-mixer");
-        sideIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "colour-mixer-side");
+                + "colourMixerSide");
+        topIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
+                + "colourMixerTop");
+        bottomIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
+                + "colourMixerBottom");
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        if (side < 2) {
-            return blockIcon;
-        }
-        return sideIcon;
+        if (side == 0) { return bottomIcon; }
+        if (side == 1) { return topIcon; }
+        return blockIcon;
     }
     
     @Override
