@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common.items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -13,7 +12,7 @@ public abstract class AbstractModItemArmor extends ItemArmor {
 
     public AbstractModItemArmor(String name, ArmorMaterial armorMaterial, int armorType) {
         super(armorMaterial, 0, armorType);
-        setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+        //setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setUnlocalizedName(name);
         setMaxStackSize(1);
     }
