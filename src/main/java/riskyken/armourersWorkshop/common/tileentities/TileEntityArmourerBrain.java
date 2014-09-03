@@ -150,7 +150,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         ModLogger.log("valid " + xCoord + " " + yCoord + " " + zCoord);
         
         formed = true;
-        //TODO createBoundingBoxes();
+        createBoundingBoxes();
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         return true;
@@ -164,7 +164,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             for (int ix = 0; ix < 8; ix++) {
                 for (int iy = 0; iy < 8; iy++) {
                     for (int iz = 0; iz < 8; iz++) {
-                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 7, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 7);
                     }
                 }
             } 
@@ -174,7 +174,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             for (int ix = 0; ix < 8; ix++) {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
-                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 4, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 4);
                     }
                 }
             } 
@@ -182,9 +182,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
                         //Right Arm
-                        worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 14, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 14);
                         //Left Arm
-                        worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 14, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 14);
                     }
                 }
             }
@@ -194,9 +194,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
                         //Right Leg
-                        worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9);
                         //Left Leg
-                        worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9);
                     }
                 }
             }
@@ -206,9 +206,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
                         //Right Leg
-                        worldObj.setBlock(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9);
                         //Left Leg
-                        worldObj.setBlock(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9);
                     }
                 }
             }
@@ -217,14 +217,21 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             for (int ix = 0; ix < 4; ix++) {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
+                        
                         //Right Leg
-                        worldObj.setBlock(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9);
                         //Left Leg
-                        worldObj.setBlock(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, ModBlocks.boundingBox);
+                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9);
                     }
                 }
             }
             break;
+        }
+    }
+    
+    private void createBoundingBox(int x, int y, int z) {
+        if (worldObj.isAirBlock(x, y, z)) {
+            worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
         }
     }
     
@@ -366,7 +373,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.type = type;
         if (formed) {
             removeBoundingBoxed();
-          //TODO createBoundingBoxes(); 
+            createBoundingBoxes(); 
         }
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
