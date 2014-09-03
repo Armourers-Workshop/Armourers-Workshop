@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.common.customarmor.PlayerCustomArmourData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -29,14 +28,6 @@ public class ModForgeEventHandler {
     public void onEntityConstructing(EntityConstructing event) {
         if (event.entity instanceof EntityPlayer && PlayerCustomArmourData.get((EntityPlayer) event.entity) == null) {
             PlayerCustomArmourData.register((EntityPlayer) event.entity);
-        }
-    }
-    
-    @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) event.entity;
-            PlayerCustomArmourData.get(player).sendCustomArmourDataToPlayer(player);
         }
     }
 }
