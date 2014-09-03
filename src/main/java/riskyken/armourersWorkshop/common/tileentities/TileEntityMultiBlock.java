@@ -42,7 +42,7 @@ public class TileEntityMultiBlock extends TileEntity {
         if (!hasParent) { return; }
         TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
         if (te != null && te instanceof TileEntityArmourerBrain) {
-            ((TileEntityArmourerBrain)te).checkForValidMultiBlock();
+            ((TileEntityArmourerBrain)te).childUpdate();
         }
     }
     

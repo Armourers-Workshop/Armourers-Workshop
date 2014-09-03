@@ -29,6 +29,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_TYPE = "type";
     private static final String TAG_FORMED = "formed";
+    private static final String TAG_RECHECK = "recheck";
     private static final String TAG_X_OFFSET = "xOffset";
     private static final String TAG_Z_OFFSET = "zOffset";
     private static final String TAG_SHOW_GUIDES = "showGuides";
@@ -38,6 +39,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private ForgeDirection direction;
     private ArmourerType type;
     private boolean formed;
+    private boolean recheck;
     private int xOffset;
     private int zOffset;
     private boolean showGuides;
@@ -90,6 +92,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         
     }
     
+    public void childUpdate() {
+        recheck = true;
+    }
+    
     @Override
     public void setInventorySlotContents(int slotId, ItemStack stack) {
         super.setInventorySlotContents(slotId, stack);
@@ -102,7 +108,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     public void updateEntity() {
         if (this.worldObj.isRemote) {return; }
         if (!this.loaded) { this.loaded = true; }
-        if (this.formed) { return; }
+        if (this.formed & !this.recheck) { return; }
         if ((this.worldObj.getTotalWorldTime() + this.TICK_OFFSET) % TICK_COOLDOWN != 0L) { return; }
         checkForValidMultiBlock();
     }
@@ -121,8 +127,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public boolean checkForValidMultiBlock() {
-        removeOldChildren();
-        removeBoundingBoxed();
+        if (formed) {
+            removeOldChildren();
+            removeBoundingBoxed();
+            formed = false;
+            recheck = false;
+            markDirty();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
         
         findMultiBlockCorner();
         
@@ -146,8 +158,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                 }
             }
         } 
-        
-        ModLogger.log("valid " + xCoord + " " + yCoord + " " + zCoord);
         
         formed = true;
         createBoundingBoxes();
@@ -243,6 +253,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                     TileEntity te = worldObj.getTileEntity(xCoord + xOffset + ix, yCoord, zCoord + zOffset + iy);
                     if (te != null && te instanceof TileEntityMultiBlock) {
                         ((TileEntityMultiBlock)te).clearParent(xCoord, yCoord, zCoord);
+                        worldObj.setBlockToAir(xCoord + xOffset + ix, yCoord + 1, zCoord + zOffset + iy);
+                        //worldObj.setBlock(xCoord + xOffset + ix, yCoord + 1, zCoord + zOffset + iy, Blocks.glass);
                     }
                 }
             }
@@ -422,6 +434,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         direction = ForgeDirection.getOrientation(compound.getInteger(TAG_DIRECTION));
         type = ArmourerType.getOrdinal(compound.getInteger(TAG_TYPE));
         formed = compound.getBoolean(TAG_FORMED);
+        recheck = compound.getBoolean(TAG_RECHECK);
         xOffset = compound.getInteger(TAG_X_OFFSET);
         zOffset = compound.getInteger(TAG_Z_OFFSET);
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
@@ -431,6 +444,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         compound.setInteger(TAG_DIRECTION, direction.ordinal());
         compound.setInteger(TAG_TYPE, type.ordinal());
         compound.setBoolean(TAG_FORMED, formed);
+        compound.setBoolean(TAG_RECHECK, recheck);
         compound.setInteger(TAG_X_OFFSET, xOffset);
         compound.setInteger(TAG_Z_OFFSET, zOffset);
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
