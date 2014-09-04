@@ -2,47 +2,31 @@ package riskyken.armourersWorkshop.client.model;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourBlockData;
-import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourBlockData;
+import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelCustomArmourHead extends ModelBiped {
-    
-    private ModelRenderer main;
-    private final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
-    
-    public ModelCustomArmourHead() {
-        textureWidth = 4;
-        textureHeight = 4;
-        
-        main = new ModelRenderer(this, 0, 0);
-        main.addBox(0F, 0F, 0F, 1, 1, 1);
-        main.setRotationPoint(0, 0, 0);
-    }
+public class ModelCustomArmourHead extends ModelCustomArmour {
     
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
-        CustomArmourData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.HEAD, ArmourPart.HEAD);
-        
+        CustomArmourItemData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.HEAD);
         if (armourData == null) { return; }
         EntityPlayer player = (EntityPlayer) entity;
-        ArrayList<ArmourBlockData> armourBlockData = armourData.getArmourData();
+        
+        ArrayList<CustomArmourPartData> parts = armourData.getParts();
+        
+        ArrayList<CustomArmourBlockData> armourBlockData = armourData.getParts().get(0).getArmourData();
         
         this.isSneak = player.isSneaking();
         this.isRiding = player.isRiding();
@@ -62,45 +46,16 @@ public class ModelCustomArmourHead extends ModelBiped {
             GL11.glTranslated(0, 1 * scale, 0);
         }
         
-        for (int i = 0; i < armourBlockData.size(); i++) {
-            ArmourBlockData blockData = armourBlockData.get(i);
-            if (!blockData.glowing) {
-                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
-            }
-        }
-        
-        float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-        float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-        GL11.glDisable(GL11.GL_LIGHTING);
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        
-        for (int i = 0; i < armourBlockData.size(); i++) {
-            ArmourBlockData blockData = armourBlockData.get(i);
-            if (blockData.glowing) {
-                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
-            }
-        }
-        
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-        GL11.glEnable(GL11.GL_LIGHTING);
+        renderHead(armourData.getParts().get(0), scale);
         
         GL11.glPopMatrix();
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderArmourBlock(int x, int y, int z, int colour, float scale) {
-        float colourRed = (colour >> 16 & 0xff) / 255F;
-        float colourGreen = (colour >> 8 & 0xff) / 255F;
-        float colourBlue = (colour & 0xff) / 255F;
-
+    private void renderHead(CustomArmourPartData part, float scale) {
         GL11.glPushMatrix();
-        GL11.glColor3f(colourRed, colourGreen, colourBlue);
-        GL11.glTranslated(x * scale, y * scale, z * scale);
-        main.render(scale);
+        GL11.glColor3f(1F, 1F, 1F);
+        renderPart(part.getArmourData(), scale);
         GL11.glPopMatrix();
-    }
-
-    private void bindArmourTexture() {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
 }

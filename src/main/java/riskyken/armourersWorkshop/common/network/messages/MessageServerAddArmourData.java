@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
+import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -11,9 +11,9 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 public class MessageServerAddArmourData implements IMessage, IMessageHandler<MessageServerAddArmourData, IMessage> {
 
     String entityName;
-    CustomArmourData armourData;
+    CustomArmourItemData armourData;
     
-    public MessageServerAddArmourData(String entityName, CustomArmourData armourData) {
+    public MessageServerAddArmourData(String entityName, CustomArmourItemData armourData) {
         this.entityName = entityName;
         this.armourData = armourData;
     }
@@ -23,7 +23,7 @@ public class MessageServerAddArmourData implements IMessage, IMessageHandler<Mes
     @Override
     public void fromBytes(ByteBuf buf) {
         entityName = ByteBufUtils.readUTF8String(buf);
-        armourData = new CustomArmourData(buf);
+        armourData = new CustomArmourItemData(buf);
     }
 
     @Override

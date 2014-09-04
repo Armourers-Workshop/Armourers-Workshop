@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -13,33 +12,29 @@ public class MessageServerRemoveArmourData implements IMessage, IMessageHandler<
 
     String name;
     ArmourerType type;
-    ArmourPart part;
     
     public MessageServerRemoveArmourData() {}
     
-    public MessageServerRemoveArmourData(String name, ArmourerType type, ArmourPart part) {
+    public MessageServerRemoveArmourData(String name, ArmourerType type) {
         this.name = name;
         this.type = type;
-        this.part = part;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         name = ByteBufUtils.readUTF8String(buf);
         type = ArmourerType.getOrdinal(buf.readByte());
-        part = ArmourPart.getOrdinal(buf.readByte());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, name);
         buf.writeByte(type.ordinal());
-        buf.writeByte(part.ordinal());
     }
     
     @Override
     public IMessage onMessage(MessageServerRemoveArmourData message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.removeCustomArmour(message.name, message.type, message.part);
+        ArmourersWorkshop.proxy.removeCustomArmour(message.name, message.type);
         return null;
     }
 }

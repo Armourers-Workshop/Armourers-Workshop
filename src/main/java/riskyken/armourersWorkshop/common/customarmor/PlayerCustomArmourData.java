@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
@@ -22,11 +23,11 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
     private static final String TAG_ARMOUR_DATA = "armourData";
     
     private final EntityPlayer player;
-    private final HashMap<String, CustomArmourData> customArmor;
+    private final HashMap<String, CustomArmourItemData> customArmor;
     
     public PlayerCustomArmourData(EntityPlayer player) {
         this.player = player;
-        customArmor = new HashMap<String, CustomArmourData>();
+        customArmor = new HashMap<String, CustomArmourItemData>();
     }
     
     public static final void register(EntityPlayer player) {
@@ -37,8 +38,8 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         return (PlayerCustomArmourData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
-    public void addCustomArmour(CustomArmourData armourData) {
-        String key = armourData.getArmourType().name() + ":" + armourData.getArmourPart().name();
+    public void addCustomArmour(CustomArmourItemData armourData) {
+        String key = armourData.getType().name();
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
         }
@@ -48,14 +49,14 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddArmourData(player.getDisplayName(), armourData), p);
     }
     
-    public void removeCustomArmour(ArmourerType type, ArmourPart part) {
-        String key = type.name() + ":" + part.name();
+    public void removeCustomArmour(ArmourerType type) {
+        String key = type.name();
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
         }
         
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerRemoveArmourData(player.getDisplayName(), type, part), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerRemoveArmourData(player.getDisplayName(), type), p);
     }
     
 
@@ -73,83 +74,69 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         
         NBTTagCompound data = stack.getTagCompound();
         if (!data.hasKey(TAG_ARMOUR_DATA)) { return ;}
-        NBTTagCompound parts = data.getCompoundTag(TAG_ARMOUR_DATA);
-        loadFromItemNBT(parts);
+        NBTTagCompound armourNBT = data.getCompoundTag(TAG_ARMOUR_DATA);
+        loadFromItemNBT(armourNBT);
         ModLogger.log(stack);
     }
     
     private void removeArmourFromSlot(byte slotId) {
         switch (slotId) {
         case 0:
-            removeCustomArmour(ArmourerType.FEET, ArmourPart.LEFT_FOOT);
-            removeCustomArmour(ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
+            removeCustomArmour(ArmourerType.FEET);
             break;
         case 1:
-            removeCustomArmour(ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-            removeCustomArmour(ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-            removeCustomArmour(ArmourerType.SKIRT, ArmourPart.SKIRT);
+            removeCustomArmour(ArmourerType.LEGS);
+            removeCustomArmour(ArmourerType.SKIRT);
             break;
         case 2:
-            removeCustomArmour(ArmourerType.CHEST, ArmourPart.CHEST);
-            removeCustomArmour(ArmourerType.CHEST, ArmourPart.LEFT_ARM);
-            removeCustomArmour(ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
+            removeCustomArmour(ArmourerType.CHEST);
             break;
         case 3:
-            removeCustomArmour(ArmourerType.HEAD, ArmourPart.HEAD);
+            removeCustomArmour(ArmourerType.HEAD);
             break;
         }
     }
     
     public void removeAllCustomArmourData() {
         player.addChatMessage(new ChatComponentText("You're custom armour data was cleared."));
-        removeCustomArmour(ArmourerType.HEAD, ArmourPart.HEAD);
-        removeCustomArmour(ArmourerType.CHEST, ArmourPart.CHEST);
-        removeCustomArmour(ArmourerType.CHEST, ArmourPart.LEFT_ARM);
-        removeCustomArmour(ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
-        removeCustomArmour(ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-        removeCustomArmour(ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-        removeCustomArmour(ArmourerType.SKIRT, ArmourPart.SKIRT);
-        removeCustomArmour(ArmourerType.FEET, ArmourPart.LEFT_FOOT);
-        removeCustomArmour(ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
+        removeCustomArmour(ArmourerType.HEAD);
+        removeCustomArmour(ArmourerType.CHEST);
+        removeCustomArmour(ArmourerType.LEGS);
+        removeCustomArmour(ArmourerType.SKIRT);
+        removeCustomArmour(ArmourerType.FEET);
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.HEAD, ArmourPart.HEAD);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.CHEST, ArmourPart.CHEST);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.CHEST, ArmourPart.LEFT_ARM);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.SKIRT, ArmourPart.SKIRT);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.HEAD);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.CHEST);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.LEGS);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.SKIRT);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.FEET);
     }
     
-    private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourerType type, ArmourPart part) {
-        String key = type.name() + ":" + part.name();
+    private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourerType type) {
+        String key = type.name();
         if (customArmor.containsKey(key)) {
-            CustomArmourData data = customArmor.get(key);
+            CustomArmourItemData data = customArmor.get(key);
             PacketHandler.networkWrapper.sendTo(new MessageServerAddArmourData(player.getDisplayName(), data), targetPlayer);
         } else {
-            PacketHandler.networkWrapper.sendTo(new MessageServerRemoveArmourData(player.getDisplayName(), type, part), targetPlayer);
+            PacketHandler.networkWrapper.sendTo(new MessageServerRemoveArmourData(player.getDisplayName(), type), targetPlayer);
         }
     }
     
     @Override
     public void saveNBTData(NBTTagCompound compound) {
-        saveKey(compound, ArmourerType.HEAD, ArmourPart.HEAD);
-        saveKey(compound, ArmourerType.CHEST, ArmourPart.CHEST);
-        saveKey(compound, ArmourerType.CHEST, ArmourPart.LEFT_ARM);
-        saveKey(compound, ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
-        saveKey(compound, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-        saveKey(compound, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-        saveKey(compound, ArmourerType.SKIRT, ArmourPart.SKIRT);
-        saveKey(compound, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
-        saveKey(compound, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
+        //TODO Change to for loop
+        //TODO Maybe save a list?
+        saveKey(compound, ArmourerType.HEAD);
+        saveKey(compound, ArmourerType.CHEST);
+        saveKey(compound, ArmourerType.LEGS);
+        saveKey(compound, ArmourerType.SKIRT);
+        saveKey(compound, ArmourerType.FEET);
     }
     
-    private void saveKey(NBTTagCompound compound, ArmourerType type, ArmourPart part) {
-        String key = type.name() + ":" + part.name();
+    private void saveKey(NBTTagCompound compound, ArmourerType type) {
+        String key = type.name();
         if (customArmor.containsKey(key)) {
             NBTTagCompound dataNBT = new NBTTagCompound();
             customArmor.get(key).writeToNBT(dataNBT);
@@ -159,44 +146,24 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
     
     @Override
     public void loadNBTData(NBTTagCompound compound) {
-        loadKey(compound, ArmourerType.HEAD, ArmourPart.HEAD);
-        loadKey(compound, ArmourerType.CHEST, ArmourPart.CHEST);
-        loadKey(compound, ArmourerType.CHEST, ArmourPart.LEFT_ARM);
-        loadKey(compound, ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
-        loadKey(compound, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-        loadKey(compound, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-        loadKey(compound, ArmourerType.SKIRT, ArmourPart.SKIRT);
-        loadKey(compound, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
-        loadKey(compound, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
+        loadKey(compound, ArmourerType.HEAD);
+        loadKey(compound, ArmourerType.CHEST);
+        loadKey(compound, ArmourerType.LEGS);
+        loadKey(compound, ArmourerType.SKIRT);
+        loadKey(compound, ArmourerType.FEET);
     }
     
-    private void loadKey(NBTTagCompound compound, ArmourerType type, ArmourPart part) {
-        String key = type.name() + ":" + part.name();
+    private void loadKey(NBTTagCompound compound, ArmourerType type) {
+        String key = type.name();
         if (compound.hasKey(key)) {
             
             NBTTagCompound dataNBT = compound.getCompoundTag(key);
-            customArmor.put(key, new CustomArmourData(dataNBT));
+            customArmor.put(key, new CustomArmourItemData(dataNBT));
         }
     }
     
     private void loadFromItemNBT(NBTTagCompound compound) {
-        loadKeyItem(compound, ArmourerType.HEAD, ArmourPart.HEAD);
-        loadKeyItem(compound, ArmourerType.CHEST, ArmourPart.CHEST);
-        loadKeyItem(compound, ArmourerType.CHEST, ArmourPart.LEFT_ARM);
-        loadKeyItem(compound, ArmourerType.CHEST, ArmourPart.RIGHT_ARM);
-        loadKeyItem(compound, ArmourerType.LEGS, ArmourPart.LEFT_LEG);
-        loadKeyItem(compound, ArmourerType.LEGS, ArmourPart.RIGHT_LEG);
-        loadKeyItem(compound, ArmourerType.SKIRT, ArmourPart.SKIRT);
-        loadKeyItem(compound, ArmourerType.FEET, ArmourPart.LEFT_FOOT);
-        loadKeyItem(compound, ArmourerType.FEET, ArmourPart.RIGHT_FOOT);
-    }
-    
-    private void loadKeyItem(NBTTagCompound compound, ArmourerType type, ArmourPart part) {
-        String key = type.name() + ":" + part.name();
-        if (compound.hasKey(key)) {
-            NBTTagCompound dataNBT = compound.getCompoundTag(key);
-            addCustomArmour(new CustomArmourData(dataNBT));
-        }
+        addCustomArmour(new CustomArmourItemData(compound));
     }
     
     @Override

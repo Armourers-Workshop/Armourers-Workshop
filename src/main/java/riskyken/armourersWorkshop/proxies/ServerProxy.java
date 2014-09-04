@@ -1,8 +1,7 @@
 package riskyken.armourersWorkshop.proxies;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
+import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 
 public class ServerProxy extends CommonProxy {
 
@@ -19,11 +18,11 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public void addCustomArmour(String playerName, CustomArmourData armourData) {
+    public void addCustomArmour(String playerName, CustomArmourItemData armourData) {
     }
 
     @Override
-    public void removeCustomArmour(String playerName, ArmourerType type, ArmourPart part) {
+    public void removeCustomArmour(String playerName, ArmourerType type) {
     }
 
     @Override

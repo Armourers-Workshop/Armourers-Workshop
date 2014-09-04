@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -15,10 +13,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerWorldHelper;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourData;
+import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
 
@@ -52,45 +49,61 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.items = new ItemStack[2];
     }
     
+    /**
+     * Get blocks in the world and saved them onto an items NBT data.
+     * @param player The player that pressed the save button.
+     * @param name Custom name for the item.
+     */
     public void saveArmourItem(EntityPlayerMP player, String name) {
         if (this.worldObj.isRemote) { return; }
         
-        ArrayList<CustomArmourData> armourData;
+        CustomArmourItemData armourItemData;
         ItemStack stackInput = getStackInSlot(0);
         
         if (stackInput == null) { return; }
         if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
         
         
-        armourData = ArmourerWorldHelper.buildArmourItem(worldObj, type, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
         
-        NBTTagCompound dataNBT = new NBTTagCompound();
+        NBTTagCompound armourNBT = new NBTTagCompound();
+        armourItemData.writeToNBT(armourNBT);
+        
         
         if (!name.equals("")) {
-            dataNBT.setString(TAG_CUSTOM_NAME, name);
+            //dataNBT.setString(TAG_CUSTOM_NAME, name);
         }
         
-        for (int i = 0; i < armourData.size(); i++) {
-            CustomArmourData data = armourData.get(i);
-            String key = data.getArmourType().name() + ":" + data.getArmourPart().name();
-            NBTTagCompound partNBT = new NBTTagCompound();
-            ModLogger.log(key);
-            data.writeToNBT(partNBT);
-            dataNBT.setTag(key, partNBT);
-        }
         
         if (!stackInput.hasTagCompound()) {
             stackInput.setTagCompound(new NBTTagCompound());
         }
         
-        stackInput.getTagCompound().setTag(TAG_ARMOUR_DATA, dataNBT);
+        stackInput.getTagCompound().setTag(TAG_ARMOUR_DATA, armourNBT);
     }
 
-    public void loadArmourItem() {
-        // TODO Auto-generated method stub
+    /**
+     * Reads the NBT data from an item and places blocks in the world.
+     * @param player The player that pressed the load button.
+     */
+    public void loadArmourItem(EntityPlayerMP player) {
+        if (this.worldObj.isRemote) { return; }
+        ItemStack stackInput = getStackInSlot(0);
         
+        if (!stackInput.hasTagCompound()) { return; };
+        NBTTagCompound itemNBT = stackInput.getTagCompound();
+        
+        if (!itemNBT.hasKey(TAG_ARMOUR_DATA)) { return; }
+        NBTTagCompound dataNBT = itemNBT.getCompoundTag(TAG_ARMOUR_DATA);
+        
+        CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
+        
+        ArmourerWorldHelper.loadArmourItem(worldObj, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset, customArmourItemData);
     }
     
+    /**
+     * Called when one of the child blocks is broken.
+     */
     public void childUpdate() {
         recheck = true;
     }

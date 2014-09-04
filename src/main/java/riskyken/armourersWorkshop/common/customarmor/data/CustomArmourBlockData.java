@@ -1,52 +1,52 @@
-package riskyken.armourersWorkshop.common.customarmor;
+package riskyken.armourersWorkshop.common.customarmor.data;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ArmourBlockData {
+public class CustomArmourBlockData {
     
     private static final String TAG_X = "x";
     private static final String TAG_Y = "y";
     private static final String TAG_Z = "z";
     private static final String TAG_COLOUR = "colour";
-    private static final String TAG_GLOWING = "glowing";
+    private static final String TAG_BLOCK_TYPE = "blockType";
     
     @Override
     public String toString() {
         return "ArmourBlockData [x=" + x + ", y=" + y + ", z=" + z
-                + ", colour=" + colour + ", glowing=" + glowing + "]";
+                + ", colour=" + colour + ", blockType=" + blockType + "]";
     }
     
     public byte x;
     public byte y;
     public byte z;
     public int colour;
-    public boolean glowing;
+    public byte blockType;
     
-    public ArmourBlockData() {
+    public CustomArmourBlockData() {
     }
     
-    public ArmourBlockData(int x, int y, int z, int colour, boolean glowing) {
+    public CustomArmourBlockData(int x, int y, int z, int colour, int blockType) {
         this.x = (byte) x;
         this.y = (byte) y;
         this.z = (byte) z;
         this.colour = colour;
-        this.glowing = glowing;
+        this.blockType = (byte) blockType;
     }
     
-    public ArmourBlockData(byte x, byte y, byte z, int colour, boolean glowing) {
+    public CustomArmourBlockData(byte x, byte y, byte z, int colour, byte blockType) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.colour = colour;
-        this.glowing = glowing;
+        this.blockType = blockType;
     }
     
-    public ArmourBlockData(ByteBuf buf) {
+    public CustomArmourBlockData(ByteBuf buf) {
         readFromBuf(buf);
     }
     
-    public ArmourBlockData(NBTTagCompound compound) {
+    public CustomArmourBlockData(NBTTagCompound compound) {
         readFromNBT(compound);
     }
     
@@ -55,7 +55,7 @@ public class ArmourBlockData {
         buf.writeByte(y);
         buf.writeByte(z);
         buf.writeInt(colour);
-        buf.writeBoolean(glowing);
+        buf.writeByte(blockType);
     }
     
     private void readFromBuf(ByteBuf buf) {
@@ -63,7 +63,7 @@ public class ArmourBlockData {
         y = buf.readByte();
         z = buf.readByte();
         colour = buf.readInt();
-        glowing = buf.readBoolean();
+        blockType = buf.readByte();
     }
     
     public void writeToNBT(NBTTagCompound compound) {
@@ -71,7 +71,7 @@ public class ArmourBlockData {
         compound.setByte(TAG_Y, y);
         compound.setByte(TAG_Z, z);
         compound.setInteger(TAG_COLOUR, colour);
-        compound.setBoolean(TAG_GLOWING, glowing);
+        compound.setByte(TAG_BLOCK_TYPE, blockType);
     }
     
     private void readFromNBT(NBTTagCompound compound) {
@@ -79,6 +79,10 @@ public class ArmourBlockData {
         y = compound.getByte(TAG_Y);
         z = compound.getByte(TAG_Z);
         colour = compound.getInteger(TAG_COLOUR);
-        glowing = compound.getBoolean(TAG_GLOWING);
+        blockType = compound.getByte(TAG_BLOCK_TYPE);
+    }
+    
+    public boolean isGlowing() {
+        return this.blockType == 1;
     }
 }
