@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import org.apache.logging.log4j.Level;
@@ -12,6 +13,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
@@ -68,7 +70,7 @@ public final class ArmourerWorldHelper {
                             -(x - xOrigin) - 1,
                             -(y - yOrigin) - 1,
                             z - zOrigin,
-                            armourBlockData, part);
+                            armourBlockData);
                 }
             }
         }
@@ -78,7 +80,7 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz, ArrayList<CustomArmourBlockData> list, ArmourPart armourPart) {
+    private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz, ArrayList<CustomArmourBlockData> list) {
         if (world.isAirBlock(x, y, z)) { return; }
         Block block = world.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
@@ -93,7 +95,35 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void loadArmourItem(World world, EntityPlayer player, int xCoord, int yCoord, int zCoord, CustomArmourItemData armourData) {
+    public static void loadArmourItem(World world, int x, int y, int z, CustomArmourItemData armourData) {
+        ArrayList<CustomArmourPartData> parts = armourData.getParts();
         
+        for (int i = 0; i < parts.size(); i++) {
+            loadArmourPart(world, parts.get(i), x, y, z);
+        }
+    }
+    
+    private static void loadArmourPart(World world, CustomArmourPartData partData, int xCoord, int yCoord, int zCoord) {
+        for (int i = 0; i < partData.getArmourData().size(); i++) {
+            CustomArmourBlockData blockData = partData.getArmourData().get(i);
+            int xOrigin = xCoord + partData.getArmourPart().getXOrigin();
+            int yOrigin = yCoord + partData.getArmourPart().getYOrigin();
+            int zOrigin = zCoord + partData.getArmourPart().getZOrigin();
+            loadArmourBlock(world, xOrigin, yOrigin, zOrigin, blockData);
+        }
+    }
+    
+    private static void loadArmourBlock(World world, int x, int y, int z, CustomArmourBlockData blockData) {
+        int targetX = x - blockData.x - 1;
+        int targetY = y - blockData.y - 1;
+        int targetZ = z + blockData.z;
+        
+        if (world.isAirBlock(targetX, targetY, targetZ)) {
+            world.setBlock(targetX, targetY, targetZ, ModBlocks.colourable);
+            TileEntity te = world.getTileEntity(targetX, targetY, targetZ);
+            if (te != null && te instanceof TileEntityColourable) {
+                ((TileEntityColourable)te).setColour(blockData.colour);
+            }
+        }
     }
 }

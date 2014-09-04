@@ -98,7 +98,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         
         CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
         
-        ArmourerWorldHelper.loadArmourItem(worldObj, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset, customArmourItemData);
+        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, customArmourItemData);
     }
     
     /**
