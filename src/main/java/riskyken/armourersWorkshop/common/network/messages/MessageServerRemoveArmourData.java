@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -11,11 +11,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 public class MessageServerRemoveArmourData implements IMessage, IMessageHandler<MessageServerRemoveArmourData, IMessage> {
 
     String name;
-    ArmourerType type;
+    ArmourType type;
     
     public MessageServerRemoveArmourData() {}
     
-    public MessageServerRemoveArmourData(String name, ArmourerType type) {
+    public MessageServerRemoveArmourData(String name, ArmourType type) {
         this.name = name;
         this.type = type;
     }
@@ -23,7 +23,7 @@ public class MessageServerRemoveArmourData implements IMessage, IMessageHandler<
     @Override
     public void fromBytes(ByteBuf buf) {
         name = ByteBufUtils.readUTF8String(buf);
-        type = ArmourerType.getOrdinal(buf.readByte());
+        type = ArmourType.getOrdinal(buf.readByte());
     }
 
     @Override

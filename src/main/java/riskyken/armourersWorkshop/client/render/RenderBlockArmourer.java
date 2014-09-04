@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.client.model.ModelFeet;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
 import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.relauncher.Side;
@@ -35,7 +35,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
 
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
-        ArmourerType type = te.getType();
+        ArmourType type = te.getType();
         
         if (!te.isFormed()) { return; }
         
@@ -78,7 +78,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         }
     }
     
-    private void renderGuide(TileEntityArmourerBrain te, ArmourerType type, double x, double y, double z) {
+    private void renderGuide(TileEntityArmourerBrain te, ArmourType type, double x, double y, double z) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         switch (type) {
         case NONE:

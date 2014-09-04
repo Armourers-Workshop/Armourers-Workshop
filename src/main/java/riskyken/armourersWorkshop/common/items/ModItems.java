@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 
 public class ModItems {
     
@@ -30,11 +30,11 @@ public class ModItems {
         customFeetArmour = new ItemCustomArmour[5];
         
         for (int i = 0; i < 5; i++) {
-            customHeadArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourerType.HEAD);
-            customChestArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourerType.CHEST);
-            customLegsArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourerType.LEGS);
-            customSkirtArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourerType.SKIRT);
-            customFeetArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourerType.FEET);
+            customHeadArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.HEAD);
+            customChestArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.CHEST);
+            customLegsArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.LEGS);
+            customSkirtArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.SKIRT);
+            customFeetArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.FEET);
         }
         
         armourTemplate = new ItemArmourTemplate();

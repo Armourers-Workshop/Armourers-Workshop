@@ -8,7 +8,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -20,9 +20,9 @@ public class ItemCustomArmour extends AbstractModItemArmor {
     private static final String TAG_ARMOUR_DATA = "armourData";
     private static final String TAG_CUSTOM_NAME = "customName";
     
-    private final ArmourerType type;
+    private final ArmourType type;
     
-    public ItemCustomArmour(ArmorMaterial armorMaterial, ArmourerType armorType) {
+    public ItemCustomArmour(ArmorMaterial armorMaterial, ArmourType armorType) {
         super(LibItemNames.CUSTOM_ARMOUR + "." + armorMaterial.name().toLowerCase() + "." + armorType.name().toLowerCase(),
                 armorMaterial, armorType.getSlotId());
         this.type = armorType;

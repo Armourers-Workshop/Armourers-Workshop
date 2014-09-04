@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.customarmor.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
@@ -34,7 +34,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final String TAG_CUSTOM_NAME = "customName";
     
     private ForgeDirection direction;
-    private ArmourerType type;
+    private ArmourType type;
     private boolean formed;
     private boolean loaded;
     private boolean recheck;
@@ -44,7 +44,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
-        this.type = ArmourerType.NONE;
+        this.type = ArmourType.NONE;
         this.formed = false;
         this.items = new ItemStack[2];
     }
@@ -129,12 +129,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         if (this.worldObj.isRemote) { return; }
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) {
-            setType(ArmourerType.NONE);
+            setType(ArmourType.NONE);
             return;
         }
         
         if (stackInput.getItem() instanceof ItemArmourTemplate) {
-            setType(ArmourerType.getOrdinal(stackInput.getItemDamage() + 1));
+            setType(ArmourType.getOrdinal(stackInput.getItemDamage() + 1));
         }
     }
     
@@ -366,7 +366,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return INFINITE_EXTENT_AABB;
     }
 
-    public ArmourerType getType() {
+    public ArmourType getType() {
         return type;
     }
     
@@ -390,7 +390,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return showGuides;
     }
     
-    private void setType(ArmourerType type) {
+    private void setType(ArmourType type) {
         if (this.type == type) { return; }
         this.type = type;
         if (formed) {
@@ -442,7 +442,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     public void readTeFromNBT(NBTTagCompound compound) {
         direction = ForgeDirection.getOrientation(compound.getInteger(TAG_DIRECTION));
-        type = ArmourerType.getOrdinal(compound.getInteger(TAG_TYPE));
+        type = ArmourType.getOrdinal(compound.getInteger(TAG_TYPE));
         formed = compound.getBoolean(TAG_FORMED);
         recheck = compound.getBoolean(TAG_RECHECK);
         xOffset = compound.getInteger(TAG_X_OFFSET);

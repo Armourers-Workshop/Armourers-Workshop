@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 
 public class CustomArmourItemData {
     
@@ -15,10 +15,10 @@ public class CustomArmourItemData {
     private static final String TAG_TYPE = "type";
     private static final String TAG_PARTS = "parts";
     
-    private ArmourerType type;
+    private ArmourType type;
     private ArrayList<CustomArmourPartData> parts;
     
-    public CustomArmourItemData(ArmourerType type, ArrayList<CustomArmourPartData> parts) {
+    public CustomArmourItemData(ArmourType type, ArrayList<CustomArmourPartData> parts) {
         this.type = type;
         this.parts = parts;
     }
@@ -40,7 +40,7 @@ public class CustomArmourItemData {
     }
 
     private void readFromBuf(ByteBuf buf) {
-        type = ArmourerType.getOrdinal(buf.readByte());
+        type = ArmourType.getOrdinal(buf.readByte());
         int size = buf.readByte();
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < size; i++) {
@@ -62,7 +62,7 @@ public class CustomArmourItemData {
     }
     
     private void readFromNBT(NBTTagCompound compound) {
-        type = ArmourerType.getOrdinal(compound.getByte(TAG_TYPE));
+        type = ArmourType.getOrdinal(compound.getByte(TAG_TYPE));
         
         NBTTagList blockData = compound.getTagList(TAG_PARTS, NBT.TAG_COMPOUND);
         parts = new ArrayList<CustomArmourPartData>();
@@ -72,7 +72,7 @@ public class CustomArmourItemData {
         }
     }
     
-    public ArmourerType getType() {
+    public ArmourType getType() {
         return type;
     }
     

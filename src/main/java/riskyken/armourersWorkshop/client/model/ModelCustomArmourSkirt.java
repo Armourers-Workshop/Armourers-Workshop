@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -20,7 +20,7 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
         setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
-        CustomArmourItemData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.SKIRT);
+        CustomArmourItemData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourType.SKIRT);
         if (armourData == null) { return; }
         ArrayList<CustomArmourPartData> parts = armourData.getParts();
         EntityPlayer player = (EntityPlayer) entity;

@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common.customarmor;
 
-public enum ArmourerType {
+public enum ArmourType {
     NONE(-1, null),
     HEAD(0, new ArmourPart[] { ArmourPart.HEAD }),
     CHEST(1, new ArmourPart[] { ArmourPart.CHEST, ArmourPart.LEFT_ARM, ArmourPart.RIGHT_ARM }),
@@ -11,13 +11,13 @@ public enum ArmourerType {
     private final ArmourPart[] parts;
     private final int slotId;
     
-    private ArmourerType(int slotId, ArmourPart[] parts) {
+    private ArmourType(int slotId, ArmourPart[] parts) {
         this.slotId = slotId;
         this.parts = parts;
     }
     
-    public static ArmourerType getOrdinal(int id) {
-        return ArmourerType.values()[id];
+    public static ArmourType getOrdinal(int id) {
+        return ArmourType.values()[id];
     }
     
     public int getSlotId() {

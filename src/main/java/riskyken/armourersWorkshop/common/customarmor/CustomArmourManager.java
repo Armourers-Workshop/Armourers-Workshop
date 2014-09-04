@@ -10,7 +10,7 @@ public class CustomArmourManager {
         playerArmourData.addCustomArmour(armourData);
     }
 
-    public static void removeCustomArmour(EntityPlayer player, ArmourerType type) {
+    public static void removeCustomArmour(EntityPlayer player, ArmourType type) {
         PlayerCustomArmourData playerArmourData = PlayerCustomArmourData.get(player);
         playerArmourData.removeCustomArmour(type);
     }

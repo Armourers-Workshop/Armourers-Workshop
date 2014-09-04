@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourerType;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
@@ -20,7 +20,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
     
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
-        CustomArmourItemData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourerType.HEAD);
+        CustomArmourItemData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourType.HEAD);
         if (armourData == null) { return; }
         EntityPlayer player = (EntityPlayer) entity;
         

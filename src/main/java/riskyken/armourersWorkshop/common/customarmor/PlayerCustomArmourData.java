@@ -49,7 +49,7 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddArmourData(player.getDisplayName(), armourData), p);
     }
     
-    public void removeCustomArmour(ArmourerType type) {
+    public void removeCustomArmour(ArmourType type) {
         String key = type.name();
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
@@ -82,39 +82,39 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
     private void removeArmourFromSlot(byte slotId) {
         switch (slotId) {
         case 0:
-            removeCustomArmour(ArmourerType.FEET);
+            removeCustomArmour(ArmourType.FEET);
             break;
         case 1:
-            removeCustomArmour(ArmourerType.LEGS);
-            removeCustomArmour(ArmourerType.SKIRT);
+            removeCustomArmour(ArmourType.LEGS);
+            removeCustomArmour(ArmourType.SKIRT);
             break;
         case 2:
-            removeCustomArmour(ArmourerType.CHEST);
+            removeCustomArmour(ArmourType.CHEST);
             break;
         case 3:
-            removeCustomArmour(ArmourerType.HEAD);
+            removeCustomArmour(ArmourType.HEAD);
             break;
         }
     }
     
     public void removeAllCustomArmourData() {
         player.addChatMessage(new ChatComponentText("You're custom armour data was cleared."));
-        removeCustomArmour(ArmourerType.HEAD);
-        removeCustomArmour(ArmourerType.CHEST);
-        removeCustomArmour(ArmourerType.LEGS);
-        removeCustomArmour(ArmourerType.SKIRT);
-        removeCustomArmour(ArmourerType.FEET);
+        removeCustomArmour(ArmourType.HEAD);
+        removeCustomArmour(ArmourType.CHEST);
+        removeCustomArmour(ArmourType.LEGS);
+        removeCustomArmour(ArmourType.SKIRT);
+        removeCustomArmour(ArmourType.FEET);
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.HEAD);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.CHEST);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.LEGS);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.SKIRT);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourerType.FEET);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.HEAD);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.CHEST);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.LEGS);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.SKIRT);
+        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.FEET);
     }
     
-    private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourerType type) {
+    private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourType type) {
         String key = type.name();
         if (customArmor.containsKey(key)) {
             CustomArmourItemData data = customArmor.get(key);
@@ -128,14 +128,14 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
     public void saveNBTData(NBTTagCompound compound) {
         //TODO Change to for loop
         //TODO Maybe save a list?
-        saveKey(compound, ArmourerType.HEAD);
-        saveKey(compound, ArmourerType.CHEST);
-        saveKey(compound, ArmourerType.LEGS);
-        saveKey(compound, ArmourerType.SKIRT);
-        saveKey(compound, ArmourerType.FEET);
+        saveKey(compound, ArmourType.HEAD);
+        saveKey(compound, ArmourType.CHEST);
+        saveKey(compound, ArmourType.LEGS);
+        saveKey(compound, ArmourType.SKIRT);
+        saveKey(compound, ArmourType.FEET);
     }
     
-    private void saveKey(NBTTagCompound compound, ArmourerType type) {
+    private void saveKey(NBTTagCompound compound, ArmourType type) {
         String key = type.name();
         if (customArmor.containsKey(key)) {
             NBTTagCompound dataNBT = new NBTTagCompound();
@@ -146,14 +146,14 @@ public class PlayerCustomArmourData implements IExtendedEntityProperties {
     
     @Override
     public void loadNBTData(NBTTagCompound compound) {
-        loadKey(compound, ArmourerType.HEAD);
-        loadKey(compound, ArmourerType.CHEST);
-        loadKey(compound, ArmourerType.LEGS);
-        loadKey(compound, ArmourerType.SKIRT);
-        loadKey(compound, ArmourerType.FEET);
+        loadKey(compound, ArmourType.HEAD);
+        loadKey(compound, ArmourType.CHEST);
+        loadKey(compound, ArmourType.LEGS);
+        loadKey(compound, ArmourType.SKIRT);
+        loadKey(compound, ArmourType.FEET);
     }
     
-    private void loadKey(NBTTagCompound compound, ArmourerType type) {
+    private void loadKey(NBTTagCompound compound, ArmourType type) {
         String key = type.name();
         if (compound.hasKey(key)) {
             

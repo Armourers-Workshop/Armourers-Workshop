@@ -6,46 +6,20 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourBlockData;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomArmourItemData saveArmourItem(World world, ArmourerType type, EntityPlayer player, int xCoord, int yCoord, int zCoord) {
+    public static CustomArmourItemData saveArmourItem(World world, ArmourType type, EntityPlayer player, int xCoord, int yCoord, int zCoord) {
         ArrayList<CustomArmourPartData> parts = new ArrayList<CustomArmourPartData>();
         
-        switch (type) {
-        case HEAD:
-            saveArmourPart(world, parts, ArmourPart.HEAD, xCoord, yCoord, zCoord);
-            break;
-        case CHEST:
-            saveArmourPart(world, parts, ArmourPart.CHEST, xCoord, yCoord, zCoord);
-            saveArmourPart(world, parts, ArmourPart.LEFT_ARM, xCoord, yCoord, zCoord);
-            saveArmourPart(world, parts, ArmourPart.RIGHT_ARM, xCoord, yCoord, zCoord);
-            break;
-        case LEGS:
-            saveArmourPart(world, parts, ArmourPart.LEFT_LEG, xCoord, yCoord, zCoord);
-            saveArmourPart(world, parts, ArmourPart.RIGHT_LEG, xCoord, yCoord, zCoord);
-            break;
-        case SKIRT:
-            saveArmourPart(world, parts, ArmourPart.SKIRT, xCoord, yCoord, zCoord);
-            break;
-        case FEET:
-            saveArmourPart(world, parts, ArmourPart.LEFT_FOOT, xCoord, yCoord, zCoord);
-            saveArmourPart(world, parts, ArmourPart.RIGHT_FOOT, xCoord, yCoord, zCoord);
-            break;
-        default:
-            ModLogger.log(Level.WARN, "TileEntityArmourerBrain at X:" + xCoord + " Y:" + yCoord +
-                    " Z:" + zCoord + " has an invalid armour type.");
-            break;
+        for (int i = 0; i < type.getParts().length; i++) {
+            saveArmourPart(world, parts, type.getParts()[i], xCoord, yCoord, zCoord);
         }
         
         return new CustomArmourItemData(type, parts);
