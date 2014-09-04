@@ -108,8 +108,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     private void renderGuidePart(ArmourPart part, double x, double y, double z) {
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
-        //GL11.glEnable(GL11.GL_BLEND);
-        //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
         GL11.glDisable(GL11.GL_LIGHTING);
         renderGuideFace(ForgeDirection.SOUTH, x + part.getXOffset(), y + 1 + part.getYOffset(), z  + part.getZOffset(), part.getXSize(), part.getYSize());
         renderGuideFace(ForgeDirection.EAST, x + part.getXOffset(), y + 1 + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getZSize(), part.getYSize());
@@ -118,7 +117,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         renderGuideFace(ForgeDirection.UP, x + part.getXOffset(), y + 1 + part.getYSize()  + part.getYOffset(), z  + part.getZOffset(), part.getXSize(), part.getZSize());
         renderGuideFace(ForgeDirection.DOWN, x + part.getXOffset(), y + 1  + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getXSize(), part.getZSize());
         GL11.glEnable(GL11.GL_LIGHTING);
-        //GL11.glDisable(GL11.GL_BLEND);
+        
         GL11.glPopMatrix();
         /*
         GL11.glColor3f(1F, 0.5F, 0.5F);
@@ -132,7 +131,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         Tessellator tessellator = Tessellator.instance;
         
         GL11.glPushMatrix();
-        GL11.glColor4f(0.5F, 0.5F, 0.5F, 1F);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
         
         GL11.glTranslated(x, y, z);
         
@@ -176,6 +177,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         tessellator.addVertexWithUV(sizeX, 0, 0, 0, sizeX * 2);
         tessellator.draw();
         
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glPopMatrix();
     }
