@@ -1,6 +1,10 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.client.config.GuiButtonExt;
 
@@ -12,8 +16,7 @@ public class GuiBookTextButton extends GuiButtonExt {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        if (this.visible)
-        {
+        if (this.visible) {
             this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int hoverState = this.getHoverState(this.field_146123_n);
             int color = UtilColour.getMinecraftColor(8);
@@ -30,4 +33,8 @@ public class GuiBookTextButton extends GuiButtonExt {
         }
     }
     
+    @Override
+    public void func_146113_a(SoundHandler soundHandler) {
+        soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(LibSounds.PAGE_TURN), 1.0F));
+    }
 }
