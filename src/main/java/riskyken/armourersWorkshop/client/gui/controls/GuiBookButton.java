@@ -1,14 +1,19 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import cpw.mods.fml.client.config.GuiButtonExt;
 
 public class GuiBookButton extends GuiButtonExt {
 
+    private final static ResourceLocation buttonSound = new ResourceLocation(LibModInfo.ID.toLowerCase() + ":pageTurn");
     private final ResourceLocation texture;
     private final int srcX;
     private final int srcY;
@@ -34,5 +39,8 @@ public class GuiBookButton extends GuiButtonExt {
         drawTexturedModalRect(this.xPosition, this.yPosition, srcX + xOffset, srcY, this.width, this.height);
     }
     
-    
+    @Override
+    public void func_146113_a(SoundHandler soundHandler) {
+        soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(LibSounds.PAGE_TURN), 1.0F));
+    }
 }

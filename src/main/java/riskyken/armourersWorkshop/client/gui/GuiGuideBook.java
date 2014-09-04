@@ -34,6 +34,9 @@ public class GuiGuideBook extends GuiScreen {
     private int guiTop;
     private ItemStack stack;
     
+    private GuiBookButton backButton;
+    private GuiBookButton forwardButton;
+    
     @Override
     public void initGui() {
         super.initGui();
@@ -41,14 +44,16 @@ public class GuiGuideBook extends GuiScreen {
         guiTop = height / 2 - guiHeight / 2;
         buttonList.clear();
         
-        buttonList.add(new GuiBookButton(0, this.guiLeft + 26, this.guiTop + 156, 3, 207, texture));
-        buttonList.add(new GuiBookButton(1, this.guiLeft + 212, this.guiTop + 156, 3, 194, texture));
+        backButton = new GuiBookButton(0, this.guiLeft + 26, this.guiTop + 156, 3, 207, texture);
+        forwardButton = new GuiBookButton(1, this.guiLeft + 212, this.guiTop + 156, 3, 194, texture);
+        
+        buttonList.add(backButton);
+        buttonList.add(forwardButton);
         
         for (int i = 0; i < chapters.length; i++) {
             String chapterList =  getLocalizedText(".chapter" + (i + 1) + ".title");
             buttonList.add(new GuiBookTextButton(i + 2, this.guiLeft + 17, this.guiTop + 25 + 14 * i, fontRendererObj.getStringWidth(chapterList), chapterList));
         }
-        
     }
     
     public GuiGuideBook(ItemStack stack) {
@@ -85,6 +90,8 @@ public class GuiGuideBook extends GuiScreen {
         renderPageText(pageNumber, 17, 1);
         renderPageText(pageNumber + 1, 134, 2);
         
+        backButton.visible = !isFirstPage(pageNumber);
+        forwardButton.visible = !isLastPage(pageNumber);
         
         for (int k = 0; k < this.buttonList.size(); ++k) {
             if (this.buttonList.get(k) instanceof GuiBookTextButton) {
@@ -92,20 +99,8 @@ public class GuiGuideBook extends GuiScreen {
                     ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
                 }
             } else {
-                if (((GuiButton)this.buttonList.get(k)).id == 0) {
-                    if (!isFirstPage(pageNumber)) {
-                        ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
-                    }
-                } else if (((GuiButton)this.buttonList.get(k)).id == 1) {
-                    if (!isLastPage(pageNumber)) {
-                        ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
-                    }
-                } else {
-                    ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
-                }
-                
+                ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
             }
-            
         }
 
         for (int k = 0; k < this.labelList.size(); ++k) {
@@ -114,17 +109,7 @@ public class GuiGuideBook extends GuiScreen {
                     ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
                 }
             } else {
-                if (((GuiButton)this.buttonList.get(k)).id == 0) {
-                    if (!isFirstPage(pageNumber)) {
-                        ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
-                    }
-                } else if (((GuiButton)this.buttonList.get(k)).id == 1) {
-                    if (!isLastPage(pageNumber)) {
-                        ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
-                    }
-                } else {
-                    ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
-                }
+                ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
             }
         }
     }
