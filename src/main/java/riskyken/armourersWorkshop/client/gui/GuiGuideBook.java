@@ -92,7 +92,18 @@ public class GuiGuideBook extends GuiScreen {
                     ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
                 }
             } else {
-                ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
+                if (((GuiButton)this.buttonList.get(k)).id == 0) {
+                    if (!isFirstPage(pageNumber)) {
+                        ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
+                    }
+                } else if (((GuiButton)this.buttonList.get(k)).id == 1) {
+                    if (!isLastPage(pageNumber)) {
+                        ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
+                    }
+                } else {
+                    ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
+                }
+                
             }
             
         }
@@ -103,7 +114,17 @@ public class GuiGuideBook extends GuiScreen {
                     ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
                 }
             } else {
-                ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
+                if (((GuiButton)this.buttonList.get(k)).id == 0) {
+                    if (!isFirstPage(pageNumber)) {
+                        ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
+                    }
+                } else if (((GuiButton)this.buttonList.get(k)).id == 1) {
+                    if (!isLastPage(pageNumber)) {
+                        ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
+                    }
+                } else {
+                    ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
+                }
             }
         }
     }
@@ -145,6 +166,14 @@ public class GuiGuideBook extends GuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
+    }
+    
+    private boolean isFirstPage(int pageNumber) {
+        return pageNumber == 1;
+    }
+    
+    private boolean isLastPage(int pageNumber) {
+        return pageNumber >= getTotalPages() - 1;
     }
     
     private void nextPage() {
