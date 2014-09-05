@@ -19,24 +19,26 @@ public class GuiCheckBox extends GuiButton {
 	private boolean checked;
 	
 	public GuiCheckBox(int id, int x, int y, String text, boolean checked) {
-		super(id, x, y, 18, 18, text);
+		super(id, x, y, 14, 14, text);
 		this.checked = checked;
 	}
 	
 	@Override
 	public void drawButton(Minecraft minecraft, int x, int y) {
-		minecraft.getTextureManager().bindTexture(texture);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		drawCheckBox(minecraft, x, y);
-		drawLabel(minecraft, this.xPosition + 22, this.yPosition + 6);
+	    if (this.visible) {
+	        minecraft.getTextureManager().bindTexture(texture);
+	        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	        drawCheckBox(minecraft, x, y);
+	        drawLabel(minecraft, this.xPosition + 18, this.yPosition + 4); 
+	    }
 	}
 	
 	private void drawCheckBox(Minecraft minecraft, int x, int y) {
 		int sourceX = 0;
 		int sourceY = 0;
 		
-		if (checked) { sourceX += 18; }
-		if(isHovering(x, y, this.xPosition, this.yPosition, width, height)) { sourceY += 18; }
+		if (checked) { sourceX += 14; }
+		if(isHovering(x, y, this.xPosition, this.yPosition, width, height)) { sourceY += 14; }
 		
 		this.drawTexturedModalRect(this.xPosition, this.yPosition, sourceX, sourceY, width, height);
 	}
