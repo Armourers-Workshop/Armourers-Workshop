@@ -77,6 +77,8 @@ inventory.armourersworkshop:armourCrafter.name=Armour Crafter
 
 # Inventory controls
 inventory.armourersworkshop:armourCrafter.create=Create
+inventory.armourersworkshop:armourerBrain.label.itemName=Item Name
+inventory.armourersworkshop:armourerBrain.label.username=Username
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop

@@ -3,7 +3,9 @@ package riskyken.armourersWorkshop.common.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -22,6 +24,17 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
 
     public BlockArmourerBrain() {
         super(LibBlockNames.ARMOURER_BRAIN);
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer)entity;
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof TileEntityArmourerBrain) {
+                ((TileEntityArmourerBrain)te).setGameProfile(player.getGameProfile());
+            }
+        }
     }
     
     @Override

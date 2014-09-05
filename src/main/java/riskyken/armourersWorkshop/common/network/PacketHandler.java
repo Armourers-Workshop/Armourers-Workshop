@@ -4,6 +4,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientArmourUpdate;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColourUpdate;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
@@ -22,5 +23,6 @@ public class PacketHandler {
         networkWrapper.registerMessage(MessageServerRemoveArmourData.class, MessageServerRemoveArmourData.class, 3, Side.CLIENT);
         networkWrapper.registerMessage(MessageClientArmourUpdate.class, MessageClientArmourUpdate.class, 4, Side.SERVER);
         networkWrapper.registerMessage(MessageClientLoadArmour.class, MessageClientLoadArmour.class, 5, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientGuiSetSkin.class, MessageClientGuiSetSkin.class, 6, Side.SERVER);
     }
 }

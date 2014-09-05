@@ -32,13 +32,11 @@ public class ItemCustomArmour extends AbstractModItemArmor {
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         if (stack.hasTagCompound()) {
             NBTTagCompound itemData = stack.getTagCompound();
+            if (itemData.hasKey(TAG_CUSTOM_NAME)) {
+                list.add(itemData.getString(TAG_CUSTOM_NAME)); 
+            }
             if (itemData.hasKey(TAG_ARMOUR_DATA)) {
-                NBTTagCompound armourData = itemData.getCompoundTag(TAG_ARMOUR_DATA);
-                if (armourData.hasKey(TAG_CUSTOM_NAME)) {
-                    list.add(armourData.getString(TAG_CUSTOM_NAME)); 
-                } else {
-                    list.add("Has armour data"); 
-                }
+                list.add("Has armour data");
             }
         } else {
             list.add("ERROR NO DATA");

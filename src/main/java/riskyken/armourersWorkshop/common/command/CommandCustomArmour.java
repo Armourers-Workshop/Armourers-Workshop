@@ -6,6 +6,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.CustomArmourManager;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -55,6 +56,11 @@ public class CommandCustomArmour extends CommandBase {
                 }
             }
             player.worldObj.setBlock((int) player.posX + 1, (int) player.posY,(int) player.posZ, ModBlocks.armourerBrain);
+            
+            TileEntity te = player.worldObj.getTileEntity((int) player.posX + 1, (int) player.posY,(int) player.posZ);
+            if (te != null && te instanceof TileEntityArmourerBrain) {
+                ((TileEntityArmourerBrain)te).setGameProfile(player.getGameProfile());
+            }
             return;
         }
         

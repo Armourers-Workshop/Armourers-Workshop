@@ -1,6 +1,9 @@
 package riskyken.armourersWorkshop.client.render;
 
+import java.util.Map;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -19,6 +22,10 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
 import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -39,8 +46,24 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         if (!te.isFormed()) { return; }
         
-        this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
+        
+        ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
+        
+        if (te.getGameProfile() != null) {
+            Minecraft minecraft = Minecraft.getMinecraft();
+            Map map = minecraft.func_152342_ad().func_152788_a(te.getGameProfile());
+            if (map.containsKey(Type.SKIN)) {
+                resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
+            }
+        }
+        
+        Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
+        
+        //this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
 
+        
+        
+        
         GL11.glPushMatrix();
         GL11.glColor3f(0.8F, 0.8F, 0.8F);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
@@ -79,7 +102,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     }
     
     private void renderGuide(TileEntityArmourerBrain te, ArmourType type, double x, double y, double z) {
+        
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
+        
         switch (type) {
         case NONE:
             break;

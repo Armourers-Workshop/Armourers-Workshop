@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourCrafter;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
@@ -39,10 +40,14 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
 
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            if (message.buttonId == 1) {
+            
+            if (message.buttonId >= 0 & message.buttonId < 5) {
+                armourerBrain.setType(ArmourType.getOrdinal(message.buttonId + 1));
+            }
+            if (message.buttonId == 6) {
                 armourerBrain.loadArmourItem(player);
             }
-            if (message.buttonId == 2) {
+            if (message.buttonId == 7) {
                 armourerBrain.toggleGuides();
             }
         }

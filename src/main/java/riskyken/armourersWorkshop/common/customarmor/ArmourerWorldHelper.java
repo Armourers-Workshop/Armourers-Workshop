@@ -22,7 +22,11 @@ public final class ArmourerWorldHelper {
             saveArmourPart(world, parts, type.getParts()[i], xCoord, yCoord, zCoord);
         }
         
-        return new CustomArmourItemData(type, parts);
+        if (parts.size() > 0) {
+            return new CustomArmourItemData(type, parts);
+        } else {
+            return null;
+        }
     }
     
     private static void saveArmourPart(World world, ArrayList<CustomArmourPartData> armourData, ArmourPart part, int xCoord, int yCoord, int zCoord) {

@@ -4,11 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.customarmor.ArmourType;
@@ -16,6 +19,10 @@ import riskyken.armourersWorkshop.common.customarmor.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+
+import com.google.common.collect.Iterables;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
 
@@ -32,7 +39,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_ARMOUR_DATA = "armourData";
     private static final String TAG_CUSTOM_NAME = "customName";
+    private static final String TAG_OWNER = "owner";
     
+    private GameProfile gameProfile = null;
     private ForgeDirection direction;
     private ArmourType type;
     private boolean formed;
@@ -44,10 +53,16 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
-        this.type = ArmourType.NONE;
+        this.type = ArmourType.HEAD;
         this.formed = false;
         this.items = new ItemStack[2];
+        //this.gameProfile = new GameProfile(null, "Borro55");
     }
+    
+    //Choccie_Bunny
+    //RiskyKen
+    //Borro55
+    //Kihira
     
     /**
      * Get blocks in the world and saved them onto an items NBT data.
@@ -66,20 +81,22 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         
         armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
         
-        NBTTagCompound armourNBT = new NBTTagCompound();
-        armourItemData.writeToNBT(armourNBT);
+        NBTTagCompound itemNBT = new NBTTagCompound();
         
+        if (armourItemData != null) {
+            NBTTagCompound armourNBT = new NBTTagCompound();
+            armourItemData.writeToNBT(armourNBT);
+            itemNBT.setTag(TAG_ARMOUR_DATA, armourNBT);
+        }
         
         if (!name.equals("")) {
-            //dataNBT.setString(TAG_CUSTOM_NAME, name);
+            itemNBT.setString(TAG_CUSTOM_NAME, name);
         }
         
+        stackInput.setTagCompound(itemNBT);
         
-        if (!stackInput.hasTagCompound()) {
-            stackInput.setTagCompound(new NBTTagCompound());
-        }
-        
-        stackInput.getTagCompound().setTag(TAG_ARMOUR_DATA, armourNBT);
+        setInventorySlotContents(0, null);
+        setInventorySlotContents(1, stackInput);
     }
 
     /**
@@ -99,6 +116,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
         
         ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, customArmourItemData);
+    
+        setInventorySlotContents(0, null);
+        setInventorySlotContents(1, stackInput);
     }
     
     /**
@@ -112,7 +132,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     public void setInventorySlotContents(int slotId, ItemStack stack) {
         super.setInventorySlotContents(slotId, stack);
         if (loaded) {
-            checkForTemplateItem();
+            //checkForTemplateItem();
         }
     }
     
@@ -254,6 +274,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private void createBoundingBox(int x, int y, int z) {
         if (worldObj.isAirBlock(x, y, z)) {
             worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
+            //TODO Set tile entity here.
         }
     }
     
@@ -390,7 +411,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return showGuides;
     }
     
-    private void setType(ArmourType type) {
+    public GameProfile getGameProfile() {
+        return gameProfile;
+    }
+    
+    public void setType(ArmourType type) {
         if (this.type == type) { return; }
         this.type = type;
         if (formed) {
@@ -407,6 +432,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public void setGameProfile(GameProfile gameProfile) {
+        this.gameProfile = gameProfile;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
         this.markDirty();
@@ -414,12 +445,29 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public Packet getDescriptionPacket() {
+        updateProfileData();
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         writeTeToNBT(compound);
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
 
+    private void updateProfileData(){
+        if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
+            if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
+                GameProfile gameprofile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.gameProfile.getName());
+                if (gameprofile != null) {
+                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
+                    if (property == null) {
+                        gameprofile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameprofile, true);
+                    }
+                    this.gameProfile = gameprofile;
+                    this.markDirty();
+                }
+            }
+        }
+    }
+    
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
@@ -448,6 +496,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         xOffset = compound.getInteger(TAG_X_OFFSET);
         zOffset = compound.getInteger(TAG_Z_OFFSET);
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
+        
+        if (compound.hasKey(TAG_OWNER, 10)) {
+            this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+        }
     }
     
     public void writeTeToNBT(NBTTagCompound compound) {
@@ -458,6 +510,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         compound.setInteger(TAG_X_OFFSET, xOffset);
         compound.setInteger(TAG_Z_OFFSET, zOffset);
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
+        if (this.gameProfile != null) {
+            NBTTagCompound profileTag = new NBTTagCompound();
+            NBTUtil.func_152460_a(profileTag, this.gameProfile);
+            compound.setTag(TAG_OWNER, profileTag);
+        }
     }
 
     @Override
