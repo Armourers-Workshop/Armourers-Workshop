@@ -23,7 +23,6 @@ public class GuiHelper {
     public static String getLocalizedControlName(String guiName, String controlName) {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + controlName;
         String localizedName = StatCollector.translateToLocal(unlocalizedName);
-        String renderText = unlocalizedName;
         if (!unlocalizedName.equals(localizedName)){
             return localizedName;
         }

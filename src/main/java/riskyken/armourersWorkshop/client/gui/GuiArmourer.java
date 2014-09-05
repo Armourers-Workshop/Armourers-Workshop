@@ -40,11 +40,11 @@ public class GuiArmourer extends GuiContainer {
         buttonList.clear();
         
         for (int i = 0; i < ArmourType.values().length - 1; i++) {
-            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourType.getOrdinal(i + 1).name()));
+            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourType.getOrdinal(i + 1).getLocalizedName()));
         }
         
-        GuiButtonExt swordButton = new GuiButtonExt(-1, guiLeft + 5, guiTop + 16 + (5 * 20), 50, 16, "SWORD");
-        GuiButtonExt staffButton = new GuiButtonExt(-1, guiLeft + 5, guiTop + 16 + (6 * 20), 50, 16, "STAFF");
+        GuiButtonExt swordButton = new GuiButtonExt(-1, guiLeft + 5, guiTop + 16 + (5 * 20), 50, 16, "Sword");
+        GuiButtonExt staffButton = new GuiButtonExt(-1, guiLeft + 5, guiTop + 16 + (6 * 20), 50, 16, "Staff");
         swordButton.enabled = false;
         staffButton.enabled = false;
         buttonList.add(swordButton);

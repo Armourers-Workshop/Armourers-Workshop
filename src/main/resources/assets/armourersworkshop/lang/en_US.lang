@@ -70,6 +70,13 @@ item.armourersworkshop:colourNoiseTool.flavour=Applies random colour noise to a 
 item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 
+# Armour types
+armourTypes.armourersworkshop:head.name=Head
+armourTypes.armourersworkshop:chest.name=Chest
+armourTypes.armourersworkshop:legs.name=Legs
+armourTypes.armourersworkshop:skirt.name=Skirt
+armourTypes.armourersworkshop:feet.name=Feet
+
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer
