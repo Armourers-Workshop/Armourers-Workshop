@@ -77,7 +77,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case NONE:
             break;
         case HEAD:
-            modelHead.render();
+            modelHead.render(te.isShowOverlay());
             break;
         case CHEST:
             modelChest.render();

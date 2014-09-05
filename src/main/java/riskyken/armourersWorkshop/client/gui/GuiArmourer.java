@@ -30,6 +30,7 @@ public class GuiArmourer extends GuiContainer {
     
     private TileEntityArmourerBrain armourerBrain;
     private GuiCheckBox checkShowGuides;
+    private GuiCheckBox checkShowOverlay;
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     
@@ -37,35 +38,35 @@ public class GuiArmourer extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = armourerBrain.getInventoryName();
+        
         buttonList.clear();
         
         for (int i = 0; i < ArmourType.values().length - 1; i++) {
             buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourType.getOrdinal(i + 1).getLocalizedName()));
         }
         
-        GuiButtonExt swordButton = new GuiButtonExt(-1, guiLeft + 5, guiTop + 16 + (5 * 20), 50, 16, "Sword");
-        GuiButtonExt staffButton = new GuiButtonExt(-1, guiLeft + 5, guiTop + 16 + (6 * 20), 50, 16, "Staff");
-        swordButton.enabled = false;
-        staffButton.enabled = false;
-        buttonList.add(swordButton);
-        buttonList.add(staffButton);
-        
         buttonList.add(new GuiButtonExt(5, guiLeft + 86, guiTop + 16, 50, 12, "Save"));
         buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, "Load"));
         
-        checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 128, "Show Guide?", armourerBrain.isShowGuides());
+        checkShowGuides = new GuiCheckBox(7, guiLeft + 5, guiTop + 118, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides());
+        checkShowOverlay = new GuiCheckBox(9, guiLeft + 5, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
+        
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(20);
         
-        textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 103, 16);
+        textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
         textUserSkin.setMaxStringLength(20);
-        buttonList.add(new GuiButtonExt(8, guiLeft + 64, guiTop + 108, 103, 16, "Set Skin"));
+        buttonList.add(new GuiButtonExt(8, guiLeft + 138, guiTop + 88, 30, 16, "Set"));
         
         if (armourerBrain.getGameProfile() != null) {
             textUserSkin.setText(armourerBrain.getGameProfile().getName());
         }
         
         buttonList.add(checkShowGuides);
+        buttonList.add(checkShowOverlay);
+        //buttonList.add(new GuiButtonExt(9, guiLeft + 5, guiTop + 118, 115, 16, "Mirror Left To Right"));
+        //buttonList.add(new GuiButtonExt(10, guiLeft + 5, guiTop + 138, 115, 16, "Mirror Right To Left"));
     }
     
     @Override
@@ -125,6 +126,8 @@ public class GuiArmourer extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         checkShowGuides.setChecked(armourerBrain.isShowGuides());
+        checkShowOverlay.setChecked(armourerBrain.isShowOverlay());
+        checkShowOverlay.visible = armourerBrain.getType() == ArmourType.HEAD;
         
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);

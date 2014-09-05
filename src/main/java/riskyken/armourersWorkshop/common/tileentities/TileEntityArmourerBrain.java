@@ -30,6 +30,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final long TICK_COOLDOWN = 40L;
     private static final long TICK_OFFSET = 5L;
     
+    private static final String TAG_OWNER = "owner";
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_TYPE = "type";
     private static final String TAG_FORMED = "formed";
@@ -37,9 +38,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private static final String TAG_X_OFFSET = "xOffset";
     private static final String TAG_Z_OFFSET = "zOffset";
     private static final String TAG_SHOW_GUIDES = "showGuides";
+    private static final String TAG_SHOW_OVERLAY = "showOverlay";
+    
     private static final String TAG_ARMOUR_DATA = "armourData";
     private static final String TAG_CUSTOM_NAME = "customName";
-    private static final String TAG_OWNER = "owner";
+    
     
     private GameProfile gameProfile = null;
     private ForgeDirection direction;
@@ -50,13 +53,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     private int xOffset;
     private int zOffset;
     private boolean showGuides;
+    private boolean showOverlay;
     
     public TileEntityArmourerBrain() {
         this.direction = ForgeDirection.UNKNOWN;
         this.type = ArmourType.HEAD;
         this.formed = false;
         this.items = new ItemStack[2];
-        //this.gameProfile = new GameProfile(null, "Borro55");
+        this.showOverlay = true;
     }
     
     //Choccie_Bunny
@@ -416,6 +420,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return showGuides;
     }
     
+    public boolean isShowOverlay() {
+        return showOverlay;
+    }
+    
     public GameProfile getGameProfile() {
         return gameProfile;
     }
@@ -445,6 +453,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public void toggleOverlay() {
+        this.showOverlay = !this.showOverlay;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -501,7 +515,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         xOffset = compound.getInteger(TAG_X_OFFSET);
         zOffset = compound.getInteger(TAG_Z_OFFSET);
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
-        
+        showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
@@ -515,6 +529,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         compound.setInteger(TAG_X_OFFSET, xOffset);
         compound.setInteger(TAG_Z_OFFSET, zOffset);
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
+        compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(profileTag, this.gameProfile);

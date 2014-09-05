@@ -22,9 +22,11 @@ public class ModelHead extends ModelBase {
         overlay.setTextureSize(64, 32);
     }
 
-    public void render() {
+    public void render(boolean showOverlay) {
         float mult = 0.0625F;
         main.render(mult);
-        overlay.render(mult);
+        if (showOverlay) {
+            overlay.render(mult);
+        }
     }
 }
