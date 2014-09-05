@@ -393,7 +393,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
+        AxisAlignedBB bb = super.getRenderBoundingBox();
+        
+        if (formed) {
+            bb = AxisAlignedBB.getBoundingBox(xCoord + xOffset, yCoord, zCoord + zOffset,
+                    xCoord + MULTI_BLOCK_SIZE, yCoord + MULTI_BLOCK_SIZE, zCoord + MULTI_BLOCK_SIZE);
+        }
+        
+        return bb;
     }
 
     public ArmourType getType() {
