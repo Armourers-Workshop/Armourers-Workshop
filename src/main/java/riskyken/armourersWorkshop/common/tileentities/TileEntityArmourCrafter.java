@@ -34,24 +34,24 @@ public class TileEntityArmourCrafter extends AbstractTileEntityInventory {
         ItemArmor itemArmour = (ItemArmor)stackArmour.getItem();
         ItemArmourTemplate itemTemplate = (ItemArmourTemplate)stackTemplate.getItem();
         
-        if (itemArmour.armorType != itemTemplate.getArmourTypeNomal(stackTemplate)) { return; }
+        if (itemArmour.armorType != ItemArmourTemplate.getArmourType(stackTemplate).getSlotId()) { return; }
         
         ItemCustomArmour targetArmour;
         
         switch (itemTemplate.getArmourType(stackTemplate)) {
-        case 0:
+        case HEAD:
             targetArmour = ModItems.customHeadArmour[itemArmour.getArmorMaterial().ordinal()];
             break;
-        case 1:
+        case CHEST:
             targetArmour = ModItems.customChestArmour[itemArmour.getArmorMaterial().ordinal()];
             break;
-        case 2:
+        case LEGS:
             targetArmour = ModItems.customLegsArmour[itemArmour.getArmorMaterial().ordinal()];
             break;
-        case 3:
+        case SKIRT:
             targetArmour = ModItems.customSkirtArmour[itemArmour.getArmorMaterial().ordinal()];
             break;
-        case 4:
+        case FEET:
             targetArmour = ModItems.customFeetArmour[itemArmour.getArmorMaterial().ordinal()];
             break;
         default:

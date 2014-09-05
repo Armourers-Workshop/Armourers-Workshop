@@ -46,11 +46,12 @@ item.armourersworkshop:customArmour.diamond.legs.name=Custom Diamond Leg Armour
 item.armourersworkshop:customArmour.diamond.skirt.name=Custom Diamond Skirt Armour
 item.armourersworkshop:customArmour.diamond.feet.name=Custom Diamond Foot Armour
 
-item.armourersworkshop:armourTemplate.0.name=Head Armour Template
-item.armourersworkshop:armourTemplate.1.name=Chest Armour Template
-item.armourersworkshop:armourTemplate.2.name=Leg Armour Template
-item.armourersworkshop:armourTemplate.3.name=Skirt Armour Template
-item.armourersworkshop:armourTemplate.4.name=Foot Armour Template
+item.armourersworkshop:armourTemplate.0.name=Blank Armour Template
+item.armourersworkshop:armourTemplate.1.name=Head Armour Template
+item.armourersworkshop:armourTemplate.2.name=Chest Armour Template
+item.armourersworkshop:armourTemplate.3.name=Leg Armour Template
+item.armourersworkshop:armourTemplate.4.name=Skirt Armour Template
+item.armourersworkshop:armourTemplate.5.name=Foot Armour Template
 item.armourersworkshop:paintbrush.name=Paintbrush
 item.armourersworkshop:paintRoller.name=Paint Roller
 item.armourersworkshop:colourPicker.name=Colour Picker

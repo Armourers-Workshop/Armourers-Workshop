@@ -77,17 +77,22 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         
         if (stackInput == null) { return; }
         if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
+        if (ItemArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
+        
         
         
         armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
         
+        if (armourItemData == null) { return; }
+        
+        ItemArmourTemplate.setArmourType(this.type, stackInput);
+        
         NBTTagCompound itemNBT = new NBTTagCompound();
         
-        if (armourItemData != null) {
-            NBTTagCompound armourNBT = new NBTTagCompound();
-            armourItemData.writeToNBT(armourNBT);
-            itemNBT.setTag(TAG_ARMOUR_DATA, armourNBT);
-        }
+        NBTTagCompound armourNBT = new NBTTagCompound();
+        armourItemData.writeToNBT(armourNBT);
+        itemNBT.setTag(TAG_ARMOUR_DATA, armourNBT);
+        
         
         if (!name.equals("")) {
             itemNBT.setString(TAG_CUSTOM_NAME, name);
