@@ -4,8 +4,10 @@ import java.util.List;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.customarmor.ArmourType;
@@ -27,6 +29,9 @@ public class ItemCustomArmour extends AbstractModItemArmor {
                 armorMaterial, armorType.getSlotId());
         this.type = armorType;
     }
+    
+    @Override
+    public void getSubItems(Item item, CreativeTabs tab, List list) {}
     
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
