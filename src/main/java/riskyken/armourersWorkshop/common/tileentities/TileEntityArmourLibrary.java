@@ -9,11 +9,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.customarmor.ArmourType;
@@ -27,6 +29,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
 
     private static final String TAG_ARMOUR_DATA = "armourData";
     
+    public ArrayList<String> fileNames = null;
+    
     public TileEntityArmourLibrary() {
         this.items = new ItemStack[2];
     }
@@ -36,7 +40,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         return LibBlockNames.ARMOUR_LIBRARY;
     }
 
-    public void saveArmour(EntityPlayerMP player) {
+    public void saveArmour(String filename, EntityPlayerMP player) {
         //Check we have a valid item to save onto.
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) { return; }
@@ -53,7 +57,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         armourDir = new File(armourDir, LibModInfo.ID);
         
         DataOutputStream stream;
-        File targetFile = new File(armourDir, File.separatorChar + "test" + ".armour");
+        File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
         
         CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
         
@@ -76,7 +80,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         setInventorySlotContents(1, stackInput);
     }
     
-    public void loadArmour(EntityPlayerMP player) {
+    public void loadArmour(String filename, EntityPlayerMP player) {
         //Check we have a valid item to load from.
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) { return; }
@@ -90,7 +94,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         armourDir = new File(armourDir, LibModInfo.ID);
         
         DataInputStream stream;
-        File targetFile = new File(armourDir, File.separatorChar + "test" + ".armour");
+        File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
         
         CustomArmourItemData armourItemData;
         
@@ -117,14 +121,41 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         armourItemData.writeToNBT(armourNBT);
         itemNBT.setTag(TAG_ARMOUR_DATA, armourNBT);
         
-        
         stackInput.setTagCompound(itemNBT);
         
         setInventorySlotContents(0, null);
         setInventorySlotContents(1, stackInput);
     }
     
-    private boolean createArmourDirectory() {
+    public ArrayList<String> getFileNames() {
+        ArrayList<String> files = new ArrayList<String>();
+        if (!createArmourDirectory()) { return null; }
+        
+        File armourDir = new File(System.getProperty("user.dir"));
+        armourDir = new File(armourDir, LibModInfo.ID);
+        
+        File[] templateFiles;
+        try {
+            templateFiles = armourDir.listFiles();
+        } catch (Exception e) {
+            ModLogger.log(Level.ERROR, "Armour file list load failed.");
+            e.printStackTrace();
+            return null;
+        }
+        
+        for (int i = 0; i < templateFiles.length; i++) {
+            String cleanName = FilenameUtils.removeExtension(templateFiles[i].getName());
+            files.add(cleanName);
+        }
+        
+        return files;
+    }
+    
+    public void setArmourList(ArrayList<String> fileNames) {
+        this.fileNames = fileNames;
+    }
+    
+    public static boolean createArmourDirectory() {
         File armourDir = new File(System.getProperty("user.dir"));
         armourDir = new File(armourDir, LibModInfo.ID);
         if (!armourDir.exists()) {

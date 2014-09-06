@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -17,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiList extends Gui {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourLibrary.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/list.png");
     
     /** Local copy of Minecraft */
     protected final Minecraft mc;
@@ -30,6 +31,8 @@ public class GuiList extends Gui {
     protected final int slotHeight;
     public final boolean enabled;
     public final boolean visible;
+    protected int scrollAmount;
+    protected int selectedIndex;
     
     protected List<IGuiListItem> listItems;
     
@@ -44,6 +47,7 @@ public class GuiList extends Gui {
         listItems = new ArrayList<IGuiListItem>();
         this.enabled = true;
         this.visible = true;
+        selectedIndex  = -1;
     }
     
     public void clearList() {
@@ -57,16 +61,49 @@ public class GuiList extends Gui {
     public void drawList(int mouseX, int mouseY, float tickTime) {
         if (!this.visible) { return; }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        //mc.renderEngine.bindTexture(icons);
-        //this.drawTexturedModalRect(x, y, 0, 0, width, height);
+        mc.renderEngine.bindTexture(texture);
+        this.drawTexturedModalRect(x, y, 0, 0, width, height);
         
+        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        
+        double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
+        double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
+        
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor((int) ((x + 1) * scaleWidth),  (mc.displayHeight) - (int)((y + height) * scaleHeight), (int) ((width - 2) * scaleWidth), (int) ((height - 2) * scaleHeight));
         for (int i = 0; i < listItems.size(); i++) {
-            listItems.get(i).drawListItem(fontRenderer, x, y + i * slotHeight, 0, 0);
+            listItems.get(i).drawListItem(fontRenderer, x + 2, y - scrollAmount + 2 + i * slotHeight, mouseX, mouseY, i == selectedIndex);
+        }
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+    
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        for (int i = 0; i < listItems.size(); i++) {
+            if (listItems.get(i).mousePressed(fontRenderer, x + 2, y - scrollAmount + 2 + i * slotHeight, mouseX, mouseY, button)) {
+                selectedIndex = i;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+        for (int i = 0; i < listItems.size(); i++) {
+            listItems.get(i).mouseReleased(fontRenderer, x, y, mouseX, mouseY, button);
         }
     }
 
+    public IGuiListItem getSelectedListEntry() {
+        return this.listItems.get(selectedIndex);
+    }
+    
+    
     public IGuiListItem getListEntry(int index) {
         return this.listItems.get(index);
+    }
+    
+    public void setScrollPercentage(int amount) {
+        scrollAmount = amount;
     }
 
     protected int getSize() {

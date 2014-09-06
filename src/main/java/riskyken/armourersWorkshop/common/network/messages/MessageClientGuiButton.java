@@ -5,10 +5,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.customarmor.ArmourType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourCrafter;
-import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -61,16 +59,6 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             TileEntityArmourCrafter armourCrafter = ((ContainerArmourCrafter) container).getTileEntity();
             if (message.buttonId == 0) {
                 armourCrafter.createArmour(player);
-            }
-        }
-        
-        if (container != null && container instanceof ContainerArmourLibrary) {
-            TileEntityArmourLibrary armourLibrary = ((ContainerArmourLibrary) container).getTileEntity();
-            if (message.buttonId == 0) {
-                armourLibrary.saveArmour(player);
-            }
-            if (message.buttonId == 1) {
-                armourLibrary.loadArmour(player);
             }
         }
         return null;

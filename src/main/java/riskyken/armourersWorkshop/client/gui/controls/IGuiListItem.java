@@ -5,9 +5,11 @@ import net.minecraft.client.gui.FontRenderer;
 
 public interface IGuiListItem {
     
-    public void drawListItem(FontRenderer fontRenderer, int x, int y, int relativeX, int relativeY);
+    public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected);
     
-    public boolean mousePressed(int x, int y, int button);
+    public boolean mousePressed(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button);
     
-    public void mouseReleased(int x, int y, int button);
+    public void mouseReleased(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button);
+
+    public String getDisplayName();
 }

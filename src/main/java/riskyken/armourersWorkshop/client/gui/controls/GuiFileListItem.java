@@ -1,9 +1,13 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import riskyken.armourersWorkshop.utils.UtilColour;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-
-public class GuiFileListItem implements IGuiListItem {
+@SideOnly(Side.CLIENT)
+public class GuiFileListItem extends Gui implements IGuiListItem {
 
     private final String displayText;
     
@@ -12,21 +16,34 @@ public class GuiFileListItem implements IGuiListItem {
     }
 
     @Override
-    public void drawListItem(FontRenderer fontRenderer, int x, int y, int relativeX, int relativeY) {
-        // TODO Auto-generated method stub
-        fontRenderer.drawString(displayText, x, y, 4210752);
+    public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected) {
+        int fontColour = UtilColour.getMinecraftColor(8);
+        if (selected) {
+            //fontColour = UtilColour.getMinecraftColor(4);
+        }
+        if (isHovering(fontRenderer, x, y, mouseX, mouseY)) {
+            fontColour = UtilColour.getMinecraftColor(0);
+        }
+        fontRenderer.drawString(displayText, x, y, fontColour);
     }
 
     @Override
-    public boolean mousePressed(int x, int y, int button) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean mousePressed(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button) {
+        return isHovering(fontRenderer, x, y, mouseX, mouseY);
     }
 
     @Override
-    public void mouseReleased(int x, int y, int button) {
+    public void mouseReleased(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button) {
         // TODO Auto-generated method stub
         
     }
     
+    private boolean isHovering(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY) {
+        return mouseX >= x & mouseY >= y & mouseX <= x + fontRenderer.getStringWidth(displayText) & mouseY <= y + 8;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return displayText;
+    }
 }

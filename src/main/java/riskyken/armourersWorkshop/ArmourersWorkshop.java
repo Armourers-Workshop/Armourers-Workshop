@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.proxies.IProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -68,6 +69,6 @@ public class ArmourersWorkshop {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-
+        TileEntityArmourLibrary.createArmourDirectory();
     }
 }
