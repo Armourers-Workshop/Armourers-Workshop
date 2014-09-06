@@ -7,7 +7,10 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiBookTextButton extends GuiButtonExt {
 
     public GuiBookTextButton(int id, int xPos, int yPos, int width, String displayString) {

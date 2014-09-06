@@ -5,15 +5,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourCrafter;
+import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourCrafter;
+import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -45,6 +48,11 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerArmourCrafter(player.inventory,(TileEntityArmourCrafter)te);
                 }
                 break;
+            case LibGuiIds.ARMOUR_LIBRARY:
+                if (te instanceof TileEntityArmourLibrary){
+                    return new ContainerArmourLibrary(player.inventory,(TileEntityArmourLibrary)te);
+                }
+                break;
         }
         return null;
     }
@@ -72,6 +80,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.ARMOUR_CRAFTER:
                 if (te instanceof TileEntityArmourCrafter) {
                     return new GuiArmourCrafter(player.inventory,(TileEntityArmourCrafter)te);
+                }
+                break;
+            case LibGuiIds.ARMOUR_LIBRARY:
+                if (te instanceof TileEntityArmourLibrary) {
+                    return new GuiArmourLibrary(player.inventory,(TileEntityArmourLibrary)te);
                 }
                 break;
         }

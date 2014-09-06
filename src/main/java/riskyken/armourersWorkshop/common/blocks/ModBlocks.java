@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -15,6 +16,7 @@ public class ModBlocks {
     public static Block armourerBrain;
     public static Block armourerMultiBlock;
     public static Block armourCrafter;
+    public static Block armourLibrary;
     public static Block boundingBox;
     public static Block colourable;
     public static Block colourableGlowing;
@@ -24,6 +26,7 @@ public class ModBlocks {
         armourerBrain = new BlockArmourerBrain();
         armourerMultiBlock = new BlockArmourerMultiBlock();
         armourCrafter = new BlockArmourCrafter();
+        armourLibrary = new BlockArmourLibrary();
         boundingBox = new BlockBoundingBox();
         colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
         colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
@@ -34,6 +37,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityArmourerBrain.class, LibBlockNames.ARMOURER_BRAIN);
         registerTileEntity(TileEntityMultiBlock.class, LibBlockNames.ARMOURER_MULTI_BLOCK);
         registerTileEntity(TileEntityArmourCrafter.class, LibBlockNames.ARMOUR_CRAFTER);
+        registerTileEntity(TileEntityArmourLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);
     }
