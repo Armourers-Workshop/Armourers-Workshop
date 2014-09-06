@@ -8,6 +8,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
+import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -24,6 +26,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourLibrary.png");
     
     private TileEntityArmourLibrary armourLibrary;
+    private GuiList fileList;
     
     public GuiArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
         super(new ContainerArmourLibrary(invPlayer, armourLibrary));
@@ -38,11 +41,23 @@ public class GuiArmourLibrary extends GuiContainer {
         buttonList.clear();
         buttonList.add(new GuiButtonExt(0, guiLeft + 50, guiTop + 20, 100, 20, "Save Test"));
         buttonList.add(new GuiButtonExt(1, guiLeft + 50, guiTop + 80, 100, 20, "Load Test"));
+        
+        fileList = new GuiList(this.guiLeft + 5, this.guiTop + 5, 200, 200, 12);
+        fileList.addListItem(new GuiFileListItem("Test 1"));
+        fileList.addListItem(new GuiFileListItem("Test 2"));
     }
+    
+    
     
     @Override
     protected void actionPerformed(GuiButton button) {
         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
+    }
+    
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float tickTime) {
+        super.drawScreen(mouseX, mouseY, tickTime);
+        fileList.drawList(mouseX, mouseY, tickTime);
     }
 
     @Override
@@ -50,6 +65,8 @@ public class GuiArmourLibrary extends GuiContainer {
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        
+        
     }
     
     @Override
