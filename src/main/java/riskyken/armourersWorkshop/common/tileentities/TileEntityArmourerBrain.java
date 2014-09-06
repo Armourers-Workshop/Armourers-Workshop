@@ -91,6 +91,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         if (this.worldObj.isRemote) { return; }
         ItemStack stackInput = getStackInSlot(0);
         
+        if (stackInput == null) { return; }
+        if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
+        
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         
