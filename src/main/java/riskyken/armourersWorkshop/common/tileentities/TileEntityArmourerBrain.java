@@ -53,8 +53,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         CustomArmourItemData armourItemData;
         ItemStack stackInput = getStackInSlot(0);
+        ItemStack stackOuput = getStackInSlot(1);
         
         if (stackInput == null) { return; }
+        if (stackOuput != null) { return; }
         if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
         if (ItemArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
         
@@ -90,8 +92,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     public void loadArmourItem(EntityPlayerMP player) {
         if (this.worldObj.isRemote) { return; }
         ItemStack stackInput = getStackInSlot(0);
+        ItemStack stackOuput = getStackInSlot(1);
         
         if (stackInput == null) { return; }
+        if (stackOuput != null) { return; }
         if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
         
         if (!stackInput.hasTagCompound()) { return; };
