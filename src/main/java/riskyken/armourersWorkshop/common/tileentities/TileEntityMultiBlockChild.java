@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.tileentities;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityMultiBlock extends TileEntity {
+public class TileEntityMultiBlockChild extends TileEntity {
 
     private static final String TAG_PARENT_X = "parentX";
     private static final String TAG_PARENT_Y = "parentY";

@@ -8,7 +8,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMultiBlock;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMultiBlockChild;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
@@ -35,7 +35,7 @@ public class ModBlocks {
 
     public static void registerTileEntities() {
         registerTileEntity(TileEntityArmourerBrain.class, LibBlockNames.ARMOURER_BRAIN);
-        registerTileEntity(TileEntityMultiBlock.class, LibBlockNames.ARMOURER_MULTI_BLOCK);
+        registerTileEntity(TileEntityMultiBlockChild.class, LibBlockNames.ARMOURER_MULTI_BLOCK);
         registerTileEntity(TileEntityArmourCrafter.class, LibBlockNames.ARMOUR_CRAFTER);
         registerTileEntity(TileEntityArmourLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);

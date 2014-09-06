@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMultiBlock;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMultiBlockChild;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -56,9 +56,9 @@ public class BlockArmourerMultiBlock extends AbstractModBlock implements ITileEn
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null & te instanceof TileEntityMultiBlock) {
+        if (te != null & te instanceof TileEntityMultiBlockChild) {
             if (!world.isRemote) {
-                ((TileEntityMultiBlock)te).notifyParentOfChange();
+                ((TileEntityMultiBlockChild)te).notifyParentOfChange();
             }
         }
         return super.removedByPlayer(world, player, x, y, z, willHarvest);
@@ -85,6 +85,6 @@ public class BlockArmourerMultiBlock extends AbstractModBlock implements ITileEn
 
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
-        return new TileEntityMultiBlock();
+        return new TileEntityMultiBlockChild();
     }
 }

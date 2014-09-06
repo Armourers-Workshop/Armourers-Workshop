@@ -101,6 +101,12 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
         super.readFromNBT(compound);
     }
     
+    public void readCommonFromNBT(NBTTagCompound compound) {
+    }
+    
+    public void writeCommonToNBT(NBTTagCompound compound) {
+    }
+    
     public void writeItemsToNBT(NBTTagCompound compound) {
         NBTTagList items = new NBTTagList();
         for (int i = 0; i < getSizeInventory(); i++) {
