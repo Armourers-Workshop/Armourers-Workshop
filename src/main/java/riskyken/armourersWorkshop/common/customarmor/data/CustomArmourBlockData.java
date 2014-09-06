@@ -1,6 +1,11 @@
 package riskyken.armourersWorkshop.common.customarmor.data;
 
 import io.netty.buffer.ByteBuf;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 public class CustomArmourBlockData {
@@ -50,6 +55,10 @@ public class CustomArmourBlockData {
         readFromNBT(compound);
     }
     
+    public CustomArmourBlockData(DataInputStream stream) throws IOException {
+        readFromStream(stream);
+    }
+
     public void writeToBuf(ByteBuf buf) {
         buf.writeByte(x);
         buf.writeByte(y);
@@ -80,6 +89,22 @@ public class CustomArmourBlockData {
         z = compound.getByte(TAG_Z);
         colour = compound.getInteger(TAG_COLOUR);
         blockType = compound.getByte(TAG_BLOCK_TYPE);
+    }
+    
+    public void writeToStream(DataOutputStream stream) throws IOException {
+        stream.writeByte(x);
+        stream.writeByte(y);
+        stream.writeByte(z);
+        stream.writeInt(colour);
+        stream.writeByte(blockType);
+    }
+    
+    private void readFromStream(DataInputStream stream) throws IOException {
+        x = stream.readByte();
+        y = stream.readByte();
+        z = stream.readByte();
+        colour = stream.readInt();
+        blockType = stream.readByte();
     }
     
     public boolean isGlowing() {

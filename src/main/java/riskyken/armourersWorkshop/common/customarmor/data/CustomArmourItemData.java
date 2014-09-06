@@ -2,6 +2,9 @@ package riskyken.armourersWorkshop.common.customarmor.data;
 
 import io.netty.buffer.ByteBuf;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +34,10 @@ public class CustomArmourItemData {
         readFromNBT(compound);
     }
     
+    public CustomArmourItemData(DataInputStream stream) throws IOException {
+        readFromStream(stream);
+    }
+
     public void writeToBuf(ByteBuf buf) {
         buf.writeByte(type.ordinal());
         buf.writeByte(parts.size());
@@ -69,6 +76,23 @@ public class CustomArmourItemData {
         for (int i = 0; i < blockData.tagCount(); i++) {
             NBTTagCompound data = (NBTTagCompound)blockData.getCompoundTagAt(i);
             parts.add(new CustomArmourPartData(data));
+        }
+    }
+    
+    public void writeToStream(DataOutputStream stream) throws IOException {
+        stream.writeByte(type.ordinal());
+        stream.writeByte(parts.size());
+        for (int i = 0; i < parts.size(); i++) {
+            parts.get(i).writeToStream(stream);
+        }
+    }
+    
+    private void readFromStream(DataInputStream stream) throws IOException {
+        type = ArmourType.getOrdinal(stream.readByte());
+        int size = stream.readByte();
+        parts = new ArrayList<CustomArmourPartData>();
+        for (int i = 0; i < size; i++) {
+            parts.add(new CustomArmourPartData(stream));
         }
     }
     
