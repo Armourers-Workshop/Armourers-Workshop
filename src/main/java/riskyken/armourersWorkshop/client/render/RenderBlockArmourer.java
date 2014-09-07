@@ -190,9 +190,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-        tessellator.addVertexWithUV(0, sizeY, 0, sizeY * 2, 0);
-        tessellator.addVertexWithUV(sizeX, sizeY, 0, sizeY * 2, sizeX * 2);
-        tessellator.addVertexWithUV(sizeX, 0, 0, 0, sizeX * 2);
+        tessellator.addVertexWithUV(0, sizeY, 0, sizeY, 0);
+        tessellator.addVertexWithUV(sizeX, sizeY, 0, sizeY, sizeX);
+        tessellator.addVertexWithUV(sizeX, 0, 0, 0, sizeX);
         tessellator.draw();
         
         GL11.glDisable(GL11.GL_BLEND);
@@ -238,9 +238,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-        tessellator.addVertexWithUV(0, sizeY, 0, sizeY * 2, 0);
-        tessellator.addVertexWithUV(sizeX, sizeY, 0, sizeY * 2, sizeX * 2);
-        tessellator.addVertexWithUV(sizeX, 0, 0, 0, sizeX * 2);
+        tessellator.addVertexWithUV(0, sizeY, 0, sizeY, 0);
+        tessellator.addVertexWithUV(sizeX, sizeY, 0, sizeY, sizeX);
+        tessellator.addVertexWithUV(sizeX, 0, 0, 0, sizeX);
         tessellator.draw();
         
         GL11.glDisable(GL11.GL_BLEND);
