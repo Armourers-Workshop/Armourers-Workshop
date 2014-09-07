@@ -61,9 +61,11 @@ public class GuiArmourLibrary extends GuiContainer {
             switch (button.id) {
             case 0:
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(filename, false));
+                textFileName.setText("");
                 break;
             case 1:
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(filename, true));
+                textFileName.setText("");
                 break;
             }
         }
