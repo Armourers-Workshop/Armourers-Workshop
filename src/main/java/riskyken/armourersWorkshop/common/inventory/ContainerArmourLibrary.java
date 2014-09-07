@@ -6,6 +6,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
@@ -33,6 +34,38 @@ public class ContainerArmourLibrary extends Container {
     
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+        Slot slot = getSlot(slotID);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack = slot.getStack();
+            ItemStack result = stack.copy();
+
+            if (slotID < 2) {
+                if (!this.mergeItemStack(stack, 11, 38, false)) {
+                    if (!this.mergeItemStack(stack, 2, 11, false)) {
+                        return null;
+                    }
+                }
+            } else {
+                if (stack.getItem() instanceof ItemArmourTemplate) {
+                    if (!this.mergeItemStack(stack, 0, 1, false)) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+
+            if (stack.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            slot.onPickupFromSlot(player, stack);
+
+            return result;
+        }
+
         return null;
     }
     
