@@ -70,19 +70,26 @@ public class GuiList extends Gui {
         double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
         
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) ((x + 1) * scaleWidth),  (mc.displayHeight) - (int)((y + height) * scaleHeight), (int) ((width - 2) * scaleWidth), (int) ((height - 2) * scaleHeight));
+        GL11.glScissor((int) ((x + 1) * scaleWidth),  (mc.displayHeight) - (int)((y + height - 1) * scaleHeight), (int) ((width - 2) * scaleWidth), (int) ((height - 2) * scaleHeight));
         for (int i = 0; i < listItems.size(); i++) {
-            listItems.get(i).drawListItem(fontRenderer, x + 2, y - scrollAmount + 2 + i * slotHeight, mouseX, mouseY, i == selectedIndex);
+            int yLocation = y - scrollAmount + 2 + i * slotHeight;
+            if (yLocation + 6 >= y & yLocation <= y + height + 1) {
+                listItems.get(i).drawListItem(fontRenderer, x + 2, yLocation, mouseX, mouseY, i == selectedIndex);
+            }
         }
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
     
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         for (int i = 0; i < listItems.size(); i++) {
-            if (listItems.get(i).mousePressed(fontRenderer, x + 2, y - scrollAmount + 2 + i * slotHeight, mouseX, mouseY, button)) {
-                selectedIndex = i;
-                return true;
+            int yLocation = y - scrollAmount + 2 + i * slotHeight;
+            if (mouseY >= y & mouseY <= y + height - 2) {
+                if (listItems.get(i).mousePressed(fontRenderer, x + 2, yLocation, mouseX, mouseY, button)) {
+                    selectedIndex = i;
+                    return true;
+                }
             }
+
         }
         return false;
     }
