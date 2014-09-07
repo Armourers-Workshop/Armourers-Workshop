@@ -15,9 +15,9 @@ public enum ArmourPart {
     
     SKIRT(1, 0, 1, 20, 13, 20, 11, 14, 11),
     
-    LEFT_FOOT(2, 0, 7, 8, 5, 8, 6, 14, 11),
+    LEFT_FOOT(2, 0, 6, 8, 5, 10, 6, 14, 11),
     
-    RIGHT_FOOT(12, 0, 7, 8, 5, 8, 16, 14, 11);
+    RIGHT_FOOT(12, 0, 6, 8, 5, 10, 16, 14, 11);
     
     private final int xOffset;
     private final int yOffset;
