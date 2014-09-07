@@ -78,8 +78,6 @@ public abstract class AbstractTileEntityMultiBlockParent extends AbstractTileEnt
                     TileEntity te = worldObj.getTileEntity(xCoord + xOffset + ix, yCoord, zCoord + zOffset + iy);
                     if (te != null && te instanceof TileEntityMultiBlockChild) {
                         ((TileEntityMultiBlockChild)te).clearParent(xCoord, yCoord, zCoord);
-                        worldObj.setBlockToAir(xCoord + xOffset + ix, yCoord + 1, zCoord + zOffset + iy);
-                        //worldObj.setBlock(xCoord + xOffset + ix, yCoord + 1, zCoord + zOffset + iy, Blocks.glass);
                     }
                 }
             }
