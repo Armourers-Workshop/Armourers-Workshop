@@ -144,8 +144,10 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         }
         
         for (int i = 0; i < templateFiles.length; i++) {
-            String cleanName = FilenameUtils.removeExtension(templateFiles[i].getName());
-            files.add(cleanName);
+            if (templateFiles[i].getName().endsWith(".armour")) {
+                String cleanName = FilenameUtils.removeExtension(templateFiles[i].getName());
+                files.add(cleanName);
+            }
         }
         
         return files;
