@@ -79,11 +79,9 @@ public class GuiArmourLibrary extends GuiContainer {
                 fileList.addListItem(new GuiFileListItem(armourLibrary.fileNames.get(i)));
             }
         }
-
         
         fileList.setScrollPercentage(scrollbar.getValue());
         fileList.drawList(mouseX, mouseY, tickTime);
-        textFileName.drawTextBox();
     }
     
     @Override
@@ -115,6 +113,7 @@ public class GuiArmourLibrary extends GuiContainer {
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        textFileName.drawTextBox();
     }
     
     @Override
