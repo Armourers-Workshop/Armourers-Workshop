@@ -97,6 +97,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         
+        if (ItemArmourTemplate.getArmourType(stackInput) != type) { return; }
+        
         if (!itemNBT.hasKey(TAG_ARMOUR_DATA)) { return; }
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(TAG_ARMOUR_DATA);
         
