@@ -53,6 +53,9 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
     
     private void renderLeftFoot(CustomArmourPartData part, float scale) {
         GL11.glPushMatrix();
+        if (isSneak) {
+            GL11.glTranslated(0, -3 * scale, 4 * scale);
+        }
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glTranslated(2 * scale, 11 * scale, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
@@ -64,6 +67,9 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
     
     private void renderRightFoot(CustomArmourPartData part, float scale) {
         GL11.glPushMatrix();
+        if (isSneak) {
+            GL11.glTranslated(0, -3 * scale, 4 * scale);
+        }
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glTranslated(-2 * scale, 11 * scale, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
