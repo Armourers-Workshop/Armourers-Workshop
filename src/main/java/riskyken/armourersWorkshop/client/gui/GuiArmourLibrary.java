@@ -82,7 +82,7 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
-        fileList.setScrollPercentage(scrollbar.getValue());
+        fileList.setScrollPercentage(scrollbar.getPercentageValue());
         fileList.drawList(mouseX, mouseY, tickTime);
     }
     

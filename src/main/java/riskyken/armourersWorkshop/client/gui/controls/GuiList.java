@@ -110,10 +110,16 @@ public class GuiList extends Gui {
     }
     
     public void setScrollPercentage(int amount) {
-        scrollAmount = amount;
+        int listHeight = this.listItems.size() * this.slotHeight;
+        int scrollRange = listHeight - this.height;
+        if (scrollRange <= 0) {
+            scrollAmount = 0;
+            return;
+        }
+        scrollAmount = (int) (scrollRange / (float)100 * amount);
     }
 
-    protected int getSize() {
+    public int getSize() {
         return this.listItems.size();
     }
 }

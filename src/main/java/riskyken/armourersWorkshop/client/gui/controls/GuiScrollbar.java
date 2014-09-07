@@ -154,8 +154,11 @@ public class GuiScrollbar  extends GuiButton {
 		return sliderValue;
 	}
 	
-	public float getPercentageValue() {
-	    return sliderMaxValue * 100 / sliderValue;
+	public int getPercentageValue() {
+	    if (sliderValue == 0) {
+	        return 0;
+	    }
+	    return (int) ((sliderValue / (float)sliderMaxValue) * 100);
 	}
 
 }
