@@ -18,6 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemArmourTemplate extends AbstractModItem {
     
     private static final String TAG_ARMOUR_DATA = "armourData";
+    private static final String TAG_AUTHOR_NAME = "authorName";
     private static final String TAG_CUSTOM_NAME = "customName";
     
     public ItemArmourTemplate() {
@@ -36,11 +37,14 @@ public class ItemArmourTemplate extends AbstractModItem {
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         if (stack.hasTagCompound()) {
             NBTTagCompound itemData = stack.getTagCompound();
-            if (itemData.hasKey(TAG_CUSTOM_NAME)) {
-                list.add(itemData.getString(TAG_CUSTOM_NAME)); 
-            }
             if (itemData.hasKey(TAG_ARMOUR_DATA)) {
-                list.add("Has armour data");
+                NBTTagCompound armourData = itemData.getCompoundTag(TAG_ARMOUR_DATA);
+                if (armourData.hasKey(TAG_CUSTOM_NAME)) {
+                    list.add("Name: " + armourData.getString(TAG_CUSTOM_NAME));
+                }
+                if (armourData.hasKey(TAG_AUTHOR_NAME)) {
+                    list.add("Author: " + armourData.getString(TAG_AUTHOR_NAME));
+                }
             }
         }
         super.addInformation(stack, player, list, p_77624_4_);

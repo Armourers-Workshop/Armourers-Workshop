@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common.customarmor;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -15,7 +14,7 @@ import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomArmourItemData saveArmourItem(World world, ArmourType type, EntityPlayer player, int xCoord, int yCoord, int zCoord) {
+    public static CustomArmourItemData saveArmourItem(World world, ArmourType type, String authorName, String customName, int xCoord, int yCoord, int zCoord) {
         ArrayList<CustomArmourPartData> parts = new ArrayList<CustomArmourPartData>();
         
         for (int i = 0; i < type.getParts().length; i++) {
@@ -23,7 +22,7 @@ public final class ArmourerWorldHelper {
         }
         
         if (parts.size() > 0) {
-            return new CustomArmourItemData(type, parts);
+            return new CustomArmourItemData(authorName, customName, type, parts);
         } else {
             return null;
         }

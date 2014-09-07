@@ -60,26 +60,22 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
         if (ItemArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
         
+        String authorName = player.getDisplayName();
+        String customName = name;
         
-        
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, player, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
         
         if (armourItemData == null) { return; }
         
         ItemArmourTemplate.setArmourType(this.type, stackInput);
         
-        NBTTagCompound itemNBT = new NBTTagCompound();
-        
         NBTTagCompound armourNBT = new NBTTagCompound();
         armourItemData.writeToNBT(armourNBT);
-        itemNBT.setTag(TAG_ARMOUR_DATA, armourNBT);
-        
-        
-        if (!name.equals("")) {
-            itemNBT.setString(TAG_CUSTOM_NAME, name);
+        if (!stackInput.hasTagCompound()) {
+            stackInput.setTagCompound(new NBTTagCompound());
         }
         
-        stackInput.setTagCompound(itemNBT);
+        stackInput.getTagCompound().setTag(TAG_ARMOUR_DATA, armourNBT);;
         
         setInventorySlotContents(0, null);
         setInventorySlotContents(1, stackInput);
