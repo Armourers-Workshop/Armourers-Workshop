@@ -53,7 +53,7 @@ public class GuiArmourer extends GuiContainer {
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 5, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
         
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
-        textItemName.setMaxStringLength(20);
+        textItemName.setMaxStringLength(40);
         
         textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
         textUserSkin.setMaxStringLength(20);
