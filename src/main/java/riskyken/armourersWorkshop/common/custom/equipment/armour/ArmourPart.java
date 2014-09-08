@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customarmor;
+package riskyken.armourersWorkshop.common.custom.equipment.armour;
 
 public enum ArmourPart {
     HEAD(1, 0, 1, 20, 20, 20, 11, 1, 11),

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customarmor.data;
+package riskyken.armourersWorkshop.common.custom.equipment.data;
 
 import io.netty.buffer.ByteBuf;
 
@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CustomArmourBlockData {
+public class CustomEquipmentBlockData {
     
     private static final String TAG_X = "x";
     private static final String TAG_Y = "y";
@@ -28,10 +28,10 @@ public class CustomArmourBlockData {
     public int colour;
     public byte blockType;
     
-    public CustomArmourBlockData() {
+    public CustomEquipmentBlockData() {
     }
     
-    public CustomArmourBlockData(int x, int y, int z, int colour, int blockType) {
+    public CustomEquipmentBlockData(int x, int y, int z, int colour, int blockType) {
         this.x = (byte) x;
         this.y = (byte) y;
         this.z = (byte) z;
@@ -39,7 +39,7 @@ public class CustomArmourBlockData {
         this.blockType = (byte) blockType;
     }
     
-    public CustomArmourBlockData(byte x, byte y, byte z, int colour, byte blockType) {
+    public CustomEquipmentBlockData(byte x, byte y, byte z, int colour, byte blockType) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -47,15 +47,15 @@ public class CustomArmourBlockData {
         this.blockType = blockType;
     }
     
-    public CustomArmourBlockData(ByteBuf buf) {
+    public CustomEquipmentBlockData(ByteBuf buf) {
         readFromBuf(buf);
     }
     
-    public CustomArmourBlockData(NBTTagCompound compound) {
+    public CustomEquipmentBlockData(NBTTagCompound compound) {
         readFromNBT(compound);
     }
     
-    public CustomArmourBlockData(DataInputStream stream) throws IOException {
+    public CustomEquipmentBlockData(DataInputStream stream) throws IOException {
         readFromStream(stream);
     }
 

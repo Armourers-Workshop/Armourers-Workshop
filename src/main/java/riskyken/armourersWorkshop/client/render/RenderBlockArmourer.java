@@ -18,8 +18,8 @@ import riskyken.armourersWorkshop.client.model.ModelChest;
 import riskyken.armourersWorkshop.client.model.ModelFeet;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
-import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 

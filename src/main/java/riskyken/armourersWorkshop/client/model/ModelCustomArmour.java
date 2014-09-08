@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourBlockData;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,9 +34,9 @@ public class ModelCustomArmour extends ModelBiped{
         return angle * (180.0 / Math.PI);
      }
      
-    public void renderPart(ArrayList<CustomArmourBlockData> armourBlockData, float scale) {
+    public void renderPart(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
          for (int i = 0; i < armourBlockData.size(); i++) {
-             CustomArmourBlockData blockData = armourBlockData.get(i);
+             CustomEquipmentBlockData blockData = armourBlockData.get(i);
              if (!blockData.isGlowing()) {
                  renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
              }
@@ -48,7 +48,7 @@ public class ModelCustomArmour extends ModelBiped{
          OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
          
          for (int i = 0; i < armourBlockData.size(); i++) {
-             CustomArmourBlockData blockData = armourBlockData.get(i);
+             CustomEquipmentBlockData blockData = armourBlockData.get(i);
              if (blockData.isGlowing()) {
                  renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
              }

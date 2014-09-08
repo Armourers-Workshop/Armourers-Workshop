@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.tileentities;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
+import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 import riskyken.armourersWorkshop.common.items.ItemCustomArmour;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -28,13 +28,13 @@ public class TileEntityArmourCrafter extends AbstractTileEntityInventory {
         if (stackTemplate == null | stackArmour == null) { return; }
         if (!stackTemplate.hasTagCompound()) { return; }
 
-        if (!(stackTemplate.getItem() instanceof ItemArmourTemplate)) { return; }
+        if (!(stackTemplate.getItem() instanceof ItemCustomArmourTemplate)) { return; }
         if (!(stackArmour.getItem() instanceof ItemArmor)) { return; }
         
         ItemArmor itemArmour = (ItemArmor)stackArmour.getItem();
-        ItemArmourTemplate itemTemplate = (ItemArmourTemplate)stackTemplate.getItem();
+        ItemCustomArmourTemplate itemTemplate = (ItemCustomArmourTemplate)stackTemplate.getItem();
         
-        if (itemArmour.armorType != ItemArmourTemplate.getArmourType(stackTemplate).getSlotId()) { return; }
+        if (itemArmour.armorType != ItemCustomArmourTemplate.getArmourType(stackTemplate).getSlotId()) { return; }
         
         ItemCustomArmour targetArmour;
         

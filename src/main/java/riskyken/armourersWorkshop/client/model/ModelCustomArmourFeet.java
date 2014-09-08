@@ -7,9 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

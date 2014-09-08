@@ -11,10 +11,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
-import riskyken.armourersWorkshop.common.customarmor.ArmourerWorldHelper;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
+import riskyken.armourersWorkshop.common.custom.equipment.ArmourerWorldHelper;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 import com.google.common.collect.Iterables;
@@ -57,8 +57,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (stackInput == null) { return; }
         if (stackOuput != null) { return; }
-        if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
-        if (ItemArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
+        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
+        if (ItemCustomArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
         
         String authorName = player.getDisplayName();
         String customName = name;
@@ -67,7 +67,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (armourItemData == null) { return; }
         
-        ItemArmourTemplate.setArmourType(this.type, stackInput);
+        ItemCustomArmourTemplate.setArmourType(this.type, stackInput);
         
         NBTTagCompound armourNBT = new NBTTagCompound();
         armourItemData.writeToNBT(armourNBT);
@@ -92,12 +92,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (stackInput == null) { return; }
         if (stackOuput != null) { return; }
-        if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
+        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
         
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         
-        if (ItemArmourTemplate.getArmourType(stackInput) != type) { return; }
+        if (ItemCustomArmourTemplate.getArmourType(stackInput) != type) { return; }
         
         if (!itemNBT.hasKey(TAG_ARMOUR_DATA)) { return; }
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(TAG_ARMOUR_DATA);
@@ -118,7 +118,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             return;
         }
         
-        if (stackInput.getItem() instanceof ItemArmourTemplate) {
+        if (stackInput.getItem() instanceof ItemCustomArmourTemplate) {
             setType(ArmourType.getOrdinal(stackInput.getItemDamage() + 1));
         }
     }

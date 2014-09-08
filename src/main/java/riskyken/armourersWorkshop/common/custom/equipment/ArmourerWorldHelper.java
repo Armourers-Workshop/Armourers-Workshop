@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customarmor;
+package riskyken.armourersWorkshop.common.custom.equipment;
 
 import java.util.ArrayList;
 
@@ -6,9 +6,11 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourBlockData;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
@@ -29,7 +31,7 @@ public final class ArmourerWorldHelper {
     }
     
     private static void saveArmourPart(World world, ArrayList<CustomArmourPartData> armourData, ArmourPart part, int xCoord, int yCoord, int zCoord) {
-        ArrayList<CustomArmourBlockData> armourBlockData = new ArrayList<CustomArmourBlockData>();
+        ArrayList<CustomEquipmentBlockData> armourBlockData = new ArrayList<CustomEquipmentBlockData>();
         
         for (int ix = 0; ix < part.getXSize(); ix++) {
             for (int iy = 0; iy < part.getYSize(); iy++) {
@@ -57,7 +59,7 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz, ArrayList<CustomArmourBlockData> list) {
+    private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz, ArrayList<CustomEquipmentBlockData> list) {
         if (world.isAirBlock(x, y, z)) { return; }
         Block block = world.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
@@ -66,7 +68,7 @@ public final class ArmourerWorldHelper {
             if (block == ModBlocks.colourableGlowing) {
                 blockType = 1;
             }
-            CustomArmourBlockData blockData = new CustomArmourBlockData(ix, iy, iz,
+            CustomEquipmentBlockData blockData = new CustomEquipmentBlockData(ix, iy, iz,
                     colour, blockType);
             list.add(blockData);
         }
@@ -82,7 +84,7 @@ public final class ArmourerWorldHelper {
     
     private static void loadArmourPart(World world, CustomArmourPartData partData, int xCoord, int yCoord, int zCoord) {
         for (int i = 0; i < partData.getArmourData().size(); i++) {
-            CustomArmourBlockData blockData = partData.getArmourData().get(i);
+            CustomEquipmentBlockData blockData = partData.getArmourData().get(i);
             int xOrigin = xCoord + partData.getArmourPart().getXOrigin();
             int yOrigin = yCoord + partData.getArmourPart().getYOrigin();
             int zOrigin = zCoord + partData.getArmourPart().getZOrigin();
@@ -90,7 +92,7 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    private static void loadArmourBlock(World world, int x, int y, int z, CustomArmourBlockData blockData) {
+    private static void loadArmourBlock(World world, int x, int y, int z, CustomEquipmentBlockData blockData) {
         int targetX = x - blockData.x - 1;
         int targetY = y - blockData.y - 1;
         int targetZ = z + blockData.z;

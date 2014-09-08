@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customarmor;
+package riskyken.armourersWorkshop.common.custom.equipment;
 
 import java.util.HashMap;
 
@@ -10,32 +10,34 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class PlayerCustomArmourData implements IExtendedEntityProperties {
+public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
 
-    public final static String TAG_EXT_PROP_NAME = "playerCustomArmourData";
+    public final static String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_ARMOUR_DATA = "armourData";
+    //private static final String TAG_WEAPON_DATA = "weaponData";
     
     private final EntityPlayer player;
     private final HashMap<String, CustomArmourItemData> customArmor;
     
-    public PlayerCustomArmourData(EntityPlayer player) {
+    public PlayerCustomEquipmentData(EntityPlayer player) {
         this.player = player;
         customArmor = new HashMap<String, CustomArmourItemData>();
     }
     
     public static final void register(EntityPlayer player) {
-        player.registerExtendedProperties(PlayerCustomArmourData.TAG_EXT_PROP_NAME, new PlayerCustomArmourData(player));
+        player.registerExtendedProperties(PlayerCustomEquipmentData.TAG_EXT_PROP_NAME, new PlayerCustomEquipmentData(player));
     }
     
-    public static final PlayerCustomArmourData get(EntityPlayer player) {
-        return (PlayerCustomArmourData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
+    public static final PlayerCustomEquipmentData get(EntityPlayer player) {
+        return (PlayerCustomEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
     public void addCustomArmour(CustomArmourItemData armourData) {

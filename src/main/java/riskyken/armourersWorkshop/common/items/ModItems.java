@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 
 public class ModItems {
     
@@ -37,7 +37,7 @@ public class ModItems {
             customFeetArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.FEET);
         }
         
-        armourTemplate = new ItemArmourTemplate();
+        armourTemplate = new ItemCustomArmourTemplate();
         paintbrush = new ItemPaintbrush();
         paintRoller = new ItemPaintRoller();
         colourPicker = new ItemColourPicker();

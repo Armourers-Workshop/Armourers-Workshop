@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customarmor.data;
+package riskyken.armourersWorkshop.common.custom.equipment.data;
 
 import io.netty.buffer.ByteBuf;
 
@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
-import riskyken.armourersWorkshop.common.customarmor.ArmourPart;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
 
 public class CustomArmourPartData {
     
     private static final String TAG_PART = "part";
     private static final String TAG_ARMOUR_DATA = "armourData";
     
-    private ArrayList<CustomArmourBlockData> armourData;
+    private ArrayList<CustomEquipmentBlockData> armourData;
     private ArmourPart part;
 
     public CustomArmourPartData(ArrayList armourData,
@@ -42,7 +42,7 @@ public class CustomArmourPartData {
         return this.part;
     }
 
-    public ArrayList<CustomArmourBlockData> getArmourData() {
+    public ArrayList<CustomEquipmentBlockData> getArmourData() {
         return armourData;
     }
 
@@ -57,9 +57,9 @@ public class CustomArmourPartData {
     private void readFromBuf(ByteBuf buf) {
         part = ArmourPart.getOrdinal(buf.readByte());
         int size = buf.readInt();
-        armourData = new ArrayList<CustomArmourBlockData>();
+        armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < size; i++) {
-            armourData.add(new CustomArmourBlockData(buf));
+            armourData.add(new CustomEquipmentBlockData(buf));
         }
     }
     
@@ -68,7 +68,7 @@ public class CustomArmourPartData {
         
         NBTTagList blockData = new NBTTagList();
         for (int i = 0; i < armourData.size(); i++) {
-            CustomArmourBlockData data = armourData.get(i);
+            CustomEquipmentBlockData data = armourData.get(i);
             NBTTagCompound dataNBT = new NBTTagCompound();
             data.writeToNBT(dataNBT);
             blockData.appendTag(dataNBT);
@@ -80,10 +80,10 @@ public class CustomArmourPartData {
         part = ArmourPart.getOrdinal(compound.getByte(TAG_PART));
         
         NBTTagList blockData = compound.getTagList(TAG_ARMOUR_DATA, NBT.TAG_COMPOUND);
-        armourData = new ArrayList<CustomArmourBlockData>();
+        armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < blockData.tagCount(); i++) {
             NBTTagCompound data = (NBTTagCompound)blockData.getCompoundTagAt(i);
-            armourData.add(new CustomArmourBlockData(data));
+            armourData.add(new CustomEquipmentBlockData(data));
         }
     }
     
@@ -98,9 +98,9 @@ public class CustomArmourPartData {
     private void readFromStream(DataInputStream stream) throws IOException {
         part = ArmourPart.getOrdinal(stream.readByte());
         int size = stream.readInt();
-        armourData = new ArrayList<CustomArmourBlockData>();
+        armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < size; i++) {
-            armourData.add(new CustomArmourBlockData(stream));
+            armourData.add(new CustomEquipmentBlockData(stream));
         }
     }
 }

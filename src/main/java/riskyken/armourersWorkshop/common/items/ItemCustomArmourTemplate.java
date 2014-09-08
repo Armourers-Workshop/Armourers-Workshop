@@ -9,19 +9,19 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemArmourTemplate extends AbstractModItem {
+public class ItemCustomArmourTemplate extends AbstractModItem {
     
     private static final String TAG_ARMOUR_DATA = "armourData";
     private static final String TAG_AUTHOR_NAME = "authorName";
     private static final String TAG_CUSTOM_NAME = "customName";
     
-    public ItemArmourTemplate() {
+    public ItemCustomArmourTemplate() {
         super(LibItemNames.ARMOUR_TEMPLATE);
         setHasSubtypes(true);
     }

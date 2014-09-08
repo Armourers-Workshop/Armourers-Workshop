@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.common.customarmor.PlayerCustomArmourData;
+import riskyken.armourersWorkshop.common.custom.equipment.PlayerCustomEquipmentData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ModForgeEventHandler {
@@ -13,7 +13,7 @@ public class ModForgeEventHandler {
     public void onStartTracking(PlayerEvent.StartTracking event) {
         if (event.target instanceof EntityPlayerMP) {
             EntityPlayerMP targetPlayer = (EntityPlayerMP) event.target;
-            PlayerCustomArmourData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer(targetPlayer);
+            PlayerCustomEquipmentData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer(targetPlayer);
         }
     }
     
@@ -26,8 +26,8 @@ public class ModForgeEventHandler {
     
     @SubscribeEvent
     public void onEntityConstructing(EntityConstructing event) {
-        if (event.entity instanceof EntityPlayer && PlayerCustomArmourData.get((EntityPlayer) event.entity) == null) {
-            PlayerCustomArmourData.register((EntityPlayer) event.entity);
+        if (event.entity instanceof EntityPlayer && PlayerCustomEquipmentData.get((EntityPlayer) event.entity) == null) {
+            PlayerCustomEquipmentData.register((EntityPlayer) event.entity);
         }
     }
 }

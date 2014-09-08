@@ -18,9 +18,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -44,7 +44,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         //Check we have a valid item to save onto.
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) { return; }
-        if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
+        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         if (!itemNBT.hasKey(TAG_ARMOUR_DATA)) { return; }
@@ -84,8 +84,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         //Check we have a valid item to load from.
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) { return; }
-        if (!(stackInput.getItem() instanceof ItemArmourTemplate)) { return; }
-        if (ItemArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
+        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
+        if (ItemCustomArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
         
         
         if (!createArmourDirectory()) { return; }
@@ -113,7 +113,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         }
         
         
-        ItemArmourTemplate.setArmourType(armourItemData.getType(), stackInput);
+        ItemCustomArmourTemplate.setArmourType(armourItemData.getType(), stackInput);
         
         NBTTagCompound itemNBT = new NBTTagCompound();
         NBTTagCompound armourNBT = new NBTTagCompound();

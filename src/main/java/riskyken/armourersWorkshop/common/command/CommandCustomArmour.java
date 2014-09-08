@@ -8,7 +8,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourManager;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.CustomArmourManager;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 
 public class CommandCustomArmour extends CommandBase {

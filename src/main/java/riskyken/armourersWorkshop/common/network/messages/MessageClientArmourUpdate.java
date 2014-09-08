@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.customarmor.CustomArmourManager;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.CustomArmourManager;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.ItemArmourTemplate;
+import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 
 public class SlotArmourTemplate extends Slot {
     
@@ -13,6 +13,6 @@ public class SlotArmourTemplate extends Slot {
     
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack.getItem() instanceof ItemArmourTemplate;
+        return stack.getItem() instanceof ItemCustomArmourTemplate;
     }
 }

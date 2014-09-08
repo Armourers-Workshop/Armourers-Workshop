@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customarmor;
+package riskyken.armourersWorkshop.common.custom.equipment.armour;
 
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;

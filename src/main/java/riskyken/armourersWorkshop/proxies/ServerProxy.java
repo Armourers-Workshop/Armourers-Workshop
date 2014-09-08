@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.proxies;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 
 public class ServerProxy extends CommonProxy {
 

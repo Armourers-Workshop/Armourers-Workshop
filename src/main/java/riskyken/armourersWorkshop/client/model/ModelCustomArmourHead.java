@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourBlockData;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.customarmor.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +26,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         
         ArrayList<CustomArmourPartData> parts = armourData.getParts();
         
-        ArrayList<CustomArmourBlockData> armourBlockData = armourData.getParts().get(0).getArmourData();
+        ArrayList<CustomEquipmentBlockData> armourBlockData = armourData.getParts().get(0).getArmourData();
         
         this.isSneak = player.isSneaking();
         this.isRiding = player.isRiding();

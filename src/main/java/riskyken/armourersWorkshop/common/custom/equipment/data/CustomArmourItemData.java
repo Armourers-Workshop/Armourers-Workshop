@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customarmor.data;
+package riskyken.armourersWorkshop.common.custom.equipment.data;
 
 import io.netty.buffer.ByteBuf;
 
@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.customarmor.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
