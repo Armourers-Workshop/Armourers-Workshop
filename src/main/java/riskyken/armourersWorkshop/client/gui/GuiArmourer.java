@@ -56,7 +56,7 @@ public class GuiArmourer extends GuiContainer {
         textItemName.setMaxStringLength(40);
         
         textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
-        textUserSkin.setMaxStringLength(20);
+        textUserSkin.setMaxStringLength(30);
         buttonList.add(new GuiButtonExt(8, guiLeft + 138, guiTop + 88, 30, 16, "Set"));
         
         if (armourerBrain.getGameProfile() != null) {
