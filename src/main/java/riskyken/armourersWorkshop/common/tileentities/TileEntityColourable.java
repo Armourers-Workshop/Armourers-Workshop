@@ -5,11 +5,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.utils.UtilColour;
 
 public class TileEntityColourable extends TileEntity implements IColourable {
-
-    private static final String TAG_COLOUR = "colour";
+    
     private int colour;
 
     public TileEntityColourable() {
@@ -24,13 +24,13 @@ public class TileEntityColourable extends TileEntity implements IColourable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        colour = compound.getInteger(TAG_COLOUR);
+        colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger(TAG_COLOUR, colour);
+        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
     }
 
     @Override

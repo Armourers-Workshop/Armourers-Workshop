@@ -22,12 +22,11 @@ import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
-
-    private static final String TAG_ARMOUR_DATA = "armourData";
     
     public ArrayList<String> fileNames = null;
     
@@ -47,8 +46,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
-        if (!itemNBT.hasKey(TAG_ARMOUR_DATA)) { return; }
-        NBTTagCompound dataNBT = itemNBT.getCompoundTag(TAG_ARMOUR_DATA);
+        if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
+        NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         
         
         if (!createArmourDirectory()) { return; }
@@ -119,7 +118,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         NBTTagCompound armourNBT = new NBTTagCompound();
         
         armourItemData.writeToNBT(armourNBT);
-        itemNBT.setTag(TAG_ARMOUR_DATA, armourNBT);
+        itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
         
         stackInput.setTagCompound(itemNBT);
         

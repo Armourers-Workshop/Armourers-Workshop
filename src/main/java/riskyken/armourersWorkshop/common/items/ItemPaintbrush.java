@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
@@ -16,8 +17,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemPaintbrush extends AbstractModItem implements IColourTool {
-
-    private static final String TAG_COLOUR = "colour";
     
     public ItemPaintbrush() {
         super(LibItemNames.PAINTBRUSH);
@@ -97,7 +96,7 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
     @Override
     public boolean getToolHasColour(ItemStack stack) {
         NBTTagCompound compound = getCompound(stack);
-        if (compound.hasKey(TAG_COLOUR)) {
+        if (compound.hasKey(LibCommonTags.TAG_COLOUR)) {
             return true;
         }
         return false;
@@ -106,8 +105,8 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
     @Override
     public int getToolColour(ItemStack stack) {
         NBTTagCompound compound = getCompound(stack);
-        if (compound.hasKey(TAG_COLOUR)) {
-            return compound.getInteger(TAG_COLOUR);
+        if (compound.hasKey(LibCommonTags.TAG_COLOUR)) {
+            return compound.getInteger(LibCommonTags.TAG_COLOUR);
         }
         return 16777215;
     }
@@ -115,6 +114,6 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
     @Override
     public void setToolColour(ItemStack stack, int colour) {
         NBTTagCompound compound = getCompound(stack);
-        compound.setInteger(TAG_COLOUR, colour);
+        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
     }
 }

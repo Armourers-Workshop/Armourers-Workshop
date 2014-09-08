@@ -10,16 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCustomArmourTemplate extends AbstractModItem {
-    
-    private static final String TAG_ARMOUR_DATA = "armourData";
-    private static final String TAG_AUTHOR_NAME = "authorName";
-    private static final String TAG_CUSTOM_NAME = "customName";
     
     public ItemCustomArmourTemplate() {
         super(LibItemNames.ARMOUR_TEMPLATE);
@@ -37,13 +34,13 @@ public class ItemCustomArmourTemplate extends AbstractModItem {
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         if (stack.hasTagCompound()) {
             NBTTagCompound itemData = stack.getTagCompound();
-            if (itemData.hasKey(TAG_ARMOUR_DATA)) {
-                NBTTagCompound armourData = itemData.getCompoundTag(TAG_ARMOUR_DATA);
-                if (armourData.hasKey(TAG_CUSTOM_NAME)) {
-                    list.add("Name: " + armourData.getString(TAG_CUSTOM_NAME));
+            if (itemData.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
+                NBTTagCompound armourData = itemData.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
+                if (armourData.hasKey(LibCommonTags.TAG_CUSTOM_NAME)) {
+                    list.add("Name: " + armourData.getString(LibCommonTags.TAG_CUSTOM_NAME));
                 }
-                if (armourData.hasKey(TAG_AUTHOR_NAME)) {
-                    list.add("Author: " + armourData.getString(TAG_AUTHOR_NAME));
+                if (armourData.hasKey(LibCommonTags.TAG_AUTHOR_NAME)) {
+                    list.add("Author: " + armourData.getString(LibCommonTags.TAG_AUTHOR_NAME));
                 }
             }
         }

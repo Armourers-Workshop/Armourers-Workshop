@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
@@ -27,9 +28,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     private static final String TAG_TYPE = "type";
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
-    
-    private static final String TAG_ARMOUR_DATA = "armourData";
-    private static final String TAG_CUSTOM_NAME = "customName";
     
     private GameProfile gameProfile = null;
     private ArmourType type;
@@ -75,7 +73,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             stackInput.setTagCompound(new NBTTagCompound());
         }
         
-        stackInput.getTagCompound().setTag(TAG_ARMOUR_DATA, armourNBT);;
+        stackInput.getTagCompound().setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);;
         
         setInventorySlotContents(0, null);
         setInventorySlotContents(1, stackInput);
@@ -99,8 +97,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (ItemCustomArmourTemplate.getArmourType(stackInput) != type) { return; }
         
-        if (!itemNBT.hasKey(TAG_ARMOUR_DATA)) { return; }
-        NBTTagCompound dataNBT = itemNBT.getCompoundTag(TAG_ARMOUR_DATA);
+        if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
+        NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         
         CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
         

@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
@@ -21,8 +22,6 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
 
     public final static String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
-    private static final String TAG_ARMOUR_DATA = "armourData";
-    //private static final String TAG_WEAPON_DATA = "weaponData";
     
     private final EntityPlayer player;
     private final HashMap<String, CustomArmourItemData> customArmor;
@@ -75,8 +74,8 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
         if (!stack.hasTagCompound()) { return; }
         
         NBTTagCompound data = stack.getTagCompound();
-        if (!data.hasKey(TAG_ARMOUR_DATA)) { return ;}
-        NBTTagCompound armourNBT = data.getCompoundTag(TAG_ARMOUR_DATA);
+        if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
+        NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         loadFromItemNBT(armourNBT);
         ModLogger.log(stack);
     }

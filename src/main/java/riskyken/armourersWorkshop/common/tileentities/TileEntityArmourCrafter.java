@@ -3,14 +3,12 @@ package riskyken.armourersWorkshop.common.tileentities;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 import riskyken.armourersWorkshop.common.items.ItemCustomArmour;
+import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 public class TileEntityArmourCrafter extends AbstractTileEntityInventory {
-
-    private static final String TAG_ARMOUR_DATA = "armourData";
     
     public TileEntityArmourCrafter() {
         this.items = new ItemStack[3];

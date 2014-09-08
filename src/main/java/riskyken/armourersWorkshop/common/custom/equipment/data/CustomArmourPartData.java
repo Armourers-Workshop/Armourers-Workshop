@@ -14,8 +14,8 @@ import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
 
 public class CustomArmourPartData {
     
+    private static final String TAG_BLOCK_DATA = "blockData";
     private static final String TAG_PART = "part";
-    private static final String TAG_ARMOUR_DATA = "armourData";
     
     private ArrayList<CustomEquipmentBlockData> armourData;
     private ArmourPart part;
@@ -73,13 +73,13 @@ public class CustomArmourPartData {
             data.writeToNBT(dataNBT);
             blockData.appendTag(dataNBT);
         }
-        compound.setTag(TAG_ARMOUR_DATA, blockData);
+        compound.setTag(TAG_BLOCK_DATA, blockData);
     }
     
     private void readFromNBT(NBTTagCompound compound) {
         part = ArmourPart.getOrdinal(compound.getByte(TAG_PART));
         
-        NBTTagList blockData = compound.getTagList(TAG_ARMOUR_DATA, NBT.TAG_COMPOUND);
+        NBTTagList blockData = compound.getTagList(TAG_BLOCK_DATA, NBT.TAG_COMPOUND);
         armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < blockData.tagCount(); i++) {
             NBTTagCompound data = (NBTTagCompound)blockData.getCompoundTagAt(i);

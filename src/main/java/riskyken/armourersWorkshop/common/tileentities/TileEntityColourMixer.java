@@ -11,13 +11,13 @@ import riskyken.armourersWorkshop.common.items.ItemPaintRoller;
 import riskyken.armourersWorkshop.common.items.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class TileEntityColourMixer extends AbstractTileEntityInventory {
     
-    private static final String TAG_COLOUR = "colour";
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
     
     public int colour;
@@ -84,20 +84,20 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        colour = compound.getInteger(TAG_COLOUR);
+        colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger(TAG_COLOUR, colour);
+        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
     }
 
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
-        compound.setInteger(TAG_COLOUR, colour);
+        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
         compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
         if (itemUpdate) { itemUpdate = false; }
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 3, compound);
@@ -107,7 +107,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
         readBaseFromNBT(compound);
-        colour = compound.getInteger(TAG_COLOUR);
+        colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
         itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         colourUpdate = true;

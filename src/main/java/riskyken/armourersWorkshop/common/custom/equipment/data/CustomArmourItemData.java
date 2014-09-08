@@ -14,13 +14,12 @@ import net.minecraftforge.common.util.Constants.NBT;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class CustomArmourItemData {
     
-    private static final String TAG_AUTHOR_NAME = "authorName";
-    private static final String TAG_CUSTOM_NAME = "customName";
     private static final String TAG_TYPE = "type";
     private static final String TAG_PARTS = "parts";
     
@@ -72,8 +71,8 @@ public class CustomArmourItemData {
     }
     
     public void writeToNBT(NBTTagCompound compound) {
-        compound.setString(TAG_AUTHOR_NAME, this.authorName);
-        compound.setString(TAG_CUSTOM_NAME, this.customName);
+        compound.setString(LibCommonTags.TAG_AUTHOR_NAME, this.authorName);
+        compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
         compound.setByte(TAG_TYPE, (byte) type.ordinal());
         NBTTagList blockData = new NBTTagList();
         for (int i = 0; i < parts.size(); i++) {
@@ -86,8 +85,8 @@ public class CustomArmourItemData {
     }
     
     private void readFromNBT(NBTTagCompound compound) {
-        this.authorName = compound.getString(TAG_AUTHOR_NAME);
-        this.customName = compound.getString(TAG_CUSTOM_NAME);
+        this.authorName = compound.getString(LibCommonTags.TAG_AUTHOR_NAME);
+        this.customName = compound.getString(LibCommonTags.TAG_CUSTOM_NAME);
         type = ArmourType.getOrdinal(compound.getByte(TAG_TYPE));
         NBTTagList blockData = compound.getTagList(TAG_PARTS, NBT.TAG_COMPOUND);
         parts = new ArrayList<CustomArmourPartData>();
