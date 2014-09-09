@@ -36,7 +36,7 @@ public class GuiHSBSlider extends GuiSlider {
         if (this.visible) {
             this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int k = this.getHoverState(this.field_146123_n);
-            GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46 + k * 20, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+            GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
             mc.renderEngine.bindTexture(sliderTexture);
             
             if (type == HSBSliderType.SATURATION) {
