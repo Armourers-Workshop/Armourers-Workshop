@@ -1,8 +1,11 @@
 package riskyken.armourersWorkshop.client.gui;
 
 import java.awt.Color;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,7 +21,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColourUpdate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -30,6 +32,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     
     private Color colour;
     private GuiHSBSlider[] slidersHSB;
+    private GuiTextField colourHex;
     
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
@@ -50,17 +53,37 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         buttonList.add(slidersHSB[0]);
         buttonList.add(slidersHSB[1]);
         buttonList.add(slidersHSB[2]);
+        colourHex = new GuiTextField(fontRendererObj, this.guiLeft + 5, this.guiTop + 90, 50, 10);
+        colourHex.setMaxStringLength(7);
+        updateHexTextbox();
     }
     
     private void checkForColourUpdates() {
         if (tileEntityColourMixer.getHasItemUpdateAndReset()) {
-            ModLogger.log("colour update");
-            Color c = new Color(tileEntityColourMixer.getColour());
-            float[] hsbvals = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
-            slidersHSB[0].setValue(hsbvals[0]);
-            slidersHSB[1].setValue(hsbvals[1]);
-            slidersHSB[2].setValue(hsbvals[2]);
+            this.colour = new Color(tileEntityColourMixer.getColour());
+            updateSliders();
         }
+    }
+    
+    private void updateSliders() {
+        float[] hsbvals = Color.RGBtoHSB(this.colour.getRed(), this.colour.getGreen(), this.colour.getBlue(), null);
+        slidersHSB[0].setValue(hsbvals[0]);
+        slidersHSB[1].setValue(hsbvals[1]);
+        slidersHSB[2].setValue(hsbvals[2]);
+    }
+    
+    private void updateHexTextbox() {
+        colourHex.setText(String.format(
+                "#%02x%02x%02x",
+                this.colour.getRed(),
+                this.colour.getGreen(),
+                this.colour.getBlue()));
+    }
+    
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
+        super.mouseClicked(mouseX, mouseY, button);
+        colourHex.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
@@ -75,6 +98,29 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     }
     
     @Override
+    protected void keyTyped(char key, int keyCode) {
+        if (!colourHex.textboxKeyTyped(key, keyCode)) {
+            super.keyTyped(key, keyCode);
+        } else {
+            String text = colourHex.getText();
+            if (isValidHex(text)) {
+                Color newColour = Color.decode(text);
+                if (!newColour.equals(this.colour)) {
+                    this.colour = newColour;
+                    updateSliders();
+                }
+            }
+        }
+    }
+    
+    private boolean isValidHex (String colorStr) {
+        String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        Pattern pattern = Pattern.compile(hexPatten);
+        Matcher matcher = pattern.matcher(colorStr);
+        return matcher.matches();
+    }
+    
+    @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntityColourMixer.getInventoryName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
@@ -82,10 +128,14 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hue");
         String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.saturation");
         String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.brightness");
+        String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hex");
+        //String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.presets");
         
-        this.fontRendererObj.drawString(labelHue, 5, 22, 4210752);
-        this.fontRendererObj.drawString(labelSaturation, 5, 42, 4210752);
-        this.fontRendererObj.drawString(labelBrightness, 5, 62, 4210752);
+        this.fontRendererObj.drawString(labelHue + ":", 5, 21, 4210752);
+        this.fontRendererObj.drawString(labelSaturation + ":", 5, 41, 4210752);
+        this.fontRendererObj.drawString(labelBrightness + ":", 5, 61, 4210752);
+        this.fontRendererObj.drawString(labelHex + ":", 5, 81, 4210752);
+        //this.fontRendererObj.drawString(labelPresets + ":", 60, 81, 4210752);
     }
     
     @Override
@@ -102,13 +152,15 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         
         drawTexturedModalRect(this.guiLeft + 146, this.guiTop + 59, 146, 59, 12, 13);
         GL11.glColor4f(1F, 1F, 1F, 1F);
+        colourHex.drawTextBox();
     }
-
+    
     @Override
     public void valueUpdated(GuiHSBSlider source, double sliderValue) {
         float[] hsbvals = { (float)slidersHSB[0].getValue(), (float)slidersHSB[1].getValue(), (float)slidersHSB[2].getValue() };
         hsbvals[source.getType().ordinal()] = (float)sliderValue;
         this.colour = Color.getHSBColor(hsbvals[0], hsbvals[1], hsbvals[2]);
+        updateHexTextbox();
         if (source.getType() == HSBSliderType.HUE) {
             slidersHSB[1].setHue((float) source.getValue());
         }

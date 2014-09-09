@@ -96,6 +96,8 @@ inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation
 inventory.armourersworkshop:colourMixer.label.brightness=Brightness
+inventory.armourersworkshop:colourMixer.label.hex=Hex
+inventory.armourersworkshop:colourMixer.label.presets=Presets
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
