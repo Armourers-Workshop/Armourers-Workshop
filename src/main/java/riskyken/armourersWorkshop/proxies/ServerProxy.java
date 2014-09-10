@@ -16,7 +16,11 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void postInit() {
     }
-
+    
+    @Override
+    public void registerKeyBindings() {   
+    }
+    
     @Override
     public void addCustomArmour(String playerName, CustomArmourItemData armourData) {
     }

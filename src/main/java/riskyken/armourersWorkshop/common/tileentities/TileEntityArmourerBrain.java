@@ -14,9 +14,12 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.custom.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
+import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
+import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
@@ -51,12 +54,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         CustomArmourItemData armourItemData;
         ItemStack stackInput = getStackInSlot(0);
-        ItemStack stackOuput = getStackInSlot(1);
+        ItemStack stackOutput = getStackInSlot(1);
+        
+        ModLogger.log("pie");
         
         if (stackInput == null) { return; }
-        if (stackOuput != null) { return; }
-        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
-        if (ItemCustomArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
+        if (stackOutput != null) { return; }
+        if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) { return; }
         
         String authorName = player.getDisplayName();
         String customName = name;
@@ -65,18 +69,18 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (armourItemData == null) { return; }
         
-        ItemCustomArmourTemplate.setArmourType(this.type, stackInput);
+        stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         
         NBTTagCompound armourNBT = new NBTTagCompound();
         armourItemData.writeToNBT(armourNBT);
-        if (!stackInput.hasTagCompound()) {
-            stackInput.setTagCompound(new NBTTagCompound());
+        if (!stackOutput.hasTagCompound()) {
+            stackOutput.setTagCompound(new NBTTagCompound());
         }
         
-        stackInput.getTagCompound().setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);;
+        stackOutput.getTagCompound().setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);;
         
-        setInventorySlotContents(0, null);
-        setInventorySlotContents(1, stackInput);
+        this.decrStackSize(0, 1);
+        setInventorySlotContents(1, stackOutput);
     }
 
     /**
@@ -85,17 +89,17 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
      */
     public void loadArmourItem(EntityPlayerMP player) {
         if (this.worldObj.isRemote) { return; }
-        ItemStack stackInput = getStackInSlot(0);
-        ItemStack stackOuput = getStackInSlot(1);
+        ItemStack stackInput = this.getStackInSlot(0);
+        ItemStack stackOuput = this.getStackInSlot(1);
         
         if (stackInput == null) { return; }
         if (stackOuput != null) { return; }
-        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
+        if (!(stackInput.getItem() instanceof ItemEquipmentSkin)) { return; }
         
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         
-        if (ItemCustomArmourTemplate.getArmourType(stackInput) != type) { return; }
+        if (stackInput.getItemDamage() != type.ordinal() - 1) { return; }
         
         if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
@@ -104,8 +108,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, customArmourItemData);
     
-        setInventorySlotContents(0, null);
-        setInventorySlotContents(1, stackInput);
+        this.setInventorySlotContents(0, null);
+        this.setInventorySlotContents(1, stackInput);
     }
     
     private void checkForTemplateItem() {
@@ -116,7 +120,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             return;
         }
         
-        if (stackInput.getItem() instanceof ItemCustomArmourTemplate) {
+        if (stackInput.getItem() instanceof ItemEquipmentSkinTemplate) {
             setType(ArmourType.getOrdinal(stackInput.getItemDamage() + 1));
         }
     }

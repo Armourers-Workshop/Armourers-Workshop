@@ -1,8 +1,8 @@
 package riskyken.armourersWorkshop.common.lib;
 
 public class LibItemNames {
-    public static final String CUSTOM_ARMOUR = "customArmour";
-    public static final String ARMOUR_TEMPLATE = "armourTemplate";
+    public static final String EQUIPMENT_SKIN_TEMPLATE = "equipmentSkinTemplate";
+    public static final String EQUIPMENT_SKIN = "equipmentSkin";
     public static final String PAINTBRUSH = "paintbrush";
     public static final String PAINT_ROLLER = "paintRoller";
     public static final String COLOUR_PICKER = "colourPicker";

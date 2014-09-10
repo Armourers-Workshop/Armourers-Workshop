@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.model;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -17,13 +18,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelCustomArmourLegs extends ModelCustomArmour {
     
-    @Override
-    public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
-        setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
+    public void render(Entity entity, RenderPlayer render) {
+        EntityPlayer player = (EntityPlayer) entity;
+        setRotationFromRender(render);
+    
         CustomArmourItemData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourType.LEGS);
         if (armourData == null) { return; }
         ArrayList<CustomArmourPartData> parts = armourData.getParts();
-        EntityPlayer player = (EntityPlayer) entity;
         
         this.isSneak = player.isSneaking();
         this.isRiding = player.isRiding();
@@ -51,8 +52,17 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
+    @Override
+    public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
+        setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
+
+    }
+    
     private void renderLeftLeg(CustomArmourPartData part, float scale) {
         GL11.glPushMatrix();
+        if (isSneak) {
+            GL11.glTranslated(0, -3 * scale, 4 * scale);
+        }
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glTranslated(2 * scale, 11 * scale, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
@@ -64,6 +74,9 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
     
     private void renderRightLeg(CustomArmourPartData part, float scale) {
         GL11.glPushMatrix();
+        if (isSneak) {
+            GL11.glTranslated(0, -3 * scale, 4 * scale);
+        }
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glTranslated(-2 * scale, 11 * scale, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);

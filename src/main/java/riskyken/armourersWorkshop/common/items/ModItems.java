@@ -1,18 +1,10 @@
 package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 
 public class ModItems {
-    
-    public static ItemCustomArmour[] customHeadArmour;
-    public static ItemCustomArmour[] customChestArmour;
-    public static ItemCustomArmour[] customLegsArmour;
-    public static ItemCustomArmour[] customSkirtArmour;
-    public static ItemCustomArmour[] customFeetArmour;
-    
-    public static Item armourTemplate;
+    public static Item equipmentSkinTemplate;
+    public static Item equipmentSkin;
     public static Item paintbrush;
     public static Item paintRoller;
     public static Item colourPicker;
@@ -23,21 +15,8 @@ public class ModItems {
     public static Item guideBook;
     
     public static void init() {
-        customHeadArmour = new ItemCustomArmour[5];
-        customChestArmour = new ItemCustomArmour[5];
-        customLegsArmour = new ItemCustomArmour[5];
-        customSkirtArmour = new ItemCustomArmour[5];
-        customFeetArmour = new ItemCustomArmour[5];
-        
-        for (int i = 0; i < 5; i++) {
-            customHeadArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.HEAD);
-            customChestArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.CHEST);
-            customLegsArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.LEGS);
-            customSkirtArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.SKIRT);
-            customFeetArmour[i] = new ItemCustomArmour(ArmorMaterial.values()[i], ArmourType.FEET);
-        }
-        
-        armourTemplate = new ItemCustomArmourTemplate();
+        equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
+        equipmentSkin = new ItemEquipmentSkin();
         paintbrush = new ItemPaintbrush();
         paintRoller = new ItemPaintRoller();
         colourPicker = new ItemColourPicker();

@@ -11,6 +11,8 @@ public interface IProxy {
     
     public abstract void postInit();
     
+    public abstract void registerKeyBindings();
+    
     public abstract void addCustomArmour(String playerName, CustomArmourItemData armourData);
     
     public abstract void removeCustomArmour(String playerName, ArmourType type);

@@ -20,9 +20,4 @@ public class CustomArmourManager {
         PlayerCustomEquipmentData playerArmourData = PlayerCustomEquipmentData.get(player);
         playerArmourData.removeAllCustomArmourData();
     }
-
-    public static void playerArmourSlotUpdate(EntityPlayer player,byte slotId, boolean added) {
-        PlayerCustomEquipmentData playerArmourData = PlayerCustomEquipmentData.get(player);
-        playerArmourData.armourSlotUpdate(slotId, added);
-    }
 }

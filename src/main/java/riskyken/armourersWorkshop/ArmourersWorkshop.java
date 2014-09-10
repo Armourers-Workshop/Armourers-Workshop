@@ -57,6 +57,7 @@ public class ArmourersWorkshop {
 
         PacketHandler.init();
         proxy.postInit();
+        proxy.registerKeyBindings();
 
         MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
         FMLCommonHandler.instance().bus().register(new ModFMLEventHandler());

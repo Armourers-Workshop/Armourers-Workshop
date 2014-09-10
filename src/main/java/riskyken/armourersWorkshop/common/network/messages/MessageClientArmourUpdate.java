@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.CustomArmourManager;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -32,7 +31,7 @@ public class MessageClientArmourUpdate implements IMessage, IMessageHandler<Mess
     
     @Override
     public IMessage onMessage(MessageClientArmourUpdate message, MessageContext ctx) {
-        CustomArmourManager.playerArmourSlotUpdate(ctx.getServerHandler().playerEntity, message.slotId, message.added);
+        //CustomArmourManager.playerArmourSlotUpdate(ctx.getServerHandler().playerEntity, message.slotId, message.added);
         return null;
     }
 }

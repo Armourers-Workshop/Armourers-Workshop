@@ -4,18 +4,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.gui.GuiArmourCrafter;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
+import riskyken.armourersWorkshop.client.gui.GuiEquipmentWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
-import riskyken.armourersWorkshop.common.inventory.ContainerArmourCrafter;
+import riskyken.armourersWorkshop.common.custom.equipment.PlayerCustomEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
+import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourCrafter;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
@@ -43,16 +43,14 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerArmourer(player.inventory,(TileEntityArmourerBrain)te);
                 }
                 break;
-            case LibGuiIds.ARMOUR_CRAFTER:
-                if (te instanceof TileEntityArmourCrafter){
-                    return new ContainerArmourCrafter(player.inventory,(TileEntityArmourCrafter)te);
-                }
-                break;
             case LibGuiIds.ARMOUR_LIBRARY:
                 if (te instanceof TileEntityArmourLibrary){
                     return new ContainerArmourLibrary(player.inventory,(TileEntityArmourLibrary)te);
                 }
                 break;
+            case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
+                PlayerCustomEquipmentData customEquipmentData = PlayerCustomEquipmentData.get(player);
+                return new ContainerEquipmentWardrobe(player.inventory, customEquipmentData);
         }
         return null;
     }
@@ -77,16 +75,14 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiGuideBook(player.getCurrentEquippedItem());
                 }
                 break;
-            case LibGuiIds.ARMOUR_CRAFTER:
-                if (te instanceof TileEntityArmourCrafter) {
-                    return new GuiArmourCrafter(player.inventory,(TileEntityArmourCrafter)te);
-                }
-                break;
             case LibGuiIds.ARMOUR_LIBRARY:
                 if (te instanceof TileEntityArmourLibrary) {
                     return new GuiArmourLibrary(player.inventory,(TileEntityArmourLibrary)te);
                 }
                 break;
+            case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
+                PlayerCustomEquipmentData customEquipmentData = PlayerCustomEquipmentData.get(player);
+                return new GuiEquipmentWardrobe(player.inventory, customEquipmentData);
         }
         return null;
     }

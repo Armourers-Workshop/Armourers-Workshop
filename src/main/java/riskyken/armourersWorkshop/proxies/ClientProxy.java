@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.proxies;
 import java.util.HashMap;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -14,6 +15,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
+import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -63,6 +65,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public void registerKeyBindings() {
+        ClientRegistry.registerKeyBinding(Keybindings.openCustomArmourGui);
+    }
+    
+    @Override
     public void addCustomArmour(String playerName, CustomArmourItemData armourData) {
         String key = playerName + ":" + armourData.getType().name();
         if (customArmor.containsKey(key)) {
@@ -100,6 +107,51 @@ public class ClientProxy extends CommonProxy {
         if (playerHasSkirt(player.getDisplayName())) {
             if (player.limbSwingAmount > 0.25F) {
                 player.limbSwingAmount = 0.25F;
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    public void onRender(RenderPlayerEvent.Post event) {
+    }
+    
+    @SubscribeEvent
+    public void onRender(RenderPlayerEvent.SetArmorModel event) {
+        EntityPlayer player = event.entityPlayer;
+        RenderPlayer render = event.renderer;
+        if (-event.slot + 3 == ArmourType.HEAD.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.HEAD);
+            if (data != null) {
+                customHead.render(player, render);
+                event.result = -2;
+            }
+        }
+        if (-event.slot + 3 == ArmourType.CHEST.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.CHEST);
+            if (data != null) {
+                customChest.render(player, render);
+                event.result = -2;
+            }
+        }
+        if (-event.slot + 3 == ArmourType.LEGS.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.LEGS);
+            if (data != null) {
+                customLegs.render(player, render);
+                event.result = -2;
+            }
+        }
+        if (-event.slot + 3 == ArmourType.SKIRT.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.SKIRT);
+            if (data != null) {
+                customSkirt.render(player, render);
+                event.result = -2;
+            }
+        }
+        if (-event.slot + 3 == ArmourType.FEET.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.FEET);
+            if (data != null) {
+                customFeet.render(player, render);
+                event.result = -2;
             }
         }
     }

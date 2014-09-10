@@ -18,9 +18,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
+import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
+import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -40,10 +41,10 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     }
 
     public void saveArmour(String filename, EntityPlayerMP player) {
-        //Check we have a valid item to save onto.
+        //Check we have a valid item to save from.
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) { return; }
-        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
+        if (!(stackInput.getItem() instanceof ItemEquipmentSkin)) { return; }
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
@@ -75,17 +76,15 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
         
-        setInventorySlotContents(0, null);
-        setInventorySlotContents(1, stackInput);
+        this.decrStackSize(0, 1);
+        this.setInventorySlotContents(1, stackInput);
     }
     
     public void loadArmour(String filename, EntityPlayerMP player) {
         //Check we have a valid item to load from.
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) { return; }
-        if (!(stackInput.getItem() instanceof ItemCustomArmourTemplate)) { return; }
-        if (ItemCustomArmourTemplate.getArmourType(stackInput) != ArmourType.NONE) { return; }
-        
+        if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) { return; }
         
         if (!createArmourDirectory()) { return; }
         
@@ -111,8 +110,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
         
-        
-        ItemCustomArmourTemplate.setArmourType(armourItemData.getType(), stackInput);
+        ModLogger.log(armourItemData.getType().ordinal());
+        ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         
         NBTTagCompound itemNBT = new NBTTagCompound();
         NBTTagCompound armourNBT = new NBTTagCompound();
@@ -120,10 +119,10 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         armourItemData.writeToNBT(armourNBT);
         itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
         
-        stackInput.setTagCompound(itemNBT);
+        stackOutput.setTagCompound(itemNBT);
         
-        setInventorySlotContents(0, null);
-        setInventorySlotContents(1, stackInput);
+        this.decrStackSize(0, 1);
+        this.setInventorySlotContents(1, stackOutput);
     }
     
     public ArrayList<String> getFileNames() {

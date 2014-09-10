@@ -5,26 +5,32 @@ import java.util.HashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
+public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IInventory {
 
     public final static String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
+    private static final String TAG_ITEMS = "items";
+    private static final String TAG_SLOT = "slot";
     
+    public ItemStack[] customArmourInventory = new ItemStack[6];
     private final EntityPlayer player;
     private final HashMap<String, CustomArmourItemData> customArmor;
+    private boolean inventoryChanged;
     
     public PlayerCustomEquipmentData(EntityPlayer player) {
         this.player = player;
@@ -61,15 +67,13 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
     }
     
 
-    public void armourSlotUpdate(byte slotId, boolean added) {
-        ItemStack stack = player.getCurrentArmor(slotId);
+    public void armourSlotUpdate(byte slot) {
+        ItemStack stack = this.getStackInSlot(slot);
         
-        if (!added)
-        {
-            removeArmourFromSlot(slotId);
+        if (stack == null) {
+            removeArmourFromSlot(slot);
             return;
-        }
-        if (stack == null) { return; }
+        } 
         
         if (!stack.hasTagCompound()) { return; }
         
@@ -77,22 +81,23 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
         if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
         NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         loadFromItemNBT(armourNBT);
-        ModLogger.log(stack);
     }
     
     private void removeArmourFromSlot(byte slotId) {
         switch (slotId) {
-        case 0:
+        case 4:
             removeCustomArmour(ArmourType.FEET);
             break;
-        case 1:
-            removeCustomArmour(ArmourType.LEGS);
+        case 3:
             removeCustomArmour(ArmourType.SKIRT);
-            break;
+            break;  
         case 2:
+            removeCustomArmour(ArmourType.LEGS);
+            break;
+        case 1:
             removeCustomArmour(ArmourType.CHEST);
             break;
-        case 3:
+        case 0:
             removeCustomArmour(ArmourType.HEAD);
             break;
         }
@@ -127,6 +132,7 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
     
     @Override
     public void saveNBTData(NBTTagCompound compound) {
+        writeItemsToNBT(compound);
         //TODO Change to for loop
         //TODO Maybe save a list?
         saveKey(compound, ArmourType.HEAD);
@@ -147,6 +153,7 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
     
     @Override
     public void loadNBTData(NBTTagCompound compound) {
+        readItemsFromNBT(compound);
         loadKey(compound, ArmourType.HEAD);
         loadKey(compound, ArmourType.CHEST);
         loadKey(compound, ArmourType.LEGS);
@@ -170,5 +177,113 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties {
     @Override
     public void init(Entity entity, World world) {
         
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return customArmourInventory.length;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return customArmourInventory[slot];
+    }
+
+    @Override
+    public ItemStack decrStackSize(int slot, int count) {
+        ItemStack itemstack = getStackInSlot(slot);
+        
+        if (itemstack != null) {
+            if (itemstack.stackSize <= count){
+                setInventorySlotContents(slot, null);
+            }else{
+                itemstack = itemstack.splitStack(count);
+                markDirty();
+            }
+        }
+        return itemstack;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int slot) {
+        ItemStack item = getStackInSlot(slot);
+        setInventorySlotContents(slot, null);
+        return item;
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        customArmourInventory[slot] = stack;
+        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+            stack.stackSize = getInventoryStackLimit();
+        }
+        if (!player.worldObj.isRemote) {
+            if (slot < 5) {
+                armourSlotUpdate((byte)slot);
+            }
+        }
+        markDirty();
+    }
+
+    @Override
+    public String getInventoryName() {
+        return "pasta";
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 64;
+    }
+
+    @Override
+    public void markDirty() {
+        this.inventoryChanged = true;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return this.player.isDead ? false : player.getDistanceSqToEntity(this.player) <= 64.0D;
+    }
+
+    @Override
+    public void openInventory() {}
+
+    @Override
+    public void closeInventory() {}
+
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return true;
+    }
+    
+    public void writeItemsToNBT(NBTTagCompound compound) {
+        NBTTagList items = new NBTTagList();
+        for (int i = 0; i < getSizeInventory(); i++) {
+            ItemStack stack = getStackInSlot(i);
+            if (stack != null) {
+                NBTTagCompound item = new NBTTagCompound();
+                item.setByte(TAG_SLOT, (byte)i);
+                stack.writeToNBT(item);
+                items.appendTag(item);
+            }
+        }
+        compound.setTag(TAG_ITEMS, items);
+    }
+    
+    public void readItemsFromNBT(NBTTagCompound compound) {
+        NBTTagList items = compound.getTagList(TAG_ITEMS, NBT.TAG_COMPOUND);
+        for (int i = 0; i < items.tagCount(); i++) {
+            NBTTagCompound item = (NBTTagCompound)items.getCompoundTagAt(i);
+            int slot = item.getByte(TAG_SLOT);
+            
+            if (slot >= 0 && slot < getSizeInventory()) {
+                setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+            }
+        }
     }
 }

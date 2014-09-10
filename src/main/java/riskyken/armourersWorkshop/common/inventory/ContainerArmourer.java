@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.ItemCustomArmourTemplate;
+import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 
 public class ContainerArmourer extends Container {
@@ -43,7 +43,7 @@ public class ContainerArmourer extends Container {
                     }
                 }
             } else {
-                if (stack.getItem() instanceof ItemCustomArmourTemplate) {
+                if (stack.getItem() instanceof ItemEquipmentSkinTemplate) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) {
                         return null;
                     }
