@@ -20,12 +20,12 @@ public class ContainerColourMixer extends Container {
         addSlotToContainer(new SlotOutput(tileEntityColourMixer, 1, 144, 80));
 
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 189));
+            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 209));
         }
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 131 + y * 18));
+                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 151 + y * 18));
             }
         }
     }

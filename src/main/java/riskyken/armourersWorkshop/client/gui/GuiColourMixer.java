@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -13,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.gui.controls.GuiColourSelector;
 import riskyken.armourersWorkshop.client.gui.controls.GuiHSBSlider;
 import riskyken.armourersWorkshop.client.gui.controls.GuiHSBSlider.HSBSliderType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiHSBSlider.IHSBSliderCallback;
@@ -33,12 +35,13 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     private Color colour;
     private GuiHSBSlider[] slidersHSB;
     private GuiTextField colourHex;
+    private GuiColourSelector colourSelector;
     
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
         this.tileEntityColourMixer = tileEntityColourMixer;
         this.xSize = 176;
-        this.ySize = 213;
+        this.ySize = 233;
     }
     
     @Override
@@ -56,6 +59,8 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         colourHex = new GuiTextField(fontRendererObj, this.guiLeft + 5, this.guiTop + 90, 50, 10);
         colourHex.setMaxStringLength(7);
         updateHexTextbox();
+        colourSelector = new GuiColourSelector(3, this.guiLeft + 5, this.guiTop + 110, 82, 22, 10, 10, 8);
+        buttonList.add(colourSelector);
     }
     
     private void checkForColourUpdates() {
@@ -78,6 +83,15 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
                 this.colour.getRed(),
                 this.colour.getGreen(),
                 this.colour.getBlue()));
+    }
+    
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if (button.id == 3) {
+            this.colour = ((GuiColourSelector)button).getSelectedColour();
+            updateHexTextbox();
+            updateSliders();
+        }
     }
     
     @Override
@@ -129,13 +143,13 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.saturation");
         String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.brightness");
         String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hex");
-        //String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.presets");
+        String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.presets");
         
         this.fontRendererObj.drawString(labelHue + ":", 5, 21, 4210752);
         this.fontRendererObj.drawString(labelSaturation + ":", 5, 41, 4210752);
         this.fontRendererObj.drawString(labelBrightness + ":", 5, 61, 4210752);
         this.fontRendererObj.drawString(labelHex + ":", 5, 81, 4210752);
-        //this.fontRendererObj.drawString(labelPresets + ":", 60, 81, 4210752);
+        this.fontRendererObj.drawString(labelPresets + ":", 5, 101, 4210752);
     }
     
     @Override
