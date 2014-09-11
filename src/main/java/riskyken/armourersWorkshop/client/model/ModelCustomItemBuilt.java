@@ -54,24 +54,24 @@ public class ModelCustomItemBuilt extends ModelBiped {
             
             switch (part.getArmourPart()) {
             case LEFT_ARM:
-                blockData.x -= 8;
-                blockData.y += 2;
-                break;
-            case RIGHT_ARM:
                 blockData.x += 8;
                 blockData.y += 2;
                 break;
+            case RIGHT_ARM:
+                blockData.x -= 8;
+                blockData.y += 2;
+                break;
             case LEFT_LEG:
-                blockData.x += 4;
+                blockData.x -= 4;
                 break;
             case RIGHT_LEG:
-                blockData.x -= 4;
-                break;
-            case LEFT_FOOT:
                 blockData.x += 4;
                 break;
-            case RIGHT_FOOT:
+            case LEFT_FOOT:
                 blockData.x -= 4;
+                break;
+            case RIGHT_FOOT:
+                blockData.x += 4;
                 break;
             default:
                 break;
