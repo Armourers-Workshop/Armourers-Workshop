@@ -8,29 +8,28 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
-import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelCustomArmourChest extends ModelCustomArmour {
     
-    public void render(Entity entity, RenderPlayer render) {
-        EntityPlayer player = (EntityPlayer) entity;
+    public void render(Entity entity, RenderPlayer render, CustomArmourItemData armourData) {
         setRotationFromRender(render);
-        CustomArmourItemData armourData = ClientProxy.getPlayerCustomArmour(entity, ArmourType.CHEST);
+
         if (armourData == null) { return; }
         ArrayList<CustomArmourPartData> parts = armourData.getParts();
         
-        this.isSneak = player.isSneaking();
-        this.isRiding = player.isRiding();
-        this.heldItemRight = 0;
-        if (player.getHeldItem() != null) {
-            this.heldItemRight = 1;
+        if (entity != null) {
+            EntityPlayer player = (EntityPlayer) entity;
+            this.isSneak = player.isSneaking();
+            this.isRiding = player.isRiding();
+            this.heldItemRight = 0;
+            if (player.getHeldItem() != null) {
+                this.heldItemRight = 1;
+            }
         }
         
         bindArmourTexture();
@@ -54,12 +53,6 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         }
         
         GL11.glColor3f(1F, 1F, 1F);
-    }
-    
-    @Override
-    public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float scale) {
-        ModLogger.log(p_78088_4_);
-        setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, entity);
     }
     
     private void renderChest(CustomArmourPartData part, float scale) {

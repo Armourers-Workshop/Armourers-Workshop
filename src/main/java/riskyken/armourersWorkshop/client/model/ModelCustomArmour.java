@@ -49,12 +49,21 @@ public class ModelCustomArmour extends ModelBiped{
     }
     
     protected void setRotationFromRender(RenderPlayer render) {
-        setRotation(bipedHead, render.modelBipedMain.bipedHead);
-        setRotation(bipedBody, render.modelBipedMain.bipedBody);
-        setRotation(bipedLeftArm, render.modelBipedMain.bipedLeftArm);
-        setRotation(bipedRightArm, render.modelBipedMain.bipedRightArm);
-        setRotation(bipedLeftLeg, render.modelBipedMain.bipedLeftLeg);
-        setRotation(bipedRightLeg, render.modelBipedMain.bipedRightLeg);
+        if (render == null) {
+            setRotation(bipedHead, 0F, 0F, 0F);
+            setRotation(bipedBody, 0F, 0F, 0F);
+            setRotation(bipedLeftArm, 0F, 0F, 0F);
+            setRotation(bipedRightArm, 0F, 0F, 0F);
+            setRotation(bipedLeftLeg, 0F, 0F, 0F);
+            setRotation(bipedRightLeg, 0F, 0F, 0F);
+        } else {
+            setRotation(bipedHead, render.modelBipedMain.bipedHead);
+            setRotation(bipedBody, render.modelBipedMain.bipedBody);
+            setRotation(bipedLeftArm, render.modelBipedMain.bipedLeftArm);
+            setRotation(bipedRightArm, render.modelBipedMain.bipedRightArm);
+            setRotation(bipedLeftLeg, render.modelBipedMain.bipedLeftLeg);
+            setRotation(bipedRightLeg, render.modelBipedMain.bipedRightLeg);
+        }
     }
      
     public void renderPart(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
