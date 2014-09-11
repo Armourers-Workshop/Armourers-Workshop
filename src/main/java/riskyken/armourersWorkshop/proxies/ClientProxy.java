@@ -12,6 +12,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
@@ -20,6 +21,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
+import riskyken.armourersWorkshop.client.model.ModelCustomItemBuilt;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
@@ -28,6 +30,7 @@ import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemD
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -35,7 +38,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 public class ClientProxy extends CommonProxy {
 
     public static HashMap<String, CustomArmourItemData> customArmor = new HashMap<String, CustomArmourItemData>();
-    //public static HashMap<Integer, ModelCustomItemBuilt> modelCache = new HashMap<Integer, ModelCustomItemBuilt>();
+    public static HashMap<String, ModelCustomItemBuilt> modelCache = new HashMap<String, ModelCustomItemBuilt>();
     
     public static ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public static ModelCustomArmourHead customHead = new ModelCustomArmourHead();
@@ -60,6 +63,12 @@ public class ClientProxy extends CommonProxy {
         return armorData;
     }
 
+    public static boolean renderModelFromCache(ItemStack stack, String id, ArmourType armourType) {
+        if (!modelCache.containsKey(id)) { return false; }
+        
+        return true;
+    }
+    
     @Override
     public void init() {
     }
@@ -168,32 +177,76 @@ public class ClientProxy extends CommonProxy {
     }
 
     public static void renderItemAsArmourModel(ItemStack stack) {
+        //long nptTime = System.nanoTime();
         NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
+        
+        String renderId = "-1";
+        if (!armourNBT.hasKey(LibCommonTags.TAG_RENDER_ID)) {
+            ModLogger.log(Level.WARN, "Item stack has no render ID. " + stack.getDisplayName());
+            return;
+        } else {
+            renderId = armourNBT.getString(LibCommonTags.TAG_RENDER_ID);
+        }
+        
+        if (!modelCache.containsKey(renderId)) {
+            buildModelForCache(armourNBT, ArmourType.getOrdinal(stack.getItemDamage() + 1), renderId);
+        }
+        
+        ModelCustomItemBuilt targetModel = modelCache.get(renderId);
+        
+        if (targetModel == null) {
+            ModLogger.log(Level.ERROR, "Model was not found in the model cache. Something is very wrong.");
+            return;
+        }
+        
+        
+        
+        //renderModelFromCache(renderId, ArmourType.getOrdinal(stack.getItemDamage() + 1));
+
         CustomArmourItemData itemData = new CustomArmourItemData(armourNBT);
+        //ModLogger.log("");
+        //ModLogger.log("NBT lookup:  " + (System.nanoTime() - nptTime));
+        //long renderTime = System.nanoTime();
         switch (ArmourType.getOrdinal(stack.getItemDamage() + 1)) {
         case HEAD:
             GL11.glTranslatef(0F, 0.7F, 0F);
-            customHead.render(null, null, itemData);
+            targetModel.render();
+            //customHead.render(null, null, itemData);
             break;
         case CHEST:
-            GL11.glTranslatef(0F, -0.3F, 0F);
-            customChest.render(null, null, itemData);
+            GL11.glTranslatef(0F, -0.35F, 0F);
+            targetModel.render();
+            //customChest.render(null, null, itemData);
             break;
         case LEGS:
             GL11.glTranslatef(0F, -1.2F, 0F);
-            customLegs.render(null, null, itemData);
+            targetModel.render();
+            //customLegs.render(null, null, itemData);
             break;
         case SKIRT:
-            GL11.glTranslatef(0F, -1.15F, 0F);
-            customSkirt.render(null, null, itemData);
+            GL11.glTranslatef(0F, -0.45F, 0F);
+            targetModel.render();
+            //customSkirt.render(null, null, itemData);
             break;
         case FEET:
-            GL11.glTranslatef(0F, -1.2F, 0F);
-            customFeet.render(null, null, itemData);
+            GL11.glTranslatef(0F, -0.8F, 0F);
+            targetModel.render();
+            //customFeet.render(null, null, itemData);
             break;
         default:
             break;
         }
-        
+        //ModLogger.log("Render model:" + (System.nanoTime() - renderTime));
+        //ModLogger.log("Total Time:  " + (System.nanoTime() - nptTime));
+    }
+    
+    public static void buildModelForCache(NBTTagCompound armourNBT, ArmourType armourType, String key) {
+        CustomArmourItemData itemData = new CustomArmourItemData(armourNBT);
+        ModelCustomItemBuilt newModel = new ModelCustomItemBuilt(itemData, armourType);
+        if (modelCache.containsKey(key)) {
+            modelCache.remove(key);
+        }
+        ModLogger.log("Adding new model to cache.");
+        modelCache.put(key, newModel);
     }
 }

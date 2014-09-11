@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -40,8 +41,13 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         return LibBlockNames.ARMOUR_LIBRARY;
     }
 
+    /**
+     * Save armour data from an items NBT data into a file on the disk.
+     * @param filename The name of the file to save to.
+     * @param player The player that pressed the save button.
+     */
     public void saveArmour(String filename, EntityPlayerMP player) {
-        //Check we have a valid item to save from.
+        //Check we have a valid item to save to.
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) { return; }
         if (!(stackInput.getItem() instanceof ItemEquipmentSkin)) { return; }
@@ -80,6 +86,11 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         this.setInventorySlotContents(1, stackInput);
     }
     
+    /**
+     * Loads an armour file from the disk and adds it to an items NBT data.
+     * @param filename The name of the file to load.
+     * @param player The player that pressed the load button.
+     */
     public void loadArmour(String filename, EntityPlayerMP player) {
         //Check we have a valid item to load from.
         ItemStack stackInput = getStackInSlot(0);
@@ -117,6 +128,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         NBTTagCompound armourNBT = new NBTTagCompound();
         
         armourItemData.writeToNBT(armourNBT);
+        armourNBT.setString(LibCommonTags.TAG_RENDER_ID, UUID.randomUUID().toString());
         itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
         
         stackOutput.setTagCompound(itemNBT);
