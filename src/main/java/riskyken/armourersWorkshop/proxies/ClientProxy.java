@@ -219,7 +219,7 @@ public class ClientProxy extends CommonProxy {
             //customChest.render(null, null, itemData);
             break;
         case LEGS:
-            GL11.glTranslatef(0F, -1.2F, 0F);
+            GL11.glTranslatef(0F, -0.45F, 0F);
             targetModel.render();
             //customLegs.render(null, null, itemData);
             break;
