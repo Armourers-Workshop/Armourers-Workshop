@@ -45,19 +45,23 @@ public class CommandCustomArmour extends CommandBase {
             return;
         }
         
+        int maxSize = TileEntityArmourerBrain.MULTI_BLOCK_SIZE;
+        
         if (args[0].equalsIgnoreCase("build")) {
-            for (int ix = 0; ix < TileEntityArmourerBrain.MULTI_BLOCK_SIZE; ix++) {
-                for (int iz = 0; iz < TileEntityArmourerBrain.MULTI_BLOCK_SIZE; iz++) {
-                    if (ix == 0 | iz == 0 |ix == TileEntityArmourerBrain.MULTI_BLOCK_SIZE - 1 |
-                            iz == TileEntityArmourerBrain.MULTI_BLOCK_SIZE - 1) {
-                        player.worldObj.setBlock((int) player.posX + ix, (int) player.posY,(int) player.posZ + iz, ModBlocks.armourerMultiBlock);
+            for (int ix = 0; ix < maxSize; ix++) {
+                for (int iz = 0; iz < maxSize; iz++) {
+                    if (ix == 0 | iz == 0 | ix == maxSize - 1 | iz == maxSize - 1) {
+                        if ((ix == 0 | ix == maxSize - 1) & (iz == 0 | iz == maxSize - 1)) {
+                            player.worldObj.setBlock((int) player.posX + ix, (int) player.posY,(int) player.posZ + iz, ModBlocks.armourerMultiBlock, 1, 2);
+                        } else {
+                            player.worldObj.setBlock((int) player.posX + ix, (int) player.posY,(int) player.posZ + iz, ModBlocks.armourerMultiBlock, 0, 2);
+                        }
                     }
-                    
                 }
             }
-            player.worldObj.setBlock((int) player.posX + 1, (int) player.posY,(int) player.posZ, ModBlocks.armourerBrain);
+            player.worldObj.setBlock((int) player.posX + 3, (int) player.posY,(int) player.posZ, ModBlocks.armourerBrain);
             
-            TileEntity te = player.worldObj.getTileEntity((int) player.posX + 1, (int) player.posY,(int) player.posZ);
+            TileEntity te = player.worldObj.getTileEntity((int) player.posX + 3, (int) player.posY,(int) player.posZ);
             if (te != null && te instanceof TileEntityArmourerBrain) {
                 ((TileEntityArmourerBrain)te).setGameProfile(player.getGameProfile());
             }
