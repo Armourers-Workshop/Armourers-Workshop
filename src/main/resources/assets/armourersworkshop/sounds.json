@@ -4,8 +4,6 @@
 	[
 	{"name": "book/pageTurn1","stream": false},
 	{"name": "book/pageTurn2","stream": false},
-	{"name": "book/pageTurn3","stream": false},
-	{"name": "book/pageTurn4","stream": false},
-	{"name": "book/pageTurn5","stream": false}
+	{"name": "book/pageTurn3","stream": false}
 	]}
 }
