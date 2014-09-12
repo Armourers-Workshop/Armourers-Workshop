@@ -11,7 +11,6 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
 
@@ -62,7 +61,7 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             default:
                 break;
             }
-            ClientProxy.renderItemAsArmourModel(item);
+            ItemModelRenderManager.renderItemAsArmourModel(item);
             
         } else {
             IIcon icon = item.getItem().getIcon(item, 0);
