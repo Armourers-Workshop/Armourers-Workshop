@@ -74,14 +74,41 @@ public final class ItemModelRenderManager {
         }
     }
     
-    private static void buildModelForCache(NBTTagCompound armourNBT, ArmourType armourType, String key) {
+    private static synchronized void buildModelForCache(NBTTagCompound armourNBT, ArmourType armourType, String key) {
         CustomArmourItemData itemData = new CustomArmourItemData(armourNBT);
-        ModelCustomItemBuilt newModel = new ModelCustomItemBuilt(itemData, armourType);
+        ModelCustomItemBuilt newModel = new ModelCustomItemBuilt(itemData, armourType, key);
         if (modelCache.containsKey(key)) {
             modelCache.remove(key);
         }
         ModLogger.log("Adding new model to cache");
         modelCache.put(key, newModel);
         ModLogger.log("Cache size " + modelCache.size());
+    }
+    
+    private static synchronized void removeModelFromCache(String key) {
+        ModLogger.log("Removing model from cache");
+        ModelCustomItemBuilt removeModel = modelCache.get(key);
+        if (removeModel != null) {
+            modelCache.remove(key);
+            removeModel.cleanUp();
+        }
+        ModLogger.log("Cache size " + modelCache.size());
+    }
+
+    public static void tick() {
+        //ModLogger.log("tick");
+        
+        for (int i = 0; i < modelCache.size(); i++) {
+            String key = (String) modelCache.keySet().toArray()[i];
+            modelCache.get(key).tick();
+        }
+        
+        for (int i = 0; i < modelCache.size(); i++) {
+            String key = (String) modelCache.keySet().toArray()[i];
+            if (modelCache.get(key).needsCleanup()) {
+                removeModelFromCache(key);
+                break;
+            }
+        }
     }
 }

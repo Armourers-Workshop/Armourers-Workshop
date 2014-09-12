@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
@@ -23,7 +25,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ModelCustomItemBuilt extends ModelBiped {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
-    private final ModelRenderer main;
+    private final CustomModelRenderer main;
+    private int timeFromRender = 0;
+    public final String renderId;
     ArrayList<CustomEquipmentBlockData> blocks = new ArrayList<CustomEquipmentBlockData>();
             
     private static float scale = 0.0625F;
@@ -32,11 +36,12 @@ public class ModelCustomItemBuilt extends ModelBiped {
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
     
-    public ModelCustomItemBuilt(CustomArmourItemData itemData, ArmourType armourType) {
+    public ModelCustomItemBuilt(CustomArmourItemData itemData, ArmourType armourType, String renderId) {
+        this.renderId = renderId;
         textureWidth = 4;
         textureHeight = 4;
         
-        main = new ModelRenderer(this, 0, 0);
+        main = new CustomModelRenderer(this, 0, 0);
         main.addBox(0F, 0F, 0F, 1, 1, 1);
         main.setRotationPoint(0, 0, 0);
         
@@ -102,7 +107,47 @@ public class ModelCustomItemBuilt extends ModelBiped {
     }
 
     public void render() {
-        //ModLogger.log(blocks.size());
+        timeFromRender = 0;
+        if (!this.compiled)
+        {
+            this.compileDisplayList();
+        }
+        GL11.glCallList(this.displayList);
+    }
+    
+    public void tick() {
+        timeFromRender++;
+    }
+    
+    public boolean needsCleanup() {
+        if (timeFromRender > 600) {
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean compiled;
+    private int displayList;
+    
+    @SideOnly(Side.CLIENT)
+    private void compileDisplayList() {
+        this.displayList = GLAllocation.generateDisplayLists(1);
+        GL11.glNewList(this.displayList, GL11.GL_COMPILE);
+        Tessellator tessellator = Tessellator.instance;
+
+        oldRender();
+
+        GL11.glEndList();
+        this.compiled = true;
+    }
+    
+    public void cleanUp() {
+        if (this.compiled) {
+            GLAllocation.deleteDisplayLists(this.displayList);
+        }
+    }
+    
+    private void oldRender() {
         bindArmourTexture();
         GL11.glPushMatrix();
         for (int i = 0; i < blocks.size(); i++) {

@@ -10,7 +10,7 @@ public class ItemEquipmentSkinTemplate extends AbstractModItem {
     
     public ItemEquipmentSkinTemplate() {
         super(LibItemNames.EQUIPMENT_SKIN_TEMPLATE);
-        setMaxStackSize(16);
+        setMaxStackSize(64);
     }
     
     @Override
