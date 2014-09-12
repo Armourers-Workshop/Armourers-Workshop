@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
 
 public class CustomArmourPartData {
@@ -44,6 +45,36 @@ public class CustomArmourPartData {
 
     public ArrayList<CustomEquipmentBlockData> getArmourData() {
         return armourData;
+    }
+
+    public void removeHiddenBlocks() {
+        ArrayList<CustomEquipmentBlockData> newBlockList = new ArrayList<CustomEquipmentBlockData>();
+        for (int i = 0; i < armourData.size(); i++) {
+            CustomEquipmentBlockData blockData = armourData.get(i);
+            if (blockCanBeSeen(armourData, blockData)) {
+                newBlockList.add(blockData);
+            }
+        }
+        armourData.clear();
+        armourData = newBlockList;
+    }
+    
+    private boolean blockCanBeSeen(ArrayList<CustomEquipmentBlockData> partBlocks, CustomEquipmentBlockData block) {
+        int sidesCovered = 0;
+        for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
+            for (int j = 0; j < partBlocks.size(); j++) {
+                CustomEquipmentBlockData checkBlock = partBlocks.get(j);
+                if (block.x + dir.offsetX == checkBlock.x &&
+                        block.y + dir.offsetY == checkBlock.y &&
+                        block.z + dir.offsetZ == checkBlock.z)
+                {
+                    sidesCovered++;
+                    break;
+                }
+            }
+        }
+        return sidesCovered < 6;
     }
 
     public void writeToBuf(ByteBuf buf) {

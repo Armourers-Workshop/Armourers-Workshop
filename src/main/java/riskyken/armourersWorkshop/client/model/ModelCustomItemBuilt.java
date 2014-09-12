@@ -7,6 +7,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -50,35 +51,54 @@ public class ModelCustomItemBuilt extends ModelBiped {
         ArrayList<CustomEquipmentBlockData> partBlocks = part.getArmourData();
         for (int i = 0; i < partBlocks.size(); i++) {
             CustomEquipmentBlockData blockData = partBlocks.get(i);
-            
-            
-            switch (part.getArmourPart()) {
-            case LEFT_ARM:
-                blockData.x += 7;
-                blockData.y += 2;
-                break;
-            case RIGHT_ARM:
-                blockData.x -= 7;
-                blockData.y += 2;
-                break;
-            case LEFT_LEG:
-                blockData.x -= 4;
-                break;
-            case RIGHT_LEG:
-                blockData.x += 4;
-                break;
-            case LEFT_FOOT:
-                blockData.x -= 4;
-                break;
-            case RIGHT_FOOT:
-                blockData.x += 4;
-                break;
-            default:
-                break;
+            if (blockCanBeSeen(partBlocks, blockData)) {
+                    
+                switch (part.getArmourPart()) {
+                case LEFT_ARM:
+                    blockData.x += 7;
+                    blockData.y += 2;
+                    break;
+                case RIGHT_ARM:
+                    blockData.x -= 7;
+                    blockData.y += 2;
+                    break;
+                case LEFT_LEG:
+                    blockData.x -= 4;
+                    break;
+                case RIGHT_LEG:
+                    blockData.x += 4;
+                    break;
+                case LEFT_FOOT:
+                    blockData.x -= 4;
+                    break;
+                case RIGHT_FOOT:
+                    blockData.x += 4;
+                    break;
+                default:
+                    break;
+                }
+                
+                blocks.add(partBlocks.get(i));
             }
-            
-            blocks.add(partBlocks.get(i));
         }
+    }
+    
+    private boolean blockCanBeSeen(ArrayList<CustomEquipmentBlockData> partBlocks, CustomEquipmentBlockData block) {
+        int sidesCovered = 0;
+        for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
+            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
+            for (int j = 0; j < partBlocks.size(); j++) {
+                CustomEquipmentBlockData checkBlock = partBlocks.get(j);
+                if (block.x + dir.offsetX == checkBlock.x &&
+                        block.y + dir.offsetY == checkBlock.y &&
+                        block.z + dir.offsetZ == checkBlock.z)
+                {
+                    sidesCovered++;
+                    break;
+                }
+            }
+        }
+        return sidesCovered < 6;
     }
 
     public void render() {

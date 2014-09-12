@@ -52,6 +52,7 @@ public class CustomEquipmentRenderManager {
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
         }
+        armourData.removeHiddenBlocks();
         customArmor.put(key, armourData);
     }
 

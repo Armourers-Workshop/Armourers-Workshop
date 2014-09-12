@@ -48,6 +48,12 @@ public class CustomArmourItemData {
     public CustomArmourItemData(DataInputStream stream) throws IOException {
         readFromStream(stream);
     }
+    
+    public void removeHiddenBlocks() {
+        for (int i = 0; i < parts.size(); i++) {
+            parts.get(i).removeHiddenBlocks();
+        }
+    }
 
     public void writeToBuf(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, this.authorName);

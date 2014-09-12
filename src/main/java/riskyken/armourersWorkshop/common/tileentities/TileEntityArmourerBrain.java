@@ -21,7 +21,6 @@ import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
@@ -57,8 +56,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         CustomArmourItemData armourItemData;
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        
-        ModLogger.log("pie");
         
         if (stackInput == null) { return; }
         if (stackOutput != null) { return; }
