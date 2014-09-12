@@ -86,6 +86,10 @@ public class CustomEquipmentRenderManager {
         }
     }
     
+    public int getCacheSize() {
+        return customArmor.size();
+    }
+    
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.SetArmorModel event) {
         EntityPlayer player = event.entityPlayer;

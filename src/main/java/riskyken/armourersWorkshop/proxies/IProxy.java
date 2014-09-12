@@ -18,4 +18,6 @@ public interface IProxy {
     public abstract void removeCustomArmour(String playerName, ArmourType type);
     
     public abstract void removeAllCustomArmourData(String playerName);
+    
+    public abstract int getPlayerModelCacheSize();
 }

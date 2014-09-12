@@ -32,4 +32,9 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void removeAllCustomArmourData(String playerName) {
     }
+
+    @Override
+    public int getPlayerModelCacheSize() {
+        return 0;
+    }
 }

@@ -1,7 +1,9 @@
 package riskyken.armourersWorkshop.proxies;
 
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
+import riskyken.armourersWorkshop.client.ModForgeEventHandler;
 import riskyken.armourersWorkshop.client.render.CustomEquipmentRenderManager;
 import riskyken.armourersWorkshop.client.render.ItemModelRenderManager;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
@@ -16,7 +18,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ClientProxy extends CommonProxy {
     
-    CustomEquipmentRenderManager equipmentRenderManager;
+    public CustomEquipmentRenderManager equipmentRenderManager;
     
     @Override
     public void init() {
@@ -33,6 +35,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
     }
 
     @Override
@@ -53,5 +56,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void removeAllCustomArmourData(String playerName) {
         equipmentRenderManager.removeAllCustomArmourData(playerName);
+    }
+
+    @Override
+    public int getPlayerModelCacheSize() {
+        return equipmentRenderManager.getCacheSize();
     }
 }
