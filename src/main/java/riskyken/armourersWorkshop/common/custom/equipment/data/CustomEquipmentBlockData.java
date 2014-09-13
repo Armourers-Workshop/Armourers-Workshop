@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.BitSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -27,6 +28,7 @@ public class CustomEquipmentBlockData {
     public byte z;
     public int colour;
     public byte blockType;
+    public BitSet faceFlags = null;
     
     public CustomEquipmentBlockData() {
     }

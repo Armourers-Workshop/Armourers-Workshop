@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.model;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
@@ -29,6 +30,7 @@ public class ModelCustomItemBuilt extends ModelBiped {
     private int timeFromRender = 0;
     public final String renderId;
     ArrayList<CustomEquipmentBlockData> blocks = new ArrayList<CustomEquipmentBlockData>();
+    BitSet faceFlags;
             
     private static float scale = 0.0625F;
     
@@ -50,60 +52,67 @@ public class ModelCustomItemBuilt extends ModelBiped {
         for (int i = 0; i < parts.size(); i++) {
             loadPart(parts.get(i));
         }
+        
+        for (int i = 0; i < blocks.size(); i++) {
+            CustomEquipmentBlockData blockData = blocks.get(i);
+            setBlockFaceFlags(blocks, blockData);
+        }
     }
     
     private void loadPart(CustomArmourPartData part) {
         ArrayList<CustomEquipmentBlockData> partBlocks = part.getArmourData();
         for (int i = 0; i < partBlocks.size(); i++) {
             CustomEquipmentBlockData blockData = partBlocks.get(i);
-            if (blockCanBeSeen(partBlocks, blockData)) {
-                    
-                switch (part.getArmourPart()) {
-                case LEFT_ARM:
-                    blockData.x += 7;
-                    blockData.y += 2;
-                    break;
-                case RIGHT_ARM:
-                    blockData.x -= 7;
-                    blockData.y += 2;
-                    break;
-                case LEFT_LEG:
-                    blockData.x -= 4;
-                    break;
-                case RIGHT_LEG:
-                    blockData.x += 4;
-                    break;
-                case LEFT_FOOT:
-                    blockData.x -= 4;
-                    break;
-                case RIGHT_FOOT:
-                    blockData.x += 4;
-                    break;
-                default:
-                    break;
-                }
-                
-                blocks.add(partBlocks.get(i));
+            
+            switch (part.getArmourPart()) {
+            case LEFT_ARM:
+                blockData.x += 7;
+                blockData.y += 2;
+                break;
+            case RIGHT_ARM:
+                blockData.x -= 7;
+                blockData.y += 2;
+                break;
+            case LEFT_LEG:
+                blockData.x -= 4;
+                break;
+            case RIGHT_LEG:
+                blockData.x += 4;
+                break;
+            case LEFT_FOOT:
+                blockData.x -= 4;
+                break;
+            case RIGHT_FOOT:
+                blockData.x += 4;
+                break;
+            default:
+                break;
             }
+            
+            blocks.add(partBlocks.get(i));
         }
     }
     
-    private boolean blockCanBeSeen(ArrayList<CustomEquipmentBlockData> partBlocks, CustomEquipmentBlockData block) {
-        int sidesCovered = 0;
-        for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
-            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
-            for (int j = 0; j < partBlocks.size(); j++) {
-                CustomEquipmentBlockData checkBlock = partBlocks.get(j);
-                if (block.x + dir.offsetX == checkBlock.x &&
-                        block.y + dir.offsetY == checkBlock.y &&
-                        block.z + dir.offsetZ == checkBlock.z)
-                {
-                    sidesCovered++;
-                    break;
+    private void setBlockFaceFlags(ArrayList<CustomEquipmentBlockData> partBlocks, CustomEquipmentBlockData block) {
+        block.faceFlags = new BitSet(6);
+        for (int j = 0; j < partBlocks.size(); j++) {
+            CustomEquipmentBlockData checkBlock = partBlocks.get(j);
+            checkFaces(block, checkBlock);
+        }
+    }
+    
+    private void checkFaces(CustomEquipmentBlockData block, CustomEquipmentBlockData checkBlock) {
+        ForgeDirection[] dirs = { ForgeDirection.EAST, ForgeDirection.WEST,  ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH };
+        for (int i = 0; i < dirs.length; i++) {
+            ForgeDirection dir = dirs[i];
+            if (block.x + dir.offsetX == checkBlock.x) {
+                if (block.y + dir.offsetY == checkBlock.y) {
+                    if (block.z + dir.offsetZ == checkBlock.z) {
+                        block.faceFlags.set(i, true); 
+                    }
                 }
             }
         }
-        return sidesCovered < 6;
     }
 
     public void render() {
@@ -120,7 +129,7 @@ public class ModelCustomItemBuilt extends ModelBiped {
     }
     
     public boolean needsCleanup() {
-        if (timeFromRender > 600) {
+        if (timeFromRender > 6000) {
             return true;
         }
         return false;
@@ -153,7 +162,7 @@ public class ModelCustomItemBuilt extends ModelBiped {
         for (int i = 0; i < blocks.size(); i++) {
             CustomEquipmentBlockData blockData = blocks.get(i);
             if (!blockData.isGlowing()) {
-                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }
         
@@ -165,7 +174,7 @@ public class ModelCustomItemBuilt extends ModelBiped {
         for (int i = 0; i < blocks.size(); i++) {
             CustomEquipmentBlockData blockData = blocks.get(i);
             if (blockData.isGlowing()) {
-                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }
         
@@ -174,7 +183,7 @@ public class ModelCustomItemBuilt extends ModelBiped {
         GL11.glPopMatrix();
     }
     
-    public void renderArmourBlock(int x, int y, int z, int colour, float scale) {
+    public void renderArmourBlock(int x, int y, int z, int colour, float scale, BitSet faceFlags) {
         float colourRed = (colour >> 16 & 0xff) / 255F;
         float colourGreen = (colour >> 8 & 0xff) / 255F;
         float colourBlue = (colour & 0xff) / 255F;
@@ -182,7 +191,7 @@ public class ModelCustomItemBuilt extends ModelBiped {
         GL11.glPushMatrix();
         GL11.glColor3f(colourRed, colourGreen, colourBlue);
         GL11.glTranslated(x * scale, y * scale, z * scale);
-        main.render(scale);
+        main.render(scale, faceFlags);
         GL11.glPopMatrix();
     }
 }
