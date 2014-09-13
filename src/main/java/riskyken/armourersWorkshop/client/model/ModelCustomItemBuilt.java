@@ -128,7 +128,9 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         if (!this.displayCompiled) {
             this.compileDisplayList();
         }
+        //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
         GL11.glCallList(this.displayList);
+        //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     
 
@@ -146,7 +148,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
     }
     
     public boolean needsCleanup() {
-        if (timeFromRender > 6) {
+        if (timeFromRender > 6000) {
             return true;
         }
         return false;

@@ -135,12 +135,12 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
 
         GL11.glDisable(GL11.GL_LIGHTING);
-        renderGuideFace(ForgeDirection.SOUTH, x + part.getXOffset(), y + 1 + part.getYOffset(), z  + part.getZOffset(), part.getXSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.EAST, x + part.getXOffset(), y + 1 + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getZSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.WEST, x + part.getXOffset() + part.getXSize(), y + 1 + part.getYOffset(), z  + part.getZOffset(), part.getZSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.NORTH, x + part.getXOffset() + part.getXSize(), y + 1 + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getXSize(), part.getYSize());
-        renderGuideFace(ForgeDirection.UP, x + part.getXOffset(), y + 1 + part.getYSize()  + part.getYOffset(), z  + part.getZOffset(), part.getXSize(), part.getZSize());
-        renderGuideFace(ForgeDirection.DOWN, x + part.getXOffset(), y + 1  + part.getYOffset(), z  + part.getZOffset() + part.getZSize(), part.getXSize(), part.getZSize());
+        renderGuideFace(ForgeDirection.SOUTH, x + part.xOffset, y + 1 + part.yOffset, z  + part.zOffset, part.xSize, part.ySize);
+        renderGuideFace(ForgeDirection.EAST, x + part.xOffset, y + 1 + part.yOffset, z  + part.zOffset + part.zSize, part.zSize, part.ySize);
+        renderGuideFace(ForgeDirection.WEST, x + part.xOffset + part.xSize, y + 1 + part.yOffset, z  + part.zOffset, part.zSize, part.ySize);
+        renderGuideFace(ForgeDirection.NORTH, x + part.xOffset + part.xSize, y + 1 + part.yOffset, z  + part.zOffset + part.zSize, part.xSize, part.ySize);
+        renderGuideFace(ForgeDirection.UP, x + part.xOffset, y + 1 + part.yOffset  + part.yOffset, z  + part.zOffset, part.xSize, part.zSize);
+        renderGuideFace(ForgeDirection.DOWN, x + part.xOffset, y + 1  + part.yOffset, z  + part.zOffset + part.zSize, part.xSize, part.zSize);
         GL11.glEnable(GL11.GL_LIGHTING);
         
         GL11.glPopMatrix();

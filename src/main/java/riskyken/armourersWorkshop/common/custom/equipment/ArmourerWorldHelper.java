@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.custom.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
@@ -33,17 +33,17 @@ public final class ArmourerWorldHelper {
     private static void saveArmourPart(World world, ArrayList<CustomArmourPartData> armourData, ArmourPart part, int xCoord, int yCoord, int zCoord) {
         ArrayList<CustomEquipmentBlockData> armourBlockData = new ArrayList<CustomEquipmentBlockData>();
         
-        for (int ix = 0; ix < part.getXSize(); ix++) {
-            for (int iy = 0; iy < part.getYSize(); iy++) {
-                for (int iz = 0; iz < part.getZSize(); iz++) {
+        for (int ix = 0; ix < part.xSize; ix++) {
+            for (int iy = 0; iy < part.ySize; iy++) {
+                for (int iz = 0; iz < part.zSize; iz++) {
                     
-                    int x = xCoord + ix + part.getXOffset();
-                    int y = yCoord + iy + part.getYOffset();
-                    int z = zCoord + iz + part.getZOffset();
+                    int x = xCoord + ix + part.xOffset;
+                    int y = yCoord + iy + part.yOffset;
+                    int z = zCoord + iz + part.zOffset;
                     
-                    int xOrigin = xCoord + part.getXOrigin();
-                    int yOrigin = yCoord + part.getYOrigin();
-                    int zOrigin = zCoord + part.getZOrigin();
+                    int xOrigin = xCoord + part.xOrigin;
+                    int yOrigin = yCoord + part.yOrigin;
+                    int zOrigin = zCoord + part.zOrigin;
                     
                     saveArmourBlockToList(world, x, y, z,
                             -(x - xOrigin) - 1,
@@ -85,9 +85,9 @@ public final class ArmourerWorldHelper {
     private static void loadArmourPart(World world, CustomArmourPartData partData, int xCoord, int yCoord, int zCoord) {
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             CustomEquipmentBlockData blockData = partData.getArmourData().get(i);
-            int xOrigin = xCoord + partData.getArmourPart().getXOrigin();
-            int yOrigin = yCoord + partData.getArmourPart().getYOrigin();
-            int zOrigin = zCoord + partData.getArmourPart().getZOrigin();
+            int xOrigin = xCoord + partData.getArmourPart().xOrigin;
+            int yOrigin = yCoord + partData.getArmourPart().yOrigin;
+            int zOrigin = zCoord + partData.getArmourPart().zOrigin;
             loadArmourBlock(world, xOrigin, yOrigin, zOrigin, blockData);
         }
     }

@@ -44,28 +44,28 @@ public enum ArmourPart {
             ),
     
     LEFT_FOOT(
-            2, 0, 6,
-            8, 5, 10,
+            2, 0, 5,
+            8, 5, 12,
             6, 14, 11
             ),
     
     RIGHT_FOOT(
-            12, 0, 6,
-            8, 5, 10,
+            12, 0, 5,
+            8, 5, 12,
             16, 14, 11
             );
     
-    private final int xOffset;
-    private final int yOffset;
-    private final int zOffset;
+    public final int xOffset;
+    public final int yOffset;
+    public final int zOffset;
     
-    private final int xSize;
-    private final int ySize;
-    private final int zSize;
+    public final int xSize;
+    public final int ySize;
+    public final int zSize;
     
-    private final int xOrigin;
-    private final int yOrigin;
-    private final int zOrigin;
+    public final int xOrigin;
+    public final int yOrigin;
+    public final int zOrigin;
     
     ArmourPart(int xOffset, int yOffset, int zOffset, int xSize, int ySize, int zSize, int xOrigin, int yOrigin, int zOrigin) {
         this.xOffset = xOffset;
@@ -79,42 +79,6 @@ public enum ArmourPart {
         this.xOrigin = xOrigin;
         this.yOrigin = yOrigin;
         this.zOrigin = zOrigin;
-    }
-    
-    public int getXSize() {
-        return xSize;
-    }
-    
-    public int getYSize() {
-        return ySize;
-    }
-    
-    public int getZSize() {
-        return zSize;
-    }
-    
-    public int getXOffset() {
-        return xOffset;
-    }
-    
-    public int getYOffset() {
-        return yOffset;
-    }
-    
-    public int getZOffset() {
-        return zOffset;
-    }
-    
-    public int getXOrigin() {
-        return xOrigin;
-    }
-    
-    public int getYOrigin() {
-        return yOrigin;
-    }
-    
-    public int getZOrigin() {
-        return zOrigin;
     }
     
     public static ArmourPart getOrdinal(int id) {
