@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -50,6 +51,15 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             }
             if (message.buttonId == 9) {
                 armourerBrain.toggleOverlay();
+            }
+            if (message.buttonId == 10) {
+                armourerBrain.clearArmourCubes();
+            }
+            if (message.buttonId == 11) {
+                armourerBrain.cloneToSide(ForgeDirection.WEST);
+            }
+            if (message.buttonId == 12) {
+                armourerBrain.cloneToSide(ForgeDirection.EAST);
             }
         }
         return null;

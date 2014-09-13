@@ -34,6 +34,12 @@ public class GuiArmourer extends GuiContainer {
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     
+    public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
+        super(new ContainerArmourer(invPlayer, armourerBrain));
+        this.armourerBrain = armourerBrain;
+        this.xSize = 256;
+        this.ySize = 256;
+    }
     
     @Override
     public void initGui() {
@@ -59,14 +65,17 @@ public class GuiArmourer extends GuiContainer {
         textUserSkin.setMaxStringLength(30);
         buttonList.add(new GuiButtonExt(8, guiLeft + 138, guiTop + 88, 30, 16, "Set"));
         
+        buttonList.add(new GuiButtonExt(10, guiLeft + 177, guiTop + 16, 70, 16, "Clear"));
+        
         if (armourerBrain.getGameProfile() != null) {
             textUserSkin.setText(armourerBrain.getGameProfile().getName());
         }
         
         buttonList.add(checkShowGuides);
         buttonList.add(checkShowOverlay);
-        //buttonList.add(new GuiButtonExt(9, guiLeft + 5, guiTop + 118, 115, 16, "Mirror Left To Right"));
-        //buttonList.add(new GuiButtonExt(10, guiLeft + 5, guiTop + 138, 115, 16, "Mirror Right To Left"));
+        buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, "West To East"));
+        buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, "East To West"));
+        //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
     }
     
     @Override
@@ -103,13 +112,6 @@ public class GuiArmourer extends GuiContainer {
         }
     }
     
-    public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
-        super(new ContainerArmourer(invPlayer, armourerBrain));
-        this.armourerBrain = armourerBrain;
-        this.xSize = 176;
-        this.ySize = 256;
-    }
-    
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourerBrain.getInventoryName());
@@ -117,10 +119,11 @@ public class GuiArmourer extends GuiContainer {
     
         String itemNameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.itemName");
         String usernameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.username");
+        String cloneLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.clone");
         
         this.fontRendererObj.drawString(itemNameLabel, 64, 48, 4210752);
         this.fontRendererObj.drawString(usernameLabel, 64, 78, 4210752);
-        
+        this.fontRendererObj.drawString(cloneLabel, 177, 36, 4210752);
     }
     
     @Override

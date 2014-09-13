@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.UUID;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,8 +11,10 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.custom.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
@@ -122,6 +125,58 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (stackInput.getItem() instanceof ItemEquipmentSkinTemplate) {
             setType(ArmourType.getOrdinal(stackInput.getItemDamage() + 1));
+        }
+    }
+
+    public void clearArmourCubes() {
+        for (int ix = 0; ix < MULTI_BLOCK_SIZE; ix++) {
+            for (int iy = 0; iy < MULTI_BLOCK_SIZE; iy++) {
+                for (int iz = 0; iz < MULTI_BLOCK_SIZE; iz++) {
+                    int x = xCoord + xOffset + ix;
+                    int y = yCoord + iy;
+                    int z = zCoord + zOffset + iz;
+                    if (!worldObj.isAirBlock(x, y, z)) {
+                        Block block = worldObj.getBlock(x, y, z);
+                        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
+                            worldObj.setBlockToAir(x, y, z);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public void cloneToSide(ForgeDirection side) {
+        for (int ix = 0; ix < MULTI_BLOCK_SIZE / 2; ix++) {
+            for (int iy = 0; iy < MULTI_BLOCK_SIZE; iy++) {
+                for (int iz = 0; iz < MULTI_BLOCK_SIZE; iz++) {
+                    int x = xCoord + xOffset + ix;
+                    int newX = xCoord + xOffset + MULTI_BLOCK_SIZE - ix - 1;
+                    if (side == ForgeDirection.EAST) {
+                        x += MULTI_BLOCK_SIZE / 2;
+                        newX = xCoord + xOffset + (MULTI_BLOCK_SIZE / 2) - ix - 1;
+                    }
+                    int y = yCoord + iy;
+                    int z = zCoord + zOffset + iz;
+                    
+                    if (!worldObj.isAirBlock(x, y, z)) {
+                        Block block = worldObj.getBlock(x, y, z);
+                        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
+                            TileEntity te1 = worldObj.getTileEntity(x, y, z);
+                            worldObj.setBlock(newX, y, z, block);
+                            if (te1 != null && te1 instanceof IColourable) {
+                                TileEntity te3 = worldObj.getTileEntity(newX, y, z);
+                                if (te3 != null && te3 instanceof IColourable) {
+                                    ((IColourable)te3).setColour(((IColourable)te1).getColour());
+                                } else {
+                                    TileEntityColourable te2 = new TileEntityColourable(((IColourable)te1).getColour());
+                                    worldObj.setTileEntity(newX, y, z, te2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     

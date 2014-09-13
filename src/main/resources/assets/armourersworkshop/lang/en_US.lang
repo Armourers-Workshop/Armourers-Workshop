@@ -60,8 +60,9 @@ inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 
 # Inventory controls
 inventory.armourersworkshop:armourCrafter.create=Create
-inventory.armourersworkshop:armourerBrain.label.itemName=Item Name
-inventory.armourersworkshop:armourerBrain.label.username=Username
+inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
+inventory.armourersworkshop:armourerBrain.label.username=Username:
+inventory.armourersworkshop:armourerBrain.label.clone=Clone:
 inventory.armourersworkshop:armourerBrain.showGuide=Show building guide?
 inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?
 inventory.armourersworkshop:colourMixer.label.hue=Hue

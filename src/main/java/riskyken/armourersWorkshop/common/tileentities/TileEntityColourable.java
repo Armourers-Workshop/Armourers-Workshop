@@ -16,6 +16,10 @@ public class TileEntityColourable extends TileEntity implements IColourable {
         this.colour = UtilColour.getMinecraftColor(0);
     }
     
+    public TileEntityColourable(int colour) {
+        this.colour = colour;
+    }
+    
     @Override
     public boolean canUpdate() {
         return false;
