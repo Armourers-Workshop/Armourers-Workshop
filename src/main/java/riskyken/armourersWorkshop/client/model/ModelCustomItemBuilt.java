@@ -23,12 +23,16 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelCustomItemBuilt extends ModelBiped {
+public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     private final CustomModelRenderer main;
     private int timeFromRender = 0;
     public final String renderId;
+    private boolean displayCompiled;
+    private int displayList;
+    private boolean facesCompiled;
+    private boolean facesCompileStarted;
     ArrayList<CustomEquipmentBlockData> blocks = new ArrayList<CustomEquipmentBlockData>();
     BitSet faceFlags;
             
@@ -51,11 +55,6 @@ public class ModelCustomItemBuilt extends ModelBiped {
         
         for (int i = 0; i < parts.size(); i++) {
             loadPart(parts.get(i));
-        }
-        
-        for (int i = 0; i < blocks.size(); i++) {
-            CustomEquipmentBlockData blockData = blocks.get(i);
-            setBlockFaceFlags(blocks, blockData);
         }
     }
     
@@ -117,11 +116,29 @@ public class ModelCustomItemBuilt extends ModelBiped {
 
     public void render() {
         timeFromRender = 0;
-        if (!this.compiled)
-        {
+        
+        if (!facesCompiled) {
+            if (!facesCompileStarted) {
+                facesCompileStarted = true;
+                new Thread(this, "Item model face cull").start();
+            }
+            return;
+        }
+        
+        if (!this.displayCompiled) {
             this.compileDisplayList();
         }
         GL11.glCallList(this.displayList);
+    }
+    
+
+    @Override
+    public void run() {
+        for (int i = 0; i < blocks.size(); i++) {
+            CustomEquipmentBlockData blockData = blocks.get(i);
+            setBlockFaceFlags(blocks, blockData);
+        }
+        facesCompiled = true;
     }
     
     public void tick() {
@@ -129,14 +146,11 @@ public class ModelCustomItemBuilt extends ModelBiped {
     }
     
     public boolean needsCleanup() {
-        if (timeFromRender > 6000) {
+        if (timeFromRender > 6) {
             return true;
         }
         return false;
     }
-    
-    private boolean compiled;
-    private int displayList;
     
     @SideOnly(Side.CLIENT)
     private void compileDisplayList() {
@@ -147,11 +161,11 @@ public class ModelCustomItemBuilt extends ModelBiped {
         oldRender();
 
         GL11.glEndList();
-        this.compiled = true;
+        this.displayCompiled = true;
     }
     
     public void cleanUp() {
-        if (this.compiled) {
+        if (this.displayCompiled) {
             GLAllocation.deleteDisplayLists(this.displayList);
         }
     }
