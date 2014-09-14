@@ -9,6 +9,8 @@ import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class AbstractModItem extends Item {
 
@@ -20,6 +22,7 @@ public abstract class AbstractModItem extends Item {
         setNoRepair();
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         String unlocalized;
