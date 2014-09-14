@@ -6,6 +6,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerLibraryFileList;
@@ -46,7 +47,7 @@ public class ContainerArmourLibrary extends Container {
                     }
                 }
             } else {
-                if (stack.getItem() instanceof ItemEquipmentSkinTemplate) {
+                if (stack.getItem() instanceof ItemEquipmentSkinTemplate | stack.getItem() instanceof ItemEquipmentSkin) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) {
                         return null;
                     }
