@@ -139,7 +139,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         renderGuideFace(ForgeDirection.EAST, x + part.xOffset, y + 1 + part.yOffset, z  + part.zOffset + part.zSize, part.zSize, part.ySize);
         renderGuideFace(ForgeDirection.WEST, x + part.xOffset + part.xSize, y + 1 + part.yOffset, z  + part.zOffset, part.zSize, part.ySize);
         renderGuideFace(ForgeDirection.NORTH, x + part.xOffset + part.xSize, y + 1 + part.yOffset, z  + part.zOffset + part.zSize, part.xSize, part.ySize);
-        renderGuideFace(ForgeDirection.UP, x + part.xOffset, y + 1 + part.yOffset  + part.yOffset, z  + part.zOffset, part.xSize, part.zSize);
+        renderGuideFace(ForgeDirection.UP, x + part.xOffset, y + 1 + part.ySize  + part.yOffset, z  + part.zOffset, part.xSize, part.zSize);
         renderGuideFace(ForgeDirection.DOWN, x + part.xOffset, y + 1  + part.yOffset, z  + part.zOffset + part.zSize, part.xSize, part.zSize);
         GL11.glEnable(GL11.GL_LIGHTING);
         
