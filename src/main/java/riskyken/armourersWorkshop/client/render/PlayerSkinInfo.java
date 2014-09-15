@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -11,6 +15,9 @@ import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
+
+import org.apache.commons.io.IOUtils;
+
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -109,7 +116,12 @@ public class PlayerSkinInfo {
     }
     
     private void uploadNakedSkin(AbstractClientPlayer player) {
-        uploadTexture(player.getLocationSkin(), playerNakedSkin);
+        
+        ResourceLocation skin = AbstractClientPlayer.locationStevePng;
+        if (player.func_152123_o()) {
+            skin = player.getLocationSkin();
+        }
+        uploadTexture(skin, playerNakedSkin);
         isNakedSkinUploaded = true;
     }
     
@@ -156,12 +168,21 @@ public class PlayerSkinInfo {
     
     private BufferedImage getBufferedImageSkin(AbstractClientPlayer player) {
         BufferedImage bufferedImage = null;
-        //InputStream inputStream;
-
+        ResourceLocation skin = AbstractClientPlayer.locationStevePng;
+        
         if (player.func_152123_o()) {
             ThreadDownloadImageData imageData = AbstractClientPlayer.getDownloadImageSkin(player.getLocationSkin(), player.getCommandSenderName());
             bufferedImage = ReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage");
-            //inputStream.close();
+        } else {
+            InputStream inputStream = null;
+            try {
+                inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skin).getInputStream();
+                bufferedImage = ImageIO.read(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(inputStream);
+            }
         }
         
         return bufferedImage;
