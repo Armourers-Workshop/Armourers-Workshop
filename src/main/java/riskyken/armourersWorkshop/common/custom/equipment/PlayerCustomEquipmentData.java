@@ -82,7 +82,13 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         ItemStack stackOutput = this.getStackInSlot(slot + 1);
         
         if (stackInput != null && stackInput.getItem() == ModItems.colourPicker && stackOutput == null) {
-            this.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+            //Silliness!
+            if (stackInput.getDisplayName().toLowerCase().equals("panties!")) {
+                this.pantsColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+            } else {
+                this.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+            }
+            
             setInventorySlotContents(slot + 1, stackInput);
             setInventorySlotContents(slot, null);
             sendNakedData();
@@ -277,9 +283,9 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
             }
 
         }
-        if (slot == 6) {
-            colourSlotUpdate((byte)slot);
-        }
+
+        colourSlotUpdate((byte)6);
+        
         markDirty();
     }
 
