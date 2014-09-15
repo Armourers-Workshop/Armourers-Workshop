@@ -98,7 +98,11 @@ public final class ArmourerWorldHelper {
         int targetZ = z + blockData.z;
         
         if (world.isAirBlock(targetX, targetY, targetZ)) {
-            world.setBlock(targetX, targetY, targetZ, ModBlocks.colourable);
+            Block targetBlock = ModBlocks.colourable;
+            if (blockData.isGlowing()) {
+                targetBlock = ModBlocks.colourableGlowing;
+            }
+            world.setBlock(targetX, targetY, targetZ, targetBlock);
             TileEntity te = world.getTileEntity(targetX, targetY, targetZ);
             if (te != null && te instanceof TileEntityColourable) {
                 ((TileEntityColourable)te).setColour(blockData.colour);

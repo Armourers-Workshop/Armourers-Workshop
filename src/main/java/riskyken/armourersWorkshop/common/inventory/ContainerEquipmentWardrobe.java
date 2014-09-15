@@ -23,13 +23,16 @@ public class ContainerEquipmentWardrobe extends Container {
         addSlotToContainer(new SlotEquipmentSkin(ArmourType.SKIRT, customEquipmentData, 3, 123, 45));
         addSlotToContainer(new SlotEquipmentSkin(ArmourType.FEET, customEquipmentData, 4, 123, 72));
         
+        addSlotToContainer(new SlotColourTool(customEquipmentData, 6, 8, 130));
+        addSlotToContainer(new SlotOutput(customEquipmentData, 7, 52, 130));
+        
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 152));
+            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 224));
         }
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 94 + y * 18));
+                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 166 + y * 18));
             }
         }
     }

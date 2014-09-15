@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.custom.equipment;
 
+import java.awt.Color;
 import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
@@ -15,10 +16,13 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.items.ItemColourPicker;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateNakedInfo;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IInventory {
@@ -26,11 +30,18 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     public final static String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_ITEMS = "items";
     private static final String TAG_SLOT = "slot";
+    private static final String TAG_NAKED = "naked";
+    private static final String TAG_SKIN_COLOUR = "skinColour";
+    private static final String TAG_PANTS_COLOUR = "pantsColour";
     
-    public ItemStack[] customArmourInventory = new ItemStack[6];
+    public ItemStack[] customArmourInventory = new ItemStack[8];
     private final EntityPlayer player;
     private final HashMap<String, CustomArmourItemData> customArmor;
     private boolean inventoryChanged;
+    
+    private boolean isNaked;
+    private int skinColour;
+    private int pantsColour;
     
     public PlayerCustomEquipmentData(EntityPlayer player) {
         this.player = player;
@@ -66,6 +77,17 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerRemoveArmourData(player.getDisplayName(), type), p);
     }
     
+    public void colourSlotUpdate(byte slot) {
+        ItemStack stackInput = this.getStackInSlot(slot);
+        ItemStack stackOutput = this.getStackInSlot(slot + 1);
+        
+        if (stackInput != null && stackInput.getItem() == ModItems.colourPicker && stackOutput == null) {
+            this.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+            setInventorySlotContents(slot + 1, stackInput);
+            setInventorySlotContents(slot, null);
+            sendNakedData();
+        }
+    }
 
     public void armourSlotUpdate(byte slot) {
         ItemStack stack = this.getStackInSlot(slot);
@@ -118,6 +140,14 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.LEGS);
         checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.SKIRT);
         checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.FEET);
+        sendNakedData(targetPlayer);
+    }
+    
+    public void setNakedInfo(boolean naked, int skinColour, int pantsColour) {
+        this.isNaked = naked;
+        this.skinColour = skinColour;
+        this.pantsColour = pantsColour;
+        sendNakedData();
     }
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourType type) {
@@ -130,9 +160,21 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         }
     }
     
+    private void sendNakedData(EntityPlayerMP targetPlayer) {
+        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateNakedInfo(this.player.getUniqueID() ,this.isNaked, this.skinColour, this.pantsColour), targetPlayer);
+    }
+    
+    private void sendNakedData() {
+        TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateNakedInfo(this.player.getUniqueID() ,this.isNaked, this.skinColour, this.pantsColour), p);
+    }
+    
     @Override
     public void saveNBTData(NBTTagCompound compound) {
         writeItemsToNBT(compound);
+        compound.setBoolean(TAG_NAKED, this.isNaked);
+        compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
+        compound.setInteger(TAG_PANTS_COLOUR, this.pantsColour);
         //TODO Change to for loop
         //TODO Maybe save a list?
         saveKey(compound, ArmourType.HEAD);
@@ -154,6 +196,18 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     @Override
     public void loadNBTData(NBTTagCompound compound) {
         readItemsFromNBT(compound);
+        this.isNaked = compound.getBoolean(TAG_NAKED);
+        if (compound.hasKey(TAG_SKIN_COLOUR)) {
+            this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
+        } else {
+            this.skinColour = Color.decode("#F9DFD2").getRGB();
+        }
+        if (compound.hasKey(TAG_PANTS_COLOUR)) {
+            this.pantsColour = compound.getInteger(TAG_PANTS_COLOUR);
+        } else {
+            this.pantsColour = Color.decode("#FCFCFC").getRGB();
+        }
+        
         loadKey(compound, ArmourType.HEAD);
         loadKey(compound, ArmourType.CHEST);
         loadKey(compound, ArmourType.LEGS);
@@ -221,6 +275,10 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
             if (slot < 5) {
                 armourSlotUpdate((byte)slot);
             }
+
+        }
+        if (slot == 6) {
+            colourSlotUpdate((byte)slot);
         }
         markDirty();
     }

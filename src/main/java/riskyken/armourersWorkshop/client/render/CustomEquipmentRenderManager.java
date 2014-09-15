@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.render;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -23,6 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class CustomEquipmentRenderManager {
     
     public HashMap<String, CustomArmourItemData> customArmor = new HashMap<String, CustomArmourItemData>();
+    public HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
     
     public ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public ModelCustomArmourHead customHead = new ModelCustomArmourHead();
@@ -55,7 +57,22 @@ public class CustomEquipmentRenderManager {
         armourData.removeHiddenBlocks();
         customArmor.put(key, armourData);
     }
-
+    
+    public void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour) {
+        if (!skinMap.containsKey(playerId)) {
+            skinMap.put(playerId, new PlayerSkinInfo(isNaked, skinColour, pantsColour));
+        } else {
+            skinMap.get(playerId).setNakedInfo(isNaked, skinColour, pantsColour);
+        }
+    }
+    
+    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
+        if (!skinMap.containsKey(playerId)) {
+            return null;
+        }
+        return skinMap.get(playerId);
+    }
+    
     public void removeCustomArmour(String playerName, ArmourType type) {
         String key = playerName + ":" + type.name();
         if (customArmor.containsKey(key)) {
@@ -79,6 +96,11 @@ public class CustomEquipmentRenderManager {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
+        if (skinMap.containsKey(player.getUniqueID())) {
+            PlayerSkinInfo skinInfo = skinMap.get(player.getUniqueID());
+            skinInfo.checkSkin((AbstractClientPlayer) player);
+        }
+        
         if (playerHasCustomArmourType(player.getDisplayName(), ArmourType.SKIRT)) {
             if (player.limbSwingAmount > 0.25F) {
                 player.limbSwingAmount = 0.25F;

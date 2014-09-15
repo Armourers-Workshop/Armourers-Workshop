@@ -7,11 +7,13 @@ import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColour
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientOpenCustomArmourGui;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateNakedInfo;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
@@ -32,5 +34,7 @@ public class PacketHandler {
         networkWrapper.registerMessage(MessageClientGuiLoadSaveArmour.class, MessageClientGuiLoadSaveArmour.class, 8, Side.SERVER);
         networkWrapper.registerMessage(MessageClientOpenCustomArmourGui.class, MessageClientOpenCustomArmourGui.class, 9, Side.SERVER);
         networkWrapper.registerMessage(MessageClientGuiToolOptionUpdate.class, MessageClientGuiToolOptionUpdate.class, 10, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientGuiUpdateNakedInfo.class, MessageClientGuiUpdateNakedInfo.class, 11, Side.SERVER);
+        networkWrapper.registerMessage(MessageServerUpdateNakedInfo.class, MessageServerUpdateNakedInfo.class, 12, Side.CLIENT);
     }
 }
