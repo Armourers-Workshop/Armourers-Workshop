@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
+import riskyken.armourersWorkshop.utils.UtilBlocks;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -28,6 +29,12 @@ public class BlockArmourLibrary extends AbstractModBlock implements ITileEntityP
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        UtilBlocks.dropInventoryBlocks(world, x, y, z);
+        super.breakBlock(world, x, y, z, block, meta);
     }
 
     @Override
