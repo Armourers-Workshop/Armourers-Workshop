@@ -1,8 +1,6 @@
 package riskyken.armourersWorkshop.client.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -44,8 +42,8 @@ public class GuiGuideBook extends GuiScreen {
         guiTop = height / 2 - guiHeight / 2;
         buttonList.clear();
         
-        backButton = new GuiBookButton(0, this.guiLeft + 26, this.guiTop + 156, 3, 207, texture);
-        forwardButton = new GuiBookButton(1, this.guiLeft + 212, this.guiTop + 156, 3, 194, texture);
+        backButton = new GuiBookButton(0, this.guiLeft - 20, this.guiTop + 156, 3, 207, texture);
+        forwardButton = new GuiBookButton(1, this.guiLeft + 258, this.guiTop + 156, 3, 194, texture);
         
         buttonList.add(backButton);
         buttonList.add(forwardButton);
@@ -65,8 +63,8 @@ public class GuiGuideBook extends GuiScreen {
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button.id == 0) { previousPage(); }
-        if (button.id == 1) { nextPage(); }
+        if (button.id == 0) { startPageTurnRight(); }
+        if (button.id == 1) { startPageTurnLeft(); }
         
         if (button.id > 1) {
             setGoToChapter(button.id - 2);
@@ -81,36 +79,111 @@ public class GuiGuideBook extends GuiScreen {
         }
     }
     
+    private float pageTurnAmount = 0F;
+    int pageState = 0;
+    private float count;
+    
+    private void startPageTurnLeft() {
+        pageState = -1;
+        pageTurnAmount = 0F;
+        nextPage();
+    }
+    
+    private void startPageTurnRight() {
+        pageState = 1;
+        pageTurnAmount = 0F;
+        previousPage();
+    }
+    
     @Override
-    public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
-        GL11.glColor4f(1, 1, 1, 1);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+    public void drawScreen(int mouseX, int mouseY, float someFloat) {
+        
+        if (pageState != 0) {
+            float turnCenter = pageTurnAmount - 0.5F;
+            if (turnCenter < 0) { turnCenter = -turnCenter; }
+            turnCenter = -turnCenter + 0.5F;
+            pageTurnAmount += (0.005F) + (turnCenter * 0.02F);
+        }
+        
+        if (pageTurnAmount > 1F) {
+            pageTurnAmount = 0F;
+            pageState = 0;
+            count = 0;
+        }
+        
+        if (pageState != 0) {
+            count = (pageState * pageTurnAmount) * 180;
+        }
+        
+        if (count > 90F) {
+            count -= 180F;
+        }
+        if (count < -90F) {
+            count += 180F;
+        }
+        
+        mc.renderEngine.bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.guiWidth, this.guiHeight);
         
-        renderPageText(pageNumber, 17, 1);
-        renderPageText(pageNumber + 1, 134, 2);
-        
+        for (int k = 0; k < this.buttonList.size(); ++k) {
+            if (this.buttonList.get(k) instanceof GuiBookTextButton) {
+                ((GuiButton)this.buttonList.get(k)).visible = pageNumber == 1;
+                if (pageNumber == 3 & pageState == -1) {
+                    ((GuiButton)this.buttonList.get(k)).visible = true;
+                }
+            }
+        }
         backButton.visible = !isFirstPage(pageNumber);
         forwardButton.visible = !isLastPage(pageNumber);
         
         for (int k = 0; k < this.buttonList.size(); ++k) {
-            if (this.buttonList.get(k) instanceof GuiBookTextButton) {
-                if (pageNumber == 1) {
-                    ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
-                }
-            } else {
-                ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, p_73863_1_, p_73863_2_);
-            }
+            ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, mouseX, mouseY);
         }
-
-        for (int k = 0; k < this.labelList.size(); ++k) {
-            if (this.buttonList.get(k) instanceof GuiBookTextButton) {
-                if (pageNumber == 1) {
-                    ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
+        
+        if (pageState == 0) {
+            renderPageText(pageNumber, 17, 1);
+            renderPageText(pageNumber + 1, 134, 2);
+        }
+        if (pageState == -1) {
+            renderPageText(pageNumber - 2, 17, 1);
+            renderPageText(pageNumber + 1, 134, 2);
+        }
+        if (pageState == 1) {
+            renderPageText(pageNumber, 17, 1);
+            renderPageText(pageNumber + 3, 134, 2);
+        }
+        
+        if (pageState != 0) {
+            GL11.glPushMatrix();
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glTranslatef(this.guiLeft + 128, 0, 0);
+            GL11.glRotatef(count, 0, 1, 0);
+            GL11.glTranslatef(-(this.guiLeft + 128), 0, 0);
+            GL11.glColor4f(1, 1, 1, 1);
+            if (count >= 0) {
+                mc.renderEngine.bindTexture(texture);
+                drawTexturedModalRect(this.guiLeft + 10, this.guiTop + 7, 10, 7, 118, 165);
+                if (pageState == -1) {
+                    renderPageText(pageNumber, 17, 1);
+                }
+                if (pageState == 1) {
+                    renderPageText(pageNumber + 2, 17, 1);
                 }
             } else {
-                ((GuiLabel)this.labelList.get(k)).func_146159_a(this.mc, p_73863_1_, p_73863_2_);
+                GL11.glTranslatef(118, 0, 0);
+                mc.renderEngine.bindTexture(texture);
+                drawTexturedModalRect(this.guiLeft + 10, this.guiTop + 7, 128, 7, 118, 165);
+                GL11.glTranslatef(-118, 0, 0);
+                if (pageState == -1) {
+                    renderPageText(pageNumber - 1, 134, 2);
+                }
+                if (pageState == 1) {
+                    renderPageText(pageNumber + 1, 134, 2);
+                }
             }
+            
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glPopMatrix();
         }
     }
     
