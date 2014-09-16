@@ -102,7 +102,7 @@ public class GuiGuideBook extends GuiScreen {
             float turnCenter = pageTurnAmount - 0.5F;
             if (turnCenter < 0) { turnCenter = -turnCenter; }
             turnCenter = -turnCenter + 0.5F;
-            pageTurnAmount += (0.005F) + (turnCenter * 0.02F);
+            pageTurnAmount += (0.006F) + (turnCenter * 0.08F);
         }
         
         if (pageTurnAmount > 1F) {
