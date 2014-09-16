@@ -18,7 +18,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiGuideBook extends GuiScreen {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBook.png");
+    private static final ResourceLocation bookTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBook.png");
+    private static final ResourceLocation bookPageTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBookPage.png");
     
     /** Holds the number of pages in each chapter **/
     private final int[] chapters = {2, 2, 4, 2, 2, 4, 4};
@@ -42,8 +43,8 @@ public class GuiGuideBook extends GuiScreen {
         guiTop = height / 2 - guiHeight / 2;
         buttonList.clear();
         
-        backButton = new GuiBookButton(0, this.guiLeft - 20, this.guiTop + 156, 3, 207, texture);
-        forwardButton = new GuiBookButton(1, this.guiLeft + 258, this.guiTop + 156, 3, 194, texture);
+        backButton = new GuiBookButton(0, this.guiLeft - 20, this.guiTop + 156, 3, 207, bookTexture);
+        forwardButton = new GuiBookButton(1, this.guiLeft + 258, this.guiTop + 156, 3, 194, bookTexture);
         
         buttonList.add(backButton);
         buttonList.add(forwardButton);
@@ -52,6 +53,7 @@ public class GuiGuideBook extends GuiScreen {
             String chapterList =  getLocalizedText(".chapter" + (i + 1) + ".title");
             buttonList.add(new GuiBookTextButton(i + 2, this.guiLeft + 17, this.guiTop + 25 + 14 * i, fontRendererObj.getStringWidth(chapterList), chapterList));
         }
+        lastRenderTick = System.currentTimeMillis();
     }
     
     public GuiGuideBook(ItemStack stack) {
@@ -79,18 +81,20 @@ public class GuiGuideBook extends GuiScreen {
         }
     }
     
+    /** The amount the page has turned. 0.0 for none 1.0 for a full turn. */
     private float pageTurnAmount = 0F;
-    int pageState = 0;
+    PageState pageState = PageState.NONE;
     private float count;
+    private long lastRenderTick;
     
     private void startPageTurnLeft() {
-        pageState = -1;
+        pageState = PageState.TURN_LEFT;
         pageTurnAmount = 0F;
         nextPage();
     }
     
     private void startPageTurnRight() {
-        pageState = 1;
+        pageState = PageState.TURN_RIGHT;
         pageTurnAmount = 0F;
         previousPage();
     }
@@ -98,21 +102,24 @@ public class GuiGuideBook extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float someFloat) {
         
-        if (pageState != 0) {
+        long tickTime = System.currentTimeMillis() - lastRenderTick;
+        lastRenderTick = System.currentTimeMillis();
+        
+        if (pageState != PageState.NONE) {
             float turnCenter = pageTurnAmount - 0.5F;
             if (turnCenter < 0) { turnCenter = -turnCenter; }
             turnCenter = -turnCenter + 0.5F;
-            pageTurnAmount += (0.006F) + (turnCenter * 0.08F);
+            pageTurnAmount += ((0.006F) + (turnCenter * 0.08F) * (tickTime * 0.1F));
         }
         
         if (pageTurnAmount > 1F) {
             pageTurnAmount = 0F;
-            pageState = 0;
+            pageState = PageState.NONE;
             count = 0;
         }
         
-        if (pageState != 0) {
-            count = (pageState * pageTurnAmount) * 180;
+        if (pageState != PageState.NONE) {
+            count = (pageState.movement * pageTurnAmount) * 180;
         }
         
         if (count > 90F) {
@@ -122,13 +129,13 @@ public class GuiGuideBook extends GuiScreen {
             count += 180F;
         }
         
-        mc.renderEngine.bindTexture(texture);
+        mc.renderEngine.bindTexture(bookTexture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.guiWidth, this.guiHeight);
         
         for (int k = 0; k < this.buttonList.size(); ++k) {
             if (this.buttonList.get(k) instanceof GuiBookTextButton) {
                 ((GuiButton)this.buttonList.get(k)).visible = pageNumber == 1;
-                if (pageNumber == 3 & pageState == -1) {
+                if (pageNumber == 3 & pageState == PageState.TURN_LEFT) {
                     ((GuiButton)this.buttonList.get(k)).visible = true;
                 }
             }
@@ -140,20 +147,20 @@ public class GuiGuideBook extends GuiScreen {
             ((GuiButton)this.buttonList.get(k)).drawButton(this.mc, mouseX, mouseY);
         }
         
-        if (pageState == 0) {
+        if (pageState == PageState.NONE) {
             renderPageText(pageNumber, 17, 1);
             renderPageText(pageNumber + 1, 134, 2);
         }
-        if (pageState == -1) {
+        if (pageState == PageState.TURN_LEFT) {
             renderPageText(pageNumber - 2, 17, 1);
             renderPageText(pageNumber + 1, 134, 2);
         }
-        if (pageState == 1) {
+        if (pageState == PageState.TURN_RIGHT) {
             renderPageText(pageNumber, 17, 1);
             renderPageText(pageNumber + 3, 134, 2);
         }
         
-        if (pageState != 0) {
+        if (pageState != PageState.NONE) {
             GL11.glPushMatrix();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glTranslatef(this.guiLeft + 128, 0, 0);
@@ -161,23 +168,23 @@ public class GuiGuideBook extends GuiScreen {
             GL11.glTranslatef(-(this.guiLeft + 128), 0, 0);
             GL11.glColor4f(1, 1, 1, 1);
             if (count >= 0) {
-                mc.renderEngine.bindTexture(texture);
+                mc.renderEngine.bindTexture(bookPageTexture);
                 drawTexturedModalRect(this.guiLeft + 10, this.guiTop + 7, 10, 7, 118, 165);
-                if (pageState == -1) {
+                if (pageState == PageState.TURN_LEFT) {
                     renderPageText(pageNumber, 17, 1);
                 }
-                if (pageState == 1) {
+                if (pageState == PageState.TURN_RIGHT) {
                     renderPageText(pageNumber + 2, 17, 1);
                 }
             } else {
                 GL11.glTranslatef(118, 0, 0);
-                mc.renderEngine.bindTexture(texture);
+                mc.renderEngine.bindTexture(bookPageTexture);
                 drawTexturedModalRect(this.guiLeft + 10, this.guiTop + 7, 128, 7, 118, 165);
                 GL11.glTranslatef(-118, 0, 0);
-                if (pageState == -1) {
+                if (pageState == PageState.TURN_LEFT) {
                     renderPageText(pageNumber - 1, 134, 2);
                 }
-                if (pageState == 1) {
+                if (pageState == PageState.TURN_RIGHT) {
                     renderPageText(pageNumber + 1, 134, 2);
                 }
             }
@@ -295,5 +302,17 @@ public class GuiGuideBook extends GuiScreen {
             pageCount += getPagesInChapter(i);
         }
         return pageCount;
+    }
+    
+    private enum PageState {
+        NONE(0),
+        TURN_LEFT(-1),
+        TURN_RIGHT(1);
+        
+        public final int movement;
+        
+        private PageState(int movement) {
+            this.movement = movement;
+        }
     }
 }
