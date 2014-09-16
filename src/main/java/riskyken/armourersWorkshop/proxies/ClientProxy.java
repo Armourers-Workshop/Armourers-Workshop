@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.client.render.CustomEquipmentRenderManager;
 import riskyken.armourersWorkshop.client.render.ItemModelRenderManager;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
+import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
@@ -17,12 +18,16 @@ import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemD
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
+    
+    public static int blockColourMixerRenderId;
+    public static int renderPass;
     
     public CustomEquipmentRenderManager equipmentRenderManager;
     
@@ -36,6 +41,8 @@ public class ClientProxy extends CommonProxy {
     public void initRenderers() {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
+        blockColourMixerRenderId = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
     }
 
     @Override

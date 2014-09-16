@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -13,6 +14,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -34,6 +36,8 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     private IIcon topIcon;
     @SideOnly(Side.CLIENT)
     private IIcon bottomIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon sideOverlayIcon;
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -44,6 +48,8 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
                 + "colourMixerTop");
         bottomIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
                 + "colourMixerBottom");
+        sideOverlayIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
+                + "colourMixerSideOverlay");
     }
     
     @SideOnly(Side.CLIENT)
@@ -51,7 +57,34 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     public IIcon getIcon(int side, int meta) {
         if (side == 0) { return bottomIcon; }
         if (side == 1) { return topIcon; }
+        
+        if (ClientProxy.renderPass == 0) {
+            return sideOverlayIcon;
+        }
+        
         return blockIcon;
+    }
+    
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
+        if (ClientProxy.renderPass == 0) {
+            TileEntity te = blockAccess.getTileEntity(x, y, z);
+            if (te != null && te instanceof TileEntityColourMixer) {
+                return ((TileEntityColourMixer)te).getColour();
+            }
+        }
+        return 16777215;
+    }
+    
+    @Override
+    public int getRenderType() {
+        return ClientProxy.blockColourMixerRenderId;
     }
     
     @Override
