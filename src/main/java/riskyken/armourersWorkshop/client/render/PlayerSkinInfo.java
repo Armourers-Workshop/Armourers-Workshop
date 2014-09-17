@@ -6,6 +6,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -21,7 +22,10 @@ import org.apache.commons.io.IOUtils;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 
 
 public class PlayerSkinInfo {
@@ -169,20 +173,31 @@ public class PlayerSkinInfo {
     private BufferedImage getBufferedImageSkin(AbstractClientPlayer player) {
         BufferedImage bufferedImage = null;
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
+        InputStream inputStream = null;
+        Minecraft mc = Minecraft.getMinecraft();
+        Map map = mc.func_152342_ad().func_152788_a(player.getGameProfile());
         
-        if (player.func_152123_o()) {
-            ThreadDownloadImageData imageData = AbstractClientPlayer.getDownloadImageSkin(player.getLocationSkin(), player.getCommandSenderName());
-            bufferedImage = ReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage");
-        } else {
-            InputStream inputStream = null;
-            try {
+        
+        try {
+            if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                ResourceLocation skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+                ITextureObject skintex = mc.getTextureManager().getTexture(skinloc);
+                
+                if (skintex instanceof ThreadDownloadImageData) {
+                    ThreadDownloadImageData imageData = (ThreadDownloadImageData)skintex;
+                    bufferedImage  = ObfuscationReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage", "field_110560_d", "bpr.h");
+                } else {
+                    inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skin).getInputStream();
+                    bufferedImage = ImageIO.read(inputStream);
+                }
+            } else {
                 inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skin).getInputStream();
                 bufferedImage = ImageIO.read(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                IOUtils.closeQuietly(inputStream);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
         }
         
         return bufferedImage;
