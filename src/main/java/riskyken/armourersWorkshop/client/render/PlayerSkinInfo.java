@@ -71,16 +71,16 @@ public class PlayerSkinInfo {
         int r = 0, g = 0, b = 0;
         
         for (int ix = 0; ix < 2; ix++) {
-            for (int iy = 0; iy < 2; iy++) {
+            for (int iy = 0; iy < 1; iy++) {
                 Color c = new Color(playerBackupSkin.getRGB(ix + 11, iy + 13));
                 r += c.getRed();
                 g += c.getGreen();
                 b += c.getBlue();
             }
         }
-        r = r / 4;
-        g = g / 4;
-        b = b / 4;
+        r = r / 2;
+        g = g / 2;
+        b = b / 2;
         
         ModLogger.log("R:" + r + " G:" + g + " B:" + b);
         
