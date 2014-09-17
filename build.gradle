@@ -17,9 +17,10 @@ buildscript {
 
 apply plugin: 'forge'
 
-def modVersion = "1.7.10-0.10.0"
+def modVersion = "0.10.0"
+def minecraftVersion = "1.7.10"
 
-version = modVersion
+version = minecraftVersion + "-" + modVersion
 group= "riskyken.armourersWorkshop"
 archivesBaseName = "Armourers-Workshop"
 

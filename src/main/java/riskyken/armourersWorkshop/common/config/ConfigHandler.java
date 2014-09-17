@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.config;
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
+import riskyken.armourersWorkshop.common.UpdateCheck;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class ConfigHandler {
@@ -22,18 +23,18 @@ public class ConfigHandler {
     }
 
     public static void loadConfigFile() {
-        config.load();
 
         ModLogger.log("Loading Config");
 
         // recipe
         disableRecipes = config
-                .get(CATEGORY_GENERAL,
-                        "Disable Recipes",
-                        false,
-                        "Disable all mod recipes. Use if you want to manually add recipes for a mod pack.")
+                .get(CATEGORY_GENERAL, "Disable Recipes", false,
+                "Disable all mod recipes. Use if you want to manually add recipes for a mod pack.")
                 .getBoolean(false);
 
+        UpdateCheck.checkForUpdates = config.get(CATEGORY_GENERAL, "Check for updates", true,
+                "Should the mod check for new versions?").getBoolean(true);
+        
         if (config.hasChanged()) {
             config.save();
         }

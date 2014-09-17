@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.common.ModFMLEventHandler;
 import riskyken.armourersWorkshop.common.ModForgeEventHandler;
+import riskyken.armourersWorkshop.common.UpdateCheck;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandCustomArmour;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
@@ -40,6 +41,8 @@ public class ArmourersWorkshop {
         ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
         ConfigHandler.init(event.getSuggestedConfigurationFile());
 
+        UpdateCheck.checkForUpdates();
+        
         ModItems.init();
         ModBlocks.init();
         
