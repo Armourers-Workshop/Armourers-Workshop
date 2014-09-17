@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.proxies;
 
+import net.minecraft.block.Block;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
@@ -11,6 +12,7 @@ import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
@@ -82,5 +84,13 @@ public class ClientProxy extends CommonProxy {
     @Override
     public PlayerSkinInfo getPlayersNakedData(String playerName) {
         return equipmentRenderManager.getPlayersNakedData(playerName);
+    }
+
+    @Override
+    public int getRenderType(Block block) {
+        if (block instanceof BlockColourMixer) {
+            return blockColourMixerRenderId;
+        }
+        return 0;
     }
 }

@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.proxies;
 
+import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
@@ -49,5 +50,11 @@ public class ServerProxy extends CommonProxy {
     @Override
     public PlayerSkinInfo getPlayersNakedData(String playerName) {
         return null;
+    }
+
+    @Override
+    public int getRenderType(Block block) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

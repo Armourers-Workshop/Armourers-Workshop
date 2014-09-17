@@ -91,7 +91,7 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     
     @Override
     public int getRenderType() {
-        return ClientProxy.blockColourMixerRenderId;
+        return ArmourersWorkshop.proxy.getRenderType(this);
     }
     
     @Override
