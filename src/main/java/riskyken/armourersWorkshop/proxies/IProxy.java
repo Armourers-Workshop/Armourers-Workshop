@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.proxies;
 
-import java.util.UUID;
-
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
@@ -24,7 +22,7 @@ public interface IProxy {
     
     public abstract int getPlayerModelCacheSize();
 
-    public abstract void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour);
+    public abstract void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour);
     
-    public abstract PlayerSkinInfo getPlayersNakedData(UUID playerId);
+    public abstract PlayerSkinInfo getPlayersNakedData(String playerName);
 }

@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.proxies;
 
-import java.util.UUID;
-
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
@@ -77,12 +75,12 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour) {
-        equipmentRenderManager.setPlayersNakedData(playerId, isNaked, skinColour, pantsColour);
+    public void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour) {
+        equipmentRenderManager.setPlayersNakedData(playerName, isNaked, skinColour, pantsColour);
     }
 
     @Override
-    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        return equipmentRenderManager.getPlayersNakedData(playerId);
+    public PlayerSkinInfo getPlayersNakedData(String playerName) {
+        return equipmentRenderManager.getPlayersNakedData(playerName);
     }
 }

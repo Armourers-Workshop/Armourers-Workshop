@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.client.render;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -24,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class CustomEquipmentRenderManager {
     
     public HashMap<String, CustomArmourItemData> customArmor = new HashMap<String, CustomArmourItemData>();
-    public HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
+    public HashMap<String, PlayerSkinInfo> skinMap = new HashMap<String, PlayerSkinInfo>();
     
     public ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public ModelCustomArmourHead customHead = new ModelCustomArmourHead();
@@ -58,19 +57,19 @@ public class CustomEquipmentRenderManager {
         customArmor.put(key, armourData);
     }
     
-    public void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour) {
-        if (!skinMap.containsKey(playerId)) {
-            skinMap.put(playerId, new PlayerSkinInfo(isNaked, skinColour, pantsColour));
+    public void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour) {
+        if (!skinMap.containsKey(playerName)) {
+            skinMap.put(playerName, new PlayerSkinInfo(isNaked, skinColour, pantsColour));
         } else {
-            skinMap.get(playerId).setNakedInfo(isNaked, skinColour, pantsColour);
+            skinMap.get(playerName).setNakedInfo(isNaked, skinColour, pantsColour);
         }
     }
     
-    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        if (!skinMap.containsKey(playerId)) {
+    public PlayerSkinInfo getPlayersNakedData(String playerName) {
+        if (!skinMap.containsKey(playerName)) {
             return null;
         }
-        return skinMap.get(playerId);
+        return skinMap.get(playerName);
     }
     
     public void removeCustomArmour(String playerName, ArmourType type) {
@@ -96,8 +95,8 @@ public class CustomEquipmentRenderManager {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
-        if (skinMap.containsKey(player.getUniqueID())) {
-            PlayerSkinInfo skinInfo = skinMap.get(player.getUniqueID());
+        if (skinMap.containsKey(player.getDisplayName())) {
+            PlayerSkinInfo skinInfo = skinMap.get(player.getDisplayName());
             skinInfo.checkSkin((AbstractClientPlayer) player);
         }
         

@@ -167,12 +167,12 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateNakedInfo(this.player.getUniqueID() ,this.isNaked, this.skinColour, this.pantsColour), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateNakedInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour), targetPlayer);
     }
     
     private void sendNakedData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateNakedInfo(this.player.getUniqueID() ,this.isNaked, this.skinColour, this.pantsColour), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateNakedInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour), p);
     }
     
     @Override
