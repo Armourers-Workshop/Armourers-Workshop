@@ -19,7 +19,7 @@ public class CustomEquipmentBlockData {
     
     @Override
     public String toString() {
-        return "ArmourBlockData [x=" + x + ", y=" + y + ", z=" + z
+        return "CustomEquipmentBlockData [x=" + x + ", y=" + y + ", z=" + z
                 + ", colour=" + colour + ", blockType=" + blockType + "]";
     }
     
@@ -111,5 +111,39 @@ public class CustomEquipmentBlockData {
     
     public boolean isGlowing() {
         return this.blockType == 1;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + blockType;
+        result = prime * result + colour;
+        result = prime * result + x;
+        result = prime * result + y;
+        result = prime * result + z;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CustomEquipmentBlockData other = (CustomEquipmentBlockData) obj;
+        if (blockType != other.blockType)
+            return false;
+        if (colour != other.colour)
+            return false;
+        if (x != other.x)
+            return false;
+        if (y != other.y)
+            return false;
+        if (z != other.z)
+            return false;
+        return true;
     }
 }

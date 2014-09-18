@@ -135,4 +135,46 @@ public class CustomArmourItemData {
     public ArrayList<CustomArmourPartData> getParts() {
         return parts;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((authorName == null) ? 0 : authorName.hashCode());
+        result = prime * result
+                + ((customName == null) ? 0 : customName.hashCode());
+        result = prime * result + ((parts == null) ? 0 : parts.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CustomArmourItemData other = (CustomArmourItemData) obj;
+        if (authorName == null) {
+            if (other.authorName != null)
+                return false;
+        } else if (!authorName.equals(other.authorName))
+            return false;
+        if (customName == null) {
+            if (other.customName != null)
+                return false;
+        } else if (!customName.equals(other.customName))
+            return false;
+        if (parts == null) {
+            if (other.parts != null)
+                return false;
+        } else if (!parts.equals(other.parts))
+            return false;
+        if (type != other.type)
+            return false;
+        return true;
+    }
 }

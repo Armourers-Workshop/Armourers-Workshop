@@ -134,4 +134,33 @@ public class CustomArmourPartData {
             armourData.add(new CustomEquipmentBlockData(stream));
         }
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((armourData == null) ? 0 : armourData.hashCode());
+        result = prime * result + ((part == null) ? 0 : part.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CustomArmourPartData other = (CustomArmourPartData) obj;
+        if (armourData == null) {
+            if (other.armourData != null)
+                return false;
+        } else if (!armourData.equals(other.armourData))
+            return false;
+        if (part != other.part)
+            return false;
+        return true;
+    }
 }
