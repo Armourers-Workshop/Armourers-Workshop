@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.custom.equipment;
 
 import java.awt.Color;
+import java.util.BitSet;
 import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
@@ -22,7 +23,7 @@ import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
-import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateNakedInfo;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateSkinInfo;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IInventory {
@@ -39,9 +40,11 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     private final HashMap<String, CustomArmourItemData> customArmor;
     private boolean inventoryChanged;
     
-    private boolean isNaked;
-    private int skinColour;
-    private int pantsColour;
+    private boolean isNaked = false;
+    private int skinColour = Color.decode("#F9DFD2").getRGB();
+    private int pantsColour = Color.decode("#FCFCFC").getRGB();
+    BitSet armourOverride = new BitSet(4);
+    boolean headOverlay;
     
     public PlayerCustomEquipmentData(EntityPlayer player) {
         this.player = player;
@@ -91,7 +94,7 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
             
             setInventorySlotContents(slot + 1, stackInput);
             setInventorySlotContents(slot, null);
-            sendNakedData();
+            sendSkinData();
         }
     }
 
@@ -149,11 +152,13 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         sendNakedData(targetPlayer);
     }
     
-    public void setNakedInfo(boolean naked, int skinColour, int pantsColour) {
+    public void setSkinInfo(boolean naked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
         this.isNaked = naked;
         this.skinColour = skinColour;
         this.pantsColour = pantsColour;
-        sendNakedData();
+        this.armourOverride = armourOverride;
+        this.headOverlay = headOverlay;
+        sendSkinData();
     }
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourType type) {
@@ -167,12 +172,12 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateNakedInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), targetPlayer);
     }
     
-    private void sendNakedData() {
+    private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateNakedInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), p);
     }
     
     @Override

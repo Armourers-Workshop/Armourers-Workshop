@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.proxies;
 
+import java.util.BitSet;
+
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
@@ -23,7 +25,7 @@ public interface IProxy {
     
     public abstract int getPlayerModelCacheSize();
 
-    public abstract void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour);
+    public abstract void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay);
     
     public abstract PlayerSkinInfo getPlayersNakedData(String playerName);
     

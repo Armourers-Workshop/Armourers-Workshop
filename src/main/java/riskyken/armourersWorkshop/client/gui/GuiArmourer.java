@@ -55,8 +55,8 @@ public class GuiArmourer extends GuiContainer {
         buttonList.add(new GuiButtonExt(5, guiLeft + 86, guiTop + 16, 50, 12, "Save"));
         buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, "Load"));
         
-        checkShowGuides = new GuiCheckBox(7, guiLeft + 5, guiTop + 118, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides());
-        checkShowOverlay = new GuiCheckBox(9, guiLeft + 5, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
+        checkShowGuides = new GuiCheckBox(7, guiLeft + 5, guiTop + 118, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides(), false);
+        checkShowOverlay = new GuiCheckBox(9, guiLeft + 5, guiTop + 134, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay(), false);
         
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);

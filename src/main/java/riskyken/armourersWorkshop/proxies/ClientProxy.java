@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.proxies;
 
+import java.util.BitSet;
+
 import net.minecraft.block.Block;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -77,8 +79,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour) {
-        equipmentRenderManager.setPlayersNakedData(playerName, isNaked, skinColour, pantsColour);
+    public void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
+        equipmentRenderManager.setPlayersSkinData(playerName, isNaked, skinColour, pantsColour, armourOverride, headOverlay);
     }
 
     @Override

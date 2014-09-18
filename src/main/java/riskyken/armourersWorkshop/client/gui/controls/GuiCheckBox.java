@@ -17,10 +17,12 @@ public class GuiCheckBox extends GuiButton {
 	private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/check-box.png");
 	
 	private boolean checked;
+	private boolean small;
 	
-	public GuiCheckBox(int id, int x, int y, String text, boolean checked) {
-		super(id, x, y, 14, 14, text);
+	public GuiCheckBox(int id, int x, int y, int width, int height, String text, boolean checked, boolean small) {
+		super(id, x, y, width, height, text);
 		this.checked = checked;
+		this.small = small;
 	}
 	
 	@Override
@@ -37,8 +39,16 @@ public class GuiCheckBox extends GuiButton {
 		int sourceX = 0;
 		int sourceY = 0;
 		
-		if (checked) { sourceX += 14; }
-		if(isHovering(x, y, this.xPosition, this.yPosition, width, height)) { sourceY += 14; }
+		if (small) {
+			sourceY += 28;
+		}
+		
+		if (checked) {
+			sourceX += this.width;
+		}
+		if(isHovering(x, y, this.xPosition, this.yPosition, width, height)) {
+			sourceY += this.height;
+		}
 		
 		this.drawTexturedModalRect(this.xPosition, this.yPosition, sourceX, sourceY, width, height);
 	}

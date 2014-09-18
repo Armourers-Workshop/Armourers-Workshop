@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.render;
 
+import java.util.BitSet;
 import java.util.HashMap;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -15,6 +16,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -57,11 +59,11 @@ public class CustomEquipmentRenderManager {
         customArmor.put(key, armourData);
     }
     
-    public void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour) {
+    public void setPlayersSkinData(String playerName, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
         if (!skinMap.containsKey(playerName)) {
-            skinMap.put(playerName, new PlayerSkinInfo(isNaked, skinColour, pantsColour));
+            skinMap.put(playerName, new PlayerSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay));
         } else {
-            skinMap.get(playerName).setNakedInfo(isNaked, skinColour, pantsColour);
+            skinMap.get(playerName).setSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay);
         }
     }
     
@@ -97,7 +99,7 @@ public class CustomEquipmentRenderManager {
         EntityPlayer player = event.entityPlayer;
         if (skinMap.containsKey(player.getDisplayName())) {
             PlayerSkinInfo skinInfo = skinMap.get(player.getDisplayName());
-            skinInfo.checkSkin((AbstractClientPlayer) player);
+            skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
         }
         
         if (playerHasCustomArmourType(player.getDisplayName(), ArmourType.SKIRT)) {
@@ -105,6 +107,15 @@ public class CustomEquipmentRenderManager {
                 player.limbSwingAmount = 0.25F;
             }
         }
+    }
+    
+    @SubscribeEvent
+    public void onRender(RenderPlayerEvent.Post event) {
+    	EntityPlayer player = event.entityPlayer;
+    	if (skinMap.containsKey(player.getDisplayName())) {
+    		PlayerSkinInfo skinInfo = skinMap.get(player.getDisplayName());
+    		skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
+    	}
     }
     
     public int getCacheSize() {
@@ -115,40 +126,50 @@ public class CustomEquipmentRenderManager {
     public void onRender(RenderPlayerEvent.SetArmorModel event) {
         EntityPlayer player = event.entityPlayer;
         RenderPlayer render = event.renderer;
-        if (-event.slot + 3 == ArmourType.HEAD.getSlotId()) {
+        PlayerSkinInfo skinInfo = null;
+        int result = -1;
+        int slot = -event.slot + 3;
+        
+    	if (skinMap.containsKey(player.getDisplayName())) {
+    		skinInfo = skinMap.get(player.getDisplayName());
+    		BitSet armourOverride = skinInfo.getArmourOverride();
+    		if (armourOverride.get(slot)) {
+    			result = -2;
+    		}
+    	}
+        
+        if (slot == ArmourType.HEAD.getSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.HEAD);
             if (data != null) {
                 customHead.render(player, render, data);
-                event.result = -2;
             }
+            
         }
-        if (-event.slot + 3 == ArmourType.CHEST.getSlotId()) {
+        if (slot == ArmourType.CHEST.getSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.CHEST);
             if (data != null) {
                 customChest.render(player, render, data);
-                event.result = -2;
             }
         }
-        if (-event.slot + 3 == ArmourType.LEGS.getSlotId()) {
+        if (slot == ArmourType.LEGS.getSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.LEGS);
             if (data != null) {
                 customLegs.render(player, render, data);
-                event.result = -2;
+                event.result = result;
             }
         }
-        if (-event.slot + 3 == ArmourType.SKIRT.getSlotId()) {
+        if (slot == ArmourType.SKIRT.getSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.SKIRT);
             if (data != null) {
                 customSkirt.render(player, render, data);
-                event.result = -2;
             }
         }
-        if (-event.slot + 3 == ArmourType.FEET.getSlotId()) {
+        if (slot == ArmourType.FEET.getSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.FEET);
             if (data != null) {
                 customFeet.render(player, render, data);
-                event.result = -2;
             }
         }
+        event.result = result;
     }
 }

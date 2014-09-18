@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.gui;
 
 import java.awt.Color;
+import java.util.BitSet;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
@@ -32,6 +33,8 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     
     Color skinColour;
     Color pantsColour;
+    BitSet armourOverride;
+    boolean headOverlay;
     
     PlayerCustomEquipmentData customEquipmentData;
     PlayerSkinInfo skinInfo;
@@ -39,6 +42,10 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     
     private GuiCheckBox nakedCheck;
     private GuiButtonExt autoButton;
+    
+    private GuiCheckBox[] armourOverrideCheck;
+    private GuiCheckBox[] overlayOverrideCheck;
+    
     private float mouseX;
     private float mouseY;
     
@@ -49,6 +56,8 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getDisplayName());
         this.skinColour = new Color(skinInfo.getSkinColour());
         this.pantsColour = new Color(skinInfo.getPantsColour());
+        this.armourOverride = skinInfo.getArmourOverride();
+        this.headOverlay = skinInfo.getHeadOverlay();
         this.xSize = 176;
         this.ySize = 248;
     }
@@ -57,22 +66,48 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        nakedCheck = new GuiCheckBox(0, this.guiLeft + 8, this.guiTop + 94, "Make players skin naked?", skinInfo.isNaked());
-        autoButton = new GuiButtonExt(1, this.guiLeft + 80, this.guiTop + 128, 80, 20, "Auto Colour");
-        buttonList.add(nakedCheck);
+        
+        autoButton = new GuiButtonExt(0, this.guiLeft + 80, this.guiTop + 128, 80, 20, "Auto Colour");
+        nakedCheck = new GuiCheckBox(1, this.guiLeft + 8, this.guiTop + 94, 14, 14, "Make players skin naked?", skinInfo.isNaked(), false);
+        
+        armourOverrideCheck = new GuiCheckBox[4];
+        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 29, this.guiTop + 17, 7, 7, "", armourOverride.get(0), true);
+        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 29, this.guiTop + 44, 7, 7, "", armourOverride.get(1), true);
+        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 140, this.guiTop + 17, 7, 7, "", armourOverride.get(2), true);
+        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 140, this.guiTop + 71, 7, 7, "", armourOverride.get(3), true);
+        
+        overlayOverrideCheck = new GuiCheckBox[1];
+        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 29, this.guiTop + 28, 7, 7, "", headOverlay, true);
+        
         buttonList.add(autoButton);
+        buttonList.add(nakedCheck);
+        buttonList.add(overlayOverrideCheck[0]);
+        buttonList.add(armourOverrideCheck[0]);
+        buttonList.add(armourOverrideCheck[1]);
+        buttonList.add(armourOverrideCheck[2]);
+        buttonList.add(armourOverrideCheck[3]);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button.id == 0) {
-            ((GuiCheckBox)button).setChecked(!((GuiCheckBox)button).isChecked());
+    	if (button instanceof GuiCheckBox) {
+    		((GuiCheckBox)button).setChecked(!((GuiCheckBox)button).isChecked());
+    		headOverlay = overlayOverrideCheck[0].isChecked();
+    		for (int i = 0; i < 4; i++) {
+    			armourOverride.set(i, armourOverrideCheck[i].isChecked());
+    		}
+    	}
+    	
+    	
+    	
+        if (button.id >= 1) {
+            //((GuiCheckBox)button).setChecked(!((GuiCheckBox)button).isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(
-                            ((GuiCheckBox)button).isChecked(),
-                            skinColour.getRGB(), pantsColour.getRGB())
+            		nakedCheck.isChecked(),
+                            skinColour.getRGB(), pantsColour.getRGB(), armourOverride, headOverlay)
             );
         }
-        if (button.id == 1) {
+        if (button.id == 0) {
             skinInfo.autoColourSkin((AbstractClientPlayer) this.player);
         }
     }

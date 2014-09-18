@@ -121,7 +121,6 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
         
-        ModLogger.log(armourItemData.getType().ordinal());
         ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         
         NBTTagCompound itemNBT = new NBTTagCompound();
