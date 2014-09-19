@@ -34,6 +34,8 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     private static final String TAG_NAKED = "naked";
     private static final String TAG_SKIN_COLOUR = "skinColour";
     private static final String TAG_PANTS_COLOUR = "pantsColour";
+    private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
+    private static final String TAG_HEAD_OVERLAY = "headOverlay";
     
     public ItemStack[] customArmourInventory = new ItemStack[8];
     private final EntityPlayer player;
@@ -186,6 +188,10 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         compound.setBoolean(TAG_NAKED, this.isNaked);
         compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
         compound.setInteger(TAG_PANTS_COLOUR, this.pantsColour);
+        for (int i = 0; i < 4; i++) {
+        	compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, this.armourOverride.get(i));
+        }
+        compound.setBoolean(TAG_HEAD_OVERLAY, this.headOverlay);
         //TODO Change to for loop
         //TODO Maybe save a list?
         saveKey(compound, ArmourType.HEAD);
@@ -210,14 +216,14 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         this.isNaked = compound.getBoolean(TAG_NAKED);
         if (compound.hasKey(TAG_SKIN_COLOUR)) {
             this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
-        } else {
-            this.skinColour = Color.decode("#F9DFD2").getRGB();
         }
         if (compound.hasKey(TAG_PANTS_COLOUR)) {
             this.pantsColour = compound.getInteger(TAG_PANTS_COLOUR);
-        } else {
-            this.pantsColour = Color.decode("#FCFCFC").getRGB();
         }
+        for (int i = 0; i < 4; i++) {
+        	this.armourOverride.set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
+        }
+        this.headOverlay = compound.getBoolean(TAG_HEAD_OVERLAY);
         
         loadKey(compound, ArmourType.HEAD);
         loadKey(compound, ArmourType.CHEST);
