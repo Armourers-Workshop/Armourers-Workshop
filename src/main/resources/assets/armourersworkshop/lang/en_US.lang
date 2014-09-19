@@ -90,7 +90,7 @@ book.armourersworkshop:guideBook.chapter2.page2.text=Armourer's Workshop will le
 
 # Chapter 3
 book.armourersworkshop:guideBook.chapter3.title=Multi-Block
-book.armourersworkshop:guideBook.chapter3.page1.text=The first thing you will need to get started building your custom armour is the armourer multiblock.&pThe Armourer multiblock is build using 79 Armourer Wall's, 4 Armourer Corner's and 1 Armourer Brain.
+book.armourersworkshop:guideBook.chapter3.page1.text=The first thing you will need to get started building your custom armour is the armourer multiblock.&pThe Armourer multiblock is build using 79 Armourer Wall's, 4 Armourer Corners and 1 Armourer Brain.
 book.armourersworkshop:guideBook.chapter3.page2.text=The multiblock is a 22*22 structure with Armourer Wall's along the edges and a Armourer Corner in each corner.&pThe Armourer Brain can be placed in any edge but CAN NOT be placed at a corner.
 book.armourersworkshop:guideBook.chapter3.page3.text=The Armourer also need a large 20*20*20 space above it to operate.&p&n&image1
 book.armourersworkshop:guideBook.chapter3.page4.text=&image2&p&p&p&image3
