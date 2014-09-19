@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -158,7 +159,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
                 files.add(cleanName);
             }
         }
-        
+        Collections.sort(files);
         return files;
     }
     
