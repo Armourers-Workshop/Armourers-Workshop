@@ -242,7 +242,10 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     }
     
     private void loadFromItemNBT(NBTTagCompound compound) {
-        addCustomArmour(new CustomArmourItemData(compound));
+        int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
+        
+        addCustomArmour(equipmentData);
     }
     
     @Override

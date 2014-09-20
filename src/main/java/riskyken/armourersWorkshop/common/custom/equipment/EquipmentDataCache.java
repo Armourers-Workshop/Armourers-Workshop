@@ -76,6 +76,13 @@ public final class EquipmentDataCache {
     }
     
     public static CustomArmourItemData getEquipmentData(int equipmentId) {
+        if (!equipmentDataCache.containsKey(equipmentId)) {
+            if (haveEquipmentOnDisk(equipmentId)) {
+                CustomArmourItemData equipmentData;
+                equipmentData = loadEquipmentFromDisk(equipmentId);
+                addEquipmentDataToCache(equipmentData, equipmentId);
+            }
+        }
         if (equipmentDataCache.containsKey(equipmentId)) {
             return equipmentDataCache.get(equipmentId);
         }
