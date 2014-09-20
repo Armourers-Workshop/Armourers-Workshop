@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import java.util.UUID;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -74,8 +72,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         
         NBTTagCompound armourNBT = new NBTTagCompound();
-        armourItemData.writeToNBT(armourNBT);
-        armourNBT.setString(LibCommonTags.TAG_RENDER_ID, UUID.randomUUID().toString());
+        armourItemData.writeClientDataToNBT(armourNBT);
         if (!stackOutput.hasTagCompound()) {
             stackOutput.setTagCompound(new NBTTagCompound());
         }

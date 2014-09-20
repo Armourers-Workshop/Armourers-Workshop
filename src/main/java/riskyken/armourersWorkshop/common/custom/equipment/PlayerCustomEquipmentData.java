@@ -71,7 +71,7 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddArmourData(player.getDisplayName(), armourData), p);
     }
-    
+
     public void removeCustomArmour(ArmourType type) {
         String key = type.name();
         if (customArmor.containsKey(key)) {

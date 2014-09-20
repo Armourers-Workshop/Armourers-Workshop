@@ -56,7 +56,10 @@ public class ServerProxy extends CommonProxy {
 
     @Override
     public int getRenderType(Block block) {
-        // TODO Auto-generated method stub
         return 0;
+    }
+
+    @Override
+    public void receivedEquipmentData(CustomArmourItemData equipmentData) {
     }
 }

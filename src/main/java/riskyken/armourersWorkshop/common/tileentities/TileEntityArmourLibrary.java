@@ -11,15 +11,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.common.custom.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
@@ -63,7 +64,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         File armourDir = new File(System.getProperty("user.dir"));
         armourDir = new File(armourDir, LibModInfo.ID);
         
-        DataOutputStream stream;
+        DataOutputStream stream = null;
         File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
         
         CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
@@ -72,7 +73,6 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(targetFile)));
             customArmourItemData.writeToStream(stream);
             stream.flush();
-            stream.close();
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Armour file not found.");
             e.printStackTrace();
@@ -81,6 +81,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             ModLogger.log(Level.ERROR, "Armour file save failed.");
             e.printStackTrace();
             return;
+        } finally {
+            IOUtils.closeQuietly(stream);
         }
         
         this.decrStackSize(0, 1);
@@ -103,7 +105,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         File armourDir = new File(System.getProperty("user.dir"));
         armourDir = new File(armourDir, LibModInfo.ID);
         
-        DataInputStream stream;
+        DataInputStream stream = null;
         File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
         
         CustomArmourItemData armourItemData;
@@ -111,7 +113,6 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(targetFile)));
             armourItemData = new CustomArmourItemData(stream);
-            stream.close();
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Armour file not found.");
             e.printStackTrace();
@@ -120,6 +121,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             ModLogger.log(Level.ERROR, "Armour file load failed.");
             e.printStackTrace();
             return;
+        } finally {
+            IOUtils.closeQuietly(stream);
         }
         
         ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
@@ -127,8 +130,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         NBTTagCompound itemNBT = new NBTTagCompound();
         NBTTagCompound armourNBT = new NBTTagCompound();
         
-        armourItemData.writeToNBT(armourNBT);
-        armourNBT.setString(LibCommonTags.TAG_RENDER_ID, UUID.randomUUID().toString());
+        armourItemData.writeClientDataToNBT(armourNBT);
+        EquipmentDataCache.addEquipmentDataToCache(armourItemData);
         itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
         
         stackOutput.setTagCompound(itemNBT);

@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -23,24 +24,19 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     }
 
     @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
+    public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
+        return canRenderModel(stack);
+    }
+
+    @Override
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
         return true;
     }
 
     @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,ItemRendererHelper helper) {
-        //if (type != ItemRenderType.INVENTORY) { return false; }
-        if (item.hasTagCompound() && item.getTagCompound().hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        GL11.glPushMatrix();
-        if (item.hasTagCompound() && item.getTagCompound().hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-
+    public void renderItem(ItemRenderType type, ItemStack stack, Object... data) {
+        if (canRenderModel(stack)) {
+            GL11.glPushMatrix();
             GL11.glScalef(-1F, -1F, 1F);
             float scale = 1.2F;
             GL11.glScalef(scale, scale, scale);
@@ -61,13 +57,29 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             default:
                 break;
             }
-            ItemModelRenderManager.renderItemAsArmourModel(item);
+            EquipmentItemRenderCache.renderItemAsArmourModel(stack);
+            GL11.glPopMatrix();
             
         } else {
-            IIcon icon = item.getItem().getIcon(item, 0);
-            renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
+            renderNomalIcon(stack);
         }
-        GL11.glPopMatrix();
-        
+    }
+    
+    private boolean canRenderModel(ItemStack stack) {
+        NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
+        if (armourNBT == null) { return false; }
+        if (!armourNBT.hasKey(LibCommonTags.TAG_EQUPMENT_ID)) { return false; }
+        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        if (EquipmentItemRenderCache.isEquipmentInCache(equipmentId)) {
+            return true;
+        } else {
+            EquipmentItemRenderCache.requestEquipmentDataFromServer(equipmentId);
+            return false;
+        }
+    }
+    
+    private void renderNomalIcon(ItemStack stack) {
+        IIcon icon = stack.getItem().getIcon(stack, 0);
+        renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
     }
 }
