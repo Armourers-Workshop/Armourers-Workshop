@@ -57,7 +57,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        
+        int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
         
         if (!createArmourDirectory()) { return; }
 
@@ -67,11 +67,11 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         DataOutputStream stream = null;
         File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
         
-        CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
+        CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
         
         try {
             stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(targetFile)));
-            customArmourItemData.writeToStream(stream);
+            equipmentData.writeToStream(stream);
             stream.flush();
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Armour file not found.");
