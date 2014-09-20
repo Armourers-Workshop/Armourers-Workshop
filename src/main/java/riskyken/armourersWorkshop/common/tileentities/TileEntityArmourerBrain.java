@@ -105,10 +105,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
+        int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
         
-        CustomArmourItemData customArmourItemData = new CustomArmourItemData(dataNBT);
+        CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
         
-        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, customArmourItemData);
+        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, equipmentData);
     
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
