@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,7 +32,35 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 public final class EquipmentDataCache {
     
     private static HashMap<Integer, CustomArmourItemData> equipmentDataCache = new HashMap<Integer, CustomArmourItemData>();
-
+    private static ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
+    private static long lastTick;
+    
+    public static void processMessageQueue() {
+        long curTick = System.currentTimeMillis();
+        if (curTick >= lastTick + 40L) {
+            lastTick = curTick;
+            if (messageQueue.size() > 0) {
+                processMessage(messageQueue.get(0));
+                messageQueue.remove(0);
+            }
+        }
+    }
+    
+    public static void processMessage(QueueMessage queueMessage) {
+        
+        if (!equipmentDataCache.containsKey(queueMessage.equipmentId)) {
+            if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
+                CustomArmourItemData equipmentData;
+                equipmentData = loadEquipmentFromDisk(queueMessage.equipmentId);
+                addEquipmentDataToCache(equipmentData, queueMessage.equipmentId);
+            }
+        }
+        
+        if (equipmentDataCache.containsKey(queueMessage.equipmentId)) {
+            CustomArmourItemData equpmentData = equipmentDataCache.get(queueMessage.equipmentId);
+            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData), queueMessage.player);
+        }
+    }
     
     public static void addEquipmentDataToCache(CustomArmourItemData equipmentData) {
         addEquipmentDataToCache(equipmentData, equipmentData.hashCode());
@@ -54,20 +83,8 @@ public final class EquipmentDataCache {
     }
     
     public static void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
-        ModLogger.log("player: " + player + " equipmentId: " + equipmentId);
-        
-        if (!equipmentDataCache.containsKey(equipmentId)) {
-            if (haveEquipmentOnDisk(equipmentId)) {
-                CustomArmourItemData equipmentData;
-                equipmentData = loadEquipmentFromDisk(equipmentId);
-                addEquipmentDataToCache(equipmentData, equipmentId);
-            }
-        }
-        
-        if (equipmentDataCache.containsKey(equipmentId)) {
-            CustomArmourItemData equpmentData = equipmentDataCache.get(equipmentId);
-            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData), player);
-        }
+        QueueMessage queueMessage = new QueueMessage(equipmentId, player);
+        messageQueue.add(queueMessage);
     }
     
     private static boolean haveEquipmentOnDisk(int equipmentId) {
@@ -148,5 +165,16 @@ public final class EquipmentDataCache {
             }
         }
         return true;
+    }
+    
+    public static class QueueMessage {
+        
+        public final int equipmentId;
+        public final EntityPlayerMP player;
+        
+        public QueueMessage(int equipmentId, EntityPlayerMP player) {
+            this.equipmentId = equipmentId;
+            this.player = player;
+        }
     }
 }

@@ -46,7 +46,6 @@ public final class EquipmentItemRenderCache {
     public static void receivedEquipmentData(CustomArmourItemData equipmentData) {
         int equipmentId = equipmentData.hashCode();
         
-        ModLogger.log(Level.INFO, "Got equipment data for id: " + equipmentId);
         NBTTagCompound armourNBT = new NBTTagCompound();
         equipmentData.writeToNBT(armourNBT);
         buildModelForCache(armourNBT, equipmentData.getType(), equipmentId);
@@ -67,19 +66,12 @@ public final class EquipmentItemRenderCache {
             return;
         }
         
-        if (!modelCache.containsKey(equipmentId)) {
-            //buildModelForCache(armourNBT, ArmourType.getOrdinal(stack.getItemDamage() + 1), equipmentId);
-        }
-        
         ModelCustomItemBuilt targetModel = modelCache.get(equipmentId);
         
         if (targetModel == null) {
             ModLogger.log(Level.ERROR, "Model was not found in the model cache. Something is very wrong.");
             return;
         }
-        //ModLogger.log(Level.INFO, "Rendering model: " + targetModel.);
-        
-        //CustomArmourItemData itemData = new CustomArmourItemData(armourNBT);
         
         switch (ArmourType.getOrdinal(stack.getItemDamage() + 1)) {
         case HEAD:

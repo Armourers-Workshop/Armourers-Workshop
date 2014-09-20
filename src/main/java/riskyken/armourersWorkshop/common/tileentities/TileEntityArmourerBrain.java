@@ -15,6 +15,7 @@ import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.custom.equipment.ArmourerWorldHelper;
+import riskyken.armourersWorkshop.common.custom.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
@@ -73,6 +74,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         NBTTagCompound armourNBT = new NBTTagCompound();
         armourItemData.writeClientDataToNBT(armourNBT);
+        EquipmentDataCache.addEquipmentDataToCache(armourItemData);
         if (!stackOutput.hasTagCompound()) {
             stackOutput.setTagCompound(new NBTTagCompound());
         }

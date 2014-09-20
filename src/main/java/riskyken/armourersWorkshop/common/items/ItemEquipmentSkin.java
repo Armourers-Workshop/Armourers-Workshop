@@ -47,25 +47,42 @@ public class ItemEquipmentSkin extends AbstractModItem {
         super.addInformation(stack, player, list, p_77624_4_);
     }
     
+    @Override
+    public int getRenderPasses(int metadata) {
+        return 2;
+    }
+    
+    @Override
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
+    
     @SideOnly(Side.CLIENT)
     private IIcon[] icons;
     
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        icons = new IIcon[5];
+        icons = new IIcon[6];
         icons[0] = register.registerIcon(LibModInfo.ID + ":" + "templateHead");
         icons[1] = register.registerIcon(LibModInfo.ID + ":" + "templateChest");
         icons[2] = register.registerIcon(LibModInfo.ID + ":" + "templateLegs");
         icons[3] = register.registerIcon(LibModInfo.ID + ":" + "templateSkirt");
         icons[4] = register.registerIcon(LibModInfo.ID + ":" + "templateFeet");
+        icons[5] = register.registerIcon(LibModInfo.ID + ":" + "templateLoading");
     }
     
     @Override
-    public IIcon getIconFromDamage(int damage) {
+    public IIcon getIcon(ItemStack stack, int pass) {
+        int damage = stack.getItemDamage();
+        
+        if (pass == 1) {
+            return icons[5];
+        }
+        
         if (damage < 5 & damage >= 0) {
             return icons[damage];
         }
-        return super.getIconFromDamage(damage);
+        return super.getIcon(stack, pass);
     }
 }

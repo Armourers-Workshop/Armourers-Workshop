@@ -81,5 +81,7 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     private void renderNomalIcon(ItemStack stack) {
         IIcon icon = stack.getItem().getIcon(stack, 0);
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
+        icon = stack.getItem().getIcon(stack, 1);
+        renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
     }
 }
