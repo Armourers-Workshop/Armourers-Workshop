@@ -28,7 +28,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     private final CustomModelRenderer main;
     private int timeFromRender = 0;
-    public final String renderId;
+    public final int renderId;
     private boolean displayCompiled;
     private int displayList;
     private boolean facesCompiled;
@@ -42,7 +42,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
     
-    public ModelCustomItemBuilt(CustomArmourItemData itemData, ArmourType armourType, String renderId) {
+    public ModelCustomItemBuilt(CustomArmourItemData itemData, ArmourType armourType, int renderId) {
         this.renderId = renderId;
         textureWidth = 4;
         textureHeight = 4;

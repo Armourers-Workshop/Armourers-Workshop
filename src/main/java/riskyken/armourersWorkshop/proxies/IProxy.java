@@ -30,4 +30,6 @@ public interface IProxy {
     public abstract PlayerSkinInfo getPlayersNakedData(String playerName);
     
     public abstract int getRenderType(Block block);
+    
+    public abstract void receivedEquipmentData(CustomArmourItemData equipmentData);
 }

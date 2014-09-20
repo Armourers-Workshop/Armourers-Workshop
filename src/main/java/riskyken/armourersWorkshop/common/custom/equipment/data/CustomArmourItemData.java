@@ -90,6 +90,16 @@ public class CustomArmourItemData {
         compound.setTag(TAG_PARTS, blockData);
     }
     
+    public void writeClientDataToNBT(NBTTagCompound compound) {
+        compound.setString(LibCommonTags.TAG_AUTHOR_NAME, this.authorName);
+        compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
+        compound.setInteger(LibCommonTags.TAG_EQUPMENT_ID, this.hashCode());
+    }
+    
+    public static boolean hasArmourData(NBTTagCompound compound) {
+        return compound.hasKey(TAG_PARTS);
+    }
+    
     private void readFromNBT(NBTTagCompound compound) {
         this.authorName = compound.getString(LibCommonTags.TAG_AUTHOR_NAME);
         this.customName = compound.getString(LibCommonTags.TAG_CUSTOM_NAME);
@@ -138,15 +148,11 @@ public class CustomArmourItemData {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((authorName == null) ? 0 : authorName.hashCode());
-        result = prime * result
-                + ((customName == null) ? 0 : customName.hashCode());
-        result = prime * result + ((parts == null) ? 0 : parts.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+        String result = this.toString();
+        for (int i = 0; i < parts.size(); i++) {
+            result += parts.get(i).toString();
+        }
+        return result.hashCode();
     }
 
     @Override
@@ -176,5 +182,11 @@ public class CustomArmourItemData {
         if (type != other.type)
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomArmourItemData [authorName=" + authorName
+                + ", customName=" + customName + ", type=" + type + "]";
     }
 }

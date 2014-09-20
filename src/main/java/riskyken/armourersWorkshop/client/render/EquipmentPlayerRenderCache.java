@@ -16,13 +16,18 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * Holds a cache of ModelCustomItemBuilt that are used when the client renders a
+ * player equipment model.
+ * @author RiskyKen
+ *
+ */
 @SideOnly(Side.CLIENT)
-public class CustomEquipmentRenderManager {
+public class EquipmentPlayerRenderCache {
     
     public HashMap<String, CustomArmourItemData> customArmor = new HashMap<String, CustomArmourItemData>();
     public HashMap<String, PlayerSkinInfo> skinMap = new HashMap<String, PlayerSkinInfo>();
@@ -33,7 +38,7 @@ public class CustomEquipmentRenderManager {
     public ModelCustomArmourSkirt customSkirt = new ModelCustomArmourSkirt();
     public ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
     
-    public CustomEquipmentRenderManager() {
+    public EquipmentPlayerRenderCache() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     

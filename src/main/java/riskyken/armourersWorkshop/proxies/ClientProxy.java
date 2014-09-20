@@ -7,8 +7,8 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.ModForgeEventHandler;
-import riskyken.armourersWorkshop.client.render.CustomEquipmentRenderManager;
-import riskyken.armourersWorkshop.client.render.ItemModelRenderManager;
+import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
+import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
@@ -31,12 +31,11 @@ public class ClientProxy extends CommonProxy {
     public static int blockColourMixerRenderId;
     public static int renderPass;
     
-    public CustomEquipmentRenderManager equipmentRenderManager;
+    public EquipmentPlayerRenderCache equipmentRenderManager;
     
     @Override
     public void init() {
-        equipmentRenderManager = new CustomEquipmentRenderManager();
-        ItemModelRenderManager.init();
+        equipmentRenderManager = new EquipmentPlayerRenderCache();
     }
 
     @Override
@@ -94,5 +93,10 @@ public class ClientProxy extends CommonProxy {
             return blockColourMixerRenderId;
         }
         return 0;
+    }
+
+    @Override
+    public void receivedEquipmentData(CustomArmourItemData equipmentData) {
+        EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
     }
 }

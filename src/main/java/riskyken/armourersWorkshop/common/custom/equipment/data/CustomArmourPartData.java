@@ -139,8 +139,9 @@ public class CustomArmourPartData {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
-                + ((armourData == null) ? 0 : armourData.hashCode());
+        for (int i = 0; i < armourData.size(); i++) {
+            result = prime * result + armourData.get(i).hashCode();
+        }
         result = prime * result + ((part == null) ? 0 : part.hashCode());
         return result;
     }
@@ -162,5 +163,14 @@ public class CustomArmourPartData {
         if (part != other.part)
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (int i = 0; i < armourData.size(); i++) {
+            result += armourData.get(i).toString();
+        }
+        return "CustomArmourPartData [armourData=" + armourData + "" + result;
     }
 }

@@ -7,6 +7,6 @@ public final class LibCommonTags {
     public static final String TAG_WEAPON_DATA = "weaponData";
     public static final String TAG_AUTHOR_NAME = "authorName";
     public static final String TAG_CUSTOM_NAME = "customName";
-    public static final String TAG_RENDER_ID = "renderId";
+    public static final String TAG_EQUPMENT_ID = "equpmentId";
     public static final String TAG_INTENSITY = "intensity";
 }

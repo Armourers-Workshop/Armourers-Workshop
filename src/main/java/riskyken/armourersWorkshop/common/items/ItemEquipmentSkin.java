@@ -38,6 +38,10 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 if (armourData.hasKey(LibCommonTags.TAG_AUTHOR_NAME)) {
                     list.add("Author: " + armourData.getString(LibCommonTags.TAG_AUTHOR_NAME));
                 }
+                if (armourData.hasKey(LibCommonTags.TAG_EQUPMENT_ID)) {
+                    list.add("Equpment Id: " + armourData.getInteger(LibCommonTags.TAG_EQUPMENT_ID));
+                }
+                
             }
         }
         super.addInformation(stack, player, list, p_77624_4_);
