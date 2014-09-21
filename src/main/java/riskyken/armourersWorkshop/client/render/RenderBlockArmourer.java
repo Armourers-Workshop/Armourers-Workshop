@@ -148,6 +148,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         Tessellator tessellator = Tessellator.instance;
         
         GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
@@ -189,54 +190,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor4f(1F, 1F, 1F, 1F);
-        GL11.glPopMatrix();
-        
-        //New layer
-        
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
-        
-        float scale2 = 0.998F;
-        GL11.glScalef(scale2, scale2, scale2);
-        GL11.glTranslated(x, y, z);
-        
-        switch (dir) {
-        case EAST:
-            GL11.glRotated(90, 0, 1, 0);
-            break;
-        case WEST:
-            GL11.glRotated(-90, 0, 1, 0);
-            break;
-        case NORTH:
-            GL11.glRotated(180, 0, 1, 0);
-            break; 
-        case UP:
-            GL11.glRotated(90, 1, 0, 0);
-            break;
-        case DOWN:
-            GL11.glRotated(-90, 1, 0, 0);
-            break;
-        default:
-            break;
-        }
-        
-        tessellator.setBrightness(15728880);
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        
-        GL11.glRotatef(180, 0, 1, 0);
-        GL11.glTranslated(-sizeX, 0, 0);
-        
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-        tessellator.addVertexWithUV(0, sizeY, 0, sizeY, 0);
-        tessellator.addVertexWithUV(sizeX, sizeY, 0, sizeY, sizeX);
-        tessellator.addVertexWithUV(sizeX, 0, 0, 0, sizeX);
-        tessellator.draw();
-        
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();
     }
 }
