@@ -2,32 +2,15 @@ package riskyken.armourersWorkshop.client.render;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.BitSet;
-import java.util.Map;
 
-import javax.imageio.ImageIO;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
-
-import org.apache.commons.io.IOUtils;
-
+import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
-
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 
 
 public class PlayerSkinInfo {
@@ -124,7 +107,7 @@ public class PlayerSkinInfo {
     }
     
     private void makeBackupSkin(AbstractClientPlayer player) {
-        BufferedImage bufferedImage = getBufferedImageSkin(player);
+        BufferedImage bufferedImage = SkinHelper.getBufferedImageSkin(player);
         if (bufferedImage != null) {
             playerBackupSkin = bufferedImage;
             haveSkinBackup = true;
@@ -132,7 +115,7 @@ public class PlayerSkinInfo {
     }
     
     private void restorePlayerSkin(AbstractClientPlayer player) {
-        uploadTexture(player.getLocationSkin(), playerBackupSkin);
+        SkinHelper.uploadTexture(player.getLocationSkin(), playerBackupSkin);
         isNakedSkinUploaded = false;
     }
     
@@ -142,7 +125,7 @@ public class PlayerSkinInfo {
         if (player.func_152123_o()) {
             skin = player.getLocationSkin();
         }
-        uploadTexture(skin, playerNakedSkin);
+        SkinHelper.uploadTexture(skin, playerNakedSkin);
         isNakedSkinUploaded = true;
     }
     
@@ -153,7 +136,7 @@ public class PlayerSkinInfo {
         
         if (playerBackupSkin == null) { return; }
         
-        playerNakedSkin = deepCopy(playerBackupSkin);
+        playerNakedSkin = SkinHelper.deepCopyBufferedImage(playerBackupSkin);
         
         for (int ix = 0; ix < 56; ix++) {
             for (int iy = 0; iy < 16; iy++) {
@@ -176,50 +159,6 @@ public class PlayerSkinInfo {
         hasNakedSkin = true;
     }
     
-    private void uploadTexture(ResourceLocation resourceLocation, BufferedImage bufferedImage) {
-        ITextureObject textureObject = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
-        if (textureObject != null) {
-            uploadTexture(textureObject, bufferedImage);
-        }
-    }
-    
-    private void uploadTexture(ITextureObject textureObject, BufferedImage bufferedImage) {
-        TextureUtil.uploadTextureImage(textureObject.getGlTextureId(), bufferedImage);
-    }
-    
-    private BufferedImage getBufferedImageSkin(AbstractClientPlayer player) {
-        BufferedImage bufferedImage = null;
-        ResourceLocation skin = AbstractClientPlayer.locationStevePng;
-        InputStream inputStream = null;
-        Minecraft mc = Minecraft.getMinecraft();
-        Map map = mc.func_152342_ad().func_152788_a(player.getGameProfile());
-        
-        
-        try {
-            if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                ResourceLocation skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
-                ITextureObject skintex = mc.getTextureManager().getTexture(skinloc);
-                
-                if (skintex instanceof ThreadDownloadImageData) {
-                    ThreadDownloadImageData imageData = (ThreadDownloadImageData)skintex;
-                    bufferedImage  = ObfuscationReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage", "field_110560_d", "bpr.h");
-                } else {
-                    inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skin).getInputStream();
-                    bufferedImage = ImageIO.read(inputStream);
-                }
-            } else {
-                inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skin).getInputStream();
-                bufferedImage = ImageIO.read(inputStream);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(inputStream);
-        }
-        
-        return bufferedImage;
-    }
-    
     public boolean isNaked() {
         return isNaked;
     }
@@ -239,11 +178,4 @@ public class PlayerSkinInfo {
     public boolean getHeadOverlay() {
 		return headOverlay;
 	}
-    
-    static BufferedImage deepCopy(BufferedImage bufferedImage) {
-        ColorModel cm = bufferedImage.getColorModel();
-        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = bufferedImage.copyData(null);
-        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-       }
 }

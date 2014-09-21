@@ -1,19 +1,22 @@
 package riskyken.armourersWorkshop.common.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockBoundingBox extends Block {
+public class BlockBoundingBox extends Block implements ITileEntityProvider {
 
     protected BlockBoundingBox() {
         super(Material.cloth);
@@ -71,5 +74,10 @@ public class BlockBoundingBox extends Block {
     protected String getModdedUnlocalizedName(String unlocalizedName) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
         return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+        return new TileEntityBoundingBox();
     }
 }

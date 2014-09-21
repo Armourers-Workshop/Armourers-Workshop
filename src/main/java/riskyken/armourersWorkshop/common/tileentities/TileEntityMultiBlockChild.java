@@ -15,6 +15,12 @@ public class TileEntityMultiBlockChild extends TileEntity {
     private int parentZ;
     private boolean hasParent;
     
+    public TileEntityMultiBlockChild() {}
+    
+    public TileEntityMultiBlockChild(int parentX, int parentY, int parentZ) {
+        setParent(parentX, parentY, parentZ);
+    }
+
     @Override
     public boolean canUpdate() {
         return false;

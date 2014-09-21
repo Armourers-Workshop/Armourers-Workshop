@@ -46,9 +46,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         if (!te.isFormed()) { return; }
         
-        
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
-        
         if (te.getGameProfile() != null) {
             Minecraft minecraft = Minecraft.getMinecraft();
             Map map = minecraft.func_152342_ad().func_152788_a(te.getGameProfile());
@@ -56,13 +54,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
                 resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
             }
         }
-        
         Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-        
-        //this.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
-
-        
-        
         
         GL11.glPushMatrix();
         GL11.glColor3f(0.8F, 0.8F, 0.8F);
@@ -246,19 +238,5 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glPopMatrix();
-        
-        
-        
-        /*
-        GL11.glRotatef(180, 0, 1, 0);
-        GL11.glTranslated(-sizeX, 0, 0);
-        
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-        tessellator.addVertexWithUV(0, sizeY, 0, sizeY * 2, 0);
-        tessellator.addVertexWithUV(sizeX, sizeY, 0, sizeY * 2, sizeX * 2);
-        tessellator.addVertexWithUV(sizeX, 0, 0, 0, sizeX * 2);
-        tessellator.draw();
-        */
     }
 }

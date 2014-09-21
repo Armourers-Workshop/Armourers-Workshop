@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -7,12 +8,19 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.common.BodyPart;
+import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -41,7 +49,99 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
             setToolColour(stack, ((IWorldColourable)block).getColour(world, x, y, z));
             return true;
         }
+        
+        if (block == ModBlocks.boundingBox) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof TileEntityBoundingBox && !world.isRemote) {
+                TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
+                if (parent != null) {
+                    int colour = getColourFromSkin(parent, ((TileEntityBoundingBox)te).getBodyPart(), player, world, x, y, z, side);
+                    setToolColour(stack, colour);
+                }
+            }
+            return true;
+        }
         return false;
+    }
+    
+    private int getColourFromSkin(TileEntityArmourerBrain te, BodyPart bodyPart, EntityPlayer player, World world, int x, int y, int z, int side) {
+        int textureX = bodyPart.textureX;
+        int textureY = bodyPart.textureY;
+        
+        ForgeDirection dir = ForgeDirection.getOrientation(side);
+        ForgeDirection xSearchAxis = ForgeDirection.UNKNOWN;
+        ForgeDirection ySearchAxis = ForgeDirection.UNKNOWN;
+        
+        switch (dir) {
+        case DOWN:
+            textureX += bodyPart.zSize + bodyPart.xSize;
+            ySearchAxis = ForgeDirection.SOUTH;
+            xSearchAxis = ForgeDirection.EAST;
+            break;
+        case UP:
+            textureX += bodyPart.zSize;
+            ySearchAxis = ForgeDirection.SOUTH;
+            xSearchAxis = ForgeDirection.EAST;
+            break;
+        case NORTH:
+            textureX += bodyPart.zSize;
+            textureY += bodyPart.zSize;
+            ySearchAxis = ForgeDirection.UP;
+            xSearchAxis = ForgeDirection.EAST;
+            break;
+        case SOUTH:
+            textureX += bodyPart.zSize + bodyPart.xSize + bodyPart.zSize;
+            textureY += bodyPart.zSize;
+            ySearchAxis = ForgeDirection.UP;
+            xSearchAxis = ForgeDirection.WEST;
+            break;
+        case WEST:
+            textureX +=  bodyPart.zSize + bodyPart.xSize;
+            textureY += bodyPart.zSize;
+            ySearchAxis = ForgeDirection.UP;
+            xSearchAxis = ForgeDirection.NORTH;
+            break;
+        case EAST:
+            textureY += bodyPart.zSize;
+            ySearchAxis = ForgeDirection.UP;
+            xSearchAxis = ForgeDirection.SOUTH;
+            break;
+        case UNKNOWN:
+            break;
+        }
+        
+        for (int ix = 1; ix < 13; ix++) {
+            int xOffset = xSearchAxis.offsetX;
+            int yOffset = xSearchAxis.offsetY;
+            int zOffset = xSearchAxis.offsetZ;
+            Block block = null;
+            if (bodyPart.mirrorTexture) {
+                block = world.getBlock(x - xOffset * ix, y - yOffset * ix, z - zOffset * ix);
+            } else {
+                block = world.getBlock(x + xOffset * ix, y + yOffset * ix, z + zOffset * ix);
+            }
+            
+            if (block != ModBlocks.boundingBox) {
+                textureX += ix - 1;
+                break;
+            }
+        }
+        
+        for (int iy = 1; iy < 13; iy++) {
+            int xOffset = ySearchAxis.offsetX;
+            int yOffset = ySearchAxis.offsetY;
+            int zOffset = ySearchAxis.offsetZ;
+            Block block = world.getBlock(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
+            if (block != ModBlocks.boundingBox) {
+                textureY += iy - 1;
+                break;
+            }
+        }
+        
+        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(te.getGameProfile());
+        int colour = playerSkin.getRGB(textureX, textureY);
+        
+        return colour;
     }
     
     @Override
