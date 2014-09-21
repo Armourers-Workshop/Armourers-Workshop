@@ -18,6 +18,8 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -52,11 +54,11 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
         
         if (block == ModBlocks.boundingBox) {
             TileEntity te = world.getTileEntity(x, y, z);
-            if (te != null && te instanceof TileEntityBoundingBox && !world.isRemote) {
+            if (te != null && te instanceof TileEntityBoundingBox && world.isRemote) {
                 TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
                 if (parent != null) {
                     int colour = getColourFromSkin(parent, ((TileEntityBoundingBox)te).getBodyPart(), player, world, x, y, z, side);
-                    setToolColour(stack, colour);
+                    PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
                 }
             }
             return true;

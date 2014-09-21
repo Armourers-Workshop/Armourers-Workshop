@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
+import riskyken.armourersWorkshop.common.items.ItemColourPicker;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -38,8 +40,16 @@ public class MessageClientGuiToolOptionUpdate implements IMessage, IMessageHandl
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         if (player != null) {
             ItemStack stack = player.getCurrentEquippedItem();
-            if (stack != null && stack.getItem() instanceof AbstractModItem) {
-                UtilItems.setIntensityOnStack(stack, message.value);
+            
+            if (message.toolOption == 0) {
+                if (stack != null && stack.getItem() instanceof AbstractModItem) {
+                    UtilItems.setIntensityOnStack(stack, message.value);
+                }
+            }
+            if (message.toolOption == 1) {
+                if (stack != null && stack.getItem() == ModItems.colourPicker) {
+                    ((ItemColourPicker)stack.getItem()).setToolColour(stack, message.value);
+                }
             }
         }
         return null;
