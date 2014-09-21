@@ -59,7 +59,9 @@ inventory.armourersworkshop:armourLibrary.name=Armour Library
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 
 # Inventory controls
-inventory.armourersworkshop:armourCrafter.create=Create
+inventory.armourersworkshop:armourLibrary.label.search=Search:
+inventory.armourersworkshop:armourLibrary.label.filename=File Name:
+inventory.armourersworkshop:armourLibrary.label.files=Files:
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:

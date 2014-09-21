@@ -19,16 +19,16 @@ public class ContainerArmourLibrary extends Container {
     public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
         this.armourLibrary = armourLibrary;
 
-        addSlotToContainer(new Slot(armourLibrary, 0, 64, 21));
-        addSlotToContainer(new SlotOutput(armourLibrary, 1, 147, 21));
+        addSlotToContainer(new Slot(armourLibrary, 0, 226, 97));
+        addSlotToContainer(new SlotOutput(armourLibrary, 1, 226, 137));
 
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 232));
+            addSlotToContainer(new Slot(invPlayer, x, 48 + 18 * x, 232));
         }
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 174 + y * 18));
+                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 48 + 18 * x, 174 + y * 18));
             }
         }
     }

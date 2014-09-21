@@ -58,7 +58,6 @@ public final class EquipmentItemRenderCache {
     
     public static void renderItemAsArmourModel(ItemStack stack) {
         NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        
         int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
         
         if (!modelCache.containsKey(equipmentId)) {
@@ -67,11 +66,6 @@ public final class EquipmentItemRenderCache {
         }
         
         ModelCustomItemBuilt targetModel = modelCache.get(equipmentId);
-        
-        if (targetModel == null) {
-            ModLogger.log(Level.ERROR, "Model was not found in the model cache. Something is very wrong.");
-            return;
-        }
         
         switch (ArmourType.getOrdinal(stack.getItemDamage() + 1)) {
         case HEAD:

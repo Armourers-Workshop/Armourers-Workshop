@@ -29,12 +29,13 @@ public class GuiArmourLibrary extends GuiContainer {
     private TileEntityArmourLibrary armourLibrary;
     private GuiList fileList;
     private GuiScrollbar scrollbar;
-    private GuiTextField textFileName;
+    private GuiTextField filenameTextbox;
+    private GuiTextField searchTextbox;
     
     public GuiArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
         super(new ContainerArmourLibrary(invPlayer, armourLibrary));
         this.armourLibrary = armourLibrary;
-        this.xSize = 176;
+        this.xSize = 256;
         this.ySize = 256;
     }
     
@@ -42,33 +43,38 @@ public class GuiArmourLibrary extends GuiContainer {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        buttonList.add(new GuiButtonExt(0, guiLeft + 86, guiTop + 16, 50, 12, "Save"));
-        buttonList.add(new GuiButtonExt(1, guiLeft + 86, guiTop + 16 + 13, 50, 12, "Load"));
+        buttonList.add(new GuiButtonExt(0, guiLeft + 156, guiTop + 96, 60, 20, "Save"));
+        buttonList.add(new GuiButtonExt(1, guiLeft + 156, guiTop + 96 + 30, 60, 20, "Load"));
         
-        textFileName = new GuiTextField(fontRendererObj, guiLeft + 7, guiTop + 46, 161, 14);
-        textFileName.setMaxStringLength(24);
-        fileList = new GuiList(this.guiLeft + 7, this.guiTop + 63, 151, 96, 12);
+        filenameTextbox = new GuiTextField(fontRendererObj, guiLeft + 152, guiTop + 36, 96, 14);
+        filenameTextbox.setMaxStringLength(24);
         
-        scrollbar = new GuiScrollbar(2, this.guiLeft + 158, this.guiTop + 63, 10, 96, "", false);
+        searchTextbox = new GuiTextField(fontRendererObj, guiLeft + 7, guiTop + 36, 131, 14);
+        searchTextbox.setMaxStringLength(24);
+        
+        fileList = new GuiList(this.guiLeft + 7, this.guiTop + 63, 131, 96, 12);
+        
+        scrollbar = new GuiScrollbar(2, this.guiLeft + 138, this.guiTop + 63, 10, 96, "", false);
         buttonList.add(scrollbar);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        String filename = textFileName.getText().trim();
+        String filename = filenameTextbox.getText().trim();
         
         if (!filename.equals("")) {
             switch (button.id) {
             case 0:
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(filename, false));
-                textFileName.setText("");
+                filenameTextbox.setText("");
                 break;
             case 1:
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(filename, true));
-                textFileName.setText("");
+                filenameTextbox.setText("");
                 break;
             }
         }
+        
     }
     
     @Override
@@ -78,7 +84,14 @@ public class GuiArmourLibrary extends GuiContainer {
         if (armourLibrary.fileNames != null) {
             fileList.clearList();
             for (int i = 0; i < armourLibrary.fileNames.size(); i++) {
-                fileList.addListItem(new GuiFileListItem(armourLibrary.fileNames.get(i)));
+                String fileName = armourLibrary.fileNames.get(i);
+                if (!searchTextbox.getText().equals("")) {
+                    if (fileName.toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
+                        fileList.addListItem(new GuiFileListItem(fileName));
+                    }
+                } else {
+                    fileList.addListItem(new GuiFileListItem(fileName));
+                }
             }
         }
         
@@ -89,9 +102,22 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
-        textFileName.mouseClicked(mouseX, mouseY, button);
+        
+        searchTextbox.mouseClicked(mouseX, mouseY, button);
+        filenameTextbox.mouseClicked(mouseX, mouseY, button);
+        
+        if (button == 1) {
+            if (searchTextbox.isFocused()) {
+                searchTextbox.setText("");
+            }
+            if (filenameTextbox.isFocused()) {
+                filenameTextbox.setText("");
+            }
+        }
+
+        
         if (fileList.mouseClicked(mouseX, mouseY, button)) {
-            textFileName.setText(fileList.getSelectedListEntry().getDisplayName());
+            filenameTextbox.setText(fileList.getSelectedListEntry().getDisplayName());
         }
         scrollbar.mousePressed(mc, mouseX, mouseY);
     }
@@ -105,7 +131,7 @@ public class GuiArmourLibrary extends GuiContainer {
     
     @Override
     protected void keyTyped(char key, int keyCode) {
-        if (!textFileName.textboxKeyTyped(key, keyCode)) {
+        if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
             super.keyTyped(key, keyCode);
         }
     }
@@ -115,12 +141,22 @@ public class GuiArmourLibrary extends GuiContainer {
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        textFileName.drawTextBox();
+        searchTextbox.drawTextBox();
+        filenameTextbox.drawTextBox();
     }
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName());
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        
+        String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");
+        String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.filename");
+        String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.search");
+        
+        this.fontRendererObj.drawString(filesLabel, 7, 55, 4210752);
+        this.fontRendererObj.drawString(filenameLabel, 152, 27, 4210752);
+        this.fontRendererObj.drawString(searchLabel, 7, 27, 4210752);
+        
+        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
     }
 }
