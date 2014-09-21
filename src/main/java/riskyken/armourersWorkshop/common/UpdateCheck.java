@@ -50,8 +50,8 @@ public class UpdateCheck implements Runnable {
 					conn.disconnect();
 
 				conn = (HttpURLConnection) url.openConnection();
-				conn.setRequestProperty("User-Agent",
-						"Mozilla/5.0 (Windows; U; Windows NT 6.0; ru; rv:1.9.0.11) Gecko/2009060215 Firefox/3.0.11 (.NET CLR 3.5.30729)");
+				conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; ru; rv:1.9.0.11) Gecko/2009060215 Firefox/3.0.11 (.NET CLR 3.5.30729)");
+				conn.setRequestProperty("Referer", "http://" + LibModInfo.VERSION);
 				conn.connect();
 				location = conn.getHeaderField("Location");
 			}
