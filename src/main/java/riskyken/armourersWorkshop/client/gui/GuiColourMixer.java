@@ -78,11 +78,13 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     }
     
     private void updateHexTextbox() {
-        colourHex.setText(String.format(
-                "#%02x%02x%02x",
-                this.colour.getRed(),
-                this.colour.getGreen(),
-                this.colour.getBlue()));
+        if (!colourHex.isFocused()) {
+            colourHex.setText(String.format(
+                    "#%02x%02x%02x",
+                    this.colour.getRed(),
+                    this.colour.getGreen(),
+                    this.colour.getBlue()));
+        }
     }
     
     @Override
@@ -104,11 +106,14 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     protected void mouseMovedOrUp(int mouseX, int mouseY, int which) {
         super.mouseMovedOrUp(mouseX, mouseY, which);
         if (which != 0) { return; }
-        float[] hsbvals = { (float)slidersHSB[0].getValue(), (float)slidersHSB[1].getValue(), (float)slidersHSB[2].getValue() };
-        Color colourNew = Color.getHSBColor(hsbvals[0], hsbvals[1], hsbvals[2]);
+        
+        updateColour();
+    }
+    
+    private void updateColour() {
         Color colourOld = new Color(tileEntityColourMixer.getColour());
-        if (colourNew.equals(colourOld)) { return; }
-        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiColourUpdate(colourNew.getRGB(), false));
+        if (this.colour.equals(colourOld)) { return; }
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiColourUpdate(this.colour.getRGB(), false));
     }
     
     @Override
@@ -122,6 +127,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
                 if (!newColour.equals(this.colour)) {
                     this.colour = newColour;
                     updateSliders();
+                    updateColour();
                 }
             }
         }
