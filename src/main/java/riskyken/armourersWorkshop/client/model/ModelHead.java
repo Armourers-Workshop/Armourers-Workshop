@@ -2,6 +2,9 @@ package riskyken.armourersWorkshop.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,7 +29,9 @@ public class ModelHead extends ModelBase {
         float mult = 0.0625F;
         main.render(mult);
         if (showOverlay) {
+            GL11.glDisable(GL11.GL_CULL_FACE);
             overlay.render(mult);
+            GL11.glEnable(GL11.GL_CULL_FACE);
         }
     }
 }
