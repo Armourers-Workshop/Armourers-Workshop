@@ -181,6 +181,15 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     }
     
     @Override
+    protected void multiBlockFormed() {
+        createBoundingBoxes();
+    }
+    
+    @Override
+    protected void multiBlockBroken() {
+        removeBoundingBoxed();
+    }
+    
     protected void createBoundingBoxes() {
         switch (type) {
         case NONE:
@@ -261,7 +270,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         }
     }
     
-    @Override
     protected void removeBoundingBoxed() {
         //clear old bounding boxes
         for (int ix = 0; ix < MULTI_BLOCK_SIZE; ix++) {
