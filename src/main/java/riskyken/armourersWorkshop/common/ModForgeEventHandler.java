@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.common.custom.equipment.PlayerCustomEquipmentData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -36,6 +37,14 @@ public class ModForgeEventHandler {
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
             PlayerCustomEquipmentData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer((EntityPlayerMP) event.entity);
+        }
+    }
+    
+    @SubscribeEvent
+    public void onLivingDeathEvent (LivingDeathEvent  event) {
+        if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
+            PlayerCustomEquipmentData playerData = PlayerCustomEquipmentData.get((EntityPlayer) event.entity);
+            playerData.dropItems();
         }
     }
 }

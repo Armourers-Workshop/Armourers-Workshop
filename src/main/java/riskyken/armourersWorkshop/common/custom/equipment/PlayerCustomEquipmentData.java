@@ -5,6 +5,7 @@ import java.util.BitSet;
 import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -361,6 +362,24 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
             
             if (slot >= 0 && slot < getSizeInventory()) {
                 setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+            }
+        }
+    }
+    
+    public void dropItems() {
+        World world = player.worldObj;
+        double x = player.posX;
+        double y = player.posY;
+        double z = player.posZ;
+        for (int i = 0; i < this.getSizeInventory(); i++) {
+            ItemStack stack = this.getStackInSlot(i);
+            if (stack != null) {
+                float f = 0.7F;
+                double xV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                double yV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                double zV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                EntityItem entityitem = new EntityItem(world, (double)x + xV, (double)y + yV, (double)z + zV, stack);
+                world.spawnEntityInWorld(entityitem);
             }
         }
     }
