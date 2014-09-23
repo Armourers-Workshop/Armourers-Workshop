@@ -15,7 +15,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
-import riskyken.armourersWorkshop.proxies.IProxy;
+import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -31,8 +31,8 @@ public class ArmourersWorkshop {
     @Mod.Instance(LibModInfo.ID)
     public static ArmourersWorkshop instance;
 
-    @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_SERVER_CLASS)
-    public static IProxy proxy;
+    @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
+    public static CommonProxy proxy;
 
     public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
 
