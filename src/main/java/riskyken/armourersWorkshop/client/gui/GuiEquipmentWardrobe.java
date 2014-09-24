@@ -66,9 +66,10 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     public void initGui() {
         super.initGui();
         buttonList.clear();
+        String guiName = "equipmentWardrobe";
         
-        autoButton = new GuiButtonExt(0, this.guiLeft + 80, this.guiTop + 128, 80, 20, "Auto Colour");
-        nakedCheck = new GuiCheckBox(1, this.guiLeft + 8, this.guiTop + 94, 14, 14, "Make players skin naked?", skinInfo.isNaked(), false);
+        autoButton = new GuiButtonExt(0, this.guiLeft + 80, this.guiTop + 128, 80, 20, GuiHelper.getLocalizedControlName(guiName, "autoColour"));
+        nakedCheck = new GuiCheckBox(1, this.guiLeft + 8, this.guiTop + 94, 14, 14, GuiHelper.getLocalizedControlName(guiName, "nakedSkin"), skinInfo.isNaked(), false);
         
         armourOverrideCheck = new GuiCheckBox[4];
         armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 29, this.guiTop + 17, 7, 7, "", armourOverride.get(0), true);

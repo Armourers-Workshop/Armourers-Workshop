@@ -52,8 +52,8 @@ public class GuiArmourer extends GuiContainer {
             buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourType.getOrdinal(i + 1).getLocalizedName()));
         }
         
-        buttonList.add(new GuiButtonExt(5, guiLeft + 86, guiTop + 16, 50, 12, "Save"));
-        buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, "Load"));
+        buttonList.add(new GuiButtonExt(5, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
+        buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
         checkShowGuides = new GuiCheckBox(7, guiLeft + 5, guiTop + 118, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides(), false);
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 5, guiTop + 134, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay(), false);
@@ -63,9 +63,9 @@ public class GuiArmourer extends GuiContainer {
         
         textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
         textUserSkin.setMaxStringLength(30);
-        buttonList.add(new GuiButtonExt(8, guiLeft + 138, guiTop + 88, 30, 16, "Set"));
+        buttonList.add(new GuiButtonExt(8, guiLeft + 138, guiTop + 88, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
         
-        buttonList.add(new GuiButtonExt(10, guiLeft + 177, guiTop + 16, 70, 16, "Clear"));
+        buttonList.add(new GuiButtonExt(10, guiLeft + 177, guiTop + 16, 70, 16, GuiHelper.getLocalizedControlName(guiName, "clear")));
         
         if (armourerBrain.getGameProfile() != null) {
             textUserSkin.setText(armourerBrain.getGameProfile().getName());
@@ -73,8 +73,8 @@ public class GuiArmourer extends GuiContainer {
         
         buttonList.add(checkShowGuides);
         buttonList.add(checkShowOverlay);
-        buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, "West To East"));
-        buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, "East To West"));
+        buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
+        buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
     }
     

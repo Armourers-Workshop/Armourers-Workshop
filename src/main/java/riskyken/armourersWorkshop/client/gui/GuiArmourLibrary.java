@@ -42,9 +42,10 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = armourLibrary.getInventoryName();
         buttonList.clear();
-        buttonList.add(new GuiButtonExt(0, guiLeft + 156, guiTop + 96, 60, 20, "Save"));
-        buttonList.add(new GuiButtonExt(1, guiLeft + 156, guiTop + 96 + 30, 60, 20, "Load"));
+        buttonList.add(new GuiButtonExt(0, guiLeft + 156, guiTop + 96, 60, 20, GuiHelper.getLocalizedControlName(guiName, "save")));
+        buttonList.add(new GuiButtonExt(1, guiLeft + 156, guiTop + 96 + 30, 60, 20, GuiHelper.getLocalizedControlName(guiName, "load")));
         
         filenameTextbox = new GuiTextField(fontRendererObj, guiLeft + 152, guiTop + 36, 96, 14);
         filenameTextbox.setMaxStringLength(24);
