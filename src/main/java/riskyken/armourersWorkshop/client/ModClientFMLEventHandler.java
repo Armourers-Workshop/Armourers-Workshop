@@ -45,6 +45,9 @@ public class ModClientFMLEventHandler {
         if (Keybindings.openCustomArmourGui.isPressed()) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientOpenCustomArmourGui());
         }
+        if (Keybindings.undo.isPressed()) {
+            
+        }
     }
     
     @SubscribeEvent
