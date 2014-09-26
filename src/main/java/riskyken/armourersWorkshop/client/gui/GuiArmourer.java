@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiButton;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetArmourerCustomName;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -60,6 +61,7 @@ public class GuiArmourer extends GuiContainer {
         
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
+        textItemName.setText(armourerBrain.getCustomName());
         
         textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
         textUserSkin.setMaxStringLength(30);
@@ -90,6 +92,11 @@ public class GuiArmourer extends GuiContainer {
         if (!textItemName.textboxKeyTyped(key, keyCode)) {
             if (!textUserSkin.textboxKeyTyped(key, keyCode)) {
                 super.keyTyped(key, keyCode);
+            }
+        } else {
+            String sendText = textItemName.getText().trim();
+            if (!sendText.equals(armourerBrain.getCustomName())) {
+                PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerCustomName(sendText));
             }
         }
     }

@@ -35,11 +35,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     private static final String TAG_TYPE = "type";
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
+    private static final String TAG_CUSTOM_NAME = "customeName";
     
     private GameProfile gameProfile = null;
     private ArmourType type;
     private boolean showGuides;
     private boolean showOverlay;
+    private String customName;
     
     public TileEntityArmourerBrain() {
         this.type = ArmourType.HEAD;
@@ -347,6 +349,16 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public String getCustomName() {
+        return customName;
+    }
+    
+    public void setCustomName(String customName) {
+        this.customName = customName;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     private void updateProfileData(){
         if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
             if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
@@ -407,6 +419,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         type = ArmourType.getOrdinal(compound.getInteger(TAG_TYPE));
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
+        customName = compound.getString(TAG_CUSTOM_NAME);
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
@@ -418,6 +431,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         compound.setInteger(TAG_TYPE, type.ordinal());
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
+        compound.setString(TAG_CUSTOM_NAME, customName);
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
