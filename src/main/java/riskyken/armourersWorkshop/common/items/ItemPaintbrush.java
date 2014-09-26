@@ -42,10 +42,6 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
             int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         
-        if (!getToolHasColour(stack)) {
-            return false;
-        }
-        
         if (player.isSneaking() & block == ModBlocks.colourMixer) {
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof IColourable) {
@@ -55,6 +51,10 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
                 }
             }
             return true;
+        }
+        
+        if (!getToolHasColour(stack)) {
+            return false;
         }
         
         if (!player.isSneaking() & block instanceof IWorldColourable) {

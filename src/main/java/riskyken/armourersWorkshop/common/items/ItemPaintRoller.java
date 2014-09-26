@@ -41,10 +41,6 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
             int side, float hitX, float hitY, float hitZ) {
         
-        if (!getToolHasColour(stack)) {
-            return false;
-        }
-        
         Block block = world.getBlock(x, y, z);
         
         if (player.isSneaking() & block == ModBlocks.colourMixer) {
@@ -56,6 +52,10 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
                 }
             }
             return true;
+        }
+        
+        if (!getToolHasColour(stack)) {
+            return false;
         }
         
         if (!player.isSneaking() & block instanceof IWorldColourable) {
