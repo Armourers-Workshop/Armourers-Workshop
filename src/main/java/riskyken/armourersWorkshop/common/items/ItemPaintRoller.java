@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import cpw.mods.fml.relauncher.Side;
@@ -41,27 +42,31 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
             return false;
         }
         
-        for (int i = -1; i < 2; i++ ) {
-            for (int j = -1; j < 2; j++ ) {
-                switch (side) {
-                    case 0:
-                        paintBlock(world, player, stack, x + j, y, z + i);
-                        break;
-                    case 1:
-                        paintBlock(world, player, stack, x + j , y, z + i);
-                        break;
-                    case 2:
-                        paintBlock(world, player, stack, x + i, y  + j, z);
-                        break;
-                    case 3:
-                        paintBlock(world, player, stack, x + i, y + j, z);
-                        break;
-                    case 4:
-                        paintBlock(world, player, stack, x, y + i, z + j);
-                        break;
-                    case 5:
-                        paintBlock(world, player, stack, x, y + i, z + j);
-                        break;
+        Block block = world.getBlock(x, y, z);
+        if (block instanceof IWorldColourable) {
+            world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+            for (int i = -1; i < 2; i++ ) {
+                for (int j = -1; j < 2; j++ ) {
+                    switch (side) {
+                        case 0:
+                            paintBlock(world, player, stack, x + j, y, z + i);
+                            break;
+                        case 1:
+                            paintBlock(world, player, stack, x + j , y, z + i);
+                            break;
+                        case 2:
+                            paintBlock(world, player, stack, x + i, y  + j, z);
+                            break;
+                        case 3:
+                            paintBlock(world, player, stack, x + i, y + j, z);
+                            break;
+                        case 4:
+                            paintBlock(world, player, stack, x, y + i, z + j);
+                            break;
+                        case 5:
+                            paintBlock(world, player, stack, x, y + i, z + j);
+                            break;
+                    }
                 }
             }
         }

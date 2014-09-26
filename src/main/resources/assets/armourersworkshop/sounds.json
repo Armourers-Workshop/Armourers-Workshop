@@ -5,5 +5,13 @@
 	{"name": "book/pageTurn1","stream": false},
 	{"name": "book/pageTurn2","stream": false},
 	{"name": "book/pageTurn3","stream": false}
+	]},
+	"paint":
+	{"category": "master","sounds":
+	[
+	{"name": "paint/paint1","stream": false},
+	{"name": "paint/paint2","stream": false},
+	{"name": "paint/paint3","stream": false}
 	]}
+	
 }

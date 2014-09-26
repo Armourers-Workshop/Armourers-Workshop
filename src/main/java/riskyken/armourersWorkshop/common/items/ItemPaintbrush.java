@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import cpw.mods.fml.relauncher.Side;
@@ -49,6 +50,7 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
                 int newColour = getToolColour(stack);
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
                 ((IWorldColourable)block).setColour(world, x, y, z, newColour);
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
             return true;
         }
