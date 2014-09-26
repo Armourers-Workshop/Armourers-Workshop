@@ -7,12 +7,15 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.tileentities.IColourable;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import cpw.mods.fml.relauncher.Side;
@@ -43,7 +46,18 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
             return false;
         }
         
-        if (block instanceof IWorldColourable) {
+        if (player.isSneaking() & block == ModBlocks.colourMixer) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof IColourable) {
+                if (!world.isRemote) {
+                    int colour = ((IColourable)te).getColour();
+                    setToolColour(stack, colour);
+                }
+            }
+            return true;
+        }
+        
+        if (!player.isSneaking() & block instanceof IWorldColourable) {
             if (!world.isRemote) {
                 IWorldColourable worldColourable = (IWorldColourable) block;
                 int oldColour = worldColourable.getColour(world, x, y, z);

@@ -7,12 +7,15 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.tileentities.IColourable;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import cpw.mods.fml.relauncher.Side;
@@ -43,7 +46,19 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
         }
         
         Block block = world.getBlock(x, y, z);
-        if (block instanceof IWorldColourable) {
+        
+        if (player.isSneaking() & block == ModBlocks.colourMixer) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof IColourable) {
+                if (!world.isRemote) {
+                    int colour = ((IColourable)te).getColour();
+                    setToolColour(stack, colour);
+                }
+            }
+            return true;
+        }
+        
+        if (!player.isSneaking() & block instanceof IWorldColourable) {
             world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             for (int i = -1; i < 2; i++ ) {
                 for (int j = -1; j < 2; j++ ) {
@@ -69,9 +84,10 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
                     }
                 }
             }
+            return true;
         }
         
-        return true;
+        return false;
     }
     
     private void paintBlock(World world, EntityPlayer player, ItemStack stack, int x, int y, int z) {

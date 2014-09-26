@@ -20,6 +20,7 @@ import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
+import riskyken.armourersWorkshop.common.tileentities.IColourable;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -46,6 +47,18 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
             int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
+        
+        if (player.isSneaking() & block == ModBlocks.colourMixer & getToolHasColour(stack)) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof IColourable) {
+                if (!world.isRemote) {
+                    int colour = getToolColour(stack);
+                    ((IColourable)te).setColour(colour);
+                }
+            }
+            return true;
+        }
+        
         
         if (block instanceof IWorldColourable) {
             setToolColour(stack, ((IWorldColourable)block).getColour(world, x, y, z));

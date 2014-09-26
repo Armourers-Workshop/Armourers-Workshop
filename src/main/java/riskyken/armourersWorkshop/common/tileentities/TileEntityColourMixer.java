@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class TileEntityColourMixer extends AbstractTileEntityInventory {
+public class TileEntityColourMixer extends AbstractTileEntityInventory implements IColourable {
     
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
     
@@ -124,5 +124,10 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory {
 
     public int getColour() {
         return this.colour;
+    }
+
+    @Override
+    public void setColour(int colour) {
+        setColour(colour, false);
     }
 }
