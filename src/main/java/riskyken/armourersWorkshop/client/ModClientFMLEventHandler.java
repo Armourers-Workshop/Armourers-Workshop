@@ -9,7 +9,7 @@ import riskyken.armourersWorkshop.common.UpdateCheck;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientOpenCustomArmourGui;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientKeyPress;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -43,10 +43,10 @@ public class ModClientFMLEventHandler {
     @SubscribeEvent
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
         if (Keybindings.openCustomArmourGui.isPressed()) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientOpenCustomArmourGui());
+            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress((byte) 0));
         }
         if (Keybindings.undo.isPressed()) {
-            
+            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress((byte) 1));
         }
     }
     

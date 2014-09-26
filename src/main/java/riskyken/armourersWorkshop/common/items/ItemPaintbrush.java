@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
+import riskyken.armourersWorkshop.common.undo.UndoManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -43,7 +44,11 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
         
         if (block instanceof IWorldColourable) {
             if (!world.isRemote) {
-                ((IWorldColourable)block).setColour(world, x, y, z, getToolColour(stack));
+                IWorldColourable worldColourable = (IWorldColourable) block;
+                int oldColour = worldColourable.getColour(world, x, y, z);
+                int newColour = getToolColour(stack);
+                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
+                ((IWorldColourable)block).setColour(world, x, y, z, newColour);
             }
             return true;
         }

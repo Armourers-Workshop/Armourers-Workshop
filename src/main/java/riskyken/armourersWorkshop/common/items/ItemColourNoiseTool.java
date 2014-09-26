@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
+import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import cpw.mods.fml.relauncher.Side;
@@ -37,11 +38,12 @@ public class ItemColourNoiseTool extends AbstractModItem {
 
         if (!player.isSneaking() & block instanceof IWorldColourable) {
             if (!world.isRemote) {
-                Color c = new Color(((IWorldColourable) block).getColour(world,
-                        x, y, z));
                 int intensity = UtilItems.getIntensityFromStack(stack, 16);
-                ((IWorldColourable) block).setColour(world, x, y, z, UtilColour
-                        .addColourNoise(c, intensity).getRGB());
+                IWorldColourable worldColourable = (IWorldColourable) block;
+                int oldColour = worldColourable.getColour(world, x, y, z);
+                int newColour = UtilColour.addColourNoise(new Color(oldColour), intensity).getRGB();
+                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
+                ((IWorldColourable) block).setColour(world, x, y, z, newColour);
             }
             return true;
         }

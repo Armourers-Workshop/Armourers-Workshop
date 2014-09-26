@@ -87,6 +87,10 @@ inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Skin Colour
 inventory.armourersworkshop:equipmentWardrobe.autoColour=Auto Colour
 inventory.armourersworkshop:equipmentWardrobe.nakedSkin=Used naked skin?
 
+# Chat Messages
+chat.armourersworkshop:undo.outOfUndos=No more undos
+chat.armourersworkshop:undo.undoing=Undoing
+
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
 

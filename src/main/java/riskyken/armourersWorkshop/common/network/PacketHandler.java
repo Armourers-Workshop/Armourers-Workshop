@@ -9,7 +9,7 @@ import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetSki
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientLoadArmour;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientOpenCustomArmourGui;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerLibraryFileList;
@@ -34,7 +34,7 @@ public class PacketHandler {
         networkWrapper.registerMessage(MessageClientGuiSetSkin.class, MessageClientGuiSetSkin.class, 6, Side.SERVER);
         networkWrapper.registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, 7, Side.CLIENT);
         networkWrapper.registerMessage(MessageClientGuiLoadSaveArmour.class, MessageClientGuiLoadSaveArmour.class, 8, Side.SERVER);
-        networkWrapper.registerMessage(MessageClientOpenCustomArmourGui.class, MessageClientOpenCustomArmourGui.class, 9, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientKeyPress.class, MessageClientKeyPress.class, 9, Side.SERVER);
         networkWrapper.registerMessage(MessageClientGuiToolOptionUpdate.class, MessageClientGuiToolOptionUpdate.class, 10, Side.SERVER);
         networkWrapper.registerMessage(MessageClientGuiUpdateNakedInfo.class, MessageClientGuiUpdateNakedInfo.class, 11, Side.SERVER);
         networkWrapper.registerMessage(MessageServerUpdateSkinInfo.class, MessageServerUpdateSkinInfo.class, 12, Side.CLIENT);

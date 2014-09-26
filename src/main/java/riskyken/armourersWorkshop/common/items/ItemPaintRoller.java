@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
+import riskyken.armourersWorkshop.common.undo.UndoManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,22 +45,22 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
             for (int j = -1; j < 2; j++ ) {
                 switch (side) {
                     case 0:
-                        paintBlock(world, stack, x + j, y, z + i);
+                        paintBlock(world, player, stack, x + j, y, z + i);
                         break;
                     case 1:
-                        paintBlock(world, stack, x + j , y, z + i);
+                        paintBlock(world, player, stack, x + j , y, z + i);
                         break;
                     case 2:
-                        paintBlock(world, stack, x + i, y  + j, z);
+                        paintBlock(world, player, stack, x + i, y  + j, z);
                         break;
                     case 3:
-                        paintBlock(world, stack, x + i, y + j, z);
+                        paintBlock(world, player, stack, x + i, y + j, z);
                         break;
                     case 4:
-                        paintBlock(world, stack, x, y + i, z + j);
+                        paintBlock(world, player, stack, x, y + i, z + j);
                         break;
                     case 5:
-                        paintBlock(world, stack, x, y + i, z + j);
+                        paintBlock(world, player, stack, x, y + i, z + j);
                         break;
                 }
             }
@@ -68,11 +69,15 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
         return true;
     }
     
-    private void paintBlock(World world, ItemStack stack, int x, int y, int z) {
+    private void paintBlock(World world, EntityPlayer player, ItemStack stack, int x, int y, int z) {
         Block block = world.getBlock(x, y, z);
         if (block instanceof IWorldColourable) {
             if (!world.isRemote) {
-                ((IWorldColourable)block).setColour(world, x, y, z, getToolColour(stack));
+                IWorldColourable worldColourable = (IWorldColourable) block;
+                int oldColour = worldColourable.getColour(world, x, y, z);
+                int newColour = getToolColour(stack);
+                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
+                ((IWorldColourable)block).setColour(world, x, y, z, newColour);
             }
         }
     }
