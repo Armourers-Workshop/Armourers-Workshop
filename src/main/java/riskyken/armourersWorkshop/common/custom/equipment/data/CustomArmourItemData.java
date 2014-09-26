@@ -145,6 +145,10 @@ public class CustomArmourItemData {
     public ArrayList<CustomArmourPartData> getParts() {
         return parts;
     }
+    
+    public String getCustomName() {
+        return customName;
+    }
 
     @Override
     public int hashCode() {

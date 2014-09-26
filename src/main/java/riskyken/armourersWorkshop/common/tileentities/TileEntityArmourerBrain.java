@@ -111,6 +111,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
         
         CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
+        setCustomName(equipmentData.getCustomName());
         
         ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, equipmentData);
     

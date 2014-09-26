@@ -34,12 +34,14 @@ public class GuiArmourer extends GuiContainer {
     private GuiCheckBox checkShowOverlay;
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
+    private boolean loadedArmourItem;
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
         super(new ContainerArmourer(invPlayer, armourerBrain));
         this.armourerBrain = armourerBrain;
         this.xSize = 256;
         this.ySize = 256;
+        loadedArmourItem = false;
     }
     
     @Override
@@ -114,6 +116,10 @@ public class GuiArmourer extends GuiContainer {
             }
             break;
         default:
+            if (button.id == 6) {
+                loadedArmourItem = true;
+                armourerBrain.setCustomName("");
+            }
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
             break;
         }
@@ -135,6 +141,12 @@ public class GuiArmourer extends GuiContainer {
     
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        if (loadedArmourItem) {
+            if (!armourerBrain.getCustomName().equals("")) {
+                textItemName.setText(armourerBrain.getCustomName());
+                loadedArmourItem = false;
+            }
+        }
         checkShowGuides.setChecked(armourerBrain.isShowGuides());
         checkShowOverlay.setChecked(armourerBrain.isShowOverlay());
         checkShowOverlay.visible = armourerBrain.getType() == ArmourType.HEAD;
