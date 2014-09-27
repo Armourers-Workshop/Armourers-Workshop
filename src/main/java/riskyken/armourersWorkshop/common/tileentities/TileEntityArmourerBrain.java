@@ -48,6 +48,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         this.formed = false;
         this.items = new ItemStack[2];
         this.showOverlay = true;
+        this.customName = "";
     }
     
     /**
