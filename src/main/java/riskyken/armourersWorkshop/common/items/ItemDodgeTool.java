@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -44,6 +45,7 @@ public class ItemDodgeTool extends AbstractModItem {
                 int newColour = UtilColour.makeColourBighter(new Color(oldColour), intensity).getRGB();
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
                 ((IWorldColourable) block).setColour(world, x, y, z, newColour);
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.DODGE, 1.0F, 1.0F);
             }
             return true;
         }
