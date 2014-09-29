@@ -7,4 +7,5 @@ public final class LibSounds {
     public static final String PAINT = PREFIX_SOUND + "paint";
     public static final String BURN = PREFIX_SOUND + "burn";
     public static final String DODGE = PREFIX_SOUND + "dodge";
+    public static final String PICKER = PREFIX_SOUND + "picker";
 }

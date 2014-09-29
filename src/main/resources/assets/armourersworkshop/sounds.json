@@ -15,6 +15,16 @@
 	{"name": "paint/paint3","stream": false}
 	]},
 	
+	"picker":
+	{"category": "master","sounds":
+	[
+	{"name": "paint/pickerfx1","stream": false},
+	{"name": "paint/pickerfx2","stream": false},
+	{"name": "paint/pickerfx3","stream": false},
+	{"name": "paint/pickerfx4","stream": false},
+	{"name": "paint/pickerfx5","stream": false}
+	]},
+	
 	"burn":
 	{"category": "master","sounds":
 	[

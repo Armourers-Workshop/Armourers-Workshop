@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.tileentities.IColourable;
@@ -61,7 +62,10 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
         
         
         if (block instanceof IWorldColourable) {
-            setToolColour(stack, ((IWorldColourable)block).getColour(world, x, y, z));
+            if (!world.isRemote) {
+                setToolColour(stack, ((IWorldColourable)block).getColour(world, x, y, z));
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+            }
             return true;
         }
         
@@ -73,6 +77,9 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
                     int colour = getColourFromSkin(parent, ((TileEntityBoundingBox)te).getBodyPart(), player, world, x, y, z, side);
                     PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
                 }
+            }
+            if (!world.isRemote) {
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
             return true;
         }
