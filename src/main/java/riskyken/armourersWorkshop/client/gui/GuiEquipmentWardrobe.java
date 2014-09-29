@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -22,6 +23,8 @@ import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
+import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -54,10 +57,18 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         this.customEquipmentData = customEquipmentData;
         this.player = inventory.player;
         skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getDisplayName());
-        this.skinColour = new Color(skinInfo.getSkinColour());
-        this.pantsColour = new Color(skinInfo.getPantsColour());
-        this.armourOverride = skinInfo.getArmourOverride();
-        this.headOverlay = skinInfo.getHeadOverlay();
+        if (skinInfo != null) {
+            this.skinColour = new Color(skinInfo.getSkinColour());
+            this.pantsColour = new Color(skinInfo.getPantsColour());
+            this.armourOverride = skinInfo.getArmourOverride();
+            this.headOverlay = skinInfo.getHeadOverlay();
+        } else {
+            this.skinColour= new Color(UtilColour.getMinecraftColor(0));
+            this.pantsColour =  new Color(UtilColour.getMinecraftColor(0));
+            this.armourOverride = new BitSet(4);
+            this.headOverlay = true;
+            ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
+        }
         this.xSize = 176;
         this.ySize = 248;
     }
