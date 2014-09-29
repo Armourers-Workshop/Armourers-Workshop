@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.proxies;
 
 import java.util.BitSet;
+import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -59,18 +60,18 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void addCustomArmour(String playerName, CustomArmourItemData armourData) {
-        equipmentRenderManager.addCustomArmour(playerName, armourData);
+    public void addCustomArmour(UUID playerId, CustomArmourItemData armourData) {
+        equipmentRenderManager.addCustomArmour(playerId, armourData);
     }
 
     @Override
-    public void removeCustomArmour(String playerName, ArmourType type) {
-        equipmentRenderManager.removeCustomArmour(playerName, type);
+    public void removeCustomArmour(UUID playerId, ArmourType type) {
+        equipmentRenderManager.removeCustomArmour(playerId, type);
     }
 
     @Override
-    public void removeAllCustomArmourData(String playerName) {
-        equipmentRenderManager.removeAllCustomArmourData(playerName);
+    public void removeAllCustomArmourData(UUID playerId) {
+        equipmentRenderManager.removeAllCustomArmourData(playerId);
     }
 
     @Override
@@ -79,13 +80,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void setPlayersNakedData(String playerName, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        equipmentRenderManager.setPlayersSkinData(playerName, isNaked, skinColour, pantsColour, armourOverride, headOverlay);
+    public void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
+        equipmentRenderManager.setPlayersSkinData(playerId, isNaked, skinColour, pantsColour, armourOverride, headOverlay);
     }
 
     @Override
-    public PlayerSkinInfo getPlayersNakedData(String playerName) {
-        return equipmentRenderManager.getPlayersNakedData(playerName);
+    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
+        return equipmentRenderManager.getPlayersNakedData(playerId);
     }
 
     @Override

@@ -70,7 +70,7 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         customArmor.put(key, armourData);
         
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddArmourData(player.getDisplayName(), armourData), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddArmourData(player.getPersistentID(), armourData), p);
     }
 
     public void removeCustomArmour(ArmourType type) {
@@ -80,7 +80,7 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         }
         
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerRemoveArmourData(player.getDisplayName(), type), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerRemoveArmourData(player.getPersistentID(), type), p);
     }
     
     public void colourSlotUpdate(byte slot) {
@@ -168,19 +168,19 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         String key = type.name();
         if (customArmor.containsKey(key)) {
             CustomArmourItemData data = customArmor.get(key);
-            PacketHandler.networkWrapper.sendTo(new MessageServerAddArmourData(player.getDisplayName(), data), targetPlayer);
+            PacketHandler.networkWrapper.sendTo(new MessageServerAddArmourData(player.getPersistentID(), data), targetPlayer);
         } else {
-            PacketHandler.networkWrapper.sendTo(new MessageServerRemoveArmourData(player.getDisplayName(), type), targetPlayer);
+            PacketHandler.networkWrapper.sendTo(new MessageServerRemoveArmourData(player.getPersistentID(), type), targetPlayer);
         }
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getPersistentID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), targetPlayer);
     }
     
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getDisplayName() ,this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getPersistentID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), p);
     }
     
     @Override

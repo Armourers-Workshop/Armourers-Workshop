@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.render;
 
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.UUID;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -30,7 +31,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class EquipmentPlayerRenderCache {
     
     public HashMap<String, CustomArmourItemData> customArmor = new HashMap<String, CustomArmourItemData>();
-    public HashMap<String, PlayerSkinInfo> skinMap = new HashMap<String, PlayerSkinInfo>();
+    public HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
     
     public ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public ModelCustomArmourHead customHead = new ModelCustomArmourHead();
@@ -45,7 +46,7 @@ public class EquipmentPlayerRenderCache {
     public CustomArmourItemData getPlayerCustomArmour(Entity entity, ArmourType type) {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
-        String key = player.getDisplayName() + ":" + type.name();
+        String key = player.getPersistentID().toString() + ":" + type.name();
         if (!customArmor.containsKey(key)) {
             return null;
         }
@@ -55,8 +56,8 @@ public class EquipmentPlayerRenderCache {
         return armorData;
     }
     
-    public void addCustomArmour(String playerName, CustomArmourItemData armourData) {
-        String key = playerName + ":" + armourData.getType().name();
+    public void addCustomArmour(UUID playerId, CustomArmourItemData armourData) {
+        String key = playerId.toString() + ":" + armourData.getType().name();
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
         }
@@ -64,50 +65,50 @@ public class EquipmentPlayerRenderCache {
         customArmor.put(key, armourData);
     }
     
-    public void setPlayersSkinData(String playerName, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        if (!skinMap.containsKey(playerName)) {
-            skinMap.put(playerName, new PlayerSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay));
+    public void setPlayersSkinData(UUID playerId, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
+        if (!skinMap.containsKey(playerId)) {
+            skinMap.put(playerId, new PlayerSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay));
         } else {
-            skinMap.get(playerName).setSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay);
+            skinMap.get(playerId).setSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay);
         }
     }
     
-    public PlayerSkinInfo getPlayersNakedData(String playerName) {
-        if (!skinMap.containsKey(playerName)) {
+    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
+        if (!skinMap.containsKey(playerId)) {
             return null;
         }
-        return skinMap.get(playerName);
+        return skinMap.get(playerId);
     }
     
-    public void removeCustomArmour(String playerName, ArmourType type) {
-        String key = playerName + ":" + type.name();
+    public void removeCustomArmour(UUID playerId, ArmourType type) {
+        String key = playerId.toString() + ":" + type.name();
         if (customArmor.containsKey(key)) {
             customArmor.remove(key);
         }
     }
 
-    public void removeAllCustomArmourData(String playerName) {
-        removeCustomArmour(playerName, ArmourType.HEAD);
-        removeCustomArmour(playerName, ArmourType.CHEST);
-        removeCustomArmour(playerName, ArmourType.LEGS);
-        removeCustomArmour(playerName, ArmourType.SKIRT);
-        removeCustomArmour(playerName, ArmourType.FEET);
+    public void removeAllCustomArmourData(UUID playerId) {
+        removeCustomArmour(playerId, ArmourType.HEAD);
+        removeCustomArmour(playerId, ArmourType.CHEST);
+        removeCustomArmour(playerId, ArmourType.LEGS);
+        removeCustomArmour(playerId, ArmourType.SKIRT);
+        removeCustomArmour(playerId, ArmourType.FEET);
     }
 
-    private boolean playerHasCustomArmourType(String playerName, ArmourType armourType) {
-        String key = playerName + ":" + armourType.name();
+    private boolean playerHasCustomArmourType(UUID playerId, ArmourType armourType) {
+        String key = playerId.toString() + ":" + armourType.name();
         return customArmor.containsKey(key);
     }
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
-        if (skinMap.containsKey(player.getDisplayName())) {
-            PlayerSkinInfo skinInfo = skinMap.get(player.getDisplayName());
+        if (skinMap.containsKey(player.getPersistentID())) {
+            PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
             skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
         }
         
-        if (playerHasCustomArmourType(player.getDisplayName(), ArmourType.SKIRT)) {
+        if (playerHasCustomArmourType(player.getPersistentID(), ArmourType.SKIRT)) {
             if (player.limbSwingAmount > 0.25F) {
                 player.limbSwingAmount = 0.25F;
             }
@@ -117,8 +118,8 @@ public class EquipmentPlayerRenderCache {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
     	EntityPlayer player = event.entityPlayer;
-    	if (skinMap.containsKey(player.getDisplayName())) {
-    		PlayerSkinInfo skinInfo = skinMap.get(player.getDisplayName());
+    	if (skinMap.containsKey(player.getPersistentID())) {
+    		PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
     		skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
     	}
     }
@@ -135,8 +136,8 @@ public class EquipmentPlayerRenderCache {
         int result = -1;
         int slot = -event.slot + 3;
         
-    	if (skinMap.containsKey(player.getDisplayName())) {
-    		skinInfo = skinMap.get(player.getDisplayName());
+    	if (skinMap.containsKey(player.getPersistentID())) {
+    		skinInfo = skinMap.get(player.getPersistentID());
     		BitSet armourOverride = skinInfo.getArmourOverride();
     		if (armourOverride.get(slot)) {
     			result = -2;

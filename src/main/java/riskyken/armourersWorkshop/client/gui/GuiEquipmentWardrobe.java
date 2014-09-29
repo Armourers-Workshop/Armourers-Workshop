@@ -56,7 +56,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         super(new ContainerEquipmentWardrobe(inventory, customEquipmentData));
         this.customEquipmentData = customEquipmentData;
         this.player = inventory.player;
-        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getDisplayName());
+        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getPersistentID());
         if (skinInfo != null) {
             this.skinColour = new Color(skinInfo.getSkinColour());
             this.pantsColour = new Color(skinInfo.getPantsColour());

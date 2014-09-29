@@ -1,17 +1,19 @@
 package riskyken.armourersWorkshop.common.network.messages;
 
-import java.util.BitSet;
-
 import io.netty.buffer.ByteBuf;
+
+import java.util.BitSet;
+import java.util.UUID;
+
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import cpw.mods.fml.common.network.ByteBufUtils;
+import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageServerUpdateSkinInfo implements IMessage, IMessageHandler<MessageServerUpdateSkinInfo, IMessage> {
 
-    String playerName;
+    UUID playerId;
     boolean naked;
     int skinColour;
     int pantsColour;
@@ -20,8 +22,8 @@ public class MessageServerUpdateSkinInfo implements IMessage, IMessageHandler<Me
     
     public MessageServerUpdateSkinInfo() {}
 
-    public MessageServerUpdateSkinInfo(String playerName, boolean naked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        this.playerName = playerName;
+    public MessageServerUpdateSkinInfo(UUID playerId, boolean naked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
+        this.playerId = playerId;
         this.naked = naked;
         this.skinColour = skinColour;
         this.pantsColour = pantsColour;
@@ -31,7 +33,7 @@ public class MessageServerUpdateSkinInfo implements IMessage, IMessageHandler<Me
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.playerName = ByteBufUtils.readUTF8String(buf);
+        this.playerId = ByteBufHelper.readUUID(buf);
         this.naked = buf.readBoolean();
         this.skinColour = buf.readInt();
         this.pantsColour = buf.readInt();
@@ -44,7 +46,7 @@ public class MessageServerUpdateSkinInfo implements IMessage, IMessageHandler<Me
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, this.playerName);
+        ByteBufHelper.writeUUID(buf, this.playerId);
         buf.writeBoolean(this.naked);
         buf.writeInt(this.skinColour);
         buf.writeInt(this.pantsColour);
@@ -56,7 +58,7 @@ public class MessageServerUpdateSkinInfo implements IMessage, IMessageHandler<Me
 
     @Override
     public IMessage onMessage(MessageServerUpdateSkinInfo message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.setPlayersNakedData(message.playerName, message.naked,
+        ArmourersWorkshop.proxy.setPlayersNakedData(message.playerId, message.naked,
         		message.skinColour, message.pantsColour, message.armourOverride, message.headOverlay);
         return null;
     }
