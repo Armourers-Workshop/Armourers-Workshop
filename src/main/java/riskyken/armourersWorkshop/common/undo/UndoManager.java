@@ -2,9 +2,9 @@ package riskyken.armourersWorkshop.common.undo;
 
 import java.util.HashMap;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
@@ -30,12 +30,14 @@ public final class UndoManager {
     public static void playerPressedUndo(EntityPlayer player) {
         String key = player.getDisplayName();
         if (!playerUndoData.containsKey(key)) {
-            player.addChatMessage(new ChatComponentText(I18n.format("chat." + LibModInfo.ID.toLowerCase() + ":undo.outOfUndos")));
+            String outOfUndosText = StatCollector.translateToLocal("chat." + LibModInfo.ID.toLowerCase() + ":undo.outOfUndos");
+            player.addChatMessage(new ChatComponentText(outOfUndosText));
             return;
         }
         PlayerUndoData playerData = playerUndoData.get(key);
         World world = player.worldObj;
-        player.addChatMessage(new ChatComponentText(I18n.format("chat." + LibModInfo.ID.toLowerCase() + ":undo.undoing")));
+        String undoText = StatCollector.translateToLocal("chat." + LibModInfo.ID.toLowerCase() + ":undo.undoing");
+        player.addChatMessage(new ChatComponentText(undoText));
         playerData.playerPressedUndo(world);
         if (playerData.getAvalableUndos() < 1) {
             playerUndoData.remove(key);
