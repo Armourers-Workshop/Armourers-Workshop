@@ -19,7 +19,9 @@ public class TileEntityBoundingBox extends TileEntity {
     private int parentZ;
     private BodyPart bodyPart;
     
-    public TileEntityBoundingBox() {}
+    public TileEntityBoundingBox() {
+        bodyPart = BodyPart.CHEST;
+    }
     
     public TileEntityBoundingBox(int parentX, int parentY, int parentZ, BodyPart bodyPart) {
         setParent(parentX, parentY, parentZ, bodyPart);
