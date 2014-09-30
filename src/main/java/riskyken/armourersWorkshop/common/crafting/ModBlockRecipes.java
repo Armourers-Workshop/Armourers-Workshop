@@ -9,12 +9,52 @@ public final class ModBlockRecipes {
 
     public static void init() {
 
-        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.colourable, 8, 0), new Object[] {
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.colourable, 16, 0), new Object[] {
             "www",
             "wiw",
             "www",
             'w', Blocks.wool,
             'i', Items.iron_ingot});
+        
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.armourLibrary, 1, 0), new Object[] {
+            "srs",
+            "bcb",
+            "sss",
+            'r', new ItemStack(Blocks.wool, 1, 14),
+            's', Blocks.stone,
+            'c', ModBlocks.colourable,
+            'b', Items.book});
+        
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.colourMixer, 1, 0), new Object[] {
+            "rgb",
+            "scs",
+            "sss",
+            'r', "dyeRed",
+            'g', "dyeGreen",
+            'b', "dyeBlue",
+            'c', ModBlocks.colourable,
+            's', Blocks.stone});
+        
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.armourerMultiBlock, 8, 0), new Object[] {
+            "sss",
+            "scs",
+            "sss",
+            'c', ModBlocks.colourable,
+            's', Blocks.stone});
+        
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.armourerBrain, 1, 0), new Object[] {
+            "cwc",
+            "wdw",
+            "cwc",
+            'w', new ItemStack(ModBlocks.armourerMultiBlock, 1, 0),
+            'c', new ItemStack(ModBlocks.armourerMultiBlock, 1, 1),
+            'd', Items.diamond});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.armourerMultiBlock, 1, 0), new Object[] {
+            new ItemStack(ModBlocks.armourerMultiBlock, 1, 1)});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.armourerMultiBlock, 1, 1), new Object[] {
+            new ItemStack(ModBlocks.armourerMultiBlock, 1, 0)});
         
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlowing, 1, 0), new Object[] {
             new ItemStack(ModBlocks.colourable, 1),
