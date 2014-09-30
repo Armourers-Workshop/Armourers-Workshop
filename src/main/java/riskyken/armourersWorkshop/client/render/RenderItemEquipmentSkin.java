@@ -66,6 +66,9 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     }
     
     private boolean canRenderModel(ItemStack stack) {
+        if (!stack.hasTagCompound()) {
+            return false;
+        }
         NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         if (armourNBT == null) { return false; }
         if (!armourNBT.hasKey(LibCommonTags.TAG_EQUPMENT_ID)) { return false; }
