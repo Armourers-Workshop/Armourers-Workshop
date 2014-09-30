@@ -10,6 +10,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
@@ -136,6 +139,10 @@ public class EquipmentPlayerRenderCache {
         int result = -1;
         int slot = -event.slot + 3;
         
+        GL11.glPushMatrix();
+        float scale = 1.001F;
+        GL11.glScalef(scale, scale, scale);
+        
     	if (skinMap.containsKey(player.getPersistentID())) {
     		skinInfo = skinMap.get(player.getPersistentID());
     		BitSet armourOverride = skinInfo.getArmourOverride();
@@ -176,6 +183,8 @@ public class EquipmentPlayerRenderCache {
                 customFeet.render(player, render, data);
             }
         }
+        
+        GL11.glPopMatrix();
         event.result = result;
     }
 }
