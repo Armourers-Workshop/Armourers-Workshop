@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -24,6 +25,9 @@ public class ItemEquipmentSkin extends AbstractModItem {
     
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
+        for (int i = 0; i < 5; i++) {
+            list.add(new ItemStack(item, 1, i));
+        }
     }
     
     @Override
@@ -43,6 +47,9 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 }
                 
             }
+        } else {
+            list.add(EnumChatFormatting.RED + "ERROR: Invalid equpment skin.");
+            list.add(EnumChatFormatting.RED + "Please delete.");
         }
         super.addInformation(stack, player, list, p_77624_4_);
     }
