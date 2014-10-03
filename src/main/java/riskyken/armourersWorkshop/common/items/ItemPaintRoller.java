@@ -10,6 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
+import riskyken.armourersWorkshop.client.particles.ParticleManager;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -64,22 +67,22 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
                 for (int j = -1; j < 2; j++ ) {
                     switch (side) {
                         case 0:
-                            paintBlock(world, player, stack, x + j, y, z + i);
+                            paintBlock(world, player, stack, x + j, y, z + i, side);
                             break;
                         case 1:
-                            paintBlock(world, player, stack, x + j , y, z + i);
+                            paintBlock(world, player, stack, x + j , y, z + i, side);
                             break;
                         case 2:
-                            paintBlock(world, player, stack, x + i, y  + j, z);
+                            paintBlock(world, player, stack, x + i, y  + j, z, side);
                             break;
                         case 3:
-                            paintBlock(world, player, stack, x + i, y + j, z);
+                            paintBlock(world, player, stack, x + i, y + j, z, side);
                             break;
                         case 4:
-                            paintBlock(world, player, stack, x, y + i, z + j);
+                            paintBlock(world, player, stack, x, y + i, z + j, side);
                             break;
                         case 5:
-                            paintBlock(world, player, stack, x, y + i, z + j);
+                            paintBlock(world, player, stack, x, y + i, z + j, side);
                             break;
                     }
                 }
@@ -90,15 +93,21 @@ public class ItemPaintRoller extends AbstractModItem implements IColourTool {
         return false;
     }
     
-    private void paintBlock(World world, EntityPlayer player, ItemStack stack, int x, int y, int z) {
+    private void paintBlock(World world, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
         Block block = world.getBlock(x, y, z);
         if (block instanceof IWorldColourable) {
+            int newColour = getToolColour(stack);
             if (!world.isRemote) {
                 IWorldColourable worldColourable = (IWorldColourable) block;
                 int oldColour = worldColourable.getColour(world, x, y, z);
-                int newColour = getToolColour(stack);
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
                 ((IWorldColourable)block).setColour(world, x, y, z, newColour);
+            } else {
+                for (int i = 0; i < 3; i++) {
+                    EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
+                            newColour, ForgeDirection.getOrientation(side));
+                    ParticleManager.INSTANCE.spawnParticle(world, particle);
+                }
             }
         }
     }

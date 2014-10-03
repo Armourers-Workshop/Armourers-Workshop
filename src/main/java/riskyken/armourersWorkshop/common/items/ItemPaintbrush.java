@@ -10,6 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
+import riskyken.armourersWorkshop.client.particles.ParticleManager;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -58,13 +61,21 @@ public class ItemPaintbrush extends AbstractModItem implements IColourTool {
         }
         
         if (!player.isSneaking() & block instanceof IWorldColourable) {
+            int newColour = getToolColour(stack);
             if (!world.isRemote) {
                 IWorldColourable worldColourable = (IWorldColourable) block;
                 int oldColour = worldColourable.getColour(world, x, y, z);
-                int newColour = getToolColour(stack);
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
                 ((IWorldColourable)block).setColour(world, x, y, z, newColour);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+            } else {
+                
+                for (int i = 0; i < 3; i++) {
+                    EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
+                            newColour, ForgeDirection.getOrientation(side));
+                    ParticleManager.INSTANCE.spawnParticle(world, particle);
+                }
+
             }
             return true;
         }
