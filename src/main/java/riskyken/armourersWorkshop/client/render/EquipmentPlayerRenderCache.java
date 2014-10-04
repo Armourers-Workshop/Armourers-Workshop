@@ -172,6 +172,7 @@ public final class EquipmentPlayerRenderCache {
         EntityPlayer player = event.entityPlayer;
         RenderPlayer render = event.renderer;
         PlayerSkinInfo skinInfo = null;
+        if (player.isInvisible()) { return; }
         int result = -1;
         int slot = -event.slot + 3;
         
