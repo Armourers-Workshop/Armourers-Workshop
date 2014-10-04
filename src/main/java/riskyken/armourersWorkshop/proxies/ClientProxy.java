@@ -13,13 +13,15 @@ import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
+import riskyken.armourersWorkshop.client.render.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -32,16 +34,15 @@ public class ClientProxy extends CommonProxy {
     public static int blockColourMixerRenderId;
     public static int renderPass;
     
-    public EquipmentPlayerRenderCache equipmentRenderManager;
-    
     @Override
     public void init() {
-        equipmentRenderManager = new EquipmentPlayerRenderCache();
+        
     }
 
     @Override
     public void initRenderers() {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
         blockColourMixerRenderId = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
@@ -60,33 +61,28 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void addCustomArmour(UUID playerId, CustomArmourItemData armourData) {
-        equipmentRenderManager.addCustomArmour(playerId, armourData);
+    public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
+        EquipmentPlayerRenderCache.INSTANCE.addEquipmentData(playerId, equipmentData);
     }
 
     @Override
-    public void removeCustomArmour(UUID playerId, ArmourType type) {
-        equipmentRenderManager.removeCustomArmour(playerId, type);
-    }
-
-    @Override
-    public void removeAllCustomArmourData(UUID playerId) {
-        equipmentRenderManager.removeAllCustomArmourData(playerId);
+    public void removeEquipmentData(UUID playerId) {
+        EquipmentPlayerRenderCache.INSTANCE.removeEquipmentData(playerId);
     }
 
     @Override
     public int getPlayerModelCacheSize() {
-        return equipmentRenderManager.getCacheSize();
+        return EquipmentPlayerRenderCache.INSTANCE.getCacheSize();
     }
 
     @Override
     public void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        equipmentRenderManager.setPlayersSkinData(playerId, isNaked, skinColour, pantsColour, armourOverride, headOverlay);
+        EquipmentPlayerRenderCache.INSTANCE.setPlayersSkinData(playerId, isNaked, skinColour, pantsColour, armourOverride, headOverlay);
     }
 
     @Override
     public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        return equipmentRenderManager.getPlayersNakedData(playerId);
+        return EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(playerId);
     }
 
     @Override
@@ -98,7 +94,17 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void receivedEquipmentData(CustomArmourItemData equipmentData) {
-        EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
+    public void receivedEquipmentData(CustomArmourItemData equipmentData, byte target) {
+        switch (target) {
+        case 0:
+            EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
+            break;
+        case 1:
+            EquipmentPlayerRenderCache.INSTANCE.receivedEquipmentData(equipmentData);
+            break; 
+        default:
+            break;
+        }
+        
     }
 }

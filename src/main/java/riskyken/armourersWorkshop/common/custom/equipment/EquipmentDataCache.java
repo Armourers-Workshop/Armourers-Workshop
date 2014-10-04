@@ -58,7 +58,7 @@ public final class EquipmentDataCache {
         
         if (equipmentDataCache.containsKey(queueMessage.equipmentId)) {
             CustomArmourItemData equpmentData = equipmentDataCache.get(queueMessage.equipmentId);
-            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData), queueMessage.player);
+            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData, queueMessage.target), queueMessage.player);
         }
     }
     
@@ -89,8 +89,8 @@ public final class EquipmentDataCache {
         return null;
     }
     
-    public static void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
-        QueueMessage queueMessage = new QueueMessage(equipmentId, player);
+    public static void clientRequestEquipmentData(int equipmentId, byte target, EntityPlayerMP player) {
+        QueueMessage queueMessage = new QueueMessage(equipmentId, target, player);
         messageQueue.add(queueMessage);
     }
     
@@ -177,10 +177,12 @@ public final class EquipmentDataCache {
     public static class QueueMessage {
         
         public final int equipmentId;
+        public final byte target;
         public final EntityPlayerMP player;
         
-        public QueueMessage(int equipmentId, EntityPlayerMP player) {
+        public QueueMessage(int equipmentId, byte target, EntityPlayerMP player) {
             this.equipmentId = equipmentId;
+            this.target = target;
             this.player = player;
         }
     }

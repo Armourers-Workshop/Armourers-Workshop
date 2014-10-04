@@ -38,7 +38,7 @@ public final class EquipmentItemRenderCache {
     
     public static void requestEquipmentDataFromServer(int equipmentId) {
         if (!requestedEquipmentIds.contains(equipmentId)) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId));
+            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId, (byte) 0));
             requestedEquipmentIds.add(equipmentId);
         }
     }

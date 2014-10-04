@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.common.custom.equipment;
 
 import java.awt.Color;
 import java.util.BitSet;
-import java.util.HashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -22,8 +21,7 @@ import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageServerAddArmourData;
-import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveArmourData;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateSkinInfo;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -39,8 +37,8 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     private static final String TAG_HEAD_OVERLAY = "headOverlay";
     
     public ItemStack[] customArmourInventory = new ItemStack[8];
+    private EntityEquipmentData equipmentData = new EntityEquipmentData();
     private final EntityPlayer player;
-    private final HashMap<String, CustomArmourItemData> customArmor;
     private boolean inventoryChanged;
     
     private boolean isNaked = false;
@@ -51,7 +49,6 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     
     public PlayerCustomEquipmentData(EntityPlayer player) {
         this.player = player;
-        customArmor = new HashMap<String, CustomArmourItemData>();
     }
     
     public static final void register(EntityPlayer player) {
@@ -62,25 +59,16 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         return (PlayerCustomEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
-    public void addCustomArmour(CustomArmourItemData armourData) {
-        String key = armourData.getType().name();
-        if (customArmor.containsKey(key)) {
-            customArmor.remove(key);
-        }
-        customArmor.put(key, armourData);
-        
+    public void addCustomEquipment(ArmourType type, int equipmentId) {
+        equipmentData.addEquipment(type, equipmentId);
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddArmourData(player.getPersistentID(), armourData), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);
     }
 
-    public void removeCustomArmour(ArmourType type) {
-        String key = type.name();
-        if (customArmor.containsKey(key)) {
-            customArmor.remove(key);
-        }
-        
+    public void removeCustomEquipment(ArmourType type) {
+        equipmentData.removeEquipment(type);
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerRemoveArmourData(player.getPersistentID(), type), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);
     }
     
     public void colourSlotUpdate(byte slot) {
@@ -120,38 +108,34 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     private void removeArmourFromSlot(byte slotId) {
         switch (slotId) {
         case 4:
-            removeCustomArmour(ArmourType.FEET);
+            removeCustomEquipment(ArmourType.FEET);
             break;
         case 3:
-            removeCustomArmour(ArmourType.SKIRT);
+            removeCustomEquipment(ArmourType.SKIRT);
             break;  
         case 2:
-            removeCustomArmour(ArmourType.LEGS);
+            removeCustomEquipment(ArmourType.LEGS);
             break;
         case 1:
-            removeCustomArmour(ArmourType.CHEST);
+            removeCustomEquipment(ArmourType.CHEST);
             break;
         case 0:
-            removeCustomArmour(ArmourType.HEAD);
+            removeCustomEquipment(ArmourType.HEAD);
             break;
         }
     }
     
     public void removeAllCustomArmourData() {
         player.addChatMessage(new ChatComponentText("You're custom armour data was cleared."));
-        removeCustomArmour(ArmourType.HEAD);
-        removeCustomArmour(ArmourType.CHEST);
-        removeCustomArmour(ArmourType.LEGS);
-        removeCustomArmour(ArmourType.SKIRT);
-        removeCustomArmour(ArmourType.FEET);
+        removeCustomEquipment(ArmourType.HEAD);
+        removeCustomEquipment(ArmourType.CHEST);
+        removeCustomEquipment(ArmourType.LEGS);
+        removeCustomEquipment(ArmourType.SKIRT);
+        removeCustomEquipment(ArmourType.FEET);
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.HEAD);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.CHEST);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.LEGS);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.SKIRT);
-        checkAndSendCustomArmourDataTo(targetPlayer, ArmourType.FEET);
+        checkAndSendCustomArmourDataTo(targetPlayer);
         sendNakedData(targetPlayer);
     }
     
@@ -164,14 +148,8 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         sendSkinData();
     }
     
-    private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer, ArmourType type) {
-        String key = type.name();
-        if (customArmor.containsKey(key)) {
-            CustomArmourItemData data = customArmor.get(key);
-            PacketHandler.networkWrapper.sendTo(new MessageServerAddArmourData(player.getPersistentID(), data), targetPlayer);
-        } else {
-            PacketHandler.networkWrapper.sendTo(new MessageServerRemoveArmourData(player.getPersistentID(), type), targetPlayer);
-        }
+    private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer) {
+        PacketHandler.networkWrapper.sendTo(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), targetPlayer);
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
@@ -193,22 +171,6 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         	compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, this.armourOverride.get(i));
         }
         compound.setBoolean(TAG_HEAD_OVERLAY, this.headOverlay);
-        //TODO Change to for loop
-        //TODO Maybe save a list?
-        saveKey(compound, ArmourType.HEAD);
-        saveKey(compound, ArmourType.CHEST);
-        saveKey(compound, ArmourType.LEGS);
-        saveKey(compound, ArmourType.SKIRT);
-        saveKey(compound, ArmourType.FEET);
-    }
-    
-    private void saveKey(NBTTagCompound compound, ArmourType type) {
-        String key = type.name();
-        if (customArmor.containsKey(key)) {
-            NBTTagCompound dataNBT = new NBTTagCompound();
-            customArmor.get(key).writeToNBT(dataNBT);
-            compound.setTag(key, dataNBT);
-        }
     }
     
     @Override
@@ -225,28 +187,13 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
         	this.armourOverride.set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
         }
         this.headOverlay = compound.getBoolean(TAG_HEAD_OVERLAY);
-        
-        loadKey(compound, ArmourType.HEAD);
-        loadKey(compound, ArmourType.CHEST);
-        loadKey(compound, ArmourType.LEGS);
-        loadKey(compound, ArmourType.SKIRT);
-        loadKey(compound, ArmourType.FEET);
-    }
-    
-    private void loadKey(NBTTagCompound compound, ArmourType type) {
-        String key = type.name();
-        if (compound.hasKey(key)) {
-            
-            NBTTagCompound dataNBT = compound.getCompoundTag(key);
-            customArmor.put(key, new CustomArmourItemData(dataNBT));
-        }
     }
     
     private void loadFromItemNBT(NBTTagCompound compound) {
         int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
         CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
         
-        addCustomArmour(equipmentData);
+        addCustomEquipment(equipmentData.getType(), equipmentId);
     }
     
     @Override

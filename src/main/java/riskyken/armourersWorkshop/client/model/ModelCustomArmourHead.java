@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.client.model;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -17,8 +17,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelCustomArmourHead extends ModelCustomArmour {
     
-    public void render(Entity entity, RenderPlayer render, CustomArmourItemData armourData) {
-        setRotationFromRender(render);
+    public void render(Entity entity, ModelBiped modelBiped, CustomArmourItemData armourData) {
+        setRotationFromModelBiped(modelBiped);
         if (armourData == null) { return; }
         
         ArrayList<CustomArmourPartData> parts = armourData.getParts();

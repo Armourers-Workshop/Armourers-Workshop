@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -48,8 +47,8 @@ public class ModelCustomArmour extends ModelBiped{
         targetModel.rotateAngleZ = sourceModel.rotateAngleZ;
     }
     
-    protected void setRotationFromRender(RenderPlayer render) {
-        if (render == null) {
+    protected void setRotationFromModelBiped(ModelBiped modelBiped) {
+        if (modelBiped == null) {
             setRotation(bipedHead, 0F, 0F, 0F);
             setRotation(bipedBody, 0F, 0F, 0F);
             setRotation(bipedLeftArm, 0F, 0F, 0F);
@@ -57,12 +56,12 @@ public class ModelCustomArmour extends ModelBiped{
             setRotation(bipedLeftLeg, 0F, 0F, 0F);
             setRotation(bipedRightLeg, 0F, 0F, 0F);
         } else {
-            setRotation(bipedHead, render.modelBipedMain.bipedHead);
-            setRotation(bipedBody, render.modelBipedMain.bipedBody);
-            setRotation(bipedLeftArm, render.modelBipedMain.bipedLeftArm);
-            setRotation(bipedRightArm, render.modelBipedMain.bipedRightArm);
-            setRotation(bipedLeftLeg, render.modelBipedMain.bipedLeftLeg);
-            setRotation(bipedRightLeg, render.modelBipedMain.bipedRightLeg);
+            setRotation(bipedHead, modelBiped.bipedHead);
+            setRotation(bipedBody, modelBiped.bipedBody);
+            setRotation(bipedLeftArm, modelBiped.bipedLeftArm);
+            setRotation(bipedRightArm, modelBiped.bipedRightArm);
+            setRotation(bipedLeftLeg, modelBiped.bipedLeftLeg);
+            setRotation(bipedRightLeg, modelBiped.bipedRightLeg);
         }
     }
      
