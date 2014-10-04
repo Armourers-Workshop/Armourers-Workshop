@@ -8,17 +8,17 @@ import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.api.common.painting.IPantable;
+import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.tileentities.IColourable;
-import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockColourable extends AbstractModBlock implements ITileEntityProvider, IWorldColourable {
+public class BlockColourable extends AbstractModBlock implements ITileEntityProvider, IPantableBlock {
     
     public BlockColourable(String name, boolean glowing) {
         super(name);
@@ -67,8 +67,8 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     @Override
     public boolean setColour(World world, int x, int y, int z, int colour) {
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null & te instanceof IColourable) {
-            ((IColourable)te).setColour(colour);
+        if (te != null & te instanceof IPantable) {
+            ((IPantable)te).setColour(colour);
             return true;
         }
         return false;
@@ -77,8 +77,8 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     @Override
     public int getColour(World world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null & te instanceof IColourable) {
-            return ((IColourable)te).getColour();
+        if (te != null & te instanceof IPantable) {
+            return ((IPantable)te).getColour();
         }
         return 0;
     }

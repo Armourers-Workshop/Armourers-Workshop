@@ -11,7 +11,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
 
@@ -71,8 +71,8 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
         }
         NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         if (armourNBT == null) { return false; }
-        if (!armourNBT.hasKey(LibCommonTags.TAG_EQUPMENT_ID)) { return false; }
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        if (!armourNBT.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) { return false; }
+        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         if (EquipmentItemRenderCache.isEquipmentInCache(equipmentId)) {
             return true;
         } else {

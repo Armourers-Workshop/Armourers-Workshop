@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.BitSet;
 
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 
 public class EntityEquipmentData {
     
@@ -21,20 +21,20 @@ public class EntityEquipmentData {
         fromBytes(buf);
     }
     
-    public void addEquipment(ArmourType type, int equipmentId) {
+    public void addEquipment(EnumArmourType type, int equipmentId) {
         this.equipmentId[type.ordinal() - 1] = equipmentId;
         this.haveEquipment.set(type.ordinal() - 1, true);
     }
     
-    public void removeEquipment(ArmourType type) {
+    public void removeEquipment(EnumArmourType type) {
         this.haveEquipment.set(type.ordinal() - 1, false);
     }
     
-    public boolean haveEquipment(ArmourType type) {
+    public boolean haveEquipment(EnumArmourType type) {
         return this.haveEquipment.get(type.ordinal() - 1);
     }
     
-    public int getEquipmentId(ArmourType type) {
+    public int getEquipmentId(EnumArmourType type) {
         return this.equipmentId[type.ordinal() - 1];
     }
     

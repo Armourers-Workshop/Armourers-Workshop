@@ -9,10 +9,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
@@ -36,14 +36,14 @@ public class ItemColourNoiseTool extends AbstractModItem {
             int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
 
-        if (!player.isSneaking() & block instanceof IWorldColourable) {
+        if (!player.isSneaking() & block instanceof IPantableBlock) {
             if (!world.isRemote) {
                 int intensity = UtilItems.getIntensityFromStack(stack, 16);
-                IWorldColourable worldColourable = (IWorldColourable) block;
+                IPantableBlock worldColourable = (IPantableBlock) block;
                 int oldColour = worldColourable.getColour(world, x, y, z);
                 int newColour = UtilColour.addColourNoise(new Color(oldColour), intensity).getRGB();
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
-                ((IWorldColourable) block).setColour(world, x, y, z, newColour);
+                ((IPantableBlock) block).setColour(world, x, y, z, newColour);
             }
             return true;
         }

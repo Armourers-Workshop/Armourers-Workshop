@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourPart;
 
 public class CustomArmourPartData {
     
@@ -19,10 +19,10 @@ public class CustomArmourPartData {
     private static final String TAG_PART = "part";
     
     private ArrayList<CustomEquipmentBlockData> armourData;
-    private ArmourPart part;
+    private EnumArmourPart part;
 
     public CustomArmourPartData(ArrayList armourData,
-            ArmourPart part) {
+            EnumArmourPart part) {
         this.armourData = armourData;
         this.part = part;
     }
@@ -39,7 +39,7 @@ public class CustomArmourPartData {
         readFromStream(stream);
     }
 
-    public ArmourPart getArmourPart() {
+    public EnumArmourPart getArmourPart() {
         return this.part;
     }
 
@@ -86,7 +86,7 @@ public class CustomArmourPartData {
     }
 
     private void readFromBuf(ByteBuf buf) {
-        part = ArmourPart.getOrdinal(buf.readByte());
+        part = EnumArmourPart.getOrdinal(buf.readByte());
         int size = buf.readInt();
         armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < size; i++) {
@@ -108,7 +108,7 @@ public class CustomArmourPartData {
     }
     
     private void readFromNBT(NBTTagCompound compound) {
-        part = ArmourPart.getOrdinal(compound.getByte(TAG_PART));
+        part = EnumArmourPart.getOrdinal(compound.getByte(TAG_PART));
         
         NBTTagList blockData = compound.getTagList(TAG_BLOCK_DATA, NBT.TAG_COMPOUND);
         armourData = new ArrayList<CustomEquipmentBlockData>();
@@ -127,7 +127,7 @@ public class CustomArmourPartData {
     }
     
     private void readFromStream(DataInputStream stream) throws IOException {
-        part = ArmourPart.getOrdinal(stream.readByte());
+        part = EnumArmourPart.getOrdinal(stream.readByte());
         int size = stream.readInt();
         armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < size; i++) {

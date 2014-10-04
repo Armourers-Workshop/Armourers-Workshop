@@ -7,28 +7,28 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
+import riskyken.armourersWorkshop.api.common.painting.IPantable;
+import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.api.common.painting.PaintingNBTHelper;
 import riskyken.armourersWorkshop.common.BodyPart;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
-import riskyken.armourersWorkshop.common.tileentities.IColourable;
-import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemColourPicker extends AbstractModItem implements IColourTool {
+public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     
     public ItemColourPicker() {
         super(LibItemNames.COLOUR_PICKER);
@@ -51,19 +51,19 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
         
         if (player.isSneaking() & block == ModBlocks.colourMixer & getToolHasColour(stack)) {
             TileEntity te = world.getTileEntity(x, y, z);
-            if (te != null && te instanceof IColourable) {
+            if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
                     int colour = getToolColour(stack);
-                    ((IColourable)te).setColour(colour);
+                    ((IPantable)te).setColour(colour);
                 }
             }
             return true;
         }
         
         
-        if (block instanceof IWorldColourable) {
+        if (block instanceof IPantableBlock) {
             if (!world.isRemote) {
-                setToolColour(stack, ((IWorldColourable)block).getColour(world, x, y, z));
+                setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z));
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
             return true;
@@ -209,34 +209,18 @@ public class ItemColourPicker extends AbstractModItem implements IColourTool {
         return tipIcon;
     }
     
-    private NBTTagCompound getCompound(ItemStack stack) {
-        if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
-        }
-        return stack.getTagCompound();
-    }
-
     @Override
     public boolean getToolHasColour(ItemStack stack) {
-        NBTTagCompound compound = getCompound(stack);
-        if (compound.hasKey(LibCommonTags.TAG_COLOUR)) {
-            return true;
-        }
-        return false;
+        return PaintingNBTHelper.getToolHasColour(stack);
     }
 
     @Override
     public int getToolColour(ItemStack stack) {
-        NBTTagCompound compound = getCompound(stack);
-        if (compound.hasKey(LibCommonTags.TAG_COLOUR)) {
-            return compound.getInteger(LibCommonTags.TAG_COLOUR);
-        }
-        return 16777215;
+        return PaintingNBTHelper.getToolColour(stack);
     }
 
     @Override
     public void setToolColour(ItemStack stack, int colour) {
-        NBTTagCompound compound = getCompound(stack);
-        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
+        PaintingNBTHelper.setToolColour(stack, colour);
     }
 }

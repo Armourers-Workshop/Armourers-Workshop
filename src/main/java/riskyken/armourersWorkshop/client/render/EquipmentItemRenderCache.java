@@ -9,10 +9,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.model.ModelCustomItemBuilt;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -58,7 +58,7 @@ public final class EquipmentItemRenderCache {
     
     public static void renderItemAsArmourModel(ItemStack stack) {
         NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         
         if (!modelCache.containsKey(equipmentId)) {
             requestEquipmentDataFromServer(equipmentId);
@@ -67,7 +67,7 @@ public final class EquipmentItemRenderCache {
         
         ModelCustomItemBuilt targetModel = modelCache.get(equipmentId);
         
-        switch (ArmourType.getOrdinal(stack.getItemDamage() + 1)) {
+        switch (EnumArmourType.getOrdinal(stack.getItemDamage() + 1)) {
         case HEAD:
             GL11.glTranslatef(0F, 0.7F, 0F);
             targetModel.render();
@@ -97,7 +97,7 @@ public final class EquipmentItemRenderCache {
         return modelCache.size();
     }
     
-    private static synchronized void buildModelForCache(NBTTagCompound armourNBT, ArmourType armourType, int key) {
+    private static synchronized void buildModelForCache(NBTTagCompound armourNBT, EnumArmourType armourType, int key) {
         CustomArmourItemData itemData = new CustomArmourItemData(armourNBT);
         ModelCustomItemBuilt newModel = new ModelCustomItemBuilt(itemData, armourType, key);
         if (modelCache.containsKey(key)) {

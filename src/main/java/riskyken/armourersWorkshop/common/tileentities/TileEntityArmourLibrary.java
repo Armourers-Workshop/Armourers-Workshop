@@ -20,13 +20,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.custom.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -57,7 +57,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         NBTTagCompound itemNBT = stackInput.getTagCompound();
         if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         
         if (!createArmourDirectory()) { return; }
 

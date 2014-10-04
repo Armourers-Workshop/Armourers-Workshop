@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import java.util.BitSet;
 
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.custom.equipment.PlayerCustomEquipmentData;
+import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEquipmentData;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -51,7 +51,7 @@ public class MessageClientGuiUpdateNakedInfo implements IMessage, IMessageHandle
 
     @Override
     public IMessage onMessage(MessageClientGuiUpdateNakedInfo message, MessageContext ctx) {
-        PlayerCustomEquipmentData customEquipmentData = PlayerCustomEquipmentData.get(ctx.getServerHandler().playerEntity);
+        ExtendedPropsEquipmentData customEquipmentData = ExtendedPropsEquipmentData.get(ctx.getServerHandler().playerEntity);
         customEquipmentData.setSkinInfo(message.naked, message.skinColour, message.pantsColour, message.armourOverride, message.headOverlay);
         return null;
     }

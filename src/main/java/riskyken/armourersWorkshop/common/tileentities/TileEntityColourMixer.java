@@ -5,18 +5,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import riskyken.armourersWorkshop.common.items.IColourTool;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
+import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ItemPaintRoller;
 import riskyken.armourersWorkshop.common.items.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class TileEntityColourMixer extends AbstractTileEntityInventory implements IColourable {
+public class TileEntityColourMixer extends AbstractTileEntityInventory implements IPantable {
     
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
     
@@ -46,7 +47,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (stackInput != null && stackInput.getItem() instanceof IColourTool) {
+        if (stackInput != null && stackInput.getItem() instanceof IPaintingTool) {
             if (stackOutput != null) { return; }
             setInventorySlotContents(0, null);
             setInventorySlotContents(1, stackInput);

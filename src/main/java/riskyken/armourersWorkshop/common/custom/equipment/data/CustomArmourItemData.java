@@ -13,8 +13,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
@@ -27,10 +27,10 @@ public class CustomArmourItemData {
     
     private String authorName;
     private String customName;
-    private ArmourType type;
+    private EnumArmourType type;
     private ArrayList<CustomArmourPartData> parts;
     
-    public CustomArmourItemData(String authorName, String customName, ArmourType type, ArrayList<CustomArmourPartData> parts) {
+    public CustomArmourItemData(String authorName, String customName, EnumArmourType type, ArrayList<CustomArmourPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
         this.type = type;
@@ -68,7 +68,7 @@ public class CustomArmourItemData {
     private void readFromBuf(ByteBuf buf) {
         this.authorName = ByteBufUtils.readUTF8String(buf);
         this.customName = ByteBufUtils.readUTF8String(buf);
-        type = ArmourType.getOrdinal(buf.readByte());
+        type = EnumArmourType.getOrdinal(buf.readByte());
         int size = buf.readByte();
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < size; i++) {
@@ -93,7 +93,7 @@ public class CustomArmourItemData {
     public void writeClientDataToNBT(NBTTagCompound compound) {
         compound.setString(LibCommonTags.TAG_AUTHOR_NAME, this.authorName);
         compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
-        compound.setInteger(LibCommonTags.TAG_EQUPMENT_ID, this.hashCode());
+        compound.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, this.hashCode());
     }
     
     public static boolean hasArmourData(NBTTagCompound compound) {
@@ -103,7 +103,7 @@ public class CustomArmourItemData {
     private void readFromNBT(NBTTagCompound compound) {
         this.authorName = compound.getString(LibCommonTags.TAG_AUTHOR_NAME);
         this.customName = compound.getString(LibCommonTags.TAG_CUSTOM_NAME);
-        type = ArmourType.getOrdinal(compound.getByte(TAG_TYPE));
+        type = EnumArmourType.getOrdinal(compound.getByte(TAG_TYPE));
         NBTTagList blockData = compound.getTagList(TAG_PARTS, NBT.TAG_COMPOUND);
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < blockData.tagCount(); i++) {
@@ -130,7 +130,7 @@ public class CustomArmourItemData {
         }
         this.authorName = stream.readUTF();
         this.customName = stream.readUTF();
-        type = ArmourType.getOrdinal(stream.readByte());
+        type = EnumArmourType.getOrdinal(stream.readByte());
         int size = stream.readByte();
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < size; i++) {
@@ -138,7 +138,7 @@ public class CustomArmourItemData {
         }
     }
     
-    public ArmourType getType() {
+    public EnumArmourType getType() {
         return type;
     }
     

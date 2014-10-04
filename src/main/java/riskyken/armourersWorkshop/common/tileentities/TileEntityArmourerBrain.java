@@ -13,17 +13,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.common.BodyPart;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.custom.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.custom.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
@@ -38,13 +39,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     private static final String TAG_CUSTOM_NAME = "customeName";
     
     private GameProfile gameProfile = null;
-    private ArmourType type;
+    private EnumArmourType type;
     private boolean showGuides;
     private boolean showOverlay;
     private String customName;
     
     public TileEntityArmourerBrain() {
-        this.type = ArmourType.HEAD;
+        this.type = EnumArmourType.HEAD;
         this.formed = false;
         this.items = new ItemStack[2];
         this.showOverlay = true;
@@ -109,7 +110,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         
         CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
@@ -124,12 +125,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         if (this.worldObj.isRemote) { return; }
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) {
-            setType(ArmourType.NONE);
+            setType(EnumArmourType.NONE);
             return;
         }
         
         if (stackInput.getItem() instanceof ItemEquipmentSkinTemplate) {
-            setType(ArmourType.getOrdinal(stackInput.getItemDamage() + 1));
+            setType(EnumArmourType.getOrdinal(stackInput.getItemDamage() + 1));
         }
     }
 
@@ -169,12 +170,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
                         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
                             TileEntity te1 = worldObj.getTileEntity(x, y, z);
                             worldObj.setBlock(newX, y, z, block);
-                            if (te1 != null && te1 instanceof IColourable) {
+                            if (te1 != null && te1 instanceof IPantable) {
                                 TileEntity te3 = worldObj.getTileEntity(newX, y, z);
-                                if (te3 != null && te3 instanceof IColourable) {
-                                    ((IColourable)te3).setColour(((IColourable)te1).getColour());
+                                if (te3 != null && te3 instanceof IPantable) {
+                                    ((IPantable)te3).setColour(((IPantable)te1).getColour());
                                 } else {
-                                    TileEntityColourable te2 = new TileEntityColourable(((IColourable)te1).getColour());
+                                    TileEntityColourable te2 = new TileEntityColourable(((IPantable)te1).getColour());
                                     worldObj.setTileEntity(newX, y, z, te2);
                                 }
                             }
@@ -306,7 +307,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         return bb;
     }
 
-    public ArmourType getType() {
+    public EnumArmourType getType() {
         return type;
     }
     
@@ -322,7 +323,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         return gameProfile;
     }
     
-    public void setType(ArmourType type) {
+    public void setType(EnumArmourType type) {
         if (this.type == type) { return; }
         this.type = type;
         if (formed) {
@@ -418,7 +419,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     @Override
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
-        type = ArmourType.getOrdinal(compound.getInteger(TAG_TYPE));
+        type = EnumArmourType.getOrdinal(compound.getInteger(TAG_TYPE));
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         customName = compound.getString(TAG_CUSTOM_NAME);

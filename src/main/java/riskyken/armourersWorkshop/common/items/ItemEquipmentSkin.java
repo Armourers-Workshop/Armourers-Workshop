@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
@@ -42,8 +42,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 if (armourData.hasKey(LibCommonTags.TAG_AUTHOR_NAME)) {
                     list.add("Author: " + armourData.getString(LibCommonTags.TAG_AUTHOR_NAME));
                 }
-                if (armourData.hasKey(LibCommonTags.TAG_EQUPMENT_ID)) {
-                    list.add("Equipment Id: " + armourData.getInteger(LibCommonTags.TAG_EQUPMENT_ID));
+                if (armourData.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) {
+                    list.add("Equipment Id: " + armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID));
                 }
                 
             }

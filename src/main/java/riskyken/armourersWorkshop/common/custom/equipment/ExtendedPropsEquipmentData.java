@@ -15,19 +15,19 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateSkinInfo;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IInventory {
+public class ExtendedPropsEquipmentData implements IExtendedEntityProperties, IInventory {
 
-    public final static String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
+    public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_ITEMS = "items";
     private static final String TAG_SLOT = "slot";
     private static final String TAG_NAKED = "naked";
@@ -47,25 +47,25 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     BitSet armourOverride = new BitSet(4);
     boolean headOverlay;
     
-    public PlayerCustomEquipmentData(EntityPlayer player) {
+    public ExtendedPropsEquipmentData(EntityPlayer player) {
         this.player = player;
     }
     
     public static final void register(EntityPlayer player) {
-        player.registerExtendedProperties(PlayerCustomEquipmentData.TAG_EXT_PROP_NAME, new PlayerCustomEquipmentData(player));
+        player.registerExtendedProperties(ExtendedPropsEquipmentData.TAG_EXT_PROP_NAME, new ExtendedPropsEquipmentData(player));
     }
     
-    public static final PlayerCustomEquipmentData get(EntityPlayer player) {
-        return (PlayerCustomEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
+    public static final ExtendedPropsEquipmentData get(EntityPlayer player) {
+        return (ExtendedPropsEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
-    public void addCustomEquipment(ArmourType type, int equipmentId) {
+    public void addCustomEquipment(EnumArmourType type, int equipmentId) {
         equipmentData.addEquipment(type, equipmentId);
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);
     }
 
-    public void removeCustomEquipment(ArmourType type) {
+    public void removeCustomEquipment(EnumArmourType type) {
         equipmentData.removeEquipment(type);
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);
@@ -108,30 +108,30 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     private void removeArmourFromSlot(byte slotId) {
         switch (slotId) {
         case 4:
-            removeCustomEquipment(ArmourType.FEET);
+            removeCustomEquipment(EnumArmourType.FEET);
             break;
         case 3:
-            removeCustomEquipment(ArmourType.SKIRT);
+            removeCustomEquipment(EnumArmourType.SKIRT);
             break;  
         case 2:
-            removeCustomEquipment(ArmourType.LEGS);
+            removeCustomEquipment(EnumArmourType.LEGS);
             break;
         case 1:
-            removeCustomEquipment(ArmourType.CHEST);
+            removeCustomEquipment(EnumArmourType.CHEST);
             break;
         case 0:
-            removeCustomEquipment(ArmourType.HEAD);
+            removeCustomEquipment(EnumArmourType.HEAD);
             break;
         }
     }
     
     public void removeAllCustomArmourData() {
         player.addChatMessage(new ChatComponentText("You're custom armour data was cleared."));
-        removeCustomEquipment(ArmourType.HEAD);
-        removeCustomEquipment(ArmourType.CHEST);
-        removeCustomEquipment(ArmourType.LEGS);
-        removeCustomEquipment(ArmourType.SKIRT);
-        removeCustomEquipment(ArmourType.FEET);
+        removeCustomEquipment(EnumArmourType.HEAD);
+        removeCustomEquipment(EnumArmourType.CHEST);
+        removeCustomEquipment(EnumArmourType.LEGS);
+        removeCustomEquipment(EnumArmourType.SKIRT);
+        removeCustomEquipment(EnumArmourType.FEET);
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
@@ -190,7 +190,7 @@ public class PlayerCustomEquipmentData implements IExtendedEntityProperties, IIn
     }
     
     private void loadFromItemNBT(NBTTagCompound compound) {
-        int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
         
         addCustomEquipment(equipmentData.getType(), equipmentId);

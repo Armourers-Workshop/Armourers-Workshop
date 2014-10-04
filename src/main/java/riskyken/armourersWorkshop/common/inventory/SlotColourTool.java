@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.IColourTool;
+import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 
 public class SlotColourTool extends Slot {
     
@@ -13,6 +13,6 @@ public class SlotColourTool extends Slot {
     
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack.getItem() instanceof IColourTool;
+        return stack.getItem() instanceof IPaintingTool;
     }
 }

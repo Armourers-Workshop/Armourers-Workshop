@@ -10,7 +10,7 @@ import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiEquipmentWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
-import riskyken.armourersWorkshop.common.custom.equipment.PlayerCustomEquipmentData;
+import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
@@ -51,7 +51,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                PlayerCustomEquipmentData customEquipmentData = PlayerCustomEquipmentData.get(player);
+                ExtendedPropsEquipmentData customEquipmentData = ExtendedPropsEquipmentData.get(player);
                 return new ContainerEquipmentWardrobe(player.inventory, customEquipmentData);
         }
         return null;
@@ -83,7 +83,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                PlayerCustomEquipmentData customEquipmentData = PlayerCustomEquipmentData.get(player);
+                ExtendedPropsEquipmentData customEquipmentData = ExtendedPropsEquipmentData.get(player);
                 return new GuiEquipmentWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getCurrentEquippedItem().getItem() instanceof AbstractModItem) {

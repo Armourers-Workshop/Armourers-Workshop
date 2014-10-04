@@ -7,11 +7,12 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -51,8 +52,12 @@ public class GuiArmourer extends GuiContainer {
         
         buttonList.clear();
         
-        for (int i = 0; i < ArmourType.values().length - 1; i++) {
-            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, ArmourType.getOrdinal(i + 1).getLocalizedName()));
+        /*
+
+        */
+        
+        for (int i = 0; i < EnumArmourType.values().length - 1; i++) {
+            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumArmourType.getOrdinal(i + 1))));
         }
         
         buttonList.add(new GuiButtonExt(5, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
@@ -80,6 +85,15 @@ public class GuiArmourer extends GuiContainer {
         buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
         buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
+    }
+    
+    private String getLocalizedArmourName(EnumArmourType armourType) {
+        String unlocalizedName = "armourTypes." + LibModInfo.ID.toLowerCase() + ":" + armourType.name().toLowerCase() + ".name";
+        String localizedName = StatCollector.translateToLocal(unlocalizedName);
+        if (!unlocalizedName.equals(localizedName)){
+            return localizedName;
+        }
+        return unlocalizedName;
     }
     
     @Override
@@ -149,7 +163,7 @@ public class GuiArmourer extends GuiContainer {
         }
         checkShowGuides.setChecked(armourerBrain.isShowGuides());
         checkShowOverlay.setChecked(armourerBrain.isShowOverlay());
-        checkShowOverlay.visible = armourerBrain.getType() == ArmourType.HEAD;
+        checkShowOverlay.visible = armourerBrain.getType() == EnumArmourType.HEAD;
         
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);

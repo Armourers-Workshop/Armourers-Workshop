@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.common.custom.equipment.armour;
 
 import net.minecraft.entity.player.EntityPlayer;
-import riskyken.armourersWorkshop.common.custom.equipment.PlayerCustomEquipmentData;
+import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEquipmentData;
 
 public class CustomArmourManager {
     /*
@@ -17,7 +17,7 @@ public class CustomArmourManager {
 */
     
     public static void removeAllCustomArmourData(EntityPlayer player) {
-        PlayerCustomEquipmentData playerArmourData = PlayerCustomEquipmentData.get(player);
+        ExtendedPropsEquipmentData playerArmourData = ExtendedPropsEquipmentData.get(player);
         playerArmourData.removeAllCustomArmourData();
     }
     

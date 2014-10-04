@@ -5,23 +5,23 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.custom.equipment.PlayerCustomEquipmentData;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEquipmentData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class ContainerEquipmentWardrobe extends Container {
     
-    PlayerCustomEquipmentData customEquipmentData;
+    ExtendedPropsEquipmentData customEquipmentData;
     
-    public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, PlayerCustomEquipmentData customEquipmentData) {
+    public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, ExtendedPropsEquipmentData customEquipmentData) {
         this.customEquipmentData = customEquipmentData;
         
-        addSlotToContainer(new SlotEquipmentSkin(ArmourType.HEAD, customEquipmentData, 0, 37, 18));
-        addSlotToContainer(new SlotEquipmentSkin(ArmourType.CHEST, customEquipmentData, 1, 37, 45));
+        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.HEAD, customEquipmentData, 0, 37, 18));
+        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.CHEST, customEquipmentData, 1, 37, 45));
         addSlotToContainer(new SlotOutput(customEquipmentData, 5, 37, 72));
-        addSlotToContainer(new SlotEquipmentSkin(ArmourType.LEGS, customEquipmentData, 2, 123, 18));
-        addSlotToContainer(new SlotEquipmentSkin(ArmourType.SKIRT, customEquipmentData, 3, 123, 45));
-        addSlotToContainer(new SlotEquipmentSkin(ArmourType.FEET, customEquipmentData, 4, 123, 72));
+        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.LEGS, customEquipmentData, 2, 123, 18));
+        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.SKIRT, customEquipmentData, 3, 123, 45));
+        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.FEET, customEquipmentData, 4, 123, 72));
         
         addSlotToContainer(new SlotColourTool(customEquipmentData, 6, 8, 130));
         addSlotToContainer(new SlotOutput(customEquipmentData, 7, 52, 130));

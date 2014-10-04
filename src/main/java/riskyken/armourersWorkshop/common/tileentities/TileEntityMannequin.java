@@ -5,12 +5,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.custom.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory {
 
@@ -26,12 +26,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         NBTTagCompound data = stack.getTagCompound();
         if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
         NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUPMENT_ID);
+        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
         setEquipment(equipmentData.getType(), equipmentId);
     }
     
-    public void setEquipment(ArmourType armourType, int equipmentId) {
+    public void setEquipment(EnumArmourType armourType, int equipmentId) {
         equipmentData.addEquipment(armourType, equipmentId);
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);

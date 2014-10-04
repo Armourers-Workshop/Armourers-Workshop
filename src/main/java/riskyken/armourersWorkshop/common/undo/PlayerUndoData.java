@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.common.tileentities.IWorldColourable;
+import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 
 public class PlayerUndoData {
 
@@ -37,8 +37,8 @@ public class PlayerUndoData {
         }
         
         Block block = world.getBlock(undoData.blockX, undoData.blockY, undoData.blockZ);
-        if (block instanceof IWorldColourable) {
-            IWorldColourable worldColourable = (IWorldColourable) block;
+        if (block instanceof IPantableBlock) {
+            IPantableBlock worldColourable = (IPantableBlock) block;
             worldColourable.setColour(world, undoData.blockX, undoData.blockY, undoData.blockZ, undoData.colour);
         }
         undos.remove(undos.size() - 1);

@@ -16,13 +16,13 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -80,7 +80,7 @@ public final class EquipmentPlayerRenderCache {
         }
     }
     
-    public CustomArmourItemData getPlayerCustomArmour(Entity entity, ArmourType type) {
+    public CustomArmourItemData getPlayerCustomArmour(Entity entity, EnumArmourType type) {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
@@ -131,7 +131,7 @@ public final class EquipmentPlayerRenderCache {
         return skinMap.get(playerId);
     }
 
-    private boolean playerHasCustomArmourType(UUID playerId, ArmourType armourType) {
+    private boolean playerHasCustomArmourType(UUID playerId, EnumArmourType armourType) {
         if (!playerEquipmentMap.containsKey(playerId)) {
             return false;
         }
@@ -147,7 +147,7 @@ public final class EquipmentPlayerRenderCache {
             skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
         }
         
-        if (playerHasCustomArmourType(player.getPersistentID(), ArmourType.SKIRT)) {
+        if (playerHasCustomArmourType(player.getPersistentID(), EnumArmourType.SKIRT)) {
             if (player.limbSwingAmount > 0.25F) {
                 player.limbSwingAmount = 0.25F;
             }
@@ -197,34 +197,34 @@ public final class EquipmentPlayerRenderCache {
         float scale = 1.001F;
         GL11.glScalef(scale, scale, scale);
         
-        if (slot == ArmourType.HEAD.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.HEAD);
+        if (slot == EnumArmourType.HEAD.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.HEAD);
             if (data != null) {
                 customHead.render(player, render.modelBipedMain, data);
             }
             
         }
-        if (slot == ArmourType.CHEST.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.CHEST);
+        if (slot == EnumArmourType.CHEST.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.CHEST);
             if (data != null) {
                 customChest.render(player, render.modelBipedMain, data);
             }
         }
-        if (slot == ArmourType.LEGS.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.LEGS);
+        if (slot == EnumArmourType.LEGS.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.LEGS);
             if (data != null) {
                 customLegs.render(player, render.modelBipedMain, data);
                 event.result = result;
             }
         }
-        if (slot == ArmourType.SKIRT.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.SKIRT);
+        if (slot == EnumArmourType.SKIRT.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.SKIRT);
             if (data != null) {
                 customSkirt.render(player, render.modelBipedMain, data);
             }
         }
-        if (slot == ArmourType.FEET.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, ArmourType.FEET);
+        if (slot == EnumArmourType.FEET.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.FEET);
             if (data != null) {
                 customFeet.render(player, render.modelBipedMain, data);
             }
@@ -239,7 +239,7 @@ public final class EquipmentPlayerRenderCache {
         
         
         for (int i = 0; i < 5; i++) {
-            ArmourType armourType = ArmourType.getOrdinal(i + 1);
+            EnumArmourType armourType = EnumArmourType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
                 CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
                 if (data != null) {

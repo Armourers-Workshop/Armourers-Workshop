@@ -14,12 +14,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourPart;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.client.model.ModelChest;
 import riskyken.armourersWorkshop.client.model.ModelFeet;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourPart;
-import riskyken.armourersWorkshop.common.custom.equipment.armour.ArmourType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 
@@ -42,7 +42,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
 
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
-        ArmourType type = te.getType();
+        EnumArmourType type = te.getType();
         
         if (!te.isFormed()) { return; }
         
@@ -93,7 +93,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         }
     }
     
-    private void renderGuide(TileEntityArmourerBrain te, ArmourType type, double x, double y, double z) {
+    private void renderGuide(TileEntityArmourerBrain te, EnumArmourType type, double x, double y, double z) {
         
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         
@@ -101,28 +101,28 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case NONE:
             break;
         case HEAD:
-            renderGuidePart(ArmourPart.HEAD, x, y, z);
+            renderGuidePart(EnumArmourPart.HEAD, x, y, z);
             break;
         case CHEST:
-            renderGuidePart(ArmourPart.CHEST, x, y, z);
-            renderGuidePart(ArmourPart.LEFT_ARM, x, y, z);
-            renderGuidePart(ArmourPart.RIGHT_ARM, x, y, z);
+            renderGuidePart(EnumArmourPart.CHEST, x, y, z);
+            renderGuidePart(EnumArmourPart.LEFT_ARM, x, y, z);
+            renderGuidePart(EnumArmourPart.RIGHT_ARM, x, y, z);
             break;
         case LEGS:
-            renderGuidePart(ArmourPart.LEFT_LEG, x, y, z);
-            renderGuidePart(ArmourPart.RIGHT_LEG, x, y, z);
+            renderGuidePart(EnumArmourPart.LEFT_LEG, x, y, z);
+            renderGuidePart(EnumArmourPart.RIGHT_LEG, x, y, z);
             break;
         case SKIRT:
-            renderGuidePart(ArmourPart.SKIRT, x, y, z);
+            renderGuidePart(EnumArmourPart.SKIRT, x, y, z);
             break;
         case FEET:
-            renderGuidePart(ArmourPart.LEFT_FOOT, x, y, z);
-            renderGuidePart(ArmourPart.RIGHT_FOOT, x, y, z);
+            renderGuidePart(EnumArmourPart.LEFT_FOOT, x, y, z);
+            renderGuidePart(EnumArmourPart.RIGHT_FOOT, x, y, z);
             break;
         }
     }
     
-    private void renderGuidePart(ArmourPart part, double x, double y, double z) {
+    private void renderGuidePart(EnumArmourPart part, double x, double y, double z) {
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
 
