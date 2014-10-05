@@ -1,13 +1,14 @@
-package riskyken.armourersWorkshop.common.custom.equipment;
+package riskyken.armourersWorkshop.common.customEquipment;
 
 import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
 
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.api.common.customEquipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 
-public class EntityEquipmentData {
+public class EntityEquipmentData implements IEntityEquipment {
     
     private static final String TAG_HAVE_EQUIPMENT = "haveEquipment";
     private static final String TAG_EQUIPMENT_ID = "equipmentId";
@@ -21,19 +22,23 @@ public class EntityEquipmentData {
         fromBytes(buf);
     }
     
+    @Override
     public void addEquipment(EnumArmourType type, int equipmentId) {
         this.equipmentId[type.ordinal() - 1] = equipmentId;
         this.haveEquipment.set(type.ordinal() - 1, true);
     }
     
+    @Override
     public void removeEquipment(EnumArmourType type) {
         this.haveEquipment.set(type.ordinal() - 1, false);
     }
     
+    @Override
     public boolean haveEquipment(EnumArmourType type) {
         return this.haveEquipment.get(type.ordinal() - 1);
     }
     
+    @Override
     public int getEquipmentId(EnumArmourType type) {
         return this.equipmentId[type.ordinal() - 1];
     }
@@ -59,7 +64,7 @@ public class EntityEquipmentData {
         }
     }
     
-    private void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf) {
         for (int i = 0; i < 5; i++) {
             this.haveEquipment.set(i, buf.readBoolean());
             this.equipmentId[i] = buf.readInt();

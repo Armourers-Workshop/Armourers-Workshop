@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.api.common.painting;
+package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

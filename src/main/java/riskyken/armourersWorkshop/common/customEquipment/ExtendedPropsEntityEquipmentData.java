@@ -1,10 +1,11 @@
-package riskyken.armourersWorkshop.common.custom.equipment;
+package riskyken.armourersWorkshop.common.customEquipment;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import riskyken.armourersWorkshop.api.common.customEquipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
@@ -37,12 +38,15 @@ public class ExtendedPropsEntityEquipmentData implements IExtendedEntityProperti
     
     public void addCustomEquipment(EnumArmourType type, int equipmentId) {
         equipmentData.addEquipment(type, equipmentId);
-        TargetPoint p = new TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(entity.getPersistentID(), equipmentData), p);
+        updateEquipmentDataToPlayersAround();
     }
 
     public void removeCustomEquipment(EnumArmourType type) {
         equipmentData.removeEquipment(type);
+        updateEquipmentDataToPlayersAround();
+    }
+    
+    private void updateEquipmentDataToPlayersAround() {
         TargetPoint p = new TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(entity.getPersistentID(), equipmentData), p);
     }
@@ -57,6 +61,11 @@ public class ExtendedPropsEntityEquipmentData implements IExtendedEntityProperti
     
     public EntityEquipmentData getEquipmentData() {
         return equipmentData;
+    }
+    
+    public void setEquipmentData(IEntityEquipment equipmentData) {
+        this.equipmentData = (EntityEquipmentData)equipmentData;
+        updateEquipmentDataToPlayersAround();
     }
     
     public static final void register(Entity entity) {

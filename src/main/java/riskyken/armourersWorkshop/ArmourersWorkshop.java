@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop;
 
 import net.minecraft.creativetab.CreativeTabs;
+import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.ModFMLEventHandler;
 import riskyken.armourersWorkshop.common.UpdateCheck;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -8,7 +9,6 @@ import riskyken.armourersWorkshop.common.command.CommandCustomArmour;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
-import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
@@ -20,6 +20,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -56,14 +58,26 @@ public class ArmourersWorkshop {
         ModBlocks.registerTileEntities();
 
         new GuiHandler();
-
+        
+        FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.common.custom.equipment.DemoDataManager");
+        FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.client.render.DemoRenderManager");
+        
         PacketHandler.init();
         proxy.postInit();
         proxy.registerKeyBindings();
         
-        new EntityEquipmentDataManager();
-        
         FMLCommonHandler.instance().bus().register(new ModFMLEventHandler());
+    }
+    
+    @Mod.EventHandler
+    public void processIMC(FMLInterModComms.IMCEvent event) {
+        for (IMCMessage imcMessage : event.getMessages()) {
+            if (!imcMessage.isStringMessage()) continue;
+            if (imcMessage.key.equalsIgnoreCase("register")) {
+                ModLogger.log(String.format("Receiving registration request from [ %s ] for method %s", imcMessage.getSender(), imcMessage.getStringValue()));
+                ApiRegistrar.INSTANCE.addApiRequest(imcMessage.getSender(), imcMessage.getStringValue());
+            }
+        }
     }
     
     @Mod.EventHandler
@@ -74,5 +88,6 @@ public class ArmourersWorkshop {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         TileEntityArmourLibrary.createArmourDirectory();
+        ApiRegistrar.INSTANCE.onLoad();
     }
 }

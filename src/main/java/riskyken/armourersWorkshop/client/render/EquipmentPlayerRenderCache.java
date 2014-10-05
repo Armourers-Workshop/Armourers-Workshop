@@ -16,17 +16,16 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.client.event.EntityRenderEvent;
-import riskyken.armourersWorkshop.api.client.event.EntityRenderEvent.IEntityRenderListener;
+import riskyken.armourersWorkshop.api.client.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
-import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEntityEquipmentData;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.customEquipment.ExtendedPropsEntityEquipmentData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -42,7 +41,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
-public final class EquipmentPlayerRenderCache implements IEntityRenderListener {
+public final class EquipmentPlayerRenderCache implements IEquipmentRenderHandler {
     
     public static final EquipmentPlayerRenderCache INSTANCE = new EquipmentPlayerRenderCache();
     
@@ -59,7 +58,6 @@ public final class EquipmentPlayerRenderCache implements IEntityRenderListener {
     
     public EquipmentPlayerRenderCache() {
         MinecraftForge.EVENT_BUS.register(this);
-        EntityRenderEvent.addListener(this);
     }
     
     public void requestEquipmentDataFromServer(int equipmentId) {
@@ -270,9 +268,9 @@ public final class EquipmentPlayerRenderCache implements IEntityRenderListener {
             }
         }
     }
-    
+
     @Override
-    public void onEntityRenderEvent(Entity entity, EnumArmourType armourType, ModelBiped modelBiped) {
+    public void renderCustomEquipmentOnEntity(Entity entity, EnumArmourType armourType, ModelBiped modelBiped) {
         ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
         if (entityProps == null) {
             return;
@@ -287,22 +285,32 @@ public final class EquipmentPlayerRenderCache implements IEntityRenderListener {
                 case NONE:
                     break;
                 case HEAD:
-                    customHead.render(null, modelBiped, data);
+                    customHead.render(entity, modelBiped, data);
                     break;
                 case CHEST:
-                    customChest.render(null, modelBiped, data);
+                    customChest.render(entity, modelBiped, data);
                     break;
                 case LEGS:
-                    customLegs.render(null, modelBiped, data);
+                    customLegs.render(entity, modelBiped, data);
                     break;
                 case SKIRT:
-                    customSkirt.render(null, modelBiped, data);
+                    customSkirt.render(entity, modelBiped, data);
                     break;
                 case FEET:
-                    customFeet.render(null, modelBiped, data);
+                    customFeet.render(entity, modelBiped, data);
                     break;
                 }
             }
         }
+    }
+
+    @Override
+    public int getItemModelRenderCacheSize() {
+        return EquipmentItemRenderCache.getCacheSize();
+    }
+
+    @Override
+    public int getPlayerModelRenderCacheSize() {
+        return getCacheSize();
     }
 }

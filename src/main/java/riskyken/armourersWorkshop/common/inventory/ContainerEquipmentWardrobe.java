@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
-import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.customEquipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class ContainerEquipmentWardrobe extends Container {

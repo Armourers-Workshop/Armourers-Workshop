@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
-import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
 
 public class CommonProxy {
     

@@ -7,9 +7,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.custom.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.customEquipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory {

@@ -48,7 +48,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 
             }
         } else {
-            list.add(EnumChatFormatting.RED + "ERROR: Invalid equpment skin.");
+            list.add(EnumChatFormatting.RED + "ERROR: Invalid equipment skin.");
             list.add(EnumChatFormatting.RED + "Please delete.");
         }
         super.addInformation(stack, player, list, p_77624_4_);

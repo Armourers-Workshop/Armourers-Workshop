@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.custom.equipment;
+package riskyken.armourersWorkshop.common.customEquipment;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,19 +8,17 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import riskyken.armourersWorkshop.api.common.customEquipment.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.customEquipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
-import riskyken.armourersWorkshop.api.common.event.AddEntityEquipmentEvent;
-import riskyken.armourersWorkshop.api.common.event.AddEntityEquipmentEvent.IAddEntityEquipmentListener;
-import riskyken.armourersWorkshop.api.common.event.RemoveEntityEquipmentEvent;
-import riskyken.armourersWorkshop.api.common.event.RemoveEntityEquipmentEvent.IRemoveEntityEquipmentListener;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class EntityEquipmentDataManager implements IAddEntityEquipmentListener, IRemoveEntityEquipmentListener{
+public final class EntityEquipmentDataManager implements IEquipmentDataHandler {
+    
+    public static final EntityEquipmentDataManager INSTANCE = new EntityEquipmentDataManager();
     
     public EntityEquipmentDataManager() {
         MinecraftForge.EVENT_BUS.register(this);
-        AddEntityEquipmentEvent.addListener(this);
-        RemoveEntityEquipmentEvent.addListener(this);
     }
     
     @SubscribeEvent
@@ -66,21 +64,66 @@ public class EntityEquipmentDataManager implements IAddEntityEquipmentListener, 
     }
 
     @Override
-    public void onRemoveEntityEquipmentEvent(Entity entity, EnumArmourType armourType) {
+    public EntityEquipmentData getCustomEquipmentForEntity(Entity entity) {
+        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
+        if (entityProps != null) {
+            return entityProps.getEquipmentData();
+        }
+        return null;
+    }
+
+    @Override
+    public void removeCustomEquipmentFromEntity(Entity entity) {
         ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
         if (entityProps == null) {
             return;
         }
-        entityProps.removeCustomEquipment(armourType);
+        entityProps.removeCustomEquipment(EnumArmourType.HEAD);
+        entityProps.removeCustomEquipment(EnumArmourType.CHEST);
+        entityProps.removeCustomEquipment(EnumArmourType.LEGS);
+        entityProps.removeCustomEquipment(EnumArmourType.SKIRT);
+        entityProps.removeCustomEquipment(EnumArmourType.FEET);
     }
 
     @Override
-    public void onAddEntityEquipmentEvent(Entity entity, EnumArmourType armourType, int equipmentId) {
+    public void setCustomEquipmentOnEntity(Entity entity, IEntityEquipment equipmentData) {
         ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
         if (entityProps == null) {
             ExtendedPropsEntityEquipmentData.register(entity);
         }
         entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-        entityProps.addCustomEquipment(armourType, equipmentId);
+        entityProps.setEquipmentData(equipmentData);
+    }
+
+    @Override
+    public void setCustomEquipmentOnPlayer(EntityPlayer player, IEntityEquipment equipmentData) {
+        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        if (entityProps == null) {
+            ExtendedPropsPlayerEquipmentData.register(player);
+        }
+        entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        entityProps.setEquipmentData(equipmentData);
+    }
+
+    @Override
+    public IEntityEquipment getCustomEquipmentForPlayer(EntityPlayer player) {
+        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        if (entityProps != null) {
+            return entityProps.getEquipmentData();
+        }
+        return null;
+    }
+
+    @Override
+    public void removeCustomEquipmentFromPlayer(EntityPlayer player) {
+        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        if (entityProps == null) {
+            return;
+        }
+        entityProps.removeCustomEquipment(EnumArmourType.HEAD);
+        entityProps.removeCustomEquipment(EnumArmourType.CHEST);
+        entityProps.removeCustomEquipment(EnumArmourType.LEGS);
+        entityProps.removeCustomEquipment(EnumArmourType.SKIRT);
+        entityProps.removeCustomEquipment(EnumArmourType.FEET);
     }
 }

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.custom.equipment;
+package riskyken.armourersWorkshop.common.customEquipment;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -17,10 +17,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.customEquipment.IEquipmentCacheHandler;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
-import riskyken.armourersWorkshop.api.common.event.GetEquipmentTypeEvent;
-import riskyken.armourersWorkshop.api.common.event.GetEquipmentTypeEvent.IGetEquipmentTypeListener;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -32,17 +31,13 @@ import riskyken.armourersWorkshop.utils.ModLogger;
  * @author RiskyKen
  *
  */
-public final class EquipmentDataCache implements IGetEquipmentTypeListener {
+public final class EquipmentDataCache implements IEquipmentCacheHandler {
     
     public static final EquipmentDataCache INSTANCE = new EquipmentDataCache();
     
     private HashMap<Integer, CustomArmourItemData> equipmentDataCache = new HashMap<Integer, CustomArmourItemData>();
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     private long lastTick;
-    
-    public EquipmentDataCache() {
-        GetEquipmentTypeEvent.addListener(this);
-    }
     
     public void processMessageQueue() {
         long curTick = System.currentTimeMillis();
@@ -197,12 +192,11 @@ public final class EquipmentDataCache implements IGetEquipmentTypeListener {
     }
 
     @Override
-    public EnumArmourType onGetEquipmentTypeEvent(int equipmentId) {
+    public EnumArmourType getEquipmentType(int equipmentId) {
         CustomArmourItemData data = getEquipmentData(equipmentId);
         if (data != null) {
             return data.getType();
         }
         return EnumArmourType.NONE;
     }
-
 }

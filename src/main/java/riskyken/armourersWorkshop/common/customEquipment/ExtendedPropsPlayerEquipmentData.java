@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.custom.equipment;
+package riskyken.armourersWorkshop.common.customEquipment;
 
 import java.awt.Color;
 import java.util.BitSet;
@@ -15,9 +15,10 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
+import riskyken.armourersWorkshop.api.common.customEquipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -61,12 +62,15 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     
     public void addCustomEquipment(EnumArmourType type, int equipmentId) {
         equipmentData.addEquipment(type, equipmentId);
-        TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);
+        updateEquipmentDataToPlayersAround();
     }
 
     public void removeCustomEquipment(EnumArmourType type) {
         equipmentData.removeEquipment(type);
+        updateEquipmentDataToPlayersAround();
+    }
+    
+    private void updateEquipmentDataToPlayersAround() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);
     }
@@ -89,6 +93,15 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         }
     }
 
+    public void setEquipmentData(IEntityEquipment equipmentData) {
+        this.equipmentData = (EntityEquipmentData) equipmentData;
+        updateEquipmentDataToPlayersAround();
+    }
+    
+    public EntityEquipmentData getEquipmentData() {
+        return equipmentData;
+    }
+    
     public void armourSlotUpdate(byte slot) {
         ItemStack stack = this.getStackInSlot(slot);
         

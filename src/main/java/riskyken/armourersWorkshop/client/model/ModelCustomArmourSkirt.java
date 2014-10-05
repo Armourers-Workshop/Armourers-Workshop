@@ -8,8 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.common.ApiRegistrar;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourPartData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,7 +24,7 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
         
         ArrayList<CustomArmourPartData> parts = armourData.getParts();
         
-        if (entity != null) {
+        if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
@@ -34,9 +36,11 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
 
         
         bindArmourTexture();
+        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.SKIRT);
         
         for (int i = 0; i < parts.size(); i++) {
             CustomArmourPartData part = parts.get(i);
+            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
             switch (part.getArmourPart()) {
             case SKIRT:
                 renderSkirt(part, scale);

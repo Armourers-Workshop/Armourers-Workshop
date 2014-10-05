@@ -8,9 +8,12 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourPart;
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.common.ApiRegistrar;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomEquipmentBlockData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,7 +27,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         ArrayList<CustomArmourPartData> parts = armourData.getParts();
         ArrayList<CustomEquipmentBlockData> armourBlockData = armourData.getParts().get(0).getArmourData();
         
-        if (entity != null) {
+        if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
@@ -35,6 +38,8 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         }
         
         bindArmourTexture();
+        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.HEAD);
+        ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, EnumArmourPart.HEAD);
         
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);

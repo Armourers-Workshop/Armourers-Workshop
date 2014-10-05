@@ -13,7 +13,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.api.common.painting.PaintingNBTHelper;
 import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
 import riskyken.armourersWorkshop.client.particles.ParticleManager;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.custom.equipment;
+package riskyken.armourersWorkshop.common.customEquipment;
 
 import java.util.ArrayList;
 
@@ -8,9 +8,9 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourPart;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourPartData;
-import riskyken.armourersWorkshop.common.custom.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.customEquipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 

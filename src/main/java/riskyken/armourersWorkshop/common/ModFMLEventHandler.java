@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common;
 
-import riskyken.armourersWorkshop.common.custom.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.customEquipment.EquipmentDataCache;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
