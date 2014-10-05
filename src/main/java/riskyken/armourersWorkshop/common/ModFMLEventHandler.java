@@ -13,7 +13,7 @@ public class ModFMLEventHandler {
     @SubscribeEvent
     public void onServerTickEvent(TickEvent.ServerTickEvent event) {
         if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
-            EquipmentDataCache.processMessageQueue();
+            EquipmentDataCache.INSTANCE.processMessageQueue();
         }
     }
 }

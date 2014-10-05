@@ -67,7 +67,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         DataOutputStream stream = null;
         File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
         
-        CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
+        CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         
         try {
             stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(targetFile)));
@@ -131,7 +131,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         NBTTagCompound armourNBT = new NBTTagCompound();
         
         armourItemData.writeClientDataToNBT(armourNBT);
-        EquipmentDataCache.addEquipmentDataToCache(armourItemData);
+        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
         
         stackOutput.setTagCompound(itemNBT);

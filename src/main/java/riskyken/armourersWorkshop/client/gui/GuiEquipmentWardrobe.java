@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
-import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEquipmentData;
+import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -39,7 +39,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     BitSet armourOverride;
     boolean headOverlay;
     
-    ExtendedPropsEquipmentData customEquipmentData;
+    ExtendedPropsPlayerEquipmentData customEquipmentData;
     PlayerSkinInfo skinInfo;
     EntityPlayer player;
     
@@ -52,7 +52,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     private float mouseX;
     private float mouseY;
     
-    public GuiEquipmentWardrobe(InventoryPlayer inventory, ExtendedPropsEquipmentData customEquipmentData) {
+    public GuiEquipmentWardrobe(InventoryPlayer inventory, ExtendedPropsPlayerEquipmentData customEquipmentData) {
         super(new ContainerEquipmentWardrobe(inventory, customEquipmentData));
         this.customEquipmentData = customEquipmentData;
         this.player = inventory.player;

@@ -27,7 +27,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
         NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
+        CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setEquipment(equipmentData.getType(), equipmentId);
     }
     

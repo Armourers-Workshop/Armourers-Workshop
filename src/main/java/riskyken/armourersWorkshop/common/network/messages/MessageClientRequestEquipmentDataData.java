@@ -32,7 +32,7 @@ public class MessageClientRequestEquipmentDataData implements IMessage, IMessage
 
     @Override
     public IMessage onMessage(MessageClientRequestEquipmentDataData message, MessageContext ctx) {
-        EquipmentDataCache.clientRequestEquipmentData(message.equpmentId, message.target, ctx.getServerHandler().playerEntity);
+        EquipmentDataCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, message.target, ctx.getServerHandler().playerEntity);
         return null;
     }
 

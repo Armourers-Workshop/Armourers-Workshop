@@ -25,7 +25,7 @@ import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipm
 import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateSkinInfo;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class ExtendedPropsEquipmentData implements IExtendedEntityProperties, IInventory {
+public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventory {
 
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_ITEMS = "items";
@@ -47,16 +47,16 @@ public class ExtendedPropsEquipmentData implements IExtendedEntityProperties, II
     BitSet armourOverride = new BitSet(4);
     boolean headOverlay;
     
-    public ExtendedPropsEquipmentData(EntityPlayer player) {
+    public ExtendedPropsPlayerEquipmentData(EntityPlayer player) {
         this.player = player;
     }
     
     public static final void register(EntityPlayer player) {
-        player.registerExtendedProperties(ExtendedPropsEquipmentData.TAG_EXT_PROP_NAME, new ExtendedPropsEquipmentData(player));
+        player.registerExtendedProperties(ExtendedPropsPlayerEquipmentData.TAG_EXT_PROP_NAME, new ExtendedPropsPlayerEquipmentData(player));
     }
     
-    public static final ExtendedPropsEquipmentData get(EntityPlayer player) {
-        return (ExtendedPropsEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
+    public static final ExtendedPropsPlayerEquipmentData get(EntityPlayer player) {
+        return (ExtendedPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
     public void addCustomEquipment(EnumArmourType type, int equipmentId) {
@@ -191,7 +191,7 @@ public class ExtendedPropsEquipmentData implements IExtendedEntityProperties, II
     
     private void loadFromItemNBT(NBTTagCompound compound) {
         int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
+        CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         
         addCustomEquipment(equipmentData.getType(), equipmentId);
     }

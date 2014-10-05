@@ -65,4 +65,13 @@ public class EntityEquipmentData {
             this.equipmentId[i] = buf.readInt();
         }
     }
+
+    public boolean hasCustomEquipment() {
+        for (int i = 0; i < 5; i++) {
+            if (this.haveEquipment.get(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

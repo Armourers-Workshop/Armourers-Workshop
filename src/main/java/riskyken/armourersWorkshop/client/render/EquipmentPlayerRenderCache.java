@@ -16,6 +16,8 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.client.event.EntityRenderEvent;
+import riskyken.armourersWorkshop.api.client.event.EntityRenderEvent.IEntityRenderListener;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
@@ -23,6 +25,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -39,7 +42,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
-public final class EquipmentPlayerRenderCache {
+public final class EquipmentPlayerRenderCache implements IEntityRenderListener {
     
     public static final EquipmentPlayerRenderCache INSTANCE = new EquipmentPlayerRenderCache();
     
@@ -56,6 +59,7 @@ public final class EquipmentPlayerRenderCache {
     
     public EquipmentPlayerRenderCache() {
         MinecraftForge.EVENT_BUS.register(this);
+        EntityRenderEvent.addListener(this);
     }
     
     public void requestEquipmentDataFromServer(int equipmentId) {
@@ -237,7 +241,6 @@ public final class EquipmentPlayerRenderCache {
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
         EntityEquipmentData equipmentData = teMannequin.getEquipmentData();
         
-        
         for (int i = 0; i < 5; i++) {
             EnumArmourType armourType = EnumArmourType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
@@ -266,7 +269,40 @@ public final class EquipmentPlayerRenderCache {
                 }
             }
         }
+    }
+    
+    @Override
+    public void onEntityRenderEvent(Entity entity, EnumArmourType armourType, ModelBiped modelBiped) {
+        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
+        if (entityProps == null) {
+            return;
+        }
         
-
+        EntityEquipmentData equipmentData = entityProps.getEquipmentData();
+        
+        if (equipmentData.haveEquipment(armourType)) {
+            CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
+            if (data != null) {
+                switch (armourType) {
+                case NONE:
+                    break;
+                case HEAD:
+                    customHead.render(null, modelBiped, data);
+                    break;
+                case CHEST:
+                    customChest.render(null, modelBiped, data);
+                    break;
+                case LEGS:
+                    customLegs.render(null, modelBiped, data);
+                    break;
+                case SKIRT:
+                    customSkirt.render(null, modelBiped, data);
+                    break;
+                case FEET:
+                    customFeet.render(null, modelBiped, data);
+                    break;
+                }
+            }
+        }
     }
 }

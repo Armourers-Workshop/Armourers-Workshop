@@ -79,7 +79,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         NBTTagCompound armourNBT = new NBTTagCompound();
         armourItemData.writeClientDataToNBT(armourNBT);
-        EquipmentDataCache.addEquipmentDataToCache(armourItemData);
+        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         if (!stackOutput.hasTagCompound()) {
             stackOutput.setTagCompound(new NBTTagCompound());
         }
@@ -112,7 +112,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         
-        CustomArmourItemData equipmentData = EquipmentDataCache.getEquipmentData(equipmentId);
+        CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
         ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, equipmentData);

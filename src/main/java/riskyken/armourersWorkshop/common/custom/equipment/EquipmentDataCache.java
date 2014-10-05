@@ -17,6 +17,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.event.GetEquipmentTypeEvent;
+import riskyken.armourersWorkshop.api.common.event.GetEquipmentTypeEvent.IGetEquipmentTypeListener;
 import riskyken.armourersWorkshop.common.custom.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
@@ -29,13 +32,19 @@ import riskyken.armourersWorkshop.utils.ModLogger;
  * @author RiskyKen
  *
  */
-public final class EquipmentDataCache {
+public final class EquipmentDataCache implements IGetEquipmentTypeListener {
     
-    private static HashMap<Integer, CustomArmourItemData> equipmentDataCache = new HashMap<Integer, CustomArmourItemData>();
-    private static ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
-    private static long lastTick;
+    public static final EquipmentDataCache INSTANCE = new EquipmentDataCache();
     
-    public static void processMessageQueue() {
+    private HashMap<Integer, CustomArmourItemData> equipmentDataCache = new HashMap<Integer, CustomArmourItemData>();
+    private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
+    private long lastTick;
+    
+    public EquipmentDataCache() {
+        GetEquipmentTypeEvent.addListener(this);
+    }
+    
+    public void processMessageQueue() {
         long curTick = System.currentTimeMillis();
         if (curTick >= lastTick + 40L) {
             lastTick = curTick;
@@ -46,7 +55,7 @@ public final class EquipmentDataCache {
         }
     }
     
-    public static void processMessage(QueueMessage queueMessage) {
+    public void processMessage(QueueMessage queueMessage) {
         
         if (!equipmentDataCache.containsKey(queueMessage.equipmentId)) {
             if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
@@ -62,11 +71,11 @@ public final class EquipmentDataCache {
         }
     }
     
-    public static void addEquipmentDataToCache(CustomArmourItemData equipmentData) {
+    public void addEquipmentDataToCache(CustomArmourItemData equipmentData) {
         addEquipmentDataToCache(equipmentData, equipmentData.hashCode());
     }
     
-    public static void addEquipmentDataToCache(CustomArmourItemData equipmentData, int equipmentId) {
+    public void addEquipmentDataToCache(CustomArmourItemData equipmentData, int equipmentId) {
         if (!equipmentDataCache.containsKey(equipmentId)) {
             equipmentDataCache.put(equipmentId, equipmentData);
             if (!haveEquipmentOnDisk(equipmentId)) {
@@ -75,7 +84,7 @@ public final class EquipmentDataCache {
         }
     }
     
-    public static CustomArmourItemData getEquipmentData(int equipmentId) {
+    public CustomArmourItemData getEquipmentData(int equipmentId) {
         if (!equipmentDataCache.containsKey(equipmentId)) {
             if (haveEquipmentOnDisk(equipmentId)) {
                 CustomArmourItemData equipmentData;
@@ -89,12 +98,12 @@ public final class EquipmentDataCache {
         return null;
     }
     
-    public static void clientRequestEquipmentData(int equipmentId, byte target, EntityPlayerMP player) {
+    public void clientRequestEquipmentData(int equipmentId, byte target, EntityPlayerMP player) {
         QueueMessage queueMessage = new QueueMessage(equipmentId, target, player);
         messageQueue.add(queueMessage);
     }
     
-    private static boolean haveEquipmentOnDisk(int equipmentId) {
+    private boolean haveEquipmentOnDisk(int equipmentId) {
         createEquipmentDirectory();
         File equipmentDir = new File(System.getProperty("user.dir"));
         equipmentDir = new File(equipmentDir, "equipment-database");
@@ -103,7 +112,7 @@ public final class EquipmentDataCache {
         return targetFile.exists();
     }
     
-    private static void saveEquipmentToDisk(CustomArmourItemData equipmentData) {
+    private void saveEquipmentToDisk(CustomArmourItemData equipmentData) {
         createEquipmentDirectory();
         File equipmentDir = new File(System.getProperty("user.dir"));
         equipmentDir = new File(equipmentDir, "equipment-database");
@@ -128,7 +137,7 @@ public final class EquipmentDataCache {
         }
     }
     
-    private static CustomArmourItemData loadEquipmentFromDisk(int equipmentId) {
+    private CustomArmourItemData loadEquipmentFromDisk(int equipmentId) {
         createEquipmentDirectory();
         File equipmentDir = new File(System.getProperty("user.dir"));
         equipmentDir = new File(equipmentDir, "equipment-database");
@@ -158,7 +167,7 @@ public final class EquipmentDataCache {
         return equipmentData;
     }
     
-    private static boolean createEquipmentDirectory() {
+    private boolean createEquipmentDirectory() {
         File equipmentDir = new File(System.getProperty("user.dir"));
         equipmentDir = new File(equipmentDir, "equipment-database");
         
@@ -174,7 +183,7 @@ public final class EquipmentDataCache {
         return true;
     }
     
-    public static class QueueMessage {
+    public class QueueMessage {
         
         public final int equipmentId;
         public final byte target;
@@ -186,4 +195,14 @@ public final class EquipmentDataCache {
             this.player = player;
         }
     }
+
+    @Override
+    public EnumArmourType onGetEquipmentTypeEvent(int equipmentId) {
+        CustomArmourItemData data = getEquipmentData(equipmentId);
+        if (data != null) {
+            return data.getType();
+        }
+        return EnumArmourType.NONE;
+    }
+
 }

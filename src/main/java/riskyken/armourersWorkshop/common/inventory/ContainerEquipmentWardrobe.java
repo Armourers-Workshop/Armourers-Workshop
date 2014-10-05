@@ -6,14 +6,14 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
-import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsEquipmentData;
+import riskyken.armourersWorkshop.common.custom.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class ContainerEquipmentWardrobe extends Container {
     
-    ExtendedPropsEquipmentData customEquipmentData;
+    ExtendedPropsPlayerEquipmentData customEquipmentData;
     
-    public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, ExtendedPropsEquipmentData customEquipmentData) {
+    public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, ExtendedPropsPlayerEquipmentData customEquipmentData) {
         this.customEquipmentData = customEquipmentData;
         
         addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.HEAD, customEquipmentData, 0, 37, 18));

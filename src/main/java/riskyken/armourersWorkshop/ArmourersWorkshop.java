@@ -1,15 +1,14 @@
 package riskyken.armourersWorkshop;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.common.ModFMLEventHandler;
-import riskyken.armourersWorkshop.common.ModForgeEventHandler;
 import riskyken.armourersWorkshop.common.UpdateCheck;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandCustomArmour;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
+import riskyken.armourersWorkshop.common.custom.equipment.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
@@ -61,8 +60,9 @@ public class ArmourersWorkshop {
         PacketHandler.init();
         proxy.postInit();
         proxy.registerKeyBindings();
-
-        MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
+        
+        new EntityEquipmentDataManager();
+        
         FMLCommonHandler.instance().bus().register(new ModFMLEventHandler());
     }
     
