@@ -7,6 +7,7 @@ tile.armourersworkshop:armourLibrary.name=Armour Library
 tile.armourersworkshop:colourable.name=Armour Cube
 tile.armourersworkshop:colourableGlowing.name=Armour Cube (Glowing)
 tile.armourersworkshop:colourMixer.name=Colour Mixer
+tile.armourersworkshop:mannequin.name=Mannequin
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Heart of the armourer multi-block.
@@ -17,6 +18,7 @@ tile.armourersworkshop:armourLibrary.flavour=Save and load armour templates from
 tile.armourersworkshop:colourable.flavour=Main building block for custom armour. (paintable)
 tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark armour cubes!
 tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your armour with.
+tile.armourersworkshop:mannequin.flavour=Show your armour off with a creepy mannequin!
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.name=Equipment Skin Template

@@ -55,7 +55,13 @@ public class ModelCustomArmour extends ModelBiped{
             setRotation(bipedRightArm, 0F, 0F, 0F);
             setRotation(bipedLeftLeg, 0F, 0F, 0F);
             setRotation(bipedRightLeg, 0F, 0F, 0F);
+            this.isRiding = false;
+            this.isSneak = false;
+            this.aimedBow = false;
         } else {
+            this.isRiding = false;
+            this.isSneak = false;
+            this.aimedBow = false;
             setRotation(bipedHead, modelBiped.bipedHead);
             setRotation(bipedBody, modelBiped.bipedBody);
             setRotation(bipedLeftArm, modelBiped.bipedLeftArm);

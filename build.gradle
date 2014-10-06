@@ -53,6 +53,13 @@ task apiJar(type: Jar) {
     classifier = 'api'
 }
 
+task devJar(type: Jar) {
+    from sourceSets.main.allSource
+	from sourceSets.main.output
+    classifier = 'dev'
+}
+
 artifacts {
 	archives apiJar
+	archives devJar
 }

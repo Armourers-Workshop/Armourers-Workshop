@@ -68,17 +68,20 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
                 ((IPantableBlock)block).setColour(world, x, y, z, newColour);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             } else {
-                
-                for (int i = 0; i < 3; i++) {
-                    EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
-                            newColour, ForgeDirection.getOrientation(side));
-                    ParticleManager.INSTANCE.spawnParticle(world, particle);
-                }
-
+                spawnPaintParticles(world, x, y, z, side, newColour);
             }
             return true;
         }
         return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private void spawnPaintParticles (World world, int x, int y, int z, int side, int colour) {
+        for (int i = 0; i < 3; i++) {
+            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
+                    colour, ForgeDirection.getOrientation(side));
+            ParticleManager.INSTANCE.spawnParticle(world, particle);
+        }
     }
     
     @Override

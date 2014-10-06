@@ -102,12 +102,17 @@ public class ItemPaintRoller extends AbstractModItem implements IPaintingTool {
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
                 ((IPantableBlock)block).setColour(world, x, y, z, newColour);
             } else {
-                for (int i = 0; i < 3; i++) {
-                    EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
-                            newColour, ForgeDirection.getOrientation(side));
-                    ParticleManager.INSTANCE.spawnParticle(world, particle);
-                }
+                spawnPaintParticles(world, x, y, z, side, newColour);
             }
+        }
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private void spawnPaintParticles (World world, int x, int y, int z, int side, int colour) {
+        for (int i = 0; i < 3; i++) {
+            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
+                    colour, ForgeDirection.getOrientation(side));
+            ParticleManager.INSTANCE.spawnParticle(world, particle);
         }
     }
     

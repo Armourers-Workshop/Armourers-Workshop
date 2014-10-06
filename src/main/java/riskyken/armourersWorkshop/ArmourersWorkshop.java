@@ -60,12 +60,14 @@ public class ArmourersWorkshop {
 
         new GuiHandler();
         
-        FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.common.equipment.DemoDataManager");
-        FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.client.render.DemoRenderManager");
+        //FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.common.equipment.DemoDataManager");
+        //FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.client.render.DemoRenderManager");
+        
         PacketHandler.init();
         proxy.postInit();
         proxy.registerKeyBindings();
         
+        EntityEquipmentDataManager.init();
         FMLCommonHandler.instance().bus().register(new ModFMLEventHandler());
     }
     
@@ -82,7 +84,6 @@ public class ArmourersWorkshop {
     
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
-        EntityEquipmentDataManager.init();
         event.registerServerCommand(new CommandCustomArmour());
     }
 

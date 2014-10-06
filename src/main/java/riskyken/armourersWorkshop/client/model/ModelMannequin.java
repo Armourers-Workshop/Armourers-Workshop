@@ -17,13 +17,19 @@ public class ModelMannequin extends ModelBiped {
             float p_78088_4_, float p_78088_5_, float p_78088_6_,
             float p_78088_7_) {
         Minecraft.getMinecraft().renderEngine.bindTexture(AbstractClientPlayer.locationStevePng);
-        
-        //bipedBody.render(mult);
-        // TODO Auto-generated method stub
-        this.isChild = false;
+        this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
+        this.bipedHead.render(p_78088_7_);
+        this.bipedBody.render(p_78088_7_);
+        this.bipedRightArm.render(p_78088_7_);
+        this.bipedLeftArm.render(p_78088_7_);
+        this.bipedRightLeg.render(p_78088_7_);
+        this.bipedLeftLeg.render(p_78088_7_);
+        //this.bipedHeadwear.render(p_78088_7_);
+        /*
         super.render(p_78088_1_, p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_,
                 p_78088_6_, p_78088_7_);
         
+        */
     }
     
 }

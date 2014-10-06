@@ -81,6 +81,11 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider {
     }
     
     @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+    
+    @Override
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, "block." + name);
         return super.setBlockName(name);

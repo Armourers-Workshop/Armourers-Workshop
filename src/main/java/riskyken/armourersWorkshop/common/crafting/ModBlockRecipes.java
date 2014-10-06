@@ -50,6 +50,14 @@ public final class ModBlockRecipes {
             'c', new ItemStack(ModBlocks.armourerMultiBlock, 1, 1),
             'd', Items.diamond});
         
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.mannequin, 1, 0), new Object[] {
+            " p ",
+            "wcw",
+            " w ",
+            'w', "plankWood",
+            'p', Blocks.pumpkin,
+            'c', ModBlocks.colourable});
+        
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.armourerMultiBlock, 1, 0), new Object[] {
             new ItemStack(ModBlocks.armourerMultiBlock, 1, 1)});
         
