@@ -9,6 +9,7 @@ import riskyken.armourersWorkshop.common.command.CommandCustomArmour;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
+import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
@@ -59,9 +60,8 @@ public class ArmourersWorkshop {
 
         new GuiHandler();
         
-        FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.common.custom.equipment.DemoDataManager");
+        FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.common.equipment.DemoDataManager");
         FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.client.render.DemoRenderManager");
-        
         PacketHandler.init();
         proxy.postInit();
         proxy.registerKeyBindings();
@@ -74,7 +74,7 @@ public class ArmourersWorkshop {
         for (IMCMessage imcMessage : event.getMessages()) {
             if (!imcMessage.isStringMessage()) continue;
             if (imcMessage.key.equalsIgnoreCase("register")) {
-                ModLogger.log(String.format("Receiving registration request from [ %s ] for method %s", imcMessage.getSender(), imcMessage.getStringValue()));
+                ModLogger.log(String.format("Receiving registration request from [ %s ] for class %s", imcMessage.getSender(), imcMessage.getStringValue()));
                 ApiRegistrar.INSTANCE.addApiRequest(imcMessage.getSender(), imcMessage.getStringValue());
             }
         }
@@ -82,6 +82,7 @@ public class ArmourersWorkshop {
     
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
+        EntityEquipmentDataManager.init();
         event.registerServerCommand(new CommandCustomArmour());
     }
 

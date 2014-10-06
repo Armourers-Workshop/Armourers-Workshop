@@ -46,14 +46,13 @@ processResources {
     }
 }
 
-task devJar(type: Jar) {
+task apiJar(type: Jar) {
     from sourceSets.main.allSource
-    from sourceSets.api.allSource
 	from sourceSets.main.output
-    from sourceSets.api.output
-    classifier = 'dev'
+	include 'riskyken/armourersWorkshop/api/**' 
+    classifier = 'api'
 }
 
 artifacts {
-	archives devJar
+	archives apiJar
 }

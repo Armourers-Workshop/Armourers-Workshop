@@ -16,7 +16,6 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.client.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
@@ -24,7 +23,6 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -41,7 +39,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
-public final class EquipmentPlayerRenderCache implements IEquipmentRenderHandler {
+public final class EquipmentPlayerRenderCache {
     
     public static final EquipmentPlayerRenderCache INSTANCE = new EquipmentPlayerRenderCache();
     
@@ -50,11 +48,11 @@ public final class EquipmentPlayerRenderCache implements IEquipmentRenderHandler
     private HashSet<Integer> requestedEquipmentIds = new HashSet<Integer>();
     private HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
     
-    private ModelCustomArmourChest customChest = new ModelCustomArmourChest();
-    private ModelCustomArmourHead customHead = new ModelCustomArmourHead();
-    private ModelCustomArmourLegs customLegs = new ModelCustomArmourLegs();
-    private ModelCustomArmourSkirt customSkirt = new ModelCustomArmourSkirt();
-    private ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
+    public ModelCustomArmourChest customChest = new ModelCustomArmourChest();
+    public ModelCustomArmourHead customHead = new ModelCustomArmourHead();
+    public ModelCustomArmourLegs customLegs = new ModelCustomArmourLegs();
+    public ModelCustomArmourSkirt customSkirt = new ModelCustomArmourSkirt();
+    public ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
     
     public EquipmentPlayerRenderCache() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -267,50 +265,5 @@ public final class EquipmentPlayerRenderCache implements IEquipmentRenderHandler
                 }
             }
         }
-    }
-
-    @Override
-    public void renderCustomEquipmentOnEntity(Entity entity, EnumArmourType armourType, ModelBiped modelBiped) {
-        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-        if (entityProps == null) {
-            return;
-        }
-        
-        EntityEquipmentData equipmentData = entityProps.getEquipmentData();
-        
-        if (equipmentData.haveEquipment(armourType)) {
-            CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
-            if (data != null) {
-                switch (armourType) {
-                case NONE:
-                    break;
-                case HEAD:
-                    customHead.render(entity, modelBiped, data);
-                    break;
-                case CHEST:
-                    customChest.render(entity, modelBiped, data);
-                    break;
-                case LEGS:
-                    customLegs.render(entity, modelBiped, data);
-                    break;
-                case SKIRT:
-                    customSkirt.render(entity, modelBiped, data);
-                    break;
-                case FEET:
-                    customFeet.render(entity, modelBiped, data);
-                    break;
-                }
-            }
-        }
-    }
-
-    @Override
-    public int getItemModelRenderCacheSize() {
-        return EquipmentItemRenderCache.getCacheSize();
-    }
-
-    @Override
-    public int getPlayerModelRenderCacheSize() {
-        return getCacheSize();
     }
 }

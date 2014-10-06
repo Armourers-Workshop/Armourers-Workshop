@@ -3,16 +3,14 @@ package riskyken.armourersWorkshop.common;
 import java.util.LinkedHashMap;
 
 import net.minecraft.entity.Entity;
-import riskyken.armourersWorkshop.api.client.IEquipmentRenderHandler;
-import riskyken.armourersWorkshop.api.client.IEquipmentRenderManager;
-import riskyken.armourersWorkshop.api.common.equipment.IEquipmentCacheHandler;
+import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
+import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderManager;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataManager;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
-import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
+import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRenderManager {
@@ -23,8 +21,6 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
     public LinkedHashMap<String, IEquipmentRenderManager> equipmentRenderManagers = new LinkedHashMap<String, IEquipmentRenderManager>();
     
     public void addApiRequest(String modName, String className) {
-        
-        
         try {
             
             Class<?> c = Class.forName(className);
@@ -36,18 +32,12 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
                 equipmentRenderManagers.put(modName, ((IEquipmentRenderManager)classObject)) ;
             }
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-            
-
     }
 
     public void onLoad() {
@@ -61,13 +51,13 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
         for (int i = 0; i < equipmentDataManagers.size(); i++) {
             String key = (String) equipmentDataManagers.keySet().toArray()[i];
             ModLogger.log(String.format("Loading %s for API addon for %s", "data manager", key));
-            equipmentDataManagers.get(key).onLoad(EntityEquipmentDataManager.INSTANCE, EquipmentDataCache.INSTANCE);
+            equipmentDataManagers.get(key).onLoad(EquipmentDataHandler.INSTANCE);
         }
         
         for (int i = 0; i < equipmentRenderManagers.size(); i++) {
             String key = (String) equipmentRenderManagers.keySet().toArray()[i];
             ModLogger.log(String.format("Loading %s for API addon for %s", "render manager", key));
-            equipmentRenderManagers.get(key).onLoad(EquipmentPlayerRenderCache.INSTANCE);
+            equipmentRenderManagers.get(key).onLoad(EquipmentRenderHandler.INSTANCE);
         }
     }
     
@@ -91,6 +81,6 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
     }
 
     @Override
-    public void onLoad(IEquipmentDataHandler dataHandler, IEquipmentCacheHandler cacheHandler) {
+    public void onLoad(IEquipmentDataHandler dataHandler) {
     }
 }

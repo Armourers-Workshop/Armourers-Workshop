@@ -17,8 +17,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.IEquipmentCacheHandler;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
@@ -31,7 +29,7 @@ import riskyken.armourersWorkshop.utils.ModLogger;
  * @author RiskyKen
  *
  */
-public final class EquipmentDataCache implements IEquipmentCacheHandler {
+public final class EquipmentDataCache {
     
     public static final EquipmentDataCache INSTANCE = new EquipmentDataCache();
     
@@ -189,14 +187,5 @@ public final class EquipmentDataCache implements IEquipmentCacheHandler {
             this.target = target;
             this.player = player;
         }
-    }
-
-    @Override
-    public EnumArmourType getEquipmentType(int equipmentId) {
-        CustomArmourItemData data = getEquipmentData(equipmentId);
-        if (data != null) {
-            return data.getType();
-        }
-        return EnumArmourType.NONE;
     }
 }

@@ -70,6 +70,15 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         updateEquipmentDataToPlayersAround();
     }
     
+    public void removeAllCustomEquipment() {
+        equipmentData.removeEquipment(EnumArmourType.HEAD);
+        equipmentData.removeEquipment(EnumArmourType.CHEST);
+        equipmentData.removeEquipment(EnumArmourType.LEGS);
+        equipmentData.removeEquipment(EnumArmourType.SKIRT);
+        equipmentData.removeEquipment(EnumArmourType.FEET);
+        updateEquipmentDataToPlayersAround();
+    }
+    
     private void updateEquipmentDataToPlayersAround() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);

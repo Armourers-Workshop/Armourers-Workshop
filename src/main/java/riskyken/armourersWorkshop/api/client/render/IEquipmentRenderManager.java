@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.api.client;
+package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.entity.Entity;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;

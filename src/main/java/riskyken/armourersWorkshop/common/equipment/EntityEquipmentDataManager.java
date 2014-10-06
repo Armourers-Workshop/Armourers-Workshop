@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.common.equipment;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
@@ -8,17 +7,14 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public final class EntityEquipmentDataManager implements IEquipmentDataHandler {
+public final class EntityEquipmentDataManager {
     
     public static final EntityEquipmentDataManager INSTANCE = new EntityEquipmentDataManager();
     
-    public EntityEquipmentDataManager() {
-        MinecraftForge.EVENT_BUS.register(this);
+    public static void init() {
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
     
     @SubscribeEvent
@@ -61,69 +57,5 @@ public final class EntityEquipmentDataManager implements IEquipmentDataHandler {
             ExtendedPropsPlayerEquipmentData playerData = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
             playerData.dropItems();
         }
-    }
-
-    @Override
-    public EntityEquipmentData getCustomEquipmentForEntity(Entity entity) {
-        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-        if (entityProps != null) {
-            return entityProps.getEquipmentData();
-        }
-        return null;
-    }
-
-    @Override
-    public void removeCustomEquipmentFromEntity(Entity entity) {
-        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-        if (entityProps == null) {
-            return;
-        }
-        entityProps.removeCustomEquipment(EnumArmourType.HEAD);
-        entityProps.removeCustomEquipment(EnumArmourType.CHEST);
-        entityProps.removeCustomEquipment(EnumArmourType.LEGS);
-        entityProps.removeCustomEquipment(EnumArmourType.SKIRT);
-        entityProps.removeCustomEquipment(EnumArmourType.FEET);
-    }
-
-    @Override
-    public void setCustomEquipmentOnEntity(Entity entity, IEntityEquipment equipmentData) {
-        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-        if (entityProps == null) {
-            ExtendedPropsEntityEquipmentData.register(entity);
-        }
-        entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-        entityProps.setEquipmentData(equipmentData);
-    }
-
-    @Override
-    public void setCustomEquipmentOnPlayer(EntityPlayer player, IEntityEquipment equipmentData) {
-        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
-        if (entityProps == null) {
-            ExtendedPropsPlayerEquipmentData.register(player);
-        }
-        entityProps = ExtendedPropsPlayerEquipmentData.get(player);
-        entityProps.setEquipmentData(equipmentData);
-    }
-
-    @Override
-    public IEntityEquipment getCustomEquipmentForPlayer(EntityPlayer player) {
-        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
-        if (entityProps != null) {
-            return entityProps.getEquipmentData();
-        }
-        return null;
-    }
-
-    @Override
-    public void removeCustomEquipmentFromPlayer(EntityPlayer player) {
-        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
-        if (entityProps == null) {
-            return;
-        }
-        entityProps.removeCustomEquipment(EnumArmourType.HEAD);
-        entityProps.removeCustomEquipment(EnumArmourType.CHEST);
-        entityProps.removeCustomEquipment(EnumArmourType.LEGS);
-        entityProps.removeCustomEquipment(EnumArmourType.SKIRT);
-        entityProps.removeCustomEquipment(EnumArmourType.FEET);
     }
 }
