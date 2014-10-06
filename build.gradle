@@ -46,19 +46,14 @@ processResources {
     }
 }
 
-task sourceJar(type: Jar) {
+task devJar(type: Jar) {
     from sourceSets.main.allSource
     from sourceSets.api.allSource
-    classifier = 'src'
-}
-
-task deobfJar(type: Jar) {
-  from sourceSets.main.output
-  from sourceSets.api.output
-  classifier = 'dev'
+	from sourceSets.main.output
+    from sourceSets.api.output
+    classifier = 'dev'
 }
 
 artifacts {
-    archives sourceJar
-	archives deobfJar
+	archives devJar
 }
