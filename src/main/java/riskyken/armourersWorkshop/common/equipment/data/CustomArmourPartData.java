@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customEquipment.data;
+package riskyken.armourersWorkshop.common.equipment.data;
 
 import io.netty.buffer.ByteBuf;
 
@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
 
 public class CustomArmourPartData {
     

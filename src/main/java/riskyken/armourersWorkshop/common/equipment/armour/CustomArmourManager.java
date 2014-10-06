@@ -1,7 +1,7 @@
-package riskyken.armourersWorkshop.common.customEquipment.armour;
+package riskyken.armourersWorkshop.common.equipment.armour;
 
 import net.minecraft.entity.player.EntityPlayer;
-import riskyken.armourersWorkshop.common.customEquipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 
 public class CustomArmourManager {
     

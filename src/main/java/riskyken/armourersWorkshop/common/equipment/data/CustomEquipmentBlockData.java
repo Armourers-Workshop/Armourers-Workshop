@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customEquipment.data;
+package riskyken.armourersWorkshop.common.equipment.data;
 
 import io.netty.buffer.ByteBuf;
 

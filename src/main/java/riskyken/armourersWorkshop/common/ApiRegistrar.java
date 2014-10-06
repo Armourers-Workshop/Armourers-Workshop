@@ -5,14 +5,14 @@ import java.util.LinkedHashMap;
 import net.minecraft.entity.Entity;
 import riskyken.armourersWorkshop.api.client.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.client.IEquipmentRenderManager;
-import riskyken.armourersWorkshop.api.common.customEquipment.IEquipmentCacheHandler;
-import riskyken.armourersWorkshop.api.common.customEquipment.IEquipmentDataHandler;
-import riskyken.armourersWorkshop.api.common.customEquipment.IEquipmentDataManager;
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourPart;
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.IEquipmentCacheHandler;
+import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
+import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataManager;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
-import riskyken.armourersWorkshop.common.customEquipment.EntityEquipmentDataManager;
-import riskyken.armourersWorkshop.common.customEquipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRenderManager {
@@ -23,7 +23,10 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
     public LinkedHashMap<String, IEquipmentRenderManager> equipmentRenderManagers = new LinkedHashMap<String, IEquipmentRenderManager>();
     
     public void addApiRequest(String modName, String className) {
+        
+        
         try {
+            
             Class<?> c = Class.forName(className);
             Object classObject = c.newInstance();
             if (classObject instanceof IEquipmentDataManager) {
@@ -32,11 +35,19 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
             if (classObject instanceof IEquipmentRenderManager) {
                 equipmentRenderManagers.put(modName, ((IEquipmentRenderManager)classObject)) ;
             }
-            
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+            
+
     }
 
     public void onLoad() {

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customEquipment;
+package riskyken.armourersWorkshop.common.equipment;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -17,9 +17,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.customEquipment.IEquipmentCacheHandler;
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
-import riskyken.armourersWorkshop.common.customEquipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.api.common.equipment.IEquipmentCacheHandler;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;

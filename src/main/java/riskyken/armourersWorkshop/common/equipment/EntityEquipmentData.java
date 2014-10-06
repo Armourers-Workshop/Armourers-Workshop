@@ -1,12 +1,12 @@
-package riskyken.armourersWorkshop.common.customEquipment;
+package riskyken.armourersWorkshop.common.equipment;
 
 import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
 
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.customEquipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 
 public class EntityEquipmentData implements IEntityEquipment {
     

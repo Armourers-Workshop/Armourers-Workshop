@@ -1,12 +1,12 @@
-package riskyken.armourersWorkshop.common.customEquipment;
+package riskyken.armourersWorkshop.common.equipment;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import riskyken.armourersWorkshop.api.common.customEquipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;

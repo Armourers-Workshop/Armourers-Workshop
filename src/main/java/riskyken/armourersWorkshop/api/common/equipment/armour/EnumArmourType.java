@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.api.common.customEquipment.armour;
+package riskyken.armourersWorkshop.api.common.equipment.armour;
 
 
 public enum EnumArmourType {

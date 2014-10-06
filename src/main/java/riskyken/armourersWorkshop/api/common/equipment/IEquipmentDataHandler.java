@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.api.common.customEquipment;
+package riskyken.armourersWorkshop.api.common.equipment;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

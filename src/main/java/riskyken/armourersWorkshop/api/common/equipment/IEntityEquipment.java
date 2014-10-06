@@ -1,6 +1,6 @@
-package riskyken.armourersWorkshop.api.common.customEquipment;
+package riskyken.armourersWorkshop.api.common.equipment;
 
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 
 public interface IEntityEquipment {
     

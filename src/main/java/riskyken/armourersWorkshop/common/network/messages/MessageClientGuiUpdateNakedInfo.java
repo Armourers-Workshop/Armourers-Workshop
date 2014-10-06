@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import java.util.BitSet;
 
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.customEquipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.customEquipment;
+package riskyken.armourersWorkshop.common.equipment;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,9 +8,9 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.api.common.customEquipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.customEquipment.IEquipmentDataHandler;
-import riskyken.armourersWorkshop.api.common.customEquipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public final class EntityEquipmentDataManager implements IEquipmentDataHandler {

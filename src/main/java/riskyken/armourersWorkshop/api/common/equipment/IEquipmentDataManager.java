@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.api.common.customEquipment;
+package riskyken.armourersWorkshop.api.common.equipment;
 
 public interface IEquipmentDataManager {
     
