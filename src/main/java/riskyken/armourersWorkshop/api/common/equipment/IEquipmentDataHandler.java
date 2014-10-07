@@ -54,6 +54,20 @@ public interface IEquipmentDataHandler {
     public ItemStack getCustomEquipmentItemStack(int equipmentId);
     
     /**
+     * Checks if an item stack has equipment data.
+     * @param stack
+     * @return True/False Has the item stack got Equipment data?
+     */
+    public boolean hasItemStackGotEquipmentData(ItemStack stack);
+    
+    /**
+     * Get the equipment id from an item stack.
+     * @param stack
+     * @return Equipment ID
+     */
+    public int getEquipmentIdFromItemStack(ItemStack stack);
+    
+    /**
      * Get the IInventory that players custom equipment items are stored in.</BR>
      * </BR>
      * Slot 0 = Head </BR>
