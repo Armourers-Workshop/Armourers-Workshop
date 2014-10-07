@@ -10,6 +10,8 @@ public interface IEquipmentDataHandler {
     
     /**
      * Sets the IEntityEquipment data for an entity.
+     * Note: If the entity is a player this will not update their
+     * IInventory holding their custom equipment item stacks
      * @param entity Entity to add the custom equipment to.
      * @param armourType Armour type to add.
      * @param equipmentId Equipment id to add.
@@ -19,7 +21,7 @@ public interface IEquipmentDataHandler {
     /**
      * Get the IEntityEquipment data for an entity.
      * @param entity
-     * @return
+     * @return IEntityEquipment
      */
     public IEntityEquipment getCustomEquipmentForEntity(Entity entity);
     
@@ -36,7 +38,7 @@ public interface IEquipmentDataHandler {
      */
     public void removeCustomEquipmentFromEntity(Entity entity, EnumArmourType armourType);
     
-    /**
+    /** 
      * Get the EnumArmourType for an equipment id.
      * @param equipmentId
      * @return The EnumArmourType for this equipment id.
@@ -52,12 +54,15 @@ public interface IEquipmentDataHandler {
     public ItemStack getCustomEquipmentItemStack(int equipmentId);
     
     /**
-     * Get the IInventory that players custom equipment items are stored in.
-     * Slot 0 = Head
-     * Slot 1 = Chest
-     * Slot 2 = Legs
-     * Slot 3 = Skirt
-     * Slot 4 = Feet
+     * Get the IInventory that players custom equipment items are stored in.</BR>
+     * </BR>
+     * Slot 0 = Head </BR>
+     * Slot 1 = Chest</BR>
+     * Slot 2 = Legs</BR>
+     * Slot 3 = Skirt</BR>
+     * Slot 4 = Feet</BR>
+     * </BR>
+     * Note: Changing this IInventory will also update the players IEntityEquipment data.
      * 
      * @param player Player to get the IInventory for.
      * @return IInventory of the player. Returns null if not found.
