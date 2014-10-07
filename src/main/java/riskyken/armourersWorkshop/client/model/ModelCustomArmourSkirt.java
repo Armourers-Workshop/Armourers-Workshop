@@ -38,6 +38,7 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
         
         bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.SKIRT);
+        armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
             CustomArmourPartData part = parts.get(i);

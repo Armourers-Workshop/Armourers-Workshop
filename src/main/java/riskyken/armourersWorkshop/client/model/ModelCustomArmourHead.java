@@ -41,6 +41,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.HEAD);
         ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, EnumArmourPart.HEAD);
+        armourData.onRender();
         
         if (!armourData.getParts().get(0).facesBuild) {
             EquipmentRenderHelper.cullFacesOnEquipmentPart(armourData.getParts().get(0));

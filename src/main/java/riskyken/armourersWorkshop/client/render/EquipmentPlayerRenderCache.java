@@ -266,4 +266,21 @@ public final class EquipmentPlayerRenderCache {
             }
         }
     }
+    
+    public void tick() {
+        for (int i = 0; i < equipmentDataMap.size(); i++) {
+            int key = (Integer) equipmentDataMap.keySet().toArray()[i];
+            equipmentDataMap.get(key).tick();
+        }
+        
+        for (int i = 0; i < equipmentDataMap.size(); i++) {
+            int key = (Integer) equipmentDataMap.keySet().toArray()[i];
+            CustomArmourItemData customArmourItemData = equipmentDataMap.get(key);
+            if (customArmourItemData.needsCleanup()) {
+                equipmentDataMap.remove(key);
+                customArmourItemData.cleanUpDisplayLists();
+                break;
+            }
+        }
+    }
 }

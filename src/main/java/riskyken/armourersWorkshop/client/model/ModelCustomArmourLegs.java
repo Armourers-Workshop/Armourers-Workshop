@@ -38,6 +38,7 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
         
         bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.LEGS);
+        armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
             CustomArmourPartData part = parts.get(i);

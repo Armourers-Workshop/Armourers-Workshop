@@ -32,6 +32,23 @@ public class CustomArmourItemData {
     private EnumArmourType type;
     private ArrayList<CustomArmourPartData> parts;
     
+    private int timeFromRender = 0;
+    
+    public void onRender() {
+        timeFromRender = 0;
+    }
+    
+    public void tick() {
+        timeFromRender++;
+    }
+    
+    public boolean needsCleanup() {
+        if (timeFromRender > 6000) {
+            return true;
+        }
+        return false;
+    }
+    
     public CustomArmourItemData(String authorName, String customName, EnumArmourType type, ArrayList<CustomArmourPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
@@ -40,7 +57,7 @@ public class CustomArmourItemData {
     }
 
     @SideOnly(Side.CLIENT)
-    public void cleanUpDisplayLists(CustomArmourPartData armourPart) {
+    public void cleanUpDisplayLists() {
         for (int i = 0; i < parts.size(); i++) {
             parts.get(i).cleanUpDisplayLists();
         }

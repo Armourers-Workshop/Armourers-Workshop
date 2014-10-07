@@ -37,6 +37,7 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         
         bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.CHEST);
+        armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
             CustomArmourPartData part = parts.get(i);
