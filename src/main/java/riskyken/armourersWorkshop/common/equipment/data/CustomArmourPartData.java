@@ -7,11 +7,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class CustomArmourPartData {
     
@@ -20,7 +23,18 @@ public class CustomArmourPartData {
     
     private ArrayList<CustomEquipmentBlockData> armourData;
     private EnumArmourPart part;
+    
+    public boolean facesBuild;
+    public boolean displayCompiled;
+    public int displayList;
 
+    @SideOnly(Side.CLIENT)
+    public void cleanUpDisplayLists() {
+        if (this.displayCompiled) {
+            GLAllocation.deleteDisplayLists(this.displayList);
+        }
+    }
+    
     public CustomArmourPartData(ArrayList armourData,
             EnumArmourPart part) {
         this.armourData = armourData;

@@ -15,7 +15,8 @@ public class CustomModelRenderer extends ModelRenderer {
     
     public void render(float scale, BitSet faceFlags) {
         Tessellator tessellator = Tessellator.instance;
-        for (int i = 0; i < this.cubeList.size(); ++i) {
+        int size = this.cubeList.size();
+        for (int i = 0; i < size; ++i) {
             ((ModelEquipmentBox)this.cubeList.get(i)).render(tessellator, scale, faceFlags);
         }
     }

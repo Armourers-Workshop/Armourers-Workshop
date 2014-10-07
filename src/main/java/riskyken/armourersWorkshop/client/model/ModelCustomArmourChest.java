@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
@@ -36,9 +37,14 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         
         bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.CHEST);
+        armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
             CustomArmourPartData part = parts.get(i);
+            if (!part.facesBuild) {
+                EquipmentRenderHelper.cullFacesOnEquipmentPart(part);
+            }
+            
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
             switch (part.getArmourPart()) {
             case CHEST:
@@ -65,7 +71,7 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-        renderPart(part.getArmourData(), scale);
+        renderPart(part, scale);
         GL11.glPopMatrix();
     }
     
@@ -82,7 +88,7 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part.getArmourData(), scale);
+        renderPart(part, scale);
         
         GL11.glPopMatrix();
     }
@@ -100,7 +106,7 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part.getArmourData(), scale);
+        renderPart(part, scale);
         GL11.glPopMatrix();
     }
 }

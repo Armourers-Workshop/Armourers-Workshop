@@ -89,7 +89,8 @@ public class ModelEquipmentBox extends ModelBox {
         //3 = down
         //4 = north
         //5 = south
-        for (int i = 0; i < this.quadList.length; ++i) {
+        int size = this.quadList.length;
+        for (int i = 0; i < size; ++i) {
             if (!faceFlags.get(i)) {
                 this.quadList[i].draw(tessellator, scale);
             }
