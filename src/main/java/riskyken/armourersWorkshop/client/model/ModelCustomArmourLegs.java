@@ -70,7 +70,7 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
-        renderPart(part.getArmourData(), scale);
+        renderPart(part, scale);
         GL11.glPopMatrix();
     }
     
@@ -84,7 +84,7 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
-        renderPart(part.getArmourData(), scale);
+        renderPart(part, scale);
         GL11.glPopMatrix();
     }
 }

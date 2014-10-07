@@ -67,7 +67,7 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         
-        renderPart(part.getArmourData(), scale);
+        renderPart(part, scale);
         GL11.glPopMatrix();
     }
 }

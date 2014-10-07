@@ -17,6 +17,8 @@ import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class CustomArmourItemData {
     
@@ -37,6 +39,13 @@ public class CustomArmourItemData {
         this.parts = parts;
     }
 
+    @SideOnly(Side.CLIENT)
+    public void cleanUpDisplayLists(CustomArmourPartData armourPart) {
+        for (int i = 0; i < parts.size(); i++) {
+            parts.get(i).cleanUpDisplayLists();
+        }
+    }
+    
     public CustomArmourItemData(ByteBuf buf) {
         readFromBuf(buf);
     }

@@ -64,7 +64,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
     private void renderHead(CustomArmourPartData part, float scale) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-        renderPart(part.getArmourData(), scale);
+        renderPart(part, scale);
         GL11.glPopMatrix();
     }
 }
