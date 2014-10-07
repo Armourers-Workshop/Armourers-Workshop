@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.model;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
@@ -10,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
@@ -20,13 +22,13 @@ public class ModelCustomArmour extends ModelBiped{
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     protected static float scale = 0.0625F;
-    private final ModelRenderer main;
+    private final CustomModelRenderer main;
     
     public ModelCustomArmour() {
         textureWidth = 4;
         textureHeight = 4;
         
-        main = new ModelRenderer(this, 0, 0);
+        main = new CustomModelRenderer(this, 0, 0);
         main.addBox(0F, 0F, 0F, 1, 1, 1);
         main.setRotationPoint(0, 0, 0);
     }
@@ -72,10 +74,11 @@ public class ModelCustomArmour extends ModelBiped{
     }
      
     public void renderPart(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
+        //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
          for (int i = 0; i < armourBlockData.size(); i++) {
              CustomEquipmentBlockData blockData = armourBlockData.get(i);
              if (!blockData.isGlowing()) {
-                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
              }
          }
          
@@ -87,15 +90,16 @@ public class ModelCustomArmour extends ModelBiped{
          for (int i = 0; i < armourBlockData.size(); i++) {
              CustomEquipmentBlockData blockData = armourBlockData.get(i);
              if (blockData.isGlowing()) {
-                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale);
+                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
              }
          }
          
          OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
          GL11.glEnable(GL11.GL_LIGHTING);
+         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
      }
 
-     public void renderArmourBlock(int x, int y, int z, int colour, float scale) {
+     public void renderArmourBlock(int x, int y, int z, int colour, float scale, BitSet faceFlags) {
          float colourRed = (colour >> 16 & 0xff) / 255F;
          float colourGreen = (colour >> 8 & 0xff) / 255F;
          float colourBlue = (colour & 0xff) / 255F;
@@ -103,7 +107,13 @@ public class ModelCustomArmour extends ModelBiped{
          GL11.glPushMatrix();
          GL11.glColor3f(colourRed, colourGreen, colourBlue);
          GL11.glTranslated(x * scale, y * scale, z * scale);
-         main.render(scale);
+         if (faceFlags != null) {
+             main.render(scale);
+             main.render(scale, faceFlags);
+         } else {
+             main.render(scale);
+         }
+         
          GL11.glPopMatrix();
      }
      

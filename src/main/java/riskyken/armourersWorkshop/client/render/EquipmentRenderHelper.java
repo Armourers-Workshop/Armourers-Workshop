@@ -14,6 +14,7 @@ public final class EquipmentRenderHelper {
         for (int i = 0; i < blocks.size(); i++) {
             CustomEquipmentBlockData blockData = blocks.get(i);
             setBlockFaceFlags(blocks, blockData);
+            partData.facesBuild = true;
         }
     }
     

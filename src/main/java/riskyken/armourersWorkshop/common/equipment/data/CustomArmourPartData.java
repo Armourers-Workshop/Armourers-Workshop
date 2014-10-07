@@ -20,6 +20,7 @@ public class CustomArmourPartData {
     
     private ArrayList<CustomEquipmentBlockData> armourData;
     private EnumArmourPart part;
+    public boolean facesBuild;
 
     public CustomArmourPartData(ArrayList armourData,
             EnumArmourPart part) {

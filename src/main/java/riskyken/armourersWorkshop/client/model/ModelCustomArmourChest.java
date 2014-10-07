@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
@@ -39,6 +40,10 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         
         for (int i = 0; i < parts.size(); i++) {
             CustomArmourPartData part = parts.get(i);
+            if (!part.facesBuild) {
+                EquipmentRenderHelper.cullFacesOnEquipmentPart(part);
+            }
+            
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
             switch (part.getArmourPart()) {
             case CHEST:

@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
@@ -40,6 +41,10 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.HEAD);
         ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, EnumArmourPart.HEAD);
+        
+        if (!armourData.getParts().get(0).facesBuild) {
+            EquipmentRenderHelper.cullFacesOnEquipmentPart(armourData.getParts().get(0));
+        }
         
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
