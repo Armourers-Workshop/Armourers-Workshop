@@ -81,7 +81,6 @@ public class ModelCustomArmour extends ModelBiped{
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
         
         if (!armourPart.displayCompiled) {
-            ModLogger.log("Building display list for: " + armourPart.getArmourPart().name());
             armourPart.displayList = GLAllocation.generateDisplayLists(1);
             GL11.glNewList(armourPart.displayList, GL11.GL_COMPILE);
             GL11.glPushMatrix();
@@ -89,8 +88,6 @@ public class ModelCustomArmour extends ModelBiped{
             GL11.glPopMatrix();
             GL11.glEndList();
             armourPart.displayCompiled = true;
-            ModLogger.log("Done");
-            return;
         }
         
         GL11.glCallList(armourPart.displayList);
