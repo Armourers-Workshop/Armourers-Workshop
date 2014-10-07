@@ -46,18 +46,6 @@ public class CustomArmourPartData {
     public ArrayList<CustomEquipmentBlockData> getArmourData() {
         return armourData;
     }
-
-    public void removeHiddenBlocks() {
-        ArrayList<CustomEquipmentBlockData> newBlockList = new ArrayList<CustomEquipmentBlockData>();
-        for (int i = 0; i < armourData.size(); i++) {
-            CustomEquipmentBlockData blockData = armourData.get(i);
-            if (blockCanBeSeen(armourData, blockData)) {
-                newBlockList.add(blockData);
-            }
-        }
-        armourData.clear();
-        armourData = newBlockList;
-    }
     
     private boolean blockCanBeSeen(ArrayList<CustomEquipmentBlockData> partBlocks, CustomEquipmentBlockData block) {
         int sidesCovered = 0;
