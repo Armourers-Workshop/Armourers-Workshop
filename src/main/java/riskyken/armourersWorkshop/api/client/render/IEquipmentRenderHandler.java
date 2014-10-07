@@ -7,14 +7,31 @@ import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 public interface IEquipmentRenderHandler {
 
     /**
-     * Renders custom equipment at an entity.
+     * Renders custom equipment at an entity using it's IEntityEquipment data.
      * @param entity Entity to render the armour on.
      * @param armourType Armour type to render.
      * @param modelBiped Optional ModelBiped that the equipment will use for rotation angles.
+     * Pass null if you do not want to use this.
      */
     public void renderCustomEquipmentOnEntity(Entity entity, EnumArmourType armourType, ModelBiped modelBiped);
     
+    /**
+     * Renders custom equipment.
+     * @param equipmentId Equipment id to render.
+     * @param modelBiped Optional ModelBiped that the equipment will use for rotation angles.
+     * Pass null if you do not want to use this.
+     */
+    public void renderCustomEquipment(int equipmentId, ModelBiped modelBiped);
+    
+    /**
+     * Get the number of items in the cache for item models.
+     * @return Number of items in the cache.
+     */
     public int getItemModelRenderCacheSize();
     
-    public int getPlayerModelRenderCacheSize();
+    /**
+     * Get the number of items in the cache for entity models.
+     * @return Number of items in the cache.
+     */
+    public int getEntityModelRenderCacheSize();
 }

@@ -23,6 +23,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -241,29 +242,52 @@ public final class EquipmentPlayerRenderCache {
             EnumArmourType armourType = EnumArmourType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
                 CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
-                if (data != null) {
-                    switch (armourType) {
-                    case HEAD:
-                        customHead.render(null, modelBiped, data);
-                        break;
-                    case CHEST:
-                        customChest.render(null, modelBiped, data);
-                        break;
-                    case LEGS:
-                        customLegs.render(null, modelBiped, data);
-                        break;
-                    case SKIRT:
-                        customSkirt.render(null, modelBiped, data);
-                        break;
-                    case FEET:
-                        customFeet.render(null, modelBiped, data);
-                        break;
-                    default:
-                        break;
-                    }
-                    
-                }
+                renderEquipmentPart(null, modelBiped, data);
             }
+        }
+    }
+    
+    public void renderEquipmentPartOnEntity(Entity entity, EnumArmourType armourType, ModelBiped modelBiped) {
+        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
+        if (entityProps == null) {
+            return;
+        }
+        
+        EntityEquipmentData equipmentData = entityProps.getEquipmentData();
+        
+        if (equipmentData.haveEquipment(armourType)) {
+            CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
+            renderEquipmentPart(entity, modelBiped, data);
+        }
+    }
+    
+    public void renderEquipmentPart(int equipmentId, ModelBiped modelBiped) {
+        CustomArmourItemData data = getCustomArmourItemData(equipmentId);
+        renderEquipmentPart(null, modelBiped, data);
+    }
+    
+    private void renderEquipmentPart(Entity entity, ModelBiped modelBiped, CustomArmourItemData data) {
+        if (data == null) {
+            return;
+        }
+        switch (data.getType()) {
+        case HEAD:
+            customHead.render(entity, modelBiped, data);
+            break;
+        case CHEST:
+            customChest.render(entity, modelBiped, data);
+            break;
+        case LEGS:
+            customLegs.render(entity, modelBiped, data);
+            break;
+        case SKIRT:
+            customSkirt.render(entity, modelBiped, data);
+            break;
+        case FEET:
+            customFeet.render(entity, modelBiped, data);
+            break;
+        default:
+            break;
         }
     }
     
