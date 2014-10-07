@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.equipment.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
@@ -96,6 +97,16 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             return data.getType();
         }
         return EnumArmourType.NONE;
+    }
+    
+    @Override
+    public boolean hasItemStackGotEquipmentData(ItemStack stack) {
+        return EquipmentNBTHelper.itemStackHasCustomEquipment(stack);
+    }
+    
+    @Override
+    public int getEquipmentIdFromItemStack(ItemStack stack) {
+        return EquipmentNBTHelper.getEquipmentIdFromStack(stack);
     }
 
     @Override
