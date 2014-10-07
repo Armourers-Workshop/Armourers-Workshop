@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -21,6 +23,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
+        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        
         GL11.glPushMatrix();
         float scale = 0.0625F;
         
@@ -30,9 +34,15 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef(rotaion * 22.5F, 0, 1, 0);
         modelMannequin.render(null, 0, 0.0001F, 0, 0, 0, scale);
-        if (tileEntity instanceof TileEntityMannequin) {
-            EquipmentPlayerRenderCache.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), modelMannequin);
+        
+        //ModLogger.log(player.getDistance(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+        
+        if (player.getDistance(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) < 40) {
+            if (tileEntity instanceof TileEntityMannequin) {
+                EquipmentPlayerRenderCache.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), modelMannequin);
+            }
         }
+        
         GL11.glPopMatrix();
     }
 }

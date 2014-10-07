@@ -17,6 +17,8 @@ import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class CustomArmourItemData {
     
@@ -30,6 +32,23 @@ public class CustomArmourItemData {
     private EnumArmourType type;
     private ArrayList<CustomArmourPartData> parts;
     
+    private int timeFromRender = 0;
+    
+    public void onRender() {
+        timeFromRender = 0;
+    }
+    
+    public void tick() {
+        timeFromRender++;
+    }
+    
+    public boolean needsCleanup() {
+        if (timeFromRender > 6000) {
+            return true;
+        }
+        return false;
+    }
+    
     public CustomArmourItemData(String authorName, String customName, EnumArmourType type, ArrayList<CustomArmourPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
@@ -37,6 +56,13 @@ public class CustomArmourItemData {
         this.parts = parts;
     }
 
+    @SideOnly(Side.CLIENT)
+    public void cleanUpDisplayLists() {
+        for (int i = 0; i < parts.size(); i++) {
+            parts.get(i).cleanUpDisplayLists();
+        }
+    }
+    
     public CustomArmourItemData(ByteBuf buf) {
         readFromBuf(buf);
     }
