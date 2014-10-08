@@ -4,6 +4,7 @@ import java.util.BitSet;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,6 +19,7 @@ import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.RenderItemMannequin;
+import riskyken.armourersWorkshop.client.render.RenderItemWeaponSkin;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -50,6 +52,11 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin(modelMannequin));
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelMannequin));
+        MinecraftForgeClient.registerItemRenderer(Items.wooden_sword, new RenderItemWeaponSkin());
+        MinecraftForgeClient.registerItemRenderer(Items.stone_sword, new RenderItemWeaponSkin());
+        MinecraftForgeClient.registerItemRenderer(Items.iron_sword, new RenderItemWeaponSkin());
+        MinecraftForgeClient.registerItemRenderer(Items.golden_sword, new RenderItemWeaponSkin());
+        MinecraftForgeClient.registerItemRenderer(Items.diamond_sword, new RenderItemWeaponSkin());
         blockColourMixerRenderId = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
     }

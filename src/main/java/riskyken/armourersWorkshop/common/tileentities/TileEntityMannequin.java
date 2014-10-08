@@ -7,7 +7,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
@@ -34,7 +34,7 @@ public class TileEntityMannequin extends TileEntity {
         setEquipment(equipmentData.getType(), equipmentId);
     }
     
-    public void setEquipment(EnumArmourType armourType, int equipmentId) {
+    public void setEquipment(EnumEquipmentType armourType, int equipmentId) {
         equipmentData.addEquipment(armourType, equipmentId);
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);

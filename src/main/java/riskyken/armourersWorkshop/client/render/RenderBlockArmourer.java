@@ -14,10 +14,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.model.ModelChest;
 import riskyken.armourersWorkshop.client.model.ModelFeet;
+import riskyken.armourersWorkshop.client.model.ModelHand;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -37,12 +38,13 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     private static final ModelChest modelChest = new ModelChest();
     private static final ModelLegs modelLegs = new ModelLegs();
     private static final ModelFeet modelFeet = new ModelFeet();
+    private static final ModelHand modelHand = new ModelHand();
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
 
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
-        EnumArmourType type = te.getType();
+        EnumEquipmentType type = te.getType();
         
         if (!te.isFormed()) { return; }
         
@@ -83,6 +85,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case FEET:
             modelFeet.render();
             break;
+        case WEAPON:
+            modelHand.render();
+            break;
         }
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
@@ -93,7 +98,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         }
     }
     
-    private void renderGuide(TileEntityArmourerBrain te, EnumArmourType type, double x, double y, double z) {
+    private void renderGuide(TileEntityArmourerBrain te, EnumEquipmentType type, double x, double y, double z) {
         
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         
@@ -101,28 +106,31 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case NONE:
             break;
         case HEAD:
-            renderGuidePart(EnumArmourPart.HEAD, x, y, z);
+            renderGuidePart(EnumEquipmentPart.HEAD, x, y, z);
             break;
         case CHEST:
-            renderGuidePart(EnumArmourPart.CHEST, x, y, z);
-            renderGuidePart(EnumArmourPart.LEFT_ARM, x, y, z);
-            renderGuidePart(EnumArmourPart.RIGHT_ARM, x, y, z);
+            renderGuidePart(EnumEquipmentPart.CHEST, x, y, z);
+            renderGuidePart(EnumEquipmentPart.LEFT_ARM, x, y, z);
+            renderGuidePart(EnumEquipmentPart.RIGHT_ARM, x, y, z);
             break;
         case LEGS:
-            renderGuidePart(EnumArmourPart.LEFT_LEG, x, y, z);
-            renderGuidePart(EnumArmourPart.RIGHT_LEG, x, y, z);
+            renderGuidePart(EnumEquipmentPart.LEFT_LEG, x, y, z);
+            renderGuidePart(EnumEquipmentPart.RIGHT_LEG, x, y, z);
             break;
         case SKIRT:
-            renderGuidePart(EnumArmourPart.SKIRT, x, y, z);
+            renderGuidePart(EnumEquipmentPart.SKIRT, x, y, z);
             break;
         case FEET:
-            renderGuidePart(EnumArmourPart.LEFT_FOOT, x, y, z);
-            renderGuidePart(EnumArmourPart.RIGHT_FOOT, x, y, z);
+            renderGuidePart(EnumEquipmentPart.LEFT_FOOT, x, y, z);
+            renderGuidePart(EnumEquipmentPart.RIGHT_FOOT, x, y, z);
             break;
+        case WEAPON:
+            renderGuidePart(EnumEquipmentPart.WEAPON, x, y, z);
+            break;  
         }
     }
     
-    private void renderGuidePart(EnumArmourPart part, double x, double y, double z) {
+    private void renderGuidePart(EnumEquipmentPart part, double x, double y, double z) {
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
 
@@ -136,11 +144,11 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glEnable(GL11.GL_LIGHTING);
         
         GL11.glPopMatrix();
-        /*
-        GL11.glColor3f(1F, 0.5F, 0.5F);
-        renderGuideFace(ForgeDirection.DOWN, x + part.getXOrigin(), y + 0 + part.getYOrigin(), z + 1 + part.getZOrigin(), 1, 1);
-        renderGuideFace(ForgeDirection.UP, x + part.getXOrigin(), y + 1 + part.getYOrigin(), z + part.getZOrigin(), 1, 1);
-        */
+        
+        //GL11.glColor3f(1F, 0.5F, 0.5F);
+        renderGuideFace(ForgeDirection.DOWN, x + part.xOrigin, y + 0 + part.yOrigin, z + 1 + part.zOrigin, 1, 1);
+        renderGuideFace(ForgeDirection.UP, x + part.xOrigin, y + 1 + part.yOrigin, z + part.zOrigin, 1, 1);
+        
     }
     
     private void renderGuideFace(ForgeDirection dir, double x, double y, double z, int sizeX, int sizeY) {

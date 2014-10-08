@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -29,7 +29,7 @@ public class CustomArmourItemData {
     
     private String authorName;
     private String customName;
-    private EnumArmourType type;
+    private EnumEquipmentType type;
     private ArrayList<CustomArmourPartData> parts;
     
     private int timeFromRender = 0;
@@ -49,7 +49,7 @@ public class CustomArmourItemData {
         return false;
     }
     
-    public CustomArmourItemData(String authorName, String customName, EnumArmourType type, ArrayList<CustomArmourPartData> parts) {
+    public CustomArmourItemData(String authorName, String customName, EnumEquipmentType type, ArrayList<CustomArmourPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
         this.type = type;
@@ -88,7 +88,7 @@ public class CustomArmourItemData {
     private void readFromBuf(ByteBuf buf) {
         this.authorName = ByteBufUtils.readUTF8String(buf);
         this.customName = ByteBufUtils.readUTF8String(buf);
-        type = EnumArmourType.getOrdinal(buf.readByte());
+        type = EnumEquipmentType.getOrdinal(buf.readByte());
         int size = buf.readByte();
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < size; i++) {
@@ -123,7 +123,7 @@ public class CustomArmourItemData {
     private void readFromNBT(NBTTagCompound compound) {
         this.authorName = compound.getString(LibCommonTags.TAG_AUTHOR_NAME);
         this.customName = compound.getString(LibCommonTags.TAG_CUSTOM_NAME);
-        type = EnumArmourType.getOrdinal(compound.getByte(TAG_TYPE));
+        type = EnumEquipmentType.getOrdinal(compound.getByte(TAG_TYPE));
         NBTTagList blockData = compound.getTagList(TAG_PARTS, NBT.TAG_COMPOUND);
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < blockData.tagCount(); i++) {
@@ -150,7 +150,7 @@ public class CustomArmourItemData {
         }
         this.authorName = stream.readUTF();
         this.customName = stream.readUTF();
-        type = EnumArmourType.getOrdinal(stream.readByte());
+        type = EnumEquipmentType.getOrdinal(stream.readByte());
         int size = stream.readByte();
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < size; i++) {
@@ -158,7 +158,7 @@ public class CustomArmourItemData {
         }
     }
     
-    public EnumArmourType getType() {
+    public EnumEquipmentType getType() {
         return type;
     }
     

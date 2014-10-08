@@ -3,14 +3,14 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class SlotEquipmentSkin extends Slot {
     
-    private EnumArmourType type;
+    private EnumEquipmentType type;
     
-    public SlotEquipmentSkin(EnumArmourType type, IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition) {
+    public SlotEquipmentSkin(EnumEquipmentType type, IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition) {
         super(inventory, slotIndex, xDisplayPosition, yDisplayPosition);
         this.type = type;
     }

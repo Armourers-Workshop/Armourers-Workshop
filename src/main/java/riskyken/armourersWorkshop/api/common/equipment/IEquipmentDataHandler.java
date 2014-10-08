@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 
 public interface IEquipmentDataHandler {
     
@@ -36,7 +36,7 @@ public interface IEquipmentDataHandler {
      * @param entity Entity to remove the custom equipment from.
      * @param armourType The type of equipment to remove.
      */
-    public void removeCustomEquipmentFromEntity(Entity entity, EnumArmourType armourType);
+    public void removeCustomEquipmentFromEntity(Entity entity, EnumEquipmentType armourType);
     
     /** 
      * Get the EnumArmourType for an equipment id.
@@ -44,7 +44,7 @@ public interface IEquipmentDataHandler {
      * @return The EnumArmourType for this equipment id.
      * Returns EnumArmourType.NONE if no armour exists for this id.
      */
-    public EnumArmourType getEquipmentType(int equipmentId);
+    public EnumEquipmentType getEquipmentType(int equipmentId);
     
     /**
      * Get an item stack for the equipment id.
@@ -59,6 +59,10 @@ public interface IEquipmentDataHandler {
      * @return True/False Has the item stack got Equipment data?
      */
     public boolean hasItemStackGotEquipmentData(ItemStack stack);
+    
+    public ItemStack getEquipmentStackFromEntity(Entity entity, EnumEquipmentType armourType);
+    
+    public void setEquipmentStackOnEntity(Entity entity, EnumEquipmentType armourType, ItemStack stack);
     
     /**
      * Get the equipment id from an item stack.

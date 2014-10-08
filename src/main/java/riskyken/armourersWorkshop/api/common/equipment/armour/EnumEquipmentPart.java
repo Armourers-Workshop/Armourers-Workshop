@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.api.common.equipment.armour;
 
-public enum EnumArmourPart {
+public enum EnumEquipmentPart {
     HEAD(
             1, 0, 1,
             20, 20, 20,
@@ -53,6 +53,12 @@ public enum EnumArmourPart {
             12, 0, 5,
             8, 5, 12,
             16, 14, 11
+            ),
+    
+    WEAPON(
+            1, 0, 1,
+            20, 40, 20,
+            11, 21, 11
             );
     
     public final int xOffset;
@@ -67,7 +73,7 @@ public enum EnumArmourPart {
     public final int yOrigin;
     public final int zOrigin;
     
-    EnumArmourPart(int xOffset, int yOffset, int zOffset, int xSize, int ySize, int zSize, int xOrigin, int yOrigin, int zOrigin) {
+    EnumEquipmentPart(int xOffset, int yOffset, int zOffset, int xSize, int ySize, int zSize, int xOrigin, int yOrigin, int zOrigin) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.zOffset = zOffset;
@@ -81,7 +87,7 @@ public enum EnumArmourPart {
         this.zOrigin = zOrigin;
     }
     
-    public static EnumArmourPart getOrdinal(int id) {
-        return EnumArmourPart.values()[id];
+    public static EnumEquipmentPart getOrdinal(int id) {
+        return EnumEquipmentPart.values()[id];
     }
 }

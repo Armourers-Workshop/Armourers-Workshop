@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
@@ -42,7 +42,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
     
-    public ModelCustomItemBuilt(CustomArmourItemData itemData, EnumArmourType armourType, int renderId) {
+    public ModelCustomItemBuilt(CustomArmourItemData itemData, EnumEquipmentType armourType, int renderId) {
         this.renderId = renderId;
         textureWidth = 4;
         textureHeight = 4;

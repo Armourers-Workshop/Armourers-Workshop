@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
@@ -37,7 +37,7 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
 
         
         bindArmourTexture();
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.SKIRT);
+        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumEquipmentType.SKIRT);
         armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {

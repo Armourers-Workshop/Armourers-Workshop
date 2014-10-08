@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -36,22 +36,23 @@ public class ExtendedPropsEntityEquipmentData implements IExtendedEntityProperti
     public void init(Entity entity, World world) {
     }
     
-    public void addCustomEquipment(EnumArmourType type, int equipmentId) {
+    public void addCustomEquipment(EnumEquipmentType type, int equipmentId) {
         equipmentData.addEquipment(type, equipmentId);
         updateEquipmentDataToPlayersAround();
     }
 
-    public void removeCustomEquipment(EnumArmourType type) {
+    public void removeCustomEquipment(EnumEquipmentType type) {
         equipmentData.removeEquipment(type);
         updateEquipmentDataToPlayersAround();
     }
     
     public void removeAllCustomEquipment() {
-        equipmentData.removeEquipment(EnumArmourType.HEAD);
-        equipmentData.removeEquipment(EnumArmourType.CHEST);
-        equipmentData.removeEquipment(EnumArmourType.LEGS);
-        equipmentData.removeEquipment(EnumArmourType.SKIRT);
-        equipmentData.removeEquipment(EnumArmourType.FEET);
+        equipmentData.removeEquipment(EnumEquipmentType.HEAD);
+        equipmentData.removeEquipment(EnumEquipmentType.CHEST);
+        equipmentData.removeEquipment(EnumEquipmentType.LEGS);
+        equipmentData.removeEquipment(EnumEquipmentType.SKIRT);
+        equipmentData.removeEquipment(EnumEquipmentType.FEET);
+        equipmentData.removeEquipment(EnumEquipmentType.WEAPON);
         updateEquipmentDataToPlayersAround();
     }
     

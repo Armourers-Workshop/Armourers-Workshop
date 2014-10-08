@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.handler;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -7,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
@@ -16,6 +18,8 @@ import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentD
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EquipmentDataHandler implements IEquipmentDataHandler {
 
@@ -24,7 +28,14 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     @Override
     public EntityEquipmentData getCustomEquipmentForEntity(Entity entity) {
         if (entity instanceof EntityPlayer) {
-            ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
+            ExtendedPropsPlayerEquipmentData entityProps;
+            entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
+            if (entity.worldObj.isRemote) {
+                EntityClientPlayerMP localPlayer = getLocalPlayer();
+                if (entity.getPersistentID() == localPlayer.getPersistentID()) {
+                    entityProps = ExtendedPropsPlayerEquipmentData.get(localPlayer);
+                }
+            }
             if (entityProps != null) {
                 return entityProps.getEquipmentData();
             }
@@ -39,7 +50,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
 
     @Override
     public void removeAllCustomEquipmentFromEntity(Entity entity) {
-        if (entity instanceof EntityPlayer) {
+        if (entity instanceof EntityPlayer) {  
             ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
             if (entityProps == null) {
                 return;
@@ -53,9 +64,14 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             entityProps.removeAllCustomEquipment();
         }
     }
+    
+    @SideOnly(Side.CLIENT)
+    private EntityClientPlayerMP getLocalPlayer() {
+        return Minecraft.getMinecraft().thePlayer;
+    }
 
     @Override
-    public void removeCustomEquipmentFromEntity(Entity entity, EnumArmourType armourType) {
+    public void removeCustomEquipmentFromEntity(Entity entity, EnumEquipmentType armourType) {
         if (entity instanceof EntityPlayer) {
             ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
             if (entityProps == null) {
@@ -91,12 +107,12 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
 
     @Override
-    public EnumArmourType getEquipmentType(int equipmentId) {
+    public EnumEquipmentType getEquipmentType(int equipmentId) {
         CustomArmourItemData data = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         if (data != null) {
             return data.getType();
         }
-        return EnumArmourType.NONE;
+        return EnumEquipmentType.NONE;
     }
     
     @Override
@@ -128,5 +144,17 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             return null;
         }
         return entityProps;
+    }
+
+    @Override
+    public ItemStack getEquipmentStackFromEntity(Entity entity, EnumEquipmentType armourType) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setEquipmentStackOnEntity(Entity entity, EnumEquipmentType armourType, ItemStack stack) {
+        // TODO Auto-generated method stub
+        
     }
 }

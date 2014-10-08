@@ -1,8 +1,8 @@
 package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.entity.Entity;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 
 /**
  * Used to handle rendering in the armourers workshop API.
@@ -18,7 +18,7 @@ public interface IEquipmentRenderManager {
     
     public void onLoad(IEquipmentRenderHandler handler);
     
-    public void onRenderEquipment(Entity entity, EnumArmourType armourType);
+    public void onRenderEquipment(Entity entity, EnumEquipmentType armourType);
     
-    public void onRenderEquipmentPart(Entity entity, EnumArmourPart armourPart);
+    public void onRenderEquipmentPart(Entity entity, EnumEquipmentPart armourPart);
 }

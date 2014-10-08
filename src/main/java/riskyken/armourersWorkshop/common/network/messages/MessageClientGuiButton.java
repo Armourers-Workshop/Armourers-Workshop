@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -40,8 +40,8 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
             
-            if (message.buttonId >= 0 & message.buttonId < 5) {
-                armourerBrain.setType(EnumArmourType.getOrdinal(message.buttonId + 1));
+            if (message.buttonId >= 0 & message.buttonId < 6) {
+                armourerBrain.setType(EnumEquipmentType.getOrdinal(message.buttonId + 1));
             }
             if (message.buttonId == 6) {
                 armourerBrain.loadArmourItem(player);

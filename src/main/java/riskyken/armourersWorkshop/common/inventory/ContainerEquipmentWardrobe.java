@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
@@ -16,12 +16,13 @@ public class ContainerEquipmentWardrobe extends Container {
     public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, ExtendedPropsPlayerEquipmentData customEquipmentData) {
         this.customEquipmentData = customEquipmentData;
         
-        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.HEAD, customEquipmentData, 0, 37, 18));
-        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.CHEST, customEquipmentData, 1, 37, 45));
-        addSlotToContainer(new SlotOutput(customEquipmentData, 5, 37, 72));
-        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.LEGS, customEquipmentData, 2, 123, 18));
-        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.SKIRT, customEquipmentData, 3, 123, 45));
-        addSlotToContainer(new SlotEquipmentSkin(EnumArmourType.FEET, customEquipmentData, 4, 123, 72));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.HEAD, customEquipmentData, 0, 37, 18));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 37, 45));
+        //WEAPON
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.WEAPON, customEquipmentData, 5, 37, 72));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 123, 18));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 123, 45));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.FEET, customEquipmentData, 4, 123, 72));
         
         addSlotToContainer(new SlotColourTool(customEquipmentData, 6, 8, 130));
         addSlotToContainer(new SlotOutput(customEquipmentData, 7, 52, 130));

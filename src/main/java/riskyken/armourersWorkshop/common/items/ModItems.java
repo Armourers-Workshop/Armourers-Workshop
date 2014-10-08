@@ -13,6 +13,7 @@ public class ModItems {
     public static Item colourNoiseTool;
     public static Item shadeNoiseTool;
     public static Item guideBook;
+    public static Item weaponSkin;
     
     public static void init() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
@@ -25,5 +26,6 @@ public class ModItems {
         colourNoiseTool = new ItemColourNoiseTool();
         shadeNoiseTool = new ItemShadeNoiseTool();
         guideBook = new ItemGuideBook();
+        weaponSkin = new ItemWeaponSkin();
     }
 }

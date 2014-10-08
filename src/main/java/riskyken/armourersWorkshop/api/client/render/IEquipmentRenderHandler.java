@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 
 public interface IEquipmentRenderHandler {
 
@@ -13,7 +13,7 @@ public interface IEquipmentRenderHandler {
      * @param modelBiped Optional ModelBiped that the equipment will use for rotation angles.
      * Pass null if you do not want to use this.
      */
-    public void renderCustomEquipmentOnEntity(Entity entity, EnumArmourType armourType, ModelBiped modelBiped);
+    public void renderCustomEquipmentOnEntity(Entity entity, EnumEquipmentType armourType, ModelBiped modelBiped);
     
     /**
      * Renders custom equipment.

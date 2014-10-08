@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.common.BodyPart;
@@ -39,13 +39,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     private static final String TAG_CUSTOM_NAME = "customeName";
     
     private GameProfile gameProfile = null;
-    private EnumArmourType type;
+    private EnumEquipmentType type;
     private boolean showGuides;
     private boolean showOverlay;
     private String customName;
     
     public TileEntityArmourerBrain() {
-        this.type = EnumArmourType.HEAD;
+        this.type = EnumEquipmentType.HEAD;
         this.formed = false;
         this.items = new ItemStack[2];
         this.showOverlay = true;
@@ -125,12 +125,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         if (this.worldObj.isRemote) { return; }
         ItemStack stackInput = getStackInSlot(0);
         if (stackInput == null) {
-            setType(EnumArmourType.NONE);
+            setType(EnumEquipmentType.NONE);
             return;
         }
         
         if (stackInput.getItem() instanceof ItemEquipmentSkinTemplate) {
-            setType(EnumArmourType.getOrdinal(stackInput.getItemDamage() + 1));
+            setType(EnumEquipmentType.getOrdinal(stackInput.getItemDamage() + 1));
         }
     }
 
@@ -265,7 +265,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
                 }
             }
             break;
+        case WEAPON:
+            //Weapons have no bounding box.
+            break;
         }
+        
     }
     
     private void createBoundingBox(int x, int y, int z, BodyPart bodyPart) {
@@ -301,13 +305,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
         if (formed) {
             bb = AxisAlignedBB.getBoundingBox(xCoord + xOffset, yCoord, zCoord + zOffset,
-                    xCoord + MULTI_BLOCK_SIZE, yCoord + MULTI_BLOCK_SIZE, zCoord + MULTI_BLOCK_SIZE);
+                    xCoord + MULTI_BLOCK_SIZE, yCoord + MULTI_BLOCK_SIZE + 20, zCoord + MULTI_BLOCK_SIZE);
         }
         
         return bb;
     }
 
-    public EnumArmourType getType() {
+    public EnumEquipmentType getType() {
         return type;
     }
     
@@ -323,7 +327,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         return gameProfile;
     }
     
-    public void setType(EnumArmourType type) {
+    public void setType(EnumEquipmentType type) {
         if (this.type == type) { return; }
         this.type = type;
         if (formed) {
@@ -419,7 +423,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     @Override
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
-        type = EnumArmourType.getOrdinal(compound.getInteger(TAG_TYPE));
+        type = EnumEquipmentType.getOrdinal(compound.getInteger(TAG_TYPE));
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         customName = compound.getString(TAG_CUSTOM_NAME);

@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
@@ -60,22 +60,23 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         return (ExtendedPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
-    public void addCustomEquipment(EnumArmourType type, int equipmentId) {
+    public void addCustomEquipment(EnumEquipmentType type, int equipmentId) {
         equipmentData.addEquipment(type, equipmentId);
         updateEquipmentDataToPlayersAround();
     }
 
-    public void removeCustomEquipment(EnumArmourType type) {
+    public void removeCustomEquipment(EnumEquipmentType type) {
         equipmentData.removeEquipment(type);
         updateEquipmentDataToPlayersAround();
     }
     
     public void removeAllCustomEquipment() {
-        equipmentData.removeEquipment(EnumArmourType.HEAD);
-        equipmentData.removeEquipment(EnumArmourType.CHEST);
-        equipmentData.removeEquipment(EnumArmourType.LEGS);
-        equipmentData.removeEquipment(EnumArmourType.SKIRT);
-        equipmentData.removeEquipment(EnumArmourType.FEET);
+        equipmentData.removeEquipment(EnumEquipmentType.HEAD);
+        equipmentData.removeEquipment(EnumEquipmentType.CHEST);
+        equipmentData.removeEquipment(EnumEquipmentType.LEGS);
+        equipmentData.removeEquipment(EnumEquipmentType.SKIRT);
+        equipmentData.removeEquipment(EnumEquipmentType.FEET);
+        equipmentData.removeEquipment(EnumEquipmentType.WEAPON);
         updateEquipmentDataToPlayersAround();
     }
     
@@ -129,31 +130,35 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     
     private void removeArmourFromSlot(byte slotId) {
         switch (slotId) {
+        case 5:
+            removeCustomEquipment(EnumEquipmentType.WEAPON);
+            break;
         case 4:
-            removeCustomEquipment(EnumArmourType.FEET);
+            removeCustomEquipment(EnumEquipmentType.FEET);
             break;
         case 3:
-            removeCustomEquipment(EnumArmourType.SKIRT);
+            removeCustomEquipment(EnumEquipmentType.SKIRT);
             break;  
         case 2:
-            removeCustomEquipment(EnumArmourType.LEGS);
+            removeCustomEquipment(EnumEquipmentType.LEGS);
             break;
         case 1:
-            removeCustomEquipment(EnumArmourType.CHEST);
+            removeCustomEquipment(EnumEquipmentType.CHEST);
             break;
         case 0:
-            removeCustomEquipment(EnumArmourType.HEAD);
+            removeCustomEquipment(EnumEquipmentType.HEAD);
             break;
         }
     }
     
     public void removeAllCustomArmourData() {
         player.addChatMessage(new ChatComponentText("You're custom armour data was cleared."));
-        removeCustomEquipment(EnumArmourType.HEAD);
-        removeCustomEquipment(EnumArmourType.CHEST);
-        removeCustomEquipment(EnumArmourType.LEGS);
-        removeCustomEquipment(EnumArmourType.SKIRT);
-        removeCustomEquipment(EnumArmourType.FEET);
+        removeCustomEquipment(EnumEquipmentType.HEAD);
+        removeCustomEquipment(EnumEquipmentType.CHEST);
+        removeCustomEquipment(EnumEquipmentType.LEGS);
+        removeCustomEquipment(EnumEquipmentType.SKIRT);
+        removeCustomEquipment(EnumEquipmentType.FEET);
+        removeCustomEquipment(EnumEquipmentType.WEAPON);
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
@@ -262,7 +267,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
             stack.stackSize = getInventoryStackLimit();
         }
         if (!player.worldObj.isRemote) {
-            if (slot < 5) {
+            if (slot < 6) {
                 armourSlotUpdate((byte)slot);
             }
 

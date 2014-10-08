@@ -8,8 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
@@ -39,8 +39,8 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         }
         
         bindArmourTexture();
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumArmourType.HEAD);
-        ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, EnumArmourPart.HEAD);
+        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumEquipmentType.HEAD);
+        ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, EnumEquipmentPart.HEAD);
         armourData.onRender();
         
         if (!armourData.getParts().get(0).facesBuild) {

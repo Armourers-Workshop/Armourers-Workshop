@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomArmourItemData saveArmourItem(World world, EnumArmourType type, String authorName, String customName, int xCoord, int yCoord, int zCoord) {
+    public static CustomArmourItemData saveArmourItem(World world, EnumEquipmentType type, String authorName, String customName, int xCoord, int yCoord, int zCoord) {
         ArrayList<CustomArmourPartData> parts = new ArrayList<CustomArmourPartData>();
         
         for (int i = 0; i < type.getParts().length; i++) {
@@ -30,7 +30,7 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    private static void saveArmourPart(World world, ArrayList<CustomArmourPartData> armourData, EnumArmourPart part, int xCoord, int yCoord, int zCoord) {
+    private static void saveArmourPart(World world, ArrayList<CustomArmourPartData> armourData, EnumEquipmentPart part, int xCoord, int yCoord, int zCoord) {
         ArrayList<CustomEquipmentBlockData> armourBlockData = new ArrayList<CustomEquipmentBlockData>();
         
         for (int ix = 0; ix < part.xSize; ix++) {

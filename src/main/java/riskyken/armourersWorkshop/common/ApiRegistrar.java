@@ -7,8 +7,8 @@ import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderManager;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataManager;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -65,7 +65,7 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
     public void onLoad(IEquipmentRenderHandler handler) {}
 
     @Override
-    public void onRenderEquipment(Entity entity, EnumArmourType armourType) {
+    public void onRenderEquipment(Entity entity, EnumEquipmentType armourType) {
         for (int i = 0; i < equipmentRenderManagers.size(); i++) {
             String key = (String) equipmentRenderManagers.keySet().toArray()[i];
             equipmentRenderManagers.get(key).onRenderEquipment(entity, armourType);
@@ -73,7 +73,7 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
     }
 
     @Override
-    public void onRenderEquipmentPart(Entity entity, EnumArmourPart armourPart) {
+    public void onRenderEquipmentPart(Entity entity, EnumEquipmentPart armourPart) {
         for (int i = 0; i < equipmentRenderManagers.size(); i++) {
             String key = (String) equipmentRenderManagers.keySet().toArray()[i];
             equipmentRenderManagers.get(key).onRenderEquipmentPart(entity, armourPart);

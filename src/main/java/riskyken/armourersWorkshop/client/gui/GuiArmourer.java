@@ -11,7 +11,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -56,15 +56,15 @@ public class GuiArmourer extends GuiContainer {
 
         */
         
-        for (int i = 0; i < EnumArmourType.values().length - 1; i++) {
-            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumArmourType.getOrdinal(i + 1))));
+        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
+            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumEquipmentType.getOrdinal(i + 1))));
         }
         
-        buttonList.add(new GuiButtonExt(5, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
+        buttonList.add(new GuiButtonExt(11, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
         buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
-        checkShowGuides = new GuiCheckBox(7, guiLeft + 5, guiTop + 118, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides(), false);
-        checkShowOverlay = new GuiCheckBox(9, guiLeft + 5, guiTop + 134, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay(), false);
+        checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 118, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides(), false);
+        checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay(), false);
         
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
@@ -87,7 +87,7 @@ public class GuiArmourer extends GuiContainer {
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
     }
     
-    private String getLocalizedArmourName(EnumArmourType armourType) {
+    private String getLocalizedArmourName(EnumEquipmentType armourType) {
         String unlocalizedName = "armourTypes." + LibModInfo.ID.toLowerCase() + ":" + armourType.name().toLowerCase() + ".name";
         String localizedName = StatCollector.translateToLocal(unlocalizedName);
         if (!unlocalizedName.equals(localizedName)){
@@ -120,7 +120,7 @@ public class GuiArmourer extends GuiContainer {
     @Override
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
-        case 5:
+        case 11:
             PacketHandler.networkWrapper.sendToServer(new MessageClientLoadArmour(textItemName.getText().trim()));
             break;
         case 8:
@@ -163,7 +163,7 @@ public class GuiArmourer extends GuiContainer {
         }
         checkShowGuides.setChecked(armourerBrain.isShowGuides());
         checkShowOverlay.setChecked(armourerBrain.isShowOverlay());
-        checkShowOverlay.visible = armourerBrain.getType() == EnumArmourType.HEAD;
+        checkShowOverlay.visible = armourerBrain.getType() == EnumEquipmentType.HEAD;
         
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);

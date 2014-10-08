@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourPart;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,7 +22,7 @@ public class CustomArmourPartData {
     private static final String TAG_PART = "part";
     
     private ArrayList<CustomEquipmentBlockData> armourData;
-    private EnumArmourPart part;
+    private EnumEquipmentPart part;
     
     public boolean facesBuild;
     public boolean displayCompiled;
@@ -36,7 +36,7 @@ public class CustomArmourPartData {
     }
     
     public CustomArmourPartData(ArrayList armourData,
-            EnumArmourPart part) {
+            EnumEquipmentPart part) {
         this.armourData = armourData;
         this.part = part;
     }
@@ -53,7 +53,7 @@ public class CustomArmourPartData {
         readFromStream(stream);
     }
 
-    public EnumArmourPart getArmourPart() {
+    public EnumEquipmentPart getArmourPart() {
         return this.part;
     }
 
@@ -88,7 +88,7 @@ public class CustomArmourPartData {
     }
 
     private void readFromBuf(ByteBuf buf) {
-        part = EnumArmourPart.getOrdinal(buf.readByte());
+        part = EnumEquipmentPart.getOrdinal(buf.readByte());
         int size = buf.readInt();
         armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < size; i++) {
@@ -110,7 +110,7 @@ public class CustomArmourPartData {
     }
     
     private void readFromNBT(NBTTagCompound compound) {
-        part = EnumArmourPart.getOrdinal(compound.getByte(TAG_PART));
+        part = EnumEquipmentPart.getOrdinal(compound.getByte(TAG_PART));
         
         NBTTagList blockData = compound.getTagList(TAG_BLOCK_DATA, NBT.TAG_COMPOUND);
         armourData = new ArrayList<CustomEquipmentBlockData>();
@@ -129,7 +129,7 @@ public class CustomArmourPartData {
     }
     
     private void readFromStream(DataInputStream stream) throws IOException {
-        part = EnumArmourPart.getOrdinal(stream.readByte());
+        part = EnumEquipmentPart.getOrdinal(stream.readByte());
         int size = stream.readInt();
         armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < size; i++) {

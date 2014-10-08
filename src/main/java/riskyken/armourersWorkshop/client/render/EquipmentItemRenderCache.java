@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.model.ModelCustomItemBuilt;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
@@ -67,7 +67,7 @@ public final class EquipmentItemRenderCache {
         
         ModelCustomItemBuilt targetModel = modelCache.get(equipmentId);
         
-        switch (EnumArmourType.getOrdinal(stack.getItemDamage() + 1)) {
+        switch (EnumEquipmentType.getOrdinal(stack.getItemDamage() + 1)) {
         case HEAD:
             GL11.glTranslatef(0F, 0.7F, 0F);
             targetModel.render();
@@ -88,6 +88,11 @@ public final class EquipmentItemRenderCache {
             GL11.glTranslatef(0F, -0.8F, 0F);
             targetModel.render();
             break;
+        case WEAPON:
+            GL11.glScalef(0.6F, 0.6F, 0.6F);
+            GL11.glTranslatef(0F, -0.1F, 0F);
+            targetModel.render();
+            break;
         default:
             break;
         }
@@ -97,7 +102,7 @@ public final class EquipmentItemRenderCache {
         return modelCache.size();
     }
     
-    private static synchronized void buildModelForCache(NBTTagCompound armourNBT, EnumArmourType armourType, int key) {
+    private static synchronized void buildModelForCache(NBTTagCompound armourNBT, EnumEquipmentType armourType, int key) {
         CustomArmourItemData itemData = new CustomArmourItemData(armourNBT);
         ModelCustomItemBuilt newModel = new ModelCustomItemBuilt(itemData, armourType, key);
         if (modelCache.containsKey(key)) {

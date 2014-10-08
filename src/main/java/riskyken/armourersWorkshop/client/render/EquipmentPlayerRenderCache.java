@@ -5,18 +5,22 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumArmourType;
+import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
@@ -24,6 +28,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -81,7 +86,7 @@ public final class EquipmentPlayerRenderCache {
         }
     }
     
-    public CustomArmourItemData getPlayerCustomArmour(Entity entity, EnumArmourType type) {
+    public CustomArmourItemData getPlayerCustomArmour(Entity entity, EnumEquipmentType type) {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
@@ -105,6 +110,11 @@ public final class EquipmentPlayerRenderCache {
     }
     
     public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
+        EntityClientPlayerMP localPlayer = Minecraft.getMinecraft().thePlayer;
+        if (localPlayer.getPersistentID() == playerId) {
+            ExtendedPropsPlayerEquipmentData props = ExtendedPropsPlayerEquipmentData.get(localPlayer);
+            props.setEquipmentData(equipmentData);
+        }
         if (playerEquipmentMap.containsKey(playerId)) {
             playerEquipmentMap.remove(playerId);
         }
@@ -132,13 +142,17 @@ public final class EquipmentPlayerRenderCache {
         return skinMap.get(playerId);
     }
 
-    private boolean playerHasCustomArmourType(UUID playerId, EnumArmourType armourType) {
+    private boolean playerHasCustomArmourType(UUID playerId, EnumEquipmentType armourType) {
         if (!playerEquipmentMap.containsKey(playerId)) {
             return false;
         }
         EntityEquipmentData equipmentData = playerEquipmentMap.get(playerId);
         return equipmentData.haveEquipment(armourType);
     }
+    
+    
+    ItemStack equippedStack = null;
+    int equippedIndex  = -1;
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
@@ -148,7 +162,7 @@ public final class EquipmentPlayerRenderCache {
             skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
         }
         
-        if (playerHasCustomArmourType(player.getPersistentID(), EnumArmourType.SKIRT)) {
+        if (playerHasCustomArmourType(player.getPersistentID(), EnumEquipmentType.SKIRT)) {
             if (player.limbSwingAmount > 0.25F) {
                 player.limbSwingAmount = 0.25F;
             }
@@ -162,6 +176,11 @@ public final class EquipmentPlayerRenderCache {
     		PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
     		skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
     	}
+    }
+    
+    @SubscribeEvent
+    public void onRender(RenderHandEvent event) {
+        
     }
     
     public int getCacheSize() {
@@ -198,34 +217,34 @@ public final class EquipmentPlayerRenderCache {
         float scale = 1.001F;
         GL11.glScalef(scale, scale, scale);
         
-        if (slot == EnumArmourType.HEAD.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.HEAD);
+        if (slot == EnumEquipmentType.HEAD.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
             if (data != null) {
                 customHead.render(player, render.modelBipedMain, data);
             }
             
         }
-        if (slot == EnumArmourType.CHEST.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.CHEST);
+        if (slot == EnumEquipmentType.CHEST.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.CHEST);
             if (data != null) {
                 customChest.render(player, render.modelBipedMain, data);
             }
         }
-        if (slot == EnumArmourType.LEGS.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.LEGS);
+        if (slot == EnumEquipmentType.LEGS.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
             if (data != null) {
                 customLegs.render(player, render.modelBipedMain, data);
                 event.result = result;
             }
         }
-        if (slot == EnumArmourType.SKIRT.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.SKIRT);
+        if (slot == EnumEquipmentType.SKIRT.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.SKIRT);
             if (data != null) {
                 customSkirt.render(player, render.modelBipedMain, data);
             }
         }
-        if (slot == EnumArmourType.FEET.getSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumArmourType.FEET);
+        if (slot == EnumEquipmentType.FEET.getSlotId()) {
+            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.FEET);
             if (data != null) {
                 customFeet.render(player, render.modelBipedMain, data);
             }
@@ -238,8 +257,8 @@ public final class EquipmentPlayerRenderCache {
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
         EntityEquipmentData equipmentData = teMannequin.getEquipmentData();
         
-        for (int i = 0; i < 5; i++) {
-            EnumArmourType armourType = EnumArmourType.getOrdinal(i + 1);
+        for (int i = 0; i < 6; i++) {
+            EnumEquipmentType armourType = EnumEquipmentType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
                 CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
                 renderEquipmentPart(null, modelBiped, data);
@@ -247,7 +266,7 @@ public final class EquipmentPlayerRenderCache {
         }
     }
     
-    public void renderEquipmentPartOnEntity(Entity entity, EnumArmourType armourType, ModelBiped modelBiped) {
+    public void renderEquipmentPartOnEntity(Entity entity, EnumEquipmentType armourType, ModelBiped modelBiped) {
         ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
         if (entityProps == null) {
             return;
@@ -285,6 +304,9 @@ public final class EquipmentPlayerRenderCache {
             break;
         case FEET:
             customFeet.render(entity, modelBiped, data);
+            break;
+        case WEAPON:
+            //TODO Render weapons on mannequins
             break;
         default:
             break;
