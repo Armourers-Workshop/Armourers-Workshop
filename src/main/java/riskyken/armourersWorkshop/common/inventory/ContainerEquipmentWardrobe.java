@@ -7,6 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class ContainerEquipmentWardrobe extends Container {
@@ -18,7 +19,6 @@ public class ContainerEquipmentWardrobe extends Container {
         
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.HEAD, customEquipmentData, 0, 37, 18));
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 37, 45));
-        //WEAPON
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.WEAPON, customEquipmentData, 5, 37, 72));
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 123, 18));
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 123, 45));
@@ -50,9 +50,9 @@ public class ContainerEquipmentWardrobe extends Container {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
-            if (slotId < 6) {
-                if (!this.mergeItemStack(stack, 15, 42, false)) {
-                    if (!this.mergeItemStack(stack, 6, 15, false)) {
+            if (slotId < 8) {
+                if (!this.mergeItemStack(stack, 17, 44, false)) {
+                    if (!this.mergeItemStack(stack, 8, 17, false)) {
                         return null;
                     }
                 }
@@ -84,7 +84,16 @@ public class ContainerEquipmentWardrobe extends Container {
                             return null;
                         }
                         break;
+                    case 5:
+                        if (!this.mergeItemStack(stack, 2, 3, false)) {
+                            return null;
+                        }
+                        break;
                     default:
+                        return null;
+                    }
+                } else if(stack.getItem() instanceof ItemColourPicker) {
+                    if (!this.mergeItemStack(stack, 6, 7, false)) {
                         return null;
                     }
                 } else {
