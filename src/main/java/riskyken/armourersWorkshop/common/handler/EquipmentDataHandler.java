@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.handler;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -11,7 +9,7 @@ import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
@@ -26,14 +24,14 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     public static final EquipmentDataHandler INSTANCE = new EquipmentDataHandler();
     
     @Override
-    public EntityEquipmentData getCustomEquipmentForEntity(Entity entity) {
+    public IEntityEquipment getCustomEquipmentForEntity(Entity entity) {
         if (entity instanceof EntityPlayer) {
             ExtendedPropsPlayerEquipmentData entityProps;
             entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
             if (entity.worldObj.isRemote) {
-                EntityClientPlayerMP localPlayer = getLocalPlayer();
-                if (entity.getPersistentID() == localPlayer.getPersistentID()) {
-                    entityProps = ExtendedPropsPlayerEquipmentData.get(localPlayer);
+                IEntityEquipment entityEquipment = getLocalPlayerEquipment(entity);
+                if (entityEquipment != null) {
+                    return entityEquipment;
                 }
             }
             if (entityProps != null) {
@@ -66,8 +64,8 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
     
     @SideOnly(Side.CLIENT)
-    private EntityClientPlayerMP getLocalPlayer() {
-        return Minecraft.getMinecraft().thePlayer;
+    private IEntityEquipment getLocalPlayerEquipment(Entity entity) {
+        return EquipmentPlayerRenderCache.INSTANCE.getPlayerCustomEquipmentData(entity);
     }
 
     @Override

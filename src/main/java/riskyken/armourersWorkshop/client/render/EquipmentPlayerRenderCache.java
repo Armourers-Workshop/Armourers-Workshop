@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
@@ -20,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
@@ -28,7 +27,6 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -100,6 +98,15 @@ public final class EquipmentPlayerRenderCache {
         return getCustomArmourItemData(equipmentId);
     }
     
+    public IEntityEquipment getPlayerCustomEquipmentData(Entity entity) {
+        if (!(entity instanceof AbstractClientPlayer)) { return null; }
+        AbstractClientPlayer player = (AbstractClientPlayer) entity;
+        
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(player.getPersistentID());
+        
+        return equipmentData;
+    }
+    
     public CustomArmourItemData getCustomArmourItemData(int equipmentId) {
         if (equipmentDataMap.containsKey(equipmentId)) {
             return equipmentDataMap.get(equipmentId);
@@ -110,11 +117,6 @@ public final class EquipmentPlayerRenderCache {
     }
     
     public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
-        EntityClientPlayerMP localPlayer = Minecraft.getMinecraft().thePlayer;
-        if (localPlayer.getPersistentID() == playerId) {
-            ExtendedPropsPlayerEquipmentData props = ExtendedPropsPlayerEquipmentData.get(localPlayer);
-            props.setEquipmentData(equipmentData);
-        }
         if (playerEquipmentMap.containsKey(playerId)) {
             playerEquipmentMap.remove(playerId);
         }
