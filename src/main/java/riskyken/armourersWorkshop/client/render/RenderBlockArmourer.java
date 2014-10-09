@@ -145,10 +145,11 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         GL11.glPopMatrix();
         
+        /*
         //GL11.glColor3f(1F, 0.5F, 0.5F);
         renderGuideFace(ForgeDirection.DOWN, x + part.xOrigin, y + 0 + part.yOrigin, z + 1 + part.zOrigin, 1, 1);
         renderGuideFace(ForgeDirection.UP, x + part.xOrigin, y + 1 + part.yOrigin, z + part.zOrigin, 1, 1);
-        
+        */
     }
     
     private void renderGuideFace(ForgeDirection dir, double x, double y, double z, int sizeX, int sizeY) {
