@@ -274,7 +274,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             }
             break;
         case WEAPON:
-            //Weapons have no bounding box.
+            for (int ix = 0; ix < 4; ix++) {
+                for (int iy = 0; iy < 4; iy++) {
+                    for (int iz = 0; iz < 12; iz++) {
+                        createBoundingBox(xCoord + xOffset + ix + 9, yCoord + iy + 19, zCoord + zOffset + iz + 9, BodyPart.WEAPON_ARM);
+                    }
+                }
+            }
             break;
         }
         
@@ -295,10 +301,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     }
     
     protected void removeBoundingBoxed() {
-        //clear old bounding boxes
-        for (int ix = 0; ix < MULTI_BLOCK_SIZE; ix++) {
-            for (int iy = 0; iy < MULTI_BLOCK_SIZE; iy++) {
-                for (int iz = 0; iz < MULTI_BLOCK_SIZE; iz++) {
+        int ySize = MULTI_BLOCK_SIZE;
+        if (type == EnumEquipmentType.WEAPON) {
+            ySize += 20;
+        }
+        for (int ix = 1; ix < MULTI_BLOCK_SIZE - 1; ix++) {
+            for (int iy = 1; iy < ySize - 1; iy++) {
+                for (int iz = 1; iz < MULTI_BLOCK_SIZE - 1; iz++) {
                     if (worldObj.getBlock(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz) == ModBlocks.boundingBox) {
                         worldObj.setBlockToAir(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz);
                     }

@@ -29,6 +29,10 @@ public enum BodyPart {
     RIGHT_LEG(
             4, 12, 4,
             0, 16, true
+            ),
+    WEAPON_ARM(
+            4, 12, 4,
+            40, 16, true
             );
     
     public final int xSize;
