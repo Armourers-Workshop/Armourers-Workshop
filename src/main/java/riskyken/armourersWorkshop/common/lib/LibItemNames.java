@@ -11,5 +11,4 @@ public class LibItemNames {
     public static final String COLOUR_NOISE_TOOL = "colourNoiseTool";
     public static final String SHADE_NOISE_TOOL = "shadeNoiseTool";
     public static final String GUIDE_BOOK = "guideBook";
-    public static final String WEAPON_SKIN = "weaponSkin";
 }
