@@ -135,9 +135,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     }
 
     public void clearArmourCubes() {
-        for (int ix = 0; ix < MULTI_BLOCK_SIZE; ix++) {
-            for (int iy = 0; iy < MULTI_BLOCK_SIZE; iy++) {
-                for (int iz = 0; iz < MULTI_BLOCK_SIZE; iz++) {
+        int ySize = MULTI_BLOCK_SIZE;
+        if (type == EnumEquipmentType.WEAPON) {
+            ySize += 20;
+        }
+        for (int ix = 1; ix < MULTI_BLOCK_SIZE - 1; ix++) {
+            for (int iy = 1; iy < ySize - 1; iy++) {
+                for (int iz = 1; iz < MULTI_BLOCK_SIZE - 1; iz++) {
                     int x = xCoord + xOffset + ix;
                     int y = yCoord + iy;
                     int z = zCoord + zOffset + iz;
@@ -153,9 +157,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     }
     
     public void cloneToSide(ForgeDirection side) {
+        int ySize = MULTI_BLOCK_SIZE;
+        if (type == EnumEquipmentType.WEAPON) {
+            ySize += 20;
+        }
         for (int ix = 0; ix < MULTI_BLOCK_SIZE / 2; ix++) {
-            for (int iy = 0; iy < MULTI_BLOCK_SIZE; iy++) {
-                for (int iz = 0; iz < MULTI_BLOCK_SIZE; iz++) {
+            for (int iy = 1; iy < ySize - 1; iy++) {
+                for (int iz = 1; iz < MULTI_BLOCK_SIZE; iz++) {
                     int x = xCoord + xOffset + ix;
                     int newX = xCoord + xOffset + MULTI_BLOCK_SIZE - ix - 1;
                     if (side == ForgeDirection.EAST) {
