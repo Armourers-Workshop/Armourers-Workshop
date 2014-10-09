@@ -95,6 +95,8 @@ public class ModelCustomArmour extends ModelBiped{
     }
     
     private void renderPartBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_LIGHTING);
         for (int i = 0; i < armourBlockData.size(); i++) {
             CustomEquipmentBlockData blockData = armourBlockData.get(i);
             if (!blockData.isGlowing()) {
@@ -116,6 +118,7 @@ public class ModelCustomArmour extends ModelBiped{
         
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glPopMatrix();
     }
 
     public void renderArmourBlock(int x, int y, int z, int colour, float scale, BitSet faceFlags) {
