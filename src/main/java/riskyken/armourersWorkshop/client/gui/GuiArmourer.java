@@ -60,7 +60,7 @@ public class GuiArmourer extends GuiContainer {
             buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumEquipmentType.getOrdinal(i + 1))));
         }
         
-        buttonList.add(new GuiButtonExt(11, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
+        buttonList.add(new GuiButtonExt(13, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
         buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
         checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 118, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides(), false);
@@ -120,7 +120,7 @@ public class GuiArmourer extends GuiContainer {
     @Override
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
-        case 11:
+        case 13:
             PacketHandler.networkWrapper.sendToServer(new MessageClientLoadArmour(textItemName.getText().trim()));
             break;
         case 8:
