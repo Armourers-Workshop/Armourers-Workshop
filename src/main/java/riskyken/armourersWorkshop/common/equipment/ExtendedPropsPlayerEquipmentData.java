@@ -19,6 +19,7 @@ import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -104,8 +105,50 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
 
     public void setEquipmentData(IEntityEquipment equipmentData) {
-        this.equipmentData = (EntityEquipmentData) equipmentData;
-        updateEquipmentDataToPlayersAround();
+        for (int i = 1; i < EnumEquipmentType.values().length; i++) {
+            EnumEquipmentType equipmentType = EnumEquipmentType.getOrdinal(i);
+            if (equipmentData.haveEquipment(equipmentType)) {
+                setEquipment(equipmentType, equipmentData.getEquipmentId(equipmentType));
+            } else {
+                clearEquipment(equipmentType);
+            }
+        }
+        //updateEquipmentDataToPlayersAround();
+    }
+    
+    private void setEquipment(EnumEquipmentType equipmentType, int equipmentId) {
+        ItemStack stack = EquipmentDataHandler.INSTANCE.getCustomEquipmentItemStack(equipmentId);
+        setEquipment(equipmentType, stack);
+    }
+    
+    private void clearEquipment(EnumEquipmentType equipmentType) {
+        setEquipment(equipmentType, null);
+    }
+    
+    private void setEquipment(EnumEquipmentType equipmentType, ItemStack stack) {
+        
+        switch (equipmentType) {
+        case NONE:
+            break;
+        case HEAD:
+            setInventorySlotContents(0, stack);
+            break;
+        case CHEST:
+            setInventorySlotContents(1, stack);
+            break;
+        case LEGS:
+            setInventorySlotContents(2, stack);
+            break;
+        case SKIRT:
+            setInventorySlotContents(3, stack);
+            break;
+        case FEET:
+            setInventorySlotContents(4, stack);
+            break;
+        case WEAPON:
+            setInventorySlotContents(5, stack);
+            break;
+        }
     }
     
     public EntityEquipmentData getEquipmentData() {
