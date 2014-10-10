@@ -25,6 +25,9 @@ public class RenderItemWeaponSkin implements IItemRenderer {
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
+        if (type == ItemRenderType.INVENTORY) {
+            return false;
+        }
         return canRenderModel(stack);
     }
 
