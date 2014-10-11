@@ -80,44 +80,85 @@ public class ModelCustomArmour extends ModelBiped{
     public void renderPart(CustomArmourPartData armourPart, float scale) {
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
         
-        if (!armourPart.displayCompiled) {
-            armourPart.displayList = GLAllocation.generateDisplayLists(1);
-            GL11.glNewList(armourPart.displayList, GL11.GL_COMPILE);
-            GL11.glPushMatrix();
-            this.renderPartBlocks(armourPart.getArmourData(), scale);
-            GL11.glPopMatrix();
-            GL11.glEndList();
-            armourPart.displayCompiled = true;
+        if (!armourPart.displayNormalCompiled) {
+            if (hasNormalBlocks(armourPart.getArmourData())) {
+                armourPart.hasNormalBlocks = true;
+                armourPart.displayListNormal = GLAllocation.generateDisplayLists(1);
+                GL11.glNewList(armourPart.displayListNormal, GL11.GL_COMPILE);
+                GL11.glPushMatrix();
+                this.renderNomralPartBlocks(armourPart.getArmourData(), scale);
+                GL11.glPopMatrix();
+                GL11.glEndList();
+            }
+            armourPart.displayNormalCompiled = true;
         }
         
-        GL11.glCallList(armourPart.displayList);
+        if (!armourPart.displayGlowingCompiled) {
+            if (hasGlowingBlocks(armourPart.getArmourData())) {
+                armourPart.hasGlowingBlocks = true;
+                armourPart.displayListGlowing = GLAllocation.generateDisplayLists(1);
+                GL11.glNewList(armourPart.displayListGlowing, GL11.GL_COMPILE);
+                GL11.glPushMatrix();
+                this.renderGlowingPartBlocks(armourPart.getArmourData(), scale);
+                GL11.glPopMatrix();
+                GL11.glEndList();
+            }
+            armourPart.displayGlowingCompiled = true;
+        }
+        
+        if (armourPart.hasNormalBlocks) {
+            GL11.glCallList(armourPart.displayListNormal);
+        }
+        
+        if (armourPart.hasGlowingBlocks) {
+            float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+            float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+            GL11.glCallList(armourPart.displayListGlowing);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+        }
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     
-    private void renderPartBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
+    private boolean hasNormalBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData) {
+        for (int i = 0; i < armourBlockData.size(); i++) {
+            CustomEquipmentBlockData blockData = armourBlockData.get(i);
+            if (!blockData.isGlowing()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean hasGlowingBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData) {
+        for (int i = 0; i < armourBlockData.size(); i++) {
+            CustomEquipmentBlockData blockData = armourBlockData.get(i);
+            if (blockData.isGlowing()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void renderNomralPartBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
         GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_LIGHTING);
         for (int i = 0; i < armourBlockData.size(); i++) {
             CustomEquipmentBlockData blockData = armourBlockData.get(i);
             if (!blockData.isGlowing()) {
                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }
-        
-        float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-        float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-        GL11.glDisable(GL11.GL_LIGHTING);
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        
+        GL11.glPopMatrix();
+    }
+    
+    private void renderGlowingPartBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
+        GL11.glPushMatrix();
         for (int i = 0; i < armourBlockData.size(); i++) {
             CustomEquipmentBlockData blockData = armourBlockData.get(i);
             if (blockData.isGlowing()) {
                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }
-        
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 

@@ -25,13 +25,27 @@ public class CustomArmourPartData {
     private EnumEquipmentPart part;
     
     public boolean facesBuild;
-    public boolean displayCompiled;
-    public int displayList;
+    
+    public boolean hasNormalBlocks;
+    public boolean hasGlowingBlocks;
+    
+    public boolean displayNormalCompiled;
+    public boolean displayGlowingCompiled;
+    
+    public int displayListNormal;
+    public int displayListGlowing;
 
     @SideOnly(Side.CLIENT)
     public void cleanUpDisplayLists() {
-        if (this.displayCompiled) {
-            GLAllocation.deleteDisplayLists(this.displayList);
+        if (this.displayNormalCompiled) {
+            if (hasNormalBlocks) {
+                GLAllocation.deleteDisplayLists(this.displayListNormal);
+            }
+        }
+        if (this.displayGlowingCompiled) {
+            if (hasGlowingBlocks) {
+                GLAllocation.deleteDisplayLists(this.displayListGlowing);  
+            }
         }
     }
     
