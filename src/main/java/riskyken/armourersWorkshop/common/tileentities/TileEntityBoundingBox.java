@@ -5,7 +5,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import riskyken.armourersWorkshop.common.BodyPart;
+import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
 
 public class TileEntityBoundingBox extends TileEntity {
     
@@ -17,13 +17,13 @@ public class TileEntityBoundingBox extends TileEntity {
     private int parentX;
     private int parentY;
     private int parentZ;
-    private BodyPart bodyPart;
+    private EnumBodyPart bodyPart;
     
     public TileEntityBoundingBox() {
-        bodyPart = BodyPart.CHEST;
+        bodyPart = EnumBodyPart.CHEST;
     }
     
-    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, BodyPart bodyPart) {
+    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, EnumBodyPart bodyPart) {
         setParent(parentX, parentY, parentZ, bodyPart);
     }
     
@@ -38,7 +38,7 @@ public class TileEntityBoundingBox extends TileEntity {
         this.parentX = compound.getInteger(TAG_PARENT_X);
         this.parentY = compound.getInteger(TAG_PARENT_Y);
         this.parentZ = compound.getInteger(TAG_PARENT_Z);
-        this.bodyPart = BodyPart.values()[compound.getByte(TAG_BODY_PART)];
+        this.bodyPart = EnumBodyPart.values()[compound.getByte(TAG_BODY_PART)];
     }
     
     @Override
@@ -71,11 +71,11 @@ public class TileEntityBoundingBox extends TileEntity {
         return null;
     }
     
-    public BodyPart getBodyPart() {
+    public EnumBodyPart getBodyPart() {
         return bodyPart;
     }
     
-    public void setParent(int x, int y, int z, BodyPart bodyPart) {
+    public void setParent(int x, int y, int z, EnumBodyPart bodyPart) {
         this.parentX = x;
         this.parentY = y;
         this.parentZ = z;

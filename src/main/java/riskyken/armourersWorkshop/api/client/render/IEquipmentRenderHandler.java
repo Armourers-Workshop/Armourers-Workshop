@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 
 public interface IEquipmentRenderHandler {
 

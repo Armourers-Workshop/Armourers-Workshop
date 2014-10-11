@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.model.ModelCustomItemBuilt;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;

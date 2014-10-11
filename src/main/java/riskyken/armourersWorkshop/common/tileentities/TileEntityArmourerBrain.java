@@ -13,10 +13,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
-import riskyken.armourersWorkshop.common.BodyPart;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
@@ -212,7 +212,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             for (int ix = 0; ix < 8; ix++) {
                 for (int iy = 0; iy < 8; iy++) {
                     for (int iz = 0; iz < 8; iz++) {
-                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 7, BodyPart.HEAD);
+                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 7, EnumBodyPart.HEAD);
                     }
                 }
             } 
@@ -222,7 +222,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             for (int ix = 0; ix < 8; ix++) {
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
-                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 4, BodyPart.CHEST);
+                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 4, EnumBodyPart.CHEST);
                     }
                 }
             } 
@@ -230,9 +230,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
                         //Right Arm
-                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 14, BodyPart.RIGHT_ARM);
+                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 14, EnumBodyPart.RIGHT_ARM);
                         //Left Arm
-                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 14, BodyPart.LEFT_ARM);
+                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 14, EnumBodyPart.LEFT_ARM);
                     }
                 }
             }
@@ -242,9 +242,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
                         //Right Leg
-                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, BodyPart.RIGHT_LEG);
+                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.RIGHT_LEG);
                         //Left Leg
-                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, BodyPart.LEFT_LEG);
+                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.LEFT_LEG);
                     }
                 }
             }
@@ -254,9 +254,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
                         //Right Leg
-                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, BodyPart.RIGHT_LEG);
+                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.RIGHT_LEG);
                         //Left Leg
-                        createBoundingBox(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9, BodyPart.LEFT_LEG);
+                        createBoundingBox(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.LEFT_LEG);
                     }
                 }
             }
@@ -266,9 +266,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
                 for (int iy = 0; iy < 12; iy++) {
                     for (int iz = 0; iz < 4; iz++) {
                         //Right Leg
-                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, BodyPart.RIGHT_LEG);
+                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.RIGHT_LEG);
                         //Left Leg
-                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, BodyPart.LEFT_LEG);
+                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.LEFT_LEG);
                     }
                 }
             }
@@ -277,7 +277,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             for (int ix = 0; ix < 4; ix++) {
                 for (int iy = 0; iy < 4; iy++) {
                     for (int iz = 0; iz < 12; iz++) {
-                        createBoundingBox(xCoord + xOffset + ix + 9, yCoord + iy + 19, zCoord + zOffset + iz + 9, BodyPart.WEAPON_ARM);
+                        createBoundingBox(xCoord + xOffset + ix + 9, yCoord + iy + 19, zCoord + zOffset + iz + 9, EnumBodyPart.WEAPON_ARM);
                     }
                 }
             }
@@ -286,7 +286,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         
     }
     
-    private void createBoundingBox(int x, int y, int z, BodyPart bodyPart) {
+    private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
         if (worldObj.isAirBlock(x, y, z)) {
             worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
             TileEntity te = null;

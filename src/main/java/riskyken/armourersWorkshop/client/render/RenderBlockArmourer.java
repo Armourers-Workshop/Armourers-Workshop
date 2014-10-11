@@ -14,8 +14,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.model.ModelChest;
 import riskyken.armourersWorkshop.client.model.ModelFeet;
 import riskyken.armourersWorkshop.client.model.ModelHand;

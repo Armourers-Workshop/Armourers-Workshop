@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.api.common.equipment;
 
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
 
 public interface IEntityEquipment {
     

@@ -11,10 +11,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.common.BodyPart;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -85,7 +85,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         return false;
     }
     
-    private int getColourFromSkin(TileEntityArmourerBrain te, BodyPart bodyPart, EntityPlayer player, World world, int x, int y, int z, int side) {
+    private int getColourFromSkin(TileEntityArmourerBrain te, EnumBodyPart bodyPart, EntityPlayer player, World world, int x, int y, int z, int side) {
         int textureX = bodyPart.textureX;
         int textureY = bodyPart.textureY;
         

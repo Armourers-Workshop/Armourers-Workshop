@@ -1,8 +1,8 @@
 package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.entity.Entity;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.armour.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 
 /**
  * Used to handle rendering in the armourers workshop API.
