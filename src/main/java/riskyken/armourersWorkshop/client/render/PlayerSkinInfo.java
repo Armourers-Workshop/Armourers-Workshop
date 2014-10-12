@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 
 public class PlayerSkinInfo {
@@ -72,8 +71,6 @@ public class PlayerSkinInfo {
         r = r / 2;
         g = g / 2;
         b = b / 2;
-        
-        ModLogger.log("R:" + r + " G:" + g + " B:" + b);
         
         int newColour = new Color(r, g, b).getRGB();
         
