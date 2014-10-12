@@ -219,16 +219,16 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerAddEquipmentInfo(player.getUniqueID(), equipmentData), targetPlayer);
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getPersistentID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), targetPlayer);
     }
     
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getPersistentID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), p);
     }
     
     @Override
@@ -397,6 +397,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
                 double zV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
                 EntityItem entityitem = new EntityItem(world, (double)x + xV, (double)y + yV, (double)z + zV, stack);
                 world.spawnEntityInWorld(entityitem);
+                setInventorySlotContents(i, null);
             }
         }
     }

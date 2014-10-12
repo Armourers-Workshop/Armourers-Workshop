@@ -105,4 +105,13 @@ public final class EntityEquipmentDataManager {
             playerData.dropItems();
         }
     }
+    
+    @SubscribeEvent
+    public void onLivingDeathEvent (PlayerEvent.Clone  event) {
+        NBTTagCompound compound = new NBTTagCompound();
+        ExtendedPropsPlayerEquipmentData oldProps = ExtendedPropsPlayerEquipmentData.get(event.original);
+        ExtendedPropsPlayerEquipmentData newProps = ExtendedPropsPlayerEquipmentData.get(event.entityPlayer);
+        oldProps.saveNBTData(compound);
+        newProps.loadNBTData(compound);
+    }
 }
