@@ -56,19 +56,20 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         super(new ContainerEquipmentWardrobe(inventory, customEquipmentData));
         this.customEquipmentData = customEquipmentData;
         this.player = inventory.player;
-        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getPersistentID());
+        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getUniqueID());
+        
+        if (skinInfo == null) {
+            skinInfo = new PlayerSkinInfo(false, UtilColour.getMinecraftColor(0), UtilColour.getMinecraftColor(0), new BitSet(4), true);
+            ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
+        }
+        
         if (skinInfo != null) {
             this.skinColour = new Color(skinInfo.getSkinColour());
             this.pantsColour = new Color(skinInfo.getPantsColour());
             this.armourOverride = skinInfo.getArmourOverride();
             this.headOverlay = skinInfo.getHeadOverlay();
-        } else {
-            this.skinColour= new Color(UtilColour.getMinecraftColor(0));
-            this.pantsColour =  new Color(UtilColour.getMinecraftColor(0));
-            this.armourOverride = new BitSet(4);
-            this.headOverlay = true;
-            ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
         }
+        
         this.xSize = 176;
         this.ySize = 248;
     }
