@@ -97,7 +97,6 @@ public class GuiArmourLibrary extends GuiContainer {
         }
         
         fileList.setScrollPercentage(scrollbar.getPercentageValue());
-        fileList.drawList(mouseX, mouseY, tickTime);
     }
     
     @Override
@@ -138,16 +137,17 @@ public class GuiArmourLibrary extends GuiContainer {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float p_146976_1_,int p_146976_2_, int p_146976_3_) {
+    protected void drawGuiContainerBackgroundLayer(float someFloat,int mouseX, int mouseY) {
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         searchTextbox.drawTextBox();
         filenameTextbox.drawTextBox();
+        fileList.drawList(mouseX, mouseY, 0);
     }
     
     @Override
-    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName());
         
         String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");
