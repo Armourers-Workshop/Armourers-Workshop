@@ -114,6 +114,18 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
     
     @Override
+    public EnumEquipmentType getEquipmentTypeFromStack(ItemStack stack) {
+        if (!hasItemStackGotEquipmentData(stack)) {
+            return EnumEquipmentType.NONE;
+        }
+        int damage = stack.getItemDamage();
+        if (damage >= 0 & damage < 5) {
+            return EnumEquipmentType.getOrdinal(damage);
+        }
+        return EnumEquipmentType.NONE;
+    }
+    
+    @Override
     public boolean hasItemStackGotEquipmentData(ItemStack stack) {
         return EquipmentNBTHelper.itemStackHasCustomEquipment(stack);
     }
@@ -142,17 +154,5 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             return null;
         }
         return entityProps;
-    }
-
-    @Override
-    public ItemStack getEquipmentStackFromEntity(Entity entity, EnumEquipmentType armourType) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setEquipmentStackOnEntity(Entity entity, EnumEquipmentType armourType, ItemStack stack) {
-        // TODO Auto-generated method stub
-        
     }
 }

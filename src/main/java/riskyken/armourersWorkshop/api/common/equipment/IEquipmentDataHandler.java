@@ -45,6 +45,14 @@ public interface IEquipmentDataHandler {
      */
     public EnumEquipmentType getEquipmentType(int equipmentId);
     
+    /** 
+     * Get the EnumArmourType for an item stack.
+     * @param stack
+     * @return The EnumArmourType for this equipment id.
+     * Returns EnumArmourType.NONE if no armour exists for this item stack.
+     */
+    public EnumEquipmentType getEquipmentTypeFromStack(ItemStack stack);
+    
     /**
      * Get an item stack for the equipment id.
      * @param equipmentId
@@ -58,10 +66,6 @@ public interface IEquipmentDataHandler {
      * @return True/False Has the item stack got Equipment data?
      */
     public boolean hasItemStackGotEquipmentData(ItemStack stack);
-    
-    public ItemStack getEquipmentStackFromEntity(Entity entity, EnumEquipmentType armourType);
-    
-    public void setEquipmentStackOnEntity(Entity entity, EnumEquipmentType armourType, ItemStack stack);
     
     /**
      * Get the equipment id from an item stack.
