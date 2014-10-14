@@ -26,10 +26,14 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
             Class<?> c = Class.forName(className);
             Object classObject = c.newInstance();
             if (classObject instanceof IEquipmentDataManager) {
-                equipmentDataManagers.put(modName, ((IEquipmentDataManager)classObject)) ;
+                ModLogger.log(String.format("Loading %s API addon for %s", "data manager", modName));
+                equipmentDataManagers.put(modName, ((IEquipmentDataManager)classObject));
+                ((IEquipmentDataManager)classObject).onLoad(EquipmentDataHandler.INSTANCE);
             }
             if (classObject instanceof IEquipmentRenderManager) {
+                ModLogger.log(String.format("Loading %s API addon for %s", "render manager", modName));
                 equipmentRenderManagers.put(modName, ((IEquipmentRenderManager)classObject)) ;
+                ((IEquipmentRenderManager)classObject).onLoad(EquipmentRenderHandler.INSTANCE);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -37,27 +41,6 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void onLoad() {
-        int addonCount = equipmentDataManagers.size() + equipmentRenderManagers.size();
-        if (addonCount > 0) {
-            ModLogger.log(String.format("Loading %s API addons.", addonCount));
-        } else {
-            ModLogger.log("No API addons to load.");
-        }
-        
-        for (int i = 0; i < equipmentDataManagers.size(); i++) {
-            String key = (String) equipmentDataManagers.keySet().toArray()[i];
-            ModLogger.log(String.format("Loading %s for API addon for %s", "data manager", key));
-            equipmentDataManagers.get(key).onLoad(EquipmentDataHandler.INSTANCE);
-        }
-        
-        for (int i = 0; i < equipmentRenderManagers.size(); i++) {
-            String key = (String) equipmentRenderManagers.keySet().toArray()[i];
-            ModLogger.log(String.format("Loading %s for API addon for %s", "render manager", key));
-            equipmentRenderManagers.get(key).onLoad(EquipmentRenderHandler.INSTANCE);
         }
     }
     

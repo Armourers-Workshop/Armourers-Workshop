@@ -72,24 +72,23 @@ public class ArmourersWorkshop {
     }
     
     @Mod.EventHandler
-    public void processIMC(FMLInterModComms.IMCEvent event) {
-        for (IMCMessage imcMessage : event.getMessages()) {
-            if (!imcMessage.isStringMessage()) continue;
-            if (imcMessage.key.equalsIgnoreCase("register")) {
-                ModLogger.log(String.format("Receiving registration request from [ %s ] for class %s", imcMessage.getSender(), imcMessage.getStringValue()));
-                ApiRegistrar.INSTANCE.addApiRequest(imcMessage.getSender(), imcMessage.getStringValue());
-            }
-        }
+    public void postInit(FMLPostInitializationEvent event) {
+        TileEntityArmourLibrary.createArmourDirectory();
     }
     
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandCustomArmour());
     }
-
+    
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        TileEntityArmourLibrary.createArmourDirectory();
-        ApiRegistrar.INSTANCE.onLoad();
+    public void processIMC(FMLInterModComms.IMCEvent event) {
+        for (IMCMessage imcMessage : event.getMessages()) {
+            if (!imcMessage.isStringMessage()) continue;
+            if (imcMessage.key.equalsIgnoreCase("register")) {
+                ModLogger.log(String.format("Receiving registration request from %s for class %s", imcMessage.getSender(), imcMessage.getStringValue()));
+                ApiRegistrar.INSTANCE.addApiRequest(imcMessage.getSender(), imcMessage.getStringValue());
+            }
+        }
     }
 }
