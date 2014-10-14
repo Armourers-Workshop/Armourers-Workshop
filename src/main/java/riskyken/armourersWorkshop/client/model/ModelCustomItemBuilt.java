@@ -116,7 +116,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
 
     public void render() {
         timeFromRender = 0;
-        
+        GL11.glColor3f(1F, 1F, 1F);
         if (!facesCompiled) {
             if (!facesCompileStarted) {
                 facesCompileStarted = true;
@@ -131,6 +131,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
         GL11.glCallList(this.displayList);
         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
+        GL11.glColor3f(1F, 1F, 1F);
     }
     
 

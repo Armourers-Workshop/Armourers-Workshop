@@ -79,7 +79,7 @@ public class ModelCustomArmour extends ModelBiped{
      
     public void renderPart(CustomArmourPartData armourPart, float scale) {
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
-        
+        GL11.glColor3f(1F, 1F, 1F);
         if (!armourPart.displayNormalCompiled) {
             if (hasNormalBlocks(armourPart.getArmourData())) {
                 armourPart.hasNormalBlocks = true;
@@ -117,6 +117,7 @@ public class ModelCustomArmour extends ModelBiped{
             GL11.glCallList(armourPart.displayListGlowing);
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         }
+        GL11.glColor3f(1F, 1F, 1F);
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     
