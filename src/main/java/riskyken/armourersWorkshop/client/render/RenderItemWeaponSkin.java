@@ -44,6 +44,7 @@ public class RenderItemWeaponSkin implements IItemRenderer {
             GL11.glScalef(-1F, -1F, 1F);
             float scale = 2.7F;
             GL11.glScalef(scale, scale, scale);
+            
             switch (type) {
             case EQUIPPED:
                 GL11.glRotatef(70, 1, 0, 1);
@@ -68,6 +69,9 @@ public class RenderItemWeaponSkin implements IItemRenderer {
                 break;
             }
             //ModLogger.log("render weapon model");
+            GL11.glTranslatef(0F, 0.7F, 0F);
+            GL11.glScalef(1.6F, 1.6F, 1.6F);
+            GL11.glTranslatef(0F, 0.06F, 0F);
             EquipmentItemRenderCache.renderItemAsArmourModel(stack, EnumEquipmentType.WEAPON);
             GL11.glPopMatrix();
         } else {
