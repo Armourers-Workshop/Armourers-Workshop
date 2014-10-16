@@ -100,8 +100,8 @@ itemGroup.armourersworkshop=Armourer's Workshop
 
 # Keybindings
 keys.armourersworkshop:category=Armourer's Workshop
-keys.armourersworkshop:equipmentWardrobe=Equipment Wardrobe
-keys.armourersworkshop:undo=Undo
+keys.armourersworkshop.equipmentWardrobe=Equipment Wardrobe
+keys.armourersworkshop.undo=Undo
 
 # Guide Book
 # Chapter 1
