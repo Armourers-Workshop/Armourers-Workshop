@@ -9,6 +9,7 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -76,7 +77,8 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == ModItems.equipmentSkin) {
+        ItemStack stack = player.getCurrentEquippedItem();
+        if (stack != null && (stack.getItem() == ModItems.equipmentSkin | stack.getItem() == Items.name_tag)) {
             if (world.isRemote) { return true; }
             int meta = world.getBlockMetadata(x, y, z);
             TileEntity te;
@@ -87,7 +89,11 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
             }
             
             if (te instanceof TileEntityMannequin) {
-                ((TileEntityMannequin)te).setEquipment(player.getCurrentEquippedItem());
+                if (stack.getItem() == ModItems.equipmentSkin) {
+                    ((TileEntityMannequin)te).setEquipment(player.getCurrentEquippedItem());
+                } else {
+                    ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
+                }
             }
             return true;
         }

@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.render;
 
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -62,8 +63,9 @@ public class RenderItemMannequin implements IItemRenderer {
         
         float scale = 0.0625F;
         GL11.glColor3f(1F, 1F, 1F);
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        modelMannequin.render(null, 0, 0, 0, headPitch, headTilt, scale);
+        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+        Minecraft.getMinecraft().renderEngine.bindTexture(AbstractClientPlayer.locationStevePng);
+        modelMannequin.render(null, 0, 0, 0, headPitch, headTilt, scale, false);
         GL11.glPopMatrix();
     }
 
