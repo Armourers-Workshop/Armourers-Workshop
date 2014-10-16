@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -12,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import cpw.mods.fml.client.config.GuiUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -62,7 +65,9 @@ public class GuiList extends Gui {
         if (!this.visible) { return; }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(texture);
-        this.drawTexturedModalRect(x, y, 0, 0, width, height);
+        
+        GuiUtils.drawContinuousTexturedBox(texture, this.x, this.y, 0, 0, width, height, 11, 11, 1, this.zLevel);
+        //this.drawTexturedModalRect(x, y, 0, 0, width, height);
         
         ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         
@@ -85,6 +90,8 @@ public class GuiList extends Gui {
             int yLocation = y - scrollAmount + 2 + i * slotHeight;
             if (mouseY >= y & mouseY <= y + height - 2) {
                 if (listItems.get(i).mousePressed(fontRenderer, x + 2, yLocation, mouseX, mouseY, button)) {
+                    SoundHandler sh = mc.getSoundHandler();
+                    sh.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
                     selectedIndex = i;
                     return true;
                 }
@@ -107,6 +114,14 @@ public class GuiList extends Gui {
     
     public IGuiListItem getListEntry(int index) {
         return this.listItems.get(index);
+    }
+    
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+    
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedIndex = selectedIndex;
     }
     
     public void setScrollPercentage(int amount) {
