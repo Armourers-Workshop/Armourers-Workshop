@@ -68,6 +68,7 @@ inventory.armourersworkshop:armourLibrary.label.filename=File Name:
 inventory.armourersworkshop:armourLibrary.label.files=Files:
 inventory.armourersworkshop:armourLibrary.save=Save
 inventory.armourersworkshop:armourLibrary.load=Load
+inventory.armourersworkshop:armourLibrary.showClientFiles=Show Local Files?
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:

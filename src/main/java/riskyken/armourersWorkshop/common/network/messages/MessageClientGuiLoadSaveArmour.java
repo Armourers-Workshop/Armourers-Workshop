@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -12,26 +13,45 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler<MessageClientGuiLoadSaveArmour, IMessage> {
 
+    Byte type;
     String filename;
+    CustomArmourItemData itemData;
     boolean load;
     
     public MessageClientGuiLoadSaveArmour() { }
     
+    public MessageClientGuiLoadSaveArmour(CustomArmourItemData itemData, boolean load) {
+        this.type = 1;
+        this.itemData = itemData;
+        this.load = load;
+    }
+    
     public MessageClientGuiLoadSaveArmour(String filename, boolean load) {
+        this.type = 0;
         this.filename = filename;
         this.load = load;
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.filename = ByteBufUtils.readUTF8String(buf);
+        this.type = buf.readByte();
         this.load = buf.readBoolean();
+        if (type == 0) {
+            this.filename = ByteBufUtils.readUTF8String(buf);
+        } else {
+            itemData = new CustomArmourItemData(buf);
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, this.filename);
+        buf.writeByte(this.type);
         buf.writeBoolean(this.load);
+        if (type == 0) {
+            ByteBufUtils.writeUTF8String(buf, this.filename);
+        } else {
+            itemData.writeToBuf(buf);
+        }
     }
     
     @Override
@@ -43,7 +63,12 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
         if (container != null && container instanceof ContainerArmourLibrary) {
             TileEntityArmourLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
             if (message.load) {
-                te.loadArmour(message.filename, player);
+                if (message.type == 0) {
+                    te.loadArmour(message.filename, player);
+                } else {
+                    te.loadArmour(message.itemData, player);
+                }
+                
             } else {
                 te.saveArmour(message.filename, player);
             }

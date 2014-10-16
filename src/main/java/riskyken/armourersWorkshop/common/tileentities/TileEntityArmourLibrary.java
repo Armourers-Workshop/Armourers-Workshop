@@ -32,7 +32,8 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     
-    public ArrayList<String> fileNames = null;
+    public ArrayList<String> serverFileNames = null;
+    public ArrayList<String> clientFileNames = null;
     
     public TileEntityArmourLibrary() {
         this.items = new ItemStack[2];
@@ -100,30 +101,28 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         if (stackInput == null) { return; }
         if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) { return; }
         
-        if (!createArmourDirectory()) { return; }
-        
-        File armourDir = new File(System.getProperty("user.dir"));
-        armourDir = new File(armourDir, LibModInfo.ID);
-        
-        DataInputStream stream = null;
-        File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
-        
-        CustomArmourItemData armourItemData;
-        
-        try {
-            stream = new DataInputStream(new BufferedInputStream(new FileInputStream(targetFile)));
-            armourItemData = new CustomArmourItemData(stream);
-        } catch (FileNotFoundException e) {
-            ModLogger.log(Level.WARN, "Armour file not found.");
-            e.printStackTrace();
+        CustomArmourItemData armourItemData = loadCustomArmourItemDataFromFile(filename);
+        if (armourItemData == null) {
             return;
-        } catch (IOException e) {
-            ModLogger.log(Level.ERROR, "Armour file load failed.");
-            e.printStackTrace();
-            return;
-        } finally {
-            IOUtils.closeQuietly(stream);
         }
+
+        ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
+        
+        NBTTagCompound itemNBT = new NBTTagCompound();
+        NBTTagCompound armourNBT = new NBTTagCompound();
+        
+        armourItemData.writeClientDataToNBT(armourNBT);
+        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
+        
+        stackOutput.setTagCompound(itemNBT);
+        
+        this.decrStackSize(0, 1);
+        this.setInventorySlotContents(1, stackOutput);
+    }
+    
+    public void loadArmour(CustomArmourItemData itemData, EntityPlayerMP player) {
+        CustomArmourItemData armourItemData = itemData;
         
         ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         
@@ -138,6 +137,36 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, stackOutput);
+    }
+    
+    public static CustomArmourItemData loadCustomArmourItemDataFromFile(String filename) {
+        if (!createArmourDirectory()) {
+            return null;
+        }
+        
+        File armourDir = new File(System.getProperty("user.dir"));
+        armourDir = new File(armourDir, LibModInfo.ID);
+        
+        File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
+        
+        DataInputStream stream = null;
+        CustomArmourItemData armourItemData;
+        
+        try {
+            stream = new DataInputStream(new BufferedInputStream(new FileInputStream(targetFile)));
+            armourItemData = new CustomArmourItemData(stream);
+        } catch (FileNotFoundException e) {
+            ModLogger.log(Level.WARN, "Armour file not found.");
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            ModLogger.log(Level.ERROR, "Armour file load failed.");
+            e.printStackTrace();
+            return null;
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
+        return armourItemData;
     }
     
     public ArrayList<String> getFileNames() {
@@ -167,7 +196,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     }
     
     public void setArmourList(ArrayList<String> fileNames) {
-        this.fileNames = fileNames;
+        this.serverFileNames = fileNames;
+        this.clientFileNames = getFileNames();
     }
     
     public static boolean createArmourDirectory() {
