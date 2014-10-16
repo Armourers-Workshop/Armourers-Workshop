@@ -11,6 +11,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 
 public class RenderItemWeaponSkin implements IItemRenderer {
@@ -67,7 +68,7 @@ public class RenderItemWeaponSkin implements IItemRenderer {
                 break;
             }
             //ModLogger.log("render weapon model");
-            EquipmentItemRenderCache.renderItemAsArmourModel(stack);
+            EquipmentItemRenderCache.renderItemAsArmourModel(stack, EnumEquipmentType.WEAPON);
             GL11.glPopMatrix();
         } else {
             renderNomalIcon(stack);

@@ -57,6 +57,10 @@ public final class EquipmentItemRenderCache {
     }
     
     public static void renderItemAsArmourModel(ItemStack stack) {
+        renderItemAsArmourModel(stack, EnumEquipmentType.getOrdinal(stack.getItemDamage() + 1));
+    }
+    
+    public static void renderItemAsArmourModel(ItemStack stack, EnumEquipmentType type) {
         NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         
@@ -67,7 +71,7 @@ public final class EquipmentItemRenderCache {
         
         ModelCustomItemBuilt targetModel = modelCache.get(equipmentId);
         
-        switch (EnumEquipmentType.getOrdinal(stack.getItemDamage() + 1)) {
+        switch (type) {
         case HEAD:
             GL11.glTranslatef(0F, 0.7F, 0F);
             targetModel.render();

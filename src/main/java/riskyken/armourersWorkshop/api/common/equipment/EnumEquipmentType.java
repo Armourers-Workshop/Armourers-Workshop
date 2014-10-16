@@ -20,7 +20,10 @@ public enum EnumEquipmentType {
     }
     
     public static EnumEquipmentType getOrdinal(int id) {
-        return EnumEquipmentType.values()[id];
+        if (id >= 0 & id < values().length) {
+            return EnumEquipmentType.values()[id];
+        }
+        return NONE;
     }
     
     public int getSlotId() {
