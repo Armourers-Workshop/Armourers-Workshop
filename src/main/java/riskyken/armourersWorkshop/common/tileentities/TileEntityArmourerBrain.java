@@ -30,7 +30,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent {
+public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_TYPE = "type";
@@ -46,7 +46,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     
     public TileEntityArmourerBrain() {
         this.type = EnumEquipmentType.HEAD;
-        this.formed = false;
         this.items = new ItemStack[2];
         this.showOverlay = true;
         this.customName = "";
@@ -71,7 +70,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         String authorName = player.getDisplayName();
         String customName = name;
         
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord, yCoord + 1, zCoord);
         
         if (armourItemData == null) { return; }
         
@@ -115,7 +114,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
-        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, equipmentData);
+        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord, yCoord + 1, zCoord, equipmentData);
     
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
@@ -461,5 +460,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
+    }
+
+    public void preRemove() {
+        // TODO Auto-generated method stub
+        
     }
 }
