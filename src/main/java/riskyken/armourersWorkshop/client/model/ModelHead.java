@@ -16,11 +16,11 @@ public class ModelHead extends ModelBase {
 
     public ModelHead() {
         main = new ModelRenderer(this, 0, 0);
-        main.addBox(-4F, -10F, -4F, 8, 8, 8);
+        main.addBox(-4F, -8F, -4F, 8, 8, 8);
         main.setRotationPoint(0, 0, 0);
 
         overlay = new ModelRenderer(this, 32, 0);
-        overlay.addBox(-4F, -10F, -4F, 8, 8, 8, 0.5F);
+        overlay.addBox(-4F, -8F, -4F, 8, 8, 8, 0.5F);
         overlay.setRotationPoint(0F, 0F, 0F);
         overlay.setTextureSize(64, 32);
     }

@@ -4,68 +4,74 @@ package riskyken.armourersWorkshop.api.common.equipment;
 
 public enum EnumEquipmentPart {
     HEAD(
-            1, 0, 1,
-            20, 20, 20,
-            11, 1, 11,
+            8, 8, 8,
+            4, 0, 4,
+            6, 1, 12, 6,
+            0, 0,
             EnumBodyPart.HEAD),
     
     CHEST(
-            4, 0, 1,
-            14, 14, 10,
-            11, 13, 6,
+            8, 12, 4,
+            4, 12, 2,
+            1, 1, 1, 1,
+            0, 0,
             EnumBodyPart.CHEST),
     
     LEFT_ARM(
-            1, 0, 11,
-            9, 18, 10,
-            7, 11, 16,
+            4, 12, 4,
+            2, 10, 2,
+            1, 1, 4, 1,
+            12, 0,
             EnumBodyPart.LEFT_ARM),
     
     RIGHT_ARM(
-            12, 0, 11,
-            9, 18, 10,
-            15, 11, 16,
+            4, 12, 4,
+            2, 10, 2,
+            1, 1, 4, 1,
+            -12, 0,
             EnumBodyPart.RIGHT_ARM),
     
     LEFT_LEG(
-            2, 5, 7,
-            8, 9, 8,
-            6, 14, 11,
+            4, 12, 4,
+            2, 12, 2,
+            1, 1, 1, 1,
+            6, 0,
             EnumBodyPart.LEFT_LEG),
     
     RIGHT_LEG(
-            12, 5, 7,
-            8, 9, 8,
-            16, 14, 11,
+            4, 12, 4,
+            2, 12, 2,
+            1, 1, 1, 1,
+            -6, 0,
             EnumBodyPart.RIGHT_LEG),
     
     SKIRT(
-            1, 0, 1,
-            20, 14, 20,
-            11, 14, 11,
+            8, 12, 4,
+            4, 12, 2,
+            1, 1, 1, 1,
+            0, 0,
             null),
     
     LEFT_FOOT(
-            2, 0, 5,
-            8, 5, 12,
-            6, 14, 11,
+            4, 5, 4,
+            2, 12, 2,
+            1, 1, 1, 1,
+            6, 0,
             EnumBodyPart.LEFT_LEG),
     
     RIGHT_FOOT(
-            12, 0, 5,
-            8, 5, 12,
-            16, 14, 11,
+            4, 5, 4,
+            2, 12, 2,
+            1, 1, 1, 1,
+            -6, 0,
             EnumBodyPart.RIGHT_LEG),
     
     WEAPON(
-            1, 0, 1,
             20, 40, 20,
-            11, 21, 11,
+            10, 20, 10,
+            0, 0, 0, 0,
+            0, 0,
             null);
-    
-    public final int xOffset;
-    public final int yOffset;
-    public final int zOffset;
     
     public final int xSize;
     public final int ySize;
@@ -75,12 +81,22 @@ public enum EnumEquipmentPart {
     public final int yOrigin;
     public final int zOrigin;
     
+    public final int xBuildSpace;
+    public final int botBuildSpace;
+    public final int topBuildSpace;
+    public final int zBuildSpace;
+    
+    public final int xLocation;
+    public final int zLocation;
+    
     public final EnumBodyPart bodyPart;
     
-    EnumEquipmentPart(int xOffset, int yOffset, int zOffset, int xSize, int ySize, int zSize, int xOrigin, int yOrigin, int zOrigin, EnumBodyPart bodyPart) {
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
-        this.zOffset = zOffset;
+    EnumEquipmentPart(
+            int xSize, int ySize, int zSize,
+            int xOrigin, int yOrigin, int zOrigin,
+            int xBuildSpace, int botBuildSpace, int topBuildSpace, int zBuildSpace,
+            int xLocation, int zLocation,
+            EnumBodyPart bodyPart) {
         
         this.xSize = xSize;
         this.ySize = ySize;
@@ -89,6 +105,14 @@ public enum EnumEquipmentPart {
         this.xOrigin = xOrigin;
         this.yOrigin = yOrigin;
         this.zOrigin = zOrigin;
+        
+        this.xBuildSpace = xBuildSpace;
+        this.botBuildSpace = botBuildSpace;
+        this.topBuildSpace = topBuildSpace;
+        this.zBuildSpace = zBuildSpace;
+        
+        this.xLocation = xLocation;
+        this.zLocation = zLocation;
         
         this.bodyPart = bodyPart;
     }

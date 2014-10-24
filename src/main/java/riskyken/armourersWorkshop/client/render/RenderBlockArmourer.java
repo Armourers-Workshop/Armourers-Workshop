@@ -5,6 +5,7 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -45,8 +46,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
 
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
         EnumEquipmentType type = te.getType();
-        
-        if (!te.isFormed()) { return; }
+        float mult = 0.0625F;
         
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         if (te.getGameProfile() != null) {
@@ -59,10 +59,13 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
         
         GL11.glPushMatrix();
-        GL11.glColor3f(0.8F, 0.8F, 0.8F);
+        //GL11.glColor3f(0.8F, 0.8F, 0.8F);
+        RenderHelper.disableStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glTranslated(x + te.getXOffset() + 11, y, z + te.getZOffset() + 11);
+        //GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glTranslated(x, y, z);
+        
+        GL11.glTranslated(0, te.getHeightOffset(), 0);
         
         GL11.glScalef(-1, -1, 1);
         GL11.glScalef(16, 16, 16);
@@ -74,28 +77,43 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             modelHead.render(te.isShowOverlay());
             break;
         case CHEST:
-            modelChest.render();
+            modelChest.renderChest();
+            GL11.glTranslated(mult * 12, 0, 0);
+            modelChest.renderLeftArm();
+            GL11.glTranslated(mult * -24, 0, 0);
+            modelChest.renderRightArm();
             break;
         case LEGS:
-            modelLegs.render(false);
+            GL11.glTranslated(mult * 6, 0, 0);
+            modelLegs.renderLeftLeft();
+            GL11.glTranslated(mult * -12, 0, 0);
+            modelLegs.renderRightLeg();
             break;
         case SKIRT:
-            modelLegs.render(true);
+            GL11.glTranslated(mult * 2, 0, 0);
+            modelLegs.renderLeftLeft();
+            GL11.glTranslated(mult * -4, 0, 0);
+            modelLegs.renderRightLeg();
             break;
         case FEET:
-            modelFeet.render();
+            GL11.glTranslated(mult * 6, 0, 0);
+            modelFeet.renderLeftLeft();
+            GL11.glTranslated(mult * -12, 0, 0);
+            modelFeet.renderRightLeg();
             break;
         case WEAPON:
             modelHand.render();
             break;
         }
-        GL11.glEnable(GL11.GL_LIGHTING);
+        //GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         
         if (te.isShowGuides()) {
-            renderGuide(te, type, x + te.getXOffset(), y, z + te.getZOffset());
+            renderGuide(te, type, x, y, z);
         }
+        
+        RenderHelper.enableStandardItemLighting();
     }
     
     private void renderGuide(TileEntityArmourerBrain te, EnumEquipmentType type, double x, double y, double z) {
@@ -106,26 +124,26 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case NONE:
             break;
         case HEAD:
-            renderGuidePart(EnumEquipmentPart.HEAD, x, y, z);
+            renderGuidePart(EnumEquipmentPart.HEAD, x, y + te.getHeightOffset(), z);
             break;
         case CHEST:
-            renderGuidePart(EnumEquipmentPart.CHEST, x, y, z);
-            renderGuidePart(EnumEquipmentPart.LEFT_ARM, x, y, z);
-            renderGuidePart(EnumEquipmentPart.RIGHT_ARM, x, y, z);
+            renderGuidePart(EnumEquipmentPart.CHEST, x, y + te.getHeightOffset(), z);
+            renderGuidePart(EnumEquipmentPart.LEFT_ARM, x, y + te.getHeightOffset(), z);
+            renderGuidePart(EnumEquipmentPart.RIGHT_ARM, x, y + te.getHeightOffset(), z);
             break;
         case LEGS:
-            renderGuidePart(EnumEquipmentPart.LEFT_LEG, x, y, z);
-            renderGuidePart(EnumEquipmentPart.RIGHT_LEG, x, y, z);
+            renderGuidePart(EnumEquipmentPart.LEFT_LEG, x, y + te.getHeightOffset(), z);
+            renderGuidePart(EnumEquipmentPart.RIGHT_LEG, x, y + te.getHeightOffset(), z);
             break;
         case SKIRT:
-            renderGuidePart(EnumEquipmentPart.SKIRT, x, y, z);
+            renderGuidePart(EnumEquipmentPart.SKIRT, x, y + te.getHeightOffset(), z);
             break;
         case FEET:
-            renderGuidePart(EnumEquipmentPart.LEFT_FOOT, x, y, z);
-            renderGuidePart(EnumEquipmentPart.RIGHT_FOOT, x, y, z);
+            renderGuidePart(EnumEquipmentPart.LEFT_FOOT, x, y + te.getHeightOffset(), z);
+            renderGuidePart(EnumEquipmentPart.RIGHT_FOOT, x, y + te.getHeightOffset(), z);
             break;
         case WEAPON:
-            renderGuidePart(EnumEquipmentPart.WEAPON, x, y, z);
+            renderGuidePart(EnumEquipmentPart.WEAPON, x, y + te.getHeightOffset(), z);
             break;  
         }
     }
@@ -133,23 +151,57 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     private void renderGuidePart(EnumEquipmentPart part, double x, double y, double z) {
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
+        
+        GL11.glTranslated(part.xLocation, 0, part.zLocation);
 
         GL11.glDisable(GL11.GL_LIGHTING);
-        renderGuideFace(ForgeDirection.SOUTH, x + part.xOffset, y + 1 + part.yOffset, z  + part.zOffset, part.xSize, part.ySize);
-        renderGuideFace(ForgeDirection.EAST, x + part.xOffset, y + 1 + part.yOffset, z  + part.zOffset + part.zSize, part.zSize, part.ySize);
-        renderGuideFace(ForgeDirection.WEST, x + part.xOffset + part.xSize, y + 1 + part.yOffset, z  + part.zOffset, part.zSize, part.ySize);
-        renderGuideFace(ForgeDirection.NORTH, x + part.xOffset + part.xSize, y + 1 + part.yOffset, z  + part.zOffset + part.zSize, part.xSize, part.ySize);
-        renderGuideFace(ForgeDirection.UP, x + part.xOffset, y + 1 + part.ySize  + part.yOffset, z  + part.zOffset, part.xSize, part.zSize);
-        renderGuideFace(ForgeDirection.DOWN, x + part.xOffset, y + 1  + part.yOffset, z  + part.zOffset + part.zSize, part.xSize, part.zSize);
+        
+        renderGuideFace(ForgeDirection.SOUTH,
+                x - part.xOrigin - part.xBuildSpace,
+                y - part.botBuildSpace,
+                z + part.zOrigin + part.zBuildSpace,
+                part.xSize + part.xBuildSpace * 2,
+                part.ySize + part.topBuildSpace + part.botBuildSpace);
+        
+        renderGuideFace(ForgeDirection.EAST,
+                x + part.xOrigin + part.xBuildSpace,
+                y - part.botBuildSpace,
+                z + part.zOrigin + part.zBuildSpace,
+                part.zSize + part.xBuildSpace * 2,
+                part.ySize + part.topBuildSpace + part.botBuildSpace);
+        
+        renderGuideFace(ForgeDirection.WEST,
+                x - part.xOrigin - part.xBuildSpace,
+                y - part.botBuildSpace,
+                z - part.zOrigin - part.zBuildSpace,
+                part.zSize + part.xBuildSpace * 2,
+                part.ySize + part.topBuildSpace + part.botBuildSpace);
+        
+        renderGuideFace(ForgeDirection.NORTH,
+                x + part.xOrigin + part.xBuildSpace,
+                y - part.botBuildSpace,
+                z - part.zOrigin - part.zBuildSpace,
+                part.xSize + part.xBuildSpace * 2,
+                part.ySize + part.topBuildSpace + part.botBuildSpace);
+        
+        renderGuideFace(ForgeDirection.UP,
+                x - part.xOrigin - part.xBuildSpace,
+                y + part.ySize + part.topBuildSpace,
+                z - part.zOrigin - part.zBuildSpace,
+                part.xSize + part.xBuildSpace * 2,
+                part.zSize + part.zBuildSpace * 2);
+        
+        renderGuideFace(ForgeDirection.DOWN,
+                x - part.xOrigin - part.xBuildSpace,
+                y - part.botBuildSpace,
+                z - part.zOrigin - part.zBuildSpace,
+                part.xSize + part.xBuildSpace * 2,
+                part.zSize + part.zBuildSpace * 2);
+        
+        
         GL11.glEnable(GL11.GL_LIGHTING);
         
         GL11.glPopMatrix();
-        
-        /*
-        //GL11.glColor3f(1F, 0.5F, 0.5F);
-        renderGuideFace(ForgeDirection.DOWN, x + part.xOrigin, y + 0 + part.yOrigin, z + 1 + part.zOrigin, 1, 1);
-        renderGuideFace(ForgeDirection.UP, x + part.xOrigin, y + 1 + part.yOrigin, z + part.zOrigin, 1, 1);
-        */
     }
     
     private void renderGuideFace(ForgeDirection dir, double x, double y, double z, int sizeX, int sizeY) {
@@ -181,6 +233,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             GL11.glRotated(90, 1, 0, 0);
             break;
         case DOWN:
+            GL11.glTranslated(0, 0, sizeY);
             GL11.glRotated(-90, 1, 0, 0);
             break;
         default:
