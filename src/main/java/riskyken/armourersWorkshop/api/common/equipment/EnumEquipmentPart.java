@@ -1,75 +1,77 @@
 package riskyken.armourersWorkshop.api.common.equipment;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 
 
 public enum EnumEquipmentPart {
     HEAD(
             8, 8, 8,
-            4, 0, 4,
-            6, 1, 12, 6,
+            -4, 0, -4,
+            new int[] {1, 12, 6, 6, 6, 6},
             0, 0,
             EnumBodyPart.HEAD),
     
     CHEST(
             8, 12, 4,
-            4, 12, 2,
-            1, 1, 1, 1,
+            -4, -12, -2,
+            new int[] {1, 1, 5, 8, 2, 2},
             0, 0,
             EnumBodyPart.CHEST),
     
     LEFT_ARM(
             4, 12, 4,
-            2, 10, 2,
-            1, 1, 4, 1,
-            12, 0,
+            -1, -10, -2,
+            new int[] {1, 4, 2, 2, 3, 2},
+            11, 0,
             EnumBodyPart.LEFT_ARM),
     
     RIGHT_ARM(
             4, 12, 4,
-            2, 10, 2,
-            1, 1, 4, 1,
-            -12, 0,
+            -3, -10, -2,
+            new int[] {1, 4, 2, 2, 2, 3},
+            -11, 0,
             EnumBodyPart.RIGHT_ARM),
     
     LEFT_LEG(
             4, 12, 4,
-            2, 12, 2,
-            1, 1, 1, 1,
+            -2, -12, -2,
+            new int[] {-4, 1, 2, 2, 2, 1},
             6, 0,
             EnumBodyPart.LEFT_LEG),
     
     RIGHT_LEG(
             4, 12, 4,
-            2, 12, 2,
-            1, 1, 1, 1,
+            -2, -12, -2,
+            new int[] {-4, 1, 2, 2, 1, 2},
             -6, 0,
             EnumBodyPart.RIGHT_LEG),
     
     SKIRT(
             8, 12, 4,
-            4, 12, 2,
-            1, 1, 1, 1,
+            -4, -12, -2,
+            new int[] {0, 1, 8, 8, 6, 6},
             0, 0,
             null),
     
     LEFT_FOOT(
-            4, 5, 4,
-            2, 12, 2,
-            1, 1, 1, 1,
+            4, 12, 4,
+            -2, -12, -2,
+            new int[] {1, -8, 4, 2, 2, 1},
             6, 0,
             EnumBodyPart.LEFT_LEG),
     
     RIGHT_FOOT(
-            4, 5, 4,
-            2, 12, 2,
-            1, 1, 1, 1,
+            4, 12, 4,
+            -2, -12, -2,
+            new int[] {1, -8, 4, 2, 1, 2},
             -6, 0,
             EnumBodyPart.RIGHT_LEG),
     
     WEAPON(
             20, 40, 20,
-            10, 20, 10,
-            0, 0, 0, 0,
+            -10, -20, -10,
+            new int[] {0, 0, 0, 0, 0, 0},
             0, 0,
             null);
     
@@ -81,10 +83,7 @@ public enum EnumEquipmentPart {
     public final int yOrigin;
     public final int zOrigin;
     
-    public final int xBuildSpace;
-    public final int botBuildSpace;
-    public final int topBuildSpace;
-    public final int zBuildSpace;
+    public final int[] buildSpace;
     
     public final int xLocation;
     public final int zLocation;
@@ -94,7 +93,7 @@ public enum EnumEquipmentPart {
     EnumEquipmentPart(
             int xSize, int ySize, int zSize,
             int xOrigin, int yOrigin, int zOrigin,
-            int xBuildSpace, int botBuildSpace, int topBuildSpace, int zBuildSpace,
+            int[] buildSpace,
             int xLocation, int zLocation,
             EnumBodyPart bodyPart) {
         
@@ -106,15 +105,43 @@ public enum EnumEquipmentPart {
         this.yOrigin = yOrigin;
         this.zOrigin = zOrigin;
         
-        this.xBuildSpace = xBuildSpace;
-        this.botBuildSpace = botBuildSpace;
-        this.topBuildSpace = topBuildSpace;
-        this.zBuildSpace = zBuildSpace;
+        this.buildSpace = buildSpace;
         
         this.xLocation = xLocation;
         this.zLocation = zLocation;
         
+        
         this.bodyPart = bodyPart;
+    }
+    
+    public int getStartX() {
+        return xOrigin - ((xSize / 2) + xOrigin) - getBuildSpaceForDirection(ForgeDirection.WEST);
+    }
+    
+    public int getStartY() {
+        return -getBuildSpaceForDirection(ForgeDirection.DOWN);
+    }
+    public int getStartZ() {
+        return zOrigin - getBuildSpaceForDirection(ForgeDirection.NORTH);
+    }
+    
+    public int getTotalXSize() {
+        return getBuildSpaceForDirection(ForgeDirection.EAST) + getBuildSpaceForDirection(ForgeDirection.WEST) + xSize;
+    }
+    
+    public int getTotalYSize() {
+        return getBuildSpaceForDirection(ForgeDirection.UP) + getBuildSpaceForDirection(ForgeDirection.DOWN) + ySize;
+    }
+    
+    public int getTotalZSize() {
+        return getBuildSpaceForDirection(ForgeDirection.NORTH) + getBuildSpaceForDirection(ForgeDirection.SOUTH) + zSize;
+    }
+    
+    public int getBuildSpaceForDirection(ForgeDirection direction) {
+        if (direction != ForgeDirection.UNKNOWN) {
+            return buildSpace[direction.ordinal()];
+        }
+        return 0;
     }
     
     public static EnumEquipmentPart getOrdinal(int id) {

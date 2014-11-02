@@ -25,7 +25,7 @@ public class CustomArmourItemData {
     private static final String TAG_TYPE = "type";
     private static final String TAG_PARTS = "parts";
     
-    private static final int FILE_VERSION = 1;
+    public static final int FILE_VERSION = 2;
     
     private String authorName;
     private String customName;
@@ -154,7 +154,7 @@ public class CustomArmourItemData {
         int size = stream.readByte();
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < size; i++) {
-            parts.add(new CustomArmourPartData(stream));
+            parts.add(new CustomArmourPartData(stream, fileVersion));
         }
     }
     
