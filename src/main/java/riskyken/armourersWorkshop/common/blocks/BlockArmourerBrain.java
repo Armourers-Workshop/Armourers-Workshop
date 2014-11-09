@@ -40,6 +40,7 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
                 ModLogger.log(direction.ordinal() - 2);
                 ModLogger.log(direction);
                 ((TileEntityArmourerBrain)te).setDirection(ForgeDirection.NORTH);
+                ((TileEntityArmourerBrain)te).onPlaced();
             }
         }
     }

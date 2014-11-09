@@ -13,6 +13,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -121,6 +122,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.setInventorySlotContents(1, stackInput);
     }
     
+    public void onPlaced() {
+        createBoundingBoxes();
+    }
+    
+    public void preRemove() {
+        removeBoundingBoxed();
+    }
+    
     private void checkForTemplateItem() {
         if (this.worldObj.isRemote) { return; }
         ItemStack stackInput = getStackInSlot(0);
@@ -197,17 +206,50 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         */
     }
     
-    public void setDirection(ForgeDirection direction) {
-        this.direction = direction;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    protected void removeBoundingBoxed() {
+        EnumEquipmentPart[] parts = type.getParts();
+        for (int i = 0; i < parts.length; i++) {
+            EnumEquipmentPart part = parts[i];
+            removeBoundingBoxesForPart(part);
+        }
     }
     
-    public ForgeDirection getDirection() {
-        return direction;
+    private void removeBoundingBoxesForPart(EnumEquipmentPart part) {
+        for (int ix = 0; ix < part.xSize; ix++) {
+            for (int iy = 0; iy < part.ySize; iy++) {
+                for (int iz = 0; iz < part.zSize; iz++) {
+                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
+                    int y = yCoord + getHeightOffset() + iy;
+                    int z = zCoord + part.zLocation  - (part.zSize / 2) + iz;
+                    
+                    if (worldObj.getBlock(x, y, z) == ModBlocks.boundingBox) {
+                        worldObj.setBlockToAir(x, y, z);
+                    }
+                }
+            }
+        }
     }
     
     protected void createBoundingBoxes() {
+        EnumEquipmentPart[] parts = type.getParts();
+        for (int i = 0; i < parts.length; i++) {
+            EnumEquipmentPart part = parts[i];
+            createBoundingBoxesForPart(part);
+        }
+    }
+    
+    private void createBoundingBoxesForPart(EnumEquipmentPart part) {
+        for (int ix = 0; ix < part.xSize; ix++) {
+            for (int iy = 0; iy < part.ySize; iy++) {
+                for (int iz = 0; iz < part.zSize; iz++) {
+                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
+                    int y = yCoord + getHeightOffset() + iy;
+                    int z = zCoord + part.zLocation - (part.zSize / 2) + iz;
+                    
+                    createBoundingBox(x, y, z, part.bodyPart);
+                }
+            }
+        }
     }
     
     private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
@@ -224,7 +266,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         }
     }
     
-    protected void removeBoundingBoxed() {
+    public void setDirection(ForgeDirection direction) {
+        this.direction = direction;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public ForgeDirection getDirection() {
+        return direction;
     }
     
     @Override
@@ -254,9 +303,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public void setType(EnumEquipmentType type) {
-        if (this.type == type) { return; }
-        this.type = type;
+        if (this.type == type) {
+            return;
+        }
         removeBoundingBoxed();
+        this.type = type;
         createBoundingBoxes(); 
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -370,10 +421,5 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
-    }
-
-    public void preRemove() {
-        // TODO Auto-generated method stub
-        
     }
 }
