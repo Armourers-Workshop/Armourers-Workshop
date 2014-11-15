@@ -168,7 +168,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
         
-        GL11.glTranslated(-part.xLocation, 0, part.zLocation);
+        GL11.glTranslated(-part.xLocation, part.yLocation, -part.zLocation);
 
         GL11.glDisable(GL11.GL_LIGHTING);
         

@@ -109,11 +109,8 @@ public class CustomEquipmentBlockData {
         
         if (version < 2) {
             switch (part) {
-            case LEFT_ARM:
-                //x -= 1;
-                break;
-            case RIGHT_ARM:
-                //x += 1;
+            case WEAPON:
+                y -= 1;
                 break;
             case SKIRT:
                 y -= 1;

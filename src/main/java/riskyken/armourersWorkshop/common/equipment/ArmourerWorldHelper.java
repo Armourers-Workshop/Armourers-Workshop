@@ -41,7 +41,7 @@ public final class ArmourerWorldHelper {
                 for (int iz = 0; iz < part.getTotalZSize(); iz++) {
                     
                     int x = xCoord + part.getStartX() - part.xLocation + ix;
-                    int y = yCoord + part.getStartY() + iy;
+                    int y = yCoord + part.getStartY() + part.yLocation + iy;
                     int z = zCoord + part.getStartZ() + part.zLocation + iz;
                     
                     int xOrigin = xCoord - part.xLocation - x + ((part.xSize / 2) + part.xOrigin);
@@ -92,7 +92,7 @@ public final class ArmourerWorldHelper {
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             CustomEquipmentBlockData blockData = partData.getArmourData().get(i);
             int xOrigin = xCoord - partData.getArmourPart().xLocation  + ((partData.getArmourPart().xSize / 2) + partData.getArmourPart().xOrigin);
-            int yOrigin = yCoord - partData.getArmourPart().yOrigin;
+            int yOrigin = yCoord - partData.getArmourPart().yOrigin + partData.getArmourPart().yLocation;
             int zOrigin = zCoord + partData.getArmourPart().zLocation;
             loadArmourBlock(world, xOrigin, yOrigin, zOrigin, blockData);
         }

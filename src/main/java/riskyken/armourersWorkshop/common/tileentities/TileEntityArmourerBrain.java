@@ -219,9 +219,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             for (int iy = 0; iy < part.ySize; iy++) {
                 for (int iz = 0; iz < part.zSize; iz++) {
                     int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
-                    int y = yCoord + getHeightOffset() + iy;
+                    int y = yCoord + part.yLocation + getHeightOffset() + iy;
                     int z = zCoord + part.zLocation  - (part.zSize / 2) + iz;
-                    
+                    if (part == EnumEquipmentPart.WEAPON) {
+                        z += 4;
+                    }
                     if (worldObj.getBlock(x, y, z) == ModBlocks.boundingBox) {
                         worldObj.setBlockToAir(x, y, z);
                     }
@@ -242,10 +244,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         for (int ix = 0; ix < part.xSize; ix++) {
             for (int iy = 0; iy < part.ySize; iy++) {
                 for (int iz = 0; iz < part.zSize; iz++) {
-                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
-                    int y = yCoord + getHeightOffset() + iy;
-                    int z = zCoord + part.zLocation - (part.zSize / 2) + iz;
                     
+                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
+                    int y = yCoord + part.yLocation + getHeightOffset() + iy;
+                    int z = zCoord + part.zLocation - (part.zSize / 2) + iz;
+                    if (part == EnumEquipmentPart.WEAPON) {
+                        z += 4;
+                    }
                     createBoundingBox(x, y, z, part.bodyPart);
                 }
             }

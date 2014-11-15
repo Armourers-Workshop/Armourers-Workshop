@@ -9,70 +9,70 @@ public enum EnumEquipmentPart {
             8, 8, 8,
             -4, 0, -4,
             new int[] {1, 12, 6, 6, 6, 6},
-            0, 0,
+            0, 0, 0,
             EnumBodyPart.HEAD),
     
     CHEST(
             8, 12, 4,
             -4, -12, -2,
             new int[] {1, 1, 5, 8, 2, 2},
-            0, 0,
+            0, 0, 0,
             EnumBodyPart.CHEST),
     
     LEFT_ARM(
             4, 12, 4,
             -1, -10, -2,
             new int[] {1, 4, 2, 2, 3, 2},
-            11, 0,
+            11, 0, 0,
             EnumBodyPart.LEFT_ARM),
     
     RIGHT_ARM(
             4, 12, 4,
             -3, -10, -2,
             new int[] {1, 4, 2, 2, 2, 3},
-            -11, 0,
+            -11, 0, 0,
             EnumBodyPart.RIGHT_ARM),
     
     LEFT_LEG(
             4, 12, 4,
             -2, -12, -2,
             new int[] {-4, 1, 2, 2, 2, 1},
-            6, 0,
+            6, 0, 0,
             EnumBodyPart.LEFT_LEG),
     
     RIGHT_LEG(
             4, 12, 4,
             -2, -12, -2,
             new int[] {-4, 1, 2, 2, 1, 2},
-            -6, 0,
+            -6, 0, 0,
             EnumBodyPart.RIGHT_LEG),
     
     SKIRT(
             8, 12, 4,
             -4, -12, -2,
             new int[] {0, 1, 8, 8, 6, 6},
-            0, 0,
+            0, 0, 0,
             null),
     
     LEFT_FOOT(
             4, 12, 4,
             -2, -12, -2,
             new int[] {1, -8, 4, 2, 2, 1},
-            6, 0,
+            6, 0, 0,
             EnumBodyPart.LEFT_LEG),
     
     RIGHT_FOOT(
             4, 12, 4,
             -2, -12, -2,
             new int[] {1, -8, 4, 2, 1, 2},
-            -6, 0,
+            -6, 0, 0,
             EnumBodyPart.RIGHT_LEG),
     
     WEAPON(
-            20, 40, 20,
-            -10, -20, -10,
-            new int[] {0, 0, 0, 0, 0, 0},
-            0, 0,
+            4, 4, 12,
+            -2, -2, -2,
+            new int[] {18, 18, 8, 0, 8, 8},
+            0, 18, 0,
             null);
     
     public final int xSize;
@@ -86,6 +86,7 @@ public enum EnumEquipmentPart {
     public final int[] buildSpace;
     
     public final int xLocation;
+    public final int yLocation;
     public final int zLocation;
     
     public final EnumBodyPart bodyPart;
@@ -94,7 +95,7 @@ public enum EnumEquipmentPart {
             int xSize, int ySize, int zSize,
             int xOrigin, int yOrigin, int zOrigin,
             int[] buildSpace,
-            int xLocation, int zLocation,
+            int xLocation, int yLocation, int zLocation,
             EnumBodyPart bodyPart) {
         
         this.xSize = xSize;
@@ -108,8 +109,8 @@ public enum EnumEquipmentPart {
         this.buildSpace = buildSpace;
         
         this.xLocation = xLocation;
+        this.yLocation = yLocation;
         this.zLocation = zLocation;
-        
         
         this.bodyPart = bodyPart;
     }
