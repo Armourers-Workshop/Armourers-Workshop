@@ -27,7 +27,7 @@ public final class EquipmentRenderHelper {
         }
         
         if (bodyPart != null) {
-            checkBlockFaceIntersectsBodyPart(bodyPart, block);
+            //checkBlockFaceIntersectsBodyPart(bodyPart, block);
         }
         
     }
