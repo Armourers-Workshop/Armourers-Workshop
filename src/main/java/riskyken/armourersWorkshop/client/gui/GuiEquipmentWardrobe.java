@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.gui;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.BitSet;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -84,13 +85,13 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         nakedCheck = new GuiCheckBox(1, this.guiLeft + 8, this.guiTop + 94, 14, 14, GuiHelper.getLocalizedControlName(guiName, "nakedSkin"), skinInfo.isNaked(), false);
         
         armourOverrideCheck = new GuiCheckBox[4];
-        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 29, this.guiTop + 17, 7, 7, "", armourOverride.get(0), true);
-        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 29, this.guiTop + 44, 7, 7, "", armourOverride.get(1), true);
-        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 140, this.guiTop + 17, 7, 7, "", armourOverride.get(2), true);
-        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 140, this.guiTop + 71, 7, 7, "", armourOverride.get(3), true);
+        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 29, this.guiTop + 17, 7, 7, "Disable head armour render", armourOverride.get(0), true);
+        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 29, this.guiTop + 44, 7, 7, "Disable chest armour render", armourOverride.get(1), true);
+        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 140, this.guiTop + 17, 7, 7, "Disable leg armour render", armourOverride.get(2), true);
+        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 140, this.guiTop + 71, 7, 7, "Disable foot armour render", armourOverride.get(3), true);
         
         overlayOverrideCheck = new GuiCheckBox[1];
-        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 29, this.guiTop + 28, 7, 7, "", headOverlay, true);
+        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 29, this.guiTop + 28, 7, 7, "Disable head overlay render", headOverlay, true);
         
         buttonList.add(autoButton);
         buttonList.add(nakedCheck);
@@ -133,13 +134,25 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     }
     
     @Override
-    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, "equipmentWardrobe");
-        
         String labelSkinColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinColour");
         this.fontRendererObj.drawString(labelSkinColour + ":", 8, 114, 4210752);
-        
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        
+        
+        for (int i = 0; i < this.buttonList.size(); i++) {
+            GuiButton button = (GuiButton) buttonList.get(i);
+            if (button instanceof GuiCheckBox) {
+                if (((GuiCheckBox)button).isHovering(mouseX, mouseY) & ((GuiCheckBox)button).small) {
+                    
+                    ArrayList lines = new ArrayList();
+                    lines.add(button.displayString);
+                    drawHoveringText(lines, mouseX - guiLeft, mouseY - guiTop, fontRendererObj);
+                }
+            }
+        }
+
     }
     
     @Override
