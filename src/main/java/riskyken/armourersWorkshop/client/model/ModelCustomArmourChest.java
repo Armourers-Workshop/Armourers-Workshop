@@ -82,8 +82,9 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
-        GL11.glTranslatef(6.0F * scale, 0F, 0F);
+        GL11.glTranslatef(5.0F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 2.0F * scale, 0F);
+        
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
@@ -101,7 +102,7 @@ public class ModelCustomArmourChest extends ModelCustomArmour {
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
-        GL11.glTranslatef(-6.0F * scale, 0F, 0F);
+        GL11.glTranslatef(-5.0F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 2.0F * scale, 0F);
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
