@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
@@ -149,7 +150,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
     }
     
     public boolean needsCleanup() {
-        if (timeFromRender > 6000) {
+        if (timeFromRender > ConfigHandler.modelCacheTime) {
             return true;
         }
         return false;
