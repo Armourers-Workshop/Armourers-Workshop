@@ -22,6 +22,14 @@ public class UtilBlocks {
         return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
     }
     
+    public static int determineOrientationSide(World world, int x, int y, int z, EntityLivingBase entity) {
+        if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
+        }
+
+        int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
+    }
+    
     public static int getColourFromTileEntity(World world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {

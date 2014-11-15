@@ -62,7 +62,7 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
       
-        GL11.glTranslated(0, 11 * scale, 0);
+        GL11.glTranslated(0, 12 * scale, 0);
         
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);

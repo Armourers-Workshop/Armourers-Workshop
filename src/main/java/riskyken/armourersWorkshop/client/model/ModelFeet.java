@@ -8,23 +8,27 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelFeet extends ModelBase {
     
-    private ModelRenderer leg1;
-    private ModelRenderer leg2;
+    private ModelRenderer legLeft;
+    private ModelRenderer legRight;
     
     public ModelFeet() {
-        leg1 = new ModelRenderer(this, 0, 16);
-        leg1.addBox(-7, -14, -2, 4, 12, 4);
-        leg1.setRotationPoint(0, 0, 0);
+        legLeft = new ModelRenderer(this, 0, 16);
+        legLeft.addBox(-2, -12, -2, 4, 12, 4);
+        legLeft.setRotationPoint(0, 0, 0);
 
-        leg2 = new ModelRenderer(this, 0, 16);
-        leg2.mirror = true;
-        leg2.addBox(3, -14, -2, 4, 12, 4);
-        leg2.setRotationPoint(0, 0, 0);
+        legRight = new ModelRenderer(this, 0, 16);
+        legRight.mirror = true;
+        legRight.addBox(-2, -12, -2, 4, 12, 4);
+        legRight.setRotationPoint(0, 0, 0);
     }
 
-    public void render() {
+    public void renderLeftLeft() {
         float mult = 0.0625F;
-        leg1.render(mult);
-        leg2.render(mult);
+        legLeft.render(mult);
+    }
+    
+    public void renderRightLeg() {
+        float mult = 0.0625F;
+        legRight.render(mult);
     }
 }

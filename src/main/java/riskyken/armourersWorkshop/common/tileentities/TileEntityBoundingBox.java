@@ -38,7 +38,9 @@ public class TileEntityBoundingBox extends TileEntity {
         this.parentX = compound.getInteger(TAG_PARENT_X);
         this.parentY = compound.getInteger(TAG_PARENT_Y);
         this.parentZ = compound.getInteger(TAG_PARENT_Z);
-        this.bodyPart = EnumBodyPart.values()[compound.getByte(TAG_BODY_PART)];
+        if (compound.hasKey(TAG_BODY_PART)) {
+            this.bodyPart = EnumBodyPart.values()[compound.getByte(TAG_BODY_PART)];
+        }
     }
     
     @Override
@@ -47,7 +49,9 @@ public class TileEntityBoundingBox extends TileEntity {
         compound.setInteger(TAG_PARENT_X, this.parentX);
         compound.setInteger(TAG_PARENT_Y, this.parentY);
         compound.setInteger(TAG_PARENT_Z, this.parentZ);
-        compound.setByte(TAG_BODY_PART, (byte)this.bodyPart.ordinal());
+        if (this.bodyPart != null) {
+            compound.setByte(TAG_BODY_PART, (byte)this.bodyPart.ordinal());
+        }
     }
     
     @Override

@@ -7,9 +7,13 @@ import java.util.BitSet;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 
 public class PlayerSkinInfo {
@@ -108,6 +112,8 @@ public class PlayerSkinInfo {
         if (bufferedImage != null) {
             playerBackupSkin = bufferedImage;
             haveSkinBackup = true;
+        } else {
+            ModLogger.log(Level.WARN, "Fail to make skin backup.");
         }
     }
     
@@ -117,6 +123,15 @@ public class PlayerSkinInfo {
     }
     
     private void uploadNakedSkin(AbstractClientPlayer player) {
+        if (!hasNakedSkin) {
+            ModLogger.log(Level.WARN, "Tryed to upload null naked skin.");
+            return;
+        }
+        
+        if (playerNakedSkin == null) {
+            ModLogger.log(Level.ERROR, "Naked skin missing. Something is wrong!");
+            return;
+        }
         
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
         if (player.func_152123_o()) {
@@ -131,7 +146,9 @@ public class PlayerSkinInfo {
             makeBackupSkin(player);
         }
         
-        if (playerBackupSkin == null) { return; }
+        if (playerBackupSkin == null) {
+            return;
+        }
         
         playerNakedSkin = SkinHelper.deepCopyBufferedImage(playerBackupSkin);
         

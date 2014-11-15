@@ -63,8 +63,8 @@ public class CustomArmourPartData {
         readFromNBT(compound);
     }
 
-    public CustomArmourPartData(DataInputStream stream) throws IOException {
-        readFromStream(stream);
+    public CustomArmourPartData(DataInputStream stream, int version) throws IOException {
+        readFromStream(stream, version);
     }
 
     public EnumEquipmentPart getArmourPart() {
@@ -142,12 +142,12 @@ public class CustomArmourPartData {
         }
     }
     
-    private void readFromStream(DataInputStream stream) throws IOException {
+    private void readFromStream(DataInputStream stream, int version) throws IOException {
         part = EnumEquipmentPart.getOrdinal(stream.readByte());
         int size = stream.readInt();
         armourData = new ArrayList<CustomEquipmentBlockData>();
         for (int i = 0; i < size; i++) {
-            armourData.add(new CustomEquipmentBlockData(stream));
+            armourData.add(new CustomEquipmentBlockData(stream, version, part));
         }
     }
 

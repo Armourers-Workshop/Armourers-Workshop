@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -25,7 +26,7 @@ public class CustomArmourItemData {
     private static final String TAG_TYPE = "type";
     private static final String TAG_PARTS = "parts";
     
-    private static final int FILE_VERSION = 1;
+    public static final int FILE_VERSION = 2;
     
     private String authorName;
     private String customName;
@@ -43,7 +44,7 @@ public class CustomArmourItemData {
     }
     
     public boolean needsCleanup() {
-        if (timeFromRender > 6000) {
+        if (timeFromRender > ConfigHandler.modelCacheTime) {
             return true;
         }
         return false;
@@ -154,7 +155,7 @@ public class CustomArmourItemData {
         int size = stream.readByte();
         parts = new ArrayList<CustomArmourPartData>();
         for (int i = 0; i < size; i++) {
-            parts.add(new CustomArmourPartData(stream));
+            parts.add(new CustomArmourPartData(stream, fileVersion));
         }
     }
     

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.BitSet;
 
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 
 public class CustomEquipmentBlockData {
     
@@ -57,8 +58,8 @@ public class CustomEquipmentBlockData {
         readFromNBT(compound);
     }
     
-    public CustomEquipmentBlockData(DataInputStream stream) throws IOException {
-        readFromStream(stream);
+    public CustomEquipmentBlockData(DataInputStream stream, int version, EnumEquipmentPart part) throws IOException {
+        readFromStream(stream, version, part);
     }
 
     public void writeToBuf(ByteBuf buf) {
@@ -101,10 +102,36 @@ public class CustomEquipmentBlockData {
         stream.writeByte(blockType);
     }
     
-    private void readFromStream(DataInputStream stream) throws IOException {
+    private void readFromStream(DataInputStream stream, int version, EnumEquipmentPart part) throws IOException {
         x = stream.readByte();
         y = stream.readByte();
         z = stream.readByte();
+        
+        if (version < 2) {
+            switch (part) {
+            case WEAPON:
+                y -= 1;
+                break;
+            case SKIRT:
+                y -= 1;
+                break;
+            case LEFT_LEG:
+                y -= 1;
+                break;
+            case RIGHT_LEG:
+                y -= 1;
+                break;
+            case LEFT_FOOT:
+                y -= 1;
+                break;
+            case RIGHT_FOOT:
+                y -= 1;
+                break;
+            default:
+                break;
+            }
+        }
+        
         colour = stream.readInt();
         blockType = stream.readByte();
     }

@@ -27,7 +27,7 @@ public final class SkinHelper {
 
     public static void uploadTexture(ResourceLocation resourceLocation, BufferedImage bufferedImage) {
         ITextureObject textureObject = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
-        if (textureObject != null) {
+        if (textureObject != null & bufferedImage != null) {
             uploadTexture(textureObject, bufferedImage);
         }
     }

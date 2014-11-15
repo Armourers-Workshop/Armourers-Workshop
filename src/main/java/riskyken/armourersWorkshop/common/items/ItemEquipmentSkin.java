@@ -10,7 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+
+import org.lwjgl.input.Keyboard;
+
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
@@ -47,10 +51,14 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 }
                 
             }
+            String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
+            list.add("Press the " + keyName + " key to open the Equipment Wardrobe");
         } else {
             list.add(EnumChatFormatting.RED + "ERROR: Invalid equipment skin.");
             list.add(EnumChatFormatting.RED + "Please delete.");
         }
+        
+
         super.addInformation(stack, player, list, p_77624_4_);
     }
     
