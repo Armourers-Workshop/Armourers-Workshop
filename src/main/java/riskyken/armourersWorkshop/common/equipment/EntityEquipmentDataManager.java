@@ -13,7 +13,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -56,7 +55,7 @@ public final class EntityEquipmentDataManager {
                                 int oldId = armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
                                 if (newId != oldId) {
                                     armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, newId);
-                                    ModLogger.log("update skin!");
+                                    //ModLogger.log("update skin!");
                                 }
                                 compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
                             } else {
@@ -64,7 +63,7 @@ public final class EntityEquipmentDataManager {
                                 NBTTagCompound armourData = new NBTTagCompound();
                                 armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentData.getEquipmentId(EnumEquipmentType.WEAPON));
                                 compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
-                                ModLogger.log("set skin!");
+                                //ModLogger.log("set skin!");
                             }
 
                         } else {
@@ -81,7 +80,7 @@ public final class EntityEquipmentDataManager {
                             NBTTagCompound compound = stack.getTagCompound();
                             if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
                                 compound.removeTag(LibCommonTags.TAG_ARMOUR_DATA);
-                                ModLogger.log("remove skin!");
+                                //ModLogger.log("remove skin!");
                             }
                         }
                     }
