@@ -25,7 +25,7 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
         if (glowing) {
             setLightLevel(1.0F);
         }
-        setHardness(2.0F);
+        setHardness(1.0F);
     }
     
     @Override
