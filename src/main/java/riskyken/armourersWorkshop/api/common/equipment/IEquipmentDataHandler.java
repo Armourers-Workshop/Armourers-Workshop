@@ -89,4 +89,12 @@ public interface IEquipmentDataHandler {
      * @return IInventory of the player. Returns null if not found.
      */
     public IInventory getPlayersEquipmentInventory(EntityPlayer player);
+    
+    /**
+     * Checks if the armour render has been overridden for this slot.
+     * @param player
+     * @param slotId
+     * @return
+     */
+    public boolean isArmourRenderOverridden(EntityPlayer player, int slotId);
 }

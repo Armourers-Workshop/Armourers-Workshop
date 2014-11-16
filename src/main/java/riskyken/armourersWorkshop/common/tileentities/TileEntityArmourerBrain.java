@@ -14,9 +14,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
@@ -25,19 +25,23 @@ import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent {
+public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
+    private static final String TAG_DIRECTION = "direction";
     private static final String TAG_OWNER = "owner";
     private static final String TAG_TYPE = "type";
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
     private static final String TAG_CUSTOM_NAME = "customeName";
+    private static final int HEIGHT_OFFSET = 2;
     
+    private ForgeDirection direction;
     private GameProfile gameProfile = null;
     private EnumEquipmentType type;
     private boolean showGuides;
@@ -46,7 +50,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     
     public TileEntityArmourerBrain() {
         this.type = EnumEquipmentType.HEAD;
-        this.formed = false;
         this.items = new ItemStack[2];
         this.showOverlay = true;
         this.customName = "";
@@ -71,7 +74,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         String authorName = player.getDisplayName();
         String customName = name;
         
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord + xOffset, yCoord + 1, zCoord + zOffset);
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord, yCoord + HEIGHT_OFFSET, zCoord);
         
         if (armourItemData == null) { return; }
         
@@ -115,10 +118,18 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
-        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord + xOffset, yCoord + 1, zCoord + zOffset, equipmentData);
+        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData);
     
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
+    }
+    
+    public void onPlaced() {
+        createBoundingBoxes();
+    }
+    
+    public void preRemove() {
+        removeBoundingBoxed();
     }
     
     private void checkForTemplateItem() {
@@ -133,22 +144,24 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
             setType(EnumEquipmentType.getOrdinal(stackInput.getItemDamage() + 1));
         }
     }
+    
+    public int getHeightOffset() {
+        return HEIGHT_OFFSET;
+    }
 
     public void clearArmourCubes() {
-        int ySize = MULTI_BLOCK_SIZE;
-        if (type == EnumEquipmentType.WEAPON) {
-            ySize += 20;
-        }
-        for (int ix = 1; ix < MULTI_BLOCK_SIZE - 1; ix++) {
-            for (int iy = 1; iy < ySize - 1; iy++) {
-                for (int iz = 1; iz < MULTI_BLOCK_SIZE - 1; iz++) {
-                    int x = xCoord + xOffset + ix;
-                    int y = yCoord + iy;
-                    int z = zCoord + zOffset + iz;
-                    if (!worldObj.isAirBlock(x, y, z)) {
-                        Block block = worldObj.getBlock(x, y, z);
-                        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
-                            worldObj.setBlockToAir(x, y, z);
+        for (int i = 0; i < type.getParts().length; i++) {
+            EnumEquipmentPart part = type.getParts()[i];
+            ModLogger.log("Clearing " + part);
+            for (int ix = 0; ix <  part.getTotalXSize(); ix++) {
+                for (int iy = 0; iy < part.getTotalYSize(); iy++) {
+                    for (int iz = 0; iz <  part.getTotalZSize(); iz++) {
+                        int tarX = xCoord + part.getStartX() - part.xLocation + ix;
+                        int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
+                        int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
+                        Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
+                        if (tarBlock == ModBlocks.colourable | tarBlock == ModBlocks.colourableGlowing) {
+                            worldObj.setBlockToAir(tarX, tarY, tarZ);
                         }
                     }
                 }
@@ -157,6 +170,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     }
     
     public void cloneToSide(ForgeDirection side) {
+        /*
         int ySize = MULTI_BLOCK_SIZE;
         if (type == EnumEquipmentType.WEAPON) {
             ySize += 20;
@@ -192,98 +206,58 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
                 }
             }
         }
+        */
     }
     
-    @Override
-    protected void multiBlockFormed() {
-        createBoundingBoxes();
+    protected void removeBoundingBoxed() {
+        EnumEquipmentPart[] parts = type.getParts();
+        for (int i = 0; i < parts.length; i++) {
+            EnumEquipmentPart part = parts[i];
+            removeBoundingBoxesForPart(part);
+        }
     }
     
-    @Override
-    protected void multiBlockBroken() {
-        removeBoundingBoxed();
+    private void removeBoundingBoxesForPart(EnumEquipmentPart part) {
+        for (int ix = 0; ix < part.xSize; ix++) {
+            for (int iy = 0; iy < part.ySize; iy++) {
+                for (int iz = 0; iz < part.zSize; iz++) {
+                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
+                    int y = yCoord + part.yLocation + getHeightOffset() + iy;
+                    int z = zCoord + part.zLocation  - (part.zSize / 2) + iz;
+                    if (part == EnumEquipmentPart.WEAPON) {
+                        z += 4;
+                    }
+                    if (worldObj.getBlock(x, y, z) == ModBlocks.boundingBox) {
+                        worldObj.setBlockToAir(x, y, z);
+                    }
+                }
+            }
+        }
     }
     
     protected void createBoundingBoxes() {
-        switch (type) {
-        case NONE:
-            break;
-        case HEAD:
-            for (int ix = 0; ix < 8; ix++) {
-                for (int iy = 0; iy < 8; iy++) {
-                    for (int iz = 0; iz < 8; iz++) {
-                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 7, EnumBodyPart.HEAD);
-                    }
-                }
-            } 
-            break;
-        case CHEST:
-            //Chest
-            for (int ix = 0; ix < 8; ix++) {
-                for (int iy = 0; iy < 12; iy++) {
-                    for (int iz = 0; iz < 4; iz++) {
-                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 4, EnumBodyPart.CHEST);
-                    }
-                }
-            } 
-            for (int ix = 0; ix < 4; ix++) {
-                for (int iy = 0; iy < 12; iy++) {
-                    for (int iz = 0; iz < 4; iz++) {
-                        //Right Arm
-                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 14, EnumBodyPart.RIGHT_ARM);
-                        //Left Arm
-                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 14, EnumBodyPart.LEFT_ARM);
-                    }
-                }
-            }
-            break;
-        case LEGS:
-            for (int ix = 0; ix < 4; ix++) {
-                for (int iy = 0; iy < 12; iy++) {
-                    for (int iz = 0; iz < 4; iz++) {
-                        //Right Leg
-                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.RIGHT_LEG);
-                        //Left Leg
-                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.LEFT_LEG);
-                    }
-                }
-            }
-            break;
-        case SKIRT:
-            for (int ix = 0; ix < 4; ix++) {
-                for (int iy = 0; iy < 12; iy++) {
-                    for (int iz = 0; iz < 4; iz++) {
-                        //Right Leg
-                        createBoundingBox(xCoord + xOffset + ix + 7, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.RIGHT_LEG);
-                        //Left Leg
-                        createBoundingBox(xCoord + xOffset + ix + 11, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.LEFT_LEG);
-                    }
-                }
-            }
-            break;
-        case FEET:
-            for (int ix = 0; ix < 4; ix++) {
-                for (int iy = 0; iy < 12; iy++) {
-                    for (int iz = 0; iz < 4; iz++) {
-                        //Right Leg
-                        createBoundingBox(xCoord + xOffset + ix + 4, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.RIGHT_LEG);
-                        //Left Leg
-                        createBoundingBox(xCoord + xOffset + ix + 14, yCoord + iy + 2, zCoord + zOffset + iz + 9, EnumBodyPart.LEFT_LEG);
-                    }
-                }
-            }
-            break;
-        case WEAPON:
-            for (int ix = 0; ix < 4; ix++) {
-                for (int iy = 0; iy < 4; iy++) {
-                    for (int iz = 0; iz < 12; iz++) {
-                        createBoundingBox(xCoord + xOffset + ix + 9, yCoord + iy + 19, zCoord + zOffset + iz + 9, EnumBodyPart.WEAPON_ARM);
-                    }
-                }
-            }
-            break;
+        EnumEquipmentPart[] parts = type.getParts();
+        for (int i = 0; i < parts.length; i++) {
+            EnumEquipmentPart part = parts[i];
+            createBoundingBoxesForPart(part);
         }
-        
+    }
+    
+    private void createBoundingBoxesForPart(EnumEquipmentPart part) {
+        for (int ix = 0; ix < part.xSize; ix++) {
+            for (int iy = 0; iy < part.ySize; iy++) {
+                for (int iz = 0; iz < part.zSize; iz++) {
+                    
+                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
+                    int y = yCoord + part.yLocation + getHeightOffset() + iy;
+                    int z = zCoord + part.zLocation - (part.zSize / 2) + iz;
+                    if (part == EnumEquipmentPart.WEAPON) {
+                        z += 4;
+                    }
+                    createBoundingBox(x, y, z, part.bodyPart);
+                }
+            }
+        }
     }
     
     private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
@@ -300,30 +274,22 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
         }
     }
     
-    protected void removeBoundingBoxed() {
-        int ySize = MULTI_BLOCK_SIZE;
-        if (type == EnumEquipmentType.WEAPON) {
-            ySize += 20;
-        }
-        for (int ix = 1; ix < MULTI_BLOCK_SIZE - 1; ix++) {
-            for (int iy = 1; iy < ySize - 1; iy++) {
-                for (int iz = 1; iz < MULTI_BLOCK_SIZE - 1; iz++) {
-                    if (worldObj.getBlock(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz) == ModBlocks.boundingBox) {
-                        worldObj.setBlockToAir(xCoord + xOffset + ix, yCoord + iy, zCoord + zOffset + iz);
-                    }
-                }
-            }
-        } 
+    public void setDirection(ForgeDirection direction) {
+        this.direction = direction;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public ForgeDirection getDirection() {
+        return direction;
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = super.getRenderBoundingBox();
         
-        if (formed) {
-            bb = AxisAlignedBB.getBoundingBox(xCoord + xOffset, yCoord, zCoord + zOffset,
-                    xCoord + MULTI_BLOCK_SIZE, yCoord + MULTI_BLOCK_SIZE + 20, zCoord + MULTI_BLOCK_SIZE);
-        }
+        bb = AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10,
+                xCoord + 20, yCoord + 40 + 20, zCoord + 20);
         
         return bb;
     }
@@ -345,12 +311,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     }
     
     public void setType(EnumEquipmentType type) {
-        if (this.type == type) { return; }
-        this.type = type;
-        if (formed) {
-            removeBoundingBoxed();
-            createBoundingBoxes(); 
+        if (this.type == type) {
+            return;
         }
+        removeBoundingBoxed();
+        this.type = type;
+        createBoundingBoxes(); 
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -440,6 +406,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     @Override
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
+        direction = ForgeDirection.getOrientation(compound.getByte(TAG_DIRECTION));
         type = EnumEquipmentType.getOrdinal(compound.getInteger(TAG_TYPE));
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
@@ -452,6 +419,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityMultiBlockParent 
     @Override
     public void writeCommonToNBT(NBTTagCompound compound) {
         super.writeCommonToNBT(compound);
+        compound.setByte(TAG_DIRECTION, (byte) direction.ordinal());
         compound.setInteger(TAG_TYPE, type.ordinal());
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);

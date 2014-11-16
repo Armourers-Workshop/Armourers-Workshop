@@ -82,8 +82,8 @@ public class GuiArmourer extends GuiContainer {
         
         buttonList.add(checkShowGuides);
         buttonList.add(checkShowOverlay);
-        buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
-        buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
+        //buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
+        //buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
     }
     
@@ -150,7 +150,7 @@ public class GuiArmourer extends GuiContainer {
         
         this.fontRendererObj.drawString(itemNameLabel, 64, 48, 4210752);
         this.fontRendererObj.drawString(usernameLabel, 64, 78, 4210752);
-        this.fontRendererObj.drawString(cloneLabel, 177, 36, 4210752);
+        //this.fontRendererObj.drawString(cloneLabel, 177, 36, 4210752);
     }
     
     @Override

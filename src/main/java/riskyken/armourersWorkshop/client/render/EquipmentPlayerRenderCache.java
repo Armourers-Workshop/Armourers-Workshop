@@ -219,33 +219,33 @@ public final class EquipmentPlayerRenderCache {
         float scale = 1.001F;
         GL11.glScalef(scale, scale, scale);
         
-        if (slot == EnumEquipmentType.HEAD.getSlotId()) {
+        if (slot == EnumEquipmentType.HEAD.getVanillaSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
             if (data != null) {
                 customHead.render(player, render.modelBipedMain, data);
             }
             
         }
-        if (slot == EnumEquipmentType.CHEST.getSlotId()) {
+        if (slot == EnumEquipmentType.CHEST.getVanillaSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.CHEST);
             if (data != null) {
                 customChest.render(player, render.modelBipedMain, data);
             }
         }
-        if (slot == EnumEquipmentType.LEGS.getSlotId()) {
+        if (slot == EnumEquipmentType.LEGS.getVanillaSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
             if (data != null) {
                 customLegs.render(player, render.modelBipedMain, data);
                 event.result = result;
             }
         }
-        if (slot == EnumEquipmentType.SKIRT.getSlotId()) {
+        if (slot == EnumEquipmentType.SKIRT.getVanillaSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.SKIRT);
             if (data != null) {
                 customSkirt.render(player, render.modelBipedMain, data);
             }
         }
-        if (slot == EnumEquipmentType.FEET.getSlotId()) {
+        if (slot == EnumEquipmentType.FEET.getVanillaSlotId()) {
             CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.FEET);
             if (data != null) {
                 customFeet.render(player, render.modelBipedMain, data);

@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -45,10 +47,28 @@ public class TileEntityMannequin extends TileEntity {
     
     public void setOwner(ItemStack stack) {
         if (stack.hasDisplayName()) {
-            setGameProfile(new GameProfile(null, stack.getDisplayName()));
+            if (gameProfile == null) {
+                setGameProfile(new GameProfile(null, stack.getDisplayName()));
+                stack.stackSize--;
+            }
         }
     }
-    
+    @Override
+    public void invalidate() {
+        if (!worldObj.isRemote) {
+            if (gameProfile != null) {
+                ItemStack stack = new ItemStack(Items.name_tag);
+                stack.setStackDisplayName(gameProfile.getName());
+                float f = 0.7F;
+                double xV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                double yV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
+                worldObj.spawnEntityInWorld(entityitem);
+            }
+        }
+        super.invalidate();
+    }
     private void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
         this.markDirty();

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -12,6 +13,7 @@ import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
@@ -33,23 +35,25 @@ public final class ArmourerWorldHelper {
     private static void saveArmourPart(World world, ArrayList<CustomArmourPartData> armourData, EnumEquipmentPart part, int xCoord, int yCoord, int zCoord) {
         ArrayList<CustomEquipmentBlockData> armourBlockData = new ArrayList<CustomEquipmentBlockData>();
         
-        for (int ix = 0; ix < part.xSize; ix++) {
-            for (int iy = 0; iy < part.ySize; iy++) {
-                for (int iz = 0; iz < part.zSize; iz++) {
+        
+        for (int ix = 0; ix < part.getTotalXSize(); ix++) {
+            for (int iy = 0; iy < part.getTotalYSize(); iy++) {
+                for (int iz = 0; iz < part.getTotalZSize(); iz++) {
                     
-                    int x = xCoord + ix + part.xOffset;
-                    int y = yCoord + iy + part.yOffset;
-                    int z = zCoord + iz + part.zOffset;
+                    int x = xCoord + part.getStartX() - part.xLocation + ix;
+                    int y = yCoord + part.getStartY() + part.yLocation + iy;
+                    int z = zCoord + part.getStartZ() + part.zLocation + iz;
                     
-                    int xOrigin = xCoord + part.xOrigin;
-                    int yOrigin = yCoord + part.yOrigin;
-                    int zOrigin = zCoord + part.zOrigin;
+                    int xOrigin = xCoord - part.xLocation - x + ((part.xSize / 2) + part.xOrigin);
+                    int yOrigin = iy + part.yOrigin - part.getBuildSpaceForDirection(ForgeDirection.DOWN);
+                    int zOrigin = zCoord + part.zLocation - z;
                     
                     saveArmourBlockToList(world, x, y, z,
-                            -(x - xOrigin) - 1,
-                            -(y - yOrigin) - 1,
-                            z - zOrigin,
+                            xOrigin - 1,
+                            -yOrigin - 1,
+                            -zOrigin,
                             armourBlockData);
+                    
                 }
             }
         }
@@ -70,6 +74,8 @@ public final class ArmourerWorldHelper {
             }
             CustomEquipmentBlockData blockData = new CustomEquipmentBlockData(ix, iy, iz,
                     colour, blockType);
+            
+            ModLogger.log("x: " + ix + " y: " + iy + " z: " + iz);
             list.add(blockData);
         }
     }
@@ -85,9 +91,9 @@ public final class ArmourerWorldHelper {
     private static void loadArmourPart(World world, CustomArmourPartData partData, int xCoord, int yCoord, int zCoord) {
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             CustomEquipmentBlockData blockData = partData.getArmourData().get(i);
-            int xOrigin = xCoord + partData.getArmourPart().xOrigin;
-            int yOrigin = yCoord + partData.getArmourPart().yOrigin;
-            int zOrigin = zCoord + partData.getArmourPart().zOrigin;
+            int xOrigin = xCoord - partData.getArmourPart().xLocation  + ((partData.getArmourPart().xSize / 2) + partData.getArmourPart().xOrigin);
+            int yOrigin = yCoord - partData.getArmourPart().yOrigin + partData.getArmourPart().yLocation;
+            int zOrigin = zCoord + partData.getArmourPart().zLocation;
             loadArmourBlock(world, xOrigin, yOrigin, zOrigin, blockData);
         }
     }

@@ -10,11 +10,15 @@ import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 
 public class CommonProxy {
     
-    public void init() {
+    public void preInit() {
         
     }
     
     public void initRenderers() {
+        
+    }
+    
+    public void init() {
         
     }
     

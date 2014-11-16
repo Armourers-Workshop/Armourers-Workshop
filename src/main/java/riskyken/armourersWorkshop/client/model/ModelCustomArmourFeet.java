@@ -67,7 +67,7 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        GL11.glTranslated(2 * scale, 11 * scale, 0);
+        GL11.glTranslated(2 * scale, 12 * scale, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
@@ -81,7 +81,7 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        GL11.glTranslated(-2 * scale, 11 * scale, 0);
+        GL11.glTranslated(-2 * scale, 12 * scale, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);

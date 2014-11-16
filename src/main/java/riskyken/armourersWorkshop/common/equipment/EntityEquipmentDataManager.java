@@ -42,20 +42,45 @@ public final class EntityEquipmentDataManager {
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                 ItemStack stack = inventory.getStackInSlot(i);
                 if (stack != null && stack.getItem() instanceof ItemSword) {
+                    
                     if (equipmentData.haveEquipment(EnumEquipmentType.WEAPON)) {
-                        if (!stack.hasTagCompound()) {
-                            stack.setTagCompound(new NBTTagCompound());
-                        }
-                        NBTTagCompound compound = stack.getTagCompound();
-                        NBTTagCompound armourData = new NBTTagCompound();
-                        armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentData.getEquipmentId(EnumEquipmentType.WEAPON));
-                        armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentData.getEquipmentId(EnumEquipmentType.WEAPON));
-                        compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
-                    } else {
+                        //ModLogger.log("tick");
                         if (stack.hasTagCompound()) {
+                            
+                            NBTTagCompound compound = stack.getTagCompound();
+                            if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
+                                //Updating the skin data
+                                NBTTagCompound armourData = compound.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
+                                int newId = equipmentData.getEquipmentId(EnumEquipmentType.WEAPON);
+                                int oldId = armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
+                                if (newId != oldId) {
+                                    armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, newId);
+                                    //ModLogger.log("update skin!");
+                                }
+                                compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+                            } else {
+                                //Setting the skin data
+                                NBTTagCompound armourData = new NBTTagCompound();
+                                armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentData.getEquipmentId(EnumEquipmentType.WEAPON));
+                                compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+                                //ModLogger.log("set skin!");
+                            }
+
+                        } else {
+                            stack.setTagCompound(new NBTTagCompound());
+                            NBTTagCompound compound = stack.getTagCompound();
+                            NBTTagCompound armourData = new NBTTagCompound();
+                            armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentData.getEquipmentId(EnumEquipmentType.WEAPON));
+                            compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+                        }
+                    } else {
+                        
+                        if (stack.hasTagCompound()) {
+                            //Removing the skin data.
                             NBTTagCompound compound = stack.getTagCompound();
                             if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
                                 compound.removeTag(LibCommonTags.TAG_ARMOUR_DATA);
+                                //ModLogger.log("remove skin!");
                             }
                         }
                     }

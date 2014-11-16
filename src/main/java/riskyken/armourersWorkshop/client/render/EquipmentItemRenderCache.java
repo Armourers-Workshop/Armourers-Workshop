@@ -94,7 +94,7 @@ public final class EquipmentItemRenderCache {
             break;
         case WEAPON:
             GL11.glScalef(0.6F, 0.6F, 0.6F);
-            GL11.glTranslatef(0F, -0.1F, 0F);
+            GL11.glTranslatef(0F, -0.03F, 0F);
             targetModel.render();
             break;
         default:

@@ -35,19 +35,12 @@ public final class ModBlockRecipes {
             'c', ModBlocks.colourable,
             's', Blocks.stone});
         
-        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.armourerMultiBlock, 8, 0), new Object[] {
-            "sss",
-            "scs",
-            "sss",
-            'c', ModBlocks.colourable,
-            's', Blocks.stone});
-        
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.armourerBrain, 1, 0), new Object[] {
             "cwc",
             "wdw",
             "cwc",
-            'w', new ItemStack(ModBlocks.armourerMultiBlock, 1, 0),
-            'c', new ItemStack(ModBlocks.armourerMultiBlock, 1, 1),
+            'c', Blocks.stone,
+            'w', ModBlocks.colourable,
             'd', Items.diamond});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.mannequin, 1, 0), new Object[] {
@@ -58,14 +51,8 @@ public final class ModBlockRecipes {
             'p', Blocks.pumpkin,
             'c', ModBlocks.colourable});
         
-        CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.armourerMultiBlock, 1, 0), new Object[] {
-            new ItemStack(ModBlocks.armourerMultiBlock, 1, 1)});
-        
-        CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.armourerMultiBlock, 1, 1), new Object[] {
-            new ItemStack(ModBlocks.armourerMultiBlock, 1, 0)});
-        
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlowing, 1, 0), new Object[] {
             new ItemStack(ModBlocks.colourable, 1),
-            new ItemStack(Blocks.redstone_lamp, 1)});
+            new ItemStack(Items.redstone, 1)});
     }
 }

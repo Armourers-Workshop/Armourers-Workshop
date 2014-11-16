@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.client.render.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.RenderItemMannequin;
 import riskyken.armourersWorkshop.client.render.RenderItemWeaponSkin;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
@@ -41,7 +42,7 @@ public class ClientProxy extends CommonProxy {
     public static int renderPass;
     
     @Override
-    public void init() {
+    public void preInit() {
         
     }
 
@@ -62,9 +63,14 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void postInit() {
+    public void init() {
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
+    }
+    
+    @Override
+    public void postInit() {
+        Addons.initRenderers();
     }
 
     @Override

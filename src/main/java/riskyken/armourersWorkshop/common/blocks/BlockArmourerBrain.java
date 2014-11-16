@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -34,6 +35,9 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityArmourerBrain) {
                 ((TileEntityArmourerBrain)te).setGameProfile(player.getGameProfile());
+                ForgeDirection direction = ForgeDirection.getOrientation(UtilBlocks.determineOrientationSide(world, x, y, z, entity));
+                ((TileEntityArmourerBrain)te).setDirection(ForgeDirection.NORTH);
+                ((TileEntityArmourerBrain)te).onPlaced();
             }
         }
     }

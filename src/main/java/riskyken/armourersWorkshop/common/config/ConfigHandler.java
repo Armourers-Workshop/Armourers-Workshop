@@ -4,7 +4,6 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 import riskyken.armourersWorkshop.common.UpdateCheck;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class ConfigHandler {
 
@@ -14,6 +13,7 @@ public class ConfigHandler {
     public static Configuration config;
 
     public static boolean disableRecipes;
+    public static int modelCacheTime = 12000;
 
     public static void init(File file) {
         if (config == null) {
@@ -23,9 +23,6 @@ public class ConfigHandler {
     }
 
     public static void loadConfigFile() {
-
-        ModLogger.log("Loading Config");
-
         // recipe
         disableRecipes = config
                 .get(CATEGORY_GENERAL, "Disable Recipes", false,
