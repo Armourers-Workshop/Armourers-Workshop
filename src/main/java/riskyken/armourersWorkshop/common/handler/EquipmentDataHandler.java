@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.handler;
 
+import java.util.BitSet;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -154,5 +156,15 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             return null;
         }
         return entityProps;
+    }
+
+    @Override
+    public boolean isArmourRenderOverridden(EntityPlayer player, int slotId) {
+        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        BitSet armourOverride = entityProps.getArmourOverride();
+        if (slotId < 4 & slotId >= 0) {
+            return armourOverride.get(slotId);
+        }
+        return false;
     }
 }

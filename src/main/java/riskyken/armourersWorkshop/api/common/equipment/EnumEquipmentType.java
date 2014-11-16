@@ -12,10 +12,10 @@ public enum EnumEquipmentType {
     WEAPON(-1, new EnumEquipmentPart[] { EnumEquipmentPart.WEAPON });
     
     private final EnumEquipmentPart[] parts;
-    private final int slotId;
+    private final int vanillaSlotId;
     
-    private EnumEquipmentType(int slotId, EnumEquipmentPart[] parts) {
-        this.slotId = slotId;
+    private EnumEquipmentType(int vanillaSlotId, EnumEquipmentPart[] parts) {
+        this.vanillaSlotId = vanillaSlotId;
         this.parts = parts;
     }
     
@@ -26,8 +26,12 @@ public enum EnumEquipmentType {
         return NONE;
     }
     
-    public int getSlotId() {
-        return slotId;
+    public int getVanillaSlotId() {
+        return vanillaSlotId;
+    }
+    
+    public int getArmourersSlotId() {
+        return this.ordinal() + 1;
     }
     
     public EnumEquipmentPart[] getParts() {

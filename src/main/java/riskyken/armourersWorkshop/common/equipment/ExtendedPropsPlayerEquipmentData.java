@@ -46,7 +46,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     private boolean isNaked = false;
     private int skinColour = Color.decode("#F9DFD2").getRGB();
     private int pantsColour = Color.decode("#FCFCFC").getRGB();
-    BitSet armourOverride = new BitSet(4);
+    private BitSet armourOverride = new BitSet(4);
     boolean headOverlay;
     
     public ExtendedPropsPlayerEquipmentData(EntityPlayer player) {
@@ -229,6 +229,10 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), p);
+    }
+    
+    public BitSet getArmourOverride() {
+        return armourOverride;
     }
     
     @Override
