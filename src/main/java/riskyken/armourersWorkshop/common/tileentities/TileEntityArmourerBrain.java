@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +25,7 @@ import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
@@ -148,22 +150,23 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
 
     public void clearArmourCubes() {
-        /*
         for (int i = 0; i < type.getParts().length; i++) {
             EnumEquipmentPart part = type.getParts()[i];
-            for (int ix = 0; ix <  part.xSize + part.xBuildSpace * 2; ix ++) {
-                for (int iy = 0; iy < part.ySize + part.bottomBuildSpace + part.topBuildSpace; iy ++) {
-                    for (int iz = 0; iz <  part.zSize + part.zBuildSpace * 2; iz ++) {
-                        worldObj.setBlockToAir(
-                                xCoord + part.xOrigin + part.xLocation - ix,
-                                yCoord + getHeightOffset() + iy - part.bottomBuildSpace,
-                                zCoord + part.zOrigin + part.zLocation - iz
-                                );
+            ModLogger.log("Clearing " + part);
+            for (int ix = 0; ix <  part.getTotalXSize(); ix++) {
+                for (int iy = 0; iy < part.getTotalYSize(); iy++) {
+                    for (int iz = 0; iz <  part.getTotalZSize(); iz++) {
+                        int tarX = xCoord + part.getStartX() - part.xLocation + ix;
+                        int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
+                        int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
+                        Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
+                        if (tarBlock == ModBlocks.colourable | tarBlock == ModBlocks.colourableGlowing) {
+                            worldObj.setBlockToAir(tarX, tarY, tarZ);
+                        }
                     }
                 }
             }
         }
-        */
     }
     
     public void cloneToSide(ForgeDirection side) {
