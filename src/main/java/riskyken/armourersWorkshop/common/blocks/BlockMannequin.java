@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockMannequin extends AbstractModBlock implements ITileEntityProvider {
 
     public BlockMannequin() {
-        super(LibBlockNames.MANNEQUIN, Material.glass, soundTypeMetal);
+        super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal);
         setLightOpacity(0);
     }
     
