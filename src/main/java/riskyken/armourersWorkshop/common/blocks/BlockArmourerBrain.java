@@ -16,7 +16,6 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -37,8 +36,6 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
             if (te != null && te instanceof TileEntityArmourerBrain) {
                 ((TileEntityArmourerBrain)te).setGameProfile(player.getGameProfile());
                 ForgeDirection direction = ForgeDirection.getOrientation(UtilBlocks.determineOrientationSide(world, x, y, z, entity));
-                ModLogger.log(direction.ordinal() - 2);
-                ModLogger.log(direction);
                 ((TileEntityArmourerBrain)te).setDirection(ForgeDirection.NORTH);
                 ((TileEntityArmourerBrain)te).onPlaced();
             }
