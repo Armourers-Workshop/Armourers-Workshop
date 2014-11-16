@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.ModFMLEventHandler;
 import riskyken.armourersWorkshop.common.UpdateCheck;
+import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
@@ -46,7 +47,7 @@ public class ArmourersWorkshop {
         ModItems.init();
         ModBlocks.init();
         
-        proxy.init();
+        proxy.preInit();
         proxy.initRenderers();
     }
 
@@ -62,7 +63,7 @@ public class ArmourersWorkshop {
         //FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.client.render.DemoRenderManager");
         
         PacketHandler.init();
-        proxy.postInit();
+        proxy.init();
         proxy.registerKeyBindings();
         
         EntityEquipmentDataManager.init();
@@ -71,6 +72,8 @@ public class ArmourersWorkshop {
     
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        Addons.init();
+        proxy.postInit();
         TileEntityArmourLibrary.createArmourDirectory();
     }
     
