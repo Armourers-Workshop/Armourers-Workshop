@@ -18,6 +18,9 @@ public final class Addons {
         if (Loader.isModLoaded("Thaumcraft")) {
             loadedAddons.add(new AddonThaumcraft());
         }
+        if (Loader.isModLoaded("weaponmod")) {
+            loadedAddons.add(new AddonBalkonsWeaponMod());
+        }
     }
     
     public static void initRenderers() {
