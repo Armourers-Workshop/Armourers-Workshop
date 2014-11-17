@@ -19,9 +19,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelCustomArmourChest extends ModelCustomArmour {
     
+    public void render(Entity entity, CustomArmourItemData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
+        setRotationAngles(limb1, limb2, limb3, headY, headX, scale, entity);
+        render(entity, armourData);
+    }
+    
     public void render(Entity entity, ModelBiped modelBiped, CustomArmourItemData armourData) {
         setRotationFromModelBiped(modelBiped);
-
+        render(entity, armourData);
+    }
+    
+    private void render(Entity entity, CustomArmourItemData armourData) {
         if (armourData == null) { return; }
         ArrayList<CustomArmourPartData> parts = armourData.getParts();
         

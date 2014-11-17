@@ -1,27 +1,15 @@
 package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.entity.Entity;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import net.minecraft.item.ItemStack;
 
 public interface IEquipmentRenderHandler {
 
-    /**
-     * Renders custom equipment at an entity using it's IEntityEquipment data.
-     * @param entity Entity to render the armour on.
-     * @param armourType Armour type to render.
-     * @param modelBiped Optional ModelBiped that the equipment will use for rotation angles.
-     * Pass null if you do not want to use this.
-     */
-    public void renderCustomEquipmentOnEntity(Entity entity, EnumEquipmentType armourType, ModelBiped modelBiped);
+    public void renderCustomEquipmentFromStack(ItemStack stack);
     
-    /**
-     * Renders custom equipment.
-     * @param equipmentId Equipment id to render.
-     * @param modelBiped Optional ModelBiped that the equipment will use for rotation angles.
-     * Pass null if you do not want to use this.
-     */
-    public void renderCustomEquipment(int equipmentId, ModelBiped modelBiped);
+    public void renderCustomEquipmentFromStack(ItemStack stack, ModelBiped modelBiped);
+    
+    public void renderCustomEquipmentFromStack(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX);
     
     /**
      * Get the number of items in the cache for item models.

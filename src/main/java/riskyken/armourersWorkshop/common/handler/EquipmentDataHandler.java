@@ -14,7 +14,6 @@ import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
@@ -26,93 +25,38 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     public static final EquipmentDataHandler INSTANCE = new EquipmentDataHandler();
     
     @Override
-    public IEntityEquipment getCustomEquipmentForEntity(Entity entity) {
-        if (entity instanceof EntityPlayer) {
-            ExtendedPropsPlayerEquipmentData entityProps;
-            entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
-            if (entity.worldObj.isRemote) {
-                IEntityEquipment entityEquipment = getLocalPlayerEquipment(entity);
-                if (entityEquipment != null) {
-                    return entityEquipment;
-                }
-            }
-            if (entityProps != null) {
-                return entityProps.getEquipmentData();
-            }
-        } else {
-            ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-            if (entityProps != null) {
-                return entityProps.getEquipmentData();
-            }
-        }
-        return null;
+    public void setCustomEquipmentOnPlayer(EntityPlayer player, ItemStack stack) {
+        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        entityProps.setEquipmentStack(stack);
     }
 
     @Override
-    public void removeAllCustomEquipmentFromEntity(Entity entity) {
-        if (entity instanceof EntityPlayer) {  
-            ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
-            if (entityProps == null) {
-                return;
-            }
-            entityProps.removeAllCustomEquipment();
-        } else {
-            ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-            if (entityProps == null) {
-                return;
-            }
-            entityProps.removeAllCustomEquipment();
-        }
+    public ItemStack[] getAllCustomEquipmentForPlayer(EntityPlayer player) {
+        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        return entityProps.getAllEquipmentStacks();
+    }
+
+    @Override
+    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, EnumEquipmentType equipmentType) {
+        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        return entityProps.getEquipmentStack(equipmentType);
+    }
+
+    @Override
+    public void clearAllCustomEquipmentFromPlayer(EntityPlayer player) {
+        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        entityProps.clearAllEquipmentStacks();
+    }
+
+    @Override
+    public void clearCustomEquipmentFromPlayer(EntityPlayer player, EnumEquipmentType equipmentType) {
+        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        entityProps.clearEquipmentStack(equipmentType);
     }
     
     @SideOnly(Side.CLIENT)
     private IEntityEquipment getLocalPlayerEquipment(Entity entity) {
         return EquipmentPlayerRenderCache.INSTANCE.getPlayerCustomEquipmentData(entity);
-    }
-
-    @Override
-    public void removeCustomEquipmentFromEntity(Entity entity, EnumEquipmentType armourType) {
-        if (entity instanceof EntityPlayer) {
-            ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
-            if (entityProps == null) {
-                return;
-            }
-            entityProps.removeCustomEquipment(armourType);
-        } else {
-            ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-            if (entityProps == null) {
-                return;
-            }
-            entityProps.removeCustomEquipment(armourType);
-        }
-    }
-
-    @Override
-    public void setCustomEquipmentOnEntity(Entity entity, IEntityEquipment equipmentData) {
-        if (entity instanceof EntityPlayer) {
-            ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
-            if (entityProps == null) {
-                ExtendedPropsPlayerEquipmentData.register((EntityPlayer) entity);
-            }
-            entityProps = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) entity);
-            entityProps.setEquipmentData(equipmentData); 
-        } else {
-            ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-            if (entityProps == null) {
-                ExtendedPropsEntityEquipmentData.register(entity);
-            }
-            entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-            entityProps.setEquipmentData(equipmentData); 
-        }
-    }
-
-    @Override
-    public EnumEquipmentType getEquipmentType(int equipmentId) {
-        CustomArmourItemData data = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
-        if (data != null) {
-            return data.getType();
-        }
-        return EnumEquipmentType.NONE;
     }
     
     @Override
@@ -137,7 +81,6 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
         return EquipmentNBTHelper.getEquipmentIdFromStack(stack);
     }
 
-    @Override
     public ItemStack getCustomEquipmentItemStack(int equipmentId) {
         CustomArmourItemData armourItemData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         if (armourItemData == null) { return null; }
@@ -166,5 +109,13 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             return armourOverride.get(slotId);
         }
         return false;
+    }
+    
+    private ExtendedPropsPlayerEquipmentData getExtendedPropsPlayerForPlayer(EntityPlayer player) {
+        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        if (entityProps == null) {
+            ExtendedPropsPlayerEquipmentData.register(player);
+        }
+        return ExtendedPropsPlayerEquipmentData.get(player);
     }
 }
