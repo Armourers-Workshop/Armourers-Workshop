@@ -9,18 +9,21 @@ import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiEquipmentWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
+import riskyken.armourersWorkshop.client.gui.GuiParticleEffect;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
+import riskyken.armourersWorkshop.common.inventory.ContainerParticleEffect;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityParticleEffect;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
@@ -36,23 +39,27 @@ public class GuiHandler implements IGuiHandler {
         switch (ID)
         {
             case LibGuiIds.COLOUR_MIXER:
-                if (te instanceof TileEntityColourMixer){
+                if (te instanceof TileEntityColourMixer) {
                     return new ContainerColourMixer(player.inventory,(TileEntityColourMixer)te);
                 }
                 break;
             case LibGuiIds.ARMOURER:
-                if (te instanceof TileEntityArmourerBrain){
+                if (te instanceof TileEntityArmourerBrain) {
                     return new ContainerArmourer(player.inventory,(TileEntityArmourerBrain)te);
                 }
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
-                if (te instanceof TileEntityArmourLibrary){
+                if (te instanceof TileEntityArmourLibrary) {
                     return new ContainerArmourLibrary(player.inventory,(TileEntityArmourLibrary)te);
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
                 ExtendedPropsPlayerEquipmentData customEquipmentData = ExtendedPropsPlayerEquipmentData.get(player);
                 return new ContainerEquipmentWardrobe(player.inventory, customEquipmentData);
+            case LibGuiIds.PARTICLE_EFFECT:
+                if (te instanceof TileEntityParticleEffect) {
+                    return new ContainerParticleEffect((TileEntityParticleEffect)te);
+                }
         }
         return null;
     }
@@ -90,8 +97,12 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiToolOptions(player.getCurrentEquippedItem());
                 }
                 break;
+            case LibGuiIds.PARTICLE_EFFECT:
+                if (te instanceof TileEntityParticleEffect) {
+                    return new GuiParticleEffect((TileEntityParticleEffect)te);
+                }
+                break;
         }
         return null;
     }
-
 }

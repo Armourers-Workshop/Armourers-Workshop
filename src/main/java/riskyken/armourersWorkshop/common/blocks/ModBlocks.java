@@ -9,6 +9,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityParticleEffect;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
@@ -21,6 +22,7 @@ public class ModBlocks {
     public static Block colourableGlowing;
     public static Block colourMixer;
     public static Block mannequin;
+    public static Block particleEffect;
     
     public static void init() {
         armourerBrain = new BlockArmourerBrain();
@@ -30,6 +32,7 @@ public class ModBlocks {
         colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
         colourMixer = new BlockColourMixer();
         mannequin = new BlockMannequin();
+        particleEffect = new BlockParticleEffect();
     }
 
     public static void registerTileEntities() {
@@ -39,6 +42,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);
         registerTileEntity(TileEntityBoundingBox.class, LibBlockNames.BOUNDING_BOX);
         registerTileEntity(TileEntityMannequin.class, LibBlockNames.MANNEQUIN);
+        registerTileEntity(TileEntityParticleEffect.class, LibBlockNames.PARTICLE_EFFECT);
     }
 
     public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {

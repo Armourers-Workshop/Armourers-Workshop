@@ -223,6 +223,7 @@ public final class EquipmentPlayerRenderCache {
             CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
             if (data != null) {
                 customHead.render(player, render.modelBipedMain, data);
+                customHead.tickModel(player.worldObj, player, data);
             }
             
         }

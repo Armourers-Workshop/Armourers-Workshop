@@ -66,12 +66,16 @@ public final class ArmourerWorldHelper {
     private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz, ArrayList<CustomEquipmentBlockData> list) {
         if (world.isAirBlock(x, y, z)) { return; }
         Block block = world.getBlock(x, y, z);
-        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
+        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing | block == ModBlocks.particleEffect) {
             int colour = UtilBlocks.getColourFromTileEntity(world ,x, y, z);
             byte blockType = 0;
             if (block == ModBlocks.colourableGlowing) {
                 blockType = 1;
             }
+            if (block == ModBlocks.particleEffect) {
+                blockType = 2;
+            }
+            
             CustomEquipmentBlockData blockData = new CustomEquipmentBlockData(ix, iy, iz,
                     colour, blockType);
             
@@ -105,8 +109,11 @@ public final class ArmourerWorldHelper {
         
         if (world.isAirBlock(targetX, targetY, targetZ)) {
             Block targetBlock = ModBlocks.colourable;
-            if (blockData.isGlowing()) {
+            if (blockData.blockType == 1) {
                 targetBlock = ModBlocks.colourableGlowing;
+            }
+            if (blockData.blockType == 2) {
+                targetBlock = ModBlocks.particleEffect;
             }
             world.setBlock(targetX, targetY, targetZ, targetBlock);
             TileEntity te = world.getTileEntity(targetX, targetY, targetZ);

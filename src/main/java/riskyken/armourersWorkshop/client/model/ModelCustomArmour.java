@@ -8,16 +8,22 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
+import riskyken.armourersWorkshop.client.particles.EntityFXTest;
+import riskyken.armourersWorkshop.client.particles.ParticleManager;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.Trig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -121,10 +127,46 @@ public class ModelCustomArmour extends ModelBiped{
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     
+    public void armourPartTick(World world, Entity entity, CustomArmourPartData armourPart) {
+        for (int i = 0; i < armourPart.getArmourData().size(); i++) {
+            CustomEquipmentBlockData blockData = armourPart.getArmourData().get(i);
+            if (blockData.blockType == 2) {
+                
+                double speed = 4 * scale;
+                
+                double pitch = ((entity.rotationPitch + 90) * Math.PI) / 180;
+                double yaw  = ((entity.rotationYaw + 180 + Trig.GetAngle(0, 0, blockData.x, blockData.z))  * Math.PI) / 180;
+                
+                double x = Math.sin(pitch) * Math.cos(yaw);
+                double y = Math.sin(pitch) * Math.sin(yaw);
+                double z = Math.cos(pitch);
+                
+                
+                EntityPlayer player = (EntityPlayer) entity;
+                //player.setVelocity(x, z, y);
+                //Vector3d vector = new Vector3d(x, z, y);
+                
+                double newX = entity.posX + x * speed;
+                double newY = entity.posY - (2 * scale) - (blockData.y * scale) + z * speed;
+                double newZ = entity.posZ + y * speed;
+                
+                //PointD newPoint1 = Trig.moveTo(new PointD(entity.posX, entity.posZ), 4 * scale, entity.rotationPitch - 90);
+                //PointD newPoint2 = Trig.moveTo(new PointD(entity.posX, entity.posY), 7 * scale, -entity.rotationPitch - 90);
+                EntityFXTest particle = new EntityFXTest(world, newX, newY, newZ);
+                
+                ParticleManager.INSTANCE.spawnParticle(world, particle);
+                //ModLogger.log("spark!");
+            }
+        }
+        if (armourPart.hasParticleEffectBlocks) {
+            
+        }
+    }
+    
     private boolean hasNormalBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData) {
         for (int i = 0; i < armourBlockData.size(); i++) {
             CustomEquipmentBlockData blockData = armourBlockData.get(i);
-            if (!blockData.isGlowing()) {
+            if (blockData.blockType == 0) {
                 return true;
             }
         }
@@ -134,7 +176,17 @@ public class ModelCustomArmour extends ModelBiped{
     private boolean hasGlowingBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData) {
         for (int i = 0; i < armourBlockData.size(); i++) {
             CustomEquipmentBlockData blockData = armourBlockData.get(i);
-            if (blockData.isGlowing()) {
+            if (blockData.blockType == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean hasParticleEffectBlock(ArrayList<CustomEquipmentBlockData> armourBlockData) {
+        for (int i = 0; i < armourBlockData.size(); i++) {
+            CustomEquipmentBlockData blockData = armourBlockData.get(i);
+            if (blockData.blockType == 2) {
                 return true;
             }
         }
@@ -145,7 +197,7 @@ public class ModelCustomArmour extends ModelBiped{
         GL11.glPushMatrix();
         for (int i = 0; i < armourBlockData.size(); i++) {
             CustomEquipmentBlockData blockData = armourBlockData.get(i);
-            if (!blockData.isGlowing()) {
+            if (blockData.blockType == 0) {
                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }
@@ -156,7 +208,7 @@ public class ModelCustomArmour extends ModelBiped{
         GL11.glPushMatrix();
         for (int i = 0; i < armourBlockData.size(); i++) {
             CustomEquipmentBlockData blockData = armourBlockData.get(i);
-            if (blockData.isGlowing()) {
+            if (blockData.blockType == 1) {
                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }

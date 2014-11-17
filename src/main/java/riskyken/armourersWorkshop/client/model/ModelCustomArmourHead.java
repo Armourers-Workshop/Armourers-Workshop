@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
@@ -60,6 +61,11 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         
         GL11.glPopMatrix();
         GL11.glColor3f(1F, 1F, 1F);
+    }
+    
+    public void tickModel(World world, Entity entity, CustomArmourItemData armourData) {
+        if (armourData == null) { return; }
+        armourPartTick(world, entity, armourData.getParts().get(0));
     }
     
     private void renderHead(CustomArmourPartData part, float scale) {

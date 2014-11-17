@@ -28,9 +28,11 @@ public class CustomArmourPartData {
     
     public boolean hasNormalBlocks;
     public boolean hasGlowingBlocks;
+    public boolean hasParticleEffectBlocks;
     
     public boolean displayNormalCompiled;
     public boolean displayGlowingCompiled;
+    
     
     public int displayListNormal;
     public int displayListGlowing;

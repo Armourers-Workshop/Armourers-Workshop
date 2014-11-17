@@ -179,7 +179,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         GL11.glPushMatrix();
         for (int i = 0; i < blocks.size(); i++) {
             CustomEquipmentBlockData blockData = blocks.get(i);
-            if (!blockData.isGlowing()) {
+            if (blockData.blockType == 0) {
                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }
@@ -191,7 +191,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         
         for (int i = 0; i < blocks.size(); i++) {
             CustomEquipmentBlockData blockData = blocks.get(i);
-            if (blockData.isGlowing()) {
+            if (blockData.blockType == 1) {
                 renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
             }
         }

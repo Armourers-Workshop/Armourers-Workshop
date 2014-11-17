@@ -136,8 +136,8 @@ public class CustomEquipmentBlockData {
         blockType = stream.readByte();
     }
     
-    public boolean isGlowing() {
-        return this.blockType == 1;
+    public int blockType() {
+        return this.blockType;
     }
 
     @Override
