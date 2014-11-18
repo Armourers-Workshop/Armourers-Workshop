@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common;
 import java.util.LinkedHashMap;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderManager;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
@@ -12,6 +13,8 @@ import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataManager;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
+
+import com.mojang.authlib.GameProfile;
 
 public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRenderManager {
     
@@ -65,5 +68,13 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
 
     @Override
     public void onLoad(IEquipmentDataHandler dataHandler) {
+    }
+
+    @Override
+    public void onRenderMannequin(TileEntity TileEntity, GameProfile gameProfile) {
+        for (int i = 0; i < equipmentRenderManagers.size(); i++) {
+            String key = (String) equipmentRenderManagers.keySet().toArray()[i];
+            equipmentRenderManagers.get(key).onRenderMannequin(TileEntity, gameProfile);
+        }
     }
 }

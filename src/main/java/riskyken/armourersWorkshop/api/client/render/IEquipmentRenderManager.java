@@ -1,8 +1,11 @@
 package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+
+import com.mojang.authlib.GameProfile;
 
 /**
  * Used to handle rendering in the armourers workshop API.
@@ -21,4 +24,6 @@ public interface IEquipmentRenderManager {
     public void onRenderEquipment(Entity entity, EnumEquipmentType armourType);
     
     public void onRenderEquipmentPart(Entity entity, EnumEquipmentPart armourPart);
+    
+    public void onRenderMannequin(TileEntity TileEntity, GameProfile gameProfile);
 }
