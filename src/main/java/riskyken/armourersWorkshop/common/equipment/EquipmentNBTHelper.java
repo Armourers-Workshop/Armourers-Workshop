@@ -7,7 +7,12 @@ import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 public class EquipmentNBTHelper {
     
     public static boolean itemStackHasCustomEquipment(ItemStack stack) {
-        if (!stack.hasTagCompound()) { return false; }
+        if (stack == null) {
+            return false;
+        }
+        if (!stack.hasTagCompound()) {
+            return false;
+        }
         NBTTagCompound itemNbt = stack.getTagCompound();
         
         if (!itemNbt.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return false;}
@@ -18,7 +23,12 @@ public class EquipmentNBTHelper {
     }
     
     public static int getEquipmentIdFromStack(ItemStack stack) {
-        if (!stack.hasTagCompound()) { return 0; }
+        if (stack == null) {
+            return 0;
+        }
+        if (!stack.hasTagCompound()) {
+            return 0;
+        }
         NBTTagCompound itemNbt = stack.getTagCompound();
         
         if (!itemNbt.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return 0;}
