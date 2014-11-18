@@ -14,6 +14,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
@@ -28,6 +29,8 @@ public class TileEntityMannequin extends TileEntity {
     private static final String TAG_ROTATION = "rotation";
     
     private GameProfile gameProfile = null;
+    private MannequinFakePlayer fakePlayer = null;
+    
     private EntityEquipmentData equipmentData;
     private int rotation;
     
@@ -93,6 +96,14 @@ public class TileEntityMannequin extends TileEntity {
     
     public GameProfile getGameProfile() {
         return gameProfile;
+    }
+    
+    public MannequinFakePlayer getFakePlayer() {
+        return fakePlayer;
+    }
+    
+    public void setFakePlayer(MannequinFakePlayer fakePlayer) {
+        this.fakePlayer = fakePlayer;
     }
     
     private void updateProfileData(){
