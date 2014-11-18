@@ -15,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
@@ -75,6 +76,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
+        ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
         modelMannequin.render(null, 0, 0.0001F, 0, 0, 0, scale, true);
         
         if (fakePlayer != null) {
