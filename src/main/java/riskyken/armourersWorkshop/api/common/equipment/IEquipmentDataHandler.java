@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.api.common.equipment;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -8,42 +7,38 @@ import net.minecraft.item.ItemStack;
 public interface IEquipmentDataHandler {
     
     /**
-     * Sets the IEntityEquipment data for an entity.
-     * Note: If the entity is a player this will not update their
-     * IInventory holding their custom equipment item stacks
-     * @param entity Entity to add the custom equipment to.
-     * @param armourType Armour type to add.
-     * @param equipmentId Equipment id to add.
+     * Sets the equipment stack for a player.
+     * @param player Entity to add the custom equipment to.
+     * @param stack Armour type to add.
      */
-    public void setCustomEquipmentOnEntity(Entity entity, IEntityEquipment equipmentData);
+    public void setCustomEquipmentOnPlayer(EntityPlayer player, ItemStack stack);
     
     /**
-     * Get the IEntityEquipment data for an entity.
+     * Get the equipment stacks for a player.
+     * @param player
+     * @return IEntityEquipment
+     */
+    public ItemStack[] getAllCustomEquipmentForPlayer(EntityPlayer player);
+    
+    /**
+     * Get the IEntityEquipment data for a player.
      * @param entity
      * @return IEntityEquipment
      */
-    public IEntityEquipment getCustomEquipmentForEntity(Entity entity);
+    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, EnumEquipmentType equipmentType);
     
     /**
-     * Removes all custom equipment data from an entity.
+     * Removes all custom equipment data from a player.
      * @param entity Entity to remove the custom equipment from.
      */
-    public void removeAllCustomEquipmentFromEntity(Entity entity);
+    public void clearAllCustomEquipmentFromPlayer(EntityPlayer player);
     
     /**
-     * Removes custom equipment data from an entity.
+     * Removes custom equipment data from a player.
      * @param entity Entity to remove the custom equipment from.
      * @param armourType The type of equipment to remove.
      */
-    public void removeCustomEquipmentFromEntity(Entity entity, EnumEquipmentType armourType);
-    
-    /** 
-     * Get the EnumArmourType for an equipment id.
-     * @param equipmentId
-     * @return The EnumArmourType for this equipment id.
-     * Returns EnumArmourType.NONE if no armour exists for this id.
-     */
-    public EnumEquipmentType getEquipmentType(int equipmentId);
+    public void clearCustomEquipmentFromPlayer(EntityPlayer player, EnumEquipmentType equipmentType);
     
     /** 
      * Get the EnumArmourType for an item stack.
@@ -52,13 +47,6 @@ public interface IEquipmentDataHandler {
      * Returns EnumArmourType.NONE if no armour exists for this item stack.
      */
     public EnumEquipmentType getEquipmentTypeFromStack(ItemStack stack);
-    
-    /**
-     * Get an item stack for the equipment id.
-     * @param equipmentId
-     * @return 
-     */
-    public ItemStack getCustomEquipmentItemStack(int equipmentId);
     
     /**
      * Checks if an item stack has equipment data.
@@ -83,7 +71,6 @@ public interface IEquipmentDataHandler {
      * Slot 3 = Skirt</BR>
      * Slot 4 = Feet</BR>
      * </BR>
-     * Note: Changing this IInventory will also update the players IEntityEquipment data.
      * 
      * @param player Player to get the IInventory for.
      * @return IInventory of the player. Returns null if not found.

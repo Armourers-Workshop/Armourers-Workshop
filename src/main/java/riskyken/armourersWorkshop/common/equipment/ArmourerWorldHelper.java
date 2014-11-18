@@ -13,7 +13,6 @@ import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
@@ -75,7 +74,6 @@ public final class ArmourerWorldHelper {
             CustomEquipmentBlockData blockData = new CustomEquipmentBlockData(ix, iy, iz,
                     colour, blockType);
             
-            ModLogger.log("x: " + ix + " y: " + iy + " z: " + iz);
             list.add(blockData);
         }
     }

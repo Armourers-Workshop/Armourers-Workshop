@@ -61,6 +61,86 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         return (ExtendedPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
+    public void setEquipmentStack(ItemStack stack) {
+        EnumEquipmentType equipmentType = EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack);
+        switch (equipmentType) {
+        case HEAD:
+            setInventorySlotContents(0, stack);
+            break;
+        case CHEST:
+            setInventorySlotContents(1, stack);
+            break;
+        case LEGS:
+            setInventorySlotContents(2, stack);
+            break;
+        case SKIRT:
+            setInventorySlotContents(3, stack);
+            break;
+        case FEET:
+            setInventorySlotContents(4, stack);
+            break;
+        case WEAPON:
+            setInventorySlotContents(5, stack);
+            break;
+        default:
+            break;
+        }
+    }
+    
+    public ItemStack[] getAllEquipmentStacks() {
+        return customArmourInventory;
+    }
+    
+    public ItemStack getEquipmentStack(EnumEquipmentType equipmentType) {
+        switch (equipmentType) {
+        case HEAD:
+            return getStackInSlot(0);
+        case CHEST:
+            return getStackInSlot(1);
+        case LEGS:
+            return getStackInSlot(2);
+        case SKIRT:
+            return getStackInSlot(3);
+        case FEET:
+            return getStackInSlot(4);
+        case WEAPON:
+            return getStackInSlot(5);
+        default:
+            return null;
+        }
+    }
+    
+    public void clearAllEquipmentStacks() {
+        for (int i = 0; i < 6; i++) {
+            setInventorySlotContents(i, null);
+        }
+    }
+    
+    public void clearEquipmentStack(EnumEquipmentType equipmentType) {
+        switch (equipmentType) {
+        case HEAD:
+            setInventorySlotContents(0, null);
+            break;
+        case CHEST:
+            setInventorySlotContents(1, null);
+            break;
+        case LEGS:
+            setInventorySlotContents(2, null);
+            break;
+        case SKIRT:
+            setInventorySlotContents(3, null);
+            break;
+        case FEET:
+            setInventorySlotContents(4, null);
+            break;
+        case WEAPON:
+            setInventorySlotContents(5, null);
+            break;
+        default:
+            break;
+        }
+    }
+    
     public void addCustomEquipment(EnumEquipmentType type, int equipmentId) {
         equipmentData.addEquipment(type, equipmentId);
         updateEquipmentDataToPlayersAround();
