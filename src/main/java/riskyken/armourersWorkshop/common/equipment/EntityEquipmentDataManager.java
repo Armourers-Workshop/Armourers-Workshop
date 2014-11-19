@@ -94,11 +94,6 @@ public final class EntityEquipmentDataManager {
         if (event.target instanceof EntityPlayerMP) {
             EntityPlayerMP targetPlayer = (EntityPlayerMP) event.target;
             ExtendedPropsPlayerEquipmentData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer(targetPlayer);
-        
-            ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(event.entity);
-            if (entityProps != null) {
-                entityProps.sendCustomEquipmentDataToPlayer(targetPlayer);
-            }
         }
     }
     
