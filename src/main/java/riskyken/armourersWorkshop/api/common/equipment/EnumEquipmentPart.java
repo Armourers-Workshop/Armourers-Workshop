@@ -52,7 +52,7 @@ public enum EnumEquipmentPart {
             -4, -12, -2,
             new int[] {0, 3, 8, 8, 6, 6},
             0, 0, 0,
-            null),
+            EnumBodyPart.LEFT_LEG),
     
     LEFT_FOOT(
             4, 12, 4,

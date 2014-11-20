@@ -156,9 +156,18 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             int yOffset = ySearchAxis.offsetY;
             int zOffset = ySearchAxis.offsetZ;
             Block block = world.getBlock(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
+            
             if (block != ModBlocks.boundingBox) {
                 textureY += iy - 1;
                 break;
+            } else {
+                TileEntity teTar = world.getTileEntity(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
+                if (teTar != null && teTar instanceof TileEntityBoundingBox) {
+                    if (((TileEntityBoundingBox)teTar).getBodyPart() != bodyPart) {
+                        textureY += iy - 1;
+                        break;
+                    }
+                }
             }
         }
         
