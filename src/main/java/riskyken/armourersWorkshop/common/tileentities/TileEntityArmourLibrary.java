@@ -52,7 +52,16 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     public void saveArmour(String filename, EntityPlayerMP player) {
         //Check we have a valid item to save to.
         ItemStack stackInput = getStackInSlot(0);
-        if (stackInput == null) { return; }
+        ItemStack stackOutput = getStackInSlot(1);
+        
+        if (stackInput == null) {
+            return;
+        }
+        
+        if (stackOutput != null) {
+            return;
+        }
+        
         if (!(stackInput.getItem() instanceof ItemEquipmentSkin)) { return; }
         if (!stackInput.hasTagCompound()) { return; };
         NBTTagCompound itemNBT = stackInput.getTagCompound();
@@ -98,7 +107,16 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     public void loadArmour(String filename, EntityPlayerMP player) {
         //Check we have a valid item to load from.
         ItemStack stackInput = getStackInSlot(0);
-        if (stackInput == null) { return; }
+        ItemStack stackOutput = getStackInSlot(1);
+        
+        if (stackInput == null) {
+            return;
+        }
+        
+        if (stackOutput != null) {
+            return;
+        }
+        
         if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) { return; }
         
         CustomArmourItemData armourItemData = loadCustomArmourItemDataFromFile(filename);
@@ -106,7 +124,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
 
-        ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
+        ItemStack stackArmour = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         
         NBTTagCompound itemNBT = new NBTTagCompound();
         NBTTagCompound armourNBT = new NBTTagCompound();
@@ -115,10 +133,10 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
         
-        stackOutput.setTagCompound(itemNBT);
+        stackArmour.setTagCompound(itemNBT);
         
         this.decrStackSize(0, 1);
-        this.setInventorySlotContents(1, stackOutput);
+        this.setInventorySlotContents(1, stackArmour);
     }
     
     public void loadArmour(CustomArmourItemData itemData, EntityPlayerMP player) {
