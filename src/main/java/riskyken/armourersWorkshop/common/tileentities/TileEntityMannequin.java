@@ -15,6 +15,7 @@ import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
@@ -32,10 +33,12 @@ public class TileEntityMannequin extends TileEntity {
     private MannequinFakePlayer fakePlayer = null;
     
     private EntityEquipmentData equipmentData;
+    private BipedRotations bipedRotations;
     private int rotation;
     
     public TileEntityMannequin() {
         equipmentData = new EntityEquipmentData();
+        bipedRotations = new BipedRotations();
     }
     
     public void setEquipment(ItemStack stack) {
@@ -98,6 +101,10 @@ public class TileEntityMannequin extends TileEntity {
         return gameProfile;
     }
     
+    public BipedRotations getBipedRotations() {
+        return bipedRotations;
+    }
+    
     public MannequinFakePlayer getFakePlayer() {
         return fakePlayer;
     }
@@ -126,6 +133,7 @@ public class TileEntityMannequin extends TileEntity {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         equipmentData.loadNBTData(compound);
+        bipedRotations.loadNBTData(compound);
         this.rotation = compound.getInteger(TAG_ROTATION);
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
@@ -136,6 +144,7 @@ public class TileEntityMannequin extends TileEntity {
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         equipmentData.saveNBTData(compound);
+        bipedRotations.saveNBTData(compound);
         compound.setInteger(TAG_ROTATION, this.rotation);
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
