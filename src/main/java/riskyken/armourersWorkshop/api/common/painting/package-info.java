@@ -1,4 +1,4 @@
-@API(owner = "armourersWorkshop", provides = "armourersWorkshopAPI", apiVersion = "0.1")
+@API(owner = "armourersWorkshop", provides = "armourersWorkshopAPI", apiVersion = riskyken.armourersWorkshop.api.common.lib.LibApi.API_VERSION)
 package riskyken.armourersWorkshop.api.common.painting;
 
 import cpw.mods.fml.common.API;

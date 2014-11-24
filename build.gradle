@@ -18,6 +18,7 @@ buildscript {
 apply plugin: 'forge'
 
 def modVersion = "0.20.4"
+def apiVersion = "0.0.1"
 def minecraftVersion = "1.7.10"
 
 version = minecraftVersion + "-" + modVersion
@@ -28,6 +29,8 @@ minecraft {
     version = "1.7.10-10.13.0.1208"
     replaceIn "common/lib/LibModInfo.java"
     replace "@VERSION@", modVersion
+	replaceIn "api/common/lib/LibApi.java"
+	replace "@API_VERSION@", apiVersion
     runDir = "eclipse"
 }
 
@@ -37,7 +40,6 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-		
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
     
@@ -48,18 +50,18 @@ processResources {
 
 task apiJar(type: Jar) {
     from sourceSets.main.allSource
-	from sourceSets.main.output
-	include 'riskyken/armourersWorkshop/api/**' 
+    from sourceSets.main.output
+    include 'riskyken/armourersWorkshop/api/**' 
     classifier = 'api'
 }
 
 task devJar(type: Jar) {
     from sourceSets.main.allSource
-	from sourceSets.main.output
+    from sourceSets.main.output
     classifier = 'dev'
 }
 
 artifacts {
-	archives apiJar
-	archives devJar
+    archives apiJar
+    archives devJar
 }
