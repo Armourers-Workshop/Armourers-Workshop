@@ -65,9 +65,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation); 
         }
         
+        
+        
         if (fakePlayer != null) {
             RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 0);
+            GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(preEvent);
+            GL11.glEnable(GL11.GL_CULL_FACE);
         }
         
         ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
@@ -75,7 +79,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         if (fakePlayer != null) {
             RenderPlayerEvent.Specials.Post postEvent = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, 0);
+            GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(postEvent);
+            GL11.glEnable(GL11.GL_CULL_FACE);
         }
         
         if (player.getDistance(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) < 40) {
