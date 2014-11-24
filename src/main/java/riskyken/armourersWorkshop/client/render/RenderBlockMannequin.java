@@ -68,7 +68,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         
         if (fakePlayer != null) {
-            RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 0);
+            RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 1);
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(preEvent);
             GL11.glEnable(GL11.GL_CULL_FACE);
@@ -78,7 +78,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         modelMannequin.render(null, 0, 0.0001F, 0, 0, 0, scale, true);
         
         if (fakePlayer != null) {
-            RenderPlayerEvent.Specials.Post postEvent = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, 0);
+            RenderPlayerEvent.Specials.Post postEvent = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, 1);
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(postEvent);
             GL11.glEnable(GL11.GL_CULL_FACE);
