@@ -50,9 +50,9 @@ public enum EnumEquipmentPart {
     SKIRT(
             8, 12, 4,
             -4, -12, -2,
-            new int[] {0, 1, 8, 8, 6, 6},
+            new int[] {0, 3, 8, 8, 6, 6},
             0, 0, 0,
-            null),
+            EnumBodyPart.LEFT_LEG),
     
     LEFT_FOOT(
             4, 12, 4,
@@ -71,7 +71,7 @@ public enum EnumEquipmentPart {
     WEAPON(
             4, 4, 12,
             -2, -2, -2,
-            new int[] {18, 18, 8, 0, 8, 8},
+            new int[] {18, 28, 8, 0, 8, 8},
             0, 18, 0,
             null);
     

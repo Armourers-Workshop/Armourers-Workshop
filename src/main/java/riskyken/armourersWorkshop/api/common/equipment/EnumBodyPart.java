@@ -14,22 +14,22 @@ public enum EnumBodyPart {
     //Should be 4, 11, 2
     LEFT_ARM(
             4, 12, 4,
-            40, 16, false,
+            40, 16, true,
             1, 9, 2),
     //Should be 3, 10 ,2
     RIGHT_ARM(
             4, 12, 4,
-            40, 16, true,
+            40, 16, false,
             3, 9, 2),
     //Should be 1, 10, 2
     LEFT_LEG(
             4, 12, 4,
-            0, 16, false,
+            0, 16, true,
             2, 12, 2),
     
     RIGHT_LEG(
             4, 12, 4,
-            0, 16, true,
+            0, 16, false,
             2, 12, 2),
             
     WEAPON_ARM(

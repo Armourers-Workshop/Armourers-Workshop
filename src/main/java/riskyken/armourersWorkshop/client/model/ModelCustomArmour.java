@@ -8,6 +8,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.Level;
@@ -53,7 +54,19 @@ public class ModelCustomArmour extends ModelBiped{
         targetModel.rotateAngleZ = sourceModel.rotateAngleZ;
     }
     
+    public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_) {
+        super.setRotationAngles(p_78087_1_, p_78087_2_, p_78087_3_, p_78087_4_, p_78087_5_, p_78087_6_, p_78087_7_);
+        this.isRiding = false;
+        this.isSneak = false;
+        this.aimedBow = false;
+        this.heldItemRight = 0;
+    }
+    
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
+        this.isRiding = false;
+        this.isSneak = false;
+        this.aimedBow = false;
+        this.heldItemRight = 0;
         if (modelBiped == null) {
             setRotation(bipedHead, 0F, 0F, 0F);
             setRotation(bipedBody, 0F, 0F, 0F);
@@ -61,13 +74,7 @@ public class ModelCustomArmour extends ModelBiped{
             setRotation(bipedRightArm, 0F, 0F, 0F);
             setRotation(bipedLeftLeg, 0F, 0F, 0F);
             setRotation(bipedRightLeg, 0F, 0F, 0F);
-            this.isRiding = false;
-            this.isSneak = false;
-            this.aimedBow = false;
         } else {
-            this.isRiding = false;
-            this.isSneak = false;
-            this.aimedBow = false;
             setRotation(bipedHead, modelBiped.bipedHead);
             setRotation(bipedBody, modelBiped.bipedBody);
             setRotation(bipedLeftArm, modelBiped.bipedLeftArm);

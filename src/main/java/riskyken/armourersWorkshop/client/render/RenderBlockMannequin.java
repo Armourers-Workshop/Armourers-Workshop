@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.render;
 
-import java.util.Map;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -16,11 +14,8 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
+import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -51,31 +46,30 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glRotatef(rotaion * 22.5F, 0, 1, 0);
         
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
+        PlayerSkinInfo skinInfo = null;
         
         if (te.getGameProfile() != null) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            Map map = minecraft.func_152342_ad().func_152788_a(te.getGameProfile());
-            if (map.containsKey(Type.SKIN)) {
-                resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
-            }
+            skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
+            resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
             if (te.getGameProfile() != null & te.getWorldObj() != null) {
                 if (fakePlayer == null) {
                     fakePlayer = new MannequinFakePlayer(te.getWorldObj(),te.getGameProfile());
                     te.setFakePlayer(fakePlayer);
                 }
-                if (fakePlayer != null) {
-                    
-                }
             }
         }
         
+        if (skinInfo != null) {
+            skinInfo.bindNomalSkin();
+        } else {
+            Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation); 
+        }
         
         if (fakePlayer != null) {
             RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 0);
             MinecraftForge.EVENT_BUS.post(preEvent);
         }
         
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
         ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
         modelMannequin.render(null, 0, 0.0001F, 0, 0, 0, scale, true);
         

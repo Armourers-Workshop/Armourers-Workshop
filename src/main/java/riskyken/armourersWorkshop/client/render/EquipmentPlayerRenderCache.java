@@ -26,7 +26,6 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -285,20 +284,6 @@ public final class EquipmentPlayerRenderCache {
         int equipmentId = EquipmentDataHandler.INSTANCE.getEquipmentIdFromItemStack(stack);
         CustomArmourItemData data = getCustomArmourItemData(equipmentId);
         renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
-    }
-    
-    public void renderEquipmentPartOnEntity(Entity entity, EnumEquipmentType armourType, ModelBiped modelBiped) {
-        ExtendedPropsEntityEquipmentData entityProps = ExtendedPropsEntityEquipmentData.get(entity);
-        if (entityProps == null) {
-            return;
-        }
-        
-        EntityEquipmentData equipmentData = entityProps.getEquipmentData();
-        
-        if (equipmentData.haveEquipment(armourType)) {
-            CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
-            renderEquipmentPart(entity, modelBiped, data);
-        }
     }
     
     private void renderEquipmentPart(Entity entity, ModelBiped modelBiped, CustomArmourItemData data) {

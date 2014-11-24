@@ -88,6 +88,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     private int getColourFromSkin(TileEntityArmourerBrain te, EnumBodyPart bodyPart, EntityPlayer player, World world, int x, int y, int z, int side) {
         int textureX = bodyPart.textureX;
         int textureY = bodyPart.textureY;
+        boolean holdMirror = true;
         
         ForgeDirection dir = ForgeDirection.getOrientation(side);
         ForgeDirection xSearchAxis = ForgeDirection.UNKNOWN;
@@ -117,15 +118,17 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             xSearchAxis = ForgeDirection.WEST;
             break;
         case WEST:
-            textureX +=  bodyPart.zSize + bodyPart.xSize;
+            textureX += bodyPart.zSize + bodyPart.xSize;
             textureY += bodyPart.zSize;
             ySearchAxis = ForgeDirection.UP;
             xSearchAxis = ForgeDirection.NORTH;
+            holdMirror = false;
             break;
         case EAST:
             textureY += bodyPart.zSize;
             ySearchAxis = ForgeDirection.UP;
             xSearchAxis = ForgeDirection.SOUTH;
+            holdMirror = false;
             break;
         case UNKNOWN:
             break;
@@ -136,7 +139,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             int yOffset = xSearchAxis.offsetY;
             int zOffset = xSearchAxis.offsetZ;
             Block block = null;
-            if (bodyPart.mirrorTexture) {
+            if (bodyPart.mirrorTexture & holdMirror) {
                 block = world.getBlock(x - xOffset * ix, y - yOffset * ix, z - zOffset * ix);
             } else {
                 block = world.getBlock(x + xOffset * ix, y + yOffset * ix, z + zOffset * ix);
@@ -153,9 +156,18 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             int yOffset = ySearchAxis.offsetY;
             int zOffset = ySearchAxis.offsetZ;
             Block block = world.getBlock(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
+            
             if (block != ModBlocks.boundingBox) {
                 textureY += iy - 1;
                 break;
+            } else {
+                TileEntity teTar = world.getTileEntity(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
+                if (teTar != null && teTar instanceof TileEntityBoundingBox) {
+                    if (((TileEntityBoundingBox)teTar).getBodyPart() != bodyPart) {
+                        textureY += iy - 1;
+                        break;
+                    }
+                }
             }
         }
         
