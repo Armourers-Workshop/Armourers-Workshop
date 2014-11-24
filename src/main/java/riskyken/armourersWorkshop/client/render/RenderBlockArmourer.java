@@ -51,7 +51,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
         }
         
-        if (skinInfo != null) {
+        if (skinInfo != null && skinInfo.isNaked()) {
             skinInfo.bindNomalSkin();
         } else {
             Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation); 
