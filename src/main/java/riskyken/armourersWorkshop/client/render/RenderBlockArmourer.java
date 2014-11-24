@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.render;
 
-import java.util.Map;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -22,12 +20,9 @@ import riskyken.armourersWorkshop.client.model.ModelFeet;
 import riskyken.armourersWorkshop.client.model.ModelHand;
 import riskyken.armourersWorkshop.client.model.ModelHead;
 import riskyken.armourersWorkshop.client.model.ModelLegs;
+import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
-
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,14 +44,18 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         float mult = 0.0625F;
         
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
+        PlayerSkinInfo skinInfo = null;
+        
         if (te.getGameProfile() != null) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            Map map = minecraft.func_152342_ad().func_152788_a(te.getGameProfile());
-            if (map.containsKey(Type.SKIN)) {
-                resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
-            }
+            skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
+            resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
         }
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
+        
+        if (skinInfo != null) {
+            skinInfo.bindNomalSkin();
+        } else {
+            Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation); 
+        }
         
         GL11.glPushMatrix();
         //GL11.glColor3f(0.8F, 0.8F, 0.8F);

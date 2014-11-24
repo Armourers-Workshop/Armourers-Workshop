@@ -6,9 +6,11 @@ import java.util.BitSet;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -27,8 +29,15 @@ public class PlayerSkinInfo {
     private BitSet armourOverride;
     private boolean headOverlay;
     
+    /** Has a skin backup been made? **/
     private boolean haveSkinBackup;
+    
+    private int backupId;
+    
+    /** Has a naked skin been made? **/
     private boolean hasNakedSkin;
+    
+    /** Is the naked skin uploaded? **/
     private boolean isNakedSkinUploaded;
     
     public PlayerSkinInfo(boolean naked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
@@ -54,7 +63,6 @@ public class PlayerSkinInfo {
             this.isNaked = naked;
         }
     }
-    
 
     public void autoColourSkin(AbstractClientPlayer player) {
         if (!haveSkinBackup) {
@@ -111,9 +119,18 @@ public class PlayerSkinInfo {
         BufferedImage bufferedImage = SkinHelper.getBufferedImageSkin(player);
         if (bufferedImage != null) {
             playerBackupSkin = bufferedImage;
+            backupId = GL11.glGenTextures();
+            TextureUtil.uploadTextureImage(backupId, playerBackupSkin);
             haveSkinBackup = true;
+            ModLogger.log("Made skin backup for player: " + player.getDisplayName());
         } else {
             ModLogger.log(Level.WARN, "Fail to make skin backup.");
+        }
+    }
+    
+    public void bindNomalSkin() {
+        if (haveSkinBackup) {
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, backupId);
         }
     }
     
@@ -127,7 +144,6 @@ public class PlayerSkinInfo {
             ModLogger.log(Level.WARN, "Tryed to upload null naked skin.");
             return;
         }
-        
         if (playerNakedSkin == null) {
             ModLogger.log(Level.ERROR, "Naked skin missing. Something is wrong!");
             return;
