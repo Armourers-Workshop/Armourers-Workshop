@@ -28,7 +28,7 @@ minecraft {
     version = "1.7.10-10.13.0.1208"
     replaceIn "common/lib/LibModInfo.java"
     replace "@VERSION@", modVersion
-    assetDir = "eclipse/assets"
+    runDir = "eclipse"
 }
 
 processResources {
