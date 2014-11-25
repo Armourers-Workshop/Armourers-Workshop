@@ -1,7 +1,9 @@
 package riskyken.armourersWorkshop.client.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +11,11 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
+import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
+import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.BipedRotations;
+import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -22,6 +28,7 @@ import cpw.mods.fml.client.config.GuiSlider.ISlider;
 public class GuiMannequin extends GuiContainer implements ISlider  {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequin.png");
+    private static ModelMannequin model = new ModelMannequin();
     
     private TileEntityMannequin tileEntity;
     private EntityPlayer player;
@@ -63,26 +70,26 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         super.initGui();
         buttonList.clear();
         
-        headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 30, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 40, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
+        headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
         
-        leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 70, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 80, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        leftArmZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 90, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
+        leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 30, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        leftArmZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
-        rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 70, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 80, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        rightArmZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 90, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
+        rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 30, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        rightArmZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
-        leftLegXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 120, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        leftLegYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        leftLegZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
+        leftLegXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 80, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        leftLegYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 90, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        leftLegZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 100, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
-        rightLegXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 120, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        rightLegYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 130, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        rightLegZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 140, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
+        rightLegXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 80, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        rightLegYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 90, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        rightLegZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 100, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
-        if (bipedRotations != null) {
+        if (bipedRotations != null & !guiLoaded) {
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
             setSliderValue(headYslider, Math.toDegrees(-bipedRotations.head.rotationY));
             
@@ -141,11 +148,13 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         String leftLegRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.leftLegRotation");
         String rightLegRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.rightLegRotation");
         
-        this.fontRendererObj.drawString(headRotationLabel, 40, 20, 4210752);
-        this.fontRendererObj.drawString(leftArmRotationLabel, 40, 60, 4210752);
-        this.fontRendererObj.drawString(rightArmRotationLabel, 147, 60, 4210752);
-        this.fontRendererObj.drawString(leftLegRotationLabel, 40, 110, 4210752);
-        this.fontRendererObj.drawString(rightLegRotationLabel, 147, 110, 4210752);
+        this.fontRendererObj.drawString(headRotationLabel, 40, 120, 4210752);
+        this.fontRendererObj.drawString(leftArmRotationLabel, 40, 20, 4210752);
+        this.fontRendererObj.drawString(rightArmRotationLabel, 147, 20, 4210752);
+        this.fontRendererObj.drawString(leftLegRotationLabel, 40, 70, 4210752);
+        this.fontRendererObj.drawString(rightLegRotationLabel, 147, 70, 4210752);
+        
+
     }
     
     @Override
@@ -153,6 +162,28 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        
+        float scale = 40F;
+        GL11.glPushMatrix();
+        RenderHelper.enableStandardItemLighting();
+        
+        ResourceLocation skin = AbstractClientPlayer.locationStevePng;
+        PlayerSkinInfo skinInfo = null;
+        
+        if (tileEntity.getGameProfile() != null) {
+            skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(tileEntity.getGameProfile().getId());
+            skin = SkinHelper.getSkinResourceLocation(tileEntity.getGameProfile());
+        }
+        
+        Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+        GL11.glTranslatef(this.guiLeft + 212, this.guiTop + 170, 100);
+        GL11.glRotatef(180, 0, 1, 0);
+        GL11.glRotatef(10, 1, 0, 0);
+        GL11.glRotatef(-20, 0, 1, 0);
+        
+        GL11.glScalef(-scale, scale, scale);
+        model.render(bipedRotations, true, 0.0625F);
+        GL11.glPopMatrix();
     }
 
     @Override
