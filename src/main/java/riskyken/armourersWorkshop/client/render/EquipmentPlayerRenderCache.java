@@ -25,6 +25,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
+import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
@@ -262,8 +263,26 @@ public final class EquipmentPlayerRenderCache {
         for (int i = 0; i < 6; i++) {
             EnumEquipmentType armourType = EnumEquipmentType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
-                CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
-                renderEquipmentPart(null, modelBiped, data);
+                if (armourType != EnumEquipmentType.WEAPON) {
+                    CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
+                    renderEquipmentPart(null, modelBiped, data);
+                } else {
+                    GL11.glPushMatrix();
+                    BipedRotations ripedRotations = teMannequin.getBipedRotations();
+                    float scale = 0.0625F;
+                    GL11.glTranslatef(-6 * scale, 0, 0);
+                    GL11.glTranslatef(0, 2 * scale, 0);
+                    GL11.glRotatef(90, 1, 0, 0);
+                    
+                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationZ), 0, 1, 0);
+                    GL11.glRotated(Math.toDegrees(-ripedRotations.rightArm.rotationY), 0, 0, 1);
+                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationX), 1, 0, 0);
+                    
+                    GL11.glTranslatef(0, 0,-8 * scale);
+                    
+                    EquipmentItemRenderCache.renderItemModelFromId(equipmentData.getEquipmentId(armourType), armourType);
+                    GL11.glPopMatrix();
+                }
             }
         }
     }

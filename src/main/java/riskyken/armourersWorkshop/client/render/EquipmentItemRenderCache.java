@@ -64,6 +64,10 @@ public final class EquipmentItemRenderCache {
         NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         
+        renderItemModelFromId(equipmentId, type);
+    }
+    
+    public static void renderItemModelFromId(int equipmentId, EnumEquipmentType type) {
         if (!modelCache.containsKey(equipmentId)) {
             requestEquipmentDataFromServer(equipmentId);
             return;
