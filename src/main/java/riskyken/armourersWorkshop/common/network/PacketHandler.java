@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.network;
 
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientArmourUpdate;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColourUpdate;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour;
@@ -42,5 +43,6 @@ public class PacketHandler {
         networkWrapper.registerMessage(MessageClientRequestEquipmentDataData.class, MessageClientRequestEquipmentDataData.class, 13, Side.SERVER);
         networkWrapper.registerMessage(MessageServerSendEquipmentData.class, MessageServerSendEquipmentData.class, 14, Side.CLIENT);
         networkWrapper.registerMessage(MessageClientGuiSetArmourerCustomName.class, MessageClientGuiSetArmourerCustomName.class, 15, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, 16, Side.SERVER);
     }
 }

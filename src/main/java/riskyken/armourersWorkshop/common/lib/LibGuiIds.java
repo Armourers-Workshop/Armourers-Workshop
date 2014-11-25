@@ -7,4 +7,5 @@ public class LibGuiIds {
     public static final int TOOL_OPTIONS = 3;
     public static final int ARMOUR_LIBRARY = 4;
     public static final int CUSTOM_ARMOUR_INVENTORY = 5;
+    public static final int MANNEQUIN = 6;
 }

@@ -9,18 +9,21 @@ import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiEquipmentWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
+import riskyken.armourersWorkshop.client.gui.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
+import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
@@ -37,22 +40,27 @@ public class GuiHandler implements IGuiHandler {
         {
             case LibGuiIds.COLOUR_MIXER:
                 if (te instanceof TileEntityColourMixer){
-                    return new ContainerColourMixer(player.inventory,(TileEntityColourMixer)te);
+                    return new ContainerColourMixer(player.inventory, (TileEntityColourMixer)te);
                 }
                 break;
             case LibGuiIds.ARMOURER:
                 if (te instanceof TileEntityArmourerBrain){
-                    return new ContainerArmourer(player.inventory,(TileEntityArmourerBrain)te);
+                    return new ContainerArmourer(player.inventory, (TileEntityArmourerBrain)te);
                 }
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
                 if (te instanceof TileEntityArmourLibrary){
-                    return new ContainerArmourLibrary(player.inventory,(TileEntityArmourLibrary)te);
+                    return new ContainerArmourLibrary(player.inventory, (TileEntityArmourLibrary)te);
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
                 ExtendedPropsPlayerEquipmentData customEquipmentData = ExtendedPropsPlayerEquipmentData.get(player);
                 return new ContainerEquipmentWardrobe(player.inventory, customEquipmentData);
+            case LibGuiIds.MANNEQUIN:
+                if (te instanceof TileEntityMannequin){
+                    return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
+                }
+                break;
         }
         return null;
     }
@@ -64,12 +72,12 @@ public class GuiHandler implements IGuiHandler {
         {
             case LibGuiIds.COLOUR_MIXER:
                 if (te instanceof TileEntityColourMixer){
-                    return new GuiColourMixer(player.inventory,(TileEntityColourMixer)te);
+                    return new GuiColourMixer(player.inventory, (TileEntityColourMixer)te);
                 }
                 break;
             case LibGuiIds.ARMOURER:
                 if (te instanceof TileEntityArmourerBrain){
-                    return new GuiArmourer(player.inventory,(TileEntityArmourerBrain)te);
+                    return new GuiArmourer(player.inventory, (TileEntityArmourerBrain)te);
                 }
                 break;
             case LibGuiIds.GUIDE_BOOK:
@@ -79,7 +87,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
                 if (te instanceof TileEntityArmourLibrary) {
-                    return new GuiArmourLibrary(player.inventory,(TileEntityArmourLibrary)te);
+                    return new GuiArmourLibrary(player.inventory, (TileEntityArmourLibrary)te);
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
@@ -88,6 +96,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getCurrentEquippedItem().getItem() instanceof AbstractModItem) {
                     return new GuiToolOptions(player.getCurrentEquippedItem());
+                }
+                break;
+            case LibGuiIds.MANNEQUIN:
+                if (te instanceof TileEntityMannequin) {
+                    return new GuiMannequin(player.inventory, (TileEntityMannequin)te);
                 }
                 break;
         }

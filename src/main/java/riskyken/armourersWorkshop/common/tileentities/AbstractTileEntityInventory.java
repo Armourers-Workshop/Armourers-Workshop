@@ -122,13 +122,14 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
     }
     
     public void readItemsFromNBT(NBTTagCompound compound) {
-        NBTTagList items = compound.getTagList(TAG_ITEMS, NBT.TAG_COMPOUND);
-        for (int i = 0; i < items.tagCount(); i++) {
-            NBTTagCompound item = (NBTTagCompound)items.getCompoundTagAt(i);
+        NBTTagList itemsList = compound.getTagList(TAG_ITEMS, NBT.TAG_COMPOUND);
+        for (int i = 0; i < itemsList.tagCount(); i++) {
+            NBTTagCompound item = (NBTTagCompound)itemsList.getCompoundTagAt(i);
             int slot = item.getByte(TAG_SLOT);
             
             if (slot >= 0 && slot < getSizeInventory()) {
-                setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
+                items[slot] = ItemStack.loadItemStackFromNBT(item);
+                //setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
             }
         }
     }

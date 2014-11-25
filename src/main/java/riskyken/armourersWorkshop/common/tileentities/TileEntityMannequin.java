@@ -9,7 +9,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
@@ -19,12 +18,14 @@ import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-public class TileEntityMannequin extends TileEntity {
+public class TileEntityMannequin extends AbstractTileEntityInventory {
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_ROTATION = "rotation";
@@ -39,6 +40,19 @@ public class TileEntityMannequin extends TileEntity {
     public TileEntityMannequin() {
         equipmentData = new EntityEquipmentData();
         bipedRotations = new BipedRotations();
+        bipedRotations.leftArm.rotationZ = (float) Math.toRadians(-10);
+        bipedRotations.rightArm.rotationZ = (float) Math.toRadians(10);
+        this.items = new ItemStack[6];
+    }
+    
+    @Override
+    public void setInventorySlotContents(int i, ItemStack itemstack) {
+        if (itemstack == null) {
+            equipmentData.removeEquipment(EnumEquipmentType.getOrdinal(i + 1)); 
+        } else {
+            setEquipment(itemstack);
+        }
+        super.setInventorySlotContents(i, itemstack);
     }
     
     public void setEquipment(ItemStack stack) {
@@ -72,6 +86,7 @@ public class TileEntityMannequin extends TileEntity {
                 EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
                 worldObj.spawnEntityInWorld(entityitem);
             }
+            UtilBlocks.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
         }
         super.invalidate();
     }
@@ -105,6 +120,12 @@ public class TileEntityMannequin extends TileEntity {
         return bipedRotations;
     }
     
+    public void setBipedRotations(BipedRotations bipedRotations) {
+        this.bipedRotations = bipedRotations;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     public MannequinFakePlayer getFakePlayer() {
         return fakePlayer;
     }
@@ -130,8 +151,8 @@ public class TileEntityMannequin extends TileEntity {
     }
     
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
+    public void readCommonFromNBT(NBTTagCompound compound) {
+        super.readCommonFromNBT(compound);
         equipmentData.loadNBTData(compound);
         bipedRotations.loadNBTData(compound);
         this.rotation = compound.getInteger(TAG_ROTATION);
@@ -139,10 +160,10 @@ public class TileEntityMannequin extends TileEntity {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
     }
-
+    
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
+    public void writeCommonToNBT(NBTTagCompound compound) {
+        super.writeCommonToNBT(compound);
         equipmentData.saveNBTData(compound);
         bipedRotations.saveNBTData(compound);
         compound.setInteger(TAG_ROTATION, this.rotation);
@@ -152,18 +173,33 @@ public class TileEntityMannequin extends TileEntity {
             compound.setTag(TAG_OWNER, profileTag);
         }
     }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        readCommonFromNBT(compound);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        writeCommonToNBT(compound);
+    }
 
     @Override
     public Packet getDescriptionPacket() {
         updateProfileData();
         NBTTagCompound compound = new NBTTagCompound();
-        writeToNBT(compound);
+        writeBaseToNBT(compound);
+        writeCommonToNBT(compound);
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        readFromNBT(packet.func_148857_g());
+        NBTTagCompound compound = packet.func_148857_g();
+        readBaseFromNBT(compound);
+        readCommonFromNBT(compound);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
@@ -176,5 +212,10 @@ public class TileEntityMannequin extends TileEntity {
         AxisAlignedBB bb = INFINITE_EXTENT_AABB;
         bb = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 3, zCoord + 1);
         return bb;
+    }
+
+    @Override
+    public String getInventoryName() {
+        return LibBlockNames.MANNEQUIN;
     }
 }

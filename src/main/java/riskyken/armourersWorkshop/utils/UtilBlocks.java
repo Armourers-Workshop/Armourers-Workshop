@@ -55,4 +55,18 @@ public class UtilBlocks {
             }
         }
     }
+    
+    public static void dropInventoryBlocks(World world, IInventory inventory, int x, int y, int z) {
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (stack != null) {
+                float f = 0.7F;
+                double xV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                double yV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                double zV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+                EntityItem entityitem = new EntityItem(world, (double)x + xV, (double)y + yV, (double)z + zV, stack);
+                world.spawnEntityInWorld(entityitem);
+            }
+        }
+    }
 }

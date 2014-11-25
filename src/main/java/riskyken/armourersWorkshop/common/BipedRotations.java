@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -57,6 +58,24 @@ public class BipedRotations {
         rightLeg.saveNBTData(compound);
     }
     
+    public void readFromBuf(ByteBuf buf) {
+        head.readFromBuf(buf);
+        chest.readFromBuf(buf);
+        leftArm.readFromBuf(buf);
+        rightArm.readFromBuf(buf);
+        leftLeg.readFromBuf(buf);
+        rightLeg.readFromBuf(buf);
+    }
+    
+    public void writeToBuf(ByteBuf buf) {
+        head.writeToBuf(buf);
+        chest.writeToBuf(buf);
+        leftArm.writeToBuf(buf);
+        rightArm.writeToBuf(buf);
+        leftLeg.writeToBuf(buf);
+        rightLeg.writeToBuf(buf);
+    }
+    
     public class BipedPart {
         private static final String TAG_ROTATION_X = "rotationX";
         private static final String TAG_ROTATION_Y = "rotationY";
@@ -70,7 +89,7 @@ public class BipedRotations {
         public BipedPart(String partName) {
             this.partName = partName;
         }
-        
+
         public void applyRotationsToBipedPart(ModelRenderer modelRenderer) {
             modelRenderer.rotateAngleX = this.rotationX;
             modelRenderer.rotateAngleY = this.rotationY;
@@ -87,6 +106,18 @@ public class BipedRotations {
             compound.setFloat(TAG_ROTATION_X + this.partName, this.rotationX);
             compound.setFloat(TAG_ROTATION_Y + this.partName, this.rotationY);
             compound.setFloat(TAG_ROTATION_Z + this.partName, this.rotationZ);
+        }
+        
+        public void writeToBuf(ByteBuf buf) {
+            buf.writeFloat(this.rotationX);
+            buf.writeFloat(this.rotationY);
+            buf.writeFloat(this.rotationZ);
+        }
+
+        public void readFromBuf(ByteBuf buf) {
+            this.rotationX = buf.readFloat();
+            this.rotationY = buf.readFloat();
+            this.rotationZ = buf.readFloat();
         }
     }
 }

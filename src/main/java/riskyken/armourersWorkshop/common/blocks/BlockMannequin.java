@@ -16,11 +16,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -77,27 +79,25 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        ItemStack stack = player.getCurrentEquippedItem();
-        if (stack != null && (stack.getItem() == ModItems.equipmentSkin | stack.getItem() == Items.name_tag)) {
-            if (world.isRemote) { return true; }
+        if (!world.isRemote) {
             int meta = world.getBlockMetadata(x, y, z);
-            TileEntity te;
-            if (meta == 0) {
-                te = world.getTileEntity(x, y, z);
-            } else {
-                te = world.getTileEntity(x, y - 1, z);
+            int yOffset = 0;
+            if (meta == 1) {
+                yOffset = -1;
             }
-            
-            if (te instanceof TileEntityMannequin) {
-                if (stack.getItem() == ModItems.equipmentSkin) {
-                    ((TileEntityMannequin)te).setEquipment(player.getCurrentEquippedItem());
-                } else {
-                    ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
+            ItemStack stack = player.getCurrentEquippedItem();
+            if (stack != null && stack.getItem() == Items.name_tag) {
+                TileEntity te = world.getTileEntity(x, y + yOffset, z);;
+                if (te instanceof TileEntityMannequin) {
+                    if (stack.getItem() == Items.name_tag) {
+                        ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
+                    }
                 }
+            } else {
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y + yOffset, z);
             }
-            return true;
         }
-        return false;
+        return true;
     }
     
     @Override
