@@ -65,9 +65,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation); 
         }
         
-        
-        
         if (fakePlayer != null) {
+            fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
+            fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
             RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 1);
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(preEvent);
@@ -76,22 +76,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
         
-        te.getBipedRotations().head.rotationX = 0;
-        te.getBipedRotations().head.rotationY = 0;
-        te.getBipedRotations().head.rotationZ = (float) Math.toRadians(20);
-        
-        te.getBipedRotations().leftArm.rotationZ = (float) Math.toRadians(-70);
-        te.getBipedRotations().rightArm.rotationZ = (float) Math.toRadians(70);
-        
-        te.getBipedRotations().leftLeg.rotationZ = (float) Math.toRadians(-45);
-        te.getBipedRotations().rightLeg.rotationZ = (float) Math.toRadians(45);
-        
         modelMannequin.render(te.getBipedRotations(), true, scale);
         
         if (fakePlayer != null) {
             RenderPlayerEvent.Specials.Post postEvent = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, 1);
             GL11.glDisable(GL11.GL_CULL_FACE);
-            //MinecraftForge.EVENT_BUS.post(postEvent);
+            MinecraftForge.EVENT_BUS.post(postEvent);
             GL11.glEnable(GL11.GL_CULL_FACE);
         }
         
