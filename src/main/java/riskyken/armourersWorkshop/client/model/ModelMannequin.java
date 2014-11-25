@@ -26,7 +26,9 @@ public class ModelMannequin extends ModelBiped {
         this.bipedRightLeg.render(scale);
         this.bipedLeftLeg.render(scale);
         if (headOverlay) {
+            GL11.glDisable(GL11.GL_CULL_FACE);
             this.bipedHeadwear.render(scale);
+            GL11.glEnable(GL11.GL_CULL_FACE);
         }
         GL11.glColor3f(1F, 1F, 1F);
     }
@@ -41,7 +43,9 @@ public class ModelMannequin extends ModelBiped {
         this.bipedRightLeg.render(scale);
         this.bipedLeftLeg.render(scale);
         if (headOverlay) {
+            GL11.glDisable(GL11.GL_CULL_FACE);
             this.bipedHeadwear.render(scale);
+            GL11.glEnable(GL11.GL_CULL_FACE);
         }
         GL11.glColor3f(1F, 1F, 1F);
     }
