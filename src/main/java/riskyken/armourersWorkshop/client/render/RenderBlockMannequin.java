@@ -68,6 +68,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (fakePlayer != null) {
             fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
             fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
+            fakePlayer.prevRotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
+            if (te.getBipedRotations() != null) {
+                te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelBipedMain);
+            }
+            
             RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 1);
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(preEvent);
