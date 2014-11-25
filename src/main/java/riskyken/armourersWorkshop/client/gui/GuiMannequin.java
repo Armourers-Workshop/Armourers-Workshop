@@ -21,7 +21,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
 
@@ -191,8 +190,6 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         if (!guiLoaded) {
             return;
         }
-        
-        ModLogger.log("update");
         
         bipedRotations.head.rotationX = (float) Math.toRadians(-headXslider.getValue());
         bipedRotations.head.rotationY = (float) Math.toRadians(-headYslider.getValue());
