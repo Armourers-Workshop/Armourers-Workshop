@@ -68,7 +68,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        
+        guiLoaded = false;
         headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
         headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
         
@@ -88,7 +88,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         rightLegYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 90, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
         rightLegZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 100, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
-        if (bipedRotations != null & !guiLoaded) {
+        if (bipedRotations != null) {
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
             setSliderValue(headYslider, Math.toDegrees(-bipedRotations.head.rotationY));
             
