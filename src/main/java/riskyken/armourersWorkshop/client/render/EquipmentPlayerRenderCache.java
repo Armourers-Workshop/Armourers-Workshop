@@ -202,6 +202,9 @@ public final class EquipmentPlayerRenderCache {
         
         int result = -1;
         int slot = -event.slot + 3;
+        if (slot > 3) {
+            return;
+        }
         
         if (skinMap.containsKey(player.getPersistentID())) {
             skinInfo = skinMap.get(player.getPersistentID());
