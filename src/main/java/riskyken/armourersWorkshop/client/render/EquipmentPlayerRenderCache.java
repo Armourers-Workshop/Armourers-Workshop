@@ -278,8 +278,9 @@ public final class EquipmentPlayerRenderCache {
                     GL11.glRotated(Math.toDegrees(-ripedRotations.rightArm.rotationY), 0, 0, 1);
                     GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationX), 1, 0, 0);
                     
-                    GL11.glTranslatef(0, 0,-8 * scale);
-                    
+                    GL11.glTranslatef(0, 0, -8 * scale);
+                    GL11.glTranslatef(0, 0.5F * scale, 0);
+                    GL11.glScalef(1.6F, 1.6F, 1.6F);
                     EquipmentItemRenderCache.renderItemModelFromId(equipmentData.getEquipmentId(armourType), armourType);
                     GL11.glPopMatrix();
                 }
