@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
@@ -46,6 +47,7 @@ public class ArmourersWorkshop {
         
         ModItems.init();
         ModBlocks.init();
+        CubeRegistry.init();
         
         proxy.preInit();
         proxy.initRenderers();
