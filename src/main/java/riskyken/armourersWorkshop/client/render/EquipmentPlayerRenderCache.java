@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -181,11 +180,6 @@ public final class EquipmentPlayerRenderCache {
     	}
     }
     
-    @SubscribeEvent
-    public void onRender(RenderHandEvent event) {
-        
-    }
-    
     public int getCacheSize() {
         return equipmentDataMap.size();
     }
@@ -273,17 +267,19 @@ public final class EquipmentPlayerRenderCache {
                     GL11.glPushMatrix();
                     BipedRotations ripedRotations = teMannequin.getBipedRotations();
                     float scale = 0.0625F;
-                    GL11.glTranslatef(-6 * scale, 0, 0);
-                    GL11.glTranslatef(0, 2 * scale, 0);
-                    GL11.glRotatef(90, 1, 0, 0);
                     
-                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationZ), 0, 1, 0);
-                    GL11.glRotated(Math.toDegrees(-ripedRotations.rightArm.rotationY), 0, 0, 1);
+                    GL11.glTranslatef(-5F * scale, 0, 0);
+                    GL11.glTranslatef(0, 2F * scale, 0);
+                    
+                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationZ), 0, 0, 1);
+                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationY), 0, 1, 0);
                     GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationX), 1, 0, 0);
                     
+                    GL11.glRotatef(90, 1, 0, 0);
+                    
                     GL11.glTranslatef(0, 0, -8 * scale);
-                    GL11.glTranslatef(0, 0.5F * scale, 0);
-                    GL11.glScalef(1.6F, 1.6F, 1.6F);
+                    GL11.glTranslatef(-1F * scale, 0, 0);
+                    
                     EquipmentItemRenderCache.renderItemModelFromId(equipmentData.getEquipmentId(armourType), armourType);
                     GL11.glPopMatrix();
                 }
