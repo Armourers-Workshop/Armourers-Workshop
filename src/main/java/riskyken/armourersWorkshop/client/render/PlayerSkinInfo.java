@@ -128,10 +128,12 @@ public class PlayerSkinInfo {
         }
     }
     
-    public void bindNomalSkin() {
+    public boolean bindNomalSkin() {
         if (haveSkinBackup) {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, backupId);
+            return true;
         }
+        return false;
     }
     
     private void restorePlayerSkin(AbstractClientPlayer player) {
