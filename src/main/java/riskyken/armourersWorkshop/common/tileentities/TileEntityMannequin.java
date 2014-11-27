@@ -19,6 +19,7 @@ import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 import com.google.common.collect.Iterables;
@@ -49,10 +50,15 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
-        if (itemstack == null) {
-            equipmentData.removeEquipment(EnumEquipmentType.getOrdinal(i + 1)); 
-        } else {
-            setEquipment(itemstack);
+        if (!worldObj.isRemote) {
+            ModLogger.log("setting slot: " + i);
+            if (itemstack == null) {
+                equipmentData.removeEquipment(EnumEquipmentType.getOrdinal(i + 1)); 
+                markDirty();
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            } else {
+                setEquipment(itemstack);
+            }
         }
         super.setInventorySlotContents(i, itemstack);
     }
