@@ -65,7 +65,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             return EnumEquipmentType.NONE;
         }
         int damage = stack.getItemDamage();
-        if (damage >= 0 & damage < 5) {
+        if (damage >= 0 & damage < 6) {
             return EnumEquipmentType.getOrdinal(damage + 1);
         }
         return EnumEquipmentType.NONE;
