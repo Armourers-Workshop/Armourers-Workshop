@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -143,6 +144,8 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         buttonList.add(rightLegYslider);
         buttonList.add(rightLegZslider);
         
+        buttonList.add(new GuiButtonExt(1, this.guiLeft + 147, this.guiTop + 130, 20, 20, "R"));
+        
         guiLoaded = true;
     }
     
@@ -152,6 +155,35 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         slider.updateSlider();
     }
 
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if (button.id == 1) {
+            guiLoaded = false;
+            setSliderValue(headXslider, 0F);
+            setSliderValue(headYslider, 0F);
+            setSliderValue(headZslider, 0F);
+            
+            setSliderValue(leftArmXslider, 0F);
+            setSliderValue(leftArmYslider, 0F);
+            setSliderValue(leftArmZslider, 0F);
+            
+            setSliderValue(rightArmXslider, 0F);
+            setSliderValue(rightArmYslider, 0F);
+            setSliderValue(rightArmZslider, 0F);
+            
+            setSliderValue(leftLegXslider, 0F);
+            setSliderValue(leftLegYslider, 0F);
+            setSliderValue(leftLegZslider, 0F);
+            
+            setSliderValue(rightLegXslider, 0F);
+            setSliderValue(rightLegYslider, 0F);
+            setSliderValue(rightLegZslider, 0F);
+            guiLoaded = true;
+
+            checkAndSendRotationValues();
+        }
+    }
+    
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName());
@@ -210,7 +242,10 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         if (!guiLoaded) {
             return;
         }
-        
+        checkAndSendRotationValues();
+    }
+    
+    private void checkAndSendRotationValues() {
         bipedRotations.head.rotationX = (float) Math.toRadians(-headXslider.getValue());
         bipedRotations.head.rotationY = (float) Math.toRadians(-headYslider.getValue());
         bipedRotations.head.rotationZ = (float) Math.toRadians(-headZslider.getValue());
@@ -235,7 +270,6 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
             NBTTagCompound compound = new NBTTagCompound();
             this.bipedRotations.saveNBTData(compound);
             this.lastBipedRotations.loadNBTData(compound);
-            
             MessageClientGuiBipedRotations message = new MessageClientGuiBipedRotations(bipedRotations);
             PacketHandler.networkWrapper.sendToServer(message);
         }
