@@ -22,6 +22,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
 
@@ -79,14 +80,16 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         super.initGui();
         buttonList.clear();
         guiLoaded = false;
+        
         headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
         headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
+        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 150, 100, 10, "Y: ", "", -10D, 10D, 0D, true, true, this);
         
-        leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 30, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 30, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
         leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
         leftArmZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
-        rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 30, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 30, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
         rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
         rightArmZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
@@ -101,12 +104,13 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         if (bipedRotations != null) {
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
             setSliderValue(headYslider, Math.toDegrees(-bipedRotations.head.rotationY));
+            setSliderValue(headZslider, Math.toDegrees(-bipedRotations.head.rotationZ));
             
-            setSliderValue(leftArmXslider, Math.toDegrees(-bipedRotations.leftArm.rotationX) - 90);
+            setSliderValue(leftArmXslider, Math.toDegrees(-bipedRotations.leftArm.rotationX));
             setSliderValue(leftArmYslider, Math.toDegrees(-bipedRotations.leftArm.rotationY));
             setSliderValue(leftArmZslider, Math.toDegrees(-bipedRotations.leftArm.rotationZ));
             
-            setSliderValue(rightArmXslider, Math.toDegrees(-bipedRotations.rightArm.rotationX) - 90);
+            setSliderValue(rightArmXslider, Math.toDegrees(-bipedRotations.rightArm.rotationX));
             setSliderValue(rightArmYslider, Math.toDegrees(bipedRotations.rightArm.rotationY));
             setSliderValue(rightArmZslider, Math.toDegrees(bipedRotations.rightArm.rotationZ));
             
@@ -121,6 +125,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         
         buttonList.add(headXslider);
         buttonList.add(headYslider);
+        buttonList.add(headZslider);
         
         buttonList.add(leftArmXslider);
         buttonList.add(leftArmYslider);
@@ -208,12 +213,13 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         
         bipedRotations.head.rotationX = (float) Math.toRadians(-headXslider.getValue());
         bipedRotations.head.rotationY = (float) Math.toRadians(-headYslider.getValue());
+        bipedRotations.head.rotationZ = (float) Math.toRadians(-headZslider.getValue());
         
-        bipedRotations.leftArm.rotationX = (float) Math.toRadians(-leftArmXslider.getValue() - 90);
+        bipedRotations.leftArm.rotationX = (float) Math.toRadians(-leftArmXslider.getValue());
         bipedRotations.leftArm.rotationY = (float) Math.toRadians(-leftArmYslider.getValue());
         bipedRotations.leftArm.rotationZ = (float) Math.toRadians(-leftArmZslider.getValue());
         
-        bipedRotations.rightArm.rotationX = (float) Math.toRadians(-rightArmXslider.getValue() - 90);
+        bipedRotations.rightArm.rotationX = (float) Math.toRadians(-rightArmXslider.getValue());
         bipedRotations.rightArm.rotationY = (float) Math.toRadians(rightArmYslider.getValue());
         bipedRotations.rightArm.rotationZ = (float) Math.toRadians(rightArmZslider.getValue());
         
