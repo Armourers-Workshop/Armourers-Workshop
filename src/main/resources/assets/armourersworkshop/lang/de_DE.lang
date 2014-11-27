@@ -1,0 +1,135 @@
+# Block names
+tile.armourersworkshop:armourerBrain.name=Ausrüster
+tile.armourersworkshop:armourLibrary.name=Ausrüstungsbibliothek
+tile.armourersworkshop:colourable.name=Rüstungswürfel
+tile.armourersworkshop:colourableGlowing.name=Rüstungswürfel (Leuchtend)
+tile.armourersworkshop:colourMixer.name=Farbmixer
+tile.armourersworkshop:mannequin.name=Schaufensterpuppe
+
+# Block flavour text
+tile.armourersworkshop:armourerBrain.flavour=Hiermit kannst du neue Rüstungsskins erstellen.
+tile.armourersworkshop:armourLibrary.flavour=Lade und Speichere Ausrüstungsvorlagen.
+tile.armourersworkshop:colourable.flavour=Hauptbaustein für selbsterstellte Ausrüstung. (färbbar)
+tile.armourersworkshop:colourableGlowing.flavour=Ausrüstungsteile die im Dunkeln leuchten!
+tile.armourersworkshop:colourMixer.flavour=Mische Farben um deine Ausrüstung zu färben.
+tile.armourersworkshop:mannequin.flavour=Stelle deine Ausrüstung auf einer gruseligen Schaufenstepuppe aus!
+
+# Item names
+item.armourersworkshop:equipmentSkinTemplate.name=Ausrüstungsvorlage
+item.armourersworkshop:equipmentSkin.0.name=Kopfschmuck-Skin
+item.armourersworkshop:equipmentSkin.1.name=Harnisch-Skin
+item.armourersworkshop:equipmentSkin.2.name=Beinschienen-Skin
+item.armourersworkshop:equipmentSkin.3.name=Rock-Skin
+item.armourersworkshop:equipmentSkin.4.name=Stiefel-Skin
+item.armourersworkshop:equipmentSkin.5.name=Waffenskin
+item.armourersworkshop:paintbrush.name=Pinsel
+item.armourersworkshop:paintRoller.name=Farbwalze
+item.armourersworkshop:colourPicker.name=Farbpicker
+item.armourersworkshop:burnTool.name=Verdunkel-Tool
+item.armourersworkshop:dodgeTool.name=Aufhell-Tool
+item.armourersworkshop:colourNoiseTool.name=Farbrauschen-Tool
+item.armourersworkshop:shadeNoiseTool.name=Schattierungs-Tool
+item.armourersworkshop:guideBook.name=Guide
+
+# Item flavour text
+item.armourersworkshop:paintbrush.flavour=Färbt einen einzelnen Würfel.
+item.armourersworkshop:paintRoller.flavour=Färbt einen 3*3*1-Bereich von Würfel.
+item.armourersworkshop:colourPicker.flavour=Wird verwendet um eine Farbe zu kopieren.
+item.armourersworkshop:burnTool.flavour=Färbt einen Würfel dunkler.
+item.armourersworkshop:dodgeTool.flavour=Färbt einen Würfel dunkler.
+item.armourersworkshop:colourNoiseTool.flavour=Fügt einem Würfel zufälliges Farbrauschen hinzu.
+item.armourersworkshop:shadeNoiseTool.flavour=Fügt einem Würfel zufällige Schattierung hinzu.
+item.armourersworkshop:guideBook.flavour=Dein Leitfaden für Armourer's Workshop.
+
+# Armour types
+armourTypes.armourersworkshop:head.name=Kopf
+armourTypes.armourersworkshop:chest.name=Brust
+armourTypes.armourersworkshop:legs.name=Beine
+armourTypes.armourersworkshop:skirt.name=Rock
+armourTypes.armourersworkshop:feet.name=Fuß
+armourTypes.armourersworkshop:weapon.name=Waffe
+
+# Inventory names
+inventory.armourersworkshop:colourMixer.name=Farbmischer
+inventory.armourersworkshop:armourerBrain.name=Ausrüster
+inventory.armourersworkshop:armourLibrary.name=Ausrüstungsbibliothek
+inventory.armourersworkshop:equipmentWardrobe.name=Kleiderschrank
+inventory.armourersworkshop:mannequin.name=Schaufensterpuppe
+
+# Inventory controls
+inventory.armourersworkshop:armourLibrary.label.search=Suchen:
+inventory.armourersworkshop:armourLibrary.label.filename=Dateiname:
+inventory.armourersworkshop:armourLibrary.label.files=Datei:
+inventory.armourersworkshop:armourLibrary.save=Speichern
+inventory.armourersworkshop:armourLibrary.load=Laden
+inventory.armourersworkshop:armourLibrary.showClientFiles=Lokale Dateien Anzeigen?
+
+inventory.armourersworkshop:armourerBrain.label.itemName=Itemname:
+inventory.armourersworkshop:armourerBrain.label.username=Nutzername:
+inventory.armourersworkshop:armourerBrain.label.clone=Kopie:
+inventory.armourersworkshop:armourerBrain.showGuide=Zeige Bauhilfe?
+inventory.armourersworkshop:armourerBrain.showOverlay=Zeige Kopf-Overlay?
+inventory.armourersworkshop:armourerBrain.save=Speichern
+inventory.armourersworkshop:armourerBrain.load=Laden
+inventory.armourersworkshop:armourerBrain.set=Setzen
+inventory.armourersworkshop:armourerBrain.clear=Leeren
+inventory.armourersworkshop:armourerBrain.westToEast=West nach Ost
+inventory.armourersworkshop:armourerBrain.eastToWest=Ost nach West
+
+inventory.armourersworkshop:colourMixer.label.hue=Farbtönung
+inventory.armourersworkshop:colourMixer.label.saturation=Sättigung
+inventory.armourersworkshop:colourMixer.label.brightness=Helligkeit
+inventory.armourersworkshop:colourMixer.label.hex=Hex
+inventory.armourersworkshop:colourMixer.label.presets=Vorlagen
+
+inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Skinfarbe
+inventory.armourersworkshop:equipmentWardrobe.autoColour=Zufällige Farbe
+inventory.armourersworkshop:equipmentWardrobe.nakedSkin=Benutze Nacktskin?
+
+inventory.armourersworkshop:mannequin.label.headRotation=Kopfrotation
+inventory.armourersworkshop:mannequin.label.leftArmRotation=Linke Armrotation
+inventory.armourersworkshop:mannequin.label.rightArmRotation=Rechte Armrotation
+inventory.armourersworkshop:mannequin.label.leftLegRotation=Linke Beinrotation
+inventory.armourersworkshop:mannequin.label.rightLegRotation=Rechte Beinrotation
+
+# Chat Messages
+chat.armourersworkshop:undo.outOfUndos=Keine weiteren Speicherpunkte
+chat.armourersworkshop:undo.undoing=Mache Rückgängig
+
+# Creative tab
+itemGroup.armourersworkshop=Armourer's Workshop
+
+# Keybindings
+keys.armourersworkshop:category=Armourer's Workshop
+keys.armourersworkshop.equipmentWardrobe=Kleiderschrank
+keys.armourersworkshop.undo=Rückgängig
+
+# Guide Book
+# Chapter 1
+book.armourersworkshop:guideBook.chapter1.title=Inhalt
+
+# Chapter 2
+book.armourersworkshop:guideBook.chapter2.title=Einleitung
+book.armourersworkshop:guideBook.chapter2.page1.text=Notiz: Dieses Buch ist immer noch unter Bearbeitung.&pWillkommen zum Armourer's Workshop Guide!&pDieses Buch wird dir helfen um dich besser mit Armourer's Workshop vertraut zu machen.
+book.armourersworkshop:guideBook.chapter2.page2.text=Armourer's Workshop lässt dich eigene Ausrüstungsskins kreieren mit denen du dein Aussehen verändern kannst!
+
+# Chapter 3
+book.armourersworkshop:guideBook.chapter3.title=Ausrüster
+book.armourersworkshop:guideBook.chapter3.page1.text=Der Ausrüster ist der erste Block den du brauchst um mit dem Bau deiner eigenen Ausrüstung anzufangen.&pNachdem du ihn plaziert hast, kannst du mit einem Rechtsclick sein Interface öffnen. Unten links siehst du sämtliche Ausrüstungstypen für welche du Skins kreieren kannst.
+book.armourersworkshop:guideBook.chapter3.page2.text=Suche den Ausrüstungstyp aus für den du einen Skin aus Rüstungswürfeln bauen möchtest.&pNachdem du damit fertig bist kannst du deine Ausrüstungsvorlage in den Ausrüster legen, einen Namen auswählen und speichern.
+
+# Chapter 4
+book.armourersworkshop:guideBook.chapter4.title=Ausrüstungsvorlagen
+book.armourersworkshop:guideBook.chapter4.page1.text=Ausrüstungsvorlagen sind die Items auf denen deine Ausrüstungsskins gespeichert sind. Lege sie in deinen Kleiderschrank (P um die GUI zu öffnen, Standardwert) um den Skin anzuwenden.
+
+# Chapter 5
+book.armourersworkshop:guideBook.chapter6.title=Malwerkzeuge
+book.armourersworkshop:guideBook.chapter6.page1.text=Es wurden dir einige Werkzeuge zur Verfügung gestellt um dir bei der Auslebung deiner Kreativität behilflich zu sein!&pFarbmischer&nKann jede Farbe erzeugen die du dir vorstellen kannst.&pPinsel&nFärbt einen einzelnen Rüstungswürfel.
+book.armourersworkshop:guideBook.chapter6.page2.text=Farbpicker&nLässt dich eine Farbe von einem Würfel auswählen und in einen Farbmischer zu importieren.&pPaint Roller&nFärbt einen 3*3*1-Bereich von Würfeln.
+book.armourersworkshop:guideBook.chapter6.page3.text=Verdunkel-Tool&nFärbt einen Würfel dunkler.&pAufhell-Tool&nFärbt einen Würfel dunkler.&pFarbrauschen-Tool&nFügt einem Würfel zufälliges Farbrauschen hinzu.
+book.armourersworkshop:guideBook.chapter6.page4.text=Schattierungs-Tool&nFügt einem Würfel zufällige Schattierung hinzu.&pManche Werkzeuge können konfiguriert werden indem man schleichend einen Rechtsclick ausführt.
+
+# Chapter 6
+book.armourersworkshop:guideBook.chapter7.title=Kleiderschrank
+book.armourersworkshop:guideBook.chapter7.page1.text=WIP
+book.armourersworkshop:guideBook.chapter7.page2.text=WIP
