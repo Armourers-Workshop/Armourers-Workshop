@@ -79,6 +79,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
             }
         }
     }
+    
     @Override
     public void invalidate() {
         if (!worldObj.isRemote) {
@@ -96,6 +97,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         }
         super.invalidate();
     }
+    
     private void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
         this.markDirty();

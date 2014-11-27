@@ -6,6 +6,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -21,6 +22,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
 
@@ -31,7 +33,9 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
     
     private TileEntityMannequin tileEntity;
     private EntityPlayer player;
+    
     private BipedRotations bipedRotations;
+    private BipedRotations lastBipedRotations;
     
     private boolean guiLoaded = false;
     
@@ -59,7 +63,14 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         super(new ContainerMannequin(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.player = invPlayer.player;
-        this.bipedRotations = tileEntity.getBipedRotations();
+        
+        this.bipedRotations = new BipedRotations();
+        this.lastBipedRotations = new BipedRotations();
+        NBTTagCompound compound = new NBTTagCompound();
+        tileEntity.getBipedRotations().saveNBTData(compound);
+        this.bipedRotations.loadNBTData(compound);
+        this.lastBipedRotations.loadNBTData(compound);
+        
         this.xSize = 256;
         this.ySize = 256;
     }
@@ -89,6 +100,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         rightLegZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 100, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
         if (bipedRotations != null) {
+            ModLogger.log("init gui");
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
             setSliderValue(headYslider, Math.toDegrees(-bipedRotations.head.rotationY));
             
@@ -152,8 +164,6 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         this.fontRendererObj.drawString(rightArmRotationLabel, 147, 20, 4210752);
         this.fontRendererObj.drawString(leftLegRotationLabel, 40, 70, 4210752);
         this.fontRendererObj.drawString(rightLegRotationLabel, 147, 70, 4210752);
-        
-
     }
     
     @Override
@@ -217,7 +227,13 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         bipedRotations.rightLeg.rotationY = (float) Math.toRadians(rightLegYslider.getValue());
         bipedRotations.rightLeg.rotationZ = (float) Math.toRadians(rightLegZslider.getValue());
         
-        MessageClientGuiBipedRotations message = new MessageClientGuiBipedRotations(bipedRotations);
-        PacketHandler.networkWrapper.sendToServer(message);
+        if (!this.bipedRotations.equals(this.lastBipedRotations)) {
+            NBTTagCompound compound = new NBTTagCompound();
+            this.bipedRotations.saveNBTData(compound);
+            this.lastBipedRotations.loadNBTData(compound);
+            
+            MessageClientGuiBipedRotations message = new MessageClientGuiBipedRotations(bipedRotations);
+            PacketHandler.networkWrapper.sendToServer(message);
+        }
     }
 }
