@@ -101,7 +101,7 @@ public class GuiGuideBook extends GuiScreen {
     
     @Override
     public void drawScreen(int mouseX, int mouseY, float someFloat) {
-        
+        GL11.glColor4f(1, 1, 1, 1);
         long tickTime = System.currentTimeMillis() - lastRenderTick;
         lastRenderTick = System.currentTimeMillis();
         
