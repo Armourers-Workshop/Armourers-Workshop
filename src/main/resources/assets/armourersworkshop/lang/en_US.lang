@@ -1,18 +1,18 @@
 # Block names
 tile.armourersworkshop:armourerBrain.name=Armourer Brain
-tile.armourersworkshop:armourLibrary.name=Armour Library
-tile.armourersworkshop:colourable.name=Armour Cube
-tile.armourersworkshop:colourableGlowing.name=Armour Cube (Glowing)
+tile.armourersworkshop:armourLibrary.name=Equipment Library
+tile.armourersworkshop:colourable.name=Equipment Cube
+tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
 tile.armourersworkshop:colourMixer.name=Colour Mixer
 tile.armourersworkshop:mannequin.name=Mannequin
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
 tile.armourersworkshop:armourLibrary.flavour=Save and load armour templates from disk.
-tile.armourersworkshop:colourable.flavour=Main building block for custom armour. (paintable)
-tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark armour cubes!
-tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your armour with.
-tile.armourersworkshop:mannequin.flavour=Show your armour off with a creepy mannequin!
+tile.armourersworkshop:colourable.flavour=Main building block for custom equipment. (paintable)
+tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark equipment cubes!
+tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipment with.
+tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.name=Equipment Skin Template
@@ -52,8 +52,7 @@ armourTypes.armourersworkshop:weapon.name=Weapon
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer
-inventory.armourersworkshop:armourCrafter.name=Armour Crafter
-inventory.armourersworkshop:armourLibrary.name=Armour Library
+inventory.armourersworkshop:armourLibrary.name=Equipment Library
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
 
@@ -111,33 +110,26 @@ book.armourersworkshop:guideBook.chapter1.title=Contents
 
 # Chapter 2
 book.armourersworkshop:guideBook.chapter2.title=Introduction
-book.armourersworkshop:guideBook.chapter2.page1.text=Welcome to the Armourer's Workshop Guide Book.&pThis book will help you get started with Armourer's Workshop.&pIt is recommended that you work through the book in order.
-book.armourersworkshop:guideBook.chapter2.page2.text=Armourer's Workshop will let you build your own armour with a custom look!
+book.armourersworkshop:guideBook.chapter2.page1.text=Note: This book is still a WIP.&pWelcome to the Armourer's Workshop Guide Book.&pThis book will help you get started with Armourer's Workshop.
+book.armourersworkshop:guideBook.chapter2.page2.text=Armourer's Workshop will let you build your own equipment skins for armour and weapons to replace their look!
 
 # Chapter 3
-book.armourersworkshop:guideBook.chapter3.title=Multi-Block
-book.armourersworkshop:guideBook.chapter3.page1.text=The first thing you will need to get started building your custom armour is the armourer multiblock.&pThe Armourer multiblock is build using 79 Armourer Wall's, 4 Armourer Corners and 1 Armourer Brain.
-book.armourersworkshop:guideBook.chapter3.page2.text=The multiblock is a 22*22 structure with Armourer Wall's along the edges and a Armourer Corner in each corner.&pThe Armourer Brain can be placed in any edge but CAN NOT be placed at a corner.
-book.armourersworkshop:guideBook.chapter3.page3.text=The Armourer also need a large 20*20*20 space above it to operate.&p&n&image1
-book.armourersworkshop:guideBook.chapter3.page4.text=&image2&p&p&p&image3
+book.armourersworkshop:guideBook.chapter3.title=Armourer
+book.armourersworkshop:guideBook.chapter3.page1.text=The first thing you will need to get started building your custom armour is the armourer.&pAfter placing the block down right click it to open the GUI. Down the left side you will see all the types of equipment that can be build.
+book.armourersworkshop:guideBook.chapter3.page2.text=Select the type of equipment that you would like to crate then start building your equipment using Equipment Cubes.&pAfter you have finished place an equipment template into the armourer type in a name and press save.
 
 # Chapter 4
-book.armourersworkshop:guideBook.chapter4.title=Armour Templates
-book.armourersworkshop:guideBook.chapter4.page1.text=Armour Templates come in 5 variants Head, Chest, Legs, Skirt and Feet.&pTo select what type of custom armour you would like to build, craft the Armour Template of the same type and insert it into the Armourer Brain.
+book.armourersworkshop:guideBook.chapter4.title=Equipment Templates
+book.armourersworkshop:guideBook.chapter4.page1.text=Equipment templates are what equipment skins are saved on simply place the equipment skin into the equipment wardrobe to apply the skin.
 
 # Chapter 5
-book.armourersworkshop:guideBook.chapter5.title=Armour Cubes
-book.armourersworkshop:guideBook.chapter5.page1.text=Armour Cubes are the main building block for custom armour. Simply place them around the player projection, then colour them to your liking.&pArmour Cubes also have a glowing variant, that will glow in the dark!
+book.armourersworkshop:guideBook.chapter6.title=Painting Tools
+book.armourersworkshop:guideBook.chapter6.page1.text=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Equipment Cube.
+book.armourersworkshop:guideBook.chapter6.page2.text=Colour Picker&nLets you pick a colour from an Equipment Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
+book.armourersworkshop:guideBook.chapter6.page3.text=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Equipment Cube.
+book.armourersworkshop:guideBook.chapter6.page4.text=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
 
 # Chapter 6
-book.armourersworkshop:guideBook.chapter6.title=Painting Tools
-book.armourersworkshop:guideBook.chapter6.page1.text=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Armour Cube.
-book.armourersworkshop:guideBook.chapter6.page2.text=Colour Picker&nLets you pick a colour from an Armour Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Armour Cube's in a 3*3*1 area.
-book.armourersworkshop:guideBook.chapter6.page3.text=Burn Tool&nMakes an Armour Cube darker.&pDodge Tool&nMakes an Armour Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Armour Cube.
-book.armourersworkshop:guideBook.chapter6.page4.text=Shade Noise Tool&nApplies random shading to am Armour Cube.
-
-# Chapter 7
-book.armourersworkshop:guideBook.chapter7.title=Armour Crafter
-book.armourersworkshop:guideBook.chapter7.page1.text=The last part of creating your custom armour is the Armour Crafter. To use the Armour Crafter save an armour design onto an Armour Template using the Armourer Brain.&pNext up place the Armour Template and some normal
-book.armourersworkshop:guideBook.chapter7.page2.text=armour of the same type inside the Armour Crafter.&pExample a Head Armour Template and a Diamond Helmet would create a Custom Diamond Head Armour with the same protection statistics as diamond.
-book.armourersworkshop:guideBook.chapter7.page3.text=Now press create and you have your every own custom armour.&pNote: Skirt amour requires leg armour as the normal armour type in the Armour Crafter
+book.armourersworkshop:guideBook.chapter7.title=Equipment Wardrobe
+book.armourersworkshop:guideBook.chapter7.page1.text=WIP
+book.armourersworkshop:guideBook.chapter7.page2.text=WIP

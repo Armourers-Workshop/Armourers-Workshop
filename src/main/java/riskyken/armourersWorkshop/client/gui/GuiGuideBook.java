@@ -22,7 +22,7 @@ public class GuiGuideBook extends GuiScreen {
     private static final ResourceLocation bookPageTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBookPage.png");
     
     /** Holds the number of pages in each chapter **/
-    private final int[] chapters = {2, 2, 4, 2, 2, 4, 4};
+    private final int[] chapters = {2, 2, 2, 2, 2, 4, 2};
     private final String bookName;
     
     private static int pageNumber = 1;
@@ -49,9 +49,9 @@ public class GuiGuideBook extends GuiScreen {
         buttonList.add(backButton);
         buttonList.add(forwardButton);
         
-        for (int i = 0; i < chapters.length; i++) {
+        for (int i = 1; i < chapters.length; i++) {
             String chapterList =  getLocalizedText(".chapter" + (i + 1) + ".title");
-            buttonList.add(new GuiBookTextButton(i + 2, this.guiLeft + 17, this.guiTop + 25 + 14 * i, fontRendererObj.getStringWidth(chapterList), chapterList));
+            buttonList.add(new GuiBookTextButton(i + 2, this.guiLeft + 17, this.guiTop + 11 + 14 * i, fontRendererObj.getStringWidth(chapterList), chapterList));
         }
         lastRenderTick = System.currentTimeMillis();
     }
