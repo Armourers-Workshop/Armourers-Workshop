@@ -22,7 +22,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
 
@@ -100,7 +99,6 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         rightLegZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 100, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
         if (bipedRotations != null) {
-            ModLogger.log("init gui");
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
             setSliderValue(headYslider, Math.toDegrees(-bipedRotations.head.rotationY));
             
