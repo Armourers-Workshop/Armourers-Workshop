@@ -11,7 +11,9 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
 
@@ -41,18 +43,23 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             float scale = 1.2F;
             GL11.glScalef(scale, scale, scale);
             GL11.glRotatef(180, 0, 1, 0);
+            
+            EnumEquipmentType equipmentType = EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack);
+            if (equipmentType == EnumEquipmentType.WEAPON) {
+                GL11.glScalef(0.7F, 0.7F, 0.7F);
+            }
+            
             switch (type) {
             case EQUIPPED:
+                GL11.glTranslatef(0.6F, -0.5F, -0.5F);
                 GL11.glRotatef(180, 0, 1, 0);
-                GL11.glTranslatef(-0.5F, -0.8F, 0.5F);
                 break;
             case ENTITY:
                 GL11.glTranslatef(0F, -0.3F, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
-                GL11.glScalef(0.8F, 0.8F, 0.8F);
+                GL11.glTranslatef(0.5F, -0.7F, -0.5F);
                 GL11.glRotatef(90, 0, 1, 0);
-                GL11.glTranslatef(0.3F, -0.9F, 0.3F);
                 break;
             default:
                 break;
