@@ -70,6 +70,6 @@ public final class HolidayHelper {
                     playerData.lastXmasYear = getYear();
                 }
             }
-        } 
+        }
     }
 }
