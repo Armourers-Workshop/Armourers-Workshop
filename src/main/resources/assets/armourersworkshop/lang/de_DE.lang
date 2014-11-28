@@ -12,7 +12,7 @@ tile.armourersworkshop:armourLibrary.flavour=Lade und Speichere Ausrüstungsvorl
 tile.armourersworkshop:colourable.flavour=Hauptbaustein für selbsterstellte Ausrüstung. (färbbar)
 tile.armourersworkshop:colourableGlowing.flavour=Ausrüstungsteile die im Dunkeln leuchten!
 tile.armourersworkshop:colourMixer.flavour=Mische Farben um deine Ausrüstung zu färben.
-tile.armourersworkshop:mannequin.flavour=Stelle deine Ausrüstung auf einer gruseligen Schaufenstepuppe aus!
+tile.armourersworkshop:mannequin.flavour=Stelle deine Ausrüstung auf einer gruseligen Schaufensterpuppe aus!
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.name=Ausrüstungsvorlage
@@ -33,13 +33,13 @@ item.armourersworkshop:guideBook.name=Guide
 
 # Item flavour text
 item.armourersworkshop:paintbrush.flavour=Färbt einen einzelnen Würfel.
-item.armourersworkshop:paintRoller.flavour=Färbt einen 3*3*1-Bereich von Würfel.
+item.armourersworkshop:paintRoller.flavour=Färbt einen 3*3*1-Bereich von Würfeln.
 item.armourersworkshop:colourPicker.flavour=Wird verwendet um eine Farbe zu kopieren.
 item.armourersworkshop:burnTool.flavour=Färbt einen Würfel dunkler.
 item.armourersworkshop:dodgeTool.flavour=Färbt einen Würfel dunkler.
 item.armourersworkshop:colourNoiseTool.flavour=Fügt einem Würfel zufälliges Farbrauschen hinzu.
 item.armourersworkshop:shadeNoiseTool.flavour=Fügt einem Würfel zufällige Schattierung hinzu.
-item.armourersworkshop:guideBook.flavour=Dein Leitfaden für Armourer's Workshop.
+item.armourersworkshop:guideBook.flavour=Dein Guide für Armourer's Workshop.
 
 # Armour types
 armourTypes.armourersworkshop:head.name=Kopf
@@ -83,7 +83,7 @@ inventory.armourersworkshop:colourMixer.label.hex=Hex
 inventory.armourersworkshop:colourMixer.label.presets=Vorlagen
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Skinfarbe
-inventory.armourersworkshop:equipmentWardrobe.autoColour=Zufällige Farbe
+inventory.armourersworkshop:equipmentWardrobe.autoColour=Farbvervollständigung
 inventory.armourersworkshop:equipmentWardrobe.nakedSkin=Benutze Nacktskin?
 
 inventory.armourersworkshop:mannequin.label.headRotation=Kopfrotation
@@ -94,7 +94,7 @@ inventory.armourersworkshop:mannequin.label.rightLegRotation=Rechte Beinrotation
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=Keine weiteren Speicherpunkte
-chat.armourersworkshop:undo.undoing=Mache Rückgängig
+chat.armourersworkshop:undo.undoing=Rückgängig Machen
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
@@ -115,8 +115,8 @@ book.armourersworkshop:guideBook.chapter2.page2.text=Armourer's Workshop lässt 
 
 # Chapter 3
 book.armourersworkshop:guideBook.chapter3.title=Ausrüster
-book.armourersworkshop:guideBook.chapter3.page1.text=Der Ausrüster ist der erste Block den du brauchst um mit dem Bau deiner eigenen Ausrüstung anzufangen.&pNachdem du ihn plaziert hast, kannst du mit einem Rechtsclick sein Interface öffnen. Unten links siehst du sämtliche Ausrüstungstypen für welche du Skins kreieren kannst.
-book.armourersworkshop:guideBook.chapter3.page2.text=Suche den Ausrüstungstyp aus für den du einen Skin aus Rüstungswürfeln bauen möchtest.&pNachdem du damit fertig bist kannst du deine Ausrüstungsvorlage in den Ausrüster legen, einen Namen auswählen und speichern.
+book.armourersworkshop:guideBook.chapter3.page1.text=Der Ausrüster ist der erste Block den du brauchst um mit dem Bau deiner eigenen Ausrüstung anzufangen.&pNachdem du ihn plaziert hast, kannst du mit einem Rechtsklick sein Interface öffnen. Unten links siehst du sämtliche Ausrüstungstypen für die du Skins kreieren kannst.
+book.armourersworkshop:guideBook.chapter3.page2.text=Suche den Ausrüstungstyp aus für den du einen Skin aus Rüstungswürfeln bauen möchtest.&pNachdem du damit fertig bist, kannst du deine Ausrüstungsvorlage in den Ausrüster legen, einen Namen auswählen, und speichern.
 
 # Chapter 4
 book.armourersworkshop:guideBook.chapter4.title=Ausrüstungsvorlagen
@@ -127,7 +127,7 @@ book.armourersworkshop:guideBook.chapter6.title=Malwerkzeuge
 book.armourersworkshop:guideBook.chapter6.page1.text=Es wurden dir einige Werkzeuge zur Verfügung gestellt um dir bei der Auslebung deiner Kreativität behilflich zu sein!&pFarbmischer&nKann jede Farbe erzeugen die du dir vorstellen kannst.&pPinsel&nFärbt einen einzelnen Rüstungswürfel.
 book.armourersworkshop:guideBook.chapter6.page2.text=Farbpicker&nLässt dich eine Farbe von einem Würfel auswählen und in einen Farbmischer zu importieren.&pPaint Roller&nFärbt einen 3*3*1-Bereich von Würfeln.
 book.armourersworkshop:guideBook.chapter6.page3.text=Verdunkel-Tool&nFärbt einen Würfel dunkler.&pAufhell-Tool&nFärbt einen Würfel dunkler.&pFarbrauschen-Tool&nFügt einem Würfel zufälliges Farbrauschen hinzu.
-book.armourersworkshop:guideBook.chapter6.page4.text=Schattierungs-Tool&nFügt einem Würfel zufällige Schattierung hinzu.&pManche Werkzeuge können konfiguriert werden indem man schleichend einen Rechtsclick ausführt.
+book.armourersworkshop:guideBook.chapter6.page4.text=Schattierungs-Tool&nFügt einem Würfel zufällige Schattierung hinzu.&pManche Werkzeuge können konfiguriert werden indem man schleichend einen Rechtsklick ausführt.
 
 # Chapter 6
 book.armourersworkshop:guideBook.chapter7.title=Kleiderschrank
