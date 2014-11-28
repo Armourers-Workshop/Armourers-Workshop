@@ -22,7 +22,7 @@ public class GuiGuideBook extends GuiScreen {
     private static final ResourceLocation bookPageTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBookPage.png");
     
     /** Holds the number of pages in each chapter **/
-    private final int[] chapters = {2, 2, 2, 2, 2, 4, 2};
+    private final int[] chapters = {2, 2, 2, 2, 4, 2};
     private final String bookName;
     
     private static int pageNumber = 1;

@@ -1,5 +1,5 @@
 # Block names
-tile.armourersworkshop:armourerBrain.name=Armourer Brain
+tile.armourersworkshop:armourerBrain.name=Armourer
 tile.armourersworkshop:armourLibrary.name=Equipment Library
 tile.armourersworkshop:colourable.name=Equipment Cube
 tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
@@ -8,7 +8,7 @@ tile.armourersworkshop:mannequin.name=Mannequin
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
-tile.armourersworkshop:armourLibrary.flavour=Save and load armour templates from disk.
+tile.armourersworkshop:armourLibrary.flavour=Save and load equipment templates from disk.
 tile.armourersworkshop:colourable.flavour=Main building block for custom equipment. (paintable)
 tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark equipment cubes!
 tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipment with.
@@ -98,7 +98,7 @@ inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 chat.armourersworkshop:undo.outOfUndos=No more undos
 chat.armourersworkshop:undo.undoing=Undoing
 chat.armourersworkshop:inventoryFull=Your inventory is full
-chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a give but you had nowhere to put it!
+chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but you had nowhere to put it!
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
@@ -127,13 +127,13 @@ book.armourersworkshop:guideBook.chapter4.title=Equipment Templates
 book.armourersworkshop:guideBook.chapter4.page1.text=Equipment templates are what equipment skins are saved on simply place the equipment skin into the equipment wardrobe to apply the skin.
 
 # Chapter 5
-book.armourersworkshop:guideBook.chapter6.title=Painting Tools
-book.armourersworkshop:guideBook.chapter6.page1.text=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Equipment Cube.
-book.armourersworkshop:guideBook.chapter6.page2.text=Colour Picker&nLets you pick a colour from an Equipment Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
-book.armourersworkshop:guideBook.chapter6.page3.text=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Equipment Cube.
-book.armourersworkshop:guideBook.chapter6.page4.text=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
+book.armourersworkshop:guideBook.chapter5.title=Painting Tools
+book.armourersworkshop:guideBook.chapter5.page1.text=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Equipment Cube.
+book.armourersworkshop:guideBook.chapter5.page2.text=Colour Picker&nLets you pick a colour from an Equipment Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
+book.armourersworkshop:guideBook.chapter5.page3.text=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Equipment Cube.
+book.armourersworkshop:guideBook.chapter5.page4.text=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
 
 # Chapter 6
-book.armourersworkshop:guideBook.chapter7.title=Equipment Wardrobe
-book.armourersworkshop:guideBook.chapter7.page1.text=WIP
-book.armourersworkshop:guideBook.chapter7.page2.text=WIP
+book.armourersworkshop:guideBook.chapter6.title=Equipment Wardrobe
+book.armourersworkshop:guideBook.chapter6.page1.text=WIP
+book.armourersworkshop:guideBook.chapter6.page2.text=WIP
