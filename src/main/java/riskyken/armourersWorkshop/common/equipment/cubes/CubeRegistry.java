@@ -9,14 +9,14 @@ public final class CubeRegistry {
     
     public static CubeRegistry INSTANCE;
     
-    private ArrayList<Cube> cubeList;
+    private ArrayList<Class<? extends Cube>> cubeList;
     
     public static void init() {
         INSTANCE = new CubeRegistry();
     }
     
     public CubeRegistry() {
-        cubeList = new ArrayList<Cube>();
+        cubeList = new ArrayList<Class<? extends Cube>>();
         registerCubes();
     }
     
@@ -24,14 +24,14 @@ public final class CubeRegistry {
         return (byte) cubeList.size();
     }
     
-    private void registerCube(Cube cube) {
-        cube.setId(getNextFreeCubeId());
-        cubeList.add(cube);
-        ModLogger.log("Registering armour cube: " + cube.getId());
+    private void registerCube(Class<? extends Cube> cubeClass) {
+        //cubeClass.setId(getNextFreeCubeId());
+        cubeList.add(cubeClass);
+        ModLogger.log("Registering armour cube: " + cubeClass.getSimpleName());
     }
     
     private void registerCubes() {
-        registerCube(new CubeNormal());
-        registerCube(new CubeGlowing());
+        registerCube(CubeNormal.class);
+        registerCube(CubeGlowing.class);
     }
 }
