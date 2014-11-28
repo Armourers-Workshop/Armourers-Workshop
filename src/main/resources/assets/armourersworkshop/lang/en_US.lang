@@ -15,7 +15,8 @@ tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipmen
 tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!
 
 # Item names
-item.armourersworkshop:equipmentSkinTemplate.name=Equipment Skin Template
+item.armourersworkshop:equipmentSkinTemplate.0.name=Equipment Skin Template
+item.armourersworkshop:equipmentSkinTemplate.1000.name=Gift Sack
 item.armourersworkshop:equipmentSkin.0.name=Head Armour Skin
 item.armourersworkshop:equipmentSkin.1.name=Chest Armour Skin
 item.armourersworkshop:equipmentSkin.2.name=Leg Armour Skin
@@ -32,6 +33,7 @@ item.armourersworkshop:shadeNoiseTool.name=Shade Noise Tool
 item.armourersworkshop:guideBook.name=Guide Book
 
 # Item flavour text
+item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
 item.armourersworkshop:paintbrush.flavour=Paints a single block.
 item.armourersworkshop:paintRoller.flavour=Paints blocks in a 3*3*1 area.
 item.armourersworkshop:colourPicker.flavour=Used to copy a blocks colour.
@@ -95,6 +97,8 @@ inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=No more undos
 chat.armourersworkshop:undo.undoing=Undoing
+chat.armourersworkshop:inventoryFull=Your inventory is full
+chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a give but you had nowhere to put it!
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop

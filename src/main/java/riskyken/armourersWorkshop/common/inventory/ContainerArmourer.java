@@ -16,7 +16,7 @@ public class ContainerArmourer extends Container {
     public ContainerArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
         this.armourerBrain = armourerBrain;
 
-        addSlotToContainer(new Slot(armourerBrain, 0, 64, 21));
+        addSlotToContainer(new SlotEquipmentSkinTemplate(armourerBrain, 0, 64, 21));
         addSlotToContainer(new SlotOutput(armourerBrain, 1, 147, 21));
 
         for (int x = 0; x < 9; x++) {
@@ -44,7 +44,7 @@ public class ContainerArmourer extends Container {
                     }
                 }
             } else {
-                if (stack.getItem() instanceof ItemEquipmentSkinTemplate | stack.getItem() instanceof ItemEquipmentSkin) {
+                if ((stack.getItem() instanceof ItemEquipmentSkinTemplate & stack.getItemDamage() == 0) | stack.getItem() instanceof ItemEquipmentSkin) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) {
                         return null;
                     }

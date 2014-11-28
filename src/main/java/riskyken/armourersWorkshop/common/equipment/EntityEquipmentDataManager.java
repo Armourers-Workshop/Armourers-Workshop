@@ -13,6 +13,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.utils.HolidayHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -114,7 +115,9 @@ public final class EntityEquipmentDataManager {
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
-            ExtendedPropsPlayerEquipmentData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer((EntityPlayerMP) event.entity);
+            ExtendedPropsPlayerEquipmentData playerData = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
+            playerData.sendCustomArmourDataToPlayer((EntityPlayerMP) event.entity);
+            HolidayHelper.giftPlayer((EntityPlayerMP) event.entity);
         }
     }
     

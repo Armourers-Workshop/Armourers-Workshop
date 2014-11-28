@@ -37,6 +37,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     private static final String TAG_PANTS_COLOUR = "pantsColour";
     private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
     private static final String TAG_HEAD_OVERLAY = "headOverlay";
+    private static final String TAG_LAST_XMAS_YEAR = "lastXmasYear";
     
     public ItemStack[] customArmourInventory = new ItemStack[8];
     private EntityEquipmentData equipmentData = new EntityEquipmentData();
@@ -48,6 +49,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     private int pantsColour = Color.decode("#FCFCFC").getRGB();
     private BitSet armourOverride = new BitSet(4);
     boolean headOverlay;
+    public int lastXmasYear;
     
     public ExtendedPropsPlayerEquipmentData(EntityPlayer player) {
         this.player = player;
@@ -321,6 +323,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         compound.setBoolean(TAG_NAKED, this.isNaked);
         compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
         compound.setInteger(TAG_PANTS_COLOUR, this.pantsColour);
+        compound.setInteger(TAG_LAST_XMAS_YEAR, this.lastXmasYear);
         for (int i = 0; i < 4; i++) {
         	compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, this.armourOverride.get(i));
         }
@@ -339,6 +342,11 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         }
         for (int i = 0; i < 4; i++) {
         	this.armourOverride.set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
+        }
+        if (compound.hasKey(TAG_LAST_XMAS_YEAR)) {
+            this.lastXmasYear = compound.getInteger(TAG_LAST_XMAS_YEAR);
+        } else {
+            this.lastXmasYear = 0;
         }
         this.headOverlay = compound.getBoolean(TAG_HEAD_OVERLAY);
     }

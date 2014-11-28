@@ -14,7 +14,7 @@ public class SlotEquipmentSkinTemplate extends Slot {
     
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if (stack.getItem() instanceof ItemEquipmentSkinTemplate) {
+        if (stack.getItem() instanceof ItemEquipmentSkinTemplate && stack.getItemDamage() == 0) {
             return true;
         }
         if (stack.getItem() instanceof ItemEquipmentSkin) {
