@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.model.ModelCustomItemBuilt;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -43,7 +43,7 @@ public final class EquipmentItemRenderCache {
         }
     }
     
-    public static void receivedEquipmentData(CustomArmourItemData equipmentData) {
+    public static void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
         int equipmentId = equipmentData.hashCode();
         
         NBTTagCompound armourNBT = new NBTTagCompound();
@@ -109,7 +109,7 @@ public final class EquipmentItemRenderCache {
     }
     
     private static synchronized void buildModelForCache(NBTTagCompound armourNBT, EnumEquipmentType armourType, int key) {
-        CustomArmourItemData itemData = new CustomArmourItemData(armourNBT);
+        CustomEquipmentItemData itemData = new CustomEquipmentItemData(armourNBT);
         ModelCustomItemBuilt newModel = new ModelCustomItemBuilt(itemData, armourType, key);
         if (modelCache.containsKey(key)) {
             modelCache.remove(key);

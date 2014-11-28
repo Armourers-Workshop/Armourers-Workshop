@@ -6,7 +6,7 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 
 public class CommonProxy {
     
@@ -54,7 +54,7 @@ public class CommonProxy {
         return 0;
     }
     
-    public void receivedEquipmentData(CustomArmourItemData equipmentData, byte target) {
+    public void receivedEquipmentData(CustomEquipmentItemData equipmentData, byte target) {
         
     }
 }

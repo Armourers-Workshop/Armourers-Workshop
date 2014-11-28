@@ -13,10 +13,10 @@ import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -82,7 +82,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
 
     public ItemStack getCustomEquipmentItemStack(int equipmentId) {
-        CustomArmourItemData armourItemData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
+        CustomEquipmentItemData armourItemData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         if (armourItemData == null) { return null; }
         ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         NBTTagCompound armourNBT = new NBTTagCompound();

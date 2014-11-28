@@ -17,7 +17,7 @@ import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
@@ -67,7 +67,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
         NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
+        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setEquipment(equipmentData.getType(), equipmentId);
     }
     

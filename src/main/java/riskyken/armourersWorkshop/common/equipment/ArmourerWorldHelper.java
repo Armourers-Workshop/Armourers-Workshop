@@ -9,29 +9,29 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomArmourItemData saveArmourItem(World world, EnumEquipmentType type, String authorName, String customName, int xCoord, int yCoord, int zCoord) {
-        ArrayList<CustomArmourPartData> parts = new ArrayList<CustomArmourPartData>();
+    public static CustomEquipmentItemData saveArmourItem(World world, EnumEquipmentType type, String authorName, String customName, int xCoord, int yCoord, int zCoord) {
+        ArrayList<CustomEquipmentPartData> parts = new ArrayList<CustomEquipmentPartData>();
         
         for (int i = 0; i < type.getParts().length; i++) {
             saveArmourPart(world, parts, type.getParts()[i], xCoord, yCoord, zCoord);
         }
         
         if (parts.size() > 0) {
-            return new CustomArmourItemData(authorName, customName, type, parts);
+            return new CustomEquipmentItemData(authorName, customName, type, parts);
         } else {
             return null;
         }
     }
     
-    private static void saveArmourPart(World world, ArrayList<CustomArmourPartData> armourData, EnumEquipmentPart part, int xCoord, int yCoord, int zCoord) {
+    private static void saveArmourPart(World world, ArrayList<CustomEquipmentPartData> armourData, EnumEquipmentPart part, int xCoord, int yCoord, int zCoord) {
         ArrayList<CustomEquipmentBlockData> armourBlockData = new ArrayList<CustomEquipmentBlockData>();
         
         
@@ -58,7 +58,7 @@ public final class ArmourerWorldHelper {
         }
         
         if (armourBlockData.size() > 0) {
-            armourData.add(new CustomArmourPartData(armourBlockData, part));
+            armourData.add(new CustomEquipmentPartData(armourBlockData, part));
         }
     }
     
@@ -78,15 +78,15 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void loadArmourItem(World world, int x, int y, int z, CustomArmourItemData armourData) {
-        ArrayList<CustomArmourPartData> parts = armourData.getParts();
+    public static void loadArmourItem(World world, int x, int y, int z, CustomEquipmentItemData armourData) {
+        ArrayList<CustomEquipmentPartData> parts = armourData.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
             loadArmourPart(world, parts.get(i), x, y, z);
         }
     }
     
-    private static void loadArmourPart(World world, CustomArmourPartData partData, int xCoord, int yCoord, int zCoord) {
+    private static void loadArmourPart(World world, CustomEquipmentPartData partData, int xCoord, int yCoord, int zCoord) {
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             CustomEquipmentBlockData blockData = partData.getArmourData().get(i);
             int xOrigin = xCoord - partData.getArmourPart().xLocation  + ((partData.getArmourPart().xSize / 2) + partData.getArmourPart().xOrigin);

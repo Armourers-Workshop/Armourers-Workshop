@@ -11,27 +11,27 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelCustomArmourLegs extends ModelCustomArmour {
     
-    public void render(Entity entity, CustomArmourItemData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
+    public void render(Entity entity, CustomEquipmentItemData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, scale, entity);
         render(entity, armourData);
     }
     
-    public void render(Entity entity, ModelBiped modelBiped, CustomArmourItemData armourData) {
+    public void render(Entity entity, ModelBiped modelBiped, CustomEquipmentItemData armourData) {
         setRotationFromModelBiped(modelBiped);
         render(entity, armourData);
     }
     
-    private void render(Entity entity, CustomArmourItemData armourData) {
+    private void render(Entity entity, CustomEquipmentItemData armourData) {
         if (armourData == null) { return; }
-        ArrayList<CustomArmourPartData> parts = armourData.getParts();
+        ArrayList<CustomEquipmentPartData> parts = armourData.getParts();
         
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -49,7 +49,7 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
         armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
-            CustomArmourPartData part = parts.get(i);
+            CustomEquipmentPartData part = parts.get(i);
             if (!part.facesBuild) {
                 EquipmentRenderHelper.cullFacesOnEquipmentPart(part);
             }
@@ -69,7 +69,7 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftLeg(CustomArmourPartData part, float scale) {
+    private void renderLeftLeg(CustomEquipmentPartData part, float scale) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -83,7 +83,7 @@ public class ModelCustomArmourLegs extends ModelCustomArmour {
         GL11.glPopMatrix();
     }
     
-    private void renderRightLeg(CustomArmourPartData part, float scale) {
+    private void renderRightLeg(CustomEquipmentPartData part, float scale) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);

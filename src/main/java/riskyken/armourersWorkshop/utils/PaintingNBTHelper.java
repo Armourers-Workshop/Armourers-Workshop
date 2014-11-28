@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.items;
+package riskyken.armourersWorkshop.utils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class CustomArmourPartData {
+public class CustomEquipmentPartData {
     
     private static final String TAG_BLOCK_DATA = "blockData";
     private static final String TAG_PART = "part";
@@ -49,21 +49,21 @@ public class CustomArmourPartData {
         }
     }
     
-    public CustomArmourPartData(ArrayList armourData,
+    public CustomEquipmentPartData(ArrayList armourData,
             EnumEquipmentPart part) {
         this.armourData = armourData;
         this.part = part;
     }
 
-    public CustomArmourPartData(ByteBuf buf) {
+    public CustomEquipmentPartData(ByteBuf buf) {
         readFromBuf(buf);
     }
     
-    public CustomArmourPartData(NBTTagCompound compound) {
+    public CustomEquipmentPartData(NBTTagCompound compound) {
         readFromNBT(compound);
     }
 
-    public CustomArmourPartData(DataInputStream stream, int version) throws IOException {
+    public CustomEquipmentPartData(DataInputStream stream, int version) throws IOException {
         readFromStream(stream, version);
     }
 
@@ -170,7 +170,7 @@ public class CustomArmourPartData {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CustomArmourPartData other = (CustomArmourPartData) obj;
+        CustomEquipmentPartData other = (CustomEquipmentPartData) obj;
         if (armourData == null) {
             if (other.armourData != null)
                 return false;

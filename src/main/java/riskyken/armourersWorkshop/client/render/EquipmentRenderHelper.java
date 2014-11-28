@@ -5,12 +5,12 @@ import java.util.BitSet;
 
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 
 public final class EquipmentRenderHelper {
 
-    public static void cullFacesOnEquipmentPart(CustomArmourPartData partData) {
+    public static void cullFacesOnEquipmentPart(CustomEquipmentPartData partData) {
         ArrayList<CustomEquipmentBlockData> blocks = partData.getArmourData();
         for (int i = 0; i < blocks.size(); i++) {
             CustomEquipmentBlockData blockData = blocks.get(i);

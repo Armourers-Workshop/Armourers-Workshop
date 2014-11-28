@@ -25,7 +25,7 @@ import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -113,7 +113,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void receivedEquipmentData(CustomArmourItemData equipmentData, byte target) {
+    public void receivedEquipmentData(CustomEquipmentItemData equipmentData, byte target) {
         switch (target) {
         case 0:
             EquipmentItemRenderCache.receivedEquipmentData(equipmentData);

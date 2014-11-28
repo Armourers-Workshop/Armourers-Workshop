@@ -21,7 +21,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class CustomArmourItemData {
+public class CustomEquipmentItemData {
     
     private static final String TAG_TYPE = "type";
     private static final String TAG_PARTS = "parts";
@@ -31,7 +31,7 @@ public class CustomArmourItemData {
     private String authorName;
     private String customName;
     private EnumEquipmentType type;
-    private ArrayList<CustomArmourPartData> parts;
+    private ArrayList<CustomEquipmentPartData> parts;
     
     private int timeFromRender = 0;
     
@@ -50,7 +50,7 @@ public class CustomArmourItemData {
         return false;
     }
     
-    public CustomArmourItemData(String authorName, String customName, EnumEquipmentType type, ArrayList<CustomArmourPartData> parts) {
+    public CustomEquipmentItemData(String authorName, String customName, EnumEquipmentType type, ArrayList<CustomEquipmentPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
         this.type = type;
@@ -64,15 +64,15 @@ public class CustomArmourItemData {
         }
     }
     
-    public CustomArmourItemData(ByteBuf buf) {
+    public CustomEquipmentItemData(ByteBuf buf) {
         readFromBuf(buf);
     }
     
-    public CustomArmourItemData(NBTTagCompound compound) {
+    public CustomEquipmentItemData(NBTTagCompound compound) {
         readFromNBT(compound);
     }
     
-    public CustomArmourItemData(DataInputStream stream) throws IOException {
+    public CustomEquipmentItemData(DataInputStream stream) throws IOException {
         readFromStream(stream);
     }
     
@@ -91,9 +91,9 @@ public class CustomArmourItemData {
         this.customName = ByteBufUtils.readUTF8String(buf);
         type = EnumEquipmentType.getOrdinal(buf.readByte());
         int size = buf.readByte();
-        parts = new ArrayList<CustomArmourPartData>();
+        parts = new ArrayList<CustomEquipmentPartData>();
         for (int i = 0; i < size; i++) {
-            parts.add(new CustomArmourPartData(buf));
+            parts.add(new CustomEquipmentPartData(buf));
         }
     }
     
@@ -103,7 +103,7 @@ public class CustomArmourItemData {
         compound.setByte(TAG_TYPE, (byte) type.ordinal());
         NBTTagList blockData = new NBTTagList();
         for (int i = 0; i < parts.size(); i++) {
-            CustomArmourPartData data = parts.get(i);
+            CustomEquipmentPartData data = parts.get(i);
             NBTTagCompound dataNBT = new NBTTagCompound();
             data.writeToNBT(dataNBT);
             blockData.appendTag(dataNBT);
@@ -126,10 +126,10 @@ public class CustomArmourItemData {
         this.customName = compound.getString(LibCommonTags.TAG_CUSTOM_NAME);
         type = EnumEquipmentType.getOrdinal(compound.getByte(TAG_TYPE));
         NBTTagList blockData = compound.getTagList(TAG_PARTS, NBT.TAG_COMPOUND);
-        parts = new ArrayList<CustomArmourPartData>();
+        parts = new ArrayList<CustomEquipmentPartData>();
         for (int i = 0; i < blockData.tagCount(); i++) {
             NBTTagCompound data = (NBTTagCompound)blockData.getCompoundTagAt(i);
-            parts.add(new CustomArmourPartData(data));
+            parts.add(new CustomEquipmentPartData(data));
         }
     }
     
@@ -153,9 +153,9 @@ public class CustomArmourItemData {
         this.customName = stream.readUTF();
         type = EnumEquipmentType.getOrdinal(stream.readByte());
         int size = stream.readByte();
-        parts = new ArrayList<CustomArmourPartData>();
+        parts = new ArrayList<CustomEquipmentPartData>();
         for (int i = 0; i < size; i++) {
-            parts.add(new CustomArmourPartData(stream, fileVersion));
+            parts.add(new CustomEquipmentPartData(stream, fileVersion));
         }
     }
     
@@ -163,7 +163,7 @@ public class CustomArmourItemData {
         return type;
     }
     
-    public ArrayList<CustomArmourPartData> getParts() {
+    public ArrayList<CustomEquipmentPartData> getParts() {
         return parts;
     }
     
@@ -188,7 +188,7 @@ public class CustomArmourItemData {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CustomArmourItemData other = (CustomArmourItemData) obj;
+        CustomEquipmentItemData other = (CustomEquipmentItemData) obj;
         if (authorName == null) {
             if (other.authorName != null)
                 return false;

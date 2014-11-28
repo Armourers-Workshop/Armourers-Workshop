@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -84,7 +84,7 @@ public class ModelCustomArmour extends ModelBiped{
         }
     }
      
-    public void renderPart(CustomArmourPartData armourPart, float scale) {
+    public void renderPart(CustomEquipmentPartData armourPart, float scale) {
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE );
         GL11.glColor3f(1F, 1F, 1F);
         if (!armourPart.displayNormalCompiled) {

@@ -16,15 +16,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
-import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.google.common.collect.Iterables;
@@ -61,33 +60,33 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
      * @param name Custom name for the item.
      */
     public void saveArmourItem(EntityPlayerMP player, String name) {
-        if (this.worldObj.isRemote) { return; }
-        
-        CustomArmourItemData armourItemData;
+        if (this.worldObj.isRemote) {
+            return;
+        }
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (stackInput == null) { return; }
-        if (stackOutput != null) { return; }
-        if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) { return; }
-        
-        String authorName = player.getDisplayName();
-        String customName = name;
-        
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord, yCoord + HEIGHT_OFFSET, zCoord);
-        
-        if (armourItemData == null) { return; }
-        
-        stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
-        
-        NBTTagCompound armourNBT = new NBTTagCompound();
-        armourItemData.writeClientDataToNBT(armourNBT);
-        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
-        if (!stackOutput.hasTagCompound()) {
-            stackOutput.setTagCompound(new NBTTagCompound());
+        if (stackInput == null) {
+            return;
+        }
+        if (stackOutput != null) {
+            return;
+        }
+        if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) {
+            return;
         }
         
-        stackOutput.getTagCompound().setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);;
+        String authorName = player.getCommandSenderName();
+        String customName = name;
+        
+        CustomEquipmentItemData armourItemData;
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord, yCoord + HEIGHT_OFFSET, zCoord);
+        
+        if (armourItemData == null) {
+            return;
+        }
+        
+        stackOutput = EquipmentNBTHelper.makeStackForEquipment(armourItemData);
         
         this.decrStackSize(0, 1);
         setInventorySlotContents(1, stackOutput);
@@ -98,24 +97,32 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
      * @param player The player that pressed the load button.
      */
     public void loadArmourItem(EntityPlayerMP player) {
-        if (this.worldObj.isRemote) { return; }
+        if (this.worldObj.isRemote) {
+            return;
+        }
         ItemStack stackInput = this.getStackInSlot(0);
         ItemStack stackOuput = this.getStackInSlot(1);
         
-        if (stackInput == null) { return; }
-        if (stackOuput != null) { return; }
-        if (!(stackInput.getItem() instanceof ItemEquipmentSkin)) { return; }
+        if (stackInput == null) {
+            return;
+        }
+        if (stackOuput != null) {
+            return;
+        }
+        if (!(stackInput.getItem() instanceof ItemEquipmentSkin)) {
+            return;
+        }
         
-        if (!stackInput.hasTagCompound()) { return; };
-        NBTTagCompound itemNBT = stackInput.getTagCompound();
-        
-        if (stackInput.getItemDamage() != type.ordinal() - 1) { return; }
-        
-        if (!itemNBT.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return; }
-        NBTTagCompound dataNBT = itemNBT.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = dataNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        
-        CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
+        if (!EquipmentNBTHelper.itemStackHasCustomEquipment(stackInput)) {
+            return;
+        }
+
+        if (stackInput.getItemDamage() != type.ordinal() - 1) {
+            return;
+        }
+
+        int equipmentId = EquipmentNBTHelper.getEquipmentIdFromStack(stackInput);
+        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
         ArmourerWorldHelper.loadArmourItem(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData);

@@ -1,9 +1,10 @@
-package riskyken.armourersWorkshop.common.equipment;
+package riskyken.armourersWorkshop.utils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
 
 public class EquipmentNBTHelper {
@@ -41,14 +42,17 @@ public class EquipmentNBTHelper {
         return armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
     }
     
-    public static ItemStack makeStackForEquipmentId(int id, EnumEquipmentType equipmentType) {
-        ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1, equipmentType.ordinal() - 1);
-        NBTTagCompound itemNbt = new NBTTagCompound();
-        NBTTagCompound armourNBT = new NBTTagCompound();
-        armourNBT.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, id);
-        itemNbt.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
+    public static ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData) {
+        ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
         
-        stack.setTagCompound(itemNbt);
+        NBTTagCompound itemNBT = new NBTTagCompound();
+        NBTTagCompound armourNBT = new NBTTagCompound();
+        
+        armourItemData.writeClientDataToNBT(armourNBT);
+        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
+        
+        stack.setTagCompound(itemNBT);
         
         return stack;
     }

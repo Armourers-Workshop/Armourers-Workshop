@@ -12,8 +12,8 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,20 +21,20 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelCustomArmourHead extends ModelCustomArmour {
     
-    public void render(Entity entity, CustomArmourItemData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
+    public void render(Entity entity, CustomEquipmentItemData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, scale, entity);
         render(entity, armourData);
     }
     
-    public void render(Entity entity, ModelBiped modelBiped, CustomArmourItemData armourData) {
+    public void render(Entity entity, ModelBiped modelBiped, CustomEquipmentItemData armourData) {
         setRotationFromModelBiped(modelBiped);
         render(entity, armourData);
     }
     
-    private void render(Entity entity, CustomArmourItemData armourData) {
+    private void render(Entity entity, CustomEquipmentItemData armourData) {
         if (armourData == null) { return; }
         
-        ArrayList<CustomArmourPartData> parts = armourData.getParts();
+        ArrayList<CustomEquipmentPartData> parts = armourData.getParts();
         ArrayList<CustomEquipmentBlockData> armourBlockData = armourData.getParts().get(0).getArmourData();
         
         if (entity != null && entity instanceof EntityPlayer) {
@@ -71,7 +71,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderHead(CustomArmourPartData part, float scale) {
+    private void renderHead(CustomEquipmentPartData part, float scale) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         renderPart(part, scale);

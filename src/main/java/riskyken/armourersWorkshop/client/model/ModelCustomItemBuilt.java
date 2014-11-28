@@ -16,8 +16,8 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourPartData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
@@ -43,7 +43,7 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
     
-    public ModelCustomItemBuilt(CustomArmourItemData itemData, EnumEquipmentType armourType, int renderId) {
+    public ModelCustomItemBuilt(CustomEquipmentItemData itemData, EnumEquipmentType armourType, int renderId) {
         this.renderId = renderId;
         textureWidth = 4;
         textureHeight = 4;
@@ -52,14 +52,14 @@ public class ModelCustomItemBuilt extends ModelBiped implements Runnable {
         main.addBox(0F, 0F, 0F, 1, 1, 1);
         main.setRotationPoint(0, 0, 0);
         
-        ArrayList<CustomArmourPartData> parts = itemData.getParts();
+        ArrayList<CustomEquipmentPartData> parts = itemData.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
             loadPart(parts.get(i));
         }
     }
     
-    private void loadPart(CustomArmourPartData part) {
+    private void loadPart(CustomEquipmentPartData part) {
         ArrayList<CustomEquipmentBlockData> partBlocks = part.getArmourData();
         for (int i = 0; i < partBlocks.size(); i++) {
             CustomEquipmentBlockData blockData = partBlocks.get(i);

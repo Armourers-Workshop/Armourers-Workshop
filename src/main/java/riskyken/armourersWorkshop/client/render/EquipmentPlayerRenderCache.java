@@ -26,7 +26,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -48,7 +48,7 @@ public final class EquipmentPlayerRenderCache {
     public static final EquipmentPlayerRenderCache INSTANCE = new EquipmentPlayerRenderCache();
     
     private HashMap<UUID, EntityEquipmentData> playerEquipmentMap = new HashMap<UUID, EntityEquipmentData>();
-    private HashMap<Integer, CustomArmourItemData> equipmentDataMap = new HashMap<Integer, CustomArmourItemData>();
+    private HashMap<Integer, CustomEquipmentItemData> equipmentDataMap = new HashMap<Integer, CustomEquipmentItemData>();
     private HashSet<Integer> requestedEquipmentIds = new HashSet<Integer>();
     private HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
     
@@ -69,7 +69,7 @@ public final class EquipmentPlayerRenderCache {
         }
     }
     
-    public void receivedEquipmentData(CustomArmourItemData equipmentData) {
+    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
         int equipmentId = equipmentData.hashCode();
         
         if (equipmentDataMap.containsKey(equipmentId)){
@@ -84,7 +84,7 @@ public final class EquipmentPlayerRenderCache {
         }
     }
     
-    public CustomArmourItemData getPlayerCustomArmour(Entity entity, EnumEquipmentType type) {
+    public CustomEquipmentItemData getPlayerCustomArmour(Entity entity, EnumEquipmentType type) {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
@@ -107,7 +107,7 @@ public final class EquipmentPlayerRenderCache {
         return equipmentData;
     }
     
-    public CustomArmourItemData getCustomArmourItemData(int equipmentId) {
+    public CustomEquipmentItemData getCustomArmourItemData(int equipmentId) {
         if (equipmentDataMap.containsKey(equipmentId)) {
             return equipmentDataMap.get(equipmentId);
         } else {
@@ -218,33 +218,33 @@ public final class EquipmentPlayerRenderCache {
         GL11.glScalef(scale, scale, scale);
         
         if (slot == EnumEquipmentType.HEAD.getVanillaSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
+            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
             if (data != null) {
                 customHead.render(player, render.modelBipedMain, data);
             }
             
         }
         if (slot == EnumEquipmentType.CHEST.getVanillaSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.CHEST);
+            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.CHEST);
             if (data != null) {
                 customChest.render(player, render.modelBipedMain, data);
             }
         }
         if (slot == EnumEquipmentType.LEGS.getVanillaSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
+            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
             if (data != null) {
                 customLegs.render(player, render.modelBipedMain, data);
                 event.result = result;
             }
         }
         if (slot == EnumEquipmentType.SKIRT.getVanillaSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.SKIRT);
+            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.SKIRT);
             if (data != null) {
                 customSkirt.render(player, render.modelBipedMain, data);
             }
         }
         if (slot == EnumEquipmentType.FEET.getVanillaSlotId()) {
-            CustomArmourItemData data = getPlayerCustomArmour(player, EnumEquipmentType.FEET);
+            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.FEET);
             if (data != null) {
                 customFeet.render(player, render.modelBipedMain, data);
             }
@@ -261,7 +261,7 @@ public final class EquipmentPlayerRenderCache {
             EnumEquipmentType armourType = EnumEquipmentType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
                 if (armourType != EnumEquipmentType.WEAPON) {
-                    CustomArmourItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
+                    CustomEquipmentItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
                     renderEquipmentPart(null, modelBiped, data);
                 } else {
                     GL11.glPushMatrix();
@@ -292,7 +292,7 @@ public final class EquipmentPlayerRenderCache {
             return;
         }
         int equipmentId = EquipmentDataHandler.INSTANCE.getEquipmentIdFromItemStack(stack);
-        CustomArmourItemData data = getCustomArmourItemData(equipmentId);
+        CustomEquipmentItemData data = getCustomArmourItemData(equipmentId);
         renderEquipmentPart(null, modelBiped, data);
     }
     
@@ -301,11 +301,11 @@ public final class EquipmentPlayerRenderCache {
             return;
         }
         int equipmentId = EquipmentDataHandler.INSTANCE.getEquipmentIdFromItemStack(stack);
-        CustomArmourItemData data = getCustomArmourItemData(equipmentId);
+        CustomEquipmentItemData data = getCustomArmourItemData(equipmentId);
         renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
-    private void renderEquipmentPart(Entity entity, ModelBiped modelBiped, CustomArmourItemData data) {
+    private void renderEquipmentPart(Entity entity, ModelBiped modelBiped, CustomEquipmentItemData data) {
         if (data == null) {
             return;
         }
@@ -333,7 +333,7 @@ public final class EquipmentPlayerRenderCache {
         }
     }
     
-    private void renderEquipmentPartRotated(Entity entity, CustomArmourItemData data, float limb1, float limb2, float limb3, float headY, float headX) {
+    private void renderEquipmentPartRotated(Entity entity, CustomEquipmentItemData data, float limb1, float limb2, float limb3, float headY, float headX) {
         if (data == null) {
             return;
         }
@@ -369,7 +369,7 @@ public final class EquipmentPlayerRenderCache {
         
         for (int i = 0; i < equipmentDataMap.size(); i++) {
             int key = (Integer) equipmentDataMap.keySet().toArray()[i];
-            CustomArmourItemData customArmourItemData = equipmentDataMap.get(key);
+            CustomEquipmentItemData customArmourItemData = equipmentDataMap.get(key);
             if (customArmourItemData.needsCleanup()) {
                 equipmentDataMap.remove(key);
                 customArmourItemData.cleanUpDisplayLists();

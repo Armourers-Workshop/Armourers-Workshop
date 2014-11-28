@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.common.equipment.data.CustomArmourItemData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
@@ -353,7 +353,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     
     private void loadFromItemNBT(NBTTagCompound compound) {
         int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        CustomArmourItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
+        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         
         addCustomEquipment(equipmentData.getType(), equipmentId);
     }
