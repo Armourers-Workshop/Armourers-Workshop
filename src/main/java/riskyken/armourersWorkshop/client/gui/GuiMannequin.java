@@ -83,11 +83,11 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         guiLoaded = false;
         
         leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 35, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
-        leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 45, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 45, 100, 10, "Y: ", "", -45D, 90D, 0D, true, true, this);
         leftArmZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 55, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
         rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 35, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
-        rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 45, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 45, 100, 10, "Y: ", "", -45D, 90D, 0D, true, true, this);
         rightArmZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 55, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
         leftLegXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 80, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
@@ -100,7 +100,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         
         headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 125, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
         headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 135, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
-        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 145, 100, 10, "Y: ", "", -10D, 10D, 0D, true, true, this);
+        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 145, 100, 10, "Y: ", "", -20D, 20D, 0D, true, true, this);
         
         if (bipedRotations != null) {
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
