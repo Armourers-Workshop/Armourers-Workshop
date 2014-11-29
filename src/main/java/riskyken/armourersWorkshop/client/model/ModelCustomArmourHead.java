@@ -12,9 +12,9 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -58,6 +58,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
+        GL11.glRotated(RadiansToDegrees(bipedHead.rotateAngleZ), 0, 0, 1);
         GL11.glRotated(RadiansToDegrees(bipedHead.rotateAngleY), 0, 1, 0);
         GL11.glRotated(RadiansToDegrees(bipedHead.rotateAngleX), 1, 0, 0);
         
