@@ -13,7 +13,6 @@ import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
@@ -135,7 +134,6 @@ public final class ArmourerWorldHelper {
         int targetZ = z + shiftZ + zOrigin;
         
         //ModLogger.log(targetX);
-        ModLogger.log(yOrigin);
         //ModLogger.log(targetZ);
         
         if (world.isAirBlock(targetX, targetY, targetZ)) {
