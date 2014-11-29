@@ -114,6 +114,9 @@ public class PlayerSkinInfo {
     }
     
     private void makeBackupSkin(AbstractClientPlayer player) {
+        if (!player.func_152123_o()) {
+            return;
+        }
         BufferedImage bufferedImage = SkinHelper.getBufferedImageSkin(player);
         if (bufferedImage != null) {
             playerBackupSkin = bufferedImage;
@@ -160,6 +163,7 @@ public class PlayerSkinInfo {
     private void makeNakedSkin(AbstractClientPlayer player) {
         if (!haveSkinBackup) {
             makeBackupSkin(player);
+            return;
         }
         
         if (playerBackupSkin == null) {
