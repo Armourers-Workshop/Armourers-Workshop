@@ -59,7 +59,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
         }
         
-        if (skinInfo != null && skinInfo.isNaked()) {
+        if (skinInfo != null && skinInfo.getNakedInfo().isNaked) {
             if (!skinInfo.bindNomalSkin()) {
                 Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
             }

@@ -1,11 +1,11 @@
 package riskyken.armourersWorkshop.proxies;
 
-import java.util.BitSet;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 
 public class CommonProxy {
@@ -42,7 +42,7 @@ public class CommonProxy {
         return 0;
     }
 
-    public void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
+    public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
         
     }
     

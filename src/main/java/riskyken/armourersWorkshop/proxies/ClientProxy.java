@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.proxies;
 
-import java.util.BitSet;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
@@ -25,6 +24,7 @@ import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -95,8 +95,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void setPlayersNakedData(UUID playerId, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        EquipmentPlayerRenderCache.INSTANCE.setPlayersSkinData(playerId, isNaked, skinColour, pantsColour, armourOverride, headOverlay);
+    public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
+        EquipmentPlayerRenderCache.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
     }
 
     @Override

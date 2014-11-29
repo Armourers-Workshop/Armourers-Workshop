@@ -19,13 +19,13 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,11 +37,13 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     
     Color skinColour;
     Color pantsColour;
+    Color pantStripeColour;
     BitSet armourOverride;
     boolean headOverlay;
     
     ExtendedPropsPlayerEquipmentData customEquipmentData;
     PlayerSkinInfo skinInfo;
+    EntityNakedInfo nakedInfo;
     EntityPlayer player;
     
     private GuiCheckBox nakedCheck;
@@ -57,18 +59,21 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         super(new ContainerEquipmentWardrobe(inventory, customEquipmentData));
         this.customEquipmentData = customEquipmentData;
         this.player = inventory.player;
+        
         skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getUniqueID());
         
         if (skinInfo == null) {
-            skinInfo = new PlayerSkinInfo(false, UtilColour.getMinecraftColor(0), UtilColour.getMinecraftColor(0), new BitSet(4), true);
+            skinInfo = new PlayerSkinInfo(new EntityNakedInfo());
             ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
         }
         
         if (skinInfo != null) {
-            this.skinColour = new Color(skinInfo.getSkinColour());
-            this.pantsColour = new Color(skinInfo.getPantsColour());
-            this.armourOverride = skinInfo.getArmourOverride();
-            this.headOverlay = skinInfo.getHeadOverlay();
+            nakedInfo = skinInfo.getNakedInfo();
+            this.skinColour = new Color(nakedInfo.skinColour);
+            this.pantsColour = new Color(nakedInfo.pantsColour);
+            this.pantStripeColour = new Color(nakedInfo.pantStripeColour);
+            this.armourOverride = nakedInfo.armourOverride;
+            this.headOverlay = nakedInfo.headOverlay;
         }
         
         this.xSize = 176;
@@ -82,7 +87,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         String guiName = "equipmentWardrobe";
         
         autoButton = new GuiButtonExt(0, this.guiLeft + 80, this.guiTop + 128, 80, 20, GuiHelper.getLocalizedControlName(guiName, "autoColour"));
-        nakedCheck = new GuiCheckBox(1, this.guiLeft + 8, this.guiTop + 94, 14, 14, GuiHelper.getLocalizedControlName(guiName, "nakedSkin"), skinInfo.isNaked(), false);
+        nakedCheck = new GuiCheckBox(1, this.guiLeft + 8, this.guiTop + 94, 14, 14, GuiHelper.getLocalizedControlName(guiName, "nakedSkin"), nakedInfo.isNaked, false);
         
         armourOverrideCheck = new GuiCheckBox[4];
         armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 29, this.guiTop + 17, 7, 7, "Disable head armour render", armourOverride.get(0), true);
@@ -112,14 +117,11 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     		}
     	}
     	
-    	
-    	
         if (button.id >= 1) {
-            //((GuiCheckBox)button).setChecked(!((GuiCheckBox)button).isChecked());
-            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(
-            		nakedCheck.isChecked(),
-                            skinColour.getRGB(), pantsColour.getRGB(), armourOverride, headOverlay)
-            );
+            nakedInfo.headOverlay = headOverlay;
+            nakedInfo.armourOverride = armourOverride;
+            nakedInfo.isNaked = nakedCheck.isChecked();
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(nakedInfo));
         }
         if (button.id == 0) {
             skinInfo.autoColourSkin((AbstractClientPlayer) this.player);
@@ -161,8 +163,9 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         this.mc.getTextureManager().bindTexture(texture);
 
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.skinColour = new Color(skinInfo.getSkinColour());
-        this.pantsColour = new Color(skinInfo.getPantsColour());
+        this.skinColour = new Color(nakedInfo.skinColour);
+        this.pantsColour = new Color(nakedInfo.pantsColour);
+        this.pantStripeColour = new Color(nakedInfo.pantStripeColour);
         
         float red = (float) skinColour.getRed() / 255;
         float green = (float) skinColour.getGreen() / 255;

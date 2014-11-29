@@ -26,6 +26,7 @@ import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -129,11 +130,11 @@ public final class EquipmentPlayerRenderCache {
         }
     }
     
-    public void setPlayersSkinData(UUID playerId, boolean isNaked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
+    public void setPlayersSkinData(UUID playerId, EntityNakedInfo nakedInfo) {
         if (!skinMap.containsKey(playerId)) {
-            skinMap.put(playerId, new PlayerSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay));
+            skinMap.put(playerId, new PlayerSkinInfo(nakedInfo));
         } else {
-            skinMap.get(playerId).setSkinInfo(isNaked, skinColour, pantsColour, armourOverride, headOverlay);
+            skinMap.get(playerId).setSkinInfo(nakedInfo);
         }
     }
     
@@ -202,7 +203,7 @@ public final class EquipmentPlayerRenderCache {
         
         if (skinMap.containsKey(player.getPersistentID())) {
             skinInfo = skinMap.get(player.getPersistentID());
-            BitSet armourOverride = skinInfo.getArmourOverride();
+            BitSet armourOverride = skinInfo.getNakedInfo().armourOverride;
             if (armourOverride.get(slot)) {
                 result = -2;
             }

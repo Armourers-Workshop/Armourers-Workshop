@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.client.render;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.BitSet;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -13,6 +12,7 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -23,11 +23,7 @@ public class PlayerSkinInfo {
     private BufferedImage playerBackupSkin = null;
     private BufferedImage playerNakedSkin = null;
     
-    private boolean isNaked;
-    private int skinColour;
-    private int pantsColour;
-    private BitSet armourOverride;
-    private boolean headOverlay;
+    private EntityNakedInfo nakedInfo;
     
     /** Has a skin backup been made? **/
     private boolean haveSkinBackup;
@@ -40,35 +36,29 @@ public class PlayerSkinInfo {
     /** Is the naked skin uploaded? **/
     private boolean isNakedSkinUploaded;
     
-    public PlayerSkinInfo(boolean naked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        this.isNaked = naked;
-        this.skinColour = skinColour;
-        this.pantsColour = pantsColour;
-        this.armourOverride = armourOverride;
-        this.headOverlay = headOverlay;
+    public PlayerSkinInfo(EntityNakedInfo nakedInfo) {
+        this.nakedInfo = nakedInfo;
     }
     
-    public void setSkinInfo(boolean naked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        if (this.skinColour != skinColour | this.pantsColour != pantsColour) {
+    public void setSkinInfo(EntityNakedInfo nakedInfo) {
+        if (this.nakedInfo.skinColour != nakedInfo.skinColour |
+                this.nakedInfo.pantsColour != nakedInfo.pantsColour | 
+                this.nakedInfo.pantStripeColour != nakedInfo.pantStripeColour) {
             this.hasNakedSkin = false;
             this.isNakedSkinUploaded = false;
         }
         
-        this.skinColour = skinColour;
-        this.pantsColour = pantsColour;
-        this.armourOverride = armourOverride;
-        this.headOverlay = headOverlay;
-        
-        if (isNaked != naked) {
-            this.isNaked = naked;
-        }
+        this.nakedInfo = nakedInfo;
+    }
+    
+    public EntityNakedInfo getNakedInfo() {
+        return nakedInfo;
     }
 
     public void autoColourSkin(AbstractClientPlayer player) {
-        if (!haveSkinBackup) {
-            makeBackupSkin(player);
+        if (playerBackupSkin == null) {
+            return;
         }
-        if (playerBackupSkin == null) { return; }
         
         int r = 0, g = 0, b = 0;
         
@@ -86,12 +76,20 @@ public class PlayerSkinInfo {
         
         int newColour = new Color(r, g, b).getRGB();
         
-        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(this.isNaked, newColour, this.pantsColour, this.armourOverride, this.headOverlay));
+        EntityNakedInfo newNakedInfo = new EntityNakedInfo();
+        newNakedInfo.isNaked = this.nakedInfo.isNaked;
+        newNakedInfo.skinColour = newColour;
+        newNakedInfo.pantsColour = this.nakedInfo.pantsColour;
+        newNakedInfo.pantStripeColour = this.nakedInfo.pantStripeColour;
+        newNakedInfo.armourOverride = this.nakedInfo.armourOverride;
+        newNakedInfo.headOverlay = this.nakedInfo.headOverlay;
+        
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(newNakedInfo));
     }
     
     public void preRender(AbstractClientPlayer player, RenderPlayer renderer) {
     	checkSkin(player);
-    	renderer.modelBipedMain.bipedHeadwear.isHidden = this.headOverlay;
+    	renderer.modelBipedMain.bipedHeadwear.isHidden = this.nakedInfo.headOverlay;
     }
     
     public void postRender(AbstractClientPlayer player, RenderPlayer renderer) {
@@ -99,7 +97,7 @@ public class PlayerSkinInfo {
     }
     
     public void checkSkin(AbstractClientPlayer player) {
-        if (isNaked) {
+        if (nakedInfo.isNaked) {
             if (!isNakedSkinUploaded) {
                 if (hasNakedSkin) {
                     uploadNakedSkin(player);
@@ -172,42 +170,22 @@ public class PlayerSkinInfo {
         
         for (int ix = 0; ix < 56; ix++) {
             for (int iy = 0; iy < 16; iy++) {
-                playerNakedSkin.setRGB(ix, iy + 16, skinColour);
+                playerNakedSkin.setRGB(ix, iy + 16, nakedInfo.skinColour);
             }
         }
         
         //Pants!
         for (int ix = 0; ix < 16; ix++) {
-            playerNakedSkin.setRGB(ix, 20, pantsColour);
+            playerNakedSkin.setRGB(ix, 20, nakedInfo.pantsColour);
         }
         for (int ix = 0; ix < 8; ix++) {
-            playerNakedSkin.setRGB(ix + 6, 20 + 1, pantsColour);
+            playerNakedSkin.setRGB(ix + 6, 20 + 1, nakedInfo.pantStripeColour);
         }
         for (int ix = 0; ix < 6; ix++) {
-            playerNakedSkin.setRGB(ix + 7, 20 + 2, pantsColour);
+            playerNakedSkin.setRGB(ix + 7, 20 + 2, nakedInfo.pantsColour);
         }
         
         uploadNakedSkin(player);
         hasNakedSkin = true;
     }
-    
-    public boolean isNaked() {
-        return isNaked;
-    }
-    
-    public int getSkinColour() {
-        return skinColour;
-    }
-    
-    public int getPantsColour() {
-        return pantsColour;
-    }
-    
-    public BitSet getArmourOverride() {
-		return armourOverride;
-	}
-    
-    public boolean getHeadOverlay() {
-		return headOverlay;
-	}
 }

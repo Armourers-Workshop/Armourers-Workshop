@@ -219,7 +219,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
             skin = SkinHelper.getSkinResourceLocation(tileEntity.getGameProfile());
         }
         
-        if (skinInfo != null && skinInfo.isNaked()) {
+        if (skinInfo != null && skinInfo.getNakedInfo().isNaked) {
             if (!skinInfo.bindNomalSkin()) {
                 Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
             }

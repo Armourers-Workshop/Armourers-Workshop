@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.common.equipment;
 
-import java.awt.Color;
 import java.util.BitSet;
 
 import net.minecraft.entity.Entity;
@@ -32,23 +31,13 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_ITEMS = "items";
     private static final String TAG_SLOT = "slot";
-    private static final String TAG_NAKED = "naked";
-    private static final String TAG_SKIN_COLOUR = "skinColour";
-    private static final String TAG_PANTS_COLOUR = "pantsColour";
-    private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
-    private static final String TAG_HEAD_OVERLAY = "headOverlay";
     private static final String TAG_LAST_XMAS_YEAR = "lastXmasYear";
     
     public ItemStack[] customArmourInventory = new ItemStack[8];
     private EntityEquipmentData equipmentData = new EntityEquipmentData();
     private final EntityPlayer player;
     private boolean inventoryChanged;
-    
-    private boolean isNaked = false;
-    private int skinColour = Color.decode("#F9DFD2").getRGB();
-    private int pantsColour = Color.decode("#FCFCFC").getRGB();
-    private BitSet armourOverride = new BitSet(4);
-    boolean headOverlay;
+    private EntityNakedInfo nakedInfo = new EntityNakedInfo(); 
     public int lastXmasYear;
     
     public ExtendedPropsPlayerEquipmentData(EntityPlayer player) {
@@ -175,9 +164,12 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         if (stackInput != null && stackInput.getItem() == ModItems.colourPicker && stackOutput == null) {
             //Silliness!
             if (stackInput.getDisplayName().toLowerCase().equals("panties!")) {
-                this.pantsColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+                this.nakedInfo.pantsColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+                this.nakedInfo.pantStripeColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+            } else if (stackInput.getDisplayName().toLowerCase().equals("stripe!")) {
+                this.nakedInfo.pantStripeColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
             } else {
-                this.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
+                this.nakedInfo.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
             }
             
             setInventorySlotContents(slot + 1, stackInput);
@@ -291,12 +283,8 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         sendNakedData(targetPlayer);
     }
     
-    public void setSkinInfo(boolean naked, int skinColour, int pantsColour, BitSet armourOverride, boolean headOverlay) {
-        this.isNaked = naked;
-        this.skinColour = skinColour;
-        this.pantsColour = pantsColour;
-        this.armourOverride = armourOverride;
-        this.headOverlay = headOverlay;
+    public void setSkinInfo(EntityNakedInfo nakedInfo) {
+        this.nakedInfo = nakedInfo;
         sendSkinData();
     }
     
@@ -305,50 +293,34 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.nakedInfo), targetPlayer);
     }
     
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.isNaked, this.skinColour, this.pantsColour, armourOverride, headOverlay), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.nakedInfo), p);
     }
     
     public BitSet getArmourOverride() {
-        return armourOverride;
+        return nakedInfo.armourOverride;
     }
     
     @Override
     public void saveNBTData(NBTTagCompound compound) {
         writeItemsToNBT(compound);
-        compound.setBoolean(TAG_NAKED, this.isNaked);
-        compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
-        compound.setInteger(TAG_PANTS_COLOUR, this.pantsColour);
+        nakedInfo.saveNBTData(compound);
         compound.setInteger(TAG_LAST_XMAS_YEAR, this.lastXmasYear);
-        for (int i = 0; i < 4; i++) {
-        	compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, this.armourOverride.get(i));
-        }
-        compound.setBoolean(TAG_HEAD_OVERLAY, this.headOverlay);
     }
     
     @Override
     public void loadNBTData(NBTTagCompound compound) {
         readItemsFromNBT(compound);
-        this.isNaked = compound.getBoolean(TAG_NAKED);
-        if (compound.hasKey(TAG_SKIN_COLOUR)) {
-            this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
-        }
-        if (compound.hasKey(TAG_PANTS_COLOUR)) {
-            this.pantsColour = compound.getInteger(TAG_PANTS_COLOUR);
-        }
-        for (int i = 0; i < 4; i++) {
-        	this.armourOverride.set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
-        }
+        nakedInfo.loadNBTData(compound);
         if (compound.hasKey(TAG_LAST_XMAS_YEAR)) {
             this.lastXmasYear = compound.getInteger(TAG_LAST_XMAS_YEAR);
         } else {
             this.lastXmasYear = 0;
         }
-        this.headOverlay = compound.getBoolean(TAG_HEAD_OVERLAY);
     }
     
     private void loadFromItemNBT(NBTTagCompound compound) {
