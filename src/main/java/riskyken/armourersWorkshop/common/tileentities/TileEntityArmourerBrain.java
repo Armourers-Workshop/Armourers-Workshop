@@ -80,7 +80,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         String customName = name;
         
         CustomEquipmentItemData armourItemData;
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, xCoord, yCoord + HEIGHT_OFFSET, zCoord);
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName,
+                xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         
         if (armourItemData == null) {
             return;
@@ -125,7 +126,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
-        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData);
+        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
     
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);

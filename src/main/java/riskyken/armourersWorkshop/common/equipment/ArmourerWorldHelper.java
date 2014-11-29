@@ -9,19 +9,21 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomEquipmentItemData saveArmourItem(World world, EnumEquipmentType type, String authorName, String customName, int xCoord, int yCoord, int zCoord) {
+    public static CustomEquipmentItemData saveArmourItem(World world, EnumEquipmentType type,
+            String authorName, String customName, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
         ArrayList<CustomEquipmentPartData> parts = new ArrayList<CustomEquipmentPartData>();
         
         for (int i = 0; i < type.getParts().length; i++) {
-            saveArmourPart(world, parts, type.getParts()[i], xCoord, yCoord, zCoord);
+            saveArmourPart(world, parts, type.getParts()[i], xCoord, yCoord, zCoord, direction);
         }
         
         if (parts.size() > 0) {
@@ -31,7 +33,8 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    private static void saveArmourPart(World world, ArrayList<CustomEquipmentPartData> armourData, EnumEquipmentPart part, int xCoord, int yCoord, int zCoord) {
+    private static void saveArmourPart(World world, ArrayList<CustomEquipmentPartData> armourData,
+            EnumEquipmentPart part, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
         ArrayList<CustomEquipmentBlockData> armourBlockData = new ArrayList<CustomEquipmentBlockData>();
         
         
@@ -51,7 +54,7 @@ public final class ArmourerWorldHelper {
                             xOrigin - 1,
                             -yOrigin - 1,
                             -zOrigin,
-                            armourBlockData);
+                            armourBlockData, direction);
                     
                 }
             }
@@ -62,7 +65,8 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz, ArrayList<CustomEquipmentBlockData> list) {
+    private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz,
+            ArrayList<CustomEquipmentBlockData> list, ForgeDirection direction) {
         if (world.isAirBlock(x, y, z)) { return; }
         Block block = world.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
@@ -78,28 +82,61 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void loadArmourItem(World world, int x, int y, int z, CustomEquipmentItemData armourData) {
+    public static void loadArmourItem(World world, int x, int y, int z, CustomEquipmentItemData armourData,
+            ForgeDirection direction) {
         ArrayList<CustomEquipmentPartData> parts = armourData.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
-            loadArmourPart(world, parts.get(i), x, y, z);
+            loadArmourPart(world, parts.get(i), x, y, z, direction);
         }
     }
     
-    private static void loadArmourPart(World world, CustomEquipmentPartData partData, int xCoord, int yCoord, int zCoord) {
+    private static void loadArmourPart(World world, CustomEquipmentPartData partData, int xCoord, int yCoord, int zCoord,
+            ForgeDirection direction) {
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             CustomEquipmentBlockData blockData = partData.getArmourData().get(i);
-            int xOrigin = xCoord - partData.getArmourPart().xLocation  + ((partData.getArmourPart().xSize / 2) + partData.getArmourPart().xOrigin);
-            int yOrigin = yCoord - partData.getArmourPart().yOrigin + partData.getArmourPart().yLocation;
-            int zOrigin = zCoord + partData.getArmourPart().zLocation;
-            loadArmourBlock(world, xOrigin, yOrigin, zOrigin, blockData);
+            
+            int xOrigin = -partData.getArmourPart().xLocation  + ((partData.getArmourPart().xSize / 2) + partData.getArmourPart().xOrigin);
+            int yOrigin = -partData.getArmourPart().yOrigin + partData.getArmourPart().yLocation;
+            int zOrigin = partData.getArmourPart().zLocation;
+            loadArmourBlock(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction);
         }
     }
     
-    private static void loadArmourBlock(World world, int x, int y, int z, CustomEquipmentBlockData blockData) {
-        int targetX = x - blockData.x - 1;
-        int targetY = y - blockData.y - 1;
-        int targetZ = z + blockData.z;
+    private static void loadArmourBlock(World world, int x, int y, int z, int xOrigin, int yOrigin, int zOrigin,
+            CustomEquipmentBlockData blockData, ForgeDirection direction) {
+        
+        
+        int shiftX = -blockData.x - 1;
+        int shiftY = blockData.y + 1;
+        int shiftZ = blockData.z;
+        /*
+        switch (direction) {
+        case SOUTH:
+            shiftZ += 1;
+            shiftX += 1;
+            break;
+        case EAST:
+            shiftZ += 1;
+            break;
+        case WEST:
+            shiftX += 1;
+            break;
+        default:
+            break;
+        }
+        
+        int targetX = x + (shiftX * -direction.offsetZ) + (shiftZ * -direction.offsetX);
+        int targetY = y + shiftY;
+        int targetZ = z + (shiftZ * -direction.offsetZ) + (shiftX * direction.offsetX);
+        */
+        int targetX = x + shiftX + xOrigin;
+        int targetY = y + yOrigin - shiftY;
+        int targetZ = z + shiftZ + zOrigin;
+        
+        //ModLogger.log(targetX);
+        ModLogger.log(yOrigin);
+        //ModLogger.log(targetZ);
         
         if (world.isAirBlock(targetX, targetY, targetZ)) {
             Block targetBlock = ModBlocks.colourable;

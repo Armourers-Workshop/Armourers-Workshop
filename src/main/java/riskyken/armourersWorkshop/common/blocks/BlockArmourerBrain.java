@@ -38,6 +38,7 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
                 ForgeDirection direction = ForgeDirection.getOrientation(UtilBlocks.determineOrientationSide(world, x, y, z, entity));
                 ((TileEntityArmourerBrain)te).setDirection(ForgeDirection.NORTH);
                 ((TileEntityArmourerBrain)te).onPlaced();
+                
             }
         }
     }
