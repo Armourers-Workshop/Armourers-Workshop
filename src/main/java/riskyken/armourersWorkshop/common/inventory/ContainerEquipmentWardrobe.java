@@ -18,11 +18,11 @@ public class ContainerEquipmentWardrobe extends Container {
         this.customEquipmentData = customEquipmentData;
         
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.HEAD, customEquipmentData, 0, 37, 18));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 37, 45));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.WEAPON, customEquipmentData, 5, 37, 72));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 123, 18));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 123, 45));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.FEET, customEquipmentData, 4, 123, 72));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 37, 37));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.WEAPON, customEquipmentData, 5, 123, 18));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 37, 56));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 123, 56));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.FEET, customEquipmentData, 4, 37, 75));
         
         addSlotToContainer(new SlotColourTool(customEquipmentData, 6, 8, 130));
         addSlotToContainer(new SlotOutput(customEquipmentData, 7, 52, 130));

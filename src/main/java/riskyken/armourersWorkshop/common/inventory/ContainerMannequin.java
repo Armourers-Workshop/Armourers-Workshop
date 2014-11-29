@@ -17,7 +17,7 @@ public class ContainerMannequin extends Container {
         this.tileEntity = tileEntity;
         
         for (int y = 0; y < 6; y++) {
-            addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.getOrdinal(y + 1) ,tileEntity, y, 11, 25 + 23 * y));
+            addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.getOrdinal(y + 1) ,tileEntity, y, 11, 25 + 19 * y));
         }
         
         for (int x = 0; x < 9; x++) {

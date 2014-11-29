@@ -59,6 +59,9 @@ public class GuiArmourer extends GuiContainer {
         for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumEquipmentType.getOrdinal(i + 1))));
         }
+        GuiButtonExt newButton = new GuiButtonExt(70, guiLeft + 5, guiTop + 16 + (6 * 20), 50, 16, "????");
+        newButton.enabled = false;
+        buttonList.add(newButton);
         
         buttonList.add(new GuiButtonExt(13, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
         buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));

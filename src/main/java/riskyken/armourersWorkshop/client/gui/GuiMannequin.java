@@ -82,17 +82,13 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         buttonList.clear();
         guiLoaded = false;
         
-        headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
-        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 150, 100, 10, "Y: ", "", -10D, 10D, 0D, true, true, this);
+        leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 35, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
+        leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 45, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        leftArmZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 55, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
-        leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 30, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
-        leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        leftArmZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
-        
-        rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 30, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
-        rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        rightArmZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
+        rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 35, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
+        rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 45, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
+        rightArmZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 55, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
         
         leftLegXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 80, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
         leftLegYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 90, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
@@ -101,6 +97,10 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         rightLegXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 80, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
         rightLegYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 90, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
         rightLegZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 100, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
+        
+        headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 125, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 135, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
+        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 145, 100, 10, "Y: ", "", -10D, 10D, 0D, true, true, this);
         
         if (bipedRotations != null) {
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
@@ -194,9 +194,9 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         String leftLegRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.leftLegRotation");
         String rightLegRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.rightLegRotation");
         
-        this.fontRendererObj.drawString(headRotationLabel, 40, 120, 4210752);
-        this.fontRendererObj.drawString(leftArmRotationLabel, 40, 20, 4210752);
-        this.fontRendererObj.drawString(rightArmRotationLabel, 147, 20, 4210752);
+        this.fontRendererObj.drawString(headRotationLabel, 40, 115, 4210752);
+        this.fontRendererObj.drawString(leftArmRotationLabel, 40, 25, 4210752);
+        this.fontRendererObj.drawString(rightArmRotationLabel, 147, 25, 4210752);
         this.fontRendererObj.drawString(leftLegRotationLabel, 40, 70, 4210752);
         this.fontRendererObj.drawString(rightLegRotationLabel, 147, 70, 4210752);
     }
