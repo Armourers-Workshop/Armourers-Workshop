@@ -36,17 +36,39 @@ public class ModelMannequin extends ModelBiped {
     public void render(BipedRotations bipedRotations,  boolean headOverlay, float scale) {
         GL11.glColor3f(1F, 1F, 1F);
         bipedRotations.applyRotationsToBiped(this);
-        this.bipedHead.render(scale);
-        this.bipedBody.render(scale);
-        this.bipedRightArm.render(scale);
-        this.bipedLeftArm.render(scale);
-        this.bipedRightLeg.render(scale);
-        this.bipedLeftLeg.render(scale);
-        if (headOverlay) {
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            this.bipedHeadwear.render(scale);
-            GL11.glEnable(GL11.GL_CULL_FACE);
+        if (isChild) {
+            float f6 = 2.0F;
+            GL11.glPushMatrix();
+            GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+            GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
+            this.bipedHead.render(scale);
+            if (headOverlay) {
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                this.bipedHeadwear.render(scale);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+            }
+            GL11.glPopMatrix();
+            GL11.glPushMatrix();
+            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+            GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
+            this.bipedBody.render(scale);
+            this.bipedRightArm.render(scale);
+            this.bipedLeftArm.render(scale);
+            this.bipedRightLeg.render(scale);
+            this.bipedLeftLeg.render(scale);
+            GL11.glPopMatrix();
+        } else {
+            this.bipedHead.render(scale);
+            this.bipedBody.render(scale);
+            this.bipedRightArm.render(scale);
+            this.bipedLeftArm.render(scale);
+            this.bipedRightLeg.render(scale);
+            this.bipedLeftLeg.render(scale);
+            if (headOverlay) {
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                this.bipedHeadwear.render(scale);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+            }
         }
-        GL11.glColor3f(1F, 1F, 1F);
     }
 }

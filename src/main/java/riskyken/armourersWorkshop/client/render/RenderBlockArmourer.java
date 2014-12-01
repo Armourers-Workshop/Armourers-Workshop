@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.client.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -15,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.client.LightingHelper;
 import riskyken.armourersWorkshop.client.model.ModelChest;
 import riskyken.armourersWorkshop.client.model.ModelFeet;
 import riskyken.armourersWorkshop.client.model.ModelHand;
@@ -60,10 +60,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         }
         
         GL11.glPushMatrix();
-        //GL11.glColor3f(0.8F, 0.8F, 0.8F);
-        RenderHelper.disableStandardItemLighting();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        //GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glColor3f(0.77F, 0.77F, 0.77F);
+        LightingHelper.disableLighting();
+        
         GL11.glTranslated(x, y, z);
         
         if (te.getDirection() != null) {
@@ -122,7 +121,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             modelHand.render();
             break;
         }
-        //GL11.glEnable(GL11.GL_LIGHTING);
+        
         GL11.glPopMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         
@@ -130,7 +129,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             renderGuide(te, type, x, y, z);
         }
         
-        RenderHelper.enableStandardItemLighting();
+        LightingHelper.enableLighting();
     }
     
     private void renderGuide(TileEntityArmourerBrain te, EnumEquipmentType type, double x, double y, double z) {

@@ -49,6 +49,10 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         
         bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumEquipmentType.HEAD);
+        
+
+        
+
         ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, EnumEquipmentPart.HEAD);
         armourData.onRender();
         
@@ -56,7 +60,15 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
             EquipmentRenderHelper.cullFacesOnEquipmentPart(armourData.getParts().get(0));
         }
         
+        
+        
         GL11.glPushMatrix();
+        if (isChild) {
+            float f6 = 2.0F;
+            GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+            GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
+        }
+        
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glRotated(RadiansToDegrees(bipedHead.rotateAngleZ), 0, 0, 1);
         GL11.glRotated(RadiansToDegrees(bipedHead.rotateAngleY), 0, 1, 0);
@@ -65,7 +77,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         if (isSneak) {
             GL11.glTranslated(0, 1 * scale, 0);
         }
-        
+
         renderHead(armourData.getParts().get(0), scale);
         
         GL11.glPopMatrix();

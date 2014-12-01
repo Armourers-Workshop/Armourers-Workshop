@@ -15,8 +15,8 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
@@ -74,6 +74,7 @@ public class ModelCustomArmour extends ModelBiped{
             setRotation(bipedRightArm, 0F, 0F, 0F);
             setRotation(bipedLeftLeg, 0F, 0F, 0F);
             setRotation(bipedRightLeg, 0F, 0F, 0F);
+            isChild = false;
         } else {
             setRotation(bipedHead, modelBiped.bipedHead);
             setRotation(bipedBody, modelBiped.bipedBody);
@@ -81,6 +82,7 @@ public class ModelCustomArmour extends ModelBiped{
             setRotation(bipedRightArm, modelBiped.bipedRightArm);
             setRotation(bipedLeftLeg, modelBiped.bipedLeftLeg);
             setRotation(bipedRightLeg, modelBiped.bipedRightLeg);
+            isChild = modelBiped.isChild;
         }
     }
      

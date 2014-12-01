@@ -54,6 +54,14 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
             if (!part.facesBuild) {
                 EquipmentRenderHelper.cullFacesOnEquipmentPart(part);
             }
+            
+            GL11.glPushMatrix();
+            if (isChild) {
+                float f6 = 2.0F;
+                GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+                GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
+            }
+            
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
             switch (part.getArmourPart()) {
             case SKIRT:
@@ -62,6 +70,8 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
             default:
                 break;
             }
+            
+            GL11.glPopMatrix();
         }
         
         GL11.glColor3f(1F, 1F, 1F);

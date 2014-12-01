@@ -19,7 +19,6 @@ public class ModelHand extends ModelBase {
         GL11.glPushMatrix();
         GL11.glTranslatef(mult * -2F, mult * -22F, mult * 10F);
         GL11.glRotatef(-90, 1, 0, 0);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
         arm1.render(mult);
         GL11.glPopMatrix();
     }

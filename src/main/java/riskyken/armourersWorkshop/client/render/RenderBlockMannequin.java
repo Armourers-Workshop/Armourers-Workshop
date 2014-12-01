@@ -42,6 +42,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         int rotaion = te.getRotation();
         
         GL11.glTranslated(x + 0.5D, y + 1.5D, z + 0.5D);
+        
+        GL11.glScalef(scale * 15, scale * 15, scale * 15);
+        GL11.glTranslated(0, scale * -1.6F, 0);
+        
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef(rotaion * 22.5F, 0, 1, 0);
         
@@ -67,7 +71,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
         }
         
+        modelMannequin.isChild = te.getBipedRotations().isChild;
+        
+        float f6 = 2.0F;
         if (fakePlayer != null) {
+            renderPlayer.modelBipedMain.isChild = modelMannequin.isChild;
             fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
             fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
             fakePlayer.prevRotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
@@ -76,9 +84,18 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
             
             RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 1);
+
+            if (renderPlayer.modelBipedMain.isChild) {
+                GL11.glPushMatrix();
+                GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+                GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
+            }
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(preEvent);
             GL11.glEnable(GL11.GL_CULL_FACE);
+            if (renderPlayer.modelBipedMain.isChild) {
+                GL11.glPopMatrix();
+            }
         }
         
         ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
@@ -87,9 +104,17 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         if (fakePlayer != null) {
             RenderPlayerEvent.Specials.Post postEvent = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, 1);
+            if (renderPlayer.modelBipedMain.isChild) {
+                GL11.glPushMatrix();
+                GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+                GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
+            }
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(postEvent);
             GL11.glEnable(GL11.GL_CULL_FACE);
+            if (renderPlayer.modelBipedMain.isChild) {
+                GL11.glPopMatrix();
+            }
         }
         
         if (player.getDistance(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) < 40) {

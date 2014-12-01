@@ -266,8 +266,19 @@ public final class EquipmentPlayerRenderCache {
                     renderEquipmentPart(null, modelBiped, data);
                 } else {
                     GL11.glPushMatrix();
-                    BipedRotations ripedRotations = teMannequin.getBipedRotations();
+                    
                     float scale = 0.0625F;
+                    if (modelBiped != null) {
+                        if (modelBiped.isChild) {
+                            float f6 = 2.0F;
+                            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+                            GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
+                            
+                        }
+                    }
+                    
+                    BipedRotations ripedRotations = teMannequin.getBipedRotations();
+                    
                     
                     GL11.glTranslatef(-5F * scale, 0, 0);
                     GL11.glTranslatef(0, 2F * scale, 0);

@@ -133,7 +133,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
-    
+        
     public MannequinFakePlayer getFakePlayer() {
         return fakePlayer;
     }

@@ -13,6 +13,7 @@ public class BipedRotations {
     private static final String TAG_RIGHT_ARM = "rightArm";
     private static final String TAG_LEFT_LEG = "LeftLeg";
     private static final String TAG_RIGHT_LEG = "RightLeg";
+    private static final String TAG_IS_CHILD = "isChild";
     
     public BipedPart head;
     public BipedPart chest;
@@ -20,6 +21,7 @@ public class BipedRotations {
     public BipedPart rightArm;
     public BipedPart leftLeg;
     public BipedPart rightLeg;
+    public boolean isChild;
     
     public BipedRotations() {
         head = new BipedPart(TAG_HEAD);
@@ -38,6 +40,7 @@ public class BipedRotations {
         rightArm.applyRotationsToBipedPart(modelBiped.bipedRightArm);
         leftLeg.applyRotationsToBipedPart(modelBiped.bipedLeftLeg);
         rightLeg.applyRotationsToBipedPart(modelBiped.bipedRightLeg);
+        modelBiped.isChild = isChild;
     }
     
     public void loadNBTData(NBTTagCompound compound) {
@@ -47,6 +50,7 @@ public class BipedRotations {
         rightArm.loadNBTData(compound);
         leftLeg.loadNBTData(compound);
         rightLeg.loadNBTData(compound);
+        this.isChild = compound.getBoolean(TAG_IS_CHILD);
     }
     
     public void saveNBTData(NBTTagCompound compound) {
@@ -56,6 +60,7 @@ public class BipedRotations {
         rightArm.saveNBTData(compound);
         leftLeg.saveNBTData(compound);
         rightLeg.saveNBTData(compound);
+        compound.setBoolean(TAG_IS_CHILD, this.isChild);
     }
     
     public void readFromBuf(ByteBuf buf) {
@@ -65,6 +70,7 @@ public class BipedRotations {
         rightArm.readFromBuf(buf);
         leftLeg.readFromBuf(buf);
         rightLeg.readFromBuf(buf);
+        this.isChild = buf.readBoolean();
     }
     
     public void writeToBuf(ByteBuf buf) {
@@ -74,9 +80,8 @@ public class BipedRotations {
         rightArm.writeToBuf(buf);
         leftLeg.writeToBuf(buf);
         rightLeg.writeToBuf(buf);
+        buf.writeBoolean(this.isChild);
     }
-    
-    
     
     @Override
     public int hashCode() {
@@ -84,6 +89,7 @@ public class BipedRotations {
         int result = 1;
         result = prime * result + ((chest == null) ? 0 : chest.hashCode());
         result = prime * result + ((head == null) ? 0 : head.hashCode());
+        result = prime * result + (isChild ? 1231 : 1237);
         result = prime * result + ((leftArm == null) ? 0 : leftArm.hashCode());
         result = prime * result + ((leftLeg == null) ? 0 : leftLeg.hashCode());
         result = prime * result
@@ -92,7 +98,7 @@ public class BipedRotations {
                 + ((rightLeg == null) ? 0 : rightLeg.hashCode());
         return result;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -111,6 +117,8 @@ public class BipedRotations {
             if (other.head != null)
                 return false;
         } else if (!head.equals(other.head))
+            return false;
+        if (isChild != other.isChild)
             return false;
         if (leftArm == null) {
             if (other.leftArm != null)
@@ -134,9 +142,7 @@ public class BipedRotations {
             return false;
         return true;
     }
-
-
-
+    
     public class BipedPart {
         private static final String TAG_ROTATION_X = "rotationX";
         private static final String TAG_ROTATION_Y = "rotationY";
@@ -150,13 +156,13 @@ public class BipedRotations {
         public BipedPart(String partName) {
             this.partName = partName;
         }
-
+        
         public void applyRotationsToBipedPart(ModelRenderer modelRenderer) {
             modelRenderer.rotateAngleX = this.rotationX;
             modelRenderer.rotateAngleY = this.rotationY;
             modelRenderer.rotateAngleZ = this.rotationZ;
         }
-        
+            
         public void loadNBTData(NBTTagCompound compound) {
             this.rotationX = compound.getFloat(TAG_ROTATION_X + this.partName);
             this.rotationY = compound.getFloat(TAG_ROTATION_Y + this.partName);
@@ -174,13 +180,13 @@ public class BipedRotations {
             buf.writeFloat(this.rotationY);
             buf.writeFloat(this.rotationZ);
         }
-
+        
         public void readFromBuf(ByteBuf buf) {
             this.rotationX = buf.readFloat();
             this.rotationY = buf.readFloat();
             this.rotationZ = buf.readFloat();
         }
-
+        
         @Override
         public int hashCode() {
             final int prime = 31;
@@ -193,7 +199,7 @@ public class BipedRotations {
             result = prime * result + Float.floatToIntBits(rotationZ);
             return result;
         }
-
+        
         @Override
         public boolean equals(Object obj) {
             if (this == obj)
@@ -219,7 +225,7 @@ public class BipedRotations {
                 return false;
             return true;
         }
-
+        
         private BipedRotations getOuterType() {
             return BipedRotations.this;
         }
