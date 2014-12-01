@@ -3,14 +3,21 @@ package riskyken.armourersWorkshop.client.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.common.SkinHelper;
+
+import com.mojang.authlib.GameProfile;
 
 public class RenderItemMannequin implements IItemRenderer {
-
+    
+    private static final String TAG_OWNER = "owner";
     private final ModelMannequin modelMannequin;
     
     public RenderItemMannequin(ModelMannequin modelMannequin) {
@@ -61,11 +68,25 @@ public class RenderItemMannequin implements IItemRenderer {
             break;
         }
         
+        ResourceLocation skin = AbstractClientPlayer.locationStevePng;
+        
+        if (item.hasTagCompound()) {
+            NBTTagCompound compound = item.getTagCompound();
+            GameProfile gameProfile = null;
+            if (compound.hasKey(TAG_OWNER, 10)) {
+                gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                skin = SkinHelper.getSkinResourceLocation(gameProfile);
+            }
+        }
+        
         float scale = 0.0625F;
         GL11.glColor3f(1F, 1F, 1F);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        Minecraft.getMinecraft().renderEngine.bindTexture(AbstractClientPlayer.locationStevePng);
-        modelMannequin.render(null, 0, 0, 0, headPitch, headTilt, scale, false);
+        Minecraft.getMinecraft().renderEngine.bindTexture(skin);
+        modelMannequin.render(null, 0, 0, 0, headPitch, headTilt, scale, true);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 

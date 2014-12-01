@@ -334,6 +334,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     public void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
+        updateProfileData();
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -387,7 +388,6 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public Packet getDescriptionPacket() {
-        updateProfileData();
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         writeCommonToNBT(compound);

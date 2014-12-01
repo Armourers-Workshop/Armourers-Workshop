@@ -7,11 +7,15 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
@@ -22,6 +26,9 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -29,6 +36,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockMannequin extends AbstractModBlock implements ITileEntityProvider {
 
+    public static DamageSource victoriousDamage = new DamageSource("victorious");
+    private static final String TAG_OWNER = "owner";
+    
     public BlockMannequin() {
         super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal);
         setLightOpacity(0);
@@ -45,8 +55,57 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
         if (te != null && te instanceof TileEntityMannequin) {
             int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
             ((TileEntityMannequin)te).setRotation(l);
+            
+            if (stack.hasTagCompound()) {
+                NBTTagCompound compound = stack.getTagCompound();
+                GameProfile gameProfile = null;
+                if (compound.hasKey(TAG_OWNER, 10)) {
+                    gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                    ((TileEntityMannequin)te).setGameProfile(gameProfile);
+                }
+            }
+            
         }
         world.setBlock(x, y + 1, z, this, 1, 2);
+    }
+    
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+        super.onEntityCollidedWithBlock(world, x, y, z, entity);
+        if (world.isRemote) {
+            return;
+        }
+        if (!(entity instanceof EntityLivingBase)) {
+            return;
+        }
+        EntityLivingBase entityLiving = (EntityLivingBase) entity;
+        
+        int meta = world.getBlockMetadata(x, y, z);
+        if (meta != 1) {
+            return;
+        }
+        
+        if (entityLiving.posY != y + (double)0.9F) {
+            return;
+        }
+        
+        if (entityLiving.posX < x + 0.2F | entityLiving.posX > x + 0.8F) {
+            return;
+        }
+        
+        if (entityLiving.posZ < z + 0.2F | entityLiving.posZ > z + 0.8F) {
+            return;
+        }
+        
+        TileEntity te = world.getTileEntity(x, y - 1, z);
+        if (te != null && te instanceof TileEntityMannequin) {
+            TileEntityMannequin teMan = (TileEntityMannequin) te;
+            if (teMan.getGameProfile() != null) {
+                if (teMan.getGameProfile().getName().equals("victorious3")) {
+                    entityLiving.attackEntityFrom(victoriousDamage, 0.5F);
+                }
+            }
+        }
     }
     
     @SideOnly(Side.CLIENT)
@@ -71,9 +130,9 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
         int meta = world.getBlockMetadata(x, y, z);
         if (meta == 0) {
-            setBlockBounds(0, 0, 0, 1, 2, 1);
+            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 1.9F, 0.9F);
         } else {
-            setBlockBounds(0, -1, 0, 1, 1, 1);
+            setBlockBounds(0.1F, -1, 0.1F, 0.9F, 0.9F, 0.9F);
         }
     }
     
@@ -88,7 +147,7 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
             ItemStack stack = player.getCurrentEquippedItem();
             if (stack != null && stack.getItem() == Items.name_tag) {
                 TileEntity te = world.getTileEntity(x, y + yOffset, z);;
-                if (te instanceof TileEntityMannequin) {
+                if (te != null && te instanceof TileEntityMannequin) {
                     if (stack.getItem() == Items.name_tag) {
                         ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
                     }
@@ -116,10 +175,7 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     
     @Override
     public int quantityDropped(int meta, int fortune, Random random) {
-        if (meta == 0) {
-            return 1;
-        }
-        return 1;
+        return 0;
     }
     
     @Override

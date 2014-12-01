@@ -1,13 +1,21 @@
 package riskyken.armourersWorkshop.common.items.block;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.world.World;
 
-public class ItemBlockMannequin extends ModItemBlock {
+import com.mojang.authlib.GameProfile;
 
+public class ItemBlockMannequin extends ModItemBlock {
+    
+    private static final String TAG_OWNER = "owner";
+    
     public ItemBlockMannequin(Block block) {
         super(block);
         setMaxStackSize(1);
@@ -25,6 +33,19 @@ public class ItemBlockMannequin extends ModItemBlock {
         }
         
         return false;
+    }
+    
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound compound = stack.getTagCompound();
+            GameProfile gameProfile = null;
+            if (compound.hasKey(TAG_OWNER, 10)) {
+                gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                list.add(gameProfile.getName());
+            }
+        }
+        super.addInformation(stack, player, list, par4);
     }
     
     private boolean canPlaceBlockHere(ItemStack stack, EntityPlayer player,

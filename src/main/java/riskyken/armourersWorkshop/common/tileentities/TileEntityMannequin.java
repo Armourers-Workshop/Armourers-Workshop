@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -15,6 +14,7 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.BipedRotations;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
@@ -76,6 +76,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
             if (gameProfile == null) {
                 setGameProfile(new GameProfile(null, stack.getDisplayName()));
                 stack.stackSize--;
+                updateProfileData();
             }
         }
     }
@@ -83,25 +84,30 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     @Override
     public void invalidate() {
         if (!worldObj.isRemote) {
+            ItemStack stack = new ItemStack(ModBlocks.mannequin);
             if (gameProfile != null) {
-                ItemStack stack = new ItemStack(Items.name_tag);
-                stack.setStackDisplayName(gameProfile.getName());
-                float f = 0.7F;
-                double xV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-                double yV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-                double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-                EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
-                worldObj.spawnEntityInWorld(entityitem);
+                NBTTagCompound profileTag = new NBTTagCompound();
+                NBTUtil.func_152460_a(profileTag, gameProfile);
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setTag(TAG_OWNER, profileTag);
+                //stack.setStackDisplayName(gameProfile.getName());
             }
+            float f = 0.7F;
+            double xV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double yV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
+            worldObj.spawnEntityInWorld(entityitem);
             UtilBlocks.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
         }
         super.invalidate();
     }
     
-    private void setGameProfile(GameProfile gameProfile) {
+    public void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (!worldObj.isRemote) {
+            updateProfileData();
+        }
     }
     
     public void setEquipment(EnumEquipmentType armourType, int equipmentId) {
@@ -153,6 +159,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
                     }
                     this.gameProfile = gameprofile;
                     this.markDirty();
+                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 }
             }
         }
@@ -196,7 +203,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
 
     @Override
     public Packet getDescriptionPacket() {
-        updateProfileData();
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         writeCommonToNBT(compound);

@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.model;
 
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
@@ -14,9 +15,26 @@ public class ModelMannequin extends ModelBiped {
         this.isChild = false;
     }
     
+    private void resetRotationsOnPart(ModelRenderer mr) {
+        mr.rotateAngleX = 0;
+        mr.rotateAngleY = 0;
+        mr.rotateAngleZ = 0;
+    }
+    
+    private void resetRotations() {
+        resetRotationsOnPart(this.bipedHead);
+        resetRotationsOnPart(this.bipedHeadwear);
+        resetRotationsOnPart(this.bipedBody);
+        resetRotationsOnPart(this.bipedLeftArm);
+        resetRotationsOnPart(this.bipedRightArm);
+        resetRotationsOnPart(this.bipedLeftLeg);
+        resetRotationsOnPart(this.bipedRightLeg);
+    }
+    
     public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_,
             float p_78088_4_, float p_78088_5_, float p_78088_6_,
             float scale, boolean headOverlay) {
+        resetRotations();
         this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, scale, p_78088_1_);
         GL11.glColor3f(1F, 1F, 1F);
         this.bipedHead.render(scale);
