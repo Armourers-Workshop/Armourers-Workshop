@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -12,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 
 import com.mojang.authlib.GameProfile;
 
@@ -77,6 +79,11 @@ public class RenderItemMannequin implements IItemRenderer {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
                 skin = SkinHelper.getSkinResourceLocation(gameProfile);
             }
+        }
+        
+        if (item.getItem() == Item.getItemFromBlock(ModBlocks.doll)) {
+            float dollScale = 0.5F;
+            GL11.glScalef(dollScale, dollScale, dollScale);
         }
         
         float scale = 0.0625F;

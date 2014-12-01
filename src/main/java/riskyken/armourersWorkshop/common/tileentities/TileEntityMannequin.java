@@ -19,6 +19,7 @@ import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 import com.google.common.collect.Iterables;
@@ -29,6 +30,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_ROTATION = "rotation";
+    private static final String TAG_IS_DOLL = "isDoll";
     
     private GameProfile gameProfile = null;
     private MannequinFakePlayer fakePlayer = null;
@@ -36,8 +38,13 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     private EntityEquipmentData equipmentData;
     private BipedRotations bipedRotations;
     private int rotation;
+    private boolean isDoll;
     
     public TileEntityMannequin() {
+        this(false);
+    }
+    
+    public TileEntityMannequin(boolean isDoll) {
         equipmentData = new EntityEquipmentData();
         bipedRotations = new BipedRotations();
         bipedRotations.leftArm.rotationZ = (float) Math.toRadians(-10);
@@ -45,6 +52,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         bipedRotations.leftArm.rotationY = (float) Math.toRadians(-1);
         bipedRotations.rightArm.rotationY = (float) Math.toRadians(1);
         this.items = new ItemStack[6];
+        this.isDoll = isDoll;
     }
     
     @Override
@@ -81,10 +89,18 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         }
     }
     
+    public boolean getIsDoll() {
+        return isDoll;
+    }
+    
     @Override
     public void invalidate() {
         if (!worldObj.isRemote) {
             ItemStack stack = new ItemStack(ModBlocks.mannequin);
+            if (isDoll) {
+                stack = new ItemStack(ModBlocks.doll);
+            }
+            ModLogger.log(isDoll);
             if (gameProfile != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
                 NBTUtil.func_152460_a(profileTag, gameProfile);
@@ -170,6 +186,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         super.readCommonFromNBT(compound);
         equipmentData.loadNBTData(compound);
         bipedRotations.loadNBTData(compound);
+        this.isDoll = compound.getBoolean(TAG_IS_DOLL);
         this.rotation = compound.getInteger(TAG_ROTATION);
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
@@ -181,6 +198,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         super.writeCommonToNBT(compound);
         equipmentData.saveNBTData(compound);
         bipedRotations.saveNBTData(compound);
+        compound.setBoolean(TAG_IS_DOLL, this.isDoll);
         compound.setInteger(TAG_ROTATION, this.rotation);
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();

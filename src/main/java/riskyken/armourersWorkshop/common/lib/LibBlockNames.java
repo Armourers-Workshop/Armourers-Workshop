@@ -8,5 +8,5 @@ public class LibBlockNames {
     public static final String COLOURABLE_GLOWING = "colourableGlowing";
     public static final String COLOUR_MIXER = "colourMixer";
     public static final String MANNEQUIN = "mannequin";
-    public static final String MINI_MANNEQUIN = "miniMannequin";
+    public static final String DOLL = "doll";
 }

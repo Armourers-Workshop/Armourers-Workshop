@@ -5,6 +5,7 @@ tile.armourersworkshop:colourable.name=Equipment Cube
 tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
 tile.armourersworkshop:colourMixer.name=Colour Mixer
 tile.armourersworkshop:mannequin.name=Mannequin
+tile.armourersworkshop:doll.name=Doll
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
@@ -13,6 +14,7 @@ tile.armourersworkshop:colourable.flavour=Main building block for custom equipme
 tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark equipment cubes!
 tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipment with.
 tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!
+tile.armourersworkshop:doll.flavour=Mini mannequin!
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=Equipment Skin Template

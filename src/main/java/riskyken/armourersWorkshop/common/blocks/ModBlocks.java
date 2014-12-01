@@ -21,6 +21,7 @@ public class ModBlocks {
     public static Block colourableGlowing;
     public static Block colourMixer;
     public static Block mannequin;
+    public static Block doll;
     
     public static void init() {
         armourerBrain = new BlockArmourerBrain();
@@ -30,6 +31,7 @@ public class ModBlocks {
         colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
         colourMixer = new BlockColourMixer();
         mannequin = new BlockMannequin();
+        doll = new BlockDoll();
     }
 
     public static void registerTileEntities() {

@@ -7,7 +7,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -15,13 +14,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -34,22 +32,21 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockMannequin extends AbstractModBlock implements ITileEntityProvider {
+public class BlockDoll extends AbstractModBlock implements ITileEntityProvider {
 
-    public static DamageSource victoriousDamage = new DamageSource("victorious");
     private static final String TAG_OWNER = "owner";
     
-    public BlockMannequin() {
-        super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal);
+    public BlockDoll() {
+        super(LibBlockNames.DOLL, Material.rock, soundTypeMetal);
         setLightOpacity(0);
     }
     
     @Override
     public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ItemBlockMannequin.class, "block." + name);
+        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
     }
-
+    
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityMannequin) {
@@ -65,46 +62,6 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
                 }
             }
             
-        }
-        world.setBlock(x, y + 1, z, this, 1, 2);
-    }
-    
-    @Override
-    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-        super.onEntityCollidedWithBlock(world, x, y, z, entity);
-        if (world.isRemote) {
-            return;
-        }
-        if (!(entity instanceof EntityLivingBase)) {
-            return;
-        }
-        EntityLivingBase entityLiving = (EntityLivingBase) entity;
-        
-        int meta = world.getBlockMetadata(x, y, z);
-        if (meta != 1) {
-            return;
-        }
-        
-        if (entityLiving.posY != y + (double)0.9F) {
-            return;
-        }
-        
-        if (entityLiving.posX < x + 0.2F | entityLiving.posX > x + 0.8F) {
-            return;
-        }
-        
-        if (entityLiving.posZ < z + 0.2F | entityLiving.posZ > z + 0.8F) {
-            return;
-        }
-        
-        TileEntity te = world.getTileEntity(x, y - 1, z);
-        if (te != null && te instanceof TileEntityMannequin) {
-            TileEntityMannequin teMan = (TileEntityMannequin) te;
-            if (teMan.getGameProfile() != null) {
-                if (teMan.getGameProfile().getName().equals("victorious3")) {
-                    entityLiving.attackEntityFrom(victoriousDamage, 0.5F);
-                }
-            }
         }
     }
     
@@ -128,68 +85,35 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0) {
-            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 1.9F, 0.9F);
-        } else {
-            setBlockBounds(0.1F, -1, 0.1F, 0.9F, 0.9F, 0.9F);
-        }
+        setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
     }
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         if (!world.isRemote) {
-            int meta = world.getBlockMetadata(x, y, z);
-            int yOffset = 0;
-            if (meta == 1) {
-                yOffset = -1;
-            }
             ItemStack stack = player.getCurrentEquippedItem();
             if (stack != null && stack.getItem() == Items.name_tag) {
-                TileEntity te = world.getTileEntity(x, y + yOffset, z);;
+                TileEntity te = world.getTileEntity(x, y, z);;
                 if (te != null && te instanceof TileEntityMannequin) {
                     if (stack.getItem() == Items.name_tag) {
                         ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
                     }
                 }
             } else {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y + yOffset, z);
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y, z);
             }
         }
         return true;
     }
     
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0) {
-            if (world.getBlock(x, y + 1, z) != ModBlocks.mannequin) {
-                world.setBlockToAir(x, y, z);
-            }
-        } else {
-            if (world.getBlock(x, y - 1, z) != ModBlocks.mannequin) {
-                world.setBlockToAir(x, y, z);
-            }
-        }
-    }
-    
-    @Override
     public int quantityDropped(int meta, int fortune, Random random) {
         return 0;
     }
-    
+
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
-        return null;
-    }
-    
-    @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        if (metadata == 0) {
-            return new TileEntityMannequin(false);
-        } else {
-            return null;
-        }
+    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+        return new TileEntityMannequin(true);
     }
     
     @Override

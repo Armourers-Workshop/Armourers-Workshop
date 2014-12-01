@@ -53,6 +53,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin(modelMannequin));
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelMannequin));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelMannequin));
         MinecraftForgeClient.registerItemRenderer(Items.wooden_sword, new RenderItemWeaponSkin());
         MinecraftForgeClient.registerItemRenderer(Items.stone_sword, new RenderItemWeaponSkin());
         MinecraftForgeClient.registerItemRenderer(Items.iron_sword, new RenderItemWeaponSkin());

@@ -49,6 +49,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef(rotaion * 22.5F, 0, 1, 0);
         
+        if (te.getIsDoll()) {
+            float dollScale = 0.5F;
+            GL11.glScalef(dollScale, dollScale, dollScale);
+            GL11.glTranslatef(0, scale * 24, 0);
+        }
+        
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;
         
