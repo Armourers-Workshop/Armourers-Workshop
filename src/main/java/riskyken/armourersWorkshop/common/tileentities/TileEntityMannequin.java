@@ -19,7 +19,6 @@ import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 import com.google.common.collect.Iterables;
@@ -100,7 +99,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
             if (isDoll) {
                 stack = new ItemStack(ModBlocks.doll);
             }
-            ModLogger.log(isDoll);
             if (gameProfile != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
                 NBTUtil.func_152460_a(profileTag, gameProfile);
