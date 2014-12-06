@@ -17,7 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = minecraftVersion + "-" + modVersion
+if (System.env.BUILD_NUMBER != null) {
+    version = "$minecraftVersion-$modVersion.$System.env.BUILD_NUMBER"
+} else {
+    version = "$minecraftVersion-$modVersion"
+}
+
 group= "riskyken.armourersWorkshop"
 archivesBaseName = "Armourers-Workshop"
 
@@ -26,7 +31,7 @@ minecraft {
     runDir = "eclipse"
 
     replaceIn "common/lib/LibModInfo.java"
-    replace "@VERSION@", modVersion 
+    replace "@VERSION@", project.version
 
     replaceIn "api/common/lib/LibApi.java"
 	replace "@API_VERSION@", apiVersion
