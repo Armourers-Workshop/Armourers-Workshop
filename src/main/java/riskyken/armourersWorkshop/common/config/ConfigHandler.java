@@ -14,6 +14,7 @@ public class ConfigHandler {
 
     public static boolean disableRecipes;
     public static int modelCacheTime = 12000;
+    public static int maxRenderDistance = 40;
 
     public static void init(File file) {
         if (config == null) {

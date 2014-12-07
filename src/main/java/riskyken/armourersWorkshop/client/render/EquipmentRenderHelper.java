@@ -3,13 +3,24 @@ package riskyken.armourersWorkshop.client.render;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 
 public final class EquipmentRenderHelper {
-
+    
+    public static boolean withinMaxRenderDistance(double x, double y, double z) {
+        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        if (player.getDistance(x, y, z) > ConfigHandler.maxRenderDistance) {
+            return false;
+        }
+        return true;
+    }
+    
     public static void cullFacesOnEquipmentPart(CustomEquipmentPartData partData) {
         ArrayList<CustomEquipmentBlockData> blocks = partData.getArmourData();
         for (int i = 0; i < blocks.size(); i++) {

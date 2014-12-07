@@ -214,6 +214,11 @@ public final class EquipmentPlayerRenderCache {
             return;
         }
         
+        if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
+            event.result = result;
+            return;
+        }
+        
         GL11.glPushMatrix();
         float scale = 1.001F;
         GL11.glScalef(scale, scale, scale);
@@ -257,6 +262,11 @@ public final class EquipmentPlayerRenderCache {
 
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
         EntityEquipmentData equipmentData = teMannequin.getEquipmentData();
+        
+        
+        if (!EquipmentRenderHelper.withinMaxRenderDistance(teMannequin.xCoord, teMannequin.yCoord, teMannequin.zCoord)) {
+            return;
+        }
         
         for (int i = 0; i < 6; i++) {
             EnumEquipmentType armourType = EnumEquipmentType.getOrdinal(i + 1);
