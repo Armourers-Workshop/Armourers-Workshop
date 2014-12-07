@@ -40,7 +40,14 @@ public class UpdateCheck implements Runnable {
 	@Override
 	public void run() {
 		ModLogger.log("Starting Update Check");
+		String localVersion = LibModInfo.VERSION;
+		
 		try {
+		    if (localVersion.contains("-")) {
+		        String[] lvSplit = localVersion.split("-");
+		        localVersion = lvSplit[1];
+		    }
+		    
 			String location = UPDATE_URL;
 			HttpURLConnection conn = null;
 			while (location != null && !location.isEmpty()) {
@@ -75,7 +82,7 @@ public class UpdateCheck implements Runnable {
 			conn.disconnect();
 			reader.close();
 
-			if (versionCompare(LibModInfo.VERSION, remoteModVersion) < 0) {
+			if (versionCompare(localVersion, remoteModVersion) < 0) {
 			    if (relevantUpdates) {
 			        if (!MinecraftForge.MC_VERSION.equals(remoteMinecraftVersion)) {
 			            updateFound = false;

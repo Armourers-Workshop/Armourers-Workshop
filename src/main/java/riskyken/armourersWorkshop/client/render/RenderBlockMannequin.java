@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.client.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -31,8 +30,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-        
         TileEntityMannequin te = (TileEntityMannequin) tileEntity;
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
@@ -122,12 +119,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 GL11.glPopMatrix();
             }
         }
-        
-        if (player.getDistance(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) < 40) {
-            if (tileEntity instanceof TileEntityMannequin) {
-                EquipmentPlayerRenderCache.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), modelMannequin);
-            }
-        }
+
+        EquipmentPlayerRenderCache.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), modelMannequin);
         
         GL11.glPopMatrix();
     }

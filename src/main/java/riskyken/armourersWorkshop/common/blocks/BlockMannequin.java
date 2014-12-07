@@ -42,6 +42,7 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     public BlockMannequin() {
         super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal);
         setLightOpacity(0);
+        setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
     }
     
     @Override
@@ -130,9 +131,9 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
         int meta = world.getBlockMetadata(x, y, z);
         if (meta == 0) {
-            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 1.9F, 0.9F);
+            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         } else {
-            setBlockBounds(0.1F, -1, 0.1F, 0.9F, 0.9F, 0.9F);
+            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         }
     }
     

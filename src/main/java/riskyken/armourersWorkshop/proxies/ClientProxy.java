@@ -9,6 +9,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.ModForgeEventHandler;
+import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
 import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
@@ -61,6 +62,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForgeClient.registerItemRenderer(Items.diamond_sword, new RenderItemWeaponSkin());
         blockColourMixerRenderId = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
+        new BlockHighlightRenderHandler();
     }
 
     @Override
