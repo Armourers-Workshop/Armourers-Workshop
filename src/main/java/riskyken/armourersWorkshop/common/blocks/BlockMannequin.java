@@ -103,7 +103,7 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
             TileEntityMannequin teMan = (TileEntityMannequin) te;
             if (teMan.getGameProfile() != null) {
                 if (teMan.getGameProfile().getName().equals("victorious3")) {
-                    entityLiving.attackEntityFrom(victoriousDamage, 0.5F);
+                    entityLiving.attackEntityFrom(victoriousDamage, 2.0F);
                 }
             }
         }
