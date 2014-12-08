@@ -16,7 +16,6 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -39,6 +38,7 @@ public class BlockDoll extends AbstractModBlock implements ITileEntityProvider {
     public BlockDoll() {
         super(LibBlockNames.DOLL, Material.rock, soundTypeMetal);
         setLightOpacity(0);
+        setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
     }
     
     @Override
@@ -81,11 +81,6 @@ public class BlockDoll extends AbstractModBlock implements ITileEntityProvider {
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
-    }
-    
-    @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
     }
     
     @Override
