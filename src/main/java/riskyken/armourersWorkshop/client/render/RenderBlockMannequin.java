@@ -34,6 +34,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
         GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_NORMALIZE);
         float scale = 0.0625F;
         
         int rotaion = te.getRotation();
@@ -121,7 +122,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
 
         EquipmentPlayerRenderCache.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), modelMannequin);
-        
+        GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
     }
 }
