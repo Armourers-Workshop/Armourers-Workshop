@@ -8,6 +8,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -91,9 +92,9 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         
         armourOverrideCheck = new GuiCheckBox[4];
         armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 29, this.guiTop + 17, 7, 7, "Disable head armour render", armourOverride.get(0), true);
-        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 29, this.guiTop + 44, 7, 7, "Disable chest armour render", armourOverride.get(1), true);
-        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 140, this.guiTop + 17, 7, 7, "Disable leg armour render", armourOverride.get(2), true);
-        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 140, this.guiTop + 71, 7, 7, "Disable foot armour render", armourOverride.get(3), true);
+        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 29, this.guiTop + 36, 7, 7, "Disable chest armour render", armourOverride.get(1), true);
+        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 29, this.guiTop + 55, 7, 7, "Disable leg armour render", armourOverride.get(2), true);
+        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 29, this.guiTop + 74, 7, 7, "Disable foot armour render", armourOverride.get(3), true);
         
         overlayOverrideCheck = new GuiCheckBox[1];
         overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 29, this.guiTop + 28, 7, 7, "Disable head overlay render", headOverlay, true);
@@ -151,6 +152,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
                     ArrayList lines = new ArrayList();
                     lines.add(button.displayString);
                     drawHoveringText(lines, mouseX - guiLeft, mouseY - guiTop, fontRendererObj);
+                    RenderHelper.enableGUIStandardItemLighting();
                 }
             }
         }
