@@ -4,6 +4,12 @@ import net.minecraft.client.renderer.OpenGlHelper;
 
 import org.lwjgl.opengl.GL11;
 
+/**
+ * Helps turn Minecraft's lighting on and off.
+ * Yip that's all!
+ * @author RiskyKen
+ * 
+ */
 public final class LightingHelper {
     
     private static float lightX;
