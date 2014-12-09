@@ -24,8 +24,8 @@ item.armourersworkshop:equipmentSkin.1.name=Chest Armour Skin
 item.armourersworkshop:equipmentSkin.2.name=Leg Armour Skin
 item.armourersworkshop:equipmentSkin.3.name=Skirt Armour Skin
 item.armourersworkshop:equipmentSkin.4.name=Foot Armour Skin
-item.armourersworkshop:equipmentSkin.5.name=Weapon Skin
-item.armourersworkshop:equipmentSkin.6.name=Unknown Skin
+item.armourersworkshop:equipmentSkin.5.name=Sword Skin
+item.armourersworkshop:equipmentSkin.6.name=Bow Skin
 item.armourersworkshop:paintbrush.name=Paintbrush
 item.armourersworkshop:paintRoller.name=Paint Roller
 item.armourersworkshop:colourPicker.name=Colour Picker
@@ -52,7 +52,8 @@ armourTypes.armourersworkshop:chest.name=Chest
 armourTypes.armourersworkshop:legs.name=Legs
 armourTypes.armourersworkshop:skirt.name=Skirt
 armourTypes.armourersworkshop:feet.name=Feet
-armourTypes.armourersworkshop:weapon.name=Weapon
+armourTypes.armourersworkshop:sword.name=Sword
+armourTypes.armourersworkshop:bow.name=Bow
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer

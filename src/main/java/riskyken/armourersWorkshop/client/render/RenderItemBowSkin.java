@@ -16,12 +16,12 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 
-public class RenderItemWeaponSkin implements IItemRenderer {
-
+public class RenderItemBowSkin implements IItemRenderer {
+    
     private final RenderItem renderItem;
     private final Minecraft mc;
     
-    public RenderItemWeaponSkin() {
+    public RenderItemBowSkin() {
         renderItem = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         mc = Minecraft.getMinecraft();
     }
@@ -33,26 +33,27 @@ public class RenderItemWeaponSkin implements IItemRenderer {
         }
         return canRenderModel(stack);
     }
-
+    
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
         return type == ItemRenderType.ENTITY;
     }
-
+    
     @Override
     public void renderItem(ItemRenderType type, ItemStack stack, Object... data) {
         if (canRenderModel(stack)) {
             if (type != ItemRenderType.ENTITY) {
                 GL11.glPopMatrix();
-                GL11.glPopMatrix(); 
+                //GL11.glPopMatrix(); 
                 
-                GL11.glRotatef(-135, 0, 1, 0);
-                GL11.glRotatef(-10, 0, 0, 1);
+                GL11.glRotatef(-50, 0, 1, 0);
+                GL11.glRotatef(20, 0, 0, 1);
+                GL11.glRotatef(10, 1, 0, 0);
             }
 
             GL11.glPushMatrix();
             
-            GL11.glScalef(-1F, -1F, 1F);
+            
             GL11.glScalef(1.6F, 1.6F, 1.6F);
 
             boolean isBlocking = false;
@@ -69,28 +70,26 @@ public class RenderItemWeaponSkin implements IItemRenderer {
             
             switch (type) {
             case EQUIPPED:
-                
-                GL11.glTranslatef(-2F * scale, -1F * scale, 0F);
-                if (isBlocking) {
-                    GL11.glTranslatef(-0F * scale, 2F * scale, 1F * scale);
-                }
-                GL11.glRotatef(-90F, 0F, 1F, 0F);
+                GL11.glScalef(1F, -1F, 1F);
+                GL11.glTranslatef(0F * scale, -6F * scale, 1F * scale);
+                //GL11.glRotatef(180F, 1F, 0F, 0F);
+                //GL11.glRotatef(180F, 0F, 1F, 0F);
                 break;
             case ENTITY:
                 GL11.glTranslatef(0F, -10F * scale, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
-                GL11.glRotatef(-90F, 0F, 1F, 0F);
+                GL11.glRotatef(166F, 0F, 0F, 1F);
                 break;
             default:
                 break;
             }
-            EquipmentItemRenderCache.renderItemAsArmourModel(stack, EnumEquipmentType.WEAPON);
+            EquipmentItemRenderCache.renderItemAsArmourModel(stack, EnumEquipmentType.BOW);
             
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
-                GL11.glPushMatrix();
+                //GL11.glPushMatrix();
                 GL11.glPushMatrix();
             }
 

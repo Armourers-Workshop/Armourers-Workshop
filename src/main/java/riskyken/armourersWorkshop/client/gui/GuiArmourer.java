@@ -52,19 +52,16 @@ public class GuiArmourer extends GuiContainer {
         
         buttonList.clear();
         
-        /*
-
-        */
-        
         for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            buttonList.add(new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumEquipmentType.getOrdinal(i + 1))));
+            GuiButtonExt equipmentButton = new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumEquipmentType.getOrdinal(i + 1)));
+            if (i == 6) {
+                equipmentButton.enabled = false;
+            }
+            buttonList.add(equipmentButton);
         }
-        GuiButtonExt newButton = new GuiButtonExt(70, guiLeft + 5, guiTop + 16 + (6 * 20), 50, 16, "????");
-        newButton.enabled = false;
-        buttonList.add(newButton);
         
         buttonList.add(new GuiButtonExt(13, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
-        buttonList.add(new GuiButtonExt(6, guiLeft + 86, guiTop + 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
+        buttonList.add(new GuiButtonExt(14, guiLeft + 86, guiTop + 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
         checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 118, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides(), false);
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay(), false);
@@ -133,7 +130,7 @@ public class GuiArmourer extends GuiContainer {
             }
             break;
         default:
-            if (button.id == 6) {
+            if (button.id == 14) {
                 loadedArmourItem = true;
                 armourerBrain.setCustomName("");
             }

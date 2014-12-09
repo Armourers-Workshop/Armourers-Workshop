@@ -16,7 +16,7 @@ public class ContainerMannequin extends Container {
     public ContainerMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
         this.tileEntity = tileEntity;
         
-        for (int y = 0; y < 6; y++) {
+        for (int y = 0; y < EnumEquipmentType.values().length - 1; y++) {
             addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.getOrdinal(y + 1) ,tileEntity, y, 11, 25 + 19 * y));
         }
         
@@ -37,9 +37,9 @@ public class ContainerMannequin extends Container {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
-            if (slotId < 6) {
-                if (!this.mergeItemStack(stack, 15, 42, false)) {
-                    if (!this.mergeItemStack(stack, 6, 15, false)) {
+            if (slotId < 7) {
+                if (!this.mergeItemStack(stack, 16, 43, false)) {
+                    if (!this.mergeItemStack(stack, 7, 16, false)) {
                         return null;
                     }
                 }
@@ -76,6 +76,11 @@ public class ContainerMannequin extends Container {
                             return null;
                         }
                         break;
+                    case 6:
+                        if (!this.mergeItemStack(stack, 6, 7, false)) {
+                            return null;
+                        }
+                        break;   
                     default:
                         return null;
                     }

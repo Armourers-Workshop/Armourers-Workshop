@@ -33,7 +33,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     private static final String TAG_SLOT = "slot";
     private static final String TAG_LAST_XMAS_YEAR = "lastXmasYear";
     
-    public ItemStack[] customArmourInventory = new ItemStack[8];
+    public ItemStack[] customArmourInventory = new ItemStack[9];
     private EntityEquipmentData equipmentData = new EntityEquipmentData();
     private final EntityPlayer player;
     private boolean inventoryChanged;
@@ -70,10 +70,13 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         case FEET:
             setInventorySlotContents(4, stack);
             break;
-        case WEAPON:
+        case SWORD:
             setInventorySlotContents(5, stack);
             break;
-        default:
+        case BOW:
+            setInventorySlotContents(6, stack);
+            break;
+        case NONE:
             break;
         }
     }
@@ -94,15 +97,18 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
             return getStackInSlot(3);
         case FEET:
             return getStackInSlot(4);
-        case WEAPON:
+        case SWORD:
             return getStackInSlot(5);
-        default:
+        case BOW:
+            return getStackInSlot(6);
+        case NONE:
             return null;
         }
+        return null;
     }
     
     public void clearAllEquipmentStacks() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             setInventorySlotContents(i, null);
         }
     }
@@ -124,10 +130,13 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         case FEET:
             setInventorySlotContents(4, null);
             break;
-        case WEAPON:
+        case SWORD:
             setInventorySlotContents(5, null);
             break;
-        default:
+        case BOW:
+            setInventorySlotContents(6, null);
+            break;
+        case NONE:
             break;
         }
     }
@@ -148,7 +157,8 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         equipmentData.removeEquipment(EnumEquipmentType.LEGS);
         equipmentData.removeEquipment(EnumEquipmentType.SKIRT);
         equipmentData.removeEquipment(EnumEquipmentType.FEET);
-        equipmentData.removeEquipment(EnumEquipmentType.WEAPON);
+        equipmentData.removeEquipment(EnumEquipmentType.SWORD);
+        equipmentData.removeEquipment(EnumEquipmentType.BOW);
         updateEquipmentDataToPlayersAround();
     }
     
@@ -200,7 +210,6 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
     
     private void setEquipment(EnumEquipmentType equipmentType, ItemStack stack) {
-        
         switch (equipmentType) {
         case NONE:
             break;
@@ -219,8 +228,11 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         case FEET:
             setInventorySlotContents(4, stack);
             break;
-        case WEAPON:
+        case SWORD:
             setInventorySlotContents(5, stack);
+            break;
+        case BOW:
+            setInventorySlotContents(6, stack);
             break;
         }
     }
@@ -246,26 +258,8 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
     
     private void removeArmourFromSlot(byte slotId) {
-        switch (slotId) {
-        case 5:
-            removeCustomEquipment(EnumEquipmentType.WEAPON);
-            break;
-        case 4:
-            removeCustomEquipment(EnumEquipmentType.FEET);
-            break;
-        case 3:
-            removeCustomEquipment(EnumEquipmentType.SKIRT);
-            break;  
-        case 2:
-            removeCustomEquipment(EnumEquipmentType.LEGS);
-            break;
-        case 1:
-            removeCustomEquipment(EnumEquipmentType.CHEST);
-            break;
-        case 0:
-            removeCustomEquipment(EnumEquipmentType.HEAD);
-            break;
-        }
+        EnumEquipmentType equipmentType = EnumEquipmentType.getOrdinal(slotId + 1);
+        removeCustomEquipment(equipmentType);
     }
     
     public void removeAllCustomArmourData() {
@@ -275,7 +269,8 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         removeCustomEquipment(EnumEquipmentType.LEGS);
         removeCustomEquipment(EnumEquipmentType.SKIRT);
         removeCustomEquipment(EnumEquipmentType.FEET);
-        removeCustomEquipment(EnumEquipmentType.WEAPON);
+        removeCustomEquipment(EnumEquipmentType.SWORD);
+        removeCustomEquipment(EnumEquipmentType.BOW);
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
@@ -374,13 +369,13 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
             stack.stackSize = getInventoryStackLimit();
         }
         if (!player.worldObj.isRemote) {
-            if (slot < 6) {
+            if (slot < 7) {
                 armourSlotUpdate((byte)slot);
             }
 
         }
 
-        colourSlotUpdate((byte)6);
+        colourSlotUpdate((byte)7);
         
         markDirty();
     }

@@ -5,7 +5,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.client.render.RenderItemWeaponSkin;
+import riskyken.armourersWorkshop.client.render.RenderItemSwordSkin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -21,7 +21,7 @@ public abstract class AbstractAddon {
     protected void overrideItemRenderer(String itemName) {
         Item item = GameRegistry.findItem(getModName(), itemName);
         if (item != null) {
-            MinecraftForgeClient.registerItemRenderer(item, new RenderItemWeaponSkin());
+            MinecraftForgeClient.registerItemRenderer(item, new RenderItemSwordSkin());
         } else {
             ModLogger.log(Level.WARN, "Unable to override item renderer for: " + getModName() + " - " + itemName);
         }

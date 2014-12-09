@@ -9,7 +9,8 @@ public enum EnumEquipmentType {
     LEGS(2, new EnumEquipmentPart[] { EnumEquipmentPart.LEFT_LEG, EnumEquipmentPart.RIGHT_LEG }),
     SKIRT(2, new EnumEquipmentPart[] { EnumEquipmentPart.SKIRT }),
     FEET(3, new EnumEquipmentPart[] { EnumEquipmentPart.LEFT_FOOT, EnumEquipmentPart.RIGHT_FOOT }),
-    WEAPON(-1, new EnumEquipmentPart[] { EnumEquipmentPart.WEAPON });
+    SWORD(-1, new EnumEquipmentPart[] { EnumEquipmentPart.WEAPON }),
+    BOW(-1, new EnumEquipmentPart[] { EnumEquipmentPart.BOW });
     
     private final EnumEquipmentPart[] parts;
     private final int vanillaSlotId;

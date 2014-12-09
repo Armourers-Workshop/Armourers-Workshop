@@ -76,6 +76,8 @@ public final class EquipmentItemRenderCache {
         ModelCustomItemBuilt targetModel = modelCache.get(equipmentId);
         
         switch (type) {
+        case NONE:
+            break;
         case HEAD:
             GL11.glTranslatef(0F, 0.7F, 0F);
             targetModel.render();
@@ -96,10 +98,11 @@ public final class EquipmentItemRenderCache {
             GL11.glTranslatef(0F, -0.8F, 0F);
             targetModel.render();
             break;
-        case WEAPON:
+        case SWORD:
             targetModel.render();
             break;
-        default:
+        case BOW:
+            targetModel.render();
             break;
         }
     }

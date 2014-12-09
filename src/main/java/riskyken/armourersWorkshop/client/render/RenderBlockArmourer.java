@@ -117,7 +117,10 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             GL11.glTranslated(mult * -12, 0, 0);
             modelFeet.renderRightLeg();
             break;
-        case WEAPON:
+        case SWORD:
+            modelHand.render();
+            break;
+        case BOW:
             modelHand.render();
             break;
         }
@@ -158,8 +161,11 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             renderGuidePart(EnumEquipmentPart.LEFT_FOOT, x, y + te.getHeightOffset(), z);
             renderGuidePart(EnumEquipmentPart.RIGHT_FOOT, x, y + te.getHeightOffset(), z);
             break;
-        case WEAPON:
+        case SWORD:
             renderGuidePart(EnumEquipmentPart.WEAPON, x, y + te.getHeightOffset(), z);
+            break;
+        case BOW:
+            renderGuidePart(EnumEquipmentPart.BOW, x, y + te.getHeightOffset(), z);
             break;  
         }
     }

@@ -50,7 +50,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         bipedRotations.rightArm.rotationZ = (float) Math.toRadians(10);
         bipedRotations.leftArm.rotationY = (float) Math.toRadians(-1);
         bipedRotations.rightArm.rotationY = (float) Math.toRadians(1);
-        this.items = new ItemStack[6];
+        this.items = new ItemStack[7];
         this.isDoll = isDoll;
     }
     

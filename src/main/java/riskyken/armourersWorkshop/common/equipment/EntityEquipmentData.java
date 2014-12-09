@@ -13,8 +13,8 @@ public class EntityEquipmentData implements IEntityEquipment {
     private static final String TAG_HAVE_EQUIPMENT = "haveEquipment";
     private static final String TAG_EQUIPMENT_ID = "equipmentId";
     
-    private BitSet haveEquipment = new BitSet(6);
-    private int[] equipmentId = new int[6];
+    private BitSet haveEquipment = new BitSet(EnumEquipmentType.values().length - 1);
+    private int[] equipmentId = new int[EnumEquipmentType.values().length - 1];
     
     public EntityEquipmentData() {}
     
@@ -44,35 +44,35 @@ public class EntityEquipmentData implements IEntityEquipment {
     }
     
     public void saveNBTData(NBTTagCompound compound) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             compound.setBoolean(TAG_HAVE_EQUIPMENT + i, this.haveEquipment.get(i));
             compound.setInteger(TAG_EQUIPMENT_ID + i, this.equipmentId[i]);
         }
     }
     
     public void loadNBTData(NBTTagCompound compound) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             this.haveEquipment.set(i, compound.getBoolean(TAG_HAVE_EQUIPMENT + i));
             this.equipmentId[i] = compound.getInteger(TAG_EQUIPMENT_ID + i);
         }
     }
     
     public void toBytes(ByteBuf buf) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             buf.writeBoolean(this.haveEquipment.get(i));
             buf.writeInt(this.equipmentId[i]);
         }
     }
     
     public void fromBytes(ByteBuf buf) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             this.haveEquipment.set(i, buf.readBoolean());
             this.equipmentId[i] = buf.readInt();
         }
     }
 
     public boolean hasCustomEquipment() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             if (this.haveEquipment.get(i)) {
                 return true;
             }

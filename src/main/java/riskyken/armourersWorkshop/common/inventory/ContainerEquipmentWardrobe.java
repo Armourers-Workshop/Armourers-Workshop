@@ -19,13 +19,14 @@ public class ContainerEquipmentWardrobe extends Container {
         
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.HEAD, customEquipmentData, 0, 37, 18));
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 37, 37));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.WEAPON, customEquipmentData, 5, 123, 18));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SWORD, customEquipmentData, 5, 123, 18));
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 37, 56));
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 123, 56));
         addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.FEET, customEquipmentData, 4, 37, 75));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.BOW, customEquipmentData, 6, 123, 37));
         
-        addSlotToContainer(new SlotColourTool(customEquipmentData, 6, 8, 130));
-        addSlotToContainer(new SlotOutput(customEquipmentData, 7, 52, 130));
+        addSlotToContainer(new SlotColourTool(customEquipmentData, 7, 8, 130));
+        addSlotToContainer(new SlotOutput(customEquipmentData, 8, 52, 130));
         
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 224));
@@ -89,11 +90,16 @@ public class ContainerEquipmentWardrobe extends Container {
                             return null;
                         }
                         break;
+                    case 6:
+                        if (!this.mergeItemStack(stack, 6, 7, false)) {
+                            return null;
+                        }
+                        break;    
                     default:
                         return null;
                     }
                 } else if(stack.getItem() instanceof ItemColourPicker) {
-                    if (!this.mergeItemStack(stack, 6, 7, false)) {
+                    if (!this.mergeItemStack(stack, 7, 8, false)) {
                         return null;
                     }
                 } else {

@@ -232,7 +232,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                     int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
                     int y = yCoord + part.yLocation + getHeightOffset() + iy;
                     int z = zCoord + part.zLocation  - (part.zSize / 2) + iz;
-                    if (part == EnumEquipmentPart.WEAPON) {
+                    if (part == EnumEquipmentPart.WEAPON | part == EnumEquipmentPart.BOW) {
                         z += 4;
                     }
                     if (worldObj.getBlock(x, y, z) == ModBlocks.boundingBox) {
@@ -258,7 +258,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                     int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
                     int y = yCoord + part.yLocation + getHeightOffset() + iy;
                     int z = zCoord + part.zLocation - (part.zSize / 2) + iz;
-                    if (part == EnumEquipmentPart.WEAPON) {
+                    if (part == EnumEquipmentPart.WEAPON | part == EnumEquipmentPart.BOW) {
                         z += 4;
                     }
                     if (part == EnumEquipmentPart.SKIRT & ix > 3) {

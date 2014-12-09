@@ -271,7 +271,7 @@ public final class EquipmentPlayerRenderCache {
         for (int i = 0; i < 6; i++) {
             EnumEquipmentType armourType = EnumEquipmentType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
-                if (armourType != EnumEquipmentType.WEAPON) {
+                if (armourType != EnumEquipmentType.SWORD) {
                     CustomEquipmentItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
                     renderEquipmentPart(null, modelBiped, data);
                 } else {
@@ -347,7 +347,7 @@ public final class EquipmentPlayerRenderCache {
         case FEET:
             customFeet.render(entity, modelBiped, data);
             break;
-        case WEAPON:
+        case SWORD:
             //TODO Render weapons on mannequins
             break;
         default:
@@ -375,7 +375,7 @@ public final class EquipmentPlayerRenderCache {
         case FEET:
             customFeet.render(entity, data, limb1, limb2, limb3, headY, headX);
             break;
-        case WEAPON:
+        case SWORD:
             //TODO Render weapons on mannequins
             break;
         default:

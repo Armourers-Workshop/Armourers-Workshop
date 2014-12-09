@@ -40,10 +40,10 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
             
-            if (message.buttonId >= 0 & message.buttonId < 6) {
+            if (message.buttonId >= 0 & message.buttonId < EnumEquipmentType.values().length - 1) {
                 armourerBrain.setType(EnumEquipmentType.getOrdinal(message.buttonId + 1));
             }
-            if (message.buttonId == 6) {
+            if (message.buttonId == 14) {
                 armourerBrain.loadArmourItem(player);
             }
             if (message.buttonId == 7) {
