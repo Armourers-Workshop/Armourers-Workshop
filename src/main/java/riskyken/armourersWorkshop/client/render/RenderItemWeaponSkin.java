@@ -70,9 +70,9 @@ public class RenderItemWeaponSkin implements IItemRenderer {
             switch (type) {
             case EQUIPPED:
                 
-                GL11.glTranslatef(-2F * scale, -1F * scale, -1F * scale);
+                GL11.glTranslatef(-2F * scale, -1F * scale, 0F);
                 if (isBlocking) {
-                    GL11.glTranslatef(-1F * scale, 2F * scale, 2F * scale);
+                    GL11.glTranslatef(-0F * scale, 2F * scale, 1F * scale);
                 }
                 GL11.glRotatef(-90F, 0F, 1F, 0F);
                 break;
