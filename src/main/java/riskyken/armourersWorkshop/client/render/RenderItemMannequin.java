@@ -71,12 +71,14 @@ public class RenderItemMannequin implements IItemRenderer {
         }
         
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
+        PlayerSkinInfo skinInfo = null;
         
         if (item.hasTagCompound()) {
             NBTTagCompound compound = item.getTagCompound();
             GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(gameProfile.getId());
                 skin = SkinHelper.getSkinResourceLocation(gameProfile);
             }
         }
@@ -86,12 +88,18 @@ public class RenderItemMannequin implements IItemRenderer {
             GL11.glScalef(dollScale, dollScale, dollScale);
         }
         
+        if (skinInfo != null && skinInfo.getNakedInfo().isNaked) {
+            if (!skinInfo.bindNomalSkin()) {
+                Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+            }
+        } else {
+            Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+        }
+        
         float scale = 0.0625F;
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-        Minecraft.getMinecraft().renderEngine.bindTexture(skin);
         modelMannequin.render(null, 0, 0, 0, headPitch, headTilt, scale, true);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
