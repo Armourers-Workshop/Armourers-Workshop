@@ -88,7 +88,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelBipedMain);
             }
             
-            RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, 1);
+            RenderPlayerEvent.Specials.Pre preEvent = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, tickTime);
 
             if (renderPlayer.modelBipedMain.isChild) {
                 GL11.glPushMatrix();
@@ -108,7 +108,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         modelMannequin.render(te.getBipedRotations(), true, scale);
         
         if (fakePlayer != null) {
-            RenderPlayerEvent.Specials.Post postEvent = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, 1);
+            RenderPlayerEvent.Specials.Post postEvent = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, tickTime);
             if (renderPlayer.modelBipedMain.isChild) {
                 GL11.glPushMatrix();
                 GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
