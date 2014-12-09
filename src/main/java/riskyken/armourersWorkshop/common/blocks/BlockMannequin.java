@@ -40,7 +40,7 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     private static final String TAG_OWNER = "owner";
     
     public BlockMannequin() {
-        super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal);
+        super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal, true);
         setLightOpacity(0);
         setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
     }

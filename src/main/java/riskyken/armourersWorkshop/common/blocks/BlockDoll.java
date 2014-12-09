@@ -36,7 +36,7 @@ public class BlockDoll extends AbstractModBlock implements ITileEntityProvider {
     private static final String TAG_OWNER = "owner";
     
     public BlockDoll() {
-        super(LibBlockNames.DOLL, Material.rock, soundTypeMetal);
+        super(LibBlockNames.DOLL, Material.rock, soundTypeMetal, false);
         setLightOpacity(0);
         setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
     }
