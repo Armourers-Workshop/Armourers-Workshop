@@ -83,6 +83,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
             fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
             fakePlayer.prevRotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
+            fakePlayer.ticksExisted = Minecraft.getMinecraft().thePlayer.ticksExisted;
             if (te.getBipedRotations() != null) {
                 te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelBipedMain);
             }
