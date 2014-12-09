@@ -29,7 +29,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
     
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             list.add(new ItemStack(item, 1, i));
         }
     }
@@ -78,14 +78,15 @@ public class ItemEquipmentSkin extends AbstractModItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        icons = new IIcon[7];
+        icons = new IIcon[8];
         icons[0] = register.registerIcon(LibModInfo.ID + ":" + "templateHead");
         icons[1] = register.registerIcon(LibModInfo.ID + ":" + "templateChest");
         icons[2] = register.registerIcon(LibModInfo.ID + ":" + "templateLegs");
         icons[3] = register.registerIcon(LibModInfo.ID + ":" + "templateSkirt");
         icons[4] = register.registerIcon(LibModInfo.ID + ":" + "templateFeet");
         icons[5] = register.registerIcon(LibModInfo.ID + ":" + "templateWeapon");
-        icons[6] = register.registerIcon(LibModInfo.ID + ":" + "templateLoading");
+        icons[6] = register.registerIcon(LibModInfo.ID + ":" + "templateBow");
+        icons[7] = register.registerIcon(LibModInfo.ID + ":" + "templateLoading");
     }
     
     @Override
@@ -93,10 +94,10 @@ public class ItemEquipmentSkin extends AbstractModItem {
         int damage = stack.getItemDamage();
         
         if (pass == 1) {
-            return icons[6];
+            return icons[7];
         }
         
-        if (damage < 6 & damage >= 0) {
+        if (damage < 7 & damage >= 0) {
             return icons[damage];
         }
         return super.getIcon(stack, pass);
