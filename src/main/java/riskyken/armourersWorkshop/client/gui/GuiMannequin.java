@@ -103,7 +103,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         
         headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 120, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
         headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
-        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Y: ", "", -20D, 20D, 0D, true, true, this);
+        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Z: ", "", -20D, 20D, 0D, true, true, this);
         
         isChildCheck = new GuiCheckBox(2, this.guiLeft + 149, this.guiTop + 110, 14, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.isChild"), false, false);
         
