@@ -4,8 +4,10 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
@@ -21,10 +23,14 @@ public class DollCraftinghandler {
     @SubscribeEvent
     public void onMinecartUpdateEvent(MinecartUpdateEvent event) {
         World world = event.minecart.worldObj;
-
+        EntityMinecart minecart = event.minecart;
+        
         List<Entity> entities;
         
-        entities = world.getEntitiesWithinAABB(EntityItem.class, event.minecart.getCollisionBox(event.minecart));
+        AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
+                minecart.posX - 0.5D, minecart.posY - 0.5D, minecart.posZ - 0.5D,
+                minecart.posX + 0.5D, minecart.posY + 0.5D, minecart.posZ + 0.5D);
+        entities = world.getEntitiesWithinAABB(EntityItem.class, bb);
         
         if (entities.size() == 0) {
             return;
