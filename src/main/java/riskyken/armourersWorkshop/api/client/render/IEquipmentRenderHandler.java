@@ -17,11 +17,6 @@ public interface IEquipmentRenderHandler {
     
     public void renderCustomEquipmentFromStack(ItemStack[] stacks, float limb1, float limb2, float limb3, float headY, float headX);
     
-    /**
-     * Get the number of items in the cache for item models.
-     * @return Number of items in the cache.
-     */
-    public int getItemModelRenderCacheSize();
     
     /**
      * Get the number of items in the cache for entity models.

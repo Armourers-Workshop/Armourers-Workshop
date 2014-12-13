@@ -13,7 +13,6 @@ import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
 import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
@@ -124,7 +123,7 @@ public class ClientProxy extends CommonProxy {
     public void receivedEquipmentData(CustomEquipmentItemData equipmentData, byte target) {
         switch (target) {
         case 0:
-            EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
+            //EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
             break;
         case 1:
             ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.model;
+package riskyken.armourersWorkshop.client.model.equipmet;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -23,7 +24,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelCustomArmour extends ModelBiped{
+public abstract class ModelCustomArmour extends ModelBiped{
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     protected static float scale = 0.0625F;
@@ -37,6 +38,8 @@ public class ModelCustomArmour extends ModelBiped{
         main.addBox(0F, 0F, 0F, 1, 1, 1);
         main.setRotationPoint(0, 0, 0);
     }
+    
+    public abstract void render(Entity entity, ModelBiped modelBiped, CustomEquipmentItemData armourData);
     
     public static double RadiansToDegrees(double angle) {
         return angle * (180.0 / Math.PI);

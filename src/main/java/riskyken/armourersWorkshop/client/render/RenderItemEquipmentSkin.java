@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
@@ -80,10 +81,10 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
         if (armourNBT == null) { return false; }
         if (!armourNBT.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) { return false; }
         int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        if (EquipmentItemRenderCache.isEquipmentInCache(equipmentId)) {
+        if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(equipmentId)) {
             return true;
         } else {
-            EquipmentItemRenderCache.requestEquipmentDataFromServer(equipmentId);
+            ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(equipmentId);
             return false;
         }
     }

@@ -1,21 +1,16 @@
-package riskyken.armourersWorkshop.client.render;
 
-import java.util.HashMap;
-import java.util.HashSet;
+package riskyken.armourersWorkshop.client.render;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.client.model.ModelCustomItemBuilt;
+import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmour;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,36 +21,10 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author RiskyKen
  *
  */
+
 @SideOnly(Side.CLIENT)
 public final class EquipmentItemRenderCache {
-    
-    private static HashMap<Integer, ModelCustomItemBuilt> modelCache = new HashMap<Integer, ModelCustomItemBuilt>();
-    private static HashSet<Integer> requestedEquipmentIds = new HashSet<Integer>();
-    
-    public static boolean isEquipmentInCache(int equipmentId) {
-        return modelCache.containsKey(equipmentId);
-    }
-    
-    public static void requestEquipmentDataFromServer(int equipmentId) {
-        if (!requestedEquipmentIds.contains(equipmentId)) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId, (byte) 0));
-            requestedEquipmentIds.add(equipmentId);
-        }
-    }
-    
-    public static void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
-        int equipmentId = equipmentData.hashCode();
-        
-        NBTTagCompound armourNBT = new NBTTagCompound();
-        equipmentData.writeToNBT(armourNBT);
-        buildModelForCache(armourNBT, equipmentData.getType(), equipmentId);
-        if (requestedEquipmentIds.contains(equipmentId)) {
-            requestedEquipmentIds.remove(equipmentId);
-        } else {
-            ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
-        }
-    }
-    
+
     public static void renderItemAsArmourModel(ItemStack stack) {
         renderItemAsArmourModel(stack, EnumEquipmentType.getOrdinal(stack.getItemDamage() + 1));
     }
@@ -68,78 +37,45 @@ public final class EquipmentItemRenderCache {
     }
     
     public static void renderItemModelFromId(int equipmentId, EnumEquipmentType type) {
-        if (!modelCache.containsKey(equipmentId)) {
-            requestEquipmentDataFromServer(equipmentId);
+        ModelCustomArmour targetModel = EquipmentPlayerRenderCache.INSTANCE.getModelForEquipmentType(type);
+        if (targetModel == null) {
             return;
         }
         
-        ModelCustomItemBuilt targetModel = modelCache.get(equipmentId);
+        CustomEquipmentItemData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+        if (data == null) {
+            return;
+        }
         
         switch (type) {
         case NONE:
             break;
         case HEAD:
-            GL11.glTranslatef(0F, 0.7F, 0F);
-            targetModel.render();
+            GL11.glTranslatef(0F, 0.2F, 0F);
+            targetModel.render(null, null, data);
             break;
         case CHEST:
             GL11.glTranslatef(0F, -0.35F, 0F);
-            targetModel.render();
+            targetModel.render(null, null, data);
             break;
         case LEGS:
-            GL11.glTranslatef(0F, -0.45F, 0F);
-            targetModel.render();
+            GL11.glTranslatef(0F, -1.2F, 0F);
+            targetModel.render(null, null, data);
             break;
         case SKIRT:
-            GL11.glTranslatef(0F, -0.45F, 0F);
-            targetModel.render();
+            GL11.glTranslatef(0F, -1.0F, 0F);
+            targetModel.render(null, null, data);
             break;
         case FEET:
-            GL11.glTranslatef(0F, -0.8F, 0F);
-            targetModel.render();
+            GL11.glTranslatef(0F, -1.2F, 0F);
+            targetModel.render(null, null, data);
             break;
         case SWORD:
-            targetModel.render();
+            targetModel.render(null, null, data);
             break;
         case BOW:
-            targetModel.render();
+            targetModel.render(null, null, data);;
             break;
-        }
-    }
-    
-    public static int getCacheSize() {
-        return modelCache.size();
-    }
-    
-    private static synchronized void buildModelForCache(NBTTagCompound armourNBT, EnumEquipmentType armourType, int key) {
-        CustomEquipmentItemData itemData = new CustomEquipmentItemData(armourNBT);
-        ModelCustomItemBuilt newModel = new ModelCustomItemBuilt(itemData, armourType, key);
-        if (modelCache.containsKey(key)) {
-            modelCache.remove(key);
-        }
-        modelCache.put(key, newModel);
-    }
-    
-    private static synchronized void removeModelFromCache(int key) {
-        ModelCustomItemBuilt removeModel = modelCache.get(key);
-        if (removeModel != null) {
-            modelCache.remove(key);
-            removeModel.cleanUp();
-        }
-    }
-
-    public static void tick() {
-        for (int i = 0; i < modelCache.size(); i++) {
-            int key = (Integer) modelCache.keySet().toArray()[i];
-            modelCache.get(key).tick();
-        }
-        
-        for (int i = 0; i < modelCache.size(); i++) {
-            int key = (Integer) modelCache.keySet().toArray()[i];
-            if (modelCache.get(key).needsCleanup()) {
-                removeModelFromCache(key);
-                break;
-            }
         }
     }
 }

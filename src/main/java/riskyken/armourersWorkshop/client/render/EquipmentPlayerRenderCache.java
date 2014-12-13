@@ -18,11 +18,13 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
-import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
-import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
-import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
-import riskyken.armourersWorkshop.client.model.ModelCustomArmourLegs;
-import riskyken.armourersWorkshop.client.model.ModelCustomArmourSkirt;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmour;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourChest;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourFeet;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourHead;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourLegs;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourSkirt;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
@@ -52,6 +54,7 @@ public final class EquipmentPlayerRenderCache {
     public ModelCustomArmourLegs customLegs = new ModelCustomArmourLegs();
     public ModelCustomArmourSkirt customSkirt = new ModelCustomArmourSkirt();
     public ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
+    public ModelCustomEquipmetSword customSword = new ModelCustomEquipmetSword();
     
     public EquipmentPlayerRenderCache() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -148,6 +151,28 @@ public final class EquipmentPlayerRenderCache {
     	}
     }
     
+    public ModelCustomArmour getModelForEquipmentType(EnumEquipmentType equipmentType) {
+        switch (equipmentType) {
+        case NONE:
+            return null;
+        case HEAD:
+            return customHead;
+        case CHEST:
+            return customChest;
+        case LEGS:
+            return customLegs;
+        case SKIRT:
+            return customSkirt;
+        case FEET:
+            return customFeet;
+        case SWORD:
+            return customSword;
+        case BOW:
+            return null;
+        }
+        return null;
+    }
+    
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.SetArmorModel event) {
         EntityPlayer player = event.entityPlayer;
@@ -234,24 +259,19 @@ public final class EquipmentPlayerRenderCache {
         for (int i = 0; i < 6; i++) {
             EnumEquipmentType armourType = EnumEquipmentType.getOrdinal(i + 1);
             if (equipmentData.haveEquipment(armourType)) {
-                if (armourType != EnumEquipmentType.SWORD) {
-                    CustomEquipmentItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
-                    renderEquipmentPart(null, modelBiped, data);
-                } else {
-                    GL11.glPushMatrix();
-                    
+                CustomEquipmentItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
+                if (armourType == EnumEquipmentType.SWORD | armourType == EnumEquipmentType.BOW) {
                     float scale = 0.0625F;
-                    if (modelBiped != null) {
-                        if (modelBiped.isChild) {
-                            float f6 = 2.0F;
-                            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-                            GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
-                            
-                        }
-                    }
-                    
+                    GL11.glPushMatrix();
                     BipedRotations ripedRotations = teMannequin.getBipedRotations();
                     
+                    if (modelBiped != null) {
+                        if (modelBiped.isChild) {
+                        float f6 = 2.0F;
+                        GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+                        GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
+                        }
+                        }
                     
                     GL11.glTranslatef(-5F * scale, 0, 0);
                     GL11.glTranslatef(0, 2F * scale, 0);
@@ -259,14 +279,15 @@ public final class EquipmentPlayerRenderCache {
                     GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationZ), 0, 0, 1);
                     GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationY), 0, 1, 0);
                     GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationX), 1, 0, 0);
-                    
                     GL11.glRotatef(90, 1, 0, 0);
                     
                     GL11.glTranslatef(0, 0, -8 * scale);
                     GL11.glTranslatef(-1F * scale, 0, 0);
+                    renderEquipmentPart(null, null, data);
                     
-                    EquipmentItemRenderCache.renderItemModelFromId(equipmentData.getEquipmentId(armourType), armourType);
                     GL11.glPopMatrix();
+                } else {
+                    renderEquipmentPart(null, modelBiped, data);
                 }
             }
         }
@@ -311,7 +332,7 @@ public final class EquipmentPlayerRenderCache {
             customFeet.render(entity, modelBiped, data);
             break;
         case SWORD:
-            //TODO Render weapons on mannequins
+            customSword.render(entity, modelBiped, data);
             break;
         default:
             break;
@@ -339,7 +360,7 @@ public final class EquipmentPlayerRenderCache {
             customFeet.render(entity, data, limb1, limb2, limb3, headY, headX);
             break;
         case SWORD:
-            //TODO Render weapons on mannequins
+            customSword.render(entity, data, limb1, limb2, limb3, headY, headX);
             break;
         default:
             break;

@@ -37,11 +37,15 @@ public class ClientEquipmentModelCache {
         FMLCommonHandler.instance().bus().register(this);
     }
     
-    private void requestEquipmentDataFromServer(int equipmentId) {
+    public void requestEquipmentDataFromServer(int equipmentId) {
         if (!requestedEquipmentIds.contains(equipmentId)) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId, (byte) 1));
             requestedEquipmentIds.add(equipmentId);
         }
+    }
+    
+    public boolean isEquipmentInCache(int equipmentId) {
+        return equipmentDataMap.containsKey(equipmentId);
     }
     
     public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {

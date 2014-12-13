@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.model;
+package riskyken.armourersWorkshop.client.model.equipmet;
 
 import java.util.ArrayList;
 
@@ -17,13 +17,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelCustomArmourFeet extends ModelCustomArmour {
+public class ModelCustomArmourLegs extends ModelCustomArmour {
     
     public void render(Entity entity, CustomEquipmentItemData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, scale, entity);
         render(entity, armourData);
     }
     
+    @Override
     public void render(Entity entity, ModelBiped modelBiped, CustomEquipmentItemData armourData) {
         setRotationFromModelBiped(modelBiped);
         render(entity, armourData);
@@ -45,7 +46,7 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
 
         
         bindArmourTexture();
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumEquipmentType.FEET);
+        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumEquipmentType.LEGS);
         armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
@@ -54,20 +55,21 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
                 EquipmentRenderHelper.cullFacesOnEquipmentPart(part);
             }
             
+            
             GL11.glPushMatrix();
             if (isChild) {
                 float f6 = 2.0F;
                 GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-                GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F); 
+                GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
             }
-
+            
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
             switch (part.getArmourPart()) {
-            case LEFT_FOOT:
-                renderLeftFoot(part, scale);
+            case LEFT_LEG:
+                renderLeftLeg(part, scale);
                 break;
-            case RIGHT_FOOT:
-                renderRightFoot(part, scale);
+            case RIGHT_LEG:
+                renderRightLeg(part, scale);
                 break;   
             default:
                 break;
@@ -78,7 +80,7 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftFoot(CustomEquipmentPartData part, float scale) {
+    private void renderLeftLeg(CustomEquipmentPartData part, float scale) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -88,13 +90,11 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
-        
-        
         renderPart(part, scale);
         GL11.glPopMatrix();
     }
     
-    private void renderRightFoot(CustomEquipmentPartData part, float scale) {
+    private void renderRightLeg(CustomEquipmentPartData part, float scale) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -104,7 +104,6 @@ public class ModelCustomArmourFeet extends ModelCustomArmour {
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) RadiansToDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
-        
         renderPart(part, scale);
         GL11.glPopMatrix();
     }
