@@ -47,7 +47,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         PlayerSkinInfo skinInfo = null;
         
         if (te.getGameProfile() != null) {
-            skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
+            skinInfo = EquipmentModelRender.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
             resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
         }
         

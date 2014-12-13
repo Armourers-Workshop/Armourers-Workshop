@@ -9,21 +9,20 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
-import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmour;
+import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * Holds a cache of ModelCustomItemBuilt that are used when the client renders a
- * item equipment model.
+ * Helps render item stacks.
  * 
  * @author RiskyKen
  *
  */
 
 @SideOnly(Side.CLIENT)
-public final class EquipmentItemRenderCache {
+public final class ItemStackRenderHelper {
 
     public static void renderItemAsArmourModel(ItemStack stack) {
         renderItemAsArmourModel(stack, EnumEquipmentType.getOrdinal(stack.getItemDamage() + 1));
@@ -37,7 +36,7 @@ public final class EquipmentItemRenderCache {
     }
     
     public static void renderItemModelFromId(int equipmentId, EnumEquipmentType type) {
-        ModelCustomArmour targetModel = EquipmentPlayerRenderCache.INSTANCE.getModelForEquipmentType(type);
+        IEquipmentModel targetModel = EquipmentModelRender.INSTANCE.getModelForEquipmentType(type);
         if (targetModel == null) {
             return;
         }

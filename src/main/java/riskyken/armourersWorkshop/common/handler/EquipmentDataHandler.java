@@ -11,7 +11,7 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRender;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
@@ -56,7 +56,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     
     @SideOnly(Side.CLIENT)
     private IEntityEquipment getLocalPlayerEquipment(Entity entity) {
-        return EquipmentPlayerRenderCache.INSTANCE.getPlayerCustomEquipmentData(entity);
+        return EquipmentModelRender.INSTANCE.getPlayerCustomEquipmentData(entity);
     }
     
     @Override

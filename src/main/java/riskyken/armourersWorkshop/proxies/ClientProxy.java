@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRender;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
@@ -88,12 +88,12 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
-        EquipmentPlayerRenderCache.INSTANCE.addEquipmentData(playerId, equipmentData);
+        EquipmentModelRender.INSTANCE.addEquipmentData(playerId, equipmentData);
     }
 
     @Override
     public void removeEquipmentData(UUID playerId) {
-        EquipmentPlayerRenderCache.INSTANCE.removeEquipmentData(playerId);
+        EquipmentModelRender.INSTANCE.removeEquipmentData(playerId);
     }
 
     @Override
@@ -103,12 +103,12 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
-        EquipmentPlayerRenderCache.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
+        EquipmentModelRender.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
     }
 
     @Override
     public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        return EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(playerId);
+        return EquipmentModelRender.INSTANCE.getPlayersNakedData(playerId);
     }
 
     @Override

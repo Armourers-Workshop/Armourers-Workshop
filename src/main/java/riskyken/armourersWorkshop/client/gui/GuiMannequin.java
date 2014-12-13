@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRender;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.SkinHelper;
@@ -228,7 +228,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         PlayerSkinInfo skinInfo = null;
         
         if (tileEntity.getGameProfile() != null) {
-            skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(tileEntity.getGameProfile().getId());
+            skinInfo = EquipmentModelRender.INSTANCE.getPlayersNakedData(tileEntity.getGameProfile().getId());
             skin = SkinHelper.getSkinResourceLocation(tileEntity.getGameProfile());
         }
         

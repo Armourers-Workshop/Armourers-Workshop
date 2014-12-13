@@ -38,6 +38,7 @@ public final class EquipmentRenderHelper {
         }
         
         if (bodyPart != null) {
+            //TODO Re enable culling faces that touch the players body.
             //checkBlockFaceIntersectsBodyPart(bodyPart, block);
         }
         

@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
@@ -17,10 +16,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelCustomArmourSkirt extends ModelCustomArmour {
+public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
     
+    @Override
     public void render(Entity entity, CustomEquipmentItemData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
-        setRotationAngles(limb1, limb2, limb3, headY, headX, scale, entity);
+        setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
         render(entity, armourData);
     }
     
@@ -46,27 +46,23 @@ public class ModelCustomArmourSkirt extends ModelCustomArmour {
         }
 
         
-        bindArmourTexture();
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumEquipmentType.SKIRT);
         armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
             CustomEquipmentPartData part = parts.get(i);
-            if (!part.facesBuild) {
-                EquipmentRenderHelper.cullFacesOnEquipmentPart(part);
-            }
             
             GL11.glPushMatrix();
             if (isChild) {
                 float f6 = 2.0F;
                 GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-                GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
+                GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
             
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
             switch (part.getArmourPart()) {
             case SKIRT:
-                renderSkirt(part, scale);
+                renderSkirt(part, SCALE);
                 break;
             default:
                 break;

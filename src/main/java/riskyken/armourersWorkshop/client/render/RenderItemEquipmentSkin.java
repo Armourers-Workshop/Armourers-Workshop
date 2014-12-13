@@ -65,7 +65,7 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             default:
                 break;
             }
-            EquipmentItemRenderCache.renderItemAsArmourModel(stack);
+            ItemStackRenderHelper.renderItemAsArmourModel(stack);
             GL11.glPopMatrix();
             
         } else {

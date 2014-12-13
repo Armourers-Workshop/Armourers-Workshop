@@ -78,7 +78,7 @@ public class RenderItemMannequin implements IItemRenderer {
             GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
-                skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(gameProfile.getId());
+                skinInfo = EquipmentModelRender.INSTANCE.getPlayersNakedData(gameProfile.getId());
                 skin = SkinHelper.getSkinResourceLocation(gameProfile);
             }
         }

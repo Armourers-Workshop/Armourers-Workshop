@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
-import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmour;
+import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourHead;
@@ -43,9 +43,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
-public final class EquipmentPlayerRenderCache {
+public final class EquipmentModelRender {
     
-    public static final EquipmentPlayerRenderCache INSTANCE = new EquipmentPlayerRenderCache();
+    public static final EquipmentModelRender INSTANCE = new EquipmentModelRender();
     
     private HashMap<UUID, EntityEquipmentData> playerEquipmentMap = new HashMap<UUID, EntityEquipmentData>();
     private HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
@@ -58,7 +58,7 @@ public final class EquipmentPlayerRenderCache {
     public ModelCustomEquipmetSword customSword = new ModelCustomEquipmetSword();
     public ModelCustomEquipmetBow customBow = new ModelCustomEquipmetBow();
     
-    public EquipmentPlayerRenderCache() {
+    public EquipmentModelRender() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
@@ -153,7 +153,7 @@ public final class EquipmentPlayerRenderCache {
     	}
     }
     
-    public ModelCustomArmour getModelForEquipmentType(EnumEquipmentType equipmentType) {
+    public IEquipmentModel getModelForEquipmentType(EnumEquipmentType equipmentType) {
         switch (equipmentType) {
         case NONE:
             return null;
@@ -253,7 +253,6 @@ public final class EquipmentPlayerRenderCache {
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
         EntityEquipmentData equipmentData = teMannequin.getEquipmentData();
         
-        
         if (!EquipmentRenderHelper.withinMaxRenderDistance(teMannequin.xCoord, teMannequin.yCoord, teMannequin.zCoord)) {
             return;
         }
@@ -269,11 +268,11 @@ public final class EquipmentPlayerRenderCache {
                     
                     if (modelBiped != null) {
                         if (modelBiped.isChild) {
-                        float f6 = 2.0F;
-                        GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-                        GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
+                            float f6 = 2.0F;
+                            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+                            GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
                         }
-                        }
+                    }
                     
                     GL11.glTranslatef(-5F * scale, 0, 0);
                     GL11.glTranslatef(0, 2F * scale, 0);
@@ -317,61 +316,21 @@ public final class EquipmentPlayerRenderCache {
         if (data == null) {
             return;
         }
-        switch (data.getType()) {
-        case NONE:
-            break;
-        case HEAD:
-            customHead.render(entity, modelBiped, data);
-            break;
-        case CHEST:
-            customChest.render(entity, modelBiped, data);
-            break;
-        case LEGS:
-            customLegs.render(entity, modelBiped, data);
-            break;
-        case SKIRT:
-            customSkirt.render(entity, modelBiped, data);
-            break;
-        case FEET:
-            customFeet.render(entity, modelBiped, data);
-            break;
-        case SWORD:
-            customSword.render(entity, modelBiped, data);
-            break;
-        case BOW:
-            customBow.render(entity, modelBiped, data);
-            break;
+        IEquipmentModel model = getModelForEquipmentType(data.getType());
+        if (model == null) {
+            return;
         }
+        model.render(entity, modelBiped, data);
     }
     
     private void renderEquipmentPartRotated(Entity entity, CustomEquipmentItemData data, float limb1, float limb2, float limb3, float headY, float headX) {
         if (data == null) {
             return;
         }
-        switch (data.getType()) {
-        case NONE:
-            break;
-        case HEAD:
-            customHead.render(entity, data, limb1, limb2, limb3, headY, headX);
-            break;
-        case CHEST:
-            customChest.render(entity, data, limb1, limb2, limb3, headY, headX);
-            break;
-        case LEGS:
-            customLegs.render(entity, data, limb1, limb2, limb3, headY, headX);
-            break;
-        case SKIRT:
-            customSkirt.render(entity, data, limb1, limb2, limb3, headY, headX);
-            break;
-        case FEET:
-            customFeet.render(entity, data, limb1, limb2, limb3, headY, headX);
-            break;
-        case SWORD:
-            customSword.render(entity, data, limb1, limb2, limb3, headY, headX);
-            break;
-        case BOW:
-            customBow.render(entity, data, limb1, limb2, limb3, headY, headX);
-            break;
+        IEquipmentModel model = getModelForEquipmentType(data.getType());
+        if (model == null) {
+            return;
         }
+        model.render(entity, data, limb1, limb2, limb3, headY, headX);
     }
 }

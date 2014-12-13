@@ -86,7 +86,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
             default:
                 break;
             }
-            EquipmentItemRenderCache.renderItemAsArmourModel(stack, EnumEquipmentType.SWORD);
+            ItemStackRenderHelper.renderItemAsArmourModel(stack, EnumEquipmentType.SWORD);
             
             GL11.glPopMatrix();
             
