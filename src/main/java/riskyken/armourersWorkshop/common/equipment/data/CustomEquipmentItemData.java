@@ -26,7 +26,7 @@ public class CustomEquipmentItemData {
     private static final String TAG_TYPE = "type";
     private static final String TAG_PARTS = "parts";
     
-    public static final int FILE_VERSION = 2;
+    public static final int FILE_VERSION = 3;
     
     private String authorName;
     private String customName;

@@ -9,7 +9,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -34,7 +35,7 @@ public final class ArmourerWorldHelper {
     
     private static void saveArmourPart(World world, ArrayList<CustomEquipmentPartData> armourData,
             EnumEquipmentPart part, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
-        ArrayList<CustomEquipmentBlockData> armourBlockData = new ArrayList<CustomEquipmentBlockData>();
+        ArrayList<ICube> armourBlockData = new ArrayList<ICube>();
         
         
         for (int ix = 0; ix < part.getTotalXSize(); ix++) {
@@ -65,7 +66,7 @@ public final class ArmourerWorldHelper {
     }
     
     private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz,
-            ArrayList<CustomEquipmentBlockData> list, ForgeDirection direction) {
+            ArrayList<ICube> list, ForgeDirection direction) {
         if (world.isAirBlock(x, y, z)) { return; }
         Block block = world.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
@@ -74,8 +75,13 @@ public final class ArmourerWorldHelper {
             if (block == ModBlocks.colourableGlowing) {
                 blockType = 1;
             }
-            CustomEquipmentBlockData blockData = new CustomEquipmentBlockData(ix, iy, iz,
-                    colour, blockType);
+            
+            ICube blockData = CubeRegistry.INSTANCE.getCubeInstanceFormId(blockType);
+            
+            blockData.setX((byte) ix);
+            blockData.setY((byte) iy);
+            blockData.setZ((byte) iz);
+            blockData.setColour(colour);
             
             list.add(blockData);
         }
@@ -93,7 +99,7 @@ public final class ArmourerWorldHelper {
     private static void loadArmourPart(World world, CustomEquipmentPartData partData, int xCoord, int yCoord, int zCoord,
             ForgeDirection direction) {
         for (int i = 0; i < partData.getArmourData().size(); i++) {
-            CustomEquipmentBlockData blockData = partData.getArmourData().get(i);
+            ICube blockData = partData.getArmourData().get(i);
             
             int xOrigin = -partData.getArmourPart().xLocation  + ((partData.getArmourPart().xSize / 2) + partData.getArmourPart().xOrigin);
             int yOrigin = -partData.getArmourPart().yOrigin + partData.getArmourPart().yLocation;
@@ -103,12 +109,12 @@ public final class ArmourerWorldHelper {
     }
     
     private static void loadArmourBlock(World world, int x, int y, int z, int xOrigin, int yOrigin, int zOrigin,
-            CustomEquipmentBlockData blockData, ForgeDirection direction) {
+            ICube blockData, ForgeDirection direction) {
         
         
-        int shiftX = -blockData.x - 1;
-        int shiftY = blockData.y + 1;
-        int shiftZ = blockData.z;
+        int shiftX = -blockData.getX() - 1;
+        int shiftY = blockData.getY() + 1;
+        int shiftZ = blockData.getZ();
         /*
         switch (direction) {
         case SOUTH:
@@ -144,7 +150,7 @@ public final class ArmourerWorldHelper {
             world.setBlock(targetX, targetY, targetZ, targetBlock);
             TileEntity te = world.getTileEntity(targetX, targetY, targetZ);
             if (te != null && te instanceof TileEntityColourable) {
-                ((TileEntityColourable)te).setColour(blockData.colour);
+                ((TileEntityColourable)te).setColour(blockData.getColour());
             }
         }
     }

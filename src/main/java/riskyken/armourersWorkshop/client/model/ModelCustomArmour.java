@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -130,9 +130,9 @@ public class ModelCustomArmour extends ModelBiped{
         // GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     
-    private boolean hasNormalBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData) {
+    private boolean hasNormalBlocks(ArrayList<ICube> armourBlockData) {
         for (int i = 0; i < armourBlockData.size(); i++) {
-            CustomEquipmentBlockData blockData = armourBlockData.get(i);
+            ICube blockData = armourBlockData.get(i);
             if (!blockData.isGlowing()) {
                 return true;
             }
@@ -140,9 +140,9 @@ public class ModelCustomArmour extends ModelBiped{
         return false;
     }
     
-    private boolean hasGlowingBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData) {
+    private boolean hasGlowingBlocks(ArrayList<ICube> armourBlockData) {
         for (int i = 0; i < armourBlockData.size(); i++) {
-            CustomEquipmentBlockData blockData = armourBlockData.get(i);
+            ICube blockData = armourBlockData.get(i);
             if (blockData.isGlowing()) {
                 return true;
             }
@@ -150,23 +150,23 @@ public class ModelCustomArmour extends ModelBiped{
         return false;
     }
     
-    private void renderNomralPartBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
+    private void renderNomralPartBlocks(ArrayList<ICube> armourBlockData, float scale) {
         GL11.glPushMatrix();
         for (int i = 0; i < armourBlockData.size(); i++) {
-            CustomEquipmentBlockData blockData = armourBlockData.get(i);
+            ICube blockData = armourBlockData.get(i);
             if (!blockData.isGlowing()) {
-                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags());
             }
         }
         GL11.glPopMatrix();
     }
     
-    private void renderGlowingPartBlocks(ArrayList<CustomEquipmentBlockData> armourBlockData, float scale) {
+    private void renderGlowingPartBlocks(ArrayList<ICube> armourBlockData, float scale) {
         GL11.glPushMatrix();
         for (int i = 0; i < armourBlockData.size(); i++) {
-            CustomEquipmentBlockData blockData = armourBlockData.get(i);
+            ICube blockData = armourBlockData.get(i);
             if (blockData.isGlowing()) {
-                renderArmourBlock(blockData.x, blockData.y, blockData.z, blockData.colour, scale, blockData.faceFlags);
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags());
             }
         }
         GL11.glPopMatrix();

@@ -8,7 +8,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 
 public final class EquipmentRenderHelper {
@@ -22,18 +22,18 @@ public final class EquipmentRenderHelper {
     }
     
     public static void cullFacesOnEquipmentPart(CustomEquipmentPartData partData) {
-        ArrayList<CustomEquipmentBlockData> blocks = partData.getArmourData();
+        ArrayList<ICube> blocks = partData.getArmourData();
         for (int i = 0; i < blocks.size(); i++) {
-            CustomEquipmentBlockData blockData = blocks.get(i);
+            ICube blockData = blocks.get(i);
             setBlockFaceFlags(blocks, blockData, partData.getArmourPart().bodyPart);
             partData.facesBuild = true;
         }
     }
     
-    private static void setBlockFaceFlags(ArrayList<CustomEquipmentBlockData> partBlocks, CustomEquipmentBlockData block, EnumBodyPart bodyPart) {
-        block.faceFlags = new BitSet(6);
+    private static void setBlockFaceFlags(ArrayList<ICube> partBlocks, ICube block, EnumBodyPart bodyPart) {
+        block.setFaceFlags(new BitSet(6));
         for (int j = 0; j < partBlocks.size(); j++) {
-            CustomEquipmentBlockData checkBlock = partBlocks.get(j);
+            ICube checkBlock = partBlocks.get(j);
             checkFaces(block, checkBlock);
         }
         
@@ -43,14 +43,14 @@ public final class EquipmentRenderHelper {
         
     }
     
-    private static void checkFaces(CustomEquipmentBlockData block, CustomEquipmentBlockData checkBlock) {
+    private static void checkFaces(ICube block, ICube checkBlock) {
         ForgeDirection[] dirs = { ForgeDirection.EAST, ForgeDirection.WEST,  ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH };
         for (int i = 0; i < dirs.length; i++) {
             ForgeDirection dir = dirs[i];
-            if (block.x + dir.offsetX == checkBlock.x) {
-                if (block.y + dir.offsetY == checkBlock.y) {
-                    if (block.z + dir.offsetZ == checkBlock.z) {
-                        block.faceFlags.set(i, true); 
+            if (block.getX() + dir.offsetX == checkBlock.getX()) {
+                if (block.getY() + dir.offsetY == checkBlock.getY()) {
+                    if (block.getZ() + dir.offsetZ == checkBlock.getZ()) {
+                        block.getFaceFlags().set(i, true); 
                     }
                 }
             }
@@ -58,12 +58,12 @@ public final class EquipmentRenderHelper {
 
     }
     
-    private static void checkBlockFaceIntersectsBodyPart(EnumBodyPart bodyPart, CustomEquipmentBlockData block) {
+    private static void checkBlockFaceIntersectsBodyPart(EnumBodyPart bodyPart, ICube block) {
         ForgeDirection[] dirs = { ForgeDirection.EAST, ForgeDirection.WEST,  ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH };
         for (int i = 0; i < dirs.length; i++) {
             ForgeDirection dir = dirs[i];
-            if (cordsIntersectsBodyPart(bodyPart, (block.x + dir.offsetX), -(block.y + dir.offsetY + 1), (block.z + dir.offsetZ))) {
-                block.faceFlags.set(i, true);
+            if (cordsIntersectsBodyPart(bodyPart, (block.getX() + dir.offsetX), -(block.getY() + dir.offsetY + 1), (block.getZ() + dir.offsetZ))) {
+                block.getFaceFlags().set(i, true);
             }
         }
     }

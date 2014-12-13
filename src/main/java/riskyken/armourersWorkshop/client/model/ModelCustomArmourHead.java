@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentBlockData;
+import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import cpw.mods.fml.relauncher.Side;
@@ -35,7 +35,7 @@ public class ModelCustomArmourHead extends ModelCustomArmour {
         if (armourData == null) { return; }
         
         ArrayList<CustomEquipmentPartData> parts = armourData.getParts();
-        ArrayList<CustomEquipmentBlockData> armourBlockData = armourData.getParts().get(0).getArmourData();
+        ArrayList<ICube> armourBlockData = armourData.getParts().get(0).getArmourData();
         
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
