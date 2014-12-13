@@ -9,6 +9,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.ModForgeEventHandler;
+import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
@@ -45,7 +46,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void preInit() {
-        
+        RenderBridge.init();
     }
 
     @Override
