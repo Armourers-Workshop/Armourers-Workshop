@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourHead;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourSkirt;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
@@ -55,6 +56,7 @@ public final class EquipmentPlayerRenderCache {
     public ModelCustomArmourSkirt customSkirt = new ModelCustomArmourSkirt();
     public ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
     public ModelCustomEquipmetSword customSword = new ModelCustomEquipmetSword();
+    public ModelCustomEquipmetBow customBow = new ModelCustomEquipmetBow();
     
     public EquipmentPlayerRenderCache() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -168,7 +170,7 @@ public final class EquipmentPlayerRenderCache {
         case SWORD:
             return customSword;
         case BOW:
-            return null;
+            return customBow;
         }
         return null;
     }
@@ -316,6 +318,8 @@ public final class EquipmentPlayerRenderCache {
             return;
         }
         switch (data.getType()) {
+        case NONE:
+            break;
         case HEAD:
             customHead.render(entity, modelBiped, data);
             break;
@@ -334,7 +338,8 @@ public final class EquipmentPlayerRenderCache {
         case SWORD:
             customSword.render(entity, modelBiped, data);
             break;
-        default:
+        case BOW:
+            customBow.render(entity, modelBiped, data);
             break;
         }
     }
@@ -344,6 +349,8 @@ public final class EquipmentPlayerRenderCache {
             return;
         }
         switch (data.getType()) {
+        case NONE:
+            break;
         case HEAD:
             customHead.render(entity, data, limb1, limb2, limb3, headY, headX);
             break;
@@ -362,7 +369,8 @@ public final class EquipmentPlayerRenderCache {
         case SWORD:
             customSword.render(entity, data, limb1, limb2, limb3, headY, headX);
             break;
-        default:
+        case BOW:
+            customBow.render(entity, data, limb1, limb2, limb3, headY, headX);
             break;
         }
     }

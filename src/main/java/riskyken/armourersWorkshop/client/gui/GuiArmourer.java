@@ -36,6 +36,7 @@ public class GuiArmourer extends GuiContainer {
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
+    private boolean canMakeBows = false;
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
         super(new ContainerArmourer(invPlayer, armourerBrain));
@@ -43,6 +44,11 @@ public class GuiArmourer extends GuiContainer {
         this.xSize = 256;
         this.ySize = 256;
         loadedArmourItem = false;
+        if (invPlayer.player.getCommandSenderName().equalsIgnoreCase("riskyken")) {
+            canMakeBows = true;
+        } else {
+            canMakeBows = false;
+        }
     }
     
     @Override
@@ -55,7 +61,9 @@ public class GuiArmourer extends GuiContainer {
         for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
             GuiButtonExt equipmentButton = new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumEquipmentType.getOrdinal(i + 1)));
             if (i == 6) {
-                equipmentButton.enabled = false;
+                if (!canMakeBows) {
+                    equipmentButton.enabled = false;
+                }
             }
             buttonList.add(equipmentButton);
         }
