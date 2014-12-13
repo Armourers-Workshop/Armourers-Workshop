@@ -53,7 +53,7 @@ public class EquipmentRenderHandler implements IEquipmentRenderHandler {
     }
     
     @Override
-    public int getEntityModelRenderCacheSize() {
+    public int getModelCacheSize() {
         return ClientEquipmentModelCache.INSTANCE.getCacheSize();
     }
 }
