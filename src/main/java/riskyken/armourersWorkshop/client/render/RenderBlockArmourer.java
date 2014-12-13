@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.LightingHelper;
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
 import riskyken.armourersWorkshop.client.model.armourer.ModelFeet;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
@@ -47,7 +48,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         PlayerSkinInfo skinInfo = null;
         
         if (te.getGameProfile() != null) {
-            skinInfo = EquipmentModelRender.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
+            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
             resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
         }
         

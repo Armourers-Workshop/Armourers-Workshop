@@ -12,8 +12,9 @@ import riskyken.armourersWorkshop.client.ModForgeEventHandler;
 import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRender;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
@@ -70,6 +71,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init() {
+        PlayerSkinHandler.init();
         ClientEquipmentModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
@@ -88,12 +90,12 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
-        EquipmentModelRender.INSTANCE.addEquipmentData(playerId, equipmentData);
+        EquipmentModelRenderer.INSTANCE.addEquipmentData(playerId, equipmentData);
     }
 
     @Override
     public void removeEquipmentData(UUID playerId) {
-        EquipmentModelRender.INSTANCE.removeEquipmentData(playerId);
+        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerId);
     }
 
     @Override
@@ -103,12 +105,12 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
-        EquipmentModelRender.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
+        PlayerSkinHandler.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
     }
 
     @Override
     public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        return EquipmentModelRender.INSTANCE.getPlayersNakedData(playerId);
+        return PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerId);
     }
 
     @Override

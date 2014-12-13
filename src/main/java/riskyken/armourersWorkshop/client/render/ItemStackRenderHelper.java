@@ -36,7 +36,7 @@ public final class ItemStackRenderHelper {
     }
     
     public static void renderItemModelFromId(int equipmentId, EnumEquipmentType type) {
-        IEquipmentModel targetModel = EquipmentModelRender.INSTANCE.getModelForEquipmentType(type);
+        IEquipmentModel targetModel = EquipmentModelRenderer.INSTANCE.getModelForEquipmentType(type);
         if (targetModel == null) {
             return;
         }

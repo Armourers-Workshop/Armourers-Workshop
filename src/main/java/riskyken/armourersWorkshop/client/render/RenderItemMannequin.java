@@ -11,6 +11,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -78,7 +79,7 @@ public class RenderItemMannequin implements IItemRenderer {
             GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
-                skinInfo = EquipmentModelRender.INSTANCE.getPlayersNakedData(gameProfile.getId());
+                skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(gameProfile.getId());
                 skin = SkinHelper.getSkinResourceLocation(gameProfile);
             }
         }

@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.client.render;
 
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -28,7 +27,6 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -37,18 +35,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * Holds a cache of ModelCustomItemBuilt that are used when the client renders a
- * player equipment model.
+ * Helps render custom equipment on the player and other entities.
+ *
  * @author RiskyKen
  *
  */
 @SideOnly(Side.CLIENT)
-public final class EquipmentModelRender {
+public final class EquipmentModelRenderer {
     
-    public static final EquipmentModelRender INSTANCE = new EquipmentModelRender();
+    public static final EquipmentModelRenderer INSTANCE = new EquipmentModelRenderer();
     
     private HashMap<UUID, EntityEquipmentData> playerEquipmentMap = new HashMap<UUID, EntityEquipmentData>();
-    private HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
     
     public ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public ModelCustomArmourHead customHead = new ModelCustomArmourHead();
@@ -58,7 +55,7 @@ public final class EquipmentModelRender {
     public ModelCustomEquipmetSword customSword = new ModelCustomEquipmetSword();
     public ModelCustomEquipmetBow customBow = new ModelCustomEquipmetBow();
     
-    public EquipmentModelRender() {
+    public EquipmentModelRenderer() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
@@ -101,21 +98,6 @@ public final class EquipmentModelRender {
             playerEquipmentMap.remove(playerId);
         }
     }
-    
-    public void setPlayersSkinData(UUID playerId, EntityNakedInfo nakedInfo) {
-        if (!skinMap.containsKey(playerId)) {
-            skinMap.put(playerId, new PlayerSkinInfo(nakedInfo));
-        } else {
-            skinMap.get(playerId).setSkinInfo(nakedInfo);
-        }
-    }
-    
-    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        if (!skinMap.containsKey(playerId)) {
-            return null;
-        }
-        return skinMap.get(playerId);
-    }
 
     private boolean playerHasCustomArmourType(UUID playerId, EnumEquipmentType armourType) {
         if (!playerEquipmentMap.containsKey(playerId)) {
@@ -132,11 +114,6 @@ public final class EquipmentModelRender {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
-        if (skinMap.containsKey(player.getPersistentID())) {
-            PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
-            skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
-        }
-        
         if (playerHasCustomArmourType(player.getPersistentID(), EnumEquipmentType.SKIRT)) {
             if (player.limbSwingAmount > 0.25F) {
                 player.limbSwingAmount = 0.25F;
@@ -147,10 +124,7 @@ public final class EquipmentModelRender {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
     	EntityPlayer player = event.entityPlayer;
-    	if (skinMap.containsKey(player.getPersistentID())) {
-    		PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
-    		skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
-    	}
+    	
     }
     
     public IEquipmentModel getModelForEquipmentType(EnumEquipmentType equipmentType) {
@@ -179,24 +153,14 @@ public final class EquipmentModelRender {
     public void onRender(RenderPlayerEvent.SetArmorModel event) {
         EntityPlayer player = event.entityPlayer;
         RenderPlayer render = event.renderer;
-        PlayerSkinInfo skinInfo = null;
         
         if (player.getGameProfile() != null) {
             if (player.isInvisible()) { return; }
         }
         
-        int result = -1;
         int slot = -event.slot + 3;
         if (slot > 3) {
             return;
-        }
-        
-        if (skinMap.containsKey(player.getPersistentID())) {
-            skinInfo = skinMap.get(player.getPersistentID());
-            BitSet armourOverride = skinInfo.getNakedInfo().armourOverride;
-            if (armourOverride.get(slot)) {
-                result = -2;
-            }
         }
         
         if (!playerEquipmentMap.containsKey(player.getPersistentID())) {
@@ -205,7 +169,6 @@ public final class EquipmentModelRender {
         }
         
         if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
-            event.result = result;
             return;
         }
         
@@ -230,7 +193,6 @@ public final class EquipmentModelRender {
             CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
             if (data != null) {
                 customLegs.render(player, render.modelBipedMain, data);
-                event.result = result;
             }
         }
         if (slot == EnumEquipmentType.SKIRT.getVanillaSlotId()) {
@@ -247,7 +209,6 @@ public final class EquipmentModelRender {
         }
         
         GL11.glPopMatrix();
-        event.result = result;
     }
 
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
