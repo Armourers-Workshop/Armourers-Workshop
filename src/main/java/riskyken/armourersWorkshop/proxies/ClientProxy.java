@@ -10,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.ModForgeEventHandler;
 import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
+import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
@@ -70,6 +71,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init() {
+        ClientEquipmentModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
     }
@@ -97,7 +99,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public int getPlayerModelCacheSize() {
-        return EquipmentPlayerRenderCache.INSTANCE.getCacheSize();
+        return ClientEquipmentModelCache.INSTANCE.getCacheSize();
     }
 
     @Override
@@ -125,7 +127,7 @@ public class ClientProxy extends CommonProxy {
             EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
             break;
         case 1:
-            EquipmentPlayerRenderCache.INSTANCE.receivedEquipmentData(equipmentData);
+            ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
             break; 
         default:
             break;

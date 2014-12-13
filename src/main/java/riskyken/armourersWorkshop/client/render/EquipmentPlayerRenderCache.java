@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.client.render;
 
 import java.util.BitSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.UUID;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -14,11 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
+import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourFeet;
 import riskyken.armourersWorkshop.client.model.ModelCustomArmourHead;
@@ -29,10 +28,7 @@ import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -49,8 +45,6 @@ public final class EquipmentPlayerRenderCache {
     public static final EquipmentPlayerRenderCache INSTANCE = new EquipmentPlayerRenderCache();
     
     private HashMap<UUID, EntityEquipmentData> playerEquipmentMap = new HashMap<UUID, EntityEquipmentData>();
-    private HashMap<Integer, CustomEquipmentItemData> equipmentDataMap = new HashMap<Integer, CustomEquipmentItemData>();
-    private HashSet<Integer> requestedEquipmentIds = new HashSet<Integer>();
     private HashMap<UUID, PlayerSkinInfo> skinMap = new HashMap<UUID, PlayerSkinInfo>();
     
     public ModelCustomArmourChest customChest = new ModelCustomArmourChest();
@@ -61,28 +55,6 @@ public final class EquipmentPlayerRenderCache {
     
     public EquipmentPlayerRenderCache() {
         MinecraftForge.EVENT_BUS.register(this);
-    }
-    
-    public void requestEquipmentDataFromServer(int equipmentId) {
-        if (!requestedEquipmentIds.contains(equipmentId)) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId, (byte) 1));
-            requestedEquipmentIds.add(equipmentId);
-        }
-    }
-    
-    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
-        int equipmentId = equipmentData.hashCode();
-        
-        if (equipmentDataMap.containsKey(equipmentId)){
-            equipmentDataMap.remove(equipmentId);
-        }
-        equipmentDataMap.put(equipmentId, equipmentData);
-        
-        if (requestedEquipmentIds.contains(equipmentId)) {
-            requestedEquipmentIds.remove(equipmentId);
-        } else {
-            ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
-        }
     }
     
     public CustomEquipmentItemData getPlayerCustomArmour(Entity entity, EnumEquipmentType type) {
@@ -109,12 +81,7 @@ public final class EquipmentPlayerRenderCache {
     }
     
     public CustomEquipmentItemData getCustomArmourItemData(int equipmentId) {
-        if (equipmentDataMap.containsKey(equipmentId)) {
-            return equipmentDataMap.get(equipmentId);
-        } else {
-            requestEquipmentDataFromServer(equipmentId);
-        }
-        return null;
+        return ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
     }
     
     public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
@@ -179,10 +146,6 @@ public final class EquipmentPlayerRenderCache {
     		PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
     		skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
     	}
-    }
-    
-    public int getCacheSize() {
-        return equipmentDataMap.size();
     }
     
     @SubscribeEvent
@@ -380,23 +343,6 @@ public final class EquipmentPlayerRenderCache {
             break;
         default:
             break;
-        }
-    }
-    
-    public void tick() {
-        for (int i = 0; i < equipmentDataMap.size(); i++) {
-            int key = (Integer) equipmentDataMap.keySet().toArray()[i];
-            equipmentDataMap.get(key).tick();
-        }
-        
-        for (int i = 0; i < equipmentDataMap.size(); i++) {
-            int key = (Integer) equipmentDataMap.keySet().toArray()[i];
-            CustomEquipmentItemData customArmourItemData = equipmentDataMap.get(key);
-            if (customArmourItemData.needsCleanup()) {
-                equipmentDataMap.remove(key);
-                customArmourItemData.cleanUpDisplayLists();
-                break;
-            }
         }
     }
 }

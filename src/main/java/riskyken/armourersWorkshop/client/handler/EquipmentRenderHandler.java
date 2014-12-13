@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.handler;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
+import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
 import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 
@@ -59,6 +60,6 @@ public class EquipmentRenderHandler implements IEquipmentRenderHandler {
 
     @Override
     public int getEntityModelRenderCacheSize() {
-        return EquipmentPlayerRenderCache.INSTANCE.getCacheSize();
+        return ClientEquipmentModelCache.INSTANCE.getCacheSize();
     }
 }
