@@ -3,8 +3,6 @@ package riskyken.armourersWorkshop.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.util.ChatComponentText;
-import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
-import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.UpdateCheck;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
@@ -56,11 +54,7 @@ public class ModClientFMLEventHandler {
         if (event.side == Side.CLIENT) {
             if (event.type == Type.PLAYER) {
                 if (event.phase == Phase.END) {
-                    //if (event.player.worldObj.getTotalWorldTime() % 40L != 0L) {
-                        EquipmentItemRenderCache.tick();
-                        EquipmentPlayerRenderCache.INSTANCE.tick();
-                        onPlayerTickEndEvent();
-                    //}
+                    onPlayerTickEndEvent();
                 }
             }
         }

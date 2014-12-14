@@ -15,11 +15,12 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.LightingHelper;
-import riskyken.armourersWorkshop.client.model.ModelChest;
-import riskyken.armourersWorkshop.client.model.ModelFeet;
-import riskyken.armourersWorkshop.client.model.ModelHand;
-import riskyken.armourersWorkshop.client.model.ModelHead;
-import riskyken.armourersWorkshop.client.model.ModelLegs;
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
+import riskyken.armourersWorkshop.client.model.armourer.ModelFeet;
+import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
+import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
+import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -47,7 +48,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         PlayerSkinInfo skinInfo = null;
         
         if (te.getGameProfile() != null) {
-            skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
+            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
             resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
         }
         

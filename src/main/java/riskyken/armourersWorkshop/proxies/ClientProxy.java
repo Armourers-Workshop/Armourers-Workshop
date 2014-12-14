@@ -9,10 +9,12 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.ModForgeEventHandler;
+import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
+import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EquipmentItemRenderCache;
-import riskyken.armourersWorkshop.client.render.EquipmentPlayerRenderCache;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.RenderBlockColourMixer;
@@ -45,7 +47,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void preInit() {
-        
+        RenderBridge.init();
     }
 
     @Override
@@ -69,6 +71,8 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init() {
+        PlayerSkinHandler.init();
+        ClientEquipmentModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
     }
@@ -86,27 +90,27 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
-        EquipmentPlayerRenderCache.INSTANCE.addEquipmentData(playerId, equipmentData);
+        EquipmentModelRenderer.INSTANCE.addEquipmentData(playerId, equipmentData);
     }
 
     @Override
     public void removeEquipmentData(UUID playerId) {
-        EquipmentPlayerRenderCache.INSTANCE.removeEquipmentData(playerId);
+        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerId);
     }
 
     @Override
     public int getPlayerModelCacheSize() {
-        return EquipmentPlayerRenderCache.INSTANCE.getCacheSize();
+        return ClientEquipmentModelCache.INSTANCE.getCacheSize();
     }
 
     @Override
     public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
-        EquipmentPlayerRenderCache.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
+        PlayerSkinHandler.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
     }
 
     @Override
     public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        return EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(playerId);
+        return PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerId);
     }
 
     @Override
@@ -121,10 +125,10 @@ public class ClientProxy extends CommonProxy {
     public void receivedEquipmentData(CustomEquipmentItemData equipmentData, byte target) {
         switch (target) {
         case 0:
-            EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
+            //EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
             break;
         case 1:
-            EquipmentPlayerRenderCache.INSTANCE.receivedEquipmentData(equipmentData);
+            ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
             break; 
         default:
             break;

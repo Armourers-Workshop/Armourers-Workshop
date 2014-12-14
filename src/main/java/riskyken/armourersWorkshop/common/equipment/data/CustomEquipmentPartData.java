@@ -13,6 +13,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,8 +22,9 @@ public class CustomEquipmentPartData {
     
     private static final String TAG_BLOCK_DATA = "blockData";
     private static final String TAG_PART = "part";
+    private static final String TAG_ID = "id";
     
-    private ArrayList<CustomEquipmentBlockData> armourData;
+    private ArrayList<ICube> armourData;
     private EnumEquipmentPart part;
     
     public boolean facesBuild;
@@ -71,19 +74,19 @@ public class CustomEquipmentPartData {
         return this.part;
     }
 
-    public ArrayList<CustomEquipmentBlockData> getArmourData() {
+    public ArrayList<ICube> getArmourData() {
         return armourData;
     }
     
-    private boolean blockCanBeSeen(ArrayList<CustomEquipmentBlockData> partBlocks, CustomEquipmentBlockData block) {
+    private boolean blockCanBeSeen(ArrayList<ICube> partBlocks, ICube block) {
         int sidesCovered = 0;
         for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
             ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
             for (int j = 0; j < partBlocks.size(); j++) {
-                CustomEquipmentBlockData checkBlock = partBlocks.get(j);
-                if (block.x + dir.offsetX == checkBlock.x &&
-                        block.y + dir.offsetY == checkBlock.y &&
-                        block.z + dir.offsetZ == checkBlock.z)
+                ICube checkBlock = partBlocks.get(j);
+                if (block.getX() + dir.offsetX == checkBlock.getX() &&
+                        block.getY() + dir.offsetY == checkBlock.getY() &&
+                        block.getZ() + dir.offsetZ == checkBlock.getZ())
                 {
                     sidesCovered++;
                     break;
@@ -104,9 +107,12 @@ public class CustomEquipmentPartData {
     private void readFromBuf(ByteBuf buf) {
         part = EnumEquipmentPart.getOrdinal(buf.readByte());
         int size = buf.readInt();
-        armourData = new ArrayList<CustomEquipmentBlockData>();
+        armourData = new ArrayList<ICube>();
         for (int i = 0; i < size; i++) {
-            armourData.add(new CustomEquipmentBlockData(buf));
+            byte id = buf.readByte();
+            ICube cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(id);
+            cube.readFromBuf(buf);
+            armourData.add(cube);
         }
     }
     
@@ -115,7 +121,7 @@ public class CustomEquipmentPartData {
         
         NBTTagList blockData = new NBTTagList();
         for (int i = 0; i < armourData.size(); i++) {
-            CustomEquipmentBlockData data = armourData.get(i);
+            ICube data = armourData.get(i);
             NBTTagCompound dataNBT = new NBTTagCompound();
             data.writeToNBT(dataNBT);
             blockData.appendTag(dataNBT);
@@ -127,10 +133,13 @@ public class CustomEquipmentPartData {
         part = EnumEquipmentPart.getOrdinal(compound.getByte(TAG_PART));
         
         NBTTagList blockData = compound.getTagList(TAG_BLOCK_DATA, NBT.TAG_COMPOUND);
-        armourData = new ArrayList<CustomEquipmentBlockData>();
+        armourData = new ArrayList<ICube>();
         for (int i = 0; i < blockData.tagCount(); i++) {
             NBTTagCompound data = (NBTTagCompound)blockData.getCompoundTagAt(i);
-            armourData.add(new CustomEquipmentBlockData(data));
+            byte id = data.getByte(TAG_ID);
+            ICube cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(id);
+            cube.readFromNBT(data);
+            armourData.add(cube);
         }
     }
     
@@ -145,9 +154,19 @@ public class CustomEquipmentPartData {
     private void readFromStream(DataInputStream stream, int version) throws IOException {
         part = EnumEquipmentPart.getOrdinal(stream.readByte());
         int size = stream.readInt();
-        armourData = new ArrayList<CustomEquipmentBlockData>();
+        armourData = new ArrayList<ICube>();
         for (int i = 0; i < size; i++) {
-            armourData.add(new CustomEquipmentBlockData(stream, version, part));
+            ICube cube;
+            
+            if (version < 3) {
+                cube = LegacyCubeHelper.loadlegacyCube(stream, version, part);
+            } else {
+                byte id = stream.readByte();
+                cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(id);
+                cube.readFromStream(stream, version, part);
+            }
+            
+            armourData.add(cube);
         }
     }
 

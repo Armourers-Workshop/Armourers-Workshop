@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
@@ -57,7 +58,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         PlayerSkinInfo skinInfo = null;
         
         if (te.getGameProfile() != null) {
-            skinInfo = EquipmentPlayerRenderCache.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
+            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
             resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
             if (te.getGameProfile() != null & te.getWorldObj() != null) {
                 if (fakePlayer == null) {
@@ -123,7 +124,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
         }
 
-        EquipmentPlayerRenderCache.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), modelMannequin);
+        EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), modelMannequin);
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
     }

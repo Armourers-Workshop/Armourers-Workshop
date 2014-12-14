@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.client.abstraction.IRenderBuffer;
+import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
 import riskyken.armourersWorkshop.common.abstraction.RenderAbstraction;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -79,11 +81,12 @@ public class EntityFXPaintSplash extends EntityFX {
     
     @Override
     public void renderParticle(Tessellator tessellator, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
-        tessellator.draw();
+        IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
+        renderBuffer.draw();
         
         RenderAbstraction.bindTexture(paintSplashTextures);
         
-        tessellator.startDrawingQuads();
+        renderBuffer.startDrawingQuads();
         
         float f6 = (particleTextureIndexX) / 8 * 0.5F;
         float f7 = f6 + 0.5F;
@@ -102,19 +105,14 @@ public class EntityFXPaintSplash extends EntityFX {
         float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)p_70539_2_ - interpPosX);
         float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)p_70539_2_ - interpPosY);
         float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)p_70539_2_ - interpPosZ);
-        tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
-        tessellator.addVertexWithUV((double)(f11 - p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 - p_70539_7_ * f10), (double)f7, (double)f9);
-        tessellator.addVertexWithUV((double)(f11 - p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 + p_70539_7_ * f10), (double)f7, (double)f8);
-        tessellator.addVertexWithUV((double)(f11 + p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 + p_70539_7_ * f10), (double)f6, (double)f8);
-        tessellator.addVertexWithUV((double)(f11 + p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 - p_70539_7_ * f10), (double)f6, (double)f9);
+        renderBuffer.setColourRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
+        renderBuffer.addVertexWithUV((double)(f11 - p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 - p_70539_7_ * f10), (double)f7, (double)f9);
+        renderBuffer.addVertexWithUV((double)(f11 - p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 + p_70539_7_ * f10), (double)f7, (double)f8);
+        renderBuffer.addVertexWithUV((double)(f11 + p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 + p_70539_7_ * f10), (double)f6, (double)f8);
+        renderBuffer.addVertexWithUV((double)(f11 + p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 - p_70539_7_ * f10), (double)f6, (double)f9);
         
-        tessellator.draw();
+        renderBuffer.draw();
         RenderAbstraction.bindTexture(particleTextures);
-        tessellator.startDrawingQuads();
-    }
-    
-    @Override
-    public int getFXLayer() {
-        return 1;
+        renderBuffer.startDrawingQuads();
     }
 }
