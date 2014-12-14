@@ -70,6 +70,10 @@ public final class EquipmentModelRenderer {
         
         EntityEquipmentData equipmentData = playerEquipmentMap.get(player.getPersistentID());
         
+        if (equipmentData == null) {
+            return null;
+        }
+        
         if (!equipmentData.haveEquipment(type)) {
             return null;
         }

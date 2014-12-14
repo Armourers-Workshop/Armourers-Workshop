@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
+import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import cpw.mods.fml.relauncher.Side;
@@ -36,6 +37,9 @@ public class ModelRendererAttachment extends ModelRenderer {
         EquipmentModelRenderer modelRenderer = EquipmentModelRenderer.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;
         if (player == null) {
+            return;
+        }
+        if (player instanceof MannequinFakePlayer) {
             return;
         }
         if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
