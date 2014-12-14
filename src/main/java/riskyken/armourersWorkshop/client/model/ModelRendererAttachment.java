@@ -51,6 +51,9 @@ public class ModelRendererAttachment extends ModelRenderer {
                 GL11.glPushMatrix();
                 if (equipmentType == EnumEquipmentType.SKIRT && equipmentPart == EnumEquipmentPart.SKIRT) {
                     GL11.glTranslatef(0, 12 * scale, 0);
+                    if (player.isSneaking()) {
+                        GL11.glTranslatef(0, -2 * scale, 0);
+                    }
                 }
                 EquipmentPartRenderer.INSTANCE.renderPart(partData, scale);
                 GL11.glPopMatrix();
