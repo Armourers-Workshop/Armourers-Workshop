@@ -49,6 +49,7 @@ public class ModelRendererAttachment extends ModelRenderer {
         if (data == null) {
             return;
         }
+        data.onRender();
         for (int i = 0; i < data.getParts().size(); i++) {
             CustomEquipmentPartData partData = data.getParts().get(i);
             if (partData.getArmourPart() == equipmentPart) {
