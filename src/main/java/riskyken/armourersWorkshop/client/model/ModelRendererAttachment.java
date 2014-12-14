@@ -35,6 +35,9 @@ public class ModelRendererAttachment extends ModelRenderer {
     public void render(float scale) {
         EquipmentModelRenderer modelRenderer = EquipmentModelRenderer.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;
+        if (player == null) {
+            return;
+        }
         if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
             return;
         }
