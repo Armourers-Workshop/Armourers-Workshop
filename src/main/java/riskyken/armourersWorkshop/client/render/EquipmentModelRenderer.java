@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,9 +13,11 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourFeet;
@@ -30,6 +31,7 @@ import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -54,6 +56,9 @@ public final class EquipmentModelRenderer {
     public ModelCustomArmourFeet customFeet = new ModelCustomArmourFeet();
     public ModelCustomEquipmetSword customSword = new ModelCustomEquipmetSword();
     public ModelCustomEquipmetBow customBow = new ModelCustomEquipmetBow();
+    
+    private boolean addedRenderAttachment = false;
+    public EntityPlayer targetPlayer = null;
     
     public EquipmentModelRenderer() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -114,17 +119,33 @@ public final class EquipmentModelRenderer {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
+        targetPlayer = player;
+        if (!addedRenderAttachment) {
+            ModelBiped playerBiped = event.renderer.modelBipedMain;
+            playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.HEAD, EnumEquipmentPart.HEAD));
+            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.CHEST));
+            playerBiped.bipedLeftArm.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.LEFT_ARM));
+            playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.RIGHT_ARM));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.LEGS, EnumEquipmentPart.LEFT_LEG));
+            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.LEGS, EnumEquipmentPart.RIGHT_LEG));
+            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.SKIRT, EnumEquipmentPart.SKIRT));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.FEET, EnumEquipmentPart.LEFT_FOOT));
+            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.FEET, EnumEquipmentPart.RIGHT_FOOT));            
+            addedRenderAttachment = true;
+        }
+        
         if (playerHasCustomArmourType(player.getPersistentID(), EnumEquipmentType.SKIRT)) {
-            if (player.limbSwingAmount > 0.25F) {
-                player.limbSwingAmount = 0.25F;
+            if (!Loader.isModLoaded("SmartMoving")) {
+                if (player.limbSwingAmount > 0.25F) {
+                    player.limbSwingAmount = 0.25F;
+                }
             }
         }
     }
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
-    	EntityPlayer player = event.entityPlayer;
-    	
+    	targetPlayer = null;
     }
     
     public IEquipmentModel getModelForEquipmentType(EnumEquipmentType equipmentType) {
@@ -147,68 +168,6 @@ public final class EquipmentModelRenderer {
             return customBow;
         }
         return null;
-    }
-    
-    @SubscribeEvent
-    public void onRender(RenderPlayerEvent.SetArmorModel event) {
-        EntityPlayer player = event.entityPlayer;
-        RenderPlayer render = event.renderer;
-        
-        if (player.getGameProfile() != null) {
-            if (player.isInvisible()) { return; }
-        }
-        
-        int slot = -event.slot + 3;
-        if (slot > 3) {
-            return;
-        }
-        
-        if (!playerEquipmentMap.containsKey(player.getPersistentID())) {
-            //This player has no custom equipment. booooo
-            return;
-        }
-        
-        if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
-            return;
-        }
-        
-        GL11.glPushMatrix();
-        float scale = 1.001F;
-        GL11.glScalef(scale, scale, scale);
-        
-        if (slot == EnumEquipmentType.HEAD.getVanillaSlotId()) {
-            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
-            if (data != null) {
-                customHead.render(player, render.modelBipedMain, data);
-            }
-            
-        }
-        if (slot == EnumEquipmentType.CHEST.getVanillaSlotId()) {
-            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.CHEST);
-            if (data != null) {
-                customChest.render(player, render.modelBipedMain, data);
-            }
-        }
-        if (slot == EnumEquipmentType.LEGS.getVanillaSlotId()) {
-            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
-            if (data != null) {
-                customLegs.render(player, render.modelBipedMain, data);
-            }
-        }
-        if (slot == EnumEquipmentType.SKIRT.getVanillaSlotId()) {
-            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.SKIRT);
-            if (data != null) {
-                customSkirt.render(player, render.modelBipedMain, data);
-            }
-        }
-        if (slot == EnumEquipmentType.FEET.getVanillaSlotId()) {
-            CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.FEET);
-            if (data != null) {
-                customFeet.render(player, render.modelBipedMain, data);
-            }
-        }
-        
-        GL11.glPopMatrix();
     }
 
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
