@@ -14,23 +14,23 @@ public class AddonBalkonsWeaponMod extends AbstractAddon {
 
     @Override
     public void initRenderers() {
-        overrideItemRenderer("battleaxe.wood");
-        overrideItemRenderer("battleaxe.stone");
-        overrideItemRenderer("battleaxe.iron");
-        overrideItemRenderer("battleaxe.diamond");
-        overrideItemRenderer("battleaxe.gold");
+        overrideItemRenderer("battleaxe.wood", RenderType.SWORD);
+        overrideItemRenderer("battleaxe.stone", RenderType.SWORD);
+        overrideItemRenderer("battleaxe.iron", RenderType.SWORD);
+        overrideItemRenderer("battleaxe.diamond", RenderType.SWORD);
+        overrideItemRenderer("battleaxe.gold", RenderType.SWORD);
         
-        overrideItemRenderer("warhammer.wood");
-        overrideItemRenderer("warhammer.stone");
-        overrideItemRenderer("warhammer.iron");
-        overrideItemRenderer("warhammer.diamond");
-        overrideItemRenderer("warhammer.gold");
+        overrideItemRenderer("warhammer.wood", RenderType.SWORD);
+        overrideItemRenderer("warhammer.stone", RenderType.SWORD);
+        overrideItemRenderer("warhammer.iron", RenderType.SWORD);
+        overrideItemRenderer("warhammer.diamond", RenderType.SWORD);
+        overrideItemRenderer("warhammer.gold", RenderType.SWORD);
         
-        overrideItemRenderer("katana.wood");
-        overrideItemRenderer("katana.stone");
-        overrideItemRenderer("katana.iron");
-        overrideItemRenderer("katana.diamond");
-        overrideItemRenderer("katana.gold");
+        overrideItemRenderer("katana.wood", RenderType.SWORD);
+        overrideItemRenderer("katana.stone", RenderType.SWORD);
+        overrideItemRenderer("katana.iron", RenderType.SWORD);
+        overrideItemRenderer("katana.diamond", RenderType.SWORD);
+        overrideItemRenderer("katana.gold", RenderType.SWORD);
     }
 
     @Override

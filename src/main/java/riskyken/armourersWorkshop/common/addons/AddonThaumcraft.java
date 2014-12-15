@@ -14,9 +14,9 @@ public class AddonThaumcraft extends AbstractAddon {
 
     @Override
     public void initRenderers() {
-        overrideItemRenderer("ItemSwordElemental");
-        overrideItemRenderer("ItemSwordThaumium");
-        overrideItemRenderer("ItemSwordVoid");
+        overrideItemRenderer("ItemSwordElemental", RenderType.SWORD);
+        overrideItemRenderer("ItemSwordThaumium", RenderType.SWORD);
+        overrideItemRenderer("ItemSwordVoid", RenderType.SWORD);
     }
 
     @Override
