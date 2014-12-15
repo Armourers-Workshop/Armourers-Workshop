@@ -32,8 +32,8 @@ public final class CraftingManager {
             try {
                 Class ccApi = Class.forName("codechicken.nei.api.API");
                 Method ccHideStack = ccApi.getMethod("hideItem", ItemStack.class);
-                ItemStack dollStack = new ItemStack(ModBlocks.doll, 1);
-                ccHideStack.invoke(null, dollStack);
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.doll, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.boundingBox, 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
