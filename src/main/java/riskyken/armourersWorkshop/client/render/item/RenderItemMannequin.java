@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.render;
+package riskyken.armourersWorkshop.client.render.item;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 

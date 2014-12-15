@@ -9,12 +9,13 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
 
     public static Block armourerBrain;
-    public static Block armourCrafter;
+    public static Block miniArmourer;
     public static Block armourLibrary;
     public static Block boundingBox;
     public static Block colourable;
@@ -25,6 +26,7 @@ public class ModBlocks {
     
     public static void init() {
         armourerBrain = new BlockArmourerBrain();
+        miniArmourer = new BlockMiniArmourer();
         armourLibrary = new BlockArmourLibrary();
         boundingBox = new BlockBoundingBox();
         colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
@@ -36,6 +38,7 @@ public class ModBlocks {
 
     public static void registerTileEntities() {
         registerTileEntity(TileEntityArmourerBrain.class, LibBlockNames.ARMOURER_BRAIN);
+        registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntityArmourLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);

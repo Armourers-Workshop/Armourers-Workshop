@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.render;
+package riskyken.armourersWorkshop.client.render.block;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -14,6 +14,9 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
+import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
