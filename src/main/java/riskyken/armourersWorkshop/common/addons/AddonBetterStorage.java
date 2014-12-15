@@ -14,7 +14,7 @@ public class AddonBetterStorage extends AbstractAddon {
 
     @Override
     public void initRenderers() {
-        overrideItemRenderer("cardboardSword");
+        overrideItemRenderer("cardboardSword", RenderType.SWORD);
     }
 
     @Override
