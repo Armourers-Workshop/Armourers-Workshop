@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.handler;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -63,17 +64,18 @@ public class BlockHighlightRenderHandler {
         if (meta == 1) {
             minY -= 1;
         }
-        
+        float f1 = 0.002F;
         AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
         
         aabb.offset(-xOff, -yOff, -zOff);
         
         GL11.glEnable(GL11.GL_BLEND);
-        //OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
         GL11.glLineWidth(2.0F);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        RenderGlobal.drawOutlinedBoundingBox(aabb, -1);
+        GL11.glDepthMask(false);
+        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
