@@ -3,9 +3,8 @@ package riskyken.armourersWorkshop.common.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -23,11 +22,14 @@ public class BlockMiniArmourer extends AbstractModBlock implements ITileEntityPr
     }
     
     @Override
-    public IIcon getIcon(IBlockAccess p_149673_1_, int p_149673_2_,
-            int p_149673_3_, int p_149673_4_, int p_149673_5_) {
-        // TODO Auto-generated method stub
-        return super.getIcon(p_149673_1_, p_149673_2_, p_149673_3_, p_149673_4_,
-                p_149673_5_);
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!world.isRemote) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof TileEntityMiniArmourer) {
+                ((TileEntityMiniArmourer)te).nextEquipmentType();
+            }
+        }
+        return true;
     }
     
     @Override
