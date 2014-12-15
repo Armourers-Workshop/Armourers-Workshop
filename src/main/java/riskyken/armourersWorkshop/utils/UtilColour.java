@@ -31,9 +31,9 @@ public class UtilColour {
     
     public static Color addColourNoise(Color c, int amount) {
         Random rnd = new Random();
-        int r = c.getRed() - amount + rnd.nextInt(amount * 2);
-        int g = c.getGreen() - amount + rnd.nextInt(amount * 2);
-        int b = c.getBlue() - amount + rnd.nextInt(amount * 2);
+        int r = c.getRed() - amount + rnd.nextInt((amount * 2) + 1);
+        int g = c.getGreen() - amount + rnd.nextInt((amount * 2) + 1);
+        int b = c.getBlue() - amount + rnd.nextInt((amount * 2) + 1);
         
         if (r < 0) { r = 0; }
         if (g < 0) { g = 0; }

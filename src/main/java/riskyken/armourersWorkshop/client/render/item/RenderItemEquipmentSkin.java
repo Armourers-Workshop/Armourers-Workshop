@@ -1,8 +1,6 @@
-package riskyken.armourersWorkshop.client.render;
+package riskyken.armourersWorkshop.client.render.item;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
@@ -16,85 +14,61 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 
-public class RenderItemSwordSkin implements IItemRenderer {
+public class RenderItemEquipmentSkin implements IItemRenderer {
 
     private final RenderItem renderItem;
     private final Minecraft mc;
-    
-    public RenderItemSwordSkin() {
+
+    public RenderItemEquipmentSkin() {
         renderItem = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         mc = Minecraft.getMinecraft();
     }
-    
+
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        if (type == ItemRenderType.INVENTORY) {
-            return false;
-        }
         return canRenderModel(stack);
     }
 
     @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        return type == ItemRenderType.ENTITY;
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
+        return true;
     }
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack stack, Object... data) {
         if (canRenderModel(stack)) {
-            if (type != ItemRenderType.ENTITY) {
-                GL11.glPopMatrix();
-                GL11.glPopMatrix(); 
-                
-                GL11.glRotatef(-135, 0, 1, 0);
-                GL11.glRotatef(-10, 0, 0, 1);
-            }
-
             GL11.glPushMatrix();
-            
             GL11.glScalef(-1F, -1F, 1F);
-            GL11.glScalef(1.6F, 1.6F, 1.6F);
-
-            boolean isBlocking = false;
+            float scale = 1.2F;
+            GL11.glScalef(scale, scale, scale);
+            GL11.glRotatef(180, 0, 1, 0);
             
-            if (data.length >= 2) {
-                if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
-                    RenderBlocks renderBlocks = (RenderBlocks) data[0];
-                    AbstractClientPlayer player = (AbstractClientPlayer) data[1];
-                    isBlocking = player.isBlocking();
-                }
+            EnumEquipmentType equipmentType = EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack);
+            if (equipmentType == EnumEquipmentType.SWORD) {
+                GL11.glScalef(0.7F, 0.7F, 0.7F);
             }
-            
-            float scale = 0.0625F;
             
             switch (type) {
             case EQUIPPED:
-                
-                GL11.glTranslatef(-2F * scale, -1F * scale, 0F);
-                if (isBlocking) {
-                    GL11.glTranslatef(-0F * scale, 2F * scale, 1F * scale);
-                }
-                GL11.glRotatef(-90F, 0F, 1F, 0F);
+                GL11.glTranslatef(0.6F, -0.5F, -0.5F);
+                GL11.glRotatef(180, 0, 1, 0);
                 break;
             case ENTITY:
-                GL11.glTranslatef(0F, -10F * scale, 0F);
+                GL11.glTranslatef(0F, -0.3F, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
-                GL11.glRotatef(-90F, 0F, 1F, 0F);
+                GL11.glTranslatef(0.5F, -0.7F, -0.5F);
+                GL11.glRotatef(90, 0, 1, 0);
                 break;
             default:
                 break;
             }
-            ItemStackRenderHelper.renderItemAsArmourModel(stack, EnumEquipmentType.SWORD);
-            
+            ItemStackRenderHelper.renderItemAsArmourModel(stack);
             GL11.glPopMatrix();
             
-            if (type != ItemRenderType.ENTITY) {
-                GL11.glPushMatrix();
-                GL11.glPushMatrix();
-            }
-
         } else {
             renderNomalIcon(stack);
         }

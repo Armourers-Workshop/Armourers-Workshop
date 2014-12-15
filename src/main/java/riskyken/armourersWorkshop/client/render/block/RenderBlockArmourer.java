@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.render;
+package riskyken.armourersWorkshop.client.render.block;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.client.model.armourer.ModelFeet;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
+import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -39,10 +40,11 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
-
+        float mult = 0.0625F;
+        
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
         EnumEquipmentType type = te.getType();
-        float mult = 0.0625F;
+        
         
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;

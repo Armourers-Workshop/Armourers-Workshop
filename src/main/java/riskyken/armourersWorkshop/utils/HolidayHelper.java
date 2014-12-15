@@ -15,7 +15,10 @@ public final class HolidayHelper {
     public enum EnumHoliday {
         NONE(0,0),
         HALLOWEEN(Calendar.OCTOBER, 31),
-        CHRISTMAS(Calendar.DECEMBER, 25);
+        CHRISTMAS(Calendar.DECEMBER, 25),
+        VALENTINES(Calendar.FEBRUARY, 14),
+        NEW_YEARS(Calendar.JANUARY, 1),
+        PONYTAIL_DAY(Calendar.JULY, 7);
         
         public final int month;
         public final int day;

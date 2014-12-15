@@ -1,5 +1,6 @@
 # Block names
 tile.armourersworkshop:armourerBrain.name=Armourer
+tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 tile.armourersworkshop:armourLibrary.name=Equipment Library
 tile.armourersworkshop:colourable.name=Equipment Cube
 tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
@@ -9,6 +10,7 @@ tile.armourersworkshop:doll.name=Doll
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
+tile.armourersworkshop:miniArmourer.flavour=Unfinished.
 tile.armourersworkshop:armourLibrary.flavour=Save and load equipment templates from disk.
 tile.armourersworkshop:colourable.flavour=Main building block for custom equipment. (paintable)
 tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark equipment cubes!

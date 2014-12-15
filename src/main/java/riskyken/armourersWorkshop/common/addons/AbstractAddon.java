@@ -5,7 +5,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.client.render.RenderItemSwordSkin;
+import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.registry.GameRegistry;
 
