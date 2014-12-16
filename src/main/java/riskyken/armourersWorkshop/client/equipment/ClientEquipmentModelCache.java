@@ -39,7 +39,7 @@ public class ClientEquipmentModelCache {
     
     public void requestEquipmentDataFromServer(int equipmentId) {
         if (!requestedEquipmentIds.contains(equipmentId)) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId, (byte) 1));
+            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId));
             requestedEquipmentIds.add(equipmentId);
         }
     }

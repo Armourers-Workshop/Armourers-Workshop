@@ -10,13 +10,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 public class EquipmentNBTHelper {
     
     public static boolean itemStackHasCustomEquipment(ItemStack stack) {
-        if (stack == null) {
-            return false;
-        }
-        if (!stack.hasTagCompound()) {
-            return false;
-        }
-        NBTTagCompound itemNbt = stack.getTagCompound();
+        NBTTagCompound itemNbt = NBTHelper.getNBTForStack(stack);
         
         if (!itemNbt.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return false;}
         NBTTagCompound armourNBT = itemNbt.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);

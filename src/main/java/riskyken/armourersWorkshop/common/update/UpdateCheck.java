@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common;
+package riskyken.armourersWorkshop.common.update;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

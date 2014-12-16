@@ -23,12 +23,11 @@ public class Cube implements ICube {
     protected static final String TAG_COLOUR = "colour";
     
     protected byte id = -1;
-    
-    private byte x;
-    private byte y;
-    private byte z;
-    public int colour;
-    private BitSet faceFlags;
+    protected byte x;
+    protected byte y;
+    protected byte z;
+    protected int colour;
+    protected BitSet faceFlags;
     
     @Override
     public byte getX() {
