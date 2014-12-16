@@ -66,5 +66,7 @@ public final class CubeRegistry {
     private void registerCubes() {
         registerCube(Cube.class);
         registerCube(CubeGlowing.class);
+        registerCube(CubeGlass.class);
+        registerCube(CubeGlassGlowing.class);
     }
 }

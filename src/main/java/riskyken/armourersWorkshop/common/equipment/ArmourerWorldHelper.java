@@ -69,13 +69,18 @@ public final class ArmourerWorldHelper {
             ArrayList<ICube> list, ForgeDirection direction) {
         if (world.isAirBlock(x, y, z)) { return; }
         Block block = world.getBlock(x, y, z);
-        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
+        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing | block == ModBlocks.colourableGlass | block == ModBlocks.colourableGlassGlowing) {
             int colour = UtilBlocks.getColourFromTileEntity(world ,x, y, z);
             byte blockType = 0;
             if (block == ModBlocks.colourableGlowing) {
                 blockType = 1;
             }
-            
+            if (block == ModBlocks.colourableGlass) {
+                blockType = 2;
+            }
+            if (block == ModBlocks.colourableGlassGlowing) {
+                blockType = 3;
+            }
             ICube blockData = CubeRegistry.INSTANCE.getCubeInstanceFormId(blockType);
             
             blockData.setX((byte) ix);
@@ -144,8 +149,14 @@ public final class ArmourerWorldHelper {
         
         if (world.isAirBlock(targetX, targetY, targetZ)) {
             Block targetBlock = ModBlocks.colourable;
-            if (blockData.isGlowing()) {
+            if (blockData.getId() == 1) {
                 targetBlock = ModBlocks.colourableGlowing;
+            }
+            if (blockData.getId() == 2) {
+                targetBlock = ModBlocks.colourableGlass;
+            }
+            if (blockData.getId() == 3) {
+                targetBlock = ModBlocks.colourableGlassGlowing;
             }
             world.setBlock(targetX, targetY, targetZ, targetBlock);
             TileEntity te = world.getTileEntity(targetX, targetY, targetZ);

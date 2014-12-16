@@ -109,7 +109,7 @@ public class EquipmentPartRenderer extends ModelBase {
         for (int i = 0; i < armourBlockData.size(); i++) {
             ICube blockData = armourBlockData.get(i);
             if (!blockData.isGlowing()) {
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags());
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
             }
         }
         GL11.glPopMatrix();
@@ -120,24 +120,35 @@ public class EquipmentPartRenderer extends ModelBase {
         for (int i = 0; i < armourBlockData.size(); i++) {
             ICube blockData = armourBlockData.get(i);
             if (blockData.isGlowing()) {
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags());
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
             }
         }
         GL11.glPopMatrix();
     }
 
-    public void renderArmourBlock(int x, int y, int z, int colour, float scale, BitSet faceFlags) {
+    public void renderArmourBlock(int x, int y, int z, int colour, float scale, BitSet faceFlags, boolean glass) {
         float colourRed = (colour >> 16 & 0xff) / 255F;
         float colourGreen = (colour >> 8 & 0xff) / 255F;
         float colourBlue = (colour & 0xff) / 255F;
 
         GL11.glPushMatrix();
-        GL11.glColor3f(colourRed, colourGreen, colourBlue);
+        if (glass) {
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glColor4f(colourRed, colourGreen, colourBlue, 0.5F);
+        } else {
+            GL11.glColor3f(colourRed, colourGreen, colourBlue);
+        }
+        
         GL11.glTranslated(x * scale, y * scale, z * scale);
         if (faceFlags != null) {
             main.render(scale, faceFlags);
         } else {
             ModLogger.log(Level.WARN, "No face flags found on armour part.");
+        }
+        if (glass) {
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            GL11.glDisable(GL11.GL_BLEND);
         }
         GL11.glPopMatrix();
     }
