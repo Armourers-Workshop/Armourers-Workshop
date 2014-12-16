@@ -54,7 +54,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
 
             GL11.glPushMatrix();
             
-            GL11.glScalef(-1F, -1F, 1F);
+            GL11.glScalef(1F, -1F, 1F);
             GL11.glScalef(1.6F, 1.6F, 1.6F);
 
             boolean isBlocking = false;
@@ -72,23 +72,26 @@ public class RenderItemSwordSkin implements IItemRenderer {
             switch (type) {
             case EQUIPPED:
                 
-                GL11.glTranslatef(-2F * scale, -1F * scale, 0F);
+                GL11.glTranslatef(2F * scale, -1F * scale, 0F * scale);
                 if (isBlocking) {
                     GL11.glTranslatef(-0F * scale, 2F * scale, 1F * scale);
                 }
-                GL11.glRotatef(-90F, 0F, 1F, 0F);
+                GL11.glRotatef(90F, 0F, 1F, 0F);
                 break;
             case ENTITY:
+                GL11.glScalef(-1F, 1F, 1F);
                 GL11.glTranslatef(0F, -10F * scale, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
+                GL11.glScalef(-1F, 1F, 1F);
                 GL11.glRotatef(-90F, 0F, 1F, 0F);
                 break;
             default:
                 break;
             }
+            GL11.glEnable(GL11.GL_CULL_FACE);
             ItemStackRenderHelper.renderItemAsArmourModel(stack, EnumEquipmentType.SWORD);
-            
+            GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
