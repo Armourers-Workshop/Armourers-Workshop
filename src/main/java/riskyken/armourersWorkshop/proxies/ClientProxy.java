@@ -127,17 +127,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void receivedEquipmentData(CustomEquipmentItemData equipmentData, byte target) {
-        switch (target) {
-        case 0:
-            //EquipmentItemRenderCache.receivedEquipmentData(equipmentData);
-            break;
-        case 1:
-            ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
-            break; 
-        default:
-            break;
-        }
-        
+    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
+        ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
     }
 }

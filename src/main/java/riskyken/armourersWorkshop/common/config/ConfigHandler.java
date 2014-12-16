@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.config;
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
-import riskyken.armourersWorkshop.common.UpdateCheck;
+import riskyken.armourersWorkshop.common.update.UpdateCheck;
 
 public class ConfigHandler {
 

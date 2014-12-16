@@ -54,7 +54,7 @@ public class CommonProxy {
         return 0;
     }
     
-    public void receivedEquipmentData(CustomEquipmentItemData equipmentData, byte target) {
+    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
         
     }
 }

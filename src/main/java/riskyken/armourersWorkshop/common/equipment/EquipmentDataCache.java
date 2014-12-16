@@ -21,6 +21,12 @@ import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * Holds a cache of equipment data on the server that will be sent to clients if
@@ -31,11 +37,26 @@ import riskyken.armourersWorkshop.utils.ModLogger;
  */
 public final class EquipmentDataCache {
     
-    public static final EquipmentDataCache INSTANCE = new EquipmentDataCache();
+    public static EquipmentDataCache INSTANCE;
     
     private HashMap<Integer, CustomEquipmentItemData> equipmentDataCache = new HashMap<Integer, CustomEquipmentItemData>();
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     private long lastTick;
+    
+    public static void init() {
+        INSTANCE = new EquipmentDataCache();
+    }
+    
+    public EquipmentDataCache() {
+        FMLCommonHandler.instance().bus().register(this);
+    }
+    
+    @SubscribeEvent
+    public void onServerTickEvent(TickEvent.ServerTickEvent event) {
+        if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
+            processMessageQueue();
+        }
+    }
     
     public void processMessageQueue() {
         long curTick = System.currentTimeMillis();
@@ -60,7 +81,7 @@ public final class EquipmentDataCache {
         
         if (equipmentDataCache.containsKey(queueMessage.equipmentId)) {
             CustomEquipmentItemData equpmentData = equipmentDataCache.get(queueMessage.equipmentId);
-            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData, queueMessage.target), queueMessage.player);
+            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData), queueMessage.player);
         }
     }
     
@@ -91,8 +112,8 @@ public final class EquipmentDataCache {
         return null;
     }
     
-    public void clientRequestEquipmentData(int equipmentId, byte target, EntityPlayerMP player) {
-        QueueMessage queueMessage = new QueueMessage(equipmentId, target, player);
+    public void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
+        QueueMessage queueMessage = new QueueMessage(equipmentId, player);
         messageQueue.add(queueMessage);
     }
     
@@ -179,12 +200,10 @@ public final class EquipmentDataCache {
     public class QueueMessage {
         
         public final int equipmentId;
-        public final byte target;
         public final EntityPlayerMP player;
         
-        public QueueMessage(int equipmentId, byte target, EntityPlayerMP player) {
+        public QueueMessage(int equipmentId, EntityPlayerMP player) {
             this.equipmentId = equipmentId;
-            this.target = target;
             this.player = player;
         }
     }

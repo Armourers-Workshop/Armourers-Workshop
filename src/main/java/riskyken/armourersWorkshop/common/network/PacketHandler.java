@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.common.network;
 
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientArmourUpdate;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColourUpdate;
@@ -31,18 +30,17 @@ public class PacketHandler {
         networkWrapper.registerMessage(MessageClientGuiButton.class, MessageClientGuiButton.class, 1, Side.SERVER);
         networkWrapper.registerMessage(MessageServerAddEquipmentInfo.class, MessageServerAddEquipmentInfo.class, 2, Side.CLIENT);
         networkWrapper.registerMessage(MessageServerRemoveEquipmentInfo.class, MessageServerRemoveEquipmentInfo.class, 3, Side.CLIENT);
-        networkWrapper.registerMessage(MessageClientArmourUpdate.class, MessageClientArmourUpdate.class, 4, Side.SERVER);
-        networkWrapper.registerMessage(MessageClientLoadArmour.class, MessageClientLoadArmour.class, 5, Side.SERVER);
-        networkWrapper.registerMessage(MessageClientGuiSetSkin.class, MessageClientGuiSetSkin.class, 6, Side.SERVER);
-        networkWrapper.registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, 7, Side.CLIENT);
-        networkWrapper.registerMessage(MessageClientGuiLoadSaveArmour.class, MessageClientGuiLoadSaveArmour.class, 8, Side.SERVER);
-        networkWrapper.registerMessage(MessageClientKeyPress.class, MessageClientKeyPress.class, 9, Side.SERVER);
-        networkWrapper.registerMessage(MessageClientGuiToolOptionUpdate.class, MessageClientGuiToolOptionUpdate.class, 10, Side.SERVER);
-        networkWrapper.registerMessage(MessageClientGuiUpdateNakedInfo.class, MessageClientGuiUpdateNakedInfo.class, 11, Side.SERVER);
-        networkWrapper.registerMessage(MessageServerUpdateSkinInfo.class, MessageServerUpdateSkinInfo.class, 12, Side.CLIENT);
-        networkWrapper.registerMessage(MessageClientRequestEquipmentDataData.class, MessageClientRequestEquipmentDataData.class, 13, Side.SERVER);
-        networkWrapper.registerMessage(MessageServerSendEquipmentData.class, MessageServerSendEquipmentData.class, 14, Side.CLIENT);
-        networkWrapper.registerMessage(MessageClientGuiSetArmourerCustomName.class, MessageClientGuiSetArmourerCustomName.class, 15, Side.SERVER);
-        networkWrapper.registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, 16, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientLoadArmour.class, MessageClientLoadArmour.class, 4, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientGuiSetSkin.class, MessageClientGuiSetSkin.class, 5, Side.SERVER);
+        networkWrapper.registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, 6, Side.CLIENT);
+        networkWrapper.registerMessage(MessageClientGuiLoadSaveArmour.class, MessageClientGuiLoadSaveArmour.class, 7, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientKeyPress.class, MessageClientKeyPress.class, 8, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientGuiToolOptionUpdate.class, MessageClientGuiToolOptionUpdate.class, 9, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientGuiUpdateNakedInfo.class, MessageClientGuiUpdateNakedInfo.class, 10, Side.SERVER);
+        networkWrapper.registerMessage(MessageServerUpdateSkinInfo.class, MessageServerUpdateSkinInfo.class, 11, Side.CLIENT);
+        networkWrapper.registerMessage(MessageClientRequestEquipmentDataData.class, MessageClientRequestEquipmentDataData.class, 12, Side.SERVER);
+        networkWrapper.registerMessage(MessageServerSendEquipmentData.class, MessageServerSendEquipmentData.class, 13, Side.CLIENT);
+        networkWrapper.registerMessage(MessageClientGuiSetArmourerCustomName.class, MessageClientGuiSetArmourerCustomName.class, 14, Side.SERVER);
+        networkWrapper.registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, 15, Side.SERVER);
     }
 }

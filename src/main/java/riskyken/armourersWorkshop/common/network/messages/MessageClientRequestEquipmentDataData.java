@@ -9,30 +9,26 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 public class MessageClientRequestEquipmentDataData implements IMessage, IMessageHandler<MessageClientRequestEquipmentDataData, IMessage> {
 
     int equpmentId;
-    byte target;
     
     public MessageClientRequestEquipmentDataData() {}
 
-    public MessageClientRequestEquipmentDataData(int equpmentId, byte target) {
+    public MessageClientRequestEquipmentDataData(int equpmentId) {
         this.equpmentId = equpmentId;
-        this.target = target;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         this.equpmentId = buf.readInt();
-        this.target = buf.readByte();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.equpmentId);
-        buf.writeByte(this.target);
     }
 
     @Override
     public IMessage onMessage(MessageClientRequestEquipmentDataData message, MessageContext ctx) {
-        EquipmentDataCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, message.target, ctx.getServerHandler().playerEntity);
+        EquipmentDataCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, ctx.getServerHandler().playerEntity);
         return null;
     }
 
