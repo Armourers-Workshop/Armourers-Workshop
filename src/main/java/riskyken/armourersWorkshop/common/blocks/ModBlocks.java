@@ -20,6 +20,8 @@ public class ModBlocks {
     public static Block boundingBox;
     public static Block colourable;
     public static Block colourableGlowing;
+    public static Block colourableGlass;
+    public static Block colourableGlassGlowing;
     public static Block colourMixer;
     public static Block mannequin;
     public static Block doll;
@@ -31,6 +33,8 @@ public class ModBlocks {
         boundingBox = new BlockBoundingBox();
         colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
         colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
+        colourableGlass = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS, false);
+        colourableGlassGlowing = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS_GLOWING, true);
         colourMixer = new BlockColourMixer();
         mannequin = new BlockMannequin();
         doll = new BlockDoll();
