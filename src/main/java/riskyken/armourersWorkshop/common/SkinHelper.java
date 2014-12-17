@@ -38,7 +38,26 @@ public final class SkinHelper {
     }
 
     public static BufferedImage getBufferedImageSkin(AbstractClientPlayer player) {
-        return getBufferedImageSkin(player.getGameProfile());
+        BufferedImage bufferedImage = null;
+        ResourceLocation skinloc = AbstractClientPlayer.locationStevePng;
+        InputStream inputStream = null;
+        Minecraft mc = Minecraft.getMinecraft();
+        skinloc = player.getLocationSkin();
+        try {
+            ITextureObject skintex = mc.getTextureManager().getTexture(skinloc);
+            if (skintex instanceof ThreadDownloadImageData) {
+                ThreadDownloadImageData imageData = (ThreadDownloadImageData)skintex;
+                bufferedImage  = ObfuscationReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage", "field_110560_d", "bpr.h");
+            } else {
+                inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skinloc).getInputStream();
+                bufferedImage = ImageIO.read(inputStream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        return bufferedImage;
     }
     
     public static BufferedImage getBufferedImageSkin(GameProfile gameProfile) {
@@ -51,7 +70,7 @@ public final class SkinHelper {
         
         try {
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+                skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
                 ITextureObject skintex = mc.getTextureManager().getTexture(skinloc);
                 
                 if (skintex instanceof ThreadDownloadImageData) {
