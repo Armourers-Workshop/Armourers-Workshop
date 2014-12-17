@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 
@@ -77,8 +78,8 @@ public final class SkinHelper {
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
         Minecraft mc = Minecraft.getMinecraft();
         Map map = mc.func_152342_ad().func_152788_a(gameProfile);
-        if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-            skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+        if (map.containsKey(Type.SKIN)) {
+            skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
         }
         return skin;
     }

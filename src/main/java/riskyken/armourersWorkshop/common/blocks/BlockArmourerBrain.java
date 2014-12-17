@@ -34,11 +34,12 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
             EntityPlayer player = (EntityPlayer)entity;
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityArmourerBrain) {
-                ((TileEntityArmourerBrain)te).setGameProfile(player.getGameProfile());
                 ForgeDirection direction = ForgeDirection.getOrientation(UtilBlocks.determineOrientationSide(world, x, y, z, entity));
                 ((TileEntityArmourerBrain)te).setDirection(ForgeDirection.NORTH);
-                ((TileEntityArmourerBrain)te).onPlaced();
-                
+                if (!world.isRemote) {
+                    ((TileEntityArmourerBrain)te).setGameProfile(player.getGameProfile());
+                    ((TileEntityArmourerBrain)te).onPlaced();
+                }
             }
         }
     }
