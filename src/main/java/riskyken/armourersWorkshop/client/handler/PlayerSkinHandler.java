@@ -8,6 +8,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -47,6 +48,9 @@ public class PlayerSkinHandler {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
+        if (player instanceof MannequinFakePlayer) {
+            return;
+        }
         if (skinMap.containsKey(player.getPersistentID())) {
             PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
             skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
@@ -56,6 +60,9 @@ public class PlayerSkinHandler {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
         EntityPlayer player = event.entityPlayer;
+        if (player instanceof MannequinFakePlayer) {
+            return;
+        }
         if (skinMap.containsKey(player.getPersistentID())) {
             PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
             skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
@@ -65,6 +72,9 @@ public class PlayerSkinHandler {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.SetArmorModel event) {
         EntityPlayer player = event.entityPlayer;
+        if (player instanceof MannequinFakePlayer) {
+            return;
+        }
         int result = -1;
         
         int slot = -event.slot + 3;

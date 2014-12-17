@@ -56,16 +56,16 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
         if (te != null && te instanceof TileEntityMannequin) {
             int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
             ((TileEntityMannequin)te).setRotation(l);
-            
-            if (stack.hasTagCompound()) {
-                NBTTagCompound compound = stack.getTagCompound();
-                GameProfile gameProfile = null;
-                if (compound.hasKey(TAG_OWNER, 10)) {
-                    gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
-                    ((TileEntityMannequin)te).setGameProfile(gameProfile);
+            if (!world.isRemote) {
+                if (stack.hasTagCompound()) {
+                    NBTTagCompound compound = stack.getTagCompound();
+                    GameProfile gameProfile = null;
+                    if (compound.hasKey(TAG_OWNER, 10)) {
+                        gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                        ((TileEntityMannequin)te).setGameProfile(gameProfile);
+                    }
                 }
             }
-            
         }
         world.setBlock(x, y + 1, z, this, 1, 2);
     }
