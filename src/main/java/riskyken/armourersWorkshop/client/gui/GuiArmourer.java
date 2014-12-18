@@ -129,7 +129,8 @@ public class GuiArmourer extends GuiContainer {
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
         case 13:
-            PacketHandler.networkWrapper.sendToServer(new MessageClientLoadArmour(textItemName.getText().trim()));
+            //TODO Save tags on equipment
+            PacketHandler.networkWrapper.sendToServer(new MessageClientLoadArmour(textItemName.getText().trim(), ""));
             break;
         case 8:
             String username = textUserSkin.getText().trim();

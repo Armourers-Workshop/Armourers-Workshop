@@ -59,7 +59,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
      * @param player The player that pressed the save button.
      * @param name Custom name for the item.
      */
-    public void saveArmourItem(EntityPlayerMP player, String name) {
+    public void saveArmourItem(EntityPlayerMP player, String name, String tags) {
         if (this.worldObj.isRemote) {
             return;
         }
@@ -80,7 +80,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         String customName = name;
         
         CustomEquipmentItemData armourItemData;
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName,
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, tags,
                 xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         
         if (armourItemData == null) {
