@@ -186,7 +186,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         return armourItemData;
     }
     
-    public ArrayList<String> getFileNames() {
+    public static ArrayList<String> getFileNames() {
         ArrayList<String> files = new ArrayList<String>();
         if (!createArmourDirectory()) { return null; }
         
