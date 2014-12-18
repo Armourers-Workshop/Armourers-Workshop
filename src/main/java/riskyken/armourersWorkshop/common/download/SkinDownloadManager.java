@@ -53,12 +53,20 @@ public final class SkinDownloadManager implements Runnable {
         return fileList;
     }
     
-    public void downloadSkin(String name) {
+    public void downloadSkin(String name, ArrayList<String> localFileList) {
         if (!name.contains("@")) {
             return;
         }
         String[] nameSplit = name.split("@");
-        String fileName = nameSplit[1] + ".armour";
+        String fileName = nameSplit[1];
+        
+        if (localFileList.contains(fileName)) {
+            //Already have this file downloaded.
+            return;
+        }
+        
+        fileName = fileName + ".armour";
+        
         URL url;
         try {
             url = new URL(SKIN_FOLDER_URL + nameSplit[0]);
@@ -86,6 +94,7 @@ public final class SkinDownloadManager implements Runnable {
             rbc = Channels.newChannel(url.openStream());
             fos = new FileOutputStream(targetFile);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            fos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -115,9 +124,7 @@ public final class SkinDownloadManager implements Runnable {
         ArrayList<String> localFileList = TileEntityArmourLibrary.getFileNames();
         for (int i = 0; i < remoteFileList.size(); i++) {
             String file = remoteFileList.get(i);
-            if (!localFileList.contains(file)) {
-                downloadSkin(file);
-            }
+            downloadSkin(file, localFileList);
         }
     }
 }
