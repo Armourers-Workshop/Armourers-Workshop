@@ -168,7 +168,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                         int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
                         int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
                         Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
-                        if (tarBlock == ModBlocks.colourable | tarBlock == ModBlocks.colourableGlowing) {
+                        if (
+                                tarBlock == ModBlocks.colourable |
+                                tarBlock == ModBlocks.colourableGlowing |
+                                tarBlock == ModBlocks.colourableGlass |
+                                tarBlock == ModBlocks.colourableGlassGlowing
+                            ) {
                             worldObj.setBlockToAir(tarX, tarY, tarZ);
                         }
                     }
