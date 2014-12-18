@@ -162,7 +162,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
         }
         
-
+        renderPlayer.modelBipedMain.bipedLeftLeg.rotateAngleZ = 0F;
+        renderPlayer.modelBipedMain.bipedRightLeg.rotateAngleZ = 0F;
+        
         //renderPlayer.modelBipedMain.render(fakePlayer, 0, 0, 0, 0, 0, 0);
         //modelMannequin.render(te.getBipedRotations(), true, scale);
         
