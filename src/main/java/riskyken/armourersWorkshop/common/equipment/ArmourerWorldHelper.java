@@ -19,7 +19,8 @@ import riskyken.armourersWorkshop.utils.UtilBlocks;
 public final class ArmourerWorldHelper {
     
     public static CustomEquipmentItemData saveArmourItem(World world, EnumEquipmentType type,
-            String authorName, String customName, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+            String authorName, String customName, String tags,
+            int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
         ArrayList<CustomEquipmentPartData> parts = new ArrayList<CustomEquipmentPartData>();
         
         for (int i = 0; i < type.getParts().length; i++) {
@@ -27,7 +28,7 @@ public final class ArmourerWorldHelper {
         }
         
         if (parts.size() > 0) {
-            return new CustomEquipmentItemData(authorName, customName, type, parts);
+            return new CustomEquipmentItemData(authorName, customName, tags, type, parts);
         } else {
             return null;
         }

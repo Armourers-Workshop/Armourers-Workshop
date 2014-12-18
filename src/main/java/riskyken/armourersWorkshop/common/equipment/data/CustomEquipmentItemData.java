@@ -25,11 +25,13 @@ public class CustomEquipmentItemData {
     
     private static final String TAG_TYPE = "type";
     private static final String TAG_PARTS = "parts";
+    private static final String TAG_TAGS = "tags";
     
-    public static final int FILE_VERSION = 3;
+    public static final int FILE_VERSION = 4;
     
     private String authorName;
     private String customName;
+    private String tags;
     private EnumEquipmentType type;
     private ArrayList<CustomEquipmentPartData> parts;
     
@@ -50,9 +52,10 @@ public class CustomEquipmentItemData {
         return false;
     }
     
-    public CustomEquipmentItemData(String authorName, String customName, EnumEquipmentType type, ArrayList<CustomEquipmentPartData> parts) {
+    public CustomEquipmentItemData(String authorName, String customName, String tags, EnumEquipmentType type, ArrayList<CustomEquipmentPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
+        this.tags = tags;
         this.type = type;
         this.parts = parts;
     }
@@ -79,6 +82,7 @@ public class CustomEquipmentItemData {
     public void writeToBuf(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, this.authorName);
         ByteBufUtils.writeUTF8String(buf, this.customName);
+        ByteBufUtils.writeUTF8String(buf, this.tags);
         buf.writeByte(type.ordinal());
         buf.writeByte(parts.size());
         for (int i = 0; i < parts.size(); i++) {
@@ -89,6 +93,7 @@ public class CustomEquipmentItemData {
     private void readFromBuf(ByteBuf buf) {
         this.authorName = ByteBufUtils.readUTF8String(buf);
         this.customName = ByteBufUtils.readUTF8String(buf);
+        this.tags = ByteBufUtils.readUTF8String(buf);
         type = EnumEquipmentType.getOrdinal(buf.readByte());
         int size = buf.readByte();
         parts = new ArrayList<CustomEquipmentPartData>();
@@ -100,6 +105,8 @@ public class CustomEquipmentItemData {
     public void writeToNBT(NBTTagCompound compound) {
         compound.setString(LibCommonTags.TAG_AUTHOR_NAME, this.authorName);
         compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
+        compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
+        compound.setString(TAG_TAGS, this.tags);
         compound.setByte(TAG_TYPE, (byte) type.ordinal());
         NBTTagList blockData = new NBTTagList();
         for (int i = 0; i < parts.size(); i++) {
@@ -124,6 +131,7 @@ public class CustomEquipmentItemData {
     private void readFromNBT(NBTTagCompound compound) {
         this.authorName = compound.getString(LibCommonTags.TAG_AUTHOR_NAME);
         this.customName = compound.getString(LibCommonTags.TAG_CUSTOM_NAME);
+        this.tags = compound.getString(TAG_TAGS);
         type = EnumEquipmentType.getOrdinal(compound.getByte(TAG_TYPE));
         NBTTagList blockData = compound.getTagList(TAG_PARTS, NBT.TAG_COMPOUND);
         parts = new ArrayList<CustomEquipmentPartData>();
@@ -137,6 +145,7 @@ public class CustomEquipmentItemData {
         stream.writeInt(FILE_VERSION);
         stream.writeUTF(this.authorName);
         stream.writeUTF(this.customName);
+        stream.writeUTF(this.tags);
         stream.writeByte(type.ordinal());
         stream.writeByte(parts.size());
         for (int i = 0; i < parts.size(); i++) {
@@ -151,6 +160,11 @@ public class CustomEquipmentItemData {
         }
         this.authorName = stream.readUTF();
         this.customName = stream.readUTF();
+        if (!(fileVersion < 4)) {
+            this.tags = stream.readUTF(); 
+        } else {
+            this.tags = "";
+        }
         type = EnumEquipmentType.getOrdinal(stream.readByte());
         int size = stream.readByte();
         parts = new ArrayList<CustomEquipmentPartData>();

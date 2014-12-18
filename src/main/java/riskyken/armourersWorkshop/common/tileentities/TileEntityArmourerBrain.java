@@ -59,7 +59,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
      * @param player The player that pressed the save button.
      * @param name Custom name for the item.
      */
-    public void saveArmourItem(EntityPlayerMP player, String name) {
+    public void saveArmourItem(EntityPlayerMP player, String name, String tags) {
         if (this.worldObj.isRemote) {
             return;
         }
@@ -80,7 +80,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         String customName = name;
         
         CustomEquipmentItemData armourItemData;
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName,
+        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, tags,
                 xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         
         if (armourItemData == null) {
@@ -168,7 +168,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
                         int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
                         int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
                         Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
-                        if (tarBlock == ModBlocks.colourable | tarBlock == ModBlocks.colourableGlowing) {
+                        if (
+                                tarBlock == ModBlocks.colourable |
+                                tarBlock == ModBlocks.colourableGlowing |
+                                tarBlock == ModBlocks.colourableGlass |
+                                tarBlock == ModBlocks.colourableGlassGlowing
+                            ) {
                             worldObj.setBlockToAir(tarX, tarY, tarZ);
                         }
                     }

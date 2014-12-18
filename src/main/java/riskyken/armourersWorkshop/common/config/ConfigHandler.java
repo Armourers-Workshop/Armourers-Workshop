@@ -15,6 +15,7 @@ public class ConfigHandler {
     public static boolean disableRecipes;
     public static int modelCacheTime = 12000;
     public static int maxRenderDistance = 40;
+    public static boolean downloadSkins;
 
     public static void init(File file) {
         if (config == null) {
@@ -29,6 +30,11 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "Disable Recipes", false,
                 "Disable all mod recipes. Use if you want to manually add recipes for a mod pack.")
                 .getBoolean(false);
+        
+        downloadSkins = config
+                .get(CATEGORY_GENERAL, "Allow Auto Skin Downloads", true,
+                "Allow the mod to auto download new skins.")
+                .getBoolean(true);
 
         UpdateCheck.checkForUpdates = config.get(CATEGORY_GENERAL, "Check for updates", true,
                 "Should the mod check for new versions?").getBoolean(true);

@@ -7,6 +7,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
+import riskyken.armourersWorkshop.common.download.SkinDownloadManager;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
@@ -45,6 +46,7 @@ public class ArmourersWorkshop {
         ConfigHandler.init(event.getSuggestedConfigurationFile());
 
         UpdateCheck.checkForUpdates();
+        SkinDownloadManager.downloadSkins();
         
         ModItems.init();
         ModBlocks.init();
