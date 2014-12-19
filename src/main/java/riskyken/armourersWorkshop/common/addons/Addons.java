@@ -9,6 +9,7 @@ public final class Addons {
     private static ArrayList<AbstractAddon> loadedAddons = new ArrayList<AbstractAddon>(); 
     
     public static void init() {
+        loadedAddons.add(new AddonMinecraft());
         if (Loader.isModLoaded("Botania")) {
             loadedAddons.add(new AddonBotania());
         }
