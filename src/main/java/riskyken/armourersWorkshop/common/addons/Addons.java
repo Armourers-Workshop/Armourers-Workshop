@@ -25,6 +25,9 @@ public final class Addons {
     
     public static void initRenderers() {
         for (int i = 0; i < loadedAddons.size(); i++) {
+            loadedAddons.get(i).init();
+        }
+        for (int i = 0; i < loadedAddons.size(); i++) {
             loadedAddons.get(i).initRenderers();
         }
     }
