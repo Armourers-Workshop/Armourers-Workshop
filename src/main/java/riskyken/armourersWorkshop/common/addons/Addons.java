@@ -21,6 +21,9 @@ public final class Addons {
         if (Loader.isModLoaded("weaponmod")) {
             loadedAddons.add(new AddonBalkonsWeaponMod());
         }
+        if (Loader.isModLoaded("TConstruct")) {
+            loadedAddons.add(new AddonTConstruct());
+        }
     }
     
     public static void initRenderers() {
