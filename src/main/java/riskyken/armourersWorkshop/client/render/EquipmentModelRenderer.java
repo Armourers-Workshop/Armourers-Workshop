@@ -45,7 +45,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class EquipmentModelRenderer {
     
-    public static final EquipmentModelRenderer INSTANCE = new EquipmentModelRenderer();
+    public static EquipmentModelRenderer INSTANCE;
     
     private HashMap<UUID, EntityEquipmentData> playerEquipmentMap = new HashMap<UUID, EntityEquipmentData>();
     
@@ -59,6 +59,10 @@ public final class EquipmentModelRenderer {
     
     private boolean addedRenderAttachment = false;
     public EntityPlayer targetPlayer = null;
+    
+    public static void init() {
+        INSTANCE = new EquipmentModelRenderer();
+    }
     
     public EquipmentModelRenderer() {
         MinecraftForge.EVENT_BUS.register(this);

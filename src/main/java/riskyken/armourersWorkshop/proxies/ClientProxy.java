@@ -52,6 +52,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initRenderers() {
+        EquipmentModelRenderer.init();
         ModelMannequin modelMannequin = new ModelMannequin();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
