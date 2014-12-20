@@ -86,8 +86,9 @@ public class RenderItemBowSkin implements IItemRenderer {
             default:
                 break;
             }
+            GL11.glEnable(GL11.GL_CULL_FACE);
             ItemStackRenderHelper.renderItemAsArmourModel(stack, EnumEquipmentType.BOW);
-            
+            GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
