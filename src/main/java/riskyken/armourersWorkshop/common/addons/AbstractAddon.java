@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
+import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -33,6 +34,17 @@ public abstract class AbstractAddon {
             
         } else {
             ModLogger.log(Level.WARN, "Unable to override item renderer for: " + getModName() + " - " + itemName);
+        }
+    }
+    
+    protected void addRenderClass(String className, RenderType renderType) {
+        switch (renderType) {
+        case SWORD:
+            EntityEquipmentDataManager.INSTANCE.addSwordRenderClass(className);
+            break;
+        case BOW:
+            EntityEquipmentDataManager.INSTANCE.addBowRenderClass(className);
+            break;
         }
     }
     

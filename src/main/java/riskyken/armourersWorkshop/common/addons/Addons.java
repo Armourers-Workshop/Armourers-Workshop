@@ -9,6 +9,7 @@ public final class Addons {
     private static ArrayList<AbstractAddon> loadedAddons = new ArrayList<AbstractAddon>(); 
     
     public static void init() {
+        loadedAddons.add(new AddonMinecraft());
         if (Loader.isModLoaded("Botania")) {
             loadedAddons.add(new AddonBotania());
         }
@@ -21,9 +22,15 @@ public final class Addons {
         if (Loader.isModLoaded("weaponmod")) {
             loadedAddons.add(new AddonBalkonsWeaponMod());
         }
+        if (Loader.isModLoaded("TConstruct")) {
+            loadedAddons.add(new AddonTConstruct());
+        }
     }
     
     public static void initRenderers() {
+        for (int i = 0; i < loadedAddons.size(); i++) {
+            loadedAddons.get(i).init();
+        }
         for (int i = 0; i < loadedAddons.size(); i++) {
             loadedAddons.get(i).initRenderers();
         }

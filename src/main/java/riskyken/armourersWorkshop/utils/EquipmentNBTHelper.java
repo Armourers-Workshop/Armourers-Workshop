@@ -50,4 +50,41 @@ public class EquipmentNBTHelper {
         
         return stack;
     }
+    
+    public static void addRenderIdToStack(ItemStack stack, int equipmentId) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound compound = stack.getTagCompound();
+            if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
+                //The stack already has a render id. Check if it needs updated.
+                NBTTagCompound armourData = compound.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
+                int newId = equipmentId;
+                int oldId = armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
+                if (newId != oldId) {
+                    armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, newId);
+                    compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+                }
+            } else {
+                //The stack has NBT but no render id.
+                NBTTagCompound armourData = new NBTTagCompound();
+                armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentId);
+                compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+            }
+        } else {
+            //The stack has no NBT so just add the render id.
+            stack.setTagCompound(new NBTTagCompound());
+            NBTTagCompound compound = stack.getTagCompound();
+            NBTTagCompound armourData = new NBTTagCompound();
+            armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentId);
+            compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+        }
+    }
+    
+    public static void removeRenderIdToStack(ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound compound = stack.getTagCompound();
+            if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
+                compound.removeTag(LibCommonTags.TAG_ARMOUR_DATA);
+            }
+        }
+    }
 }
