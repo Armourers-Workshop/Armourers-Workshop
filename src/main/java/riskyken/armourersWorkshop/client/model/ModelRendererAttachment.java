@@ -60,7 +60,9 @@ public class ModelRendererAttachment extends ModelRenderer {
                         GL11.glTranslatef(0, -2 * scale, 0);
                     }
                 }
+                GL11.glEnable(GL11.GL_CULL_FACE);
                 EquipmentPartRenderer.INSTANCE.renderPart(partData, scale);
+                GL11.glDisable(GL11.GL_CULL_FACE);
                 GL11.glPopMatrix();
                 break;
             }
