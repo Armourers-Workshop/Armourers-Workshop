@@ -23,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemEquipmentSkin extends AbstractModItem {
 
     public ItemEquipmentSkin() {
-        super(LibItemNames.EQUIPMENT_SKIN);
+        super(LibItemNames.EQUIPMENT_SKIN, false);
         setHasSubtypes(true);
     }
     

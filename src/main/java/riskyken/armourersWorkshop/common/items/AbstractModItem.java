@@ -15,7 +15,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class AbstractModItem extends Item {
 
     public AbstractModItem(String name) {
-        setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+        this(name, true);
+    }
+    
+    public AbstractModItem(String name, boolean addCreativeTab) {
+        if (addCreativeTab) {
+            setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+        }
         setUnlocalizedName(name);
         setHasSubtypes(false);
         setMaxStackSize(1);
