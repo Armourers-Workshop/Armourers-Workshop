@@ -5,6 +5,7 @@ import java.util.HashSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
@@ -40,9 +41,6 @@ public final class EntityEquipmentDataManager {
         FMLCommonHandler.instance().bus().register(this);
         swordSkinItems = new HashSet<String>();
         bowSkinItems = new HashSet<String>();
-        
-        addSwordRenderClass(ItemSword.class.getName());
-        addBowRenderClass(ItemBow.class.getName());
     }
     
     public void addSwordRenderClass(String className) {
@@ -53,15 +51,21 @@ public final class EntityEquipmentDataManager {
         bowSkinItems.add(className);
     }
     
-    private boolean isSwordRenderClass(String className) {
-        if (swordSkinItems.contains(className)) {
+    private boolean isSwordRenderItem(Item item) {
+        if (swordSkinItems.contains(item.getClass().getName())) {
+            return true;
+        }
+        if (item instanceof ItemSword) {
             return true;
         }
         return false;
     }
     
-    private boolean isBowRenderClass(String className) {
-        if (bowSkinItems.contains(className)) {
+    private boolean isBowRenderItem(Item item) {
+        if (bowSkinItems.contains(item.getClass().getName())) {
+            return true;
+        }
+        if (item instanceof ItemBow) {
             return true;
         }
         return false;
@@ -85,7 +89,7 @@ public final class EntityEquipmentDataManager {
         EntityEquipmentData equipmentData = props.getEquipmentData();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (stack != null && isSwordRenderClass(stack.getItem().getClass().getName())) {
+            if (stack != null && isSwordRenderItem(stack.getItem())) {
                 
                 if (equipmentData.haveEquipment(EnumEquipmentType.SWORD)) {
                     //ModLogger.log("tick");
@@ -137,7 +141,7 @@ public final class EntityEquipmentDataManager {
         EntityEquipmentData equipmentData = props.getEquipmentData();
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (stack != null && isBowRenderClass(stack.getItem().getClass().getName())) {
+            if (stack != null && isBowRenderItem(stack.getItem())) {
                 
                 if (equipmentData.haveEquipment(EnumEquipmentType.BOW)) {
                     //ModLogger.log("tick");
