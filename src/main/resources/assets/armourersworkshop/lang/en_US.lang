@@ -14,12 +14,12 @@ tile.armourersworkshop:doll.name=Doll
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
 tile.armourersworkshop:miniArmourer.flavour=Unfinished.
 tile.armourersworkshop:armourLibrary.flavour=Save and load equipment templates from disk.
-tile.armourersworkshop:colourable.flavour=Main building block for custom equipment. (paintable)
-tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark equipment cubes!
-tile.armourersworkshop:colourableGlass.flavour=Transparent equipment cube.
-tile.armourersworkshop:colourableGlassGlowing.flavour=Glowing transparent equipment cube!
-tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipment with.
-tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!
+tile.armourersworkshop:colourable.flavour=Main building block for custom equipment.%n(Paintable)
+tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark equipment cubes!%n(Paintable)
+tile.armourersworkshop:colourableGlass.flavour=Transparent equipment cube.%n(Paintable)
+tile.armourersworkshop:colourableGlassGlowing.flavour=Glowing transparent equipment cube!%n(Paintable)
+tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipment with.%nSneak right click with tool to quickly paint.
+tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!%nRight click with a name tag to set a skin.
 tile.armourersworkshop:doll.flavour=Mini mannequin!
 
 # Item names

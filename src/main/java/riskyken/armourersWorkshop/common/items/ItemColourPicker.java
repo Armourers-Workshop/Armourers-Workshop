@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -180,12 +182,17 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
-        if (getToolHasColour(stack)) {
-            list.add("Colour " + getToolColour(stack));
-        } else {
-            list.add("No colour");
-        }
         super.addInformation(stack, player, list, p_77624_4_);
+        String cGray = EnumChatFormatting.GRAY.toString();
+        String cGold = EnumChatFormatting.GOLD.toString();
+        if (getToolHasColour(stack)) {
+            Color c = new Color(getToolColour(stack));
+            String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
+            list.add(cGold + "Colour: " + cGray + c.getRGB());
+            list.add(cGold + "Hex: " + cGray + hex);
+        } else {
+            list.add("No paint");
+        }
     }
     
     @Override

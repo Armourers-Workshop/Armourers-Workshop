@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
@@ -64,7 +65,9 @@ public class ItemBurnTool extends AbstractModItem {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(stack, player, list, p_77624_4_);
+        String cGray = EnumChatFormatting.GRAY.toString();
+        String cGold = EnumChatFormatting.GOLD.toString();
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
-        list.add("Intensity: " + intensity);
+        list.add(cGold + "Intensity: "+ cGray + intensity);
     }
 }

@@ -36,26 +36,36 @@ public class ItemEquipmentSkin extends AbstractModItem {
     
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
+        String cGreen = EnumChatFormatting.GREEN.toString();
+        String cGray = EnumChatFormatting.GRAY.toString();
+        String cRed = EnumChatFormatting.RED.toString();
+        String cGold = EnumChatFormatting.GOLD.toString();
         if (stack.hasTagCompound()) {
+            
             NBTTagCompound itemData = stack.getTagCompound();
             if (itemData.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
                 NBTTagCompound armourData = itemData.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
                 if (armourData.hasKey(LibCommonTags.TAG_CUSTOM_NAME)) {
-                    list.add("Name: " + armourData.getString(LibCommonTags.TAG_CUSTOM_NAME));
+                    if (!armourData.getString(LibCommonTags.TAG_CUSTOM_NAME).trim().isEmpty()) {
+                        list.add(cGold + "Name: " + cGray + armourData.getString(LibCommonTags.TAG_CUSTOM_NAME));
+                    }
+                    
                 }
                 if (armourData.hasKey(LibCommonTags.TAG_AUTHOR_NAME)) {
-                    list.add("Author: " + armourData.getString(LibCommonTags.TAG_AUTHOR_NAME));
+                    list.add(cGold + "Author: " + cGray + armourData.getString(LibCommonTags.TAG_AUTHOR_NAME));
                 }
                 if (armourData.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) {
-                    list.add("Equipment Id: " + armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID));
+                    list.add(cGold + "Equipment Id: " + cGray + armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID));
                 }
                 
             }
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
-            list.add("Press the " + keyName + " key to open the Equipment Wardrobe");
+
+            keyName = cGreen + keyName + cGray;
+            list.add("Press the " + keyName + " key to open the " + cGreen + "Equipment Wardrobe");
         } else {
-            list.add(EnumChatFormatting.RED + "ERROR: Invalid equipment skin.");
-            list.add(EnumChatFormatting.RED + "Please delete.");
+            list.add(cRed + "ERROR: Invalid equipment skin.");
+            list.add(cRed + "Please delete.");
         }
         
 
