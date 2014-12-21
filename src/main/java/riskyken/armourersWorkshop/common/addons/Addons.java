@@ -8,21 +8,30 @@ public final class Addons {
     
     private static ArrayList<AbstractAddon> loadedAddons = new ArrayList<AbstractAddon>(); 
     
+    public static boolean weaponmodCompatibility;
+    public static boolean betterStorageCompatibility;
+    public static boolean botaniaCompatibility;
+    public static boolean minecraftCompatibility;
+    public static boolean tConstructCompatibility;
+    public static boolean thaumcraftCompatibility;
+    
     public static void init() {
-        loadedAddons.add(new AddonMinecraft());
-        if (Loader.isModLoaded("Botania")) {
+        if (minecraftCompatibility) {
+            loadedAddons.add(new AddonMinecraft()); 
+        }
+        if (Loader.isModLoaded("Botania") & botaniaCompatibility) {
             loadedAddons.add(new AddonBotania());
         }
-        if (Loader.isModLoaded("betterstorage")) {
+        if (Loader.isModLoaded("betterstorage") & betterStorageCompatibility) {
             loadedAddons.add(new AddonBetterStorage());
         }
-        if (Loader.isModLoaded("Thaumcraft")) {
+        if (Loader.isModLoaded("Thaumcraft") & thaumcraftCompatibility) {
             loadedAddons.add(new AddonThaumcraft());
         }
-        if (Loader.isModLoaded("weaponmod")) {
+        if (Loader.isModLoaded("weaponmod") & weaponmodCompatibility) {
             loadedAddons.add(new AddonBalkonsWeaponMod());
         }
-        if (Loader.isModLoaded("TConstruct")) {
+        if (Loader.isModLoaded("TConstruct") & tConstructCompatibility) {
             loadedAddons.add(new AddonTConstruct());
         }
     }

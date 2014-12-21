@@ -11,7 +11,6 @@ import riskyken.armourersWorkshop.common.download.SkinDownloadManager;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
-import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
@@ -79,7 +78,6 @@ public class ArmourersWorkshop {
         Addons.init();
         proxy.postInit();
         TileEntityArmourLibrary.createArmourDirectory();
-        new DollCraftinghandler();
     }
     
     @Mod.EventHandler

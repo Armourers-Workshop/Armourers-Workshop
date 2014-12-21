@@ -8,6 +8,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -15,10 +16,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public final class CraftingManager {
 
     public static void init() {
+        hideItemsInNEI();
         if (ConfigHandler.disableRecipes) { return; }
         ModBlockRecipes.init();
         ModItemRecipes.init();
-        hideItemsInNEI();
+        new DollCraftinghandler();
     }
 
     public static void addShapelessRecipe(ItemStack result, Object[] recipe) {
