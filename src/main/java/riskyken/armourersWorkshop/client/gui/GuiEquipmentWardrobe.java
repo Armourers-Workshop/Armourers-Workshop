@@ -41,6 +41,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     Color pantStripeColour;
     BitSet armourOverride;
     boolean headOverlay;
+    boolean limitLimbs;
     
     ExtendedPropsPlayerEquipmentData customEquipmentData;
     PlayerSkinInfo skinInfo;
@@ -52,6 +53,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
     
     private GuiCheckBox[] armourOverrideCheck;
     private GuiCheckBox[] overlayOverrideCheck;
+    private GuiCheckBox limitLimbsCheck;
     
     private float mouseX;
     private float mouseY;
@@ -75,6 +77,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
             this.pantStripeColour = new Color(nakedInfo.pantStripeColour);
             this.armourOverride = nakedInfo.armourOverride;
             this.headOverlay = nakedInfo.headOverlay;
+            this.limitLimbs = nakedInfo.limitLimbs;
         }
         
         this.xSize = 176;
@@ -91,13 +94,15 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         nakedCheck = new GuiCheckBox(1, this.guiLeft + 8, this.guiTop + 94, 14, 14, GuiHelper.getLocalizedControlName(guiName, "nakedSkin"), nakedInfo.isNaked, false);
         
         armourOverrideCheck = new GuiCheckBox[4];
-        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 29, this.guiTop + 17, 7, 7, "Disable head armour render", armourOverride.get(0), true);
-        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 29, this.guiTop + 36, 7, 7, "Disable chest armour render", armourOverride.get(1), true);
-        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 29, this.guiTop + 55, 7, 7, "Disable leg armour render", armourOverride.get(2), true);
-        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 29, this.guiTop + 74, 7, 7, "Disable foot armour render", armourOverride.get(3), true);
+        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 28, this.guiTop + 17, 7, 7, "Disable head armour render", armourOverride.get(0), true);
+        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 28, this.guiTop + 36, 7, 7, "Disable chest armour render", armourOverride.get(1), true);
+        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 28, this.guiTop + 55, 7, 7, "Disable leg armour render", armourOverride.get(2), true);
+        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 28, this.guiTop + 74, 7, 7, "Disable foot armour render", armourOverride.get(3), true);
         
         overlayOverrideCheck = new GuiCheckBox[1];
-        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 29, this.guiTop + 28, 7, 7, "Disable head overlay render", headOverlay, true);
+        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 28, this.guiTop + 28, 7, 7, "Disable head overlay render", headOverlay, true);
+        
+        limitLimbsCheck = new GuiCheckBox(7, this.guiLeft + 141, this.guiTop + 55, 7, 7, "Limit limb movement while wearing a skirt", limitLimbs, true);
         
         buttonList.add(autoButton);
         buttonList.add(nakedCheck);
@@ -106,6 +111,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
         buttonList.add(armourOverrideCheck[1]);
         buttonList.add(armourOverrideCheck[2]);
         buttonList.add(armourOverrideCheck[3]);
+        buttonList.add(limitLimbsCheck);
     }
     
     @Override
@@ -122,6 +128,7 @@ public class GuiEquipmentWardrobe extends GuiContainer{
             nakedInfo.headOverlay = headOverlay;
             nakedInfo.armourOverride = armourOverride;
             nakedInfo.isNaked = nakedCheck.isChecked();
+            nakedInfo.limitLimbs = limitLimbsCheck.isChecked();
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(nakedInfo));
         }
         if (button.id == 0) {

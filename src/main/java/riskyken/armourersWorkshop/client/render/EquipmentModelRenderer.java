@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourChest;
@@ -144,8 +145,11 @@ public final class EquipmentModelRenderer {
         
         if (playerHasCustomArmourType(player.getPersistentID(), EnumEquipmentType.SKIRT)) {
             if (!Loader.isModLoaded("SmartMoving")) {
-                if (player.limbSwingAmount > 0.25F) {
-                    player.limbSwingAmount = 0.25F;
+                PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(player.getPersistentID());
+                if (skinInfo != null && skinInfo.getNakedInfo().limitLimbs) {
+                    if (player.limbSwingAmount > 0.25F) {
+                        player.limbSwingAmount = 0.25F;
+                    } 
                 }
             }
         }
