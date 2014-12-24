@@ -109,6 +109,27 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
         }
     }
     
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
+        ItemStack stack = new ItemStack(ModBlocks.mannequin, 1);
+        int meta = world.getBlockMetadata(x, y, z);
+        int yOffset = 0;
+        if (meta == 1) {
+            yOffset = -1;
+        }
+        TileEntity te = world.getTileEntity(x, y + yOffset, z);;
+        if (te != null && te instanceof TileEntityMannequin) {
+            TileEntityMannequin teMan = (TileEntityMannequin) te;
+            if (teMan.getGameProfile() != null) {
+                NBTTagCompound profileTag = new NBTTagCompound();
+                NBTUtil.func_152460_a(profileTag, teMan.getGameProfile());
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setTag(TAG_OWNER, profileTag);
+            }
+        }
+        return stack;
+    }
+    
     @SideOnly(Side.CLIENT)
     @Override
     public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
