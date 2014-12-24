@@ -172,12 +172,12 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
             setSliderValue(headZslider, 0F);
             
             setSliderValue(leftArmXslider, 0F);
-            setSliderValue(leftArmYslider, 0F);
-            setSliderValue(leftArmZslider, 0F);
+            setSliderValue(leftArmYslider, 1F);
+            setSliderValue(leftArmZslider, 10F);
             
             setSliderValue(rightArmXslider, 0F);
-            setSliderValue(rightArmYslider, 0F);
-            setSliderValue(rightArmZslider, 0F);
+            setSliderValue(rightArmYslider, 1F);
+            setSliderValue(rightArmZslider, 10F);
             
             setSliderValue(leftLegXslider, 0F);
             setSliderValue(leftLegYslider, 0F);
@@ -186,6 +186,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
             setSliderValue(rightLegXslider, 0F);
             setSliderValue(rightLegYslider, 0F);
             setSliderValue(rightLegZslider, 0F);
+            
             guiLoaded = true;
 
             checkAndSendRotationValues();
