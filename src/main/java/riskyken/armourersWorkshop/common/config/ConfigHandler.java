@@ -5,12 +5,15 @@ import java.io.File;
 import net.minecraftforge.common.config.Configuration;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class ConfigHandler {
 
     public static String CATEGORY_GENERAL = "general";
     public static String CATEGORY_COMPATIBILITY = "compatibility";
-
+    public static String CATEGORY_CLIENT = "client";
+    
     public static Configuration config;
 
     public static boolean disableRecipes;
@@ -71,6 +74,13 @@ public class ConfigHandler {
                 .get(CATEGORY_COMPATIBILITY, "Thaumcraft Compatibility", true,
                 "Allow weapon render override on Thaumcraft items.")
                 .getBoolean(true);
+        
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            maxRenderDistance = config
+                    .get(CATEGORY_CLIENT, "Skin Render Distance", 40,
+                    "The max distance away that skins will render.")
+                    .getInt(40);
+        }
         
         if (config.hasChanged()) {
             config.save();

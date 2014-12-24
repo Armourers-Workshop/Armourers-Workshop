@@ -25,7 +25,11 @@ public class ModConfigGui extends GuiConfig {
                 .getCategory(ConfigHandler.CATEGORY_GENERAL))
                 .getChildElements());
         configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_COMPATIBILITY)).getChildElements());
+                .getCategory(ConfigHandler.CATEGORY_COMPATIBILITY))
+                .getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandler.config
+                .getCategory(ConfigHandler.CATEGORY_CLIENT))
+                .getChildElements());
         return configs;
     }
 }
