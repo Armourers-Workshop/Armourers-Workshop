@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -52,6 +53,7 @@ public class GuiScrollbar  extends GuiButton {
 	public void drawButton(Minecraft minecraft, int x, int y) {
         if (this.visible)
         {
+            updateMouse();
             FontRenderer fontRendererObj = minecraft.fontRenderer;
             minecraft.getTextureManager().bindTexture(texture);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -108,6 +110,17 @@ public class GuiScrollbar  extends GuiButton {
 		this.dragging = false;
 	}
 	
+    private void updateMouse() {
+        if (Mouse.isCreated()) {
+            int dWheel = Mouse.getDWheel();
+            if (dWheel < 0) {
+                setValue(sliderValue + 2);
+            } else if (dWheel > 0) {
+                setValue(sliderValue - 2);
+            }
+        }
+    }
+	
 	public void setValue(int newValue) {
 		sliderValue = newValue;
 		if (sliderValue <= 0) { sliderValue = 0; }
@@ -123,11 +136,11 @@ public class GuiScrollbar  extends GuiButton {
 					this.dragging = true;
 				}
 				else {
-					setValue(sliderValue + 10);
+					setValue(sliderValue + 4);
 					//sliderValue += 10;
 				}
 			} else {
-				setValue(sliderValue - 10);
+				setValue(sliderValue - 4);
 				//sliderValue -= 10;
 			}
 			return true;
