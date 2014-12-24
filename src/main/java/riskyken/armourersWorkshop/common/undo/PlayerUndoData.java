@@ -8,9 +8,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 
 public class PlayerUndoData {
-
-    private static final int MAX_UNDOS = 50;
-
+    
     private ArrayList<UndoData> undos;
     private EntityPlayer player;
     
@@ -21,7 +19,7 @@ public class PlayerUndoData {
 
     public void addUndoData(UndoData undoData) {
         undos.add(undoData);
-        if (undos.size() > MAX_UNDOS) {
+        if (undos.size() > UndoManager.maxUndos) {
             undos.remove(0);
         }
     }

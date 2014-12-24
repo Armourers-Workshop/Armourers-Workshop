@@ -15,6 +15,8 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
  */
 public final class UndoManager {
 
+    public static int maxUndos = 50;
+    
     private static HashMap<String, PlayerUndoData> playerUndoData = new HashMap<String, PlayerUndoData>();
 
     public static void playerPaintedBlock(EntityPlayer player, World world, int x, int y, int z, int oldColour) {

@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -41,6 +42,11 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "Allow Auto Skin Downloads", true,
                 "Allow the mod to auto download new skins.")
                 .getBoolean(true);
+        
+        UndoManager.maxUndos = config
+                .get(CATEGORY_GENERAL, "Max Undos", 100,
+                "Max number of undos a player has for block painting.")
+                .getInt(100);
         
         UpdateCheck.checkForUpdates = config.get(CATEGORY_GENERAL, "Check for updates", true,
                 "Should the mod check for new versions?").getBoolean(true);
