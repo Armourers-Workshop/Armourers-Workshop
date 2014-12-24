@@ -87,6 +87,7 @@ public class EntityFXPaintSplash extends EntityFX {
         RenderAbstraction.bindTexture(paintSplashTextures);
         
         renderBuffer.startDrawingQuads();
+        renderBuffer.setBrightness(getBrightnessForRender(0));
         
         float f6 = (particleTextureIndexX) / 8 * 0.5F;
         float f7 = f6 + 0.5F;
