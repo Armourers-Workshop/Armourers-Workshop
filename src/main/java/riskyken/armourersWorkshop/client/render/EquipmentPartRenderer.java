@@ -40,6 +40,7 @@ public class EquipmentPartRenderer extends ModelBase {
     }
     
     public void renderPart(CustomEquipmentPartData armourPart, float scale) {
+        mc.mcProfiler.startSection(armourPart.getArmourPart().name());
         mc.renderEngine.bindTexture(texture);
         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
         GL11.glColor3f(1F, 1F, 1F);
@@ -81,6 +82,7 @@ public class EquipmentPartRenderer extends ModelBase {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         }
         GL11.glColor3f(1F, 1F, 1F);
+        mc.mcProfiler.endSection();
         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     

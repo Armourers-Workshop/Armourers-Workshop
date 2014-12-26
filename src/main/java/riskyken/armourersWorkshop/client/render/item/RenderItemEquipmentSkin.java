@@ -66,7 +66,9 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             default:
                 break;
             }
+            mc.mcProfiler.startSection("armourers item skin");
             ItemStackRenderHelper.renderItemAsArmourModel(stack);
+            mc.mcProfiler.endSection();
             GL11.glPopMatrix();
             
         } else {

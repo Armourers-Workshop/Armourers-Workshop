@@ -41,6 +41,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
+        mc.mcProfiler.startSection("armourers mannequin");
         TileEntityMannequin te = (TileEntityMannequin) tileEntity;
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
@@ -196,9 +197,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 GL11.glPopMatrix();
             }
         }
+        
 
+        mc.mcProfiler.startSection("mannequin skin");
         EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), targetBiped);
+        mc.mcProfiler.endSection();
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
+        mc.mcProfiler.endSection();
     }
 }

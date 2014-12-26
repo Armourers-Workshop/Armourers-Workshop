@@ -34,23 +34,31 @@ public class ModelRendererAttachment extends ModelRenderer {
     
     @Override
     public void render(float scale) {
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.mcProfiler.startSection("armourers player render");
         EquipmentModelRenderer modelRenderer = EquipmentModelRenderer.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;
         if (player == null) {
+            mc.mcProfiler.endSection();
             return;
         }
         if (player instanceof MannequinFakePlayer) {
+            mc.mcProfiler.endSection();
             return;
         }
         if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
+            mc.mcProfiler.endSection();
             return;
         }
         CustomEquipmentItemData data = modelRenderer.getPlayerCustomArmour(player, equipmentType);
         if (data == null) {
+            mc.mcProfiler.endSection();
             return;
         }
+        
         data.onRender();
-        for (int i = 0; i < data.getParts().size(); i++) {
+        int size = data.getParts().size();
+        for (int i = 0; i < size; i++) {
             CustomEquipmentPartData partData = data.getParts().get(i);
             if (partData.getArmourPart() == equipmentPart) {
                 GL11.glPushMatrix();
@@ -71,5 +79,6 @@ public class ModelRendererAttachment extends ModelRenderer {
             AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
             Minecraft.getMinecraft().renderEngine.bindTexture(clientPlayer.getLocationSkin());
         }
+        mc.mcProfiler.endSection();
     }
 }
