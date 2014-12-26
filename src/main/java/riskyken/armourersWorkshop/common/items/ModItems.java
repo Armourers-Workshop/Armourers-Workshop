@@ -12,6 +12,7 @@ public class ModItems {
     public static Item dodgeTool;
     public static Item colourNoiseTool;
     public static Item shadeNoiseTool;
+    public static Item mannequinTool;
     public static Item guideBook;
     
     public static void init() {
@@ -24,6 +25,7 @@ public class ModItems {
         dodgeTool = new ItemDodgeTool();
         colourNoiseTool = new ItemColourNoiseTool();
         shadeNoiseTool = new ItemShadeNoiseTool();
+        mannequinTool = new ItemMannequinTool();
         guideBook = new ItemGuideBook();
     }
 }

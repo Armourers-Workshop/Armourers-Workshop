@@ -21,6 +21,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -117,7 +118,7 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
         if (meta == 1) {
             yOffset = -1;
         }
-        TileEntity te = world.getTileEntity(x, y + yOffset, z);;
+        TileEntity te = world.getTileEntity(x, y + yOffset, z);
         if (te != null && te instanceof TileEntityMannequin) {
             TileEntityMannequin teMan = (TileEntityMannequin) te;
             if (teMan.getGameProfile() != null) {
@@ -161,6 +162,9 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         if (!world.isRemote) {
+            if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+                return false;
+            }
             int meta = world.getBlockMetadata(x, y, z);
             int yOffset = 0;
             if (meta == 1) {
@@ -177,6 +181,9 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
             } else {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y + yOffset, z);
             }
+        }
+        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+            return false;
         }
         return true;
     }

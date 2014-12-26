@@ -18,6 +18,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -108,6 +109,9 @@ public class BlockDoll extends AbstractModBlock implements ITileEntityProvider {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         if (!world.isRemote) {
             ItemStack stack = player.getCurrentEquippedItem();
+            if (stack != null && stack.getItem() == ModItems.mannequinTool) {
+                return false;
+            }
             if (stack != null && stack.getItem() == Items.name_tag) {
                 TileEntity te = world.getTileEntity(x, y, z);;
                 if (te != null && te instanceof TileEntityMannequin) {
@@ -118,6 +122,9 @@ public class BlockDoll extends AbstractModBlock implements ITileEntityProvider {
             } else {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y, z);
             }
+        }
+        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+            return false;
         }
         return true;
     }

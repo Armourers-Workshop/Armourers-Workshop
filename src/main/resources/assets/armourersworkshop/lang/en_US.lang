@@ -39,6 +39,7 @@ item.armourersworkshop:burnTool.name=Burn Tool
 item.armourersworkshop:dodgeTool.name=Dodge Tool
 item.armourersworkshop:colourNoiseTool.name=Colour Noise Tool
 item.armourersworkshop:shadeNoiseTool.name=Shade Noise Tool
+item.armourersworkshop:mannequinTool.name=Mannequin Tool
 item.armourersworkshop:guideBook.name=Guide Book
 
 # Item flavour text
@@ -50,6 +51,7 @@ item.armourersworkshop:burnTool.flavour=Makes a block darker.
 item.armourersworkshop:dodgeTool.flavour=Makes a block lighter.
 item.armourersworkshop:colourNoiseTool.flavour=Applies random colour noise to a block.
 item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
+item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%nRight click to apply setting.%nSneak right click to save settings.
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 
 # Armour types
