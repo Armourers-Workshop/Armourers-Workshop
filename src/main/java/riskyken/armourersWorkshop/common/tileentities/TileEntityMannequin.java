@@ -30,6 +30,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     private static final String TAG_OWNER = "owner";
     private static final String TAG_ROTATION = "rotation";
     private static final String TAG_IS_DOLL = "isDoll";
+    private static final String TAG_HEIGHT_OFFSET = "heightOffset";
     
     private GameProfile gameProfile = null;
     private MannequinFakePlayer fakePlayer = null;
@@ -38,6 +39,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     private BipedRotations bipedRotations;
     private int rotation;
     private boolean isDoll;
+    private int heightOffset;
     
     public TileEntityMannequin() {
         this(false);
@@ -130,6 +132,17 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public int getHeightOffset() {
+        return heightOffset;
+    }
+    
+    public void setHeightOffset(int heightOffset) {
+        this.heightOffset = heightOffset;
+    }
+    
+    private void updateHeightOffset() {
+    }
+    
     public void setRotation(int rotation) {
         this.rotation = rotation;
         markDirty();
@@ -150,6 +163,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     
     public void setBipedRotations(BipedRotations bipedRotations) {
         this.bipedRotations = bipedRotations;
+        updateHeightOffset();
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }

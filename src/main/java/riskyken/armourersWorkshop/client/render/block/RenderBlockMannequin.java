@@ -45,6 +45,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         TileEntityMannequin te = (TileEntityMannequin) tileEntity;
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
+        double heightOffset = te.getHeightOffset();
+        //heightOffset = 12;
         ModelBiped targetBiped = renderPlayer.modelBipedMain;
         if (Loader.isModLoaded("moreplayermodels")) {
             targetBiped = model;
@@ -57,7 +59,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         int rotaion = te.getRotation();
         
         GL11.glTranslated(x + 0.5D, y + 1.5D, z + 0.5D);
-        
         GL11.glScalef(scale * 15, scale * 15, scale * 15);
         GL11.glTranslated(0, scale * -1.6F, 0);
         
@@ -144,6 +145,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         te.getBipedRotations().applyRotationsToBiped(targetBiped);
         
         if (te.getBipedRotations().isChild) {
+            GL11.glTranslated(0, heightOffset * scale * 1.0F / f6, 0);
             GL11.glPushMatrix();
             GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
             GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
@@ -162,6 +164,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             targetBiped.bipedLeftLeg.render(scale);
             GL11.glPopMatrix();
         } else {
+            GL11.glTranslated(0, heightOffset * scale, 0);
             targetBiped.bipedHead.render(scale);
             targetBiped.bipedBody.render(scale);
             targetBiped.bipedRightArm.render(scale);
