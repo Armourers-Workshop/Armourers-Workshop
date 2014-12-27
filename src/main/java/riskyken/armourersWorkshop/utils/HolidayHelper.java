@@ -46,8 +46,32 @@ public final class HolidayHelper {
             Calendar cLowerRange = (Calendar)holidayDate.clone();
             Calendar cUpperRange = (Calendar)holidayDate.clone();
             
-            cLowerRange.add(Calendar.DAY_OF_MONTH, -range);
-            cUpperRange.add(Calendar.DAY_OF_MONTH, range);
+            cLowerRange.add(Calendar.DAY_OF_MONTH, -range - 1);
+            cUpperRange.add(Calendar.DAY_OF_MONTH, range + 1);
+            
+            if (current.after(cLowerRange) && current.before(cUpperRange)) {
+                return holiday;
+            }
+        }
+        
+        return EnumHoliday.NONE;
+    }
+    
+    public static EnumHoliday getBeforeHoliday(int range) {
+        Calendar current = Calendar.getInstance();
+        
+        for (int i = 1; i < EnumHoliday.values().length; i++) {
+            EnumHoliday holiday = EnumHoliday.values()[i];
+            Calendar holidayDate = Calendar.getInstance();
+
+            holidayDate.set(Calendar.MONTH, holiday.month);
+            holidayDate.set(Calendar.DAY_OF_MONTH, holiday.day);
+
+            Calendar cLowerRange = (Calendar)holidayDate.clone();
+            Calendar cUpperRange = (Calendar)holidayDate.clone();
+            
+            cLowerRange.add(Calendar.DAY_OF_MONTH, -range - 1);
+            cUpperRange.add(Calendar.DAY_OF_MONTH, + 1);
             
             if (current.after(cLowerRange) && current.before(cUpperRange)) {
                 return holiday;
