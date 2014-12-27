@@ -32,11 +32,24 @@ public class CustomEquipmentPartData {
     public boolean hasNormalBlocks;
     public boolean hasGlowingBlocks;
     
+    @SideOnly(Side.CLIENT)
     public boolean displayNormalCompiled;
+    @SideOnly(Side.CLIENT)
     public boolean displayGlowingCompiled;
     
+    @SideOnly(Side.CLIENT)
     public int displayListNormal;
+    @SideOnly(Side.CLIENT)
     public int displayListGlowing;
+    
+    @SideOnly(Side.CLIENT)
+    public boolean modelBaked;
+    
+    @SideOnly(Side.CLIENT)
+    public void bakeModel() {
+        armourData.clear();
+        modelBaked = true;
+    }
 
     @SideOnly(Side.CLIENT)
     public void cleanUpDisplayLists() {

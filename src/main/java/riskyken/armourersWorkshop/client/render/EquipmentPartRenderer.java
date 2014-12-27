@@ -66,6 +66,12 @@ public class EquipmentPartRenderer extends ModelBase {
             armourPart.displayGlowingCompiled = true;
         }
         
+        if (armourPart.displayNormalCompiled & armourPart.displayGlowingCompiled) {
+            if (!armourPart.modelBaked) {
+                armourPart.bakeModel();
+            }
+        }
+        
         if (armourPart.hasNormalBlocks) {
             GL11.glCallList(armourPart.displayListNormal);
         }
