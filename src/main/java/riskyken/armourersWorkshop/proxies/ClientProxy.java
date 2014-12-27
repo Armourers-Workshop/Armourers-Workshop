@@ -7,10 +7,10 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
-import riskyken.armourersWorkshop.client.ModForgeEventHandler;
 import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
+import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -71,7 +71,7 @@ public class ClientProxy extends CommonProxy {
         PlayerSkinHandler.init();
         ClientEquipmentModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
-        MinecraftForge.EVENT_BUS.register(new ModForgeEventHandler());
+        MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
     }
     
     @Override
