@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.client.model;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,9 +23,10 @@ public class ModelRendererAttachment extends ModelRenderer {
 
     private final EnumEquipmentType equipmentType;
     private final EnumEquipmentPart equipmentPart;
-    
+    private final Minecraft mc;
     public ModelRendererAttachment(ModelBase modelBase, EnumEquipmentType equipmentType, EnumEquipmentPart equipmentPart) {
         super(modelBase);
+        mc = Minecraft.getMinecraft();
         this.equipmentType = equipmentType;
         this.equipmentPart = equipmentPart;
         addBox(0, 0, 0, 0, 0, 0);
@@ -34,7 +34,6 @@ public class ModelRendererAttachment extends ModelRenderer {
     
     @Override
     public void render(float scale) {
-        Minecraft mc = Minecraft.getMinecraft();
         mc.mcProfiler.startSection("armourers player render");
         EquipmentModelRenderer modelRenderer = EquipmentModelRenderer.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;
@@ -74,10 +73,6 @@ public class ModelRendererAttachment extends ModelRenderer {
                 GL11.glPopMatrix();
                 break;
             }
-        }
-        if (player instanceof AbstractClientPlayer) {
-            AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
-            Minecraft.getMinecraft().renderEngine.bindTexture(clientPlayer.getLocationSkin());
         }
         mc.mcProfiler.endSection();
     }

@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
@@ -15,15 +14,12 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class EquipmentPartRenderer extends ModelBase {
-    
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     
     public static final EquipmentPartRenderer INSTANCE = new EquipmentPartRenderer();
     private final CustomModelRenderer main;
@@ -41,8 +37,8 @@ public class EquipmentPartRenderer extends ModelBase {
     
     public void renderPart(CustomEquipmentPartData armourPart, float scale) {
         mc.mcProfiler.startSection(armourPart.getArmourPart().name());
-        mc.renderEngine.bindTexture(texture);
         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor3f(1F, 1F, 1F);
         if (!armourPart.displayNormalCompiled) {
             if (hasNormalBlocks(armourPart.getArmourData())) {
@@ -81,6 +77,8 @@ public class EquipmentPartRenderer extends ModelBase {
             GL11.glCallList(armourPart.displayListGlowing);
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         }
+        
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glColor3f(1F, 1F, 1F);
         mc.mcProfiler.endSection();
         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
