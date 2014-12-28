@@ -6,11 +6,11 @@ import java.util.BitSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.OpenGlHelper;
 
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.LightingHelper;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
@@ -77,11 +77,9 @@ public class EquipmentPartRenderer extends ModelBase {
         }
         
         if (armourPart.hasGlowingBlocks) {
-            float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-            float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+            LightingHelper.disableLighting();
             GL11.glCallList(armourPart.displayListGlowing);
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+            LightingHelper.enableLighting();
         }
         
         GL11.glEnable(GL11.GL_TEXTURE_2D);
