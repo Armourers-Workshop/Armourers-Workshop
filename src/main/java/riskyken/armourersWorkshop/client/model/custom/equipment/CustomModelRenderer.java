@@ -15,13 +15,13 @@ public class CustomModelRenderer extends ModelRenderer {
         // TODO Auto-generated constructor stub
     }
     
-    public void render(float scale, BitSet faceFlags) {
+    public void render(float scale, BitSet faceFlags, int x, int y, int z, float r, float g, float b, float a) {
         Tessellator tessellator = Tessellator.instance;
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         int size = this.cubeList.size();
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < size; ++i) {
-            ((ModelEquipmentBox)this.cubeList.get(i)).render(renderBuffer, scale, faceFlags);
+            ((ModelEquipmentBox)this.cubeList.get(i)).render(renderBuffer, scale, faceFlags, x, y, z , r, g , b, a);
         }
         renderBuffer.draw();
     }

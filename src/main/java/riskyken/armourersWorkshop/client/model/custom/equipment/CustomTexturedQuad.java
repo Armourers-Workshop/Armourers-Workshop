@@ -14,17 +14,17 @@ public class CustomTexturedQuad extends TexturedQuad {
                 p_i1153_7_);
     }
     
-    public void draw(IRenderBuffer renderBuffer, float scale) {
+    public void draw(IRenderBuffer renderBuffer, float scale, int x, int y, int z, float r, float g, float b, float a) {
         Vec3 vec3 = this.vertexPositions[1].vector3D.subtract(this.vertexPositions[0].vector3D);
         Vec3 vec31 = this.vertexPositions[1].vector3D.subtract(this.vertexPositions[2].vector3D);
         Vec3 vec32 = vec31.crossProduct(vec3).normalize();
         //renderBuffer.startDrawingQuads();
 
         renderBuffer.setNormal((float)vec32.xCoord, (float)vec32.yCoord, (float)vec32.zCoord);
-
+        renderBuffer.setColourRGBA_F(r, g, b, a);
         for (int i = 0; i < 4; ++i) {
             PositionTextureVertex positiontexturevertex = this.vertexPositions[i];
-            renderBuffer.addVertex((double)((float)positiontexturevertex.vector3D.xCoord * scale), (double)((float)positiontexturevertex.vector3D.yCoord * scale), (double)((float)positiontexturevertex.vector3D.zCoord * scale));
+            renderBuffer.addVertex((double)((float)(positiontexturevertex.vector3D.xCoord + x) * scale), (double)((float)(positiontexturevertex.vector3D.yCoord + y) * scale), (double)((float)(positiontexturevertex.vector3D.zCoord + z) * scale));
         }
 
         //renderBuffer.draw();
