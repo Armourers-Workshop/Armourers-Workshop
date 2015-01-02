@@ -22,8 +22,8 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class SkinDownloadManager implements Runnable {
 
-    private static final String SKIN_LIST_URL = "https://dl.dropboxusercontent.com/u/9733425/app_update/mods/armourers-workshop/skin-list.txt";
-    private static final String SKIN_FOLDER_URL = "https://dl.dropboxusercontent.com/u/9733425/app_update/mods/armourers-workshop/skins/";
+    private static final String SKIN_LIST_URL = "https://raw.githubusercontent.com/RiskyKen/Armourers-Workshop/master/web/skin-list.txt";
+    private static final String SKIN_FOLDER_URL = "https://github.com/RiskyKen/Armourers-Workshop/raw/master/web/skins/";
     
     public static void downloadSkins() {
         if (!ConfigHandler.downloadSkins) {
