@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Level;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -38,48 +39,46 @@ public class ClientEquipmentModelCache {
     }
     
     public void requestEquipmentDataFromServer(int equipmentId) {
-        if (!requestedEquipmentIds.contains(equipmentId)) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId));
-            requestedEquipmentIds.add(equipmentId);
+        synchronized (requestedEquipmentIds) {
+            if (!requestedEquipmentIds.contains(equipmentId)) {
+                PacketHandler.networkWrapper.sendToServer(new MessageClientRequestEquipmentDataData(equipmentId));
+                requestedEquipmentIds.add(equipmentId);
+            }
         }
     }
     
     public boolean isEquipmentInCache(int equipmentId) {
-        return equipmentDataMap.containsKey(equipmentId);
+        synchronized (equipmentDataMap) {
+            return equipmentDataMap.containsKey(equipmentId); 
+        }
     }
     
     public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
         int equipmentId = equipmentData.hashCode();
         
-        if (equipmentDataMap.containsKey(equipmentId)) {
-            equipmentDataMap.remove(equipmentId);
-        }
-        for (int i = 0; i < equipmentData.getParts().size(); i++) {
-            CustomEquipmentPartData partData = equipmentData.getParts().get(i);
-            if (!partData.facesBuild) {
-                EquipmentRenderHelper.cullFacesOnEquipmentPart(partData);
+        synchronized (equipmentDataMap) {
+            if (equipmentDataMap.containsKey(equipmentId)) {
+                equipmentDataMap.remove(equipmentId);
             }
         }
-        equipmentDataMap.put(equipmentId, equipmentData);
         
-        if (requestedEquipmentIds.contains(equipmentId)) {
-            requestedEquipmentIds.remove(equipmentId);
-        } else {
-            ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
-        }
+        (new Thread(new FaceCullThread(equipmentData, equipmentId),LibModInfo.NAME + " model bake thread.")).start();
     }
     
     public int getCacheSize() {
-        return equipmentDataMap.size();
+        synchronized (equipmentDataMap) {
+            return equipmentDataMap.size();
+        }
     }
     
     public CustomEquipmentItemData getEquipmentItemData(int equipmentId) {
-        if (equipmentDataMap.containsKey(equipmentId)) {
-            return equipmentDataMap.get(equipmentId);
-        } else {
-            requestEquipmentDataFromServer(equipmentId);
-            return null;
+        synchronized (equipmentDataMap) {
+            if (equipmentDataMap.containsKey(equipmentId)) {
+                return equipmentDataMap.get(equipmentId);
+            }
         }
+        requestEquipmentDataFromServer(equipmentId);
+        return null;
     }
     
     @SubscribeEvent
@@ -90,18 +89,53 @@ public class ClientEquipmentModelCache {
     }
     
     public void tick() {
-        for (int i = 0; i < equipmentDataMap.size(); i++) {
-            int key = (Integer) equipmentDataMap.keySet().toArray()[i];
-            equipmentDataMap.get(key).tick();
+        synchronized (equipmentDataMap) {
+            for (int i = 0; i < equipmentDataMap.size(); i++) {
+                int key = (Integer) equipmentDataMap.keySet().toArray()[i];
+                equipmentDataMap.get(key).tick();
+            }
+            
+            for (int i = 0; i < equipmentDataMap.size(); i++) {
+                int key = (Integer) equipmentDataMap.keySet().toArray()[i];
+                CustomEquipmentItemData customArmourItemData = equipmentDataMap.get(key);
+                if (customArmourItemData.needsCleanup()) {
+                    equipmentDataMap.remove(key);
+                    customArmourItemData.cleanUpDisplayLists();
+                    break;
+                }
+            }
         }
+    }
+    
+    public class FaceCullThread implements Runnable {
         
-        for (int i = 0; i < equipmentDataMap.size(); i++) {
-            int key = (Integer) equipmentDataMap.keySet().toArray()[i];
-            CustomEquipmentItemData customArmourItemData = equipmentDataMap.get(key);
-            if (customArmourItemData.needsCleanup()) {
-                equipmentDataMap.remove(key);
-                customArmourItemData.cleanUpDisplayLists();
-                break;
+        private CustomEquipmentItemData equipmentData;
+        private int equipmentId;
+        
+        public FaceCullThread(CustomEquipmentItemData equipmentData, int equipmentId) {
+            this.equipmentData = equipmentData;
+            this.equipmentId = equipmentId;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < equipmentData.getParts().size(); i++) {
+                CustomEquipmentPartData partData = equipmentData.getParts().get(i);
+                if (!partData.facesBuild) {
+                    EquipmentRenderHelper.cullFacesOnEquipmentPart(partData);
+                }
+            }
+            
+            synchronized (equipmentDataMap) {
+                equipmentDataMap.put(equipmentId, equipmentData);
+            }
+            
+            synchronized (requestedEquipmentIds) {
+                if (requestedEquipmentIds.contains(equipmentId)) {
+                    requestedEquipmentIds.remove(equipmentId);
+                } else {
+                    ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
+                }
             }
         }
     }
