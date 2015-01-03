@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -99,6 +100,11 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider {
     protected String getModdedUnlocalizedName(String unlocalizedName) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
         return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+        return null;
     }
 
     @Override
