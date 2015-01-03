@@ -30,7 +30,12 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
         this.isRiding = false;
         this.isSneak = false;
         this.aimedBow = false;
+        this.isChild = false;
         this.heldItemRight = 0;
+        bipedLeftLeg.rotateAngleZ = 0F;
+        bipedRightLeg.rotateAngleZ = 0F;
+        bipedHead.rotateAngleZ = 0F;
+        bipedHeadwear.rotateAngleZ = 0F;
     }
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
