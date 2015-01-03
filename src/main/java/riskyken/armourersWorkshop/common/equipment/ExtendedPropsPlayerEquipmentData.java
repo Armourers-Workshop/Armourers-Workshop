@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateSkinInfo;
+import riskyken.armourersWorkshop.utils.UtilPlayer;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventory {
@@ -164,7 +165,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     
     private void updateEquipmentDataToPlayersAround() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(player.getPersistentID(), equipmentData), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(UtilPlayer.getIDFromPlayer(player), equipmentData), p);
     }
     
     public void colourSlotUpdate(byte slot) {
@@ -284,16 +285,16 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerAddEquipmentInfo(player.getUniqueID(), equipmentData), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerAddEquipmentInfo(UtilPlayer.getIDFromPlayer(player), equipmentData), targetPlayer);
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.nakedInfo), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(UtilPlayer.getIDFromPlayer(player), this.nakedInfo), targetPlayer);
     }
     
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(this.player.getUniqueID(), this.nakedInfo), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(UtilPlayer.getIDFromPlayer(player), this.nakedInfo), p);
     }
     
     public BitSet getArmourOverride() {

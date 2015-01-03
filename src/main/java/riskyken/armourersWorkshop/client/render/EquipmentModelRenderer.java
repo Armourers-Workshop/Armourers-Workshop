@@ -32,6 +32,7 @@ import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.UtilPlayer;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -73,7 +74,7 @@ public final class EquipmentModelRenderer {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(player.getPersistentID());
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(UtilPlayer.getIDFromPlayer(player));
         
         if (equipmentData == null) {
             return null;
@@ -91,7 +92,7 @@ public final class EquipmentModelRenderer {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(player.getPersistentID());
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(UtilPlayer.getIDFromPlayer(player));
         
         return equipmentData;
     }
@@ -143,9 +144,9 @@ public final class EquipmentModelRenderer {
             addedRenderAttachment = true;
         }
         
-        if (playerHasCustomArmourType(player.getPersistentID(), EnumEquipmentType.SKIRT)) {
+        if (playerHasCustomArmourType(UtilPlayer.getIDFromPlayer(player), EnumEquipmentType.SKIRT)) {
             if (!Loader.isModLoaded("SmartMoving")) {
-                PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(player.getPersistentID());
+                PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(UtilPlayer.getIDFromPlayer(player));
                 if (skinInfo != null && skinInfo.getNakedInfo().limitLimbs) {
                     if (player.limbSwingAmount > 0.25F) {
                         player.limbSwingAmount = 0.25F;

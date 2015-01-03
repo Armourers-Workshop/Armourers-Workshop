@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
+import riskyken.armourersWorkshop.utils.UtilPlayer;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -51,8 +52,8 @@ public class PlayerSkinHandler {
         if (player instanceof MannequinFakePlayer) {
             return;
         }
-        if (skinMap.containsKey(player.getPersistentID())) {
-            PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
+        if (skinMap.containsKey(UtilPlayer.getIDFromPlayer(player))) {
+            PlayerSkinInfo skinInfo = skinMap.get(UtilPlayer.getIDFromPlayer(player));
             skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
         }
     }
@@ -63,8 +64,8 @@ public class PlayerSkinHandler {
         if (player instanceof MannequinFakePlayer) {
             return;
         }
-        if (skinMap.containsKey(player.getPersistentID())) {
-            PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
+        if (skinMap.containsKey(UtilPlayer.getIDFromPlayer(player))) {
+            PlayerSkinInfo skinInfo = skinMap.get(UtilPlayer.getIDFromPlayer(player));
             skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
         }
     }
@@ -82,8 +83,8 @@ public class PlayerSkinHandler {
             return;
         }
         
-        if (skinMap.containsKey(player.getPersistentID())) {
-            PlayerSkinInfo skinInfo = skinMap.get(player.getPersistentID());
+        if (skinMap.containsKey(UtilPlayer.getIDFromPlayer(player))) {
+            PlayerSkinInfo skinInfo = skinMap.get(UtilPlayer.getIDFromPlayer(player));
             BitSet armourOverride = skinInfo.getNakedInfo().armourOverride;
             if (armourOverride.get(slot)) {
                 result = -2;
