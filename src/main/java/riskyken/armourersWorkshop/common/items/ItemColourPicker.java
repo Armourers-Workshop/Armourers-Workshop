@@ -27,6 +27,7 @@ import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOp
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.PaintingNBTHelper;
+import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -175,8 +176,11 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         }
         
         BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(te.getGameProfile());
-        int colour = playerSkin.getRGB(textureX, textureY);
         
+        int colour = UtilColour.getMinecraftColor(0);
+        if (playerSkin != null) {
+            colour = playerSkin.getRGB(textureX, textureY);
+        }
         return colour;
     }
     
