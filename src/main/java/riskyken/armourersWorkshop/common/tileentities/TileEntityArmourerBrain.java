@@ -51,6 +51,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         this.type = EnumEquipmentType.HEAD;
         this.items = new ItemStack[2];
         this.showOverlay = true;
+        this.showGuides = true;
         this.customName = "";
     }
     
