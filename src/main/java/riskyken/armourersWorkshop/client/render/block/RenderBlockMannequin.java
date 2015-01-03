@@ -176,14 +176,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
         }
         
-        targetBiped.bipedLeftLeg.rotateAngleZ = 0F;
-        targetBiped.bipedRightLeg.rotateAngleZ = 0F;
-        targetBiped.bipedHead.rotateAngleZ = 0F;
-        targetBiped.bipedHeadwear.rotateAngleZ = 0F;
-        
-        //renderPlayer.modelBipedMain.render(fakePlayer, 0, 0, 0, 0, 0, 0);
-        //modelMannequin.render(te.getBipedRotations(), true, scale);
-        
         if (fakePlayer != null) {
             RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, tickTime);
             RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, tickTime);
@@ -205,6 +197,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.startSection("mannequin skin");
         EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), targetBiped);
         mc.mcProfiler.endSection();
+        
+        targetBiped.bipedLeftLeg.rotateAngleZ = 0F;
+        targetBiped.bipedRightLeg.rotateAngleZ = 0F;
+        targetBiped.bipedHead.rotateAngleZ = 0F;
+        targetBiped.bipedHeadwear.rotateAngleZ = 0F;
+        
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
