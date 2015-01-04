@@ -1,10 +1,13 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.util.Random;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -105,7 +108,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
         headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Z: ", "", -20D, 20D, 0D, true, true, this);
         
-        isChildCheck = new GuiCheckBox(2, this.guiLeft + 149, this.guiTop + 110, 14, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.isChild"), false, false);
+        isChildCheck = new GuiCheckBox(3, this.guiLeft + 149, this.guiTop + 110, 14, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.isChild"), false, false);
         
         if (bipedRotations != null) {
             isChildCheck.setChecked(bipedRotations.isChild);
@@ -152,7 +155,8 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         buttonList.add(rightLegZslider);
         
         buttonList.add(isChildCheck);
-        buttonList.add(new GuiButtonExt(1, this.guiLeft + 147, this.guiTop + 130, 20, 20, "R"));
+        buttonList.add(new GuiButtonExt(1, this.guiLeft + 67, this.guiTop + 152, 50, 18, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "reset")));
+        buttonList.add(new GuiButtonExt(2, this.guiLeft + 119, this.guiTop + 152, 50, 18, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "random")));
         
         guiLoaded = true;
     }
@@ -192,6 +196,31 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
             checkAndSendRotationValues();
         }
         if (button.id == 2) {
+            guiLoaded = false;
+            Random rnd = new Random();
+            setSliderValue(leftArmXslider, rnd.nextFloat() * 270 - 90);
+            setSliderValue(leftArmYslider, rnd.nextFloat() * 135 - 45);
+            setSliderValue(leftArmZslider, rnd.nextFloat() * 90 - 45);
+            
+            setSliderValue(rightArmXslider, rnd.nextFloat() * 270 - 90);
+            setSliderValue(rightArmYslider, rnd.nextFloat() * 135 - 45);
+            setSliderValue(rightArmZslider, rnd.nextFloat() * 90 - 45);
+            
+            setSliderValue(leftLegXslider, rnd.nextFloat() * 180 - 90);
+            setSliderValue(leftLegYslider, rnd.nextFloat() * 90 - 45);
+            setSliderValue(leftLegZslider, rnd.nextFloat() * 90 - 45);
+            
+            setSliderValue(rightLegXslider, rnd.nextFloat() * 180 - 90);
+            setSliderValue(rightLegYslider, rnd.nextFloat() * 90 - 45);
+            setSliderValue(rightLegZslider, rnd.nextFloat() * 90 - 45);
+            
+            setSliderValue(headXslider, rnd.nextFloat() * 180 - 90);
+            setSliderValue(headYslider, rnd.nextFloat() * 180 - 90);
+            setSliderValue(headZslider, rnd.nextFloat() * 40 - 20);
+            guiLoaded = true;
+            checkAndSendRotationValues();
+        }
+        if (button.id == 3) {
             isChildCheck.setChecked(!isChildCheck.isChecked());
             bipedRotations.isChild = isChildCheck.isChecked();
             checkAndSendRotationValues();
@@ -201,6 +230,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName());
+        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
         
         String headRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.headRotation");
         String leftArmRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.leftArmRotation");

@@ -106,6 +106,8 @@ inventory.armourersworkshop:mannequin.label.rightArmRotation=Right Arm Rotation
 inventory.armourersworkshop:mannequin.label.leftLegRotation=Left Leg Rotation
 inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
+inventory.armourersworkshop:mannequin.random=Random
+inventory.armourersworkshop:mannequin.reset=Reset
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=No more undos
