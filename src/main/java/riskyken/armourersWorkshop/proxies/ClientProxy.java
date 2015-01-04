@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
+import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.item.RenderItemBlockMiniArmourer;
@@ -63,6 +64,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelMannequin));
         blockColourMixerRenderId = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
+        RenderingRegistry.registerBlockHandler(new RenderBlockGlowing(RenderingRegistry.getNextAvailableRenderId()));
         new BlockHighlightRenderHandler();
     }
 

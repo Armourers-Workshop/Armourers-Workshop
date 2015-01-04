@@ -10,6 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -107,5 +108,10 @@ public class BlockColourableGlass extends AbstractModBlock implements ITileEntit
             return ((IPantable)te).getColour();
         }
         return 0;
+    }
+    
+    @Override
+    public int getRenderType() {
+        return RenderBlockGlowing.renderId;
     }
 }
