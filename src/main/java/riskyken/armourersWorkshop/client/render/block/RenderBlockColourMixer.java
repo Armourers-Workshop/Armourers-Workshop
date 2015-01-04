@@ -72,11 +72,16 @@ public class RenderBlockColourMixer implements ISimpleBlockRenderingHandler {
     
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+        boolean rendered = false;
         ClientProxy.renderPass = 0;
-        renderer.renderStandardBlock(block, x, y, z);
+        if (renderer.renderStandardBlock(block, x, y, z)) {
+            rendered = true;
+        }
         ClientProxy.renderPass = 1;
-        renderer.renderStandardBlock(block, x, y, z);
-        return false;
+        if (renderer.renderStandardBlock(block, x, y, z)) {
+            rendered = true;
+        }
+        return rendered;
     }
 
     @Override
