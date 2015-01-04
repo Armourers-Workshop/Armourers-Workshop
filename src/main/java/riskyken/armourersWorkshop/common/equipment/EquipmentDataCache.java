@@ -60,7 +60,7 @@ public final class EquipmentDataCache {
     
     public void processMessageQueue() {
         long curTick = System.currentTimeMillis();
-        if (curTick >= lastTick + 40L) {
+        if (curTick >= lastTick + 80L) {
             lastTick = curTick;
             if (messageQueue.size() > 0) {
                 processMessage(messageQueue.get(0));

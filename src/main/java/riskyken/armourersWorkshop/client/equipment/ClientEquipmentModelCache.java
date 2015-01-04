@@ -62,7 +62,10 @@ public class ClientEquipmentModelCache {
             }
         }
         
-        (new Thread(new FaceCullThread(equipmentData, equipmentId),LibModInfo.NAME + " model bake thread.")).start();
+        
+        Thread t = (new Thread(new FaceCullThread(equipmentData, equipmentId),LibModInfo.NAME + " model bake thread."));
+        t.setPriority(Thread.MIN_PRIORITY);
+        t.start();
     }
     
     public int getCacheSize() {
