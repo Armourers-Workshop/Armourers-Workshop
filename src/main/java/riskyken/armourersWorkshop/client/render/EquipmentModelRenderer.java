@@ -27,7 +27,6 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
-import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
@@ -197,7 +196,6 @@ public final class EquipmentModelRenderer {
                 if (armourType == EnumEquipmentType.SWORD | armourType == EnumEquipmentType.BOW) {
                     float scale = 0.0625F;
                     GL11.glPushMatrix();
-                    BipedRotations ripedRotations = teMannequin.getBipedRotations();
                     
                     if (modelBiped != null) {
                         if (modelBiped.isChild) {
@@ -210,9 +208,9 @@ public final class EquipmentModelRenderer {
                     GL11.glTranslatef(-5F * scale, 0, 0);
                     GL11.glTranslatef(0, 2F * scale, 0);
                     
-                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationZ), 0, 0, 1);
-                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationY), 0, 1, 0);
-                    GL11.glRotated(Math.toDegrees(ripedRotations.rightArm.rotationX), 1, 0, 0);
+                    GL11.glRotated(Math.toDegrees(modelBiped.bipedRightArm.rotateAngleZ), 0, 0, 1);
+                    GL11.glRotated(Math.toDegrees(modelBiped.bipedRightArm.rotateAngleY), 0, 1, 0);
+                    GL11.glRotated(Math.toDegrees(modelBiped.bipedRightArm.rotateAngleX), 1, 0, 0);
                     GL11.glRotatef(90, 1, 0, 0);
                     
                     GL11.glTranslatef(0, 0, -8 * scale);

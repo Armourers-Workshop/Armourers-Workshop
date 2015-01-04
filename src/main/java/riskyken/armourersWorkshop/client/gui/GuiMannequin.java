@@ -19,6 +19,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.SkinHelper;
@@ -275,9 +276,9 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         GL11.glRotatef(180, 0, 1, 0);
         GL11.glRotatef(10, 1, 0, 0);
         GL11.glRotatef(-20, 0, 1, 0);
-        
         GL11.glScalef(-scale, scale, scale);
         model.render(bipedRotations, true, 0.0625F);
+        EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(tileEntity, model);
         GL11.glPopMatrix();
     }
 
