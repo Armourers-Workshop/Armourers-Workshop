@@ -1,5 +1,8 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 
 import net.minecraft.client.gui.GuiButton;
@@ -8,7 +11,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 
+import org.apache.logging.log4j.Level;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
@@ -21,6 +27,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,6 +41,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private GuiList fileList;
     private GuiButtonExt saveButton;
     private GuiButtonExt loadButton;
+    private GuiButtonExt openFolderButton;
     private GuiScrollbar scrollbar;
     private GuiTextField filenameTextbox;
     private GuiTextField searchTextbox;
@@ -51,11 +59,14 @@ public class GuiArmourLibrary extends GuiContainer {
         super.initGui();
         String guiName = armourLibrary.getInventoryName();
         buttonList.clear();
-        saveButton = new GuiButtonExt(0, guiLeft + 156, guiTop + 96, 60, 20, GuiHelper.getLocalizedControlName(guiName, "save"));
+        saveButton = new GuiButtonExt(0, guiLeft + 152, guiTop + 100, 60, 16, GuiHelper.getLocalizedControlName(guiName, "save"));
         buttonList.add(saveButton);
         
-        loadButton = new GuiButtonExt(1, guiLeft + 156, guiTop + 96 + 30, 60, 20, GuiHelper.getLocalizedControlName(guiName, "load"));
+        loadButton = new GuiButtonExt(1, guiLeft + 152, guiTop + 120, 60, 16, GuiHelper.getLocalizedControlName(guiName, "load"));
         buttonList.add(loadButton);
+        
+        openFolderButton = new GuiButtonExt(4, guiLeft + 152, guiTop + 80, 96, 16, GuiHelper.getLocalizedControlName(guiName, "openFolder"));
+        buttonList.add(openFolderButton);
         
         filenameTextbox = new GuiTextField(fontRendererObj, guiLeft + 152, guiTop + 36, 96, 14);
         filenameTextbox.setMaxStringLength(24);
@@ -80,6 +91,10 @@ public class GuiArmourLibrary extends GuiContainer {
             checkClientFiles.setChecked(!checkClientFiles.isChecked());
         }
         
+        if (button.id == 4) {
+            openEquipmentFolder();
+        }
+        
         if (!filename.equals("")) {
             switch (button.id) {
             case 0:
@@ -100,6 +115,45 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
+    }
+    
+    private void openEquipmentFolder() {
+        File armourDir = new File(System.getProperty("user.dir"));
+        File file = new File(armourDir, LibModInfo.ID);
+        String filePath = file.getAbsolutePath();
+
+        if (Util.getOSType() == Util.EnumOS.OSX) {
+            try {
+                Runtime.getRuntime().exec(new String[] {"/usr/bin/open", filePath});
+                return;
+            } catch (IOException ioexception1) {
+                ModLogger.log(Level.ERROR, "Couldn\'t open file: " + ioexception1);
+            }
+        } else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
+            String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] {filePath});
+            try {
+                Runtime.getRuntime().exec(s1);
+                return;
+            } catch (IOException ioexception) {
+                ModLogger.log(Level.ERROR, "Couldn\'t open file: " + ioexception);
+            }
+        }
+
+        boolean openedFailed = false;
+
+        try {
+            Class oclass = Class.forName("java.awt.Desktop");
+            Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
+            oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {file.toURI()});
+        } catch (Throwable throwable) {
+            ModLogger.log(Level.ERROR, "Couldn\'t open link: " + throwable);
+            openedFailed = true;
+        }
+
+        if (openedFailed) {
+            ModLogger.log("Opening via system class!");
+            Sys.openURL("file://" + filePath);
+        }
     }
     
     @Override

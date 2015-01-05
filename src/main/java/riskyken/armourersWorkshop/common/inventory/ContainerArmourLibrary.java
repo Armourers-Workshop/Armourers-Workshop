@@ -19,7 +19,7 @@ public class ContainerArmourLibrary extends Container {
     public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
         this.armourLibrary = armourLibrary;
 
-        addSlotToContainer(new SlotEquipmentSkinTemplate(armourLibrary, 0, 226, 97));
+        addSlotToContainer(new SlotEquipmentSkinTemplate(armourLibrary, 0, 226, 101));
         addSlotToContainer(new SlotOutput(armourLibrary, 1, 226, 137));
 
         for (int x = 0; x < 9; x++) {
