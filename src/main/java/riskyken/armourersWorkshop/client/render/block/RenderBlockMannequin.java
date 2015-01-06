@@ -1,24 +1,20 @@
 package riskyken.armourersWorkshop.client.render.block;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
-import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -71,12 +67,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glTranslatef(0, scale * 24, 0);
         }
         
-        ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
-        PlayerSkinInfo skinInfo = null;
-        
         if (te.getGameProfile() != null) {
-            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
-            resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
             if (te.getGameProfile() != null & te.getWorldObj() != null) {
                 if (fakePlayer == null) {
                     fakePlayer = new MannequinFakePlayer(te.getWorldObj(),te.getGameProfile());
@@ -125,13 +116,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
         }
         
-        if (skinInfo != null && skinInfo.getNakedInfo().isNaked) {
-            if (!skinInfo.bindNomalSkin()) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-            }
-        } else {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-        }
+        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
         
         ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
         

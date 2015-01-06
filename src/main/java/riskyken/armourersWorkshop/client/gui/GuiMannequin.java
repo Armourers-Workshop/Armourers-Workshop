@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.client.gui;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
@@ -17,10 +16,8 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
-import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
@@ -256,21 +253,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         GL11.glPushMatrix();
         RenderHelper.enableStandardItemLighting();
         
-        ResourceLocation skin = AbstractClientPlayer.locationStevePng;
-        PlayerSkinInfo skinInfo = null;
-        
-        if (tileEntity.getGameProfile() != null) {
-            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(tileEntity.getGameProfile().getId());
-            skin = SkinHelper.getSkinResourceLocation(tileEntity.getGameProfile());
-        }
-        
-        if (skinInfo != null && skinInfo.getNakedInfo().isNaked) {
-            if (!skinInfo.bindNomalSkin()) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
-            }
-        } else {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
-        }
+        SkinHelper.bindPlayersNormalSkin(tileEntity.getGameProfile());
         
         GL11.glTranslatef(this.guiLeft + 212, this.guiTop + 170, 100);
         GL11.glRotatef(180, 0, 1, 0);

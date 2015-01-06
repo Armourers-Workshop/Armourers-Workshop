@@ -15,7 +15,6 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.client.LightingHelper;
-import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
 import riskyken.armourersWorkshop.client.model.armourer.ModelFeet;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
@@ -49,18 +48,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;
         
-        if (te.getGameProfile() != null) {
-            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(te.getGameProfile().getId());
-            resourcelocation = SkinHelper.getSkinResourceLocation(te.getGameProfile());
-        }
-        
-        if (skinInfo != null && skinInfo.getNakedInfo().isNaked) {
-            if (!skinInfo.bindNomalSkin()) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-            }
-        } else {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-        }
+        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
         
         GL11.glPushMatrix();
         GL11.glColor3f(0.77F, 0.77F, 0.77F);

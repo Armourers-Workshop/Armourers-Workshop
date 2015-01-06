@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,7 +10,6 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.SkinHelper;
@@ -75,13 +73,12 @@ public class RenderItemMannequin implements IItemRenderer {
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;
         
+        GameProfile gameProfile = null;
+        
         if (item.hasTagCompound()) {
             NBTTagCompound compound = item.getTagCompound();
-            GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
-                skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(gameProfile.getId());
-                skin = SkinHelper.getSkinResourceLocation(gameProfile);
             }
         }
         
@@ -90,13 +87,7 @@ public class RenderItemMannequin implements IItemRenderer {
             GL11.glScalef(dollScale, dollScale, dollScale);
         }
         
-        if (skinInfo != null && skinInfo.getNakedInfo().isNaked) {
-            if (!skinInfo.bindNomalSkin()) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
-            }
-        } else {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
-        }
+        SkinHelper.bindPlayersNormalSkin(gameProfile);
         
         float scale = 0.0625F;
         GL11.glColor3f(1F, 1F, 1F);

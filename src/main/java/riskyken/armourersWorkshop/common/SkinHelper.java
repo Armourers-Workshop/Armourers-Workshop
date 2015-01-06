@@ -18,6 +18,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.apache.commons.io.IOUtils;
 
+import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
@@ -91,6 +94,27 @@ public final class SkinHelper {
         }
         
         return bufferedImage;
+    }
+    
+    public static void bindPlayersNormalSkin(GameProfile gameProfile) {
+        ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
+        PlayerSkinInfo skinInfo = null;
+        if (gameProfile != null) {
+            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(gameProfile.getId());
+            resourcelocation = getSkinResourceLocation(gameProfile);
+        }
+        
+        if (skinInfo != null) {
+            if (skinInfo.getNakedInfo().isNaked) {
+                if (!skinInfo.bindNomalSkin()) {
+                    Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
+                }
+            } else {
+                Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
+            }
+        } else {
+            Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
+        }
     }
     
     public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile) {
