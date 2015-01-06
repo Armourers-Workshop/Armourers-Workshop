@@ -71,7 +71,7 @@ public enum EnumEquipmentPart {
     WEAPON(
             4, 4, 12,
             -2, -2, -2,
-            new int[] {18, 28, 8, 0, 8, 8},
+            new int[] {18, 28, 16, 8, 8, 8},
             0, 18, 0,
             null),
     BOW(
