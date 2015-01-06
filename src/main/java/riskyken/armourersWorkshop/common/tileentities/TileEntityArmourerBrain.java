@@ -258,14 +258,20 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     private void createBoundingBoxesForPart(EnumEquipmentPart part) {
-        for (int ix = 0; ix < part.xSize; ix++) {
-            for (int iy = 0; iy < part.ySize; iy++) {
-                for (int iz = 0; iz < part.zSize; iz++) {
+        int xSize = part.xSize;
+        int ySize = part.ySize;
+        int zSize = part.zSize;
+        if (part == EnumEquipmentPart.WEAPON | part == EnumEquipmentPart.BOW) {
+            zSize -= 4;
+        }
+        for (int ix = 0; ix < xSize; ix++) {
+            for (int iy = 0; iy < ySize; iy++) {
+                for (int iz = 0; iz < zSize; iz++) {
                     int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
                     int y = yCoord + part.yLocation + getHeightOffset() + iy;
                     int z = zCoord + part.zLocation - (part.zSize / 2) + iz;
                     if (part == EnumEquipmentPart.WEAPON | part == EnumEquipmentPart.BOW) {
-                        z += 4;
+                        z += 8;
                     }
                     if (part == EnumEquipmentPart.SKIRT & ix > 3) {
                         createBoundingBox(x, y, z, EnumBodyPart.RIGHT_LEG);
