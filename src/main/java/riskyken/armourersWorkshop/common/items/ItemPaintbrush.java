@@ -92,14 +92,10 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
         super.addInformation(stack, player, list, p_77624_4_);
         String cGray = EnumChatFormatting.GRAY.toString();
         String cGold = EnumChatFormatting.GOLD.toString();
-        if (getToolHasColour(stack)) {
-            Color c = new Color(getToolColour(stack));
-            String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-            list.add(cGold + "Colour: " + cGray + c.getRGB());
-            list.add(cGold + "Hex: " + cGray + hex);
-        } else {
-            list.add("No paint");
-        }
+        Color c = new Color(getToolColour(stack));
+        String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
+        list.add(cGold + "Colour: " + cGray + c.getRGB());
+        list.add(cGold + "Hex: " + cGray + hex);
     }
     
     @Override
@@ -130,7 +126,7 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
 
     @Override
     public boolean getToolHasColour(ItemStack stack) {
-        return PaintingNBTHelper.getToolHasColour(stack);
+        return true;
     }
 
     @Override
