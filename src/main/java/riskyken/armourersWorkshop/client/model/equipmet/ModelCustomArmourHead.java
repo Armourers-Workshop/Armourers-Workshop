@@ -32,7 +32,8 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
         render(entity, armourData);
     }
     
-    private void render(Entity entity, CustomEquipmentItemData armourData) {
+    @Override
+    public void render(Entity entity, CustomEquipmentItemData armourData) {
         if (armourData == null) { return; }
         
         ArrayList<CustomEquipmentPartData> parts = armourData.getParts();

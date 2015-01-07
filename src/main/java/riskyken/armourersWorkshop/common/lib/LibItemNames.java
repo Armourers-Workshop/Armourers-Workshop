@@ -12,4 +12,8 @@ public class LibItemNames {
     public static final String SHADE_NOISE_TOOL = "shadeNoiseTool";
     public static final String GUIDE_BOOK = "guideBook";
     public static final String MANNEQUIN_TOOL = "mannequinTool";
+    public static final String ARMOUR_CONTAINER_HEAD = "armourContainerHead";
+    public static final String ARMOUR_CONTAINER_CHEST = "armourContainerChest";
+    public static final String ARMOUR_CONTAINER_LEGS = "armourContainerLegs";
+    public static final String ARMOUR_CONTAINER_FEET = "armourContainerFeet";
 }

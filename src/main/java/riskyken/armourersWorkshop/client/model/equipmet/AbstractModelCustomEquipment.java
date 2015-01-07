@@ -3,7 +3,9 @@ package riskyken.armourersWorkshop.client.model.equipmet;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -11,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class AbstractModelCustomEquipment extends ModelBiped implements IEquipmentModel {
 
+    public CustomEquipmentItemData npcEquipmentData = null;
     protected static float SCALE = 0.0625F;
     
     protected void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -37,6 +40,24 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
         bipedHead.rotateAngleZ = 0F;
         bipedHeadwear.rotateAngleZ = 0F;
     }
+    
+    @Override
+    public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_) {
+        if (npcEquipmentData != null) {
+            if (entity instanceof EntityLivingBase) {
+                if (((EntityLivingBase)entity).getHeldItem() != null) {
+                    this.heldItemRight = 1;
+                }
+            }
+            super.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, entity);
+
+            render(entity, npcEquipmentData);
+            npcEquipmentData = null;
+        }
+    }
+    
+    
+    public abstract void render(Entity entity, CustomEquipmentItemData armourData);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
