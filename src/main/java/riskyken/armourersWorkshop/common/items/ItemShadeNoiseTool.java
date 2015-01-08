@@ -11,9 +11,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
@@ -29,7 +29,7 @@ public class ItemShadeNoiseTool extends AbstractModItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "shadeNoiseTool");
+        itemIcon = register.registerIcon(LibItemResources.SHADE_NOISE_TOOL);
     }
 
     @Override

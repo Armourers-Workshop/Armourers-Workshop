@@ -9,10 +9,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
@@ -49,14 +49,10 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "colourMixerSide");
-        topIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "colourMixerTop");
-        bottomIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "colourMixerBottom");
-        sideOverlayIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "colourMixerSideOverlay");
+        blockIcon = register.registerIcon(LibBlockResources.COLOUR_MIXER_SIDE);
+        topIcon = register.registerIcon(LibBlockResources.COLOUR_MIXER_TOP);
+        bottomIcon = register.registerIcon(LibBlockResources.COLOUR_MIXER_BOTTOM);
+        sideOverlayIcon = register.registerIcon(LibBlockResources.COLOUR_MIXER_SIDE_OVERLAY);
     }
     
     @SideOnly(Side.CLIENT)

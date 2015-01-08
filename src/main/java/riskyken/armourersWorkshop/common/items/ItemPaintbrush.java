@@ -15,11 +15,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
 import riskyken.armourersWorkshop.client.particles.ParticleManager;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.PaintingNBTHelper;
@@ -38,8 +38,8 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "paintbrush");
-        tipIcon = register.registerIcon(LibModInfo.ID + ":" + "paintbrush-tip");
+        itemIcon = register.registerIcon(LibItemResources.PAINTBRUSH);
+        tipIcon = register.registerIcon(LibItemResources.PAINTBRUSH_TIP);
     }
     
     @Override

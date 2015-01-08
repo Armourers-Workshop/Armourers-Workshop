@@ -11,10 +11,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
@@ -79,10 +79,8 @@ public class BlockArmourerBrain extends AbstractModBlock implements ITileEntityP
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "frame");
-        sideIcon = register.registerIcon(LibModInfo.ID.toLowerCase() + ":"
-                + "armourerBrainSide");
+        blockIcon = register.registerIcon(LibBlockResources.ARMOURER_TOP_BOTTOM);
+        sideIcon = register.registerIcon(LibBlockResources.ARMOURER_SIDE);
     }
     
     @SideOnly(Side.CLIENT)

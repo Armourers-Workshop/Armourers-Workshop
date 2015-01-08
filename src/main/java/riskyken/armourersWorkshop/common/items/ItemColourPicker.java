@@ -17,10 +17,10 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
@@ -43,8 +43,8 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "colour-picker");
-        tipIcon = register.registerIcon(LibModInfo.ID + ":" + "colour-picker-tip");
+        itemIcon = register.registerIcon(LibItemResources.COLOUR_PICKER);
+        tipIcon = register.registerIcon(LibItemResources.COLOUR_PICKER_TIP);
     }
     
     @Override

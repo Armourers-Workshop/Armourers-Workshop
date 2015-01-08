@@ -9,9 +9,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -31,8 +31,8 @@ public class ItemEquipmentSkinTemplate extends AbstractModItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "templateBlank");
-        giftIcon = register.registerIcon(LibModInfo.ID + ":" + "giftSack");
+        itemIcon = register.registerIcon(LibItemResources.TEMPLATE_BLANK);
+        giftIcon = register.registerIcon(LibItemResources.GIFT_SACK);
     }
     
     @Override

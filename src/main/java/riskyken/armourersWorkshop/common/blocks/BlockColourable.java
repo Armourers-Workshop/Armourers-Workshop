@@ -10,9 +10,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -38,7 +38,7 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
+        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
     }
     
     @SideOnly(Side.CLIENT)

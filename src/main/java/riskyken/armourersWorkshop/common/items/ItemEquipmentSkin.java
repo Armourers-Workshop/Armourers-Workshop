@@ -14,9 +14,9 @@ import net.minecraft.util.IIcon;
 import org.lwjgl.input.Keyboard;
 
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -89,14 +89,14 @@ public class ItemEquipmentSkin extends AbstractModItem {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
         icons = new IIcon[8];
-        icons[0] = register.registerIcon(LibModInfo.ID + ":" + "templateHead");
-        icons[1] = register.registerIcon(LibModInfo.ID + ":" + "templateChest");
-        icons[2] = register.registerIcon(LibModInfo.ID + ":" + "templateLegs");
-        icons[3] = register.registerIcon(LibModInfo.ID + ":" + "templateSkirt");
-        icons[4] = register.registerIcon(LibModInfo.ID + ":" + "templateFeet");
-        icons[5] = register.registerIcon(LibModInfo.ID + ":" + "templateWeapon");
-        icons[6] = register.registerIcon(LibModInfo.ID + ":" + "templateBow");
-        icons[7] = register.registerIcon(LibModInfo.ID + ":" + "templateLoading");
+        icons[0] = register.registerIcon(LibItemResources.TEMPLATE_HEAD);
+        icons[1] = register.registerIcon(LibItemResources.TEMPLATE_CHEST);
+        icons[2] = register.registerIcon(LibItemResources.TEMPLATE_LEGS);
+        icons[3] = register.registerIcon(LibItemResources.TEMPLATE_SKIRT);
+        icons[4] = register.registerIcon(LibItemResources.TEMPLATE_FEET);
+        icons[5] = register.registerIcon(LibItemResources.TEMPLATE_WEAPON);
+        icons[6] = register.registerIcon(LibItemResources.TEMPLATE_BOW);
+        icons[7] = register.registerIcon(LibItemResources.TEMPLATE_LOADING);
     }
     
     @Override
