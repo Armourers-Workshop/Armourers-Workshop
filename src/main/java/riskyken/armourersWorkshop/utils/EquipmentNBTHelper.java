@@ -36,8 +36,13 @@ public class EquipmentNBTHelper {
         return armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
     }
     
-    public static ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData) {
-        ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
+    public static ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData, boolean armouerContainer) {
+        ItemStack stack = null;
+        if (!armouerContainer) {
+            stack = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
+        } else {
+            stack = new ItemStack(ModItems.armourContainer[armourItemData.getType().getVanillaSlotId()], 1);
+        }
         
         NBTTagCompound itemNBT = new NBTTagCompound();
         NBTTagCompound armourNBT = new NBTTagCompound();

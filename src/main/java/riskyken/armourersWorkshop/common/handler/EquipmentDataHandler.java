@@ -5,6 +5,7 @@ import java.util.BitSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
@@ -64,9 +65,24 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
         if (!hasItemStackGotEquipmentData(stack)) {
             return EnumEquipmentType.NONE;
         }
-        int damage = stack.getItemDamage();
-        if (damage >= 0 & damage < 6) {
-            return EnumEquipmentType.getOrdinal(damage + 1);
+        Item item = stack.getItem();
+        if (item == ModItems.equipmentSkin) {
+            int damage = stack.getItemDamage();
+            if (damage >= 0 & damage < 6) {
+                return EnumEquipmentType.getOrdinal(damage + 1);
+            }
+        }
+        if (item == ModItems.armourContainer[0]) {
+            return EnumEquipmentType.HEAD;
+        }
+        if (item == ModItems.armourContainer[1]) {
+            return EnumEquipmentType.CHEST;
+        }
+        if (item == ModItems.armourContainer[2]) {
+            return EnumEquipmentType.LEGS;
+        }
+        if (item == ModItems.armourContainer[3]) {
+            return EnumEquipmentType.FEET;
         }
         return EnumEquipmentType.NONE;
     }

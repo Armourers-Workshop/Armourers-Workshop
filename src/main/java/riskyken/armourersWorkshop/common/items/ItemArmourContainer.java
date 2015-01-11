@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemArmourContainer extends AbstractModItemArmour {
 
     public ItemArmourContainer(String name, int armourType) {
-        super(name, ArmorMaterial.IRON, armourType, true);
+        super(name, ArmorMaterial.IRON, armourType, false);
     }
     
     @Override

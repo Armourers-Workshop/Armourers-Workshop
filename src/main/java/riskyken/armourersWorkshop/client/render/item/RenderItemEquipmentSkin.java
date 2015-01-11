@@ -50,7 +50,6 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             if (equipmentType == EnumEquipmentType.SWORD) {
                 GL11.glScalef(0.7F, 0.7F, 0.7F);
             }
-            
             switch (type) {
             case EQUIPPED:
                 GL11.glTranslatef(0.6F, -0.5F, -0.5F);
@@ -70,7 +69,6 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             ItemStackRenderHelper.renderItemAsArmourModel(stack);
             mc.mcProfiler.endSection();
             GL11.glPopMatrix();
-            
         } else {
             renderNomalIcon(stack);
         }
@@ -95,7 +93,10 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     private void renderNomalIcon(ItemStack stack) {
         IIcon icon = stack.getItem().getIcon(stack, 0);
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
-        icon = stack.getItem().getIcon(stack, 1);
-        renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
+        if (stack.getItem().getRenderPasses(stack.getItemDamage()) > 1) {
+            icon = stack.getItem().getIcon(stack, 1);
+            renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
+        }
+
     }
 }

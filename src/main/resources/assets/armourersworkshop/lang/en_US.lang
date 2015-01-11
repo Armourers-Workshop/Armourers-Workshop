@@ -58,7 +58,7 @@ item.armourersworkshop:colourNoiseTool.flavour=Applies random colour noise to a 
 item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
 item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%nRight click to apply setting.%nSneak right click to save settings.
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
-item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.
+item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to put on NPC's.
 
 # Armour types
 armourTypes.armourersworkshop:head.name=Head

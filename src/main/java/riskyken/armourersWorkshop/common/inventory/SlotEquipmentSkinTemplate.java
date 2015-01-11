@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.items.ItemArmourContainerItem;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 
@@ -18,6 +19,9 @@ public class SlotEquipmentSkinTemplate extends Slot {
             return true;
         }
         if (stack.getItem() instanceof ItemEquipmentSkin) {
+            return true;
+        }
+        if (stack.getItem() instanceof ItemArmourContainerItem) {
             return true;
         }
         return false;

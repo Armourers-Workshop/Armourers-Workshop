@@ -11,14 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.input.Keyboard;
-
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -66,10 +62,6 @@ public class AbstractModItemArmour extends ItemArmor {
                 }
                 
             }
-            String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
-
-            keyName = cGreen + keyName + cGray;
-            list.add("Press the " + keyName + " key to open the " + cGreen + "Equipment Wardrobe");
         }
         
         unlocalized = stack.getUnlocalizedName() + ".flavour";

@@ -44,6 +44,7 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_) {
         if (npcEquipmentData != null) {
+            this.heldItemRight = 0;
             if (entity instanceof EntityLivingBase) {
                 if (((EntityLivingBase)entity).getHeldItem() != null) {
                     this.heldItemRight = 1;

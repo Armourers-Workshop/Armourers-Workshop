@@ -38,6 +38,10 @@ public final class CraftingManager {
                 Method ccHideStack = ccApi.getMethod("hideItem", ItemStack.class);
                 ccHideStack.invoke(null, new ItemStack(ModBlocks.doll, 1));
                 ccHideStack.invoke(null, new ItemStack(ModBlocks.boundingBox, 1));
+                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[0], 1));
+                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[1], 1));
+                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[2], 1));
+                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
                 for (int i = 1; i < EnumEquipmentType.values().length; i++) {
                     ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1, i - 1));
                 }

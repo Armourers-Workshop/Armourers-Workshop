@@ -11,11 +11,14 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemEquipmentSkinTemplate extends AbstractModItem {
+public class ItemEquipmentSkinTemplate extends AbstractModItem implements ISkinHolder {
     
     private static final String TAG_OWNER = "owner";
     
@@ -60,5 +63,10 @@ public class ItemEquipmentSkinTemplate extends AbstractModItem {
             return giftIcon;
         }
         return super.getIconFromDamage(damage);
+    }
+
+    @Override
+    public ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData) {
+        return EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
     }
 }

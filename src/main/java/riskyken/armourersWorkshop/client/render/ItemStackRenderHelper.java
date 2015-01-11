@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -25,7 +26,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public final class ItemStackRenderHelper {
 
     public static void renderItemAsArmourModel(ItemStack stack) {
-        renderItemAsArmourModel(stack, EnumEquipmentType.getOrdinal(stack.getItemDamage() + 1));
+        EnumEquipmentType type =  EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack);
+        renderItemAsArmourModel(stack, type);
     }
     
     public static void renderItemAsArmourModel(ItemStack stack, EnumEquipmentType type) {

@@ -20,9 +20,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
@@ -119,16 +119,20 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
         
-        if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) {
+        if (!(stackInput.getItem() instanceof ISkinHolder)) {
             return;
         }
+        ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
         
         CustomEquipmentItemData armourItemData = loadCustomArmourItemDataFromFile(filename);
         if (armourItemData == null) {
             return;
         }
 
-        ItemStack stackArmour = EquipmentNBTHelper.makeStackForEquipment(armourItemData);
+        ItemStack stackArmour = inputItem.makeStackForEquipment(armourItemData);
+        if (stackArmour == null) {
+            return;
+        }
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, stackArmour);
@@ -146,11 +150,15 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
         
-        if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) {
+        if (!(stackInput.getItem() instanceof ISkinHolder)) {
             return;
         }
+        ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
         
-        ItemStack stackArmour = EquipmentNBTHelper.makeStackForEquipment(itemData);
+        ItemStack stackArmour = inputItem.makeStackForEquipment(itemData);
+        if (stackArmour == null) {
+            return;
+        }
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, stackArmour);

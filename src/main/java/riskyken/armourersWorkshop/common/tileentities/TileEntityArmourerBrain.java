@@ -19,6 +19,7 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
@@ -73,9 +74,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         if (stackOutput != null) {
             return;
         }
-        if (!(stackInput.getItem() instanceof ItemEquipmentSkinTemplate)) {
+        if (!(stackInput.getItem() instanceof ISkinHolder)) {
             return;
         }
+        ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
         
         String authorName = player.getCommandSenderName();
         String customName = name;
@@ -88,7 +90,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             return;
         }
         
-        stackOutput = EquipmentNBTHelper.makeStackForEquipment(armourItemData);
+        stackOutput = inputItem.makeStackForEquipment(armourItemData);
+        if (stackOutput == null) {
+            return;
+        }
         
         this.decrStackSize(0, 1);
         setInventorySlotContents(1, stackOutput);
