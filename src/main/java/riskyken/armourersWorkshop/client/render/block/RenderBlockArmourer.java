@@ -53,7 +53,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glColor3f(0.77F, 0.77F, 0.77F);
         LightingHelper.disableLighting();
-        
+        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glTranslated(x, y, z);
         
         if (te.getDirection() != null) {
@@ -124,6 +124,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         }
         
         LightingHelper.enableLighting();
+        GL11.glEnable(GL11.GL_LIGHTING);
     }
     
     private void renderGuide(TileEntityArmourerBrain te, EnumEquipmentType type, double x, double y, double z) {

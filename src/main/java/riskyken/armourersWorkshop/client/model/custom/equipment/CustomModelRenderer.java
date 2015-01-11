@@ -4,7 +4,6 @@ import java.util.BitSet;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.Tessellator;
 import riskyken.armourersWorkshop.client.abstraction.IRenderBuffer;
 import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
 
@@ -16,7 +15,6 @@ public class CustomModelRenderer extends ModelRenderer {
     }
     
     public void render(float scale, BitSet faceFlags, int x, int y, int z, float r, float g, float b, float a) {
-        Tessellator tessellator = Tessellator.instance;
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         int size = this.cubeList.size();
         renderBuffer.startDrawingQuads();
@@ -27,8 +25,7 @@ public class CustomModelRenderer extends ModelRenderer {
     }
     
     @Override
-    public ModelRenderer addBox(float x, float y, float z, int xSize, int ySize, int zSize)
-    {
+    public ModelRenderer addBox(float x, float y, float z, int xSize, int ySize, int zSize) {
         this.cubeList.add(new ModelEquipmentBox(this, 0, 0, x, y, z, xSize, ySize, zSize, 0.0F));
         return this;
     }

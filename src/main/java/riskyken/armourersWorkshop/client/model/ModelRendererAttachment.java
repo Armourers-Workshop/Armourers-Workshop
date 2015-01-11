@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.model;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +16,7 @@ import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -72,6 +74,13 @@ public class ModelRendererAttachment extends ModelRenderer {
                 GL11.glDisable(GL11.GL_CULL_FACE);
                 GL11.glPopMatrix();
                 break;
+            }
+        }
+        
+        if (ClientProxy.shadersModLoaded) {
+            if (player instanceof AbstractClientPlayer) {
+                AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
+                Minecraft.getMinecraft().renderEngine.bindTexture(clientPlayer.getLocationSkin());
             }
         }
         mc.mcProfiler.endSection();

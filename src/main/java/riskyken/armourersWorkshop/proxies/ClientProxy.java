@@ -37,12 +37,14 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     
+    public static boolean shadersModLoaded;
     public static int blockColourMixerRenderId;
     public static int renderPass;
     
@@ -79,6 +81,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         Addons.initRenderers();
+        shadersModLoaded = Loader.isModLoaded("shadersmod");
     }
 
     @Override
