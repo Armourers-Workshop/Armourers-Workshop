@@ -49,6 +49,10 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
                     this.heldItemRight = 1;
                 }
             }
+            bipedLeftLeg.rotateAngleZ = 0F;
+            bipedRightLeg.rotateAngleZ = 0F;
+            bipedHead.rotateAngleZ = 0F;
+            bipedHeadwear.rotateAngleZ = 0F;
             super.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, entity);
 
             render(entity, npcEquipmentData);
