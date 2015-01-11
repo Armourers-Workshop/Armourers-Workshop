@@ -30,7 +30,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
 
     private TileEntityColourMixer tileEntityColourMixer;
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/colour-mixer.png");
+    private static final ResourceLocation guiTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/colour-mixer.png");
     
     private Color colour;
     private GuiHSBSlider[] slidersHSB;
@@ -59,7 +59,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         colourHex = new GuiTextField(fontRendererObj, this.guiLeft + 5, this.guiTop + 90, 50, 10);
         colourHex.setMaxStringLength(7);
         updateHexTextbox();
-        colourSelector = new GuiColourSelector(3, this.guiLeft + 5, this.guiTop + 110, 82, 22, 10, 10, 8);
+        colourSelector = new GuiColourSelector(3, this.guiLeft + 5, this.guiTop + 110, 82, 22, 10, 10, 8, guiTexture);
         buttonList.add(colourSelector);
     }
     
@@ -162,7 +162,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         checkForColourUpdates();
         GL11.glColor4f(1, 1, 1, 1);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(guiTexture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         
         float red = (float) colour.getRed() / 255;

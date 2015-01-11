@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.gui.controls;
 import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,12 +20,14 @@ public class GuiColourSelector extends GuiButtonExt {
     private int colorWidth;
     private int colourHeight;
     private int rowLength;
+    private ResourceLocation guiTexture;
     
-    public GuiColourSelector(int id, int xPos, int yPos, int width, int height, int colorWidth, int colourHeight, int rowLength) {
+    public GuiColourSelector(int id, int xPos, int yPos, int width, int height, int colorWidth, int colourHeight, int rowLength, ResourceLocation guiTexture) {
         super(id, xPos, yPos, width, height, "");
         this.colorWidth = colorWidth;
         this.colourHeight = colourHeight;
         this.rowLength = rowLength;
+        this.guiTexture = guiTexture;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class GuiColourSelector extends GuiButtonExt {
         this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
         int k = this.getHoverState(this.field_146123_n);
         GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
-
+        mc.renderEngine.bindTexture(guiTexture);
         for (int i = 0; i < 16; i++) {
             int curRow = i / rowLength;
             Color c = new Color(UtilColour.getMinecraftColor(i));
@@ -44,11 +47,12 @@ public class GuiColourSelector extends GuiButtonExt {
             GL11.glColor4f(red, green, blue, 1.0F);
             int xPos = this.xPosition + 1 + this.colorWidth * i - curRow * colourHeight * rowLength;
             int yPos = this.yPosition + 1 + curRow * 10;
-            drawTexturedModalRect(xPos, yPos, 0, 182, this.colorWidth, this.colourHeight);
+            drawTexturedModalRect(xPos, yPos, 176, 0, this.colorWidth, this.colourHeight);
             if (mouseX >= xPos & mouseY >= yPos & mouseX <= xPos + this.colorWidth & mouseY <= yPos + this.colourHeight) {
                 this.selectedColour = new Color(UtilColour.getMinecraftColor(i));
             }
         }
+        
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mouseDragged(mc, mouseX, mouseY);
     }
