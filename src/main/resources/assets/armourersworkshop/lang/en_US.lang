@@ -41,6 +41,11 @@ item.armourersworkshop:colourNoiseTool.name=Colour Noise Tool
 item.armourersworkshop:shadeNoiseTool.name=Shade Noise Tool
 item.armourersworkshop:mannequinTool.name=Mannequin Tool
 item.armourersworkshop:guideBook.name=Guide Book
+item.armourersworkshop:armourContainer.name=Armour Container
+item.armourersworkshop:armourContainerHead.name=Head Armour Container
+item.armourersworkshop:armourContainerChest.name=Chest Armour Container
+item.armourersworkshop:armourContainerLegs.name=Legs Armour Container
+item.armourersworkshop:armourContainerFeet.name=Feet Armour Container
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -53,6 +58,7 @@ item.armourersworkshop:colourNoiseTool.flavour=Applies random colour noise to a 
 item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
 item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%nRight click to apply setting.%nSneak right click to save settings.
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
+item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.
 
 # Armour types
 armourTypes.armourersworkshop:head.name=Head

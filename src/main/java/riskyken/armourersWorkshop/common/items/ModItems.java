@@ -15,6 +15,7 @@ public class ModItems {
     public static Item shadeNoiseTool;
     public static Item mannequinTool;
     public static Item guideBook;
+    public static Item armourContainerItem;
     public static Item[] armourContainer;
     
     public static void init() {
@@ -29,6 +30,7 @@ public class ModItems {
         shadeNoiseTool = new ItemShadeNoiseTool();
         mannequinTool = new ItemMannequinTool();
         guideBook = new ItemGuideBook();
+        armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];
         armourContainer[0] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_HEAD, 0);
         armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, 1);
