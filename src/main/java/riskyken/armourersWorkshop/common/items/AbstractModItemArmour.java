@@ -115,6 +115,7 @@ public class AbstractModItemArmour extends ItemArmor {
     }
     
     @Override
+    @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack stack, int armorSlot) {
         if (!stack.hasTagCompound()) {
             return null;
