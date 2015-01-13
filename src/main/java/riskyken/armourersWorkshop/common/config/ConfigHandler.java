@@ -81,6 +81,11 @@ public class ConfigHandler {
                 "Allow weapon render override on Thaumcraft items.")
                 .getBoolean(true);
         
+        Addons.zeldaswordskillsCompatibility = config
+                .get(CATEGORY_COMPATIBILITY, "Zelda Sword Skills Compatibility", true,
+                "Allow weapon render override on Zelda Sword Skills items.")
+                .getBoolean(true);
+        
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             maxRenderDistance = config
                     .get(CATEGORY_CLIENT, "Skin Render Distance", 40,

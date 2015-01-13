@@ -14,6 +14,7 @@ public final class Addons {
     public static boolean minecraftCompatibility;
     public static boolean tConstructCompatibility;
     public static boolean thaumcraftCompatibility;
+    public static boolean zeldaswordskillsCompatibility;
     
     public static void init() {
         if (minecraftCompatibility) {
@@ -33,6 +34,9 @@ public final class Addons {
         }
         if (Loader.isModLoaded("TConstruct") & tConstructCompatibility) {
             loadedAddons.add(new AddonTConstruct());
+        }
+        if (Loader.isModLoaded("zeldaswordskills") & zeldaswordskillsCompatibility) {
+            loadedAddons.add(new AddonZeldaSwordSkills());
         }
     }
     
