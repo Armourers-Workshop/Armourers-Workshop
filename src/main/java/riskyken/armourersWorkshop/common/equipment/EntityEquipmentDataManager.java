@@ -10,6 +10,8 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.GameRules;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -139,9 +141,20 @@ public final class EntityEquipmentDataManager {
     @SubscribeEvent
     public void onLivingDeathEvent (LivingDeathEvent  event) {
         if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
+            GameRules gr = getGameRules();
+            boolean keepInventory = false;
+            if (gr.hasRule("keepInventory")) {
+                keepInventory = gr.getGameRuleBooleanValue("keepInventory");
+            }
             ExtendedPropsPlayerEquipmentData playerData = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
-            playerData.dropItems();
+            if (!keepInventory) {
+                playerData.dropItems();
+            }
         }
+    }
+    
+    private GameRules getGameRules() {
+        return MinecraftServer.getServer().worldServerForDimension(0).getGameRules();
     }
     
     @SubscribeEvent
