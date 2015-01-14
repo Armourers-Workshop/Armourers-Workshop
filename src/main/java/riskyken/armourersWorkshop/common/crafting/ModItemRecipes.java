@@ -70,6 +70,15 @@ public final class ModItemRecipes {
             'd', Blocks.mossy_cobblestone,
             's', "stickWood"});
         
+        CraftingManager.addShapedRecipe(new ItemStack(ModItems.mannequinTool, 1, 0), new Object[] {
+            " wd",
+            " iw",
+            "s  ",
+            'w', ModBlocks.colourable,
+            'i', Items.iron_ingot,
+            'd', "plankWood",
+            's', "stickWood"});
+        
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.equipmentSkinTemplate, 8, 0), new Object[] {
             "cc",
             "cc",
