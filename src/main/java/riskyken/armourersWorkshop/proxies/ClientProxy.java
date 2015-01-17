@@ -27,6 +27,7 @@ import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
@@ -38,6 +39,7 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -45,6 +47,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ClientProxy extends CommonProxy {
     
     public static boolean shadersModLoaded;
+    public static boolean moreplayermodelsLoaded;
     public static int blockColourMixerRenderId;
     public static int renderPass;
     
@@ -76,11 +79,7 @@ public class ClientProxy extends CommonProxy {
         ClientEquipmentModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
-    }
-    
-    @Override
-    public void postInit() {
-        Addons.initRenderers();
+        //Cross mod support
         try {
             Class.forName("shadersmodcore.client.Shaders");
             ModLogger.log("Shaders mod support active");
@@ -88,6 +87,16 @@ public class ClientProxy extends CommonProxy {
         } catch (Exception e) {
             ModLogger.log("Shaders mod not found");
         }
+        if (Loader.isModLoaded("moreplayermodels")) {
+            moreplayermodelsLoaded = true;
+            ConfigHandler.compatibilityRender = true;
+            ModLogger.log("More Player Models support active");
+        }
+    }
+    
+    @Override
+    public void postInit() {
+        Addons.initRenderers();
     }
 
     @Override

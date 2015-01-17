@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -36,6 +37,9 @@ public class ModelRendererAttachment extends ModelRenderer {
     
     @Override
     public void render(float scale) {
+        if (ConfigHandler.compatibilityRender) {
+            return;
+        }
         mc.mcProfiler.startSection("armourers player render");
         EquipmentModelRenderer modelRenderer = EquipmentModelRenderer.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;

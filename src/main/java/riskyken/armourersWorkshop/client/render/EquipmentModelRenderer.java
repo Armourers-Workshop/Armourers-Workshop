@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,7 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
@@ -129,7 +131,7 @@ public final class EquipmentModelRenderer {
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
         targetPlayer = player;
-        if (!addedRenderAttachment) {
+        if (!addedRenderAttachment & !ConfigHandler.compatibilityRender) {
             ModelBiped playerBiped = event.renderer.modelBipedMain;
             playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.HEAD, EnumEquipmentPart.HEAD));
             playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.CHEST));
@@ -158,6 +160,61 @@ public final class EquipmentModelRenderer {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
     	targetPlayer = null;
+    }
+    
+    @SubscribeEvent
+    public void onRenderSpecialsPost(RenderPlayerEvent.Specials.Post event) {
+        if (!ConfigHandler.compatibilityRender) {
+            return;
+        }
+        EntityPlayer player = event.entityPlayer;
+        RenderPlayer render = event.renderer;
+        if (player.getGameProfile() == null) {
+            return;
+        }
+        if (!playerEquipmentMap.containsKey(UtilPlayer.getIDFromPlayer(player))) {
+            return;
+        }
+        
+        if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
+            return;
+        }
+        
+        for (int slot = 0; slot < 4; slot++) {
+            GL11.glPushMatrix();
+            if (slot == EnumEquipmentType.HEAD.getVanillaSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
+                if (data != null) {
+                    customHead.render(player, render.modelBipedMain, data);
+                }
+            }
+            if (slot == EnumEquipmentType.CHEST.getVanillaSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.CHEST);
+                if (data != null) {
+                    customChest.render(player, render.modelBipedMain, data);
+                }
+            }
+            if (slot == EnumEquipmentType.LEGS.getVanillaSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
+                if (data != null) {
+                    customLegs.render(player, render.modelBipedMain, data);
+                }
+            }
+            if (slot == EnumEquipmentType.SKIRT.getVanillaSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.SKIRT);
+                if (data != null) {
+                    customSkirt.render(player, render.modelBipedMain, data);
+                }
+            }
+            if (slot == EnumEquipmentType.FEET.getVanillaSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.FEET);
+                if (data != null) {
+                    customFeet.render(player, render.modelBipedMain, data);
+                }
+            }
+            
+            GL11.glPopMatrix();
+        }
     }
     
     public IEquipmentModel getModelForEquipmentType(EnumEquipmentType equipmentType) {

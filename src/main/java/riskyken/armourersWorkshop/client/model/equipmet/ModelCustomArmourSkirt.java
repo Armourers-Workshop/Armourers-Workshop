@@ -80,7 +80,7 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
         GL11.glColor3f(1F, 1F, 1F);
       
         GL11.glTranslated(0, 12 * scale, 0);
-        
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
