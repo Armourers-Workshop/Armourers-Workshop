@@ -70,7 +70,8 @@ public class ModelRendererAttachment extends ModelRenderer {
                 if (equipmentType == EnumEquipmentType.SKIRT && equipmentPart == EnumEquipmentPart.SKIRT) {
                     GL11.glTranslatef(0, 12 * scale, 0);
                     if (player.isSneaking()) {
-                        GL11.glTranslatef(0, -2 * scale, 0);
+                        GL11.glTranslated(0, -3 * scale, 0);
+                        GL11.glRotatef(-28.6478898F, 1F, 0F, 0F);
                     }
                 }
                 GL11.glEnable(GL11.GL_CULL_FACE);
