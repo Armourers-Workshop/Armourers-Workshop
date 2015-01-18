@@ -11,7 +11,6 @@ public class CustomModelRenderer extends ModelRenderer {
 
     public CustomModelRenderer(ModelBase p_i1174_1_, int p_i1174_2_, int p_i1174_3_) {
         super(p_i1174_1_, p_i1174_2_, p_i1174_3_);
-        // TODO Auto-generated constructor stub
     }
     
     public void render(float scale, BitSet faceFlags, int x, int y, int z, float r, float g, float b, float a) {

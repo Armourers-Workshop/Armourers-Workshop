@@ -139,7 +139,7 @@ public final class EquipmentModelRenderer {
             playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.RIGHT_ARM));
             playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.LEGS, EnumEquipmentPart.LEFT_LEG));
             playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.LEGS, EnumEquipmentPart.RIGHT_LEG));
-            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.SKIRT, EnumEquipmentPart.SKIRT));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.SKIRT, EnumEquipmentPart.SKIRT));
             playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.FEET, EnumEquipmentPart.LEFT_FOOT));
             playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.FEET, EnumEquipmentPart.RIGHT_FOOT));            
             addedRenderAttachment = true;
@@ -182,6 +182,9 @@ public final class EquipmentModelRenderer {
         
         for (int slot = 0; slot < 4; slot++) {
             GL11.glPushMatrix();
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glEnable(GL11.GL_BLEND);
             if (slot == EnumEquipmentType.HEAD.getVanillaSlotId()) {
                 CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
                 if (data != null) {
@@ -212,7 +215,8 @@ public final class EquipmentModelRenderer {
                     customFeet.render(player, render.modelBipedMain, data);
                 }
             }
-            
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
         }
     }
@@ -308,7 +312,12 @@ public final class EquipmentModelRenderer {
         if (model == null) {
             return;
         }
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
         model.render(entity, modelBiped, data);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_CULL_FACE);
     }
     
     private void renderEquipmentPartRotated(Entity entity, CustomEquipmentItemData data, float limb1, float limb2, float limb3, float headY, float headX) {

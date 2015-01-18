@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
@@ -89,24 +88,6 @@ public class CustomEquipmentPartData {
 
     public ArrayList<ICube> getArmourData() {
         return armourData;
-    }
-    
-    private boolean blockCanBeSeen(ArrayList<ICube> partBlocks, ICube block) {
-        int sidesCovered = 0;
-        for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
-            ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
-            for (int j = 0; j < partBlocks.size(); j++) {
-                ICube checkBlock = partBlocks.get(j);
-                if (block.getX() + dir.offsetX == checkBlock.getX() &&
-                        block.getY() + dir.offsetY == checkBlock.getY() &&
-                        block.getZ() + dir.offsetZ == checkBlock.getZ())
-                {
-                    sidesCovered++;
-                    break;
-                }
-            }
-        }
-        return sidesCovered < 6;
     }
 
     public void writeToBuf(ByteBuf buf) {

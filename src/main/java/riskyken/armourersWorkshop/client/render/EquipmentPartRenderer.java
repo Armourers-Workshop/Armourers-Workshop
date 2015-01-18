@@ -143,8 +143,6 @@ public class EquipmentPartRenderer extends ModelBase {
         float colourAlpha = 1F;
         
         if (glass) {
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             colourAlpha = 0.5F;
         }
         
@@ -152,9 +150,6 @@ public class EquipmentPartRenderer extends ModelBase {
             main.render(scale, faceFlags, x, y, z, colourRed, colourGreen, colourBlue, colourAlpha);
         } else {
             ModLogger.log(Level.WARN, "No face flags found on armour part.");
-        }
-        if (glass) {
-            GL11.glDisable(GL11.GL_BLEND);
         }
     }
 }

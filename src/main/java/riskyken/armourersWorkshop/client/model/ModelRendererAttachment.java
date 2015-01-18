@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.client.model;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -27,8 +27,11 @@ public class ModelRendererAttachment extends ModelRenderer {
     private final EnumEquipmentType equipmentType;
     private final EnumEquipmentPart equipmentPart;
     private final Minecraft mc;
-    public ModelRendererAttachment(ModelBase modelBase, EnumEquipmentType equipmentType, EnumEquipmentPart equipmentPart) {
+    private ModelBiped baseModel;
+    
+    public ModelRendererAttachment(ModelBiped modelBase, EnumEquipmentType equipmentType, EnumEquipmentPart equipmentPart) {
         super(modelBase);
+        this.baseModel = modelBase;
         mc = Minecraft.getMinecraft();
         this.equipmentType = equipmentType;
         this.equipmentPart = equipmentPart;
@@ -68,13 +71,14 @@ public class ModelRendererAttachment extends ModelRenderer {
             if (partData.getArmourPart() == equipmentPart) {
                 GL11.glPushMatrix();
                 if (equipmentType == EnumEquipmentType.SKIRT && equipmentPart == EnumEquipmentPart.SKIRT) {
-                    GL11.glTranslatef(0, 12 * scale, 0);
+                    GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
+                    GL11.glTranslatef(-2 * scale, 0, 0);
                     if (player.isSneaking()) {
-                        GL11.glTranslated(0, -3 * scale, 0);
-                        GL11.glRotatef(-28.6478898F, 1F, 0F, 0F);
                     }
                 }
                 GL11.glEnable(GL11.GL_CULL_FACE);
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                GL11.glEnable(GL11.GL_BLEND);
                 EquipmentPartRenderer.INSTANCE.renderPart(partData, scale);
                 GL11.glDisable(GL11.GL_CULL_FACE);
                 GL11.glPopMatrix();
