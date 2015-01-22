@@ -66,7 +66,9 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
                 break;
             }
             mc.mcProfiler.startSection("armourers item skin");
+            GL11.glEnable(GL11.GL_CULL_FACE);
             ItemStackRenderHelper.renderItemAsArmourModel(stack);
+            GL11.glDisable(GL11.GL_CULL_FACE);
             mc.mcProfiler.endSection();
             GL11.glPopMatrix();
         } else {

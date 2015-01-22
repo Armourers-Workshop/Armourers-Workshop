@@ -17,6 +17,8 @@ import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.utils.EventState;
 
 public class RenderItemSwordSkin implements IItemRenderer {
 
@@ -90,7 +92,9 @@ public class RenderItemSwordSkin implements IItemRenderer {
                 break;
             }
             GL11.glEnable(GL11.GL_CULL_FACE);
+            Addons.onWeaponRender(type, EventState.PRE);
             ItemStackRenderHelper.renderItemAsArmourModel(stack, EnumEquipmentType.SWORD);
+            Addons.onWeaponRender(type, EventState.POST);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
