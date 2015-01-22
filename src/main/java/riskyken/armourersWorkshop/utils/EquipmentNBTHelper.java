@@ -84,7 +84,7 @@ public class EquipmentNBTHelper {
         }
     }
     
-    public static void removeRenderIdToStack(ItemStack stack) {
+    public static void removeRenderIdFromStack(ItemStack stack) {
         if (stack.hasTagCompound()) {
             NBTTagCompound compound = stack.getTagCompound();
             if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {

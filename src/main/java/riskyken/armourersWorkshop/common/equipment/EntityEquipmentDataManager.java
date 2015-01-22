@@ -94,14 +94,14 @@ public final class EntityEquipmentDataManager {
                 if (equipmentData.haveEquipment(EnumEquipmentType.SWORD)) {
                     EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(EnumEquipmentType.SWORD));
                 } else {
-                    EquipmentNBTHelper.removeRenderIdToStack(stack);
+                    EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isBowRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(EnumEquipmentType.BOW)) {
                     EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(EnumEquipmentType.BOW));
                 } else {
-                    EquipmentNBTHelper.removeRenderIdToStack(stack);
+                    EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
         }
