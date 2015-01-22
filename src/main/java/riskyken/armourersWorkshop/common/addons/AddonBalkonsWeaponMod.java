@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.addons;
 
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
+import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class AddonBalkonsWeaponMod extends AbstractAddon {
@@ -36,5 +38,9 @@ public class AddonBalkonsWeaponMod extends AbstractAddon {
     @Override
     public String getModName() {
         return "weaponmod";
+    }
+
+    @Override
+    public void onWeaponRender(ItemRenderType type, EventState state) {
     }
 }

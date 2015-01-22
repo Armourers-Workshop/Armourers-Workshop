@@ -1,9 +1,11 @@
 package riskyken.armourersWorkshop.common.addons;
 
 import net.minecraft.init.Items;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
+import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class AddonMinecraft extends AbstractAddon {
@@ -31,4 +33,7 @@ public class AddonMinecraft extends AbstractAddon {
         return "Minecraft";
     }
 
+    @Override
+    public void onWeaponRender(ItemRenderType type, EventState state) {
+    }
 }

@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.addons;
 
 import java.util.ArrayList;
 
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
+import riskyken.armourersWorkshop.utils.EventState;
 import cpw.mods.fml.common.Loader;
 
 public final class Addons {
@@ -15,6 +17,7 @@ public final class Addons {
     public static boolean tConstructCompatibility;
     public static boolean thaumcraftCompatibility;
     public static boolean zeldaswordskillsCompatibility;
+    public static boolean moreSwordsModCompatibility;
     
     public static void init() {
         if (minecraftCompatibility) {
@@ -37,6 +40,15 @@ public final class Addons {
         }
         if (Loader.isModLoaded("zeldaswordskills") & zeldaswordskillsCompatibility) {
             loadedAddons.add(new AddonZeldaSwordSkills());
+        }
+        if (Loader.isModLoaded("MSM3") & moreSwordsModCompatibility) {
+            loadedAddons.add(new AddonMoreSwordsMod());
+        }
+    }
+    
+    public static void onWeaponRender(ItemRenderType type, EventState state) {
+        for (int i = 0; i < loadedAddons.size(); i++) {
+            loadedAddons.get(i).onWeaponRender(type, state);
         }
     }
     

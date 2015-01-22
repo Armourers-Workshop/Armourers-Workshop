@@ -86,6 +86,11 @@ public class ConfigHandler {
                 "Allow weapon render override on Zelda Sword Skills items.")
                 .getBoolean(true);
         
+        Addons.moreSwordsModCompatibility = config
+                .get(CATEGORY_COMPATIBILITY, "More Swords Mod Compatibility", true,
+                "Allow weapon render override on More Swords Mod items.")
+                .getBoolean(true);
+        
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             maxRenderDistance = config
                     .get(CATEGORY_CLIENT, "Skin Render Distance", 40,
