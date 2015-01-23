@@ -18,6 +18,7 @@ public final class Addons {
     public static boolean thaumcraftCompatibility;
     public static boolean zeldaswordskillsCompatibility;
     public static boolean moreSwordsModCompatibility;
+    public static boolean battlegear2Compatibility = true;
     
     public static void init() {
         if (minecraftCompatibility) {
@@ -43,6 +44,9 @@ public final class Addons {
         }
         if (Loader.isModLoaded("MSM3") & moreSwordsModCompatibility) {
             loadedAddons.add(new AddonMoreSwordsMod());
+        }
+        if (Loader.isModLoaded("battlegear2") & battlegear2Compatibility) {
+            loadedAddons.add(new AddonBattlegear2());
         }
     }
     

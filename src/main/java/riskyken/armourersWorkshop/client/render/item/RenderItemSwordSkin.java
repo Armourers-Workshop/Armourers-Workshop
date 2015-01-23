@@ -48,8 +48,6 @@ public class RenderItemSwordSkin implements IItemRenderer {
         if (canRenderModel(stack)) {
             if (type != ItemRenderType.ENTITY) {
                 GL11.glPopMatrix();
-                //GL11.glPopMatrix(); 
-                
                 GL11.glRotatef(-135, 0, 1, 0);
                 GL11.glRotatef(-10, 0, 0, 1);
             }
@@ -99,7 +97,6 @@ public class RenderItemSwordSkin implements IItemRenderer {
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
-                //GL11.glPushMatrix();
                 GL11.glPushMatrix();
             }
 
