@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.abstraction;
+package riskyken.mcWrapper.client;
 
 import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;

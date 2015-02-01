@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.client.abstraction.IRenderBuffer;
-import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
-import riskyken.armourersWorkshop.common.abstraction.RenderAbstraction;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.utils.UtilRender;
+import riskyken.mcWrapper.client.IRenderBuffer;
+import riskyken.mcWrapper.client.RenderBridge;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -84,7 +84,7 @@ public class EntityFXPaintSplash extends EntityFX {
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         renderBuffer.draw();
         
-        RenderAbstraction.bindTexture(paintSplashTextures);
+        UtilRender.bindTexture(paintSplashTextures);
         
         renderBuffer.startDrawingQuads();
         renderBuffer.setBrightness(getBrightnessForRender(0));
@@ -113,7 +113,7 @@ public class EntityFXPaintSplash extends EntityFX {
         renderBuffer.addVertexWithUV((double)(f11 + p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 - p_70539_7_ * f10), (double)f6, (double)f9);
         
         renderBuffer.draw();
-        RenderAbstraction.bindTexture(particleTextures);
+        UtilRender.bindTexture(particleTextures);
         renderBuffer.startDrawingQuads();
     }
 }

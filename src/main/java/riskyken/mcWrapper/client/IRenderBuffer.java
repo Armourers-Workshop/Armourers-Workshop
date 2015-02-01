@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.abstraction;
+package riskyken.mcWrapper.client;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -10,7 +10,7 @@ public interface IRenderBuffer {
     
     public void startDrawingQuads();
     
-    public void startDrawing(int state);
+    public void startDrawing(int drawMode);
     
     public void setBrightness(int brightness);
     

@@ -4,8 +4,8 @@ import java.util.BitSet;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import riskyken.armourersWorkshop.client.abstraction.IRenderBuffer;
-import riskyken.armourersWorkshop.client.abstraction.RenderBridge;
+import riskyken.mcWrapper.client.IRenderBuffer;
+import riskyken.mcWrapper.client.RenderBridge;
 
 public class CustomModelRenderer extends ModelRenderer {
 

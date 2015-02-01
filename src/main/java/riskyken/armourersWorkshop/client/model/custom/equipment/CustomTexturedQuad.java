@@ -3,8 +3,8 @@ package riskyken.armourersWorkshop.client.model.custom.equipment;
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.model.TexturedQuad;
 import net.minecraft.util.Vec3;
-import riskyken.armourersWorkshop.client.abstraction.IRenderBuffer;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.mcWrapper.client.IRenderBuffer;
 
 public class CustomTexturedQuad extends TexturedQuad {
 

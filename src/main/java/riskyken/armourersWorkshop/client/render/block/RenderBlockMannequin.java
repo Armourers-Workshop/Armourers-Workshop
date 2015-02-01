@@ -2,10 +2,15 @@ package riskyken.armourersWorkshop.client.render.block;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -98,8 +103,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 te.getBipedRotations().applyRotationsToBiped(targetBiped);
             }
             
+            //Pre render events
             RenderPlayerEvent.Pre preEvent = new RenderPlayerEvent.Pre(fakePlayer, renderPlayer, tickTime);
-            
             RenderPlayerEvent.Specials.Pre preEventSpecials = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, tickTime);
 
             if (targetBiped.isChild) {
@@ -161,6 +166,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
         }
         
+        //Post render events
         if (fakePlayer != null) {
             RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, tickTime);
             RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, tickTime);
@@ -178,10 +184,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
         }
         
-
+        //Render armourer's skins
         mc.mcProfiler.startSection("mannequin skin");
         EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), targetBiped);
         mc.mcProfiler.endSection();
+        
+        //Render items.
+        renderEquippedItems(te, fakePlayer);
         
         targetBiped.bipedLeftLeg.rotateAngleZ = 0F;
         targetBiped.bipedRightLeg.rotateAngleZ = 0F;
@@ -191,5 +200,29 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
+    }
+    
+    private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer) {
+        RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (stack != null & fakePlayer != null) {
+                renderEquippedItem(fakePlayer, stack);
+            }
+        }
+    }
+    
+    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack) {
+        GL11.glPushMatrix();
+        if (!(stack.getItem() instanceof ItemBlock)) {
+            //GL11.glTranslatef(0.9375F, 0.0625F, 0.0F);
+            GL11.glRotatef(335.0F, 0.0F, 0.0F, -1.0F);
+            GL11.glRotatef(50.0F, 0.0F, -1.0F, 0.0F);
+            GL11.glScalef(0.75F, 0.75F, 0.75F);
+        }
+
+        RenderManager rm = RenderManager.instance;
+        rm.itemRenderer.renderItem(fakePlayer, stack, 0);
+        GL11.glPopMatrix();
     }
 }

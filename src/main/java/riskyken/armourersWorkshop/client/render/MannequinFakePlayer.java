@@ -8,11 +8,11 @@ import net.minecraft.world.World;
 import com.mojang.authlib.GameProfile;
 
 public class MannequinFakePlayer extends AbstractClientPlayer {
-
+    
     public MannequinFakePlayer(World world, GameProfile gameProfile) {
         super(world, gameProfile);
     }
-
+    
     @Override
     public void addChatMessage(IChatComponent p_145747_1_) {
     }
