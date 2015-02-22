@@ -30,8 +30,8 @@ public class RenderBridge implements IRenderBuffer {
     }
 
     @Override
-    public void startDrawing(int state) {
-        tessellator.startDrawing(state);
+    public void startDrawing(int drawMode) {
+        tessellator.startDrawing(drawMode);
     }
 
     @Override
