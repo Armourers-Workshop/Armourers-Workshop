@@ -234,16 +234,14 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
-        writeBaseToNBT(compound);
-        writeCommonToNBT(compound);
+        writeToNBT(compound);
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
-        readBaseFromNBT(compound);
-        readCommonFromNBT(compound);
+        readFromNBT(compound);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     

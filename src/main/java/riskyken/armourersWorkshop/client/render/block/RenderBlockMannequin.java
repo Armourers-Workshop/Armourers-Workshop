@@ -1,7 +1,11 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import java.awt.Color;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -9,9 +13,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -22,6 +30,8 @@ import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
@@ -33,6 +43,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private ModelMannequin model;
     private RenderPlayer renderPlayer;
     private final Minecraft mc;
+    private float scale = 0.0625F;
     
     public RenderBlockMannequin() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
@@ -55,7 +66,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_NORMALIZE);
-        float scale = 0.0625F;
         
         int rotaion = te.getRotation();
         
@@ -101,6 +111,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             
             if (te.getBipedRotations() != null) {
                 te.getBipedRotations().applyRotationsToBiped(targetBiped);
+                te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);
+                te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
             }
             
             //Pre render events
@@ -136,14 +148,16 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         if (te.getBipedRotations().isChild) {
             GL11.glTranslated(0, heightOffset * scale * 1.0F / f6, 0);
-            GL11.glPushMatrix();
-            GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-            GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
-            targetBiped.bipedHead.render(scale);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            targetBiped.bipedHeadwear.render(scale);
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            GL11.glPopMatrix();
+            if (!hasCustomHead(te, fakePlayer)) {
+                GL11.glPushMatrix();
+                GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+                GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
+                targetBiped.bipedHead.render(scale);
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                targetBiped.bipedHeadwear.render(scale);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+                GL11.glPopMatrix();
+            }
             GL11.glPushMatrix();
             GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
             GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
@@ -155,15 +169,17 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glPopMatrix();
         } else {
             GL11.glTranslated(0, heightOffset * scale, 0);
-            targetBiped.bipedHead.render(scale);
+            if (!hasCustomHead(te, fakePlayer)) {
+                targetBiped.bipedHead.render(scale);
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                targetBiped.bipedHeadwear.render(scale);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+            }
             targetBiped.bipedBody.render(scale);
             targetBiped.bipedRightArm.render(scale);
             targetBiped.bipedLeftArm.render(scale);
             targetBiped.bipedRightLeg.render(scale);
             targetBiped.bipedLeftLeg.render(scale);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            targetBiped.bipedHeadwear.render(scale);
-            GL11.glEnable(GL11.GL_CULL_FACE);
         }
         
         //Post render events
@@ -190,7 +206,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
         
         //Render items.
-        renderEquippedItems(te, fakePlayer);
+        renderEquippedItems(te, fakePlayer, targetBiped);
         
         targetBiped.bipedLeftLeg.rotateAngleZ = 0F;
         targetBiped.bipedRightLeg.rotateAngleZ = 0F;
@@ -202,27 +218,246 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
     }
     
-    private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer) {
+    private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (stack != null & fakePlayer != null) {
-                renderEquippedItem(fakePlayer, stack);
+                renderEquippedItem(fakePlayer, stack, targetBiped, i);
             }
         }
     }
     
-    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack) {
+    public ItemStack getStackInMannequinSlot(IInventory inventory, MannequinSlotType slot) {
+        return inventory.getStackInSlot(slot.ordinal());
+    }
+    
+    private boolean hasCustomHead(IInventory inventory, MannequinFakePlayer fakePlayer) {
+        ItemStack stack = getStackInMannequinSlot(inventory, MannequinSlotType.HEAD);
+        if (stack != null & fakePlayer != null) {
+            if (stack.getItem() instanceof ItemBlock) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot) {
+        if (slot < 6) {
+            if (stack.getItem() == ModItems.equipmentSkin) {
+                return;
+            }
+        }
+        
+        Item targetItem = stack.getItem();
+        RenderManager rm = RenderManager.instance;
+        
         GL11.glPushMatrix();
-        if (!(stack.getItem() instanceof ItemBlock)) {
-            //GL11.glTranslatef(0.9375F, 0.0625F, 0.0F);
-            GL11.glRotatef(335.0F, 0.0F, 0.0F, -1.0F);
-            GL11.glRotatef(50.0F, 0.0F, -1.0F, 0.0F);
-            GL11.glScalef(0.75F, 0.75F, 0.75F);
+        switch (slot) {
+        case 0:
+            renderHeadStack(fakePlayer, stack, targetBiped, rm);
+            break;
+        case 1:
+            renderChestStack(fakePlayer, stack, targetBiped, rm);
+            break;
+        case 2:
+            renderLegsStack(fakePlayer, stack, targetBiped, rm);
+            break;
+        case 4:
+            renderFeetStack(fakePlayer, stack, targetBiped, rm);
+            break;
+        case 5:
+            renderRightArmStack(fakePlayer, stack, targetBiped, rm);
+            break;
+        case 6:
+            renderLeftArmStack(fakePlayer, stack, targetBiped, rm);
+            break;
+        }
+        GL11.glPopMatrix();
+    }
+    
+    private void renderHeadStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+        Item targetItem = stack.getItem();
+        if (targetItem instanceof ItemBlock) {
+            float blockScale = 0.5F;
+            GL11.glTranslatef(0, -4 * scale, 0);
+            GL11.glScalef(-blockScale, -blockScale, blockScale);
+            GL11.glRotatef(90F, 0F, 1F, 0F);
+            rm.itemRenderer.renderItem(fakePlayer, stack, 0);
+        } else {
+            if (targetItem instanceof ItemArmor) {
+                int passes = targetItem.getRenderPasses(stack.getItemDamage());
+                for (int i = 0; i < passes; i++) {
+                    ModelBiped armourBiped = ForgeHooksClient.getArmorModel(fakePlayer, stack, 1, renderPlayer.modelArmorChestplate);
+                    if (i == 0) {
+                        bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 0, null));
+                    } else {
+                        bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 0, "overlay"));
+                    }
+                    
+                    Color c = new Color(targetItem.getColorFromItemStack(stack, i));
+                    GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
+                    if (armourBiped == renderPlayer.modelArmorChestplate) {
+                        armourBiped.bipedHead.showModel = true;
+                        armourBiped.bipedHead.render(scale);
+                    } else {
+                        armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                    }
+                }
+            }
+        }
+    }
+    
+    private void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+        Item targetItem = stack.getItem();
+        if (targetItem instanceof ItemArmor) {
+            int passes = targetItem.getRenderPasses(stack.getItemDamage());
+            for (int i = 0; i < passes; i++) {
+                ModelBiped armourBiped = ForgeHooksClient.getArmorModel(fakePlayer, stack, 1, renderPlayer.modelArmorChestplate);
+                if (i == 0) {
+                    bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 1, null));
+                } else {
+                    bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 1, "overlay"));
+                }
+                
+                Color c = new Color(targetItem.getColorFromItemStack(stack, i));
+                GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
+                
+                if (armourBiped == renderPlayer.modelArmorChestplate) {
+                    armourBiped.bipedBody.showModel = true;
+                    armourBiped.bipedLeftArm.showModel = true;
+                    armourBiped.bipedRightArm.showModel = true;
+                    
+                    armourBiped.bipedBody.render(scale);
+                    armourBiped.bipedLeftArm.render(scale);
+                    armourBiped.bipedRightArm.render(scale);
+                    
+                    armourBiped = ForgeHooksClient.getArmorModel(fakePlayer, stack, 1, renderPlayer.modelArmor);
+                    armourBiped.bipedBody.showModel = true;
+                    armourBiped.bipedBody.render(scale);
+                } else {
+                    armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                }
+            }
+        }
+    }
+    private void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+        Item targetItem = stack.getItem();
+        if (targetItem instanceof ItemArmor) {
+            int passes = targetItem.getRenderPasses(stack.getItemDamage());
+            for (int i = 0; i < passes; i++) {
+                ModelBiped armourBiped = ForgeHooksClient.getArmorModel(fakePlayer, stack, 2, renderPlayer.modelArmor);
+                if (i == 0) {
+                    bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 2, null));
+                } else {
+                    bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 2, "overlay"));
+                }
+                
+                Color c = new Color(targetItem.getColorFromItemStack(stack, i));
+                GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
+                
+                if (armourBiped == renderPlayer.modelArmor) {
+                    armourBiped.bipedBody.showModel = true;
+                    armourBiped.bipedLeftLeg.showModel = true;
+                    armourBiped.bipedRightLeg.showModel = true;
+                    armourBiped.bipedBody.render(scale);
+                    armourBiped.bipedLeftLeg.render(scale);
+                    armourBiped.bipedRightLeg.render(scale);
+                } else {
+                    armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                }
+            }
+        }
+    }
+    private void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+        Item targetItem = stack.getItem();
+        if (targetItem instanceof ItemArmor) {
+            int passes = targetItem.getRenderPasses(stack.getItemDamage());
+            for (int i = 0; i < passes; i++) {
+                ModelBiped armourBiped = ForgeHooksClient.getArmorModel(fakePlayer, stack, 3, renderPlayer.modelArmorChestplate);
+                if (i == 0) {
+                    bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 3, null));
+                } else {
+                    bindTexture(RenderBiped.getArmorResource(fakePlayer, stack, 3, "overlay"));
+                }
+                
+                Color c = new Color(targetItem.getColorFromItemStack(stack, i));
+                GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
+                
+                if (armourBiped == renderPlayer.modelArmorChestplate) {
+                    armourBiped.bipedLeftLeg.showModel = true;
+                    armourBiped.bipedRightLeg.showModel = true;
+                    armourBiped.bipedLeftLeg.render(scale);
+                    armourBiped.bipedRightLeg.render(scale);
+                } else {
+                    armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                }
+            }
+        }
+    }
+    
+    private void renderRightArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+        Item targetItem = stack.getItem();
+        float blockScale = 0.5F;
+        float itemScale = 1 - (float)1 / 3;
+        Tessellator tessellator = Tessellator.instance;
+        
+        if (targetItem instanceof ItemBlock) {
+            GL11.glTranslatef(0, -4 * scale, 0);
+            GL11.glScalef(-blockScale, -blockScale, blockScale);
+            GL11.glRotatef(90F, 0F, 1F, 0F);
+        } else {
+            //Movement
+            GL11.glTranslatef(-5F * scale, 0F, 0F);
+            GL11.glTranslatef(0F, 2F * scale, 0F);
+            
+            GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleZ), 0F, 0F, 1F);
+            GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleY), 0F, 1F, 0F);
+            GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleX), 1F, 0F, 0F);
+            
+            GL11.glTranslatef(-2F * scale, 0F, 0F);
+            GL11.glTranslatef(0F, 10F * scale, 0F);
+            
+            GL11.glRotatef(-90, 0, 1, 0);
+            GL11.glRotatef(45, 0, 0, 1);
+            
+            GL11.glScalef(itemScale, itemScale, itemScale);
+            GL11.glRotatef(-335.0F, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
+        }
+        
+        rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
+    }
+    
+    private void renderLeftArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+        Item targetItem = stack.getItem();
+        float blockScale = 0.5F;
+        float itemScale = 1 - (float)1 / 3;
+        
+        if (targetItem instanceof ItemBlock) {
+            GL11.glTranslatef(0, -4 * scale, 0);
+            GL11.glScalef(-blockScale, -blockScale, blockScale);
+            GL11.glRotatef(90F, 0F, 1F, 0F);
+        } else {
+            //Movement
+            GL11.glTranslatef(5F * scale, 0F, 0F);
+            GL11.glTranslatef(0F, 2F * scale, 0F);
+            
+            GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleZ), 0F, 0F, 1F);
+            GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleY), 0F, 1F, 0F);
+            GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleX), 1F, 0F, 0F);
+            
+            GL11.glTranslatef(1F * scale, 0F, 0F);
+            GL11.glTranslatef(0F, 10F * scale, 0F);
+            
+            GL11.glRotatef(-90, 0, 1, 0);
+            GL11.glRotatef(45, 0, 0, 1);
+            
+            GL11.glScalef(itemScale, itemScale, itemScale);
+            GL11.glRotatef(-335.0F, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
         }
 
-        RenderManager rm = RenderManager.instance;
-        rm.itemRenderer.renderItem(fakePlayer, stack, 0);
-        GL11.glPopMatrix();
+        rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
     }
 }

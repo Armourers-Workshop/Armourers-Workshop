@@ -17,18 +17,4 @@ public class SlotMannequin extends Slot {
     public boolean isItemValid(ItemStack stack) {
         return true;
     }
-    
-    public enum MannequinSlotType {
-        HEAD,
-        CHEST,
-        LEGS,
-        SKIRT,
-        FEET,
-        RIGHT_HAND,
-        LEFT_HAND;
-
-        public static MannequinSlotType getOrdinal(int i) {
-            return MannequinSlotType.values()[i];
-        }
-    }
 }
