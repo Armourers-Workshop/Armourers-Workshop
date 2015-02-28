@@ -301,7 +301,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                         armourBiped.bipedHead.showModel = true;
                         armourBiped.bipedHead.render(scale);
                     } else {
-                        armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                        //armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
                     }
                 }
             }
@@ -336,7 +336,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     armourBiped.bipedBody.showModel = true;
                     armourBiped.bipedBody.render(scale);
                 } else {
-                    armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                    //armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
                 }
             }
         }
@@ -364,7 +364,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     armourBiped.bipedLeftLeg.render(scale);
                     armourBiped.bipedRightLeg.render(scale);
                 } else {
-                    armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                    //armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
                 }
             }
         }
@@ -390,7 +390,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     armourBiped.bipedLeftLeg.render(scale);
                     armourBiped.bipedRightLeg.render(scale);
                 } else {
-                    armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
+                    //armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
                 }
             }
         }
