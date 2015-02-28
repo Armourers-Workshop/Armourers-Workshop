@@ -8,8 +8,8 @@ public enum EnumEquipmentPart {
     HEAD(
             8, 8, 8,
             -4, 0, -4,
-            new int[] {1, 12, 6, 6, 6, 6},
-            0, 0, 0,
+            new int[] {12, 12, 6, 6, 6, 6},
+            0, 11, 0,
             EnumBodyPart.HEAD),
     
     CHEST(

@@ -55,7 +55,9 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         case NONE:
             break;
         case HEAD:
+            GL11.glTranslated(0, -11 * scale, 0);
             modelHead.render(true);
+            GL11.glTranslated(0, 11 * scale, 0);
             break;
         case CHEST:
             modelChest.renderChest();

@@ -81,7 +81,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         case NONE:
             break;
         case HEAD:
+            GL11.glTranslated(0, -11 * mult, 0);
             modelHead.render(te.isShowOverlay());
+            GL11.glTranslated(0, 11 * mult, 0);
             break;
         case CHEST:
             modelChest.renderChest();
