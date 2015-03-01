@@ -37,14 +37,16 @@ import cpw.mods.fml.relauncher.Side;
  */
 public final class EquipmentDataCache {
     
-    public static EquipmentDataCache INSTANCE;
+    public static EquipmentDataCache INSTANCE = null;
     
     private HashMap<Integer, CustomEquipmentItemData> equipmentDataCache = new HashMap<Integer, CustomEquipmentItemData>();
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     private long lastTick;
     
     public static void init() {
-        INSTANCE = new EquipmentDataCache();
+        if (INSTANCE == null) {
+            INSTANCE = new EquipmentDataCache();
+        }
     }
     
     public EquipmentDataCache() {
