@@ -42,7 +42,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private ModelMannequin model;
     private RenderPlayer renderPlayer;
     private final Minecraft mc;
-    private float scale = 0.0625F;
+    private final float SCALE = 0.0625F;
     
     public RenderBlockMannequin() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
@@ -70,8 +70,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         int rotaion = te.getRotation();
         
         GL11.glTranslated(x + 0.5D, y + 1.5D, z + 0.5D);
-        GL11.glScalef(scale * 15, scale * 15, scale * 15);
-        GL11.glTranslated(0, scale * -1.6F, 0);
+        GL11.glScalef(SCALE * 15, SCALE * 15, SCALE * 15);
+        GL11.glTranslated(0, SCALE * -1.6F, 0);
         
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef(rotaion * 22.5F, 0, 1, 0);
@@ -79,7 +79,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.getIsDoll()) {
             float dollScale = 0.5F;
             GL11.glScalef(dollScale, dollScale, dollScale);
-            GL11.glTranslatef(0, scale * 24, 0);
+            GL11.glTranslatef(0, SCALE * 24, 0);
         }
         
         if (te.getGameProfile() != null) {
@@ -122,7 +122,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             if (targetBiped.isChild) {
                 GL11.glPushMatrix();
                 GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-                GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
+                GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
             }
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(preEvent);
@@ -149,24 +149,24 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         //GL11.glTranslated(0, heightOffset * scale * 1.0F / f6, 0);
         if (!hasCustomHead(te, fakePlayer)) {
             if (te.getBipedRotations().isChild) {
-                ModelHelper.enableChildModelScale(true, scale);
+                ModelHelper.enableChildModelScale(true, SCALE);
             }
-            targetBiped.bipedHead.render(scale);
+            targetBiped.bipedHead.render(SCALE);
             GL11.glDisable(GL11.GL_CULL_FACE);
-            targetBiped.bipedHeadwear.render(scale);
+            targetBiped.bipedHeadwear.render(SCALE);
             GL11.glEnable(GL11.GL_CULL_FACE);
             if (te.getBipedRotations().isChild) {
                 ModelHelper.disableChildModelScale();
             }
         }
         if (te.getBipedRotations().isChild) {
-            ModelHelper.enableChildModelScale(false, scale);
+            ModelHelper.enableChildModelScale(false, SCALE);
         }
-        targetBiped.bipedBody.render(scale);
-        targetBiped.bipedRightArm.render(scale);
-        targetBiped.bipedLeftArm.render(scale);
-        targetBiped.bipedRightLeg.render(scale);
-        targetBiped.bipedLeftLeg.render(scale);
+        targetBiped.bipedBody.render(SCALE);
+        targetBiped.bipedRightArm.render(SCALE);
+        targetBiped.bipedLeftArm.render(SCALE);
+        targetBiped.bipedRightLeg.render(SCALE);
+        targetBiped.bipedLeftLeg.render(SCALE);
         if (te.getBipedRotations().isChild) {
             ModelHelper.disableChildModelScale();
         }
@@ -181,7 +181,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             if (targetBiped.isChild) {
                 GL11.glPushMatrix();
                 GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-                GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
+                GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
             }
             GL11.glDisable(GL11.GL_CULL_FACE);
             MinecraftForge.EVENT_BUS.post(postEvent);
@@ -252,7 +252,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         GL11.glPushMatrix();
         if (targetBiped.isChild) {
-            ModelHelper.enableChildModelScale(slot == 0, scale);
+            ModelHelper.enableChildModelScale(slot == 0, SCALE);
         }
         switch (slot) {
         case 0:
