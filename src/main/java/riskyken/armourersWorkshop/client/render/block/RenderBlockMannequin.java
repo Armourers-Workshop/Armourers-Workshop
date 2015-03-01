@@ -18,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -140,40 +141,29 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         te.getBipedRotations().applyRotationsToBiped(targetBiped);
         
+        //GL11.glTranslated(0, heightOffset * scale * 1.0F / f6, 0);
+        if (!hasCustomHead(te, fakePlayer)) {
+            if (te.getBipedRotations().isChild) {
+                ModelHelper.enableChildModelScale(true, scale);
+            }
+            targetBiped.bipedHead.render(scale);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            targetBiped.bipedHeadwear.render(scale);
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            if (te.getBipedRotations().isChild) {
+                ModelHelper.disableChildModelScale();
+            }
+        }
         if (te.getBipedRotations().isChild) {
-            GL11.glTranslated(0, heightOffset * scale * 1.0F / f6, 0);
-            if (!hasCustomHead(te, fakePlayer)) {
-                GL11.glPushMatrix();
-                GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-                GL11.glTranslatef(0.0F, 16.0F * scale, 0.0F);
-                targetBiped.bipedHead.render(scale);
-                GL11.glDisable(GL11.GL_CULL_FACE);
-                targetBiped.bipedHeadwear.render(scale);
-                GL11.glEnable(GL11.GL_CULL_FACE);
-                GL11.glPopMatrix();
-            }
-            GL11.glPushMatrix();
-            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-            GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
-            targetBiped.bipedBody.render(scale);
-            targetBiped.bipedRightArm.render(scale);
-            targetBiped.bipedLeftArm.render(scale);
-            targetBiped.bipedRightLeg.render(scale);
-            targetBiped.bipedLeftLeg.render(scale);
-            GL11.glPopMatrix();
-        } else {
-            GL11.glTranslated(0, heightOffset * scale, 0);
-            if (!hasCustomHead(te, fakePlayer)) {
-                targetBiped.bipedHead.render(scale);
-                GL11.glDisable(GL11.GL_CULL_FACE);
-                targetBiped.bipedHeadwear.render(scale);
-                GL11.glEnable(GL11.GL_CULL_FACE);
-            }
-            targetBiped.bipedBody.render(scale);
-            targetBiped.bipedRightArm.render(scale);
-            targetBiped.bipedLeftArm.render(scale);
-            targetBiped.bipedRightLeg.render(scale);
-            targetBiped.bipedLeftLeg.render(scale);
+            ModelHelper.enableChildModelScale(false, scale);
+        }
+        targetBiped.bipedBody.render(scale);
+        targetBiped.bipedRightArm.render(scale);
+        targetBiped.bipedLeftArm.render(scale);
+        targetBiped.bipedRightLeg.render(scale);
+        targetBiped.bipedLeftLeg.render(scale);
+        if (te.getBipedRotations().isChild) {
+            ModelHelper.disableChildModelScale();
         }
         
         //Render items.
@@ -247,6 +237,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         RenderManager rm = RenderManager.instance;
         
         GL11.glPushMatrix();
+        if (targetBiped.isChild) {
+            ModelHelper.enableChildModelScale(slot == 0, scale);
+        }
         switch (slot) {
         case 0:
             renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm);
@@ -266,6 +259,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         case 6:
             renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm);
             break;
+        }
+        if (targetBiped.isChild) {
+            ModelHelper.disableChildModelScale();
         }
         GL11.glPopMatrix();
     }
