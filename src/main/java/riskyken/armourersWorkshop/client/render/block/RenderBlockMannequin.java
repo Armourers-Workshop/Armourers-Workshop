@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -27,6 +28,8 @@ import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.HolidayHelper;
+import riskyken.armourersWorkshop.utils.HolidayHelper.EnumHoliday;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -35,6 +38,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
+    private static boolean isHalloween;
     private ModelMannequin model;
     private RenderPlayer renderPlayer;
     private final Minecraft mc;
@@ -44,6 +48,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
+        isHalloween = HolidayHelper.getHoliday(1) == EnumHoliday.HALLOWEEN;
     }
     
     @Override
@@ -206,8 +211,14 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (stack != null & fakePlayer != null) {
-                renderEquippedItem(fakePlayer, stack, targetBiped, i);
+            if (fakePlayer != null) {
+                if (i == 0 & isHalloween) {
+                    renderEquippedItem(fakePlayer, new ItemStack(Blocks.lit_pumpkin), targetBiped, i);
+                } else {
+                    if (stack != null) {
+                        renderEquippedItem(fakePlayer, stack, targetBiped, i);
+                    }
+                }
             }
         }
     }
@@ -222,6 +233,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             if (stack.getItem() instanceof ItemBlock) {
                 return true;
             }
+        }
+        if (isHalloween) {
+            return true;
         }
         return false;
     }
