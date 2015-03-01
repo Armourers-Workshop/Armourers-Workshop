@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
@@ -181,28 +182,34 @@ public class RenderBlockMannequinItems {
         float itemScale = 1 - (float)1 / 3;
         Tessellator tessellator = Tessellator.instance;
         
+        //Movement
+        GL11.glTranslatef(-5F * scale, 0F, 0F);
+        GL11.glTranslatef(0F, 2F * scale, 0F);
+        
+        GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleZ), 0F, 0F, 1F);
+        GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleY), 0F, 1F, 0F);
+        GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleX), 1F, 0F, 0F);
+        
+        GL11.glTranslatef(-2F * scale, 0F, 0F);
+        GL11.glTranslatef(0F, 10F * scale, 0F);
+        
+        GL11.glRotatef(-90, 0, 1, 0);
+        GL11.glRotatef(45, 0, 0, 1);
+        
+        GL11.glScalef(itemScale, itemScale, itemScale);
+        GL11.glRotatef(-335.0F, 0.0F, 0.0F, 1.0F);
+        GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
+        
         if (targetItem instanceof ItemBlock) {
-            GL11.glTranslatef(0, -4 * scale, 0);
+            GL11.glTranslatef(-3 * scale, 4 * scale, 2 * scale);
             GL11.glScalef(-blockScale, -blockScale, blockScale);
-            GL11.glRotatef(90F, 0F, 1F, 0F);
+            GL11.glRotatef(30F, 0F, 1F, 0F);
+            GL11.glRotatef(130F, 1F, 0F, 0F);
         } else {
-            //Movement
-            GL11.glTranslatef(-5F * scale, 0F, 0F);
-            GL11.glTranslatef(0F, 2F * scale, 0F);
-            
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleZ), 0F, 0F, 1F);
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleY), 0F, 1F, 0F);
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedRightArm.rotateAngleX), 1F, 0F, 0F);
-            
-            GL11.glTranslatef(-2F * scale, 0F, 0F);
-            GL11.glTranslatef(0F, 10F * scale, 0F);
-            
-            GL11.glRotatef(-90, 0, 1, 0);
-            GL11.glRotatef(45, 0, 0, 1);
-            
-            GL11.glScalef(itemScale, itemScale, itemScale);
-            GL11.glRotatef(-335.0F, 0.0F, 0.0F, 1.0F);
-            GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
+            if (!(targetItem instanceof ItemSword)) {
+                //GL11.glRotatef(90F, 0F, 1F, 0F);
+                GL11.glScalef(0.75F, 0.75F, 0.75F);
+            }
         }
         
         rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
@@ -213,30 +220,37 @@ public class RenderBlockMannequinItems {
         float blockScale = 0.5F;
         float itemScale = 1 - (float)1 / 3;
         
-        if (targetItem instanceof ItemBlock) {
-            GL11.glTranslatef(0, -4 * scale, 0);
-            GL11.glScalef(-blockScale, -blockScale, blockScale);
-            GL11.glRotatef(90F, 0F, 1F, 0F);
-        } else {
-            //Movement
-            GL11.glTranslatef(5F * scale, 0F, 0F);
-            GL11.glTranslatef(0F, 2F * scale, 0F);
-            
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleZ), 0F, 0F, 1F);
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleY), 0F, 1F, 0F);
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleX), 1F, 0F, 0F);
-            
-            GL11.glTranslatef(1F * scale, 0F, 0F);
-            GL11.glTranslatef(0F, 10F * scale, 0F);
-            
-            GL11.glRotatef(-90, 0, 1, 0);
-            GL11.glRotatef(45, 0, 0, 1);
-            
-            GL11.glScalef(itemScale, itemScale, itemScale);
-            GL11.glRotatef(-335.0F, 0.0F, 0.0F, 1.0F);
-            GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
-        }
 
+        //Movement
+        GL11.glTranslatef(5F * scale, 0F, 0F);
+        GL11.glTranslatef(0F, 2F * scale, 0F);
+        
+        GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleZ), 0F, 0F, 1F);
+        GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleY), 0F, 1F, 0F);
+        GL11.glRotated(Math.toDegrees(targetBiped.bipedLeftArm.rotateAngleX), 1F, 0F, 0F);
+        
+        GL11.glTranslatef(1F * scale, 0F, 0F);
+        GL11.glTranslatef(0F, 10F * scale, 0F);
+        
+        GL11.glRotatef(-90, 0, 1, 0);
+        GL11.glRotatef(45, 0, 0, 1);
+        
+        GL11.glScalef(itemScale, itemScale, itemScale);
+        GL11.glRotatef(-335.0F, 0.0F, 0.0F, 1.0F);
+        GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
+        
+        if (targetItem instanceof ItemBlock) {
+            GL11.glTranslatef(-2 * scale, 4 * scale, 2 * scale);
+            GL11.glScalef(-blockScale, -blockScale, blockScale);
+            GL11.glRotatef(50F, 0F, 1F, 0F);
+            GL11.glRotatef(130F, 1F, 0F, 0F);
+        } else {
+            if (!(targetItem instanceof ItemSword)) {
+                //GL11.glRotatef(-45F, 1F, 0F, 1F);
+                GL11.glScalef(0.75F, 0.75F, 0.75F);
+            }
+        }
+            
         rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
     }
     
