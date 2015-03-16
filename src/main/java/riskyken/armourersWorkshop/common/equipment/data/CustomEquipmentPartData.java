@@ -32,6 +32,8 @@ public class CustomEquipmentPartData {
     public boolean hasGlowingBlocks;
     
     @SideOnly(Side.CLIENT)
+    public int totalCubesInPart;
+    @SideOnly(Side.CLIENT)
     public boolean displayNormalCompiled;
     @SideOnly(Side.CLIENT)
     public boolean displayGlowingCompiled;

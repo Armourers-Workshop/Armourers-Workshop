@@ -23,6 +23,7 @@ public final class EquipmentRenderHelper {
     
     public static void cullFacesOnEquipmentPart(CustomEquipmentPartData partData) {
         ArrayList<ICube> blocks = partData.getArmourData();
+        partData.totalCubesInPart = blocks.size();
         for (int i = 0; i < blocks.size(); i++) {
             ICube blockData = blocks.get(i);
             setBlockFaceFlags(blocks, blockData, partData.getArmourPart().bodyPart);

@@ -119,8 +119,6 @@ public class CustomEquipmentItemData {
     }
     
     public void writeClientDataToNBT(NBTTagCompound compound) {
-        compound.setString(LibCommonTags.TAG_AUTHOR_NAME, this.authorName);
-        compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
         compound.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, this.hashCode());
     }
     
@@ -183,6 +181,18 @@ public class CustomEquipmentItemData {
     
     public String getCustomName() {
         return customName;
+    }
+    
+    public String getAuthorName() {
+        return authorName;
+    }
+    
+    public int gotTotalCubes() {
+        int totalCubes = 0;
+        for (int i = 0; i < parts.size(); i++) {
+            totalCubes += parts.get(i).totalCubesInPart;
+        }
+        return totalCubes;
     }
 
     @Override

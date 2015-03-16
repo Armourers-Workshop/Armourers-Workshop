@@ -15,8 +15,10 @@ import org.lwjgl.input.Keyboard;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -55,17 +57,20 @@ public class ItemEquipmentSkin extends AbstractModItem {
             NBTTagCompound itemData = stack.getTagCompound();
             if (itemData.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
                 NBTTagCompound armourData = itemData.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-                if (armourData.hasKey(LibCommonTags.TAG_CUSTOM_NAME)) {
-                    if (!armourData.getString(LibCommonTags.TAG_CUSTOM_NAME).trim().isEmpty()) {
-                        list.add(cGold + "Name: " + cGray + armourData.getString(LibCommonTags.TAG_CUSTOM_NAME));
+                if (armourData.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) {
+                    int equipmentId = armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
+                    if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(equipmentId)) {
+                        CustomEquipmentItemData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+                        if (!data.getCustomName().trim().isEmpty()) {
+                            list.add(cGold + "Name: " + cGray + data.getCustomName());
+                        }
+                        if (!data.getAuthorName().trim().isEmpty()) {
+                            list.add(cGold + "Author: " + cGray + data.getAuthorName());
+                        }
+                        list.add(cGold + "Cubes: " + cGray + data.gotTotalCubes());
                     }
                     
-                }
-                if (armourData.hasKey(LibCommonTags.TAG_AUTHOR_NAME)) {
-                    list.add(cGold + "Author: " + cGray + armourData.getString(LibCommonTags.TAG_AUTHOR_NAME));
-                }
-                if (armourData.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) {
-                    list.add(cGold + "Equipment Id: " + cGray + armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID));
+                    list.add(cGold + "Equipment Id: " + cGray + equipmentId);
                 }
                 
             }
