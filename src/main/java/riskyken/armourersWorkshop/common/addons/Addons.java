@@ -48,6 +48,10 @@ public final class Addons {
         if (Loader.isModLoaded("battlegear2") & battlegear2Compatibility) {
             loadedAddons.add(new AddonBattlegear2());
         }
+        
+        for (int i = 0; i < loadedAddons.size(); i++) {
+            loadedAddons.get(i).init();
+        }
     }
     
     public static void onWeaponRender(ItemRenderType type, EventState state) {
@@ -56,10 +60,7 @@ public final class Addons {
         }
     }
     
-    public static void initRenderers() {
-        for (int i = 0; i < loadedAddons.size(); i++) {
-            loadedAddons.get(i).init();
-        }
+    public static void initRenderers() {    
         for (int i = 0; i < loadedAddons.size(); i++) {
             loadedAddons.get(i).initRenderers();
         }
