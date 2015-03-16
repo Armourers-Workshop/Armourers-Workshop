@@ -241,7 +241,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     }
     
     private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot) {
-        if (slot < 6) {
+        if (slot < 7) {
             if (stack.getItem() == ModItems.equipmentSkin) {
                 return;
             }

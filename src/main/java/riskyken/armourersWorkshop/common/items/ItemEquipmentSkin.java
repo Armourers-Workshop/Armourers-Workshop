@@ -13,6 +13,7 @@ import net.minecraft.util.IIcon;
 
 import org.lwjgl.input.Keyboard;
 
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
@@ -25,6 +26,15 @@ public class ItemEquipmentSkin extends AbstractModItem {
     public ItemEquipmentSkin() {
         super(LibItemNames.EQUIPMENT_SKIN, false);
         setHasSubtypes(true);
+    }
+    
+    public EnumEquipmentType getEquipmentType(ItemStack stack) {
+        int damage = stack.getItemDamage() + 1;
+        if (damage >= 0 & damage < EnumEquipmentType.values().length) {
+            return EnumEquipmentType.values()[damage];
+        } else {
+            return EnumEquipmentType.NONE;
+        }
     }
     
     @Override
