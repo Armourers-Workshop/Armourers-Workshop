@@ -22,7 +22,14 @@ public class ConfigHandler {
     public static int maxRenderDistance = 40;
     public static boolean downloadSkins;
     public static boolean compatibilityRender = false;
-
+    
+    /** Should skins be dropped on player death.<br/>
+     * <br/>
+     * 0 = use keep inventory rule<br/>
+     * 1 = never drop<br/>
+     * 2 = always drop
+     */
+    public static int dropSkinsOnDeath = 0;
 
     public static void init(File file) {
         if (config == null) {
@@ -50,6 +57,13 @@ public class ConfigHandler {
         
         UpdateCheck.checkForUpdates = config.get(CATEGORY_GENERAL, "Check for updates", true,
                 "Should the mod check for new versions?").getBoolean(true);
+        
+        dropSkinsOnDeath = config.get(CATEGORY_GENERAL, "Drop Skins On Death", 0,
+                "Should skins be dropped on player death.\n"
+                + "0 = use keep inventory rule\n"
+                + "1 = never drop\n"
+                + "2 = always drop").getInt(0);
+        
         
         Addons.weaponmodCompatibility = config
                 .get(CATEGORY_COMPATIBILITY, "Balkon's Weapon Mod Compatibility", true,

@@ -18,6 +18,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -141,13 +142,31 @@ public final class EntityEquipmentDataManager {
     @SubscribeEvent
     public void onLivingDeathEvent (LivingDeathEvent  event) {
         if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
+            boolean dropSkins = true;
+            
             GameRules gr = getGameRules();
             boolean keepInventory = false;
             if (gr.hasRule("keepInventory")) {
                 keepInventory = gr.getGameRuleBooleanValue("keepInventory");
             }
+            
+            switch (ConfigHandler.dropSkinsOnDeath) {
+            case 0:
+                dropSkins = !keepInventory;
+                break;
+            case 1:
+                dropSkins = false;
+                break;
+            case 2:
+                dropSkins = true;
+                break;
+            default:
+                dropSkins = !keepInventory;
+                break;
+            }
+
             ExtendedPropsPlayerEquipmentData playerData = ExtendedPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
-            if (!keepInventory) {
+            if (dropSkins) {
                 playerData.dropItems();
             }
         }
