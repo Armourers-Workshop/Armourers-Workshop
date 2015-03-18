@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.command.CommandArmourers;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
@@ -82,6 +83,7 @@ public class ArmourersWorkshop {
     
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandArmourers());
         EquipmentDataCache.init();
     }
     
