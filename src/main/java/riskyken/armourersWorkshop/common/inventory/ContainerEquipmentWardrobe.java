@@ -12,29 +12,29 @@ import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class ContainerEquipmentWardrobe extends Container {
     
-    ExtendedPropsPlayerEquipmentData customEquipmentData;
+    private ExtendedPropsPlayerEquipmentData customEquipmentData;
     
     public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, ExtendedPropsPlayerEquipmentData customEquipmentData) {
         this.customEquipmentData = customEquipmentData;
         
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.HEAD, customEquipmentData, 0, 37, 18));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 37, 37));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SWORD, customEquipmentData, 5, 123, 18));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 37, 56));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 123, 56));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.FEET, customEquipmentData, 4, 37, 75));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.BOW, customEquipmentData, 6, 123, 37));
-        
-        addSlotToContainer(new SlotColourTool(customEquipmentData, 7, 8, 130));
-        addSlotToContainer(new SlotOutput(customEquipmentData, 8, 52, 130));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.HEAD, customEquipmentData, 0, 88, 18));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 88, 37));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SWORD, customEquipmentData, 5, 69, 113));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 88, 75));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 88, 56));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.FEET, customEquipmentData, 4, 88, 94));
+        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.BOW, customEquipmentData, 6, 28, 113));
+
+        addSlotToContainer(new SlotColourTool(customEquipmentData, 7, 91, 35));
+        addSlotToContainer(new SlotOutput(customEquipmentData, 8, 130, 35));
         
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 224));
+            addSlotToContainer(new SlotHidable(invPlayer, x, 54 + 18 * x, 232));
         }
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 166 + y * 18));
+                addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, 54 + 18 * x, 174 + y * 18));
             }
         }
     }

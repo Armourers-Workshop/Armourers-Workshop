@@ -11,6 +11,7 @@ public class EntityNakedInfo {
     
     private static final String TAG_NAKED = "naked";
     private static final String TAG_SKIN_COLOUR = "skinColour";
+    private static final String TAG_HAIR_COLOUR = "hairColour";
     private static final String TAG_PANTS_COLOUR = "pantsColour";
     private static final String TAG_PANT_STRIPE_COLOUR = "pantStripeColour";
     private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
@@ -21,6 +22,8 @@ public class EntityNakedInfo {
     public boolean isNaked;
     /** Colour use for the players naked skin */
     public int skinColour;
+    /** Colour use for the players hair */
+    public int hairColour;
     /** 1st colour use for the players panties when naked! */
     public int pantsColour;
     /** 2nd colour use for the players panties when naked! */
@@ -35,6 +38,7 @@ public class EntityNakedInfo {
     public EntityNakedInfo() {
         isNaked = false;
         skinColour = Color.decode("#F9DFD2").getRGB();
+        hairColour = Color.decode("#804020").getRGB();
         pantsColour = Color.decode("#FCFCFC").getRGB();
         pantStripeColour = Color.decode("#FCFCFC").getRGB();
         armourOverride = new BitSet(4);
@@ -45,6 +49,7 @@ public class EntityNakedInfo {
     public void saveNBTData(NBTTagCompound compound) {
         compound.setBoolean(TAG_NAKED, this.isNaked);
         compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
+        compound.setInteger(TAG_HAIR_COLOUR, this.hairColour);
         compound.setInteger(TAG_PANTS_COLOUR, this.pantsColour);
         compound.setInteger(TAG_PANT_STRIPE_COLOUR, this.pantStripeColour);
         for (int i = 0; i < 4; i++) {
@@ -58,6 +63,9 @@ public class EntityNakedInfo {
         this.isNaked = compound.getBoolean(TAG_NAKED);
         if (compound.hasKey(TAG_SKIN_COLOUR)) {
             this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
+        }
+        if (compound.hasKey(TAG_HAIR_COLOUR)) {
+            this.hairColour = compound.getInteger(TAG_HAIR_COLOUR);
         }
         if (compound.hasKey(TAG_PANTS_COLOUR)) {
             this.pantsColour = compound.getInteger(TAG_PANTS_COLOUR);
@@ -79,6 +87,7 @@ public class EntityNakedInfo {
     public void fromBytes(ByteBuf buf) {
         this.isNaked = buf.readBoolean();
         this.skinColour = buf.readInt();
+        this.hairColour = buf.readInt();
         this.pantsColour = buf.readInt();
         this.pantStripeColour = buf.readInt();
         this.armourOverride = new BitSet(4);
@@ -92,6 +101,7 @@ public class EntityNakedInfo {
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(this.isNaked);
         buf.writeInt(this.skinColour);
+        buf.writeInt(this.hairColour);
         buf.writeInt(this.pantsColour);
         buf.writeInt(this.pantStripeColour);
         for (int i = 0; i < 4; i++) {

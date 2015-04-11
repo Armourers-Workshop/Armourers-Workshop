@@ -1,11 +1,10 @@
 package riskyken.armourersWorkshop.common.inventory;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 
-public class SlotColourTool extends Slot {
+public class SlotColourTool extends SlotHidable {
     
     public SlotColourTool(IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition) {
         super(inventory, slotIndex, xDisplayPosition, yDisplayPosition);

@@ -1,79 +1,39 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import cpw.mods.fml.client.config.GuiUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiCheckBox extends GuiButton {
+public class GuiCheckBox extends cpw.mods.fml.client.config.GuiCheckBox {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/check-box.png");
-
-    private boolean checked;
-    public boolean small;
-
-    public GuiCheckBox(int id, int x, int y, int width, int height, String text, boolean checked, boolean small) {
-        super(id, x, y, width, height, text);
-        this.checked = checked;
-        this.small = small;
-    }
-
-    @Override
-    public void drawButton(Minecraft minecraft, int x, int y) {
-        if (this.visible) {
-            minecraft.getTextureManager().bindTexture(texture);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            drawCheckBox(minecraft, x, y);
-            if (!small) {
-                drawLabel(minecraft, this.xPosition + 18, this.yPosition + 4);
-            }
-        }
-    }
-
-    private void drawCheckBox(Minecraft minecraft, int x, int y) {
-        int sourceX = 0;
-        int sourceY = 0;
-
-        if (small) {
-            sourceY += 28;
-        }
-
-        if (checked) {
-            sourceX += this.width;
-        }
-        if (isHovering(x, y, this.xPosition, this.yPosition, width, height)) {
-            sourceY += this.height;
-        }
-
-        this.drawTexturedModalRect(this.xPosition, this.yPosition, sourceX,
-                sourceY, width, height);
-    }
-
-    private void drawLabel(Minecraft minecraft, int x, int y) {
-        FontRenderer fontRendererObj = minecraft.fontRenderer;
-        fontRendererObj.drawString(this.displayString, x, y, 4210752);
-    }
-
-    public boolean isHovering(int mouseX, int mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+    private int boxWidth;
+    
+    public GuiCheckBox(int id, int x, int y, String text, boolean checked) {
+        super(id, x, y, text, checked);
+        this.boxWidth = 9;
+        this.height = 9;
     }
     
-    public boolean isHovering(int mouseX, int mouseY) {
-        return mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    @Override
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        if (this.visible) {
+            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.boxWidth && mouseY < this.yPosition + this.height;
+            GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.boxWidth, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+            this.mouseDragged(mc, mouseX, mouseY);
+            int color = 4210752;
+            
+            if (packedFGColour != 0) {
+                color = packedFGColour;
+            } else if (!this.enabled) {
+                color = 10526880;
+            }
+            
+            if (this.isChecked()) {
+                this.drawCenteredString(mc.fontRenderer, "x", this.xPosition + this.boxWidth / 2 + 1, this.yPosition, 14737632);
+            }  
+            mc.fontRenderer.drawString(displayString, xPosition + this.boxWidth + 2, yPosition + 1, color, false);
+        }
     }
 }

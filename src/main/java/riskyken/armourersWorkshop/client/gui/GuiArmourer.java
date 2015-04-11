@@ -71,8 +71,8 @@ public class GuiArmourer extends GuiContainer {
         buttonList.add(new GuiButtonExt(13, guiLeft + 86, guiTop + 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
         buttonList.add(new GuiButtonExt(14, guiLeft + 86, guiTop + 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
-        checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 118, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides(), false);
-        checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay(), false);
+        checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 118, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides());
+        checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
         
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
@@ -170,8 +170,8 @@ public class GuiArmourer extends GuiContainer {
                 loadedArmourItem = false;
             }
         }
-        checkShowGuides.setChecked(armourerBrain.isShowGuides());
-        checkShowOverlay.setChecked(armourerBrain.isShowOverlay());
+        checkShowGuides.setIsChecked(armourerBrain.isShowGuides());
+        checkShowOverlay.setIsChecked(armourerBrain.isShowOverlay());
         checkShowOverlay.visible = armourerBrain.getType() == EnumEquipmentType.HEAD;
         
         GL11.glColor4f(1, 1, 1, 1);

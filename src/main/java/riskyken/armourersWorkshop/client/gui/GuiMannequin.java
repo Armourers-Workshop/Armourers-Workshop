@@ -106,10 +106,10 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
         headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Z: ", "", -20D, 20D, 0D, true, true, this);
         
-        isChildCheck = new GuiCheckBox(3, this.guiLeft + 149, this.guiTop + 110, 14, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.isChild"), false, false);
+        isChildCheck = new GuiCheckBox(3, this.guiLeft + 149, this.guiTop + 110, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.isChild"), false);
         
         if (bipedRotations != null) {
-            isChildCheck.setChecked(bipedRotations.isChild);
+            isChildCheck.setIsChecked(bipedRotations.isChild);
             
             setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
             setSliderValue(headYslider, Math.toDegrees(-bipedRotations.head.rotationY));
@@ -219,7 +219,6 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
             checkAndSendRotationValues();
         }
         if (button.id == 3) {
-            isChildCheck.setChecked(!isChildCheck.isChecked());
             bipedRotations.isChild = isChildCheck.isChecked();
             checkAndSendRotationValues();
         }

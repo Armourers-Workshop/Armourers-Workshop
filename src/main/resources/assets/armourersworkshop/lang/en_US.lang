@@ -104,6 +104,7 @@ inventory.armourersworkshop:colourMixer.label.hex=Hex
 inventory.armourersworkshop:colourMixer.label.presets=Presets
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Skin Colour
+inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Hair Colour
 inventory.armourersworkshop:equipmentWardrobe.autoColour=Auto Colour
 inventory.armourersworkshop:equipmentWardrobe.nakedSkin=Used naked skin?
 

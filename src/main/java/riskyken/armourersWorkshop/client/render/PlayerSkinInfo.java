@@ -42,6 +42,7 @@ public class PlayerSkinInfo {
     
     public void setSkinInfo(EntityNakedInfo nakedInfo) {
         if (this.nakedInfo.skinColour != nakedInfo.skinColour |
+                this.nakedInfo.hairColour != nakedInfo.hairColour |
                 this.nakedInfo.pantsColour != nakedInfo.pantsColour | 
                 this.nakedInfo.pantStripeColour != nakedInfo.pantStripeColour) {
             this.hasNakedSkin = false;
@@ -55,6 +56,39 @@ public class PlayerSkinInfo {
         return nakedInfo;
     }
 
+    public void autoColourHair(AbstractClientPlayer player) {
+        if (playerBackupSkin == null) {
+            return;
+        }
+        
+        int r = 0, g = 0, b = 0;
+        
+        for (int ix = 0; ix < 2; ix++) {
+            for (int iy = 0; iy < 1; iy++) {
+                Color c = new Color(playerBackupSkin.getRGB(ix + 11, iy + 3));
+                r += c.getRed();
+                g += c.getGreen();
+                b += c.getBlue();
+            }
+        }
+        r = r / 2;
+        g = g / 2;
+        b = b / 2;
+        
+        int newColour = new Color(r, g, b).getRGB();
+        
+        EntityNakedInfo newNakedInfo = new EntityNakedInfo();
+        newNakedInfo.isNaked = this.nakedInfo.isNaked;
+        newNakedInfo.skinColour = this.nakedInfo.skinColour;
+        newNakedInfo.hairColour = newColour;
+        newNakedInfo.pantsColour = this.nakedInfo.pantsColour;
+        newNakedInfo.pantStripeColour = this.nakedInfo.pantStripeColour;
+        newNakedInfo.armourOverride = this.nakedInfo.armourOverride;
+        newNakedInfo.headOverlay = this.nakedInfo.headOverlay;
+        
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(newNakedInfo));
+    }
+    
     public void autoColourSkin(AbstractClientPlayer player) {
         if (playerBackupSkin == null) {
             return;
@@ -79,6 +113,7 @@ public class PlayerSkinInfo {
         EntityNakedInfo newNakedInfo = new EntityNakedInfo();
         newNakedInfo.isNaked = this.nakedInfo.isNaked;
         newNakedInfo.skinColour = newColour;
+        newNakedInfo.hairColour = this.nakedInfo.hairColour;
         newNakedInfo.pantsColour = this.nakedInfo.pantsColour;
         newNakedInfo.pantStripeColour = this.nakedInfo.pantStripeColour;
         newNakedInfo.armourOverride = this.nakedInfo.armourOverride;

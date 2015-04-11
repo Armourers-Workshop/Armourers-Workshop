@@ -79,17 +79,13 @@ public class GuiArmourLibrary extends GuiContainer {
         scrollbar = new GuiScrollbar(2, this.guiLeft + 138, this.guiTop + 63, 10, 96, "", false);
         buttonList.add(scrollbar);
         
-        checkClientFiles = new GuiCheckBox(3, this.guiLeft + 152, this.guiTop + 63, 14, 14, GuiHelper.getLocalizedControlName(guiName, "showClientFiles"), false, false);
+        checkClientFiles = new GuiCheckBox(3, this.guiLeft + 152, this.guiTop + 63, GuiHelper.getLocalizedControlName(guiName, "showClientFiles"), false);
         buttonList.add(checkClientFiles);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
         String filename = filenameTextbox.getText().trim();
-        
-        if (button.id == 3) {
-            checkClientFiles.setChecked(!checkClientFiles.isChecked());
-        }
         
         if (button.id == 4) {
             openEquipmentFolder();

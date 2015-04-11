@@ -1,12 +1,11 @@
 package riskyken.armourersWorkshop.common.inventory;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
-public class SlotEquipmentSkin extends Slot {
+public class SlotEquipmentSkin extends SlotHidable {
     
     private EnumEquipmentType type;
     
