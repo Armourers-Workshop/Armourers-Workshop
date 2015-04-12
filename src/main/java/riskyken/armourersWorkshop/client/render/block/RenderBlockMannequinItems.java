@@ -38,10 +38,10 @@ public class RenderBlockMannequinItems {
         Item targetItem = stack.getItem();
         if (targetItem instanceof ItemBlock) {
             float blockScale = 0.5F;
-            GL11.glTranslatef(0, -4 * scale, 0);
             GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleZ), 0, 0, 1);
             GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleY), 0, 1, 0);
             GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleX), 1, 0, 0);
+            GL11.glTranslatef(0, -4 * scale, 0);
             
             GL11.glScalef(-blockScale, -blockScale, blockScale);
             GL11.glRotatef(90F, 0F, 1F, 0F);
