@@ -47,8 +47,7 @@ public class CommandArmourers extends CommandBase {
             String playerName = args[1];
             EntityPlayer player = getPlayer(commandSender, playerName);
             if (player != null) {
-                switch (command) {
-                case "giveSkin":
+                if (command.equals("giveSkin")) {
                     if (args.length > 2) {
                         String skinName = args[2];
                         for (int i = 3; i < args.length; i++) {
@@ -65,11 +64,9 @@ public class CommandArmourers extends CommandBase {
                     } else {
                         throw new WrongUsageException("commands.armourers.usage", (Object)args);
                     }
-                    break;
-                case "clearSkins":
+                } else if (command.equals("clearSkins")) {
                     ExtendedPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
-                    break;
-                case "setSkin":
+                } else if (command.equals("setSkin")) {
                     if (args.length > 2) {
                         String skinName = args[2];
                         for (int i = 3; i < args.length; i++) {
@@ -84,8 +81,7 @@ public class CommandArmourers extends CommandBase {
                     } else {
                         throw new WrongUsageException("commands.armourers.usage", (Object)args);
                     }
-                    break;
-                default:
+                } else {
                     throw new WrongUsageException("commands.armourers.usage", (Object)args);
                 }
             } else {
