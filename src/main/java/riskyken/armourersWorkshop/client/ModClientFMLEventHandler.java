@@ -41,7 +41,7 @@ public class ModClientFMLEventHandler {
     
     @SubscribeEvent
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
-        if (Keybindings.openCustomArmourGui.isPressed()) {
+        if (Keybindings.openCustomArmourGui.isPressed() & ConfigHandler.allowEquipmentWardrobe) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress((byte) 0));
         }
         if (Keybindings.undo.isPressed()) {

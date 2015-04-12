@@ -22,6 +22,7 @@ public class ConfigHandler {
     public static int maxRenderDistance = 40;
     public static boolean downloadSkins;
     public static boolean compatibilityRender = false;
+    public static boolean allowEquipmentWardrobe = true;
     
     /** Should skins be dropped on player death.<br/>
      * <br/>
@@ -64,6 +65,10 @@ public class ConfigHandler {
                 + "1 = never drop\n"
                 + "2 = always drop").getInt(0);
         
+        allowEquipmentWardrobe = config
+                .get(CATEGORY_COMPATIBILITY, "Allow equipment wardrobe", true,
+                "Allow the player to open the equipment wardrobe GUI.")
+                .getBoolean(true);
         
         Addons.weaponmodCompatibility = config
                 .get(CATEGORY_COMPATIBILITY, "Balkon's Weapon Mod Compatibility", true,
