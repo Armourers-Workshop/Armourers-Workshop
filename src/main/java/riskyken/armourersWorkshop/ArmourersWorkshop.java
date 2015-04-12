@@ -53,7 +53,6 @@ public class ArmourersWorkshop {
         CubeRegistry.init();
         
         proxy.preInit();
-        proxy.initRenderers();
     }
 
     @Mod.EventHandler
@@ -70,7 +69,7 @@ public class ArmourersWorkshop {
         PacketHandler.init();
         proxy.init();
         proxy.registerKeyBindings();
-        
+        proxy.initRenderers();
         EntityEquipmentDataManager.init();
     }
     
