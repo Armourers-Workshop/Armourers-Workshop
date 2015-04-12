@@ -66,7 +66,7 @@ public class ConfigHandler {
                 + "2 = always drop").getInt(0);
         
         allowEquipmentWardrobe = config
-                .get(CATEGORY_COMPATIBILITY, "Allow equipment wardrobe", true,
+                .get(CATEGORY_GENERAL, "Allow equipment wardrobe", true,
                 "Allow the player to open the equipment wardrobe GUI.")
                 .getBoolean(true);
         
