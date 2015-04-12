@@ -33,7 +33,7 @@ public class GuiList extends Gui {
     protected final int height;
     protected final int slotHeight;
     public final boolean enabled;
-    public final boolean visible;
+    public boolean visible;
     protected int scrollAmount;
     protected int selectedIndex;
     
@@ -86,6 +86,7 @@ public class GuiList extends Gui {
     }
     
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        if (!this.visible) { return false; }
         for (int i = 0; i < listItems.size(); i++) {
             int yLocation = y - scrollAmount + 2 + i * slotHeight;
             if (mouseY >= y & mouseY <= y + height - 2) {
@@ -102,6 +103,7 @@ public class GuiList extends Gui {
     }
     
     public void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+        if (!this.visible) { return; }
         for (int i = 0; i < listItems.size(); i++) {
             listItems.get(i).mouseReleased(fontRenderer, x, y, mouseX, mouseY, button);
         }

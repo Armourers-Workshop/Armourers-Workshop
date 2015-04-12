@@ -17,6 +17,8 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
+import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
+import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
@@ -51,8 +53,8 @@ public class GuiEquipmentWardrobe extends GuiContainer {
     PlayerSkinInfo skinInfo;
     EntityNakedInfo nakedInfo;
     EntityPlayer player;
-
-    private GuiCheckBox nakedCheck;
+    
+    private GuiList skinList;
     private GuiButtonExt autoButton;
 
     private GuiCheckBox[] armourOverrideCheck;
@@ -97,7 +99,14 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         String guiName = "equipmentWardrobe";
         
         autoButton = new GuiButtonExt(0, this.guiLeft + 27, this.guiTop + 116, 80, 18, GuiHelper.getLocalizedControlName(guiName, "autoColour"));
-        nakedCheck = new GuiCheckBox(1, this.guiLeft + 27, this.guiTop + 137, GuiHelper.getLocalizedControlName(guiName, "nakedSkin"), nakedInfo.isNaked);
+        skinList = new GuiList(this.guiLeft + 165, this.guiTop + 30, 80, 96, 12);
+        skinList.clearList();
+        skinList.addListItem(new GuiFileListItem("Default", true));
+        skinList.addListItem(new GuiFileListItem("None", true));
+        skinList.setSelectedIndex(0);
+        if (skinInfo.getNakedInfo().isNaked) {
+            skinList.setSelectedIndex(1);
+        }
         
         armourOverrideCheck = new GuiCheckBox[4];
         armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 110, this.guiTop + 17, "Head armour render?", !armourOverride.get(0));
@@ -118,14 +127,26 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         buttonList.add(limitLimbsCheck);
         
         buttonList.add(autoButton);
-        buttonList.add(nakedCheck);
         
         setActiveTab(activeTab);
     }
     
     @Override
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
+        super.mouseClicked(mouseX, mouseY, button);
+        if (skinList.mouseClicked(mouseX, mouseY, button)) {
+            String skinName = skinList.getSelectedListEntry().getDisplayName();
+            nakedInfo.isNaked = skinList.getSelectedIndex() == 1;
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(nakedInfo));
+        }
+    }
+    
+    @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         super.mouseMovedOrUp(mouseX, mouseY, button);
+        
+        skinList.mouseMovedOrUp(mouseX, mouseY, button);
+        
         if (button == 0) {
             int tabXPos = this.guiLeft;
             int tabYPos = this.guiTop + 12;
@@ -154,7 +175,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
             GuiButton button = (GuiButton) buttonList.get(i);
             button.visible = tabNumber == TAB_MAIN;
         }
-        for (int i = 6; i < 8; i++) {
+        for (int i = 6; i < 7; i++) {
             GuiButton button = (GuiButton) buttonList.get(i);
             button.visible = tabNumber == TAB_SKIN;
         }
@@ -167,6 +188,8 @@ public class GuiEquipmentWardrobe extends GuiContainer {
             SlotHidable slot = (SlotHidable) inventorySlots.inventorySlots.get(i);
             slot.setVisible(tabNumber == TAB_SKIN);
         }
+        
+        skinList.visible = tabNumber == TAB_SKIN;
     }
 
     @Override
@@ -181,7 +204,6 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         if (button.id >= 1) {
             nakedInfo.headOverlay = headOverlay;
             nakedInfo.armourOverride = armourOverride;
-            nakedInfo.isNaked = nakedCheck.isChecked();
             nakedInfo.limitLimbs = limitLimbsCheck.isChecked();
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(nakedInfo));
         }
@@ -206,6 +228,9 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         if (activeTab == TAB_SKIN) {
             String labelSkinColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinColour");
             this.fontRendererObj.drawString(labelSkinColour + ":", 90, 18, 4210752); 
+            
+            String labelSkinOverride = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinOverride");
+            this.fontRendererObj.drawString(labelSkinOverride + ":", 165, 18, 4210752); 
             
             String labelHairColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.hairColour");
             this.fontRendererObj.drawString(labelHairColour + ":", 90, 70, 4210752); 
@@ -278,6 +303,9 @@ public class GuiEquipmentWardrobe extends GuiContainer {
             this.drawTexturedModalRect(this.guiLeft + 111, this.guiTop + 89, 243, 181, 12, 12);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
+        
+        //Skin list
+        skinList.drawList(p_146976_2_, p_146976_3_, 0);
 
         //3D player preview
         int boxX = this.guiLeft + 57;

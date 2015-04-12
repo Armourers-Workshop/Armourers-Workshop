@@ -10,16 +10,22 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiFileListItem extends Gui implements IGuiListItem {
 
     private final String displayText;
+    private final boolean showSelected;
     
     public GuiFileListItem(String displayText) {
+        this(displayText, false);
+    }
+    
+    public GuiFileListItem(String displayText, boolean showSelected) {
         this.displayText = displayText;
+        this.showSelected = showSelected;
     }
 
     @Override
     public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected) {
         int fontColour = UtilColour.getMinecraftColor(8);
-        if (selected) {
-            //fontColour = UtilColour.getMinecraftColor(4);
+        if (selected && showSelected) {
+            fontColour = UtilColour.getMinecraftColor(4);
         }
         if (isHovering(fontRenderer, x, y, mouseX, mouseY)) {
             fontColour = UtilColour.getMinecraftColor(0);
