@@ -23,7 +23,7 @@ public class CommandArmourers extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender commandSender) {
-        return null;
+        return "commands.armourers.usage";
     }
     
     @Override
@@ -42,51 +42,51 @@ public class CommandArmourers extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender commandSender, String[] args) {
-        if (args != null && args.length > 1) {
-            String command = args[0];
-            String playerName = args[1];
-            EntityPlayer player = getPlayer(commandSender, playerName);
-            if (player != null) {
-                if (command.equals("giveSkin")) {
-                    if (args.length > 2) {
-                        String skinName = args[2];
-                        for (int i = 3; i < args.length; i++) {
-                            skinName += " " + args[i];
-                        }
-                        CustomEquipmentItemData armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
-                        if (armourItemData == null) {
-                            throw new WrongUsageException("commands.armourers.notfound", (Object)args);
-                        }
-                        ItemStack skinStack = EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
-                        EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
-                        entityItem.delayBeforeCanPickup = 0;
-                        entityItem.func_145797_a(player.getCommandSenderName());
-                    } else {
-                        throw new WrongUsageException("commands.armourers.usage", (Object)args);
-                    }
-                } else if (command.equals("clearSkins")) {
-                    ExtendedPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
-                } else if (command.equals("setSkin")) {
-                    if (args.length > 2) {
-                        String skinName = args[2];
-                        for (int i = 3; i < args.length; i++) {
-                            skinName += " " + args[i];
-                        }
-                        CustomEquipmentItemData armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
-                        if (armourItemData == null) {
-                            throw new WrongUsageException("commands.armourers.notfound", (Object)args);
-                        }
-                        ItemStack skinStack = EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
-                        ExtendedPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
-                    } else {
-                        throw new WrongUsageException("commands.armourers.usage", (Object)args);
-                    }
-                } else {
-                    throw new WrongUsageException("commands.armourers.usage", (Object)args);
-                }
-            } else {
+        if (args == null) {
+            throw new WrongUsageException("commands.armourers.usage", (Object)args);
+        }
+        if (args.length < 2) {
+            throw new WrongUsageException("commands.armourers.usage", (Object)args);
+        }
+        String command = args[0];
+        String playerName = args[1];
+        EntityPlayer player = getPlayer(commandSender, playerName);
+        if (player == null) {
+            return;
+        }
+        
+        if (command.equals("giveSkin")) {
+            if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
+            } 
+            String skinName = args[2];
+            for (int i = 3; i < args.length; i++) {
+                skinName += " " + args[i];
             }
+            CustomEquipmentItemData armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
+            if (armourItemData == null) {
+                throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
+            }
+            ItemStack skinStack = EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
+            EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
+            entityItem.delayBeforeCanPickup = 0;
+            entityItem.func_145797_a(player.getCommandSenderName());
+        } else if (command.equals("clearSkins")) {
+            ExtendedPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
+        } else if (command.equals("setSkin")) {
+            if (args.length < 3) {
+                throw new WrongUsageException("commands.armourers.usage", (Object)args);
+            } 
+            String skinName = args[2];
+            for (int i = 3; i < args.length; i++) {
+                skinName += " " + args[i];
+            }
+            CustomEquipmentItemData armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
+            if (armourItemData == null) {
+                throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
+            }
+            ItemStack skinStack = EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
+            ExtendedPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }

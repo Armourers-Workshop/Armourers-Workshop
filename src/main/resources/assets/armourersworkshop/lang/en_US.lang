@@ -126,6 +126,9 @@ chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but yo
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
+# Commands
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin> <player> [skinName]
+commands.armourers.fileNotFound=The file %1$s was not found.
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
