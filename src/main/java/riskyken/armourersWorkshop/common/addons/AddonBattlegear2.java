@@ -15,6 +15,10 @@ public class AddonBattlegear2 extends AbstractAddon {
 
     @Override
     public void init() {
+    }
+
+    @Override
+    public void initRenderers() {
         overrideItemRenderer("waraxe.wood", RenderType.SWORD);
         overrideItemRenderer("waraxe.stone", RenderType.SWORD);
         overrideItemRenderer("waraxe.iron", RenderType.SWORD);
@@ -32,10 +36,6 @@ public class AddonBattlegear2 extends AbstractAddon {
         overrideItemRenderer("spear.iron", RenderType.SWORD);
         overrideItemRenderer("spear.diamond", RenderType.SWORD);
         overrideItemRenderer("spear.gold", RenderType.SWORD);
-    }
-
-    @Override
-    public void initRenderers() {
     }
 
     @Override
