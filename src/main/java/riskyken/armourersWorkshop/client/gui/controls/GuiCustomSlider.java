@@ -5,7 +5,10 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiSlider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiCustomSlider extends GuiSlider {
 
     public GuiCustomSlider(int id, int xPos, int yPos, int width, int height,

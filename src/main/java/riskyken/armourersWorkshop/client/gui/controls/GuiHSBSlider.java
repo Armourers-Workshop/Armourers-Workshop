@@ -12,7 +12,10 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiHSBSlider extends GuiSlider {
 
     private static final ResourceLocation sliderTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/sliderHue.png");

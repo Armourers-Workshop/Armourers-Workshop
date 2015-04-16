@@ -6,7 +6,10 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiDropDownList extends GuiButtonExt {
 
     private List<String> listItems;
