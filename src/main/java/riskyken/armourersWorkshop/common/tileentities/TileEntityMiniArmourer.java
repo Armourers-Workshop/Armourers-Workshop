@@ -1,16 +1,17 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityMiniArmourer extends TileEntity {
+public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
 
     private static final String TAG_TYPE = "type";
     
@@ -24,10 +25,17 @@ public class TileEntityMiniArmourer extends TileEntity {
     private EnumEquipmentType equipmentType = EnumEquipmentType.HEAD;
     
     public TileEntityMiniArmourer() {
+        this.items = new ItemStack[2];
     }
     
     public EnumEquipmentType getEquipmentType() {
         return equipmentType;
+    }
+    
+    public void setEquipmentType(EnumEquipmentType equipmentType) {
+        this.equipmentType = equipmentType;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
@@ -49,9 +57,7 @@ public class TileEntityMiniArmourer extends TileEntity {
         if (value > equipmentType.values().length - 2) {
             value = 1;
         }
-        equipmentType = EnumEquipmentType.getOrdinal(value);
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        setEquipmentType(EnumEquipmentType.getOrdinal(value));
     }
     
     @Override
@@ -69,5 +75,10 @@ public class TileEntityMiniArmourer extends TileEntity {
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
+    }
+
+    @Override
+    public String getInventoryName() {
+        return LibBlockNames.MINI_ARMOURER;
     }
 }

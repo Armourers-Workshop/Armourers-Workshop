@@ -42,8 +42,13 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         GL11.glScalef(-1, -1, 1);
         modelArmourer.render(tileEntity, tickTime, scale);
         
-        GL11.glScalef(2, 2, 2);
         GL11.glTranslatef(0, -8 * scale, 0);
+        
+        float rotation = (float)((double)System.currentTimeMillis() / 25 % 360);
+        
+        GL11.glRotatef(rotation, 0, 1, 0);
+        GL11.glScalef(0.75F, 0.75F, 0.75F);
+        
         
         Minecraft mc = Minecraft.getMinecraft();
         mc.renderEngine.bindTexture(mc.thePlayer.getLocationSkin());
@@ -94,9 +99,11 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         
         GL11.glPopMatrix();
         
+        /*
         GL11.glPushMatrix();
-        renderGuide(type, x + 0.5D, y + 0.5D, z + 0.5D, scale * 2);
+        renderGuide(type, x + 0.5D, y + 0.5D, z + 0.5D, scale);
         GL11.glPopMatrix();
+        */
     }
     
     private void renderGuide(EnumEquipmentType type, double x, double y, double z, float scale) {

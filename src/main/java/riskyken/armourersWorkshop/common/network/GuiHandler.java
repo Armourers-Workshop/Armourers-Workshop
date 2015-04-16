@@ -10,6 +10,8 @@ import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiEquipmentWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiMannequin;
+import riskyken.armourersWorkshop.client.gui.GuiMiniArmourer;
+import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
@@ -17,6 +19,8 @@ import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
+import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
+import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -24,6 +28,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
@@ -61,6 +66,15 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
                 }
                 break;
+            case LibGuiIds.MINI_ARMOURER:
+                if (te instanceof TileEntityMiniArmourer){
+                    return new ContainerMiniArmourer(player.inventory, (TileEntityMiniArmourer)te);
+                }
+                break;
+            case LibGuiIds.MINI_ARMOURER_BUILDING:
+                if (te instanceof TileEntityMiniArmourer) {
+                    return new ContainerMiniArmourerBuilding((TileEntityMiniArmourer)te);
+                }
         }
         return null;
     }
@@ -103,8 +117,16 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiMannequin(player.inventory, (TileEntityMannequin)te);
                 }
                 break;
+            case LibGuiIds.MINI_ARMOURER:
+                if (te instanceof TileEntityMiniArmourer){
+                    return new GuiMiniArmourer(player.inventory, (TileEntityMiniArmourer)te);
+                }
+                break;
+            case LibGuiIds.MINI_ARMOURER_BUILDING:
+                if (te instanceof TileEntityMiniArmourer) {
+                    return new GuiMiniArmourerBuilding((TileEntityMiniArmourer)te);
+                }
         }
         return null;
     }
-
 }

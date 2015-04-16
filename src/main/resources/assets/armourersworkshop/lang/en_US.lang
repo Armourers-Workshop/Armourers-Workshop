@@ -75,6 +75,7 @@ inventory.armourersworkshop:armourerBrain.name=Armourer
 inventory.armourersworkshop:armourLibrary.name=Equipment Library
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
+inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:
@@ -116,6 +117,10 @@ inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
+
+inventory.armourersworkshop:miniArmourer.save=Save
+inventory.armourersworkshop:miniArmourer.load=Load
+inventory.armourersworkshop:miniArmourer.label.buildingAccess=Sneak right click the mini armourer to access the building interface.
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=No more undos

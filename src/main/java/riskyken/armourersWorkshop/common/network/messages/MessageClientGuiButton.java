@@ -6,7 +6,10 @@ import net.minecraft.inventory.Container;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
+import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
+import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -62,6 +65,18 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
                 armourerBrain.cloneToSide(ForgeDirection.EAST);
             }
         }
+        
+        if (container != null && container instanceof ContainerMiniArmourerBuilding) {
+            TileEntityMiniArmourer miniArmourer = ((ContainerMiniArmourerBuilding) container).getTileEntity();
+            
+            EnumEquipmentType equipmentType = EnumEquipmentType.getOrdinal(message.buttonId + 1);
+            miniArmourer.setEquipmentType(equipmentType);
+        }
+        
+        if (container != null && container instanceof ContainerMiniArmourer) {
+            TileEntityMiniArmourer miniArmourer = ((ContainerMiniArmourer) container).getTileEntity();
+        }
+        
         return null;
     }
 }
