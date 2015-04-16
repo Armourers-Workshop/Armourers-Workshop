@@ -32,7 +32,7 @@ public class CustomEquipmentPartData {
     public boolean hasGlowingBlocks;
     
     @SideOnly(Side.CLIENT)
-    public int totalCubesInPart;
+    public int[] totalCubesInPart = null;
     @SideOnly(Side.CLIENT)
     public boolean displayNormalCompiled;
     @SideOnly(Side.CLIENT)

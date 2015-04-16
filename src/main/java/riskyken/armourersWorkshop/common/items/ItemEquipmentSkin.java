@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,10 @@ import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.common.equipment.cubes.Cube;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlass;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlassGlowing;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlowing;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import cpw.mods.fml.relauncher.Side;
@@ -52,8 +57,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
         String cGray = EnumChatFormatting.GRAY.toString();
         String cRed = EnumChatFormatting.RED.toString();
         String cGold = EnumChatFormatting.GOLD.toString();
+        String cYellow = EnumChatFormatting.YELLOW.toString();
         if (stack.hasTagCompound()) {
-            
             NBTTagCompound itemData = stack.getTagCompound();
             if (itemData.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
                 NBTTagCompound armourData = itemData.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
@@ -67,12 +72,20 @@ public class ItemEquipmentSkin extends AbstractModItem {
                         if (!data.getAuthorName().trim().isEmpty()) {
                             list.add(cGold + "Author: " + cGray + data.getAuthorName());
                         }
-                        list.add(cGold + "Cubes: " + cGray + data.gotTotalCubes());
+                        
+                        if (GuiScreen.isShiftKeyDown()) {
+                            list.add(cYellow + "Equipment Id: " + cGray + equipmentId);
+                            list.add(cYellow + "Total Cubes: " + cGray + data.getTotalCubes());
+                            list.add(cYellow + "Cubes: " + cGray + data.getTotalOfCubeType(Cube.class));
+                            list.add(cYellow + "Cubes Glowing: " + cGray + data.getTotalOfCubeType(CubeGlowing.class));
+                            list.add(cYellow + "Cubes Glass: " + cGray + data.getTotalOfCubeType(CubeGlass.class));
+                            list.add(cYellow + "Cubes Glass Glowing: " + cGray + data.getTotalOfCubeType(CubeGlassGlowing.class));
+                            
+                        } else {
+                            list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
+                        }
                     }
-                    
-                    list.add(cGold + "Equipment Id: " + cGray + equipmentId);
                 }
-                
             }
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
 

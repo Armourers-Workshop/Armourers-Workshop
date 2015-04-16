@@ -53,12 +53,12 @@ public final class CubeRegistry {
         return null;
     }
     
-    private byte getNextFreeCubeId() {
+    public byte getTotalCubes() {
         return (byte) cubeList.size();
     }
     
     private void registerCube(Class<? extends Cube> cubeClass) {
-        byte id = getNextFreeCubeId();
+        byte id = getTotalCubes();
         cubeList.add(cubeClass);
         ModLogger.log("Registering equipment cube: " + cubeClass.getSimpleName() + " - id: " + id);
     }

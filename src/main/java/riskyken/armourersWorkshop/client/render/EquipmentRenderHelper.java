@@ -8,6 +8,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 
@@ -23,9 +24,11 @@ public final class EquipmentRenderHelper {
     
     public static void cullFacesOnEquipmentPart(CustomEquipmentPartData partData) {
         ArrayList<ICube> blocks = partData.getArmourData();
-        partData.totalCubesInPart = blocks.size();
+        partData.totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
         for (int i = 0; i < blocks.size(); i++) {
             ICube blockData = blocks.get(i);
+            int cubeId = CubeRegistry.INSTANCE.getIdForCubeClass(blockData.getClass());
+            partData.totalCubesInPart[cubeId] += 1;
             setBlockFaceFlags(blocks, blockData, partData.getArmourPart().bodyPart);
             partData.facesBuild = true;
         }

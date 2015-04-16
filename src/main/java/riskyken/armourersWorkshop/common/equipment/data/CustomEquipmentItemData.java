@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Level;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -187,12 +189,22 @@ public class CustomEquipmentItemData {
         return authorName;
     }
     
-    public int gotTotalCubes() {
+    public int getTotalCubes() {
         int totalCubes = 0;
-        for (int i = 0; i < parts.size(); i++) {
-            totalCubes += parts.get(i).totalCubesInPart;
+        for (int i = 0; i < CubeRegistry.INSTANCE.getTotalCubes(); i++) {
+            Class<? extends ICube> cubeClass = CubeRegistry.INSTANCE.getCubeFormId((byte) i);
+            totalCubes += getTotalOfCubeType(cubeClass);
         }
         return totalCubes;
+    }
+    
+    public int getTotalOfCubeType(Class<? extends ICube> cubeClass) {
+        int totalOfCube = 0;
+        int cubeId = CubeRegistry.INSTANCE.getIdForCubeClass(cubeClass);
+        for (int i = 0; i < parts.size(); i++) {
+            totalOfCube += parts.get(i).totalCubesInPart[cubeId];
+        }
+        return totalOfCube;
     }
 
     @Override
