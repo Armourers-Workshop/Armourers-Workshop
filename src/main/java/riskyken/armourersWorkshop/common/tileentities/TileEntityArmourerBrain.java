@@ -229,6 +229,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     protected void removeBoundingBoxed() {
+        if (type == EnumEquipmentType.NONE) {
+            return;
+        }
         EnumEquipmentPart[] parts = type.getParts();
         for (int i = 0; i < parts.length; i++) {
             EnumEquipmentPart part = parts[i];

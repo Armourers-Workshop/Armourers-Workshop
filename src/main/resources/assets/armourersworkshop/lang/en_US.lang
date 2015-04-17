@@ -69,6 +69,15 @@ armourTypes.armourersworkshop:feet.name=Feet
 armourTypes.armourersworkshop:sword.name=Sword
 armourTypes.armourersworkshop:bow.name=Bow
 
+# Skin Types
+skinType.armourersworkshop:armourers:head.name=Head
+skinType.armourersworkshop:armourers:chest.name=Chest
+skinType.armourersworkshop:armourers:legs.name=Legs
+skinType.armourersworkshop:armourers:skirt.name=Skirt
+skinType.armourersworkshop:armourers:feet.name=Feet
+skinType.armourersworkshop:armourers:sword.name=Sword
+skinType.armourersworkshop:armourers:bow.name=Bow
+
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer

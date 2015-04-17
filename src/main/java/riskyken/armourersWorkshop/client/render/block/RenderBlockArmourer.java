@@ -82,27 +82,27 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             break;
         case HEAD:
             GL11.glTranslated(0, -11 * mult, 0);
-            modelHead.render(te.isShowOverlay());
+            modelHead.render(mult, te.isShowOverlay());
             GL11.glTranslated(0, 11 * mult, 0);
             break;
         case CHEST:
-            modelChest.renderChest();
+            modelChest.renderChest(mult);
             GL11.glTranslated(mult * 11, 0, 0);
-            modelChest.renderLeftArm();
+            modelChest.renderLeftArm(mult);
             GL11.glTranslated(mult * -22, 0, 0);
-            modelChest.renderRightArm();
+            modelChest.renderRightArm(mult);
             break;
         case LEGS:
             GL11.glTranslated(mult * 6, 0, 0);
-            modelLegs.renderLeftLeft();
+            modelLegs.renderLeftLeft(mult);
             GL11.glTranslated(mult * -12, 0, 0);
-            modelLegs.renderRightLeg();
+            modelLegs.renderRightLeg(mult);
             break;
         case SKIRT:
             GL11.glTranslated(mult * 2, 0, 0);
-            modelLegs.renderLeftLeft();
+            modelLegs.renderLeftLeft(mult);
             GL11.glTranslated(mult * -4, 0, 0);
-            modelLegs.renderRightLeg();
+            modelLegs.renderRightLeg(mult);
             break;
         case FEET:
             GL11.glTranslated(mult * 6, 0, 0);

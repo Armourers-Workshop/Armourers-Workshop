@@ -25,12 +25,11 @@ public class ModelHead extends ModelBase {
         overlay.setTextureSize(64, 32);
     }
 
-    public void render(boolean showOverlay) {
-        float mult = 0.0625F;
-        main.render(mult);
+    public void render(float scale, boolean showOverlay) {
+        main.render(scale);
         if (showOverlay) {
             GL11.glDisable(GL11.GL_CULL_FACE);
-            overlay.render(mult);
+            overlay.render(scale);
             GL11.glEnable(GL11.GL_CULL_FACE);
         }
     }

@@ -29,6 +29,8 @@ import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.cubes.Cube;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
+import riskyken.armourersWorkshop.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -64,7 +66,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     private int mouseLeftDownId = -1;
     private int mouseRightDownId = -1;
     
-    private float zoom = 100.0F;
+    private float zoom = 150.0F;
     private float rotation = 0F;
     private float pitch = 0F;
     
@@ -90,10 +92,15 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         buttonList.add(new GuiButtonExt(1, 0, this.height - 18, 60, 18, "Cookies"));
         
         GuiDropDownList dropDownList = new GuiDropDownList(2, 2, 2, 80, "", this);
-        for (int i = 1; i < EnumEquipmentType.values().length - 1; i++) {
-            dropDownList.addListItem(getLocalizedEquipmentName(EnumEquipmentType.getOrdinal(i)));
+        
+        ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkins();
+        for (int i = 0; i < skinTypes.size(); i++) {
+            ISkinType skinType = skinTypes.get(i);
+            dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType));
+            if (skinType == tileEntity.getSkinType()) {
+                dropDownList.setListSelectedIndex(i);
+            }
         }
-        dropDownList.setListSelectedIndex(tileEntity.getEquipmentType().ordinal() - 1);
         
         buttonList.add(dropDownList);
     }
@@ -233,7 +240,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     private void renderModels(int mouseX, int mouseY) {
         GL11.glPushMatrix();
         
-        GL11.glTranslatef(this.width / 2, this.height / 2, 500.0F);
+        GL11.glTranslatef(this.width / 2, this.height - 50, 500.0F);
         GL11.glScalef((float)(-zoom), (float)zoom, (float)zoom);
         
         GL11.glRotatef(180F, 0F, 1F, 0F);
@@ -316,48 +323,14 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         
         mc.renderEngine.bindTexture(mc.thePlayer.getLocationSkin());
         
-        EnumEquipmentType type = tileEntity.getEquipmentType();
+        ISkinType skinType = tileEntity.getSkinType();
         float scale = 0.0625F;
-        switch (type) {
-        case NONE:
-            break;
-        case HEAD:
-            //GL11.glTranslated(0, -11 * scale, 0);
-            modelHead.render(true);
-            //GL11.glTranslated(0, 11 * scale, 0);
-            break;
-        case CHEST:
-            modelChest.renderChest();
-            GL11.glTranslated(scale * 11, 0, 0);
-            modelChest.renderLeftArm();
-            GL11.glTranslated(scale * -22, 0, 0);
-            modelChest.renderRightArm();
-            break;
-        case LEGS:
-            GL11.glTranslated(scale * 6, 0, 0);
-            modelLegs.renderLeftLeft();
-            GL11.glTranslated(scale * -12, 0, 0);
-            modelLegs.renderRightLeg();
-            break;
-        case SKIRT:
-            GL11.glTranslated(scale * 2, 0, 0);
-            modelLegs.renderLeftLeft();
-            GL11.glTranslated(scale * -4, 0, 0);
-            modelLegs.renderRightLeg();
-            break;
-        case FEET:
-            GL11.glTranslated(scale * 6, 0, 0);
-            modelFeet.renderLeftLeft();
-            GL11.glTranslated(scale * -12, 0, 0);
-            modelFeet.renderRightLeg();
-            break;
-        case SWORD:
-            modelHand.render();
-            break;
-        case BOW:
-            modelHand.render();
-            break;
+        if (skinType != null) {
+            skinType.renderBuildingGuide(scale, true, false);
+            
+            skinType.renderBuildingGrid(scale);
         }
+        
         GL11.glPopMatrix();
     }
     

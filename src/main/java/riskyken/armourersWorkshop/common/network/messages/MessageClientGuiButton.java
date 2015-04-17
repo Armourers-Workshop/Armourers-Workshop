@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
@@ -68,9 +70,8 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         
         if (container != null && container instanceof ContainerMiniArmourerBuilding) {
             TileEntityMiniArmourer miniArmourer = ((ContainerMiniArmourerBuilding) container).getTileEntity();
-            
-            EnumEquipmentType equipmentType = EnumEquipmentType.getOrdinal(message.buttonId + 1);
-            miniArmourer.setEquipmentType(equipmentType);
+            ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(message.buttonId);
+            miniArmourer.setSkinType(skinType);
         }
         
         if (container != null && container instanceof ContainerMiniArmourer) {

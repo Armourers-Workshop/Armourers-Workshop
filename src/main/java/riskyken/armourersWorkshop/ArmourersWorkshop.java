@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.common.download.SkinDownloadManager;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
@@ -50,6 +51,7 @@ public class ArmourersWorkshop {
         
         ModItems.init();
         ModBlocks.init();
+        SkinTypeRegistry.init();
         CubeRegistry.init();
         
         proxy.preInit();
