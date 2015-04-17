@@ -13,7 +13,7 @@ public class CustomModelRenderer extends ModelRenderer {
         super(p_i1174_1_, p_i1174_2_, p_i1174_3_);
     }
     
-    public void render(float scale, BitSet faceFlags, int x, int y, int z, float r, float g, float b, float a) {
+    public void render(float scale, BitSet faceFlags, int x, int y, int z, float[] r, float[] g, float[] b, float[] a) {
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         int size = this.cubeList.size();
         renderBuffer.startDrawingQuads();
