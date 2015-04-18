@@ -30,6 +30,7 @@ public final class SkinTypeRegistry {
         registerSkin(new SkinLegs());
         registerSkin(new SkinSkirt());
         registerSkin(new SkinFeet());
+        registerSkin(new SkinSword());
     }
     
     private void registerSkin(ISkinType skinType) {
@@ -53,6 +54,8 @@ public final class SkinTypeRegistry {
             return getSkinFromRegistryName("armourers:skirt");
         case 4:
             return getSkinFromRegistryName("armourers:feet");
+        case 5:
+            return getSkinFromRegistryName("armourers:sword");
         default:
             return null;
         }
@@ -64,7 +67,6 @@ public final class SkinTypeRegistry {
             String key = (String) skinTypeMap.keySet().toArray()[i];
             skinTypes.add(skinTypeMap.get(key));
         }
-        
         return skinTypes;
     }
     
