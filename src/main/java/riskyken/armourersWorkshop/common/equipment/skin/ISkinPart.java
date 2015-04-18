@@ -16,8 +16,6 @@ public interface ISkinPart {
     
     public Point3i getOffset();
     
-    public Point3i getOrigin();
-    
     @SideOnly(Side.CLIENT)
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper);
     
@@ -27,6 +25,5 @@ public interface ISkinPart {
     public void removeBoundingBoxesForPart(World world, int x, int y, int z);
     
     public void createBoundingBoxesForPart(World world, int x, int y, int z);
-
     
 }

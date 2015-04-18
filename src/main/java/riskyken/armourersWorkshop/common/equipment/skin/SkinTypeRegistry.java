@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import net.minecraft.util.StatCollector;
+import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
+import riskyken.armourersWorkshop.common.equipment.skin.type.SkinFeet;
+import riskyken.armourersWorkshop.common.equipment.skin.type.SkinHead;
+import riskyken.armourersWorkshop.common.equipment.skin.type.SkinLegs;
+import riskyken.armourersWorkshop.common.equipment.skin.type.SkinSkirt;
+import riskyken.armourersWorkshop.common.equipment.skin.type.SkinSword;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;

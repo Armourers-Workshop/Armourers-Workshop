@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.equipment.skin;
+package riskyken.armourersWorkshop.common.equipment.skin.type;
 
 import javax.vecmath.Point3i;
 
@@ -6,27 +6,26 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
+import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.common.Rectangle3D;
+import riskyken.armourersWorkshop.common.equipment.skin.ISkinPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SkinLegsPartLeftLeg implements ISkinPart {
-
+public class SkinChestPartRightArm implements ISkinPart {
+    
     @SideOnly(Side.CLIENT)
-    private static final ModelLegs partModel = new ModelLegs();
+    private static final ModelChest partModel = new ModelChest();
     
     private Rectangle3D buildingSpace;
     private Rectangle3D guideSpace;
     private Point3i offset;
-    private Point3i origin;
     
-    public SkinLegsPartLeftLeg() {
-        this.buildingSpace = new Rectangle3D(-4, -8, -4, 7, 9, 8);
-        this.guideSpace = new Rectangle3D(-2, -12, -2, 4, 12, 4);
-        this.offset = new Point3i(6, -5, 0);
-        this.origin = new Point3i(0, 12, 0);
+    public SkinChestPartRightArm() {
+        this.buildingSpace = new Rectangle3D(-3, -11, -4, 9, 17, 8);
+        this.guideSpace = new Rectangle3D(-1, -10, -2, 4, 12, 4);
+        this.offset = new Point3i(-10, 0, 0);
     }
     
     @Override
@@ -44,33 +43,24 @@ public class SkinLegsPartLeftLeg implements ISkinPart {
         return this.offset;
     }
 
-    @Override
-    public Point3i getOrigin() {
-        return this.origin;
-    }
-
     @SideOnly(Side.CLIENT)
     @Override
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
-        GL11.glTranslated(offset.x * scale, offset.y * scale, offset.z * scale);
         GL11.glTranslated(0, this.buildingSpace.y * scale, 0);
-        GL11.glTranslated(origin.x * scale, origin.y * scale, origin.z * scale);
-        partModel.renderLeftLeft(scale);
-        GL11.glTranslated(-origin.x * scale, -origin.y * scale, -origin.z * scale);
+        GL11.glTranslated(0, -this.guideSpace.y * scale, 0);
+        partModel.renderRightArm(scale);
+        GL11.glTranslated(0, this.guideSpace.y * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.y * scale, 0);
-        GL11.glTranslated(-offset.x * scale, -offset.y * scale, -offset.z * scale);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public void renderBuildingGrid(float scale) {
-        GL11.glTranslated(offset.x * scale, offset.y * scale, offset.z * scale);
         GL11.glTranslated(0, this.buildingSpace.y * scale, 0);
         GL11.glScalef(-1, -1, 1);
         RenderBlockMiniArmourer.renderGuidePart(this, scale);
         GL11.glScalef(-1, -1, 1);
         GL11.glTranslated(0, -this.buildingSpace.y * scale, 0);
-        GL11.glTranslated(-offset.x * scale, -offset.y * scale, -offset.z * scale);
     }
     
     @Override

@@ -22,6 +22,8 @@ import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.relauncher.Side;
@@ -39,7 +41,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
-        float mult = 0.0625F;
+        float scale = 0.0625F;
         
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
         EnumEquipmentType type = te.getType();
@@ -72,57 +74,23 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             }
         }
         
-        GL11.glTranslated(0, te.getHeightOffset(), 0);
+        GL11.glTranslated(0, te.getHeightOffset() - 1, 0);
         
         GL11.glScalef(-1, -1, 1);
         GL11.glScalef(16, 16, 16);
         
-        switch (type) {
-        case NONE:
-            break;
-        case HEAD:
-            GL11.glTranslated(0, -11 * mult, 0);
-            modelHead.render(mult, te.isShowOverlay());
-            GL11.glTranslated(0, 11 * mult, 0);
-            break;
-        case CHEST:
-            modelChest.renderChest(mult);
-            GL11.glTranslated(mult * 11, 0, 0);
-            modelChest.renderLeftArm(mult);
-            GL11.glTranslated(mult * -22, 0, 0);
-            modelChest.renderRightArm(mult);
-            break;
-        case LEGS:
-            GL11.glTranslated(mult * 6, 0, 0);
-            modelLegs.renderLeftLeft(mult);
-            GL11.glTranslated(mult * -12, 0, 0);
-            modelLegs.renderRightLeg(mult);
-            break;
-        case SKIRT:
-            GL11.glTranslated(mult * 2, 0, 0);
-            modelLegs.renderLeftLeft(mult);
-            GL11.glTranslated(mult * -4, 0, 0);
-            modelLegs.renderRightLeg(mult);
-            break;
-        case FEET:
-            GL11.glTranslated(mult * 6, 0, 0);
-            modelFeet.renderLeftLeft();
-            GL11.glTranslated(mult * -12, 0, 0);
-            modelFeet.renderRightLeg();
-            break;
-        case SWORD:
-            modelHand.render();
-            break;
-        case BOW:
-            modelHand.render();
-            break;
+        ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(type.ordinal() - 1);
+        if (skinType != null) {
+            skinType.renderBuildingGuide(scale, te.isShowOverlay(), false);
+            
+            skinType.renderBuildingGrid(scale);
         }
         
         GL11.glPopMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         
         if (te.isShowGuides()) {
-            renderGuide(te, type, x, y, z);
+            //renderGuide(te, type, x, y, z);
         }
         
         LightingHelper.enableLighting();

@@ -43,12 +43,12 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         ISkinType skinType = tileEntity.getSkinType();
         if (skinType != null) {
             float rotation = (float)((double)System.currentTimeMillis() / 25 % 360);
-            GL11.glRotatef(rotation, 0F, 1F, 0F);
+            //GL11.glRotatef(rotation, 0F, 1F, 0F);
             bindTexture(AbstractClientPlayer.locationStevePng);
             skinType.renderBuildingGuide(scale, true, false);
             
             
-            //skinType.renderBuildingGrid(scale);
+            skinType.renderBuildingGrid(scale);
         }
         
         GL11.glPopMatrix();
@@ -69,12 +69,22 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
-        Rectangle3D guideRec = part.getBuildingSpace();
-
+        
+        Rectangle3D buildRec = part.getBuildingSpace();
+        Rectangle3D guideRec = part.getGuideSpace();
+        
         GL11.glDisable(GL11.GL_LIGHTING);
         
-        renderGuideBox(guideRec.x, guideRec.y, guideRec.z, 
-                guideRec.width, guideRec.height, guideRec.depth, scale);
+        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
+        renderGuideBox(buildRec.x, buildRec.y, buildRec.z, buildRec.width, buildRec.height, buildRec.depth, scale);
+        
+        GL11.glColor4f(1F, 0F, 0F, 0.5F);
+        renderGuideBox(guideRec.x, guideRec.y, guideRec.z, guideRec.width, guideRec.height, guideRec.depth, scale);
+        
+        GL11.glColor4f(0F, 1F, 0F, 0.5F);
+        renderGuideBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, scale);
+        
+        GL11.glColor4f(1F, 1F, 1F, 1F);
         
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
@@ -97,7 +107,7 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
+        
         
         float scale1 = 0.999F;
         //GL11.glScalef(scale1, scale1, scale1);
@@ -134,7 +144,6 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         tessellator.draw();
         
         GL11.glDisable(GL11.GL_BLEND);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();
     }

@@ -19,11 +19,11 @@ public class ModelChest extends ModelBase {
         
         leftArm = new ModelRenderer(this, 40, 16);
         leftArm.mirror = true;
-        leftArm.addBox(-2.0F, -12.0F, -2.0F, 4, 12, 4);
+        leftArm.addBox(-1.0F, -12.0F, -2.0F, 4, 12, 4);
         leftArm.setRotationPoint(0, 0, 0);
 
         rightArm = new ModelRenderer(this, 40, 16);
-        rightArm.addBox(-2.0F, -12.0F, -2.0F, 4, 12, 4);
+        rightArm.addBox(-3.0F, -12.0F, -2.0F, 4, 12, 4);
         rightArm.setRotationPoint(0, 0, 0);
     }
 

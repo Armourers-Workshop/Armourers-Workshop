@@ -1,62 +1,55 @@
 package riskyken.armourersWorkshop.common.equipment.skin;
 
-import java.util.ArrayList;
+import javax.vecmath.Point3i;
 
 import net.minecraft.world.World;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SkinHead implements ISkinType {
-
-    private ISkinPart partHead;
-    private ArrayList<ISkinPart> skinParts;
-    
-    public SkinHead() {
-        this.skinParts = new ArrayList<ISkinPart>();
-        partHead = new SkinHeadPartBase();
-        skinParts.add(partHead);
-    }
-    
-    @Override
-    public ArrayList<ISkinPart> getSkinParts() {
-        return this.skinParts;
-    }
-    
-    @Override
-    public String getRegistryName() {
-        return "armourers:head";
-    }
+public abstract class SkinTypeBase implements ISkinType {
 
     @SideOnly(Side.CLIENT)
     @Override
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
-        for (int i = 0; i < this.skinParts.size(); i++) {
-            ISkinPart skinPart = this.skinParts.get(i);
+        for (int i = 0; i < this.getSkinParts().size(); i++) {
+            ISkinPart skinPart = this.getSkinParts().get(i);
+            Point3i partOffset = skinPart.getOffset();
+            GL11.glTranslated(partOffset.x * scale, partOffset.y * scale, partOffset.z * scale);
             skinPart.renderBuildingGuide(scale, showSkinOverlay, showHelper);
+            GL11.glTranslated(-partOffset.x * scale, -partOffset.y * scale, -partOffset.z * scale);
         }
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public void renderBuildingGrid(float scale) {
-        for (int i = 0; i < this.skinParts.size(); i++) {
-            ISkinPart skinPart = this.skinParts.get(i);
+        for (int i = 0; i < this.getSkinParts().size(); i++) {
+            ISkinPart skinPart = this.getSkinParts().get(i);
+            Point3i partOffset = skinPart.getOffset();
+            GL11.glTranslated(partOffset.x * scale, partOffset.y * scale, partOffset.z * scale);
             skinPart.renderBuildingGrid(scale);
+            GL11.glTranslated(-partOffset.x * scale, -partOffset.y * scale, -partOffset.z * scale);
         }
     }
-
+    
     @Override
     public void createBoundingBoxes(World world, int x, int y, int z) {
         // TODO Auto-generated method stub
+        
     }
-
+    
     @Override
     public void removeBoundingBoxed(World world, int x, int y, int z) {
         // TODO Auto-generated method stub
+        
     }
-
+    
     @Override
     public int clearArmourCubes() {
+        // TODO Auto-generated method stub
         /*
         for (int i = 0; i < type.getParts().length; i++) {
             EnumEquipmentPart part = type.getParts()[i];
@@ -83,10 +76,9 @@ public class SkinHead implements ISkinType {
         */
         return 0;
     }
-
+    
     @Override
     public boolean showSkinOverlayCheckbox() {
-        // TODO Auto-generated method stub
         return false;
     }
 }
