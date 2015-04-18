@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -47,7 +47,7 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
         }
 
         
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, EnumEquipmentType.SKIRT);
+        ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSkirt);
         armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {

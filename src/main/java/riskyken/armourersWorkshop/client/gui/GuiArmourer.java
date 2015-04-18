@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.util.ArrayList;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -7,12 +9,12 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -36,7 +38,6 @@ public class GuiArmourer extends GuiContainer {
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
-    private boolean canMakeBows = false;
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
         super(new ContainerArmourer(invPlayer, armourerBrain));
@@ -44,11 +45,6 @@ public class GuiArmourer extends GuiContainer {
         this.xSize = 256;
         this.ySize = 256;
         loadedArmourItem = false;
-        if (invPlayer.player.getCommandSenderName().equalsIgnoreCase("riskyken")) {
-            canMakeBows = true;
-        } else {
-            canMakeBows = false;
-        }
     }
     
     @Override
@@ -58,13 +54,11 @@ public class GuiArmourer extends GuiContainer {
         
         buttonList.clear();
         
-        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            GuiButtonExt equipmentButton = new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, getLocalizedArmourName(EnumEquipmentType.getOrdinal(i + 1)));
-            if (i == 6) {
-                if (!canMakeBows) {
-                    equipmentButton.enabled = false;
-                }
-            }
+        
+        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkins();
+        for (int i = 0; i < skinList.size(); i++) {
+            ISkinType skinType = skinList.get(i);
+            GuiButtonExt equipmentButton = new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType));
             buttonList.add(equipmentButton);
         }
         
@@ -93,15 +87,6 @@ public class GuiArmourer extends GuiContainer {
         //buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
         //buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
-    }
-    
-    private String getLocalizedArmourName(EnumEquipmentType armourType) {
-        String unlocalizedName = "armourTypes." + LibModInfo.ID.toLowerCase() + ":" + armourType.name().toLowerCase() + ".name";
-        String localizedName = StatCollector.translateToLocal(unlocalizedName);
-        if (!unlocalizedName.equals(localizedName)){
-            return localizedName;
-        }
-        return unlocalizedName;
     }
     
     @Override
@@ -172,7 +157,11 @@ public class GuiArmourer extends GuiContainer {
         }
         checkShowGuides.setIsChecked(armourerBrain.isShowGuides());
         checkShowOverlay.setIsChecked(armourerBrain.isShowOverlay());
-        checkShowOverlay.visible = armourerBrain.getType() == EnumEquipmentType.HEAD;
+        if (armourerBrain.getSkinType() != null) {
+            checkShowOverlay.visible = armourerBrain.getSkinType().showSkinOverlayCheckbox();
+        } else {
+            checkShowOverlay.visible = false;
+        }
         
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);

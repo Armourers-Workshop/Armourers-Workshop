@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.equipment.skin.type;
 
 import java.util.ArrayList;
 
-import riskyken.armourersWorkshop.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeBase;
 
 public class SkinFeet extends SkinTypeBase {
@@ -23,5 +23,15 @@ public class SkinFeet extends SkinTypeBase {
     @Override
     public String getRegistryName() {
         return "armourers:feet";
+    }
+    
+    @Override
+    public String getName() {
+        return "Feet";
+    }
+
+    @Override
+    public int getVanillaArmourSlotId() {
+        return 3;
     }
 }

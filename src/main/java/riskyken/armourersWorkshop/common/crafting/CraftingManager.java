@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
@@ -42,9 +41,11 @@ public final class CraftingManager {
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[1], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[2], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
-                for (int i = 1; i < EnumEquipmentType.values().length; i++) {
-                    ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1, i - 1));
+                /*
+                for (int i = 0; i < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered(); i++) {
+                    ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1, i));
                 }
+                */
             } catch (Exception e) {
                 e.printStackTrace();
             }

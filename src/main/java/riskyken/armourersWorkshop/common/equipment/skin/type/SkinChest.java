@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.equipment.skin.type;
 
 import java.util.ArrayList;
 
-import riskyken.armourersWorkshop.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeBase;
 
 public class SkinChest extends SkinTypeBase {
@@ -24,5 +24,15 @@ public class SkinChest extends SkinTypeBase {
     @Override
     public String getRegistryName() {
         return "armourers:chest";
+    }
+    
+    @Override
+    public String getName() {
+        return "Chest";
+    }
+
+    @Override
+    public int getVanillaArmourSlotId() {
+        return 1;
     }
 }

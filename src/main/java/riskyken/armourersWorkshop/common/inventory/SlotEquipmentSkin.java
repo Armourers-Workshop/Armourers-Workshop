@@ -2,22 +2,22 @@ package riskyken.armourersWorkshop.common.inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class SlotEquipmentSkin extends SlotHidable {
     
-    private EnumEquipmentType type;
+    private ISkinType skinType;
     
-    public SlotEquipmentSkin(EnumEquipmentType type, IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition) {
+    public SlotEquipmentSkin(ISkinType skinType, IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition) {
         super(inventory, slotIndex, xDisplayPosition, yDisplayPosition);
-        this.type = type;
+        this.skinType = skinType;
     }
     
     @Override
     public boolean isItemValid(ItemStack stack) {
         if (stack.getItem() instanceof ItemEquipmentSkin) {
-            if (stack.getItemDamage() == this.type.ordinal() - 1) {
+            if (this.skinType != null && stack.getItemDamage() == this.skinType.getId()) {
                 return true;
             }
         }

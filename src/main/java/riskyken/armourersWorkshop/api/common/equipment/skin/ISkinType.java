@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.equipment.skin;
+package riskyken.armourersWorkshop.api.common.equipment.skin;
 
 import java.util.ArrayList;
 
@@ -12,6 +12,8 @@ public interface ISkinType {
     
     public String getRegistryName();
     
+    public String getName();
+    
     @SideOnly(Side.CLIENT)
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper);
     
@@ -22,7 +24,13 @@ public interface ISkinType {
     
     public void removeBoundingBoxed(World world, int x, int y, int z);
 
-    public int clearArmourCubes();
+    public int clearArmourCubes(World world, int x, int y, int z);
     
     public boolean showSkinOverlayCheckbox();
+    
+    public int getVanillaArmourSlotId();
+    
+    public int getId();
+    
+    public void setId(int id);
 }

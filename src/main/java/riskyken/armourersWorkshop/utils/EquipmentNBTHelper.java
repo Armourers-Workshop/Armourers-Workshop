@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 
 public class EquipmentNBTHelper {
@@ -39,9 +40,9 @@ public class EquipmentNBTHelper {
     public static ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData, boolean armouerContainer) {
         ItemStack stack = null;
         if (!armouerContainer) {
-            stack = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
+            stack = new ItemStack(ModItems.equipmentSkin, 1, SkinTypeRegistry.INSTANCE.getLegacyIdForSkin(armourItemData.getSkinType()));
         } else {
-            stack = new ItemStack(ModItems.armourContainer[armourItemData.getType().getVanillaSlotId()], 1);
+            stack = new ItemStack(ModItems.armourContainer[armourItemData.getSkinType().getVanillaArmourSlotId()], 1);
         }
         
         NBTTagCompound itemNBT = new NBTTagCompound();

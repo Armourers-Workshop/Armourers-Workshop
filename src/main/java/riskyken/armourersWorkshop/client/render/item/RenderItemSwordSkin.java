@@ -13,12 +13,12 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.common.addons.AbstractAddon;
 import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EventState;
 
 public class RenderItemSwordSkin implements IItemRenderer {
@@ -123,7 +123,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
             }
             GL11.glEnable(GL11.GL_CULL_FACE);
             Addons.onWeaponRender(type, EventState.PRE);
-            ItemStackRenderHelper.renderItemAsArmourModel(stack, EnumEquipmentType.SWORD);
+            ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinSword);
             Addons.onWeaponRender(type, EventState.POST);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();

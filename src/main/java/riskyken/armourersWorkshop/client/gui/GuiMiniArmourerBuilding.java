@@ -16,7 +16,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.LightingHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -29,7 +29,6 @@ import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.cubes.Cube;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
-import riskyken.armourersWorkshop.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -103,12 +102,6 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         }
         
         buttonList.add(dropDownList);
-    }
-    
-    private String getLocalizedEquipmentName(EnumEquipmentType equipmentType) {
-        String localizedName = "armourTypes." + LibModInfo.ID.toLowerCase() + ":" + equipmentType.name().toLowerCase() + ".name";
-        localizedName = StatCollector.translateToLocal(localizedName);
-        return localizedName;
     }
     
     @Override

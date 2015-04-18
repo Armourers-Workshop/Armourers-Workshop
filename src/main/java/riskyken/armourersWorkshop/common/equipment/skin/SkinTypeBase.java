@@ -6,11 +6,15 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class SkinTypeBase implements ISkinType {
 
+    private int id = -1;
+    
     @SideOnly(Side.CLIENT)
     @Override
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
@@ -48,7 +52,7 @@ public abstract class SkinTypeBase implements ISkinType {
     }
     
     @Override
-    public int clearArmourCubes() {
+    public int clearArmourCubes(World world, int x, int y, int z) {
         // TODO Auto-generated method stub
         /*
         for (int i = 0; i < type.getParts().length; i++) {
@@ -80,5 +84,20 @@ public abstract class SkinTypeBase implements ISkinType {
     @Override
     public boolean showSkinOverlayCheckbox() {
         return false;
+    }
+    
+    @Override
+    public int getVanillaArmourSlotId() {
+        return -1;
+    }
+    
+    @Override
+    public int getId() {
+        return this.id;
+    }
+    
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
 }

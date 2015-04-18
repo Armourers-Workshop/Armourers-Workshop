@@ -14,7 +14,7 @@ import net.minecraft.util.IIcon;
 
 import org.lwjgl.input.Keyboard;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
@@ -24,6 +24,8 @@ import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlass;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlassGlowing;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlowing;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -35,18 +37,13 @@ public class ItemEquipmentSkin extends AbstractModItem {
         setHasSubtypes(true);
     }
     
-    public EnumEquipmentType getEquipmentType(ItemStack stack) {
-        int damage = stack.getItemDamage() + 1;
-        if (damage >= 0 & damage < EnumEquipmentType.values().length) {
-            return EnumEquipmentType.values()[damage];
-        } else {
-            return EnumEquipmentType.NONE;
-        }
+    public ISkinType getSkinType(ItemStack stack) {
+        return EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
     }
     
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered(); i++) {
             list.add(new ItemStack(item, 1, i));
         }
     }

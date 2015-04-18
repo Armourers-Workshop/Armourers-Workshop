@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import net.minecraft.util.StatCollector;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinFeet;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinHead;
@@ -20,6 +20,14 @@ public final class SkinTypeRegistry {
     
     public static SkinTypeRegistry INSTANCE;
     
+    public static ISkinType skinHead;
+    public static ISkinType skinChest;
+    public static ISkinType skinLegs;
+    public static ISkinType skinSkirt;
+    public static ISkinType skinFeet;
+    public static ISkinType skinSword;
+    public static ISkinType skinBow;
+    
     private LinkedHashMap<String, ISkinType> skinTypeMap;
     
     public static void init() {
@@ -32,17 +40,25 @@ public final class SkinTypeRegistry {
     }
     
     private void registerSkins() {
-        registerSkin(new SkinHead());
-        registerSkin(new SkinChest());
-        registerSkin(new SkinLegs());
-        registerSkin(new SkinSkirt());
-        registerSkin(new SkinFeet());
-        registerSkin(new SkinSword());
+        skinHead = new SkinHead();
+        skinChest = new SkinChest();
+        skinLegs = new SkinLegs();
+        skinSkirt = new SkinSkirt();
+        skinFeet = new SkinFeet();
+        skinSword = new SkinSword();
+        
+        registerSkin(skinHead);
+        registerSkin(skinChest);
+        registerSkin(skinLegs);
+        registerSkin(skinSkirt);
+        registerSkin(skinFeet);
+        registerSkin(skinSword);
     }
     
     private void registerSkin(ISkinType skinType) {
+        skinType.setId(skinTypeMap.size());
         skinTypeMap.put(skinType.getRegistryName(), skinType);
-        ModLogger.log("Registering equipment skin type : " + skinType.getRegistryName());
+        ModLogger.log("Registering equipment skin id: " + skinType.getId() + " type:" + skinType.getRegistryName());
     }
     
     public ISkinType getSkinFromRegistryName(String registryName) {
@@ -63,29 +79,15 @@ public final class SkinTypeRegistry {
             return getSkinFromRegistryName("armourers:feet");
         case 5:
             return getSkinFromRegistryName("armourers:sword");
+        case 6:
+            return getSkinFromRegistryName("armourers:bow");
         default:
             return null;
         }
     }
     
-    public EnumEquipmentType getLegacyEquipmentTypeForSkin(ISkinType skinType) {
-        String skinName = skinType.getRegistryName();
-        if (skinName.equals("armourers:head")) {
-            return EnumEquipmentType.HEAD;
-        } else if (skinName.equals("armourers:chest")) {
-            return EnumEquipmentType.CHEST;
-        } else if (skinName.equals("armourers:legs")) {
-            return EnumEquipmentType.LEGS;
-        } else if (skinName.equals("armourers:skirt")) {
-            return EnumEquipmentType.SKIRT;
-        } else if (skinName.equals("armourers:feet")) {
-            return EnumEquipmentType.FEET;
-        } else if (skinName.equals("armourers:sword")) {
-            return EnumEquipmentType.SWORD;
-        } else if (skinName.equals("armourers:bow")) {
-            return EnumEquipmentType.BOW;
-        }
-        return EnumEquipmentType.NONE;
+    public int getLegacyIdForSkin(ISkinType skinType) {
+        return skinType.getId();
     }
     
     public ArrayList<ISkinType> getRegisteredSkins() {
@@ -95,6 +97,10 @@ public final class SkinTypeRegistry {
             skinTypes.add(skinTypeMap.get(key));
         }
         return skinTypes;
+    }
+    
+    public int getNumberOfSkinRegistered() {
+        return skinTypeMap.size();
     }
     
     @SideOnly(Side.CLIENT)

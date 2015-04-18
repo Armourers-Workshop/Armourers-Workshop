@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 
 public class SlotMannequin extends Slot {
@@ -31,7 +31,7 @@ public class SlotMannequin extends Slot {
                 return true;
             }
             if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
-                    .getEquipmentType(stack) == EnumEquipmentType.HEAD) {
+                    .getSkinType(stack) == SkinTypeRegistry.skinHead) {
                 return true;
             }
             break;
@@ -40,7 +40,7 @@ public class SlotMannequin extends Slot {
                 return true;
             }
             if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
-                    .getEquipmentType(stack) == EnumEquipmentType.CHEST) {
+                    .getSkinType(stack) == SkinTypeRegistry.skinChest) {
                 return true;
             }
             break;
@@ -49,13 +49,13 @@ public class SlotMannequin extends Slot {
                 return true;
             }
             if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
-                    .getEquipmentType(stack) == EnumEquipmentType.LEGS) {
+                    .getSkinType(stack) == SkinTypeRegistry.skinLegs) {
                 return true;
             }
             break;
         case SKIRT:
             if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
-                    .getEquipmentType(stack) == EnumEquipmentType.SKIRT) {
+                    .getSkinType(stack) == SkinTypeRegistry.skinSkirt) {
                 return true;
             }
             break;
@@ -64,7 +64,7 @@ public class SlotMannequin extends Slot {
                 return true;
             }
             if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
-                    .getEquipmentType(stack) == EnumEquipmentType.FEET) {
+                    .getSkinType(stack) == SkinTypeRegistry.skinFeet) {
                 return true;
             }
             break;

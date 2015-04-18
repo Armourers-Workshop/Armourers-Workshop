@@ -2,81 +2,107 @@ package riskyken.armourersWorkshop.common.equipment;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.BitSet;
+import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class EntityEquipmentData implements IEntityEquipment {
     
-    private static final String TAG_HAVE_EQUIPMENT = "haveEquipment";
+    private static final String TAG_SKIN_LIST = "skinList";
+    private static final String TAG_SKIN_TYPE = "skinType";
     private static final String TAG_EQUIPMENT_ID = "equipmentId";
     
-    private BitSet haveEquipment = new BitSet(EnumEquipmentType.values().length - 1);
-    private int[] equipmentId = new int[EnumEquipmentType.values().length - 1];
+    private HashMap<String, Integer> equipment = new HashMap<String, Integer>();
     
-    public EntityEquipmentData() {}
+    public EntityEquipmentData() {
+    }
     
     public EntityEquipmentData(ByteBuf buf) {
         fromBytes(buf);
     }
     
     @Override
-    public void addEquipment(EnumEquipmentType type, int equipmentId) {
-        this.equipmentId[type.ordinal() - 1] = equipmentId;
-        this.haveEquipment.set(type.ordinal() - 1, true);
+    public void addEquipment(ISkinType skinType, int equipmentId) {
+        String key = skinType.getRegistryName();
+        if (this.equipment.containsKey(key)) {
+            this.equipment.remove(key);
+        }
+        this.equipment.put(key, equipmentId);
     }
     
     @Override
-    public void removeEquipment(EnumEquipmentType type) {
-        this.haveEquipment.set(type.ordinal() - 1, false);
-    }
-    
-    @Override
-    public boolean haveEquipment(EnumEquipmentType type) {
-        return this.haveEquipment.get(type.ordinal() - 1);
-    }
-    
-    @Override
-    public int getEquipmentId(EnumEquipmentType type) {
-        return this.equipmentId[type.ordinal() - 1];
-    }
-    
-    public void saveNBTData(NBTTagCompound compound) {
-        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            compound.setBoolean(TAG_HAVE_EQUIPMENT + i, this.haveEquipment.get(i));
-            compound.setInteger(TAG_EQUIPMENT_ID + i, this.equipmentId[i]);
+    public void removeEquipment(ISkinType skinType) {
+        String key = skinType.getRegistryName();
+        if (this.equipment.containsKey(key)) {
+            this.equipment.remove(key);
         }
     }
     
+    @Override
+    public boolean haveEquipment(ISkinType skinType) {
+        String key = skinType.getRegistryName();
+        return this.equipment.containsKey(key);
+    }
+    
+    @Override
+    public int getEquipmentId(ISkinType skinType) {
+        String key = skinType.getRegistryName();
+        if (this.equipment.containsKey(key)) {
+            return this.equipment.get(key);
+        }
+        return 0;
+    }
+    
+    public void saveNBTData(NBTTagCompound compound) {
+        NBTTagList items = new NBTTagList();
+        for (int i = 0; i < equipment.size(); i++) {
+            String skinName = (String) equipment.keySet().toArray()[i];
+            int equipmentId = equipment.get(skinName);
+            NBTTagCompound item = new NBTTagCompound();
+            item.setString(TAG_SKIN_TYPE, skinName);
+            item.setInteger(TAG_EQUIPMENT_ID, equipmentId);
+            items.appendTag(item);
+        }
+        compound.setTag(TAG_SKIN_LIST, items);
+    }
+    
     public void loadNBTData(NBTTagCompound compound) {
-        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            this.haveEquipment.set(i, compound.getBoolean(TAG_HAVE_EQUIPMENT + i));
-            this.equipmentId[i] = compound.getInteger(TAG_EQUIPMENT_ID + i);
+        NBTTagList itemsList = compound.getTagList(TAG_SKIN_LIST, NBT.TAG_COMPOUND);
+        equipment.clear();
+        for (int i = 0; i < itemsList.tagCount(); i++) {
+            NBTTagCompound item = (NBTTagCompound)itemsList.getCompoundTagAt(i);
+            String skinName = item.getString(TAG_SKIN_TYPE);
+            int equipmentId = item.getInteger(TAG_EQUIPMENT_ID);
+            equipment.put(skinName, equipmentId);
         }
     }
     
     public void toBytes(ByteBuf buf) {
-        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            buf.writeBoolean(this.haveEquipment.get(i));
-            buf.writeInt(this.equipmentId[i]);
+        buf.writeByte(equipment.size());
+        for (int i = 0; i < equipment.size(); i++) {
+            String skinName = (String) equipment.keySet().toArray()[i];
+            int equipmentId = equipment.get(skinName);
+            ByteBufUtils.writeUTF8String(buf, skinName);
+            buf.writeInt(equipmentId);
         }
     }
     
     public void fromBytes(ByteBuf buf) {
-        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            this.haveEquipment.set(i, buf.readBoolean());
-            this.equipmentId[i] = buf.readInt();
+        int itemCount = buf.readByte();
+        equipment.clear();
+        for (int i = 0; i < itemCount; i++) {
+            String skinName = ByteBufUtils.readUTF8String(buf);
+            int equipmentId = buf.readInt();
+            equipment.put(skinName, equipmentId);
         }
     }
 
     public boolean hasCustomEquipment() {
-        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            if (this.haveEquipment.get(i)) {
-                return true;
-            }
-        }
-        return false;
+        return this.equipment.size() > 0;
     }
 }

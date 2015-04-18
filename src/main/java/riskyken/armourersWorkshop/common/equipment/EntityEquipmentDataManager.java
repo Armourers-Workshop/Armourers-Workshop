@@ -17,8 +17,8 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -92,19 +92,21 @@ public final class EntityEquipmentDataManager {
         ItemStack stack = inventory.getCurrentItem();
         if (stack != null) {
             if (isSwordRenderItem(stack.getItem())) {
-                if (equipmentData.haveEquipment(EnumEquipmentType.SWORD)) {
-                    EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(EnumEquipmentType.SWORD));
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword)) {
+                    EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(SkinTypeRegistry.skinSword));
                 } else {
                     EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
+            /*
             if (isBowRenderItem(stack.getItem())) {
-                if (equipmentData.haveEquipment(EnumEquipmentType.BOW)) {
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow)) {
                     EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(EnumEquipmentType.BOW));
                 } else {
                     EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
+            */
         }
     }
     

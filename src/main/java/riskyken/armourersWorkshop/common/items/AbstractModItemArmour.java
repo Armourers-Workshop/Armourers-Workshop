@@ -142,25 +142,7 @@ public class AbstractModItemArmour extends ItemArmor {
             return null;
         }
         
-        switch (data.getType()) {
-        case HEAD:
-            targetModel = emr.customHead;
-            break;
-        case CHEST:
-            targetModel = emr.customChest;
-            break;
-        case LEGS:
-            targetModel = emr.customLegs;
-            break;
-        case SKIRT:
-            targetModel = emr.customSkirt;
-            break;
-        case FEET:
-            targetModel = emr.customFeet;
-            break;
-        default:
-            break;
-        }
+        targetModel = emr.getModelForEquipmentType(data.getSkinType());
         
         if (targetModel == null) {
             return null;

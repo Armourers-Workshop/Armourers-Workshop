@@ -6,7 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderManager;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.mojang.authlib.GameProfile;
@@ -25,12 +24,6 @@ public class DemoRenderManager implements IEquipmentRenderManager {
     public void onLoad(IEquipmentRenderHandler handler) {
         this.handler = handler;
         ModLogger.log("Loaded DemoRenderManager");
-    }
-
-    @Override
-    public void onRenderEquipment(Entity entity, EnumEquipmentType armourType) {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override

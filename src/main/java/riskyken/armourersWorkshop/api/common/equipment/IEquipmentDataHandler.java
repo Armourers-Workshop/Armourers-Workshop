@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.api.common.equipment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 
 public interface IEquipmentDataHandler {
     
@@ -25,7 +26,7 @@ public interface IEquipmentDataHandler {
      * @param entity
      * @return IEntityEquipment
      */
-    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, EnumEquipmentType equipmentType);
+    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, ISkinType skinType);
     
     /**
      * Removes all custom equipment data from a player.
@@ -38,7 +39,7 @@ public interface IEquipmentDataHandler {
      * @param entity Entity to remove the custom equipment from.
      * @param armourType The type of equipment to remove.
      */
-    public void clearCustomEquipmentFromPlayer(EntityPlayer player, EnumEquipmentType equipmentType);
+    public void clearCustomEquipmentFromPlayer(EntityPlayer player, ISkinType skinType);
     
     /** 
      * Get the EnumArmourType for an item stack.
@@ -46,7 +47,7 @@ public interface IEquipmentDataHandler {
      * @return The EnumArmourType for this equipment id.
      * Returns EnumArmourType.NONE if no armour exists for this item stack.
      */
-    public EnumEquipmentType getEquipmentTypeFromStack(ItemStack stack);
+    public ISkinType getSkinTypeFromStack(ItemStack stack);
     
     /**
      * Checks if an item stack has equipment data.

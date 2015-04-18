@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.render;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -15,11 +16,12 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
+import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourChest;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourFeet;
@@ -31,6 +33,7 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
@@ -71,7 +74,7 @@ public final class EquipmentModelRenderer {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
-    public CustomEquipmentItemData getPlayerCustomArmour(Entity entity, EnumEquipmentType type) {
+    public CustomEquipmentItemData getPlayerCustomArmour(Entity entity, ISkinType skinType) {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
@@ -81,11 +84,11 @@ public final class EquipmentModelRenderer {
             return null;
         }
         
-        if (!equipmentData.haveEquipment(type)) {
+        if (!equipmentData.haveEquipment(skinType)) {
             return null;
         }
         
-        int equipmentId = equipmentData.getEquipmentId(type);
+        int equipmentId = equipmentData.getEquipmentId(skinType);
         return getCustomArmourItemData(equipmentId);
     }
     
@@ -115,14 +118,13 @@ public final class EquipmentModelRenderer {
         }
     }
 
-    private boolean playerHasCustomArmourType(UUID playerId, EnumEquipmentType armourType) {
+    private boolean playerHasCustomArmourType(UUID playerId, ISkinType skinType) {
         if (!playerEquipmentMap.containsKey(playerId)) {
             return false;
         }
         EntityEquipmentData equipmentData = playerEquipmentMap.get(playerId);
-        return equipmentData.haveEquipment(armourType);
+        return equipmentData.haveEquipment(skinType);
     }
-    
     
     ItemStack equippedStack = null;
     int equippedIndex  = -1;
@@ -133,19 +135,21 @@ public final class EquipmentModelRenderer {
         targetPlayer = player;
         if (!addedRenderAttachment & !ConfigHandler.compatibilityRender) {
             ModelBiped playerBiped = event.renderer.modelBipedMain;
-            playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.HEAD, EnumEquipmentPart.HEAD));
-            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.CHEST));
-            playerBiped.bipedLeftArm.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.LEFT_ARM));
-            playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.CHEST, EnumEquipmentPart.RIGHT_ARM));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.LEGS, EnumEquipmentPart.LEFT_LEG));
-            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.LEGS, EnumEquipmentPart.RIGHT_LEG));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.SKIRT, EnumEquipmentPart.SKIRT));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.FEET, EnumEquipmentPart.LEFT_FOOT));
-            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, EnumEquipmentType.FEET, EnumEquipmentPart.RIGHT_FOOT));            
+            
+            playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinHead, EnumEquipmentPart.HEAD));
+            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, EnumEquipmentPart.CHEST));
+            playerBiped.bipedLeftArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, EnumEquipmentPart.LEFT_ARM));
+            playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, EnumEquipmentPart.RIGHT_ARM));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, EnumEquipmentPart.LEFT_LEG));
+            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, EnumEquipmentPart.RIGHT_LEG));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinSkirt, EnumEquipmentPart.SKIRT));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, EnumEquipmentPart.LEFT_FOOT));
+            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, EnumEquipmentPart.RIGHT_FOOT));            
+            
             addedRenderAttachment = true;
         }
         
-        if (playerHasCustomArmourType(UtilPlayer.getIDFromPlayer(player), EnumEquipmentType.SKIRT)) {
+        if (playerHasCustomArmourType(UtilPlayer.getIDFromPlayer(player), SkinTypeRegistry.skinSkirt)) {
             if (!Loader.isModLoaded("SmartMoving")) {
                 PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(UtilPlayer.getIDFromPlayer(player));
                 if (skinInfo != null && skinInfo.getNakedInfo().limitLimbs) {
@@ -185,32 +189,32 @@ public final class EquipmentModelRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glEnable(GL11.GL_BLEND);
-            if (slot == EnumEquipmentType.HEAD.getVanillaSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.HEAD);
+            if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead);
                 if (data != null) {
                     customHead.render(player, render.modelBipedMain, data);
                 }
             }
-            if (slot == EnumEquipmentType.CHEST.getVanillaSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.CHEST);
+            if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest);
                 if (data != null) {
                     customChest.render(player, render.modelBipedMain, data);
                 }
             }
-            if (slot == EnumEquipmentType.LEGS.getVanillaSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.LEGS);
+            if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs);
                 if (data != null) {
                     customLegs.render(player, render.modelBipedMain, data);
                 }
             }
-            if (slot == EnumEquipmentType.SKIRT.getVanillaSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.SKIRT);
+            if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt);
                 if (data != null) {
                     customSkirt.render(player, render.modelBipedMain, data);
                 }
             }
-            if (slot == EnumEquipmentType.FEET.getVanillaSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, EnumEquipmentType.FEET);
+            if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
+                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet);
                 if (data != null) {
                     customFeet.render(player, render.modelBipedMain, data);
                 }
@@ -221,25 +225,21 @@ public final class EquipmentModelRenderer {
         }
     }
     
-    public IEquipmentModel getModelForEquipmentType(EnumEquipmentType equipmentType) {
-        switch (equipmentType) {
-        case NONE:
-            return null;
-        case HEAD:
+    public AbstractModelCustomEquipment getModelForEquipmentType(ISkinType skinType) {
+        if (skinType == SkinTypeRegistry.skinHead) {
             return customHead;
-        case CHEST:
+        } else if (skinType == SkinTypeRegistry.skinChest) {
             return customChest;
-        case LEGS:
+        } else if (skinType == SkinTypeRegistry.skinLegs) {
             return customLegs;
-        case SKIRT:
+        } else if (skinType == SkinTypeRegistry.skinSkirt) {
             return customSkirt;
-        case FEET:
+        } else if (skinType == SkinTypeRegistry.skinFeet) {
             return customFeet;
-        case SWORD:
+        } else if (skinType == SkinTypeRegistry.skinSword) {
             return customSword;
-        case BOW:
-            return customBow;
         }
+        //return customBow;
         return null;
     }
 
@@ -250,11 +250,12 @@ public final class EquipmentModelRenderer {
             return;
         }
         
-        for (int i = 0; i < 6; i++) {
-            EnumEquipmentType armourType = EnumEquipmentType.getOrdinal(i + 1);
-            if (equipmentData.haveEquipment(armourType)) {
-                CustomEquipmentItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(armourType));
-                if (armourType == EnumEquipmentType.SWORD | armourType == EnumEquipmentType.BOW) {
+        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkins();
+        for (int i = 0; i < skinList.size(); i++) {
+            ISkinType skinType = skinList.get(i);
+            if (equipmentData.haveEquipment(skinType)) {
+                CustomEquipmentItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(skinType));
+                if (skinType == SkinTypeRegistry.skinSword) {
                     float scale = 0.0625F;
                     GL11.glPushMatrix();
                     
@@ -287,7 +288,7 @@ public final class EquipmentModelRenderer {
     }
     
     public void renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped) {
-        if (EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack) == EnumEquipmentType.NONE) {
+        if (EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack) == null) {
             return;
         }
         int equipmentId = EquipmentDataHandler.INSTANCE.getEquipmentIdFromItemStack(stack);
@@ -296,7 +297,7 @@ public final class EquipmentModelRenderer {
     }
     
     public void renderEquipmentPartFromStack(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX) {
-        if (EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack) == EnumEquipmentType.NONE) {
+        if (EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack) == null) {
             return;
         }
         int equipmentId = EquipmentDataHandler.INSTANCE.getEquipmentIdFromItemStack(stack);
@@ -308,7 +309,7 @@ public final class EquipmentModelRenderer {
         if (data == null) {
             return;
         }
-        IEquipmentModel model = getModelForEquipmentType(data.getType());
+        IEquipmentModel model = getModelForEquipmentType(data.getSkinType());
         if (model == null) {
             return;
         }
@@ -324,7 +325,7 @@ public final class EquipmentModelRenderer {
         if (data == null) {
             return;
         }
-        IEquipmentModel model = getModelForEquipmentType(data.getType());
+        IEquipmentModel model = getModelForEquipmentType(data.getSkinType());
         if (model == null) {
             return;
         }

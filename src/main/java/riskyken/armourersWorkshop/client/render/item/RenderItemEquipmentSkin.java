@@ -11,10 +11,11 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
@@ -46,8 +47,8 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             GL11.glScalef(scale, scale, scale);
             GL11.glRotatef(180, 0, 1, 0);
             
-            EnumEquipmentType equipmentType = EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack);
-            if (equipmentType == EnumEquipmentType.SWORD) {
+            ISkinType skinType = EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
+            if (skinType == SkinTypeRegistry.skinSword) {
                 GL11.glScalef(0.7F, 0.7F, 0.7F);
             }
             switch (type) {

@@ -10,7 +10,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.BipedRotations;
@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
@@ -60,9 +61,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         if (!worldObj.isRemote) {
             if (itemstack == null) {
-                equipmentData.removeEquipment(EnumEquipmentType.getOrdinal(i + 1)); 
-                markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(i);
+                if (skinType != null) {
+                    equipmentData.removeEquipment(skinType);
+                    markDirty();
+                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                }
             } else {
                 setEquipment(itemstack);
             }
@@ -77,7 +81,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
-        setEquipment(equipmentData.getType(), equipmentId);
+        setEquipment(equipmentData.getSkinType(), equipmentId);
     }
     
     public void setOwner(ItemStack stack) {
@@ -126,8 +130,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         }
     }
     
-    public void setEquipment(EnumEquipmentType armourType, int equipmentId) {
-        equipmentData.addEquipment(armourType, equipmentId);
+    public void setEquipment(ISkinType skinType, int equipmentId) {
+        equipmentData.addEquipment(skinType, equipmentId);
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }

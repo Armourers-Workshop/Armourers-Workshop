@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.equipment;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 
 import net.minecraft.entity.Entity;
@@ -10,14 +11,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
@@ -54,31 +55,12 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
     
     public void setEquipmentStack(ItemStack stack) {
-        EnumEquipmentType equipmentType = EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack);
-        switch (equipmentType) {
-        case HEAD:
-            setInventorySlotContents(0, stack);
-            break;
-        case CHEST:
-            setInventorySlotContents(1, stack);
-            break;
-        case LEGS:
-            setInventorySlotContents(2, stack);
-            break;
-        case SKIRT:
-            setInventorySlotContents(3, stack);
-            break;
-        case FEET:
-            setInventorySlotContents(4, stack);
-            break;
-        case SWORD:
-            setInventorySlotContents(5, stack);
-            break;
-        case BOW:
-            setInventorySlotContents(6, stack);
-            break;
-        case NONE:
-            break;
+        ISkinType skinType = EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
+        if (skinType != null) {
+            int slot = SkinTypeHelper.getSlotForSkinType(skinType);
+            if (slot != -1) {
+                setInventorySlotContents(slot, stack);
+            }
         }
     }
     
@@ -86,80 +68,39 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         return customArmourInventory;
     }
     
-    public ItemStack getEquipmentStack(EnumEquipmentType equipmentType) {
-        switch (equipmentType) {
-        case HEAD:
-            return getStackInSlot(0);
-        case CHEST:
-            return getStackInSlot(1);
-        case LEGS:
-            return getStackInSlot(2);
-        case SKIRT:
-            return getStackInSlot(3);
-        case FEET:
-            return getStackInSlot(4);
-        case SWORD:
-            return getStackInSlot(5);
-        case BOW:
-            return getStackInSlot(6);
-        case NONE:
-            return null;
+    public ItemStack getEquipmentStack(ISkinType skinType) {
+        int slot = SkinTypeHelper.getSlotForSkinType(skinType);
+        if (slot != -1) {
+            return getStackInSlot(slot);
         }
         return null;
     }
     
     public void clearAllEquipmentStacks() {
-        for (int i = 0; i < EnumEquipmentType.values().length - 1; i++) {
-            setInventorySlotContents(i, null);
+        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkins();
+        for (int i = 0; i < skinList.size() - 1; i++) {
+            ISkinType skinType = skinList.get(i);
+            int slot = SkinTypeHelper.getSlotForSkinType(skinType);
+            if (slot != -1) {
+                setInventorySlotContents(slot, null);
+            }
         }
     }
     
-    public void clearEquipmentStack(EnumEquipmentType equipmentType) {
-        switch (equipmentType) {
-        case HEAD:
-            setInventorySlotContents(0, null);
-            break;
-        case CHEST:
-            setInventorySlotContents(1, null);
-            break;
-        case LEGS:
-            setInventorySlotContents(2, null);
-            break;
-        case SKIRT:
-            setInventorySlotContents(3, null);
-            break;
-        case FEET:
-            setInventorySlotContents(4, null);
-            break;
-        case SWORD:
-            setInventorySlotContents(5, null);
-            break;
-        case BOW:
-            setInventorySlotContents(6, null);
-            break;
-        case NONE:
-            break;
+    public void clearEquipmentStack(ISkinType skinType) {
+        int slot = SkinTypeHelper.getSlotForSkinType(skinType);
+        if (slot != -1) {
+            setInventorySlotContents(slot, null);
         }
     }
     
-    public void addCustomEquipment(EnumEquipmentType type, int equipmentId) {
-        equipmentData.addEquipment(type, equipmentId);
-        updateEquipmentDataToPlayersAround();
-    }
-
-    public void removeCustomEquipment(EnumEquipmentType type) {
-        equipmentData.removeEquipment(type);
+    public void addCustomEquipment(ISkinType skinType, int equipmentId) {
+        equipmentData.addEquipment(skinType, equipmentId);
         updateEquipmentDataToPlayersAround();
     }
     
-    public void removeAllCustomEquipment() {
-        equipmentData.removeEquipment(EnumEquipmentType.HEAD);
-        equipmentData.removeEquipment(EnumEquipmentType.CHEST);
-        equipmentData.removeEquipment(EnumEquipmentType.LEGS);
-        equipmentData.removeEquipment(EnumEquipmentType.SKIRT);
-        equipmentData.removeEquipment(EnumEquipmentType.FEET);
-        equipmentData.removeEquipment(EnumEquipmentType.SWORD);
-        equipmentData.removeEquipment(EnumEquipmentType.BOW);
+    public void removeCustomEquipment(ISkinType skinType) {
+        equipmentData.removeEquipment(skinType);
         updateEquipmentDataToPlayersAround();
     }
     
@@ -188,55 +129,6 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
             sendSkinData();
         }
     }
-
-    public void setEquipmentData(IEntityEquipment equipmentData) {
-        for (int i = 1; i < EnumEquipmentType.values().length; i++) {
-            EnumEquipmentType equipmentType = EnumEquipmentType.getOrdinal(i);
-            if (equipmentData.haveEquipment(equipmentType)) {
-                setEquipment(equipmentType, equipmentData.getEquipmentId(equipmentType));
-            } else {
-                clearEquipment(equipmentType);
-            }
-        }
-        //updateEquipmentDataToPlayersAround();
-    }
-    
-    private void setEquipment(EnumEquipmentType equipmentType, int equipmentId) {
-        ItemStack stack = EquipmentDataHandler.INSTANCE.getCustomEquipmentItemStack(equipmentId);
-        setEquipment(equipmentType, stack);
-    }
-    
-    private void clearEquipment(EnumEquipmentType equipmentType) {
-        setEquipment(equipmentType, null);
-    }
-    
-    private void setEquipment(EnumEquipmentType equipmentType, ItemStack stack) {
-        switch (equipmentType) {
-        case NONE:
-            break;
-        case HEAD:
-            setInventorySlotContents(0, stack);
-            break;
-        case CHEST:
-            setInventorySlotContents(1, stack);
-            break;
-        case LEGS:
-            setInventorySlotContents(2, stack);
-            break;
-        case SKIRT:
-            setInventorySlotContents(3, stack);
-            break;
-        case FEET:
-            setInventorySlotContents(4, stack);
-            break;
-        case SWORD:
-            setInventorySlotContents(5, stack);
-            break;
-        case BOW:
-            setInventorySlotContents(6, stack);
-            break;
-        }
-    }
     
     public EntityEquipmentData getEquipmentData() {
         return equipmentData;
@@ -250,28 +142,23 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
             return;
         } 
         
-        if (!stack.hasTagCompound()) { return; }
+        if (!stack.hasTagCompound()) {
+            return;
+        }
         
         NBTTagCompound data = stack.getTagCompound();
-        if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
+        if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
+            return ;
+        }
         NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
         loadFromItemNBT(armourNBT);
     }
     
     private void removeArmourFromSlot(byte slotId) {
-        EnumEquipmentType equipmentType = EnumEquipmentType.getOrdinal(slotId + 1);
-        removeCustomEquipment(equipmentType);
-    }
-    
-    public void removeAllCustomArmourData() {
-        player.addChatMessage(new ChatComponentText("You're custom armour data was cleared."));
-        removeCustomEquipment(EnumEquipmentType.HEAD);
-        removeCustomEquipment(EnumEquipmentType.CHEST);
-        removeCustomEquipment(EnumEquipmentType.LEGS);
-        removeCustomEquipment(EnumEquipmentType.SKIRT);
-        removeCustomEquipment(EnumEquipmentType.FEET);
-        removeCustomEquipment(EnumEquipmentType.SWORD);
-        removeCustomEquipment(EnumEquipmentType.BOW);
+        ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
+        if (slotId != -1) {
+            removeCustomEquipment(skinType);
+        }
     }
     
     public void sendCustomArmourDataToPlayer(EntityPlayerMP targetPlayer) {
@@ -323,12 +210,11 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
         CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         
-        addCustomEquipment(equipmentData.getType(), equipmentId);
+        addCustomEquipment(equipmentData.getSkinType(), equipmentId);
     }
     
     @Override
     public void init(Entity entity, World world) {
-        
     }
 
     @Override
@@ -373,7 +259,6 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
             if (slot < 7) {
                 armourSlotUpdate((byte)slot);
             }
-
         }
 
         colourSlotUpdate((byte)7);

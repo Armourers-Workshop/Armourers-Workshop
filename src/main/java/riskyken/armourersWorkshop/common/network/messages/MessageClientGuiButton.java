@@ -3,9 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
@@ -45,8 +43,9 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
             
-            if (message.buttonId >= 0 & message.buttonId < EnumEquipmentType.values().length - 1) {
-                armourerBrain.setType(EnumEquipmentType.getOrdinal(message.buttonId + 1));
+            if (message.buttonId >= 0 & message.buttonId < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered()) {
+                ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(message.buttonId);
+                armourerBrain.setSkinType(skinType);
             }
             if (message.buttonId == 14) {
                 armourerBrain.loadArmourItem(player);
@@ -61,10 +60,10 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
                 armourerBrain.clearArmourCubes();
             }
             if (message.buttonId == 11) {
-                armourerBrain.cloneToSide(ForgeDirection.WEST);
+                //armourerBrain.cloneToSide(ForgeDirection.WEST);
             }
             if (message.buttonId == 12) {
-                armourerBrain.cloneToSide(ForgeDirection.EAST);
+                //armourerBrain.cloneToSide(ForgeDirection.EAST);
             }
         }
         

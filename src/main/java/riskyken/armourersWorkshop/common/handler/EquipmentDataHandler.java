@@ -8,14 +8,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -38,9 +39,9 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
 
     @Override
-    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, EnumEquipmentType equipmentType) {
+    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, ISkinType skinType) {
         ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        return entityProps.getEquipmentStack(equipmentType);
+        return entityProps.getEquipmentStack(skinType);
     }
 
     @Override
@@ -50,9 +51,9 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
 
     @Override
-    public void clearCustomEquipmentFromPlayer(EntityPlayer player, EnumEquipmentType equipmentType) {
+    public void clearCustomEquipmentFromPlayer(EntityPlayer player, ISkinType skinType) {
         ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        entityProps.clearEquipmentStack(equipmentType);
+        entityProps.clearEquipmentStack(skinType);
     }
     
     @SideOnly(Side.CLIENT)
@@ -61,30 +62,30 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
     
     @Override
-    public EnumEquipmentType getEquipmentTypeFromStack(ItemStack stack) {
+    public ISkinType getSkinTypeFromStack(ItemStack stack) {
         if (!hasItemStackGotEquipmentData(stack)) {
-            return EnumEquipmentType.NONE;
+            return null;
         }
         Item item = stack.getItem();
         if (item == ModItems.equipmentSkin) {
             int damage = stack.getItemDamage();
             if (damage >= 0 & damage < 6) {
-                return EnumEquipmentType.getOrdinal(damage + 1);
+                return SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(damage);
             }
         }
         if (item == ModItems.armourContainer[0]) {
-            return EnumEquipmentType.HEAD;
+            return SkinTypeRegistry.skinHead;
         }
         if (item == ModItems.armourContainer[1]) {
-            return EnumEquipmentType.CHEST;
+            return SkinTypeRegistry.skinChest;
         }
         if (item == ModItems.armourContainer[2]) {
-            return EnumEquipmentType.LEGS;
+            return SkinTypeRegistry.skinLegs;
         }
         if (item == ModItems.armourContainer[3]) {
-            return EnumEquipmentType.FEET;
+            return SkinTypeRegistry.skinFeet;
         }
-        return EnumEquipmentType.NONE;
+        return null;
     }
     
     @Override
@@ -100,7 +101,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     public ItemStack getCustomEquipmentItemStack(int equipmentId) {
         CustomEquipmentItemData armourItemData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         if (armourItemData == null) { return null; }
-        ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, armourItemData.getType().ordinal() - 1);
+        ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, SkinTypeRegistry.INSTANCE.getLegacyIdForSkin(armourItemData.getSkinType()));
         NBTTagCompound armourNBT = new NBTTagCompound();
         armourItemData.writeClientDataToNBT(armourNBT);
         stackOutput.setTagCompound(new NBTTagCompound());

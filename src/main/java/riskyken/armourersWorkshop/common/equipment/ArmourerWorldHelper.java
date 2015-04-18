@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
@@ -18,17 +18,18 @@ import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomEquipmentItemData saveArmourItem(World world, EnumEquipmentType type,
+    public static CustomEquipmentItemData saveArmourItem(World world, ISkinType skinType,
             String authorName, String customName, String tags,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
         ArrayList<CustomEquipmentPartData> parts = new ArrayList<CustomEquipmentPartData>();
         
+        /*
         for (int i = 0; i < type.getParts().length; i++) {
             saveArmourPart(world, parts, type.getParts()[i], xCoord, yCoord, zCoord, direction);
         }
-        
+        */
         if (parts.size() > 0) {
-            return new CustomEquipmentItemData(authorName, customName, tags, type, parts);
+            return new CustomEquipmentItemData(authorName, customName, tags, skinType, parts);
         } else {
             return null;
         }

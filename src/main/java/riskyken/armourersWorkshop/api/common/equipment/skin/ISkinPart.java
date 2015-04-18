@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.equipment.skin;
+package riskyken.armourersWorkshop.api.common.equipment.skin;
 
 import javax.vecmath.Point3i;
 

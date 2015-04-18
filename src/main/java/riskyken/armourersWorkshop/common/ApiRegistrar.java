@@ -7,9 +7,9 @@ import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderManager;
 import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataManager;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -50,12 +50,8 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
     @Override
     public void onLoad(IEquipmentRenderHandler handler) {}
 
-    @Override
-    public void onRenderEquipment(Entity entity, EnumEquipmentType armourType) {
-        for (int i = 0; i < equipmentRenderManagers.size(); i++) {
-            String key = (String) equipmentRenderManagers.keySet().toArray()[i];
-            equipmentRenderManagers.get(key).onRenderEquipment(entity, armourType);
-        }
+    
+    public void onRenderEquipment(Entity entity, ISkinType skinType) {
     }
 
     @Override

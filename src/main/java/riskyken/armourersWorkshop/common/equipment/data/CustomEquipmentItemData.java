@@ -8,16 +8,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants.NBT;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -25,16 +24,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class CustomEquipmentItemData {
     
-    private static final String TAG_TYPE = "type";
-    private static final String TAG_PARTS = "parts";
-    private static final String TAG_TAGS = "tags";
-    
-    public static final int FILE_VERSION = 4;
+    public static final int FILE_VERSION = 5;
     
     private String authorName;
     private String customName;
     private String tags;
-    private EnumEquipmentType type;
+    private ISkinType skinType;
     private ArrayList<CustomEquipmentPartData> parts;
     
     private int timeFromRender = 0;
@@ -54,11 +49,11 @@ public class CustomEquipmentItemData {
         return false;
     }
     
-    public CustomEquipmentItemData(String authorName, String customName, String tags, EnumEquipmentType type, ArrayList<CustomEquipmentPartData> parts) {
+    public CustomEquipmentItemData(String authorName, String customName, String tags, ISkinType skinType, ArrayList<CustomEquipmentPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
         this.tags = tags;
-        this.type = type;
+        this.skinType = skinType;
         this.parts = parts;
     }
 
@@ -73,10 +68,6 @@ public class CustomEquipmentItemData {
         readFromBuf(buf);
     }
     
-    public CustomEquipmentItemData(NBTTagCompound compound) {
-        readFromNBT(compound);
-    }
-    
     public CustomEquipmentItemData(DataInputStream stream) throws IOException {
         readFromStream(stream);
     }
@@ -85,7 +76,7 @@ public class CustomEquipmentItemData {
         ByteBufUtils.writeUTF8String(buf, this.authorName);
         ByteBufUtils.writeUTF8String(buf, this.customName);
         ByteBufUtils.writeUTF8String(buf, this.tags);
-        buf.writeByte(type.ordinal());
+        ByteBufUtils.writeUTF8String(buf, this.skinType.getRegistryName());
         buf.writeByte(parts.size());
         for (int i = 0; i < parts.size(); i++) {
             parts.get(i).writeToBuf(buf);
@@ -96,7 +87,7 @@ public class CustomEquipmentItemData {
         this.authorName = ByteBufUtils.readUTF8String(buf);
         this.customName = ByteBufUtils.readUTF8String(buf);
         this.tags = ByteBufUtils.readUTF8String(buf);
-        type = EnumEquipmentType.getOrdinal(buf.readByte());
+        this.skinType = SkinTypeRegistry.INSTANCE.getSkinFromRegistryName(ByteBufUtils.readUTF8String(buf));
         int size = buf.readByte();
         parts = new ArrayList<CustomEquipmentPartData>();
         for (int i = 0; i < size; i++) {
@@ -104,41 +95,8 @@ public class CustomEquipmentItemData {
         }
     }
     
-    public void writeToNBT(NBTTagCompound compound) {
-        compound.setString(LibCommonTags.TAG_AUTHOR_NAME, this.authorName);
-        compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
-        compound.setString(LibCommonTags.TAG_CUSTOM_NAME, this.customName);
-        compound.setString(TAG_TAGS, this.tags);
-        compound.setByte(TAG_TYPE, (byte) type.ordinal());
-        NBTTagList blockData = new NBTTagList();
-        for (int i = 0; i < parts.size(); i++) {
-            CustomEquipmentPartData data = parts.get(i);
-            NBTTagCompound dataNBT = new NBTTagCompound();
-            data.writeToNBT(dataNBT);
-            blockData.appendTag(dataNBT);
-        }
-        compound.setTag(TAG_PARTS, blockData);
-    }
-    
     public void writeClientDataToNBT(NBTTagCompound compound) {
         compound.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, this.hashCode());
-    }
-    
-    public static boolean hasArmourData(NBTTagCompound compound) {
-        return compound.hasKey(TAG_PARTS);
-    }
-    
-    private void readFromNBT(NBTTagCompound compound) {
-        this.authorName = compound.getString(LibCommonTags.TAG_AUTHOR_NAME);
-        this.customName = compound.getString(LibCommonTags.TAG_CUSTOM_NAME);
-        this.tags = compound.getString(TAG_TAGS);
-        type = EnumEquipmentType.getOrdinal(compound.getByte(TAG_TYPE));
-        NBTTagList blockData = compound.getTagList(TAG_PARTS, NBT.TAG_COMPOUND);
-        parts = new ArrayList<CustomEquipmentPartData>();
-        for (int i = 0; i < blockData.tagCount(); i++) {
-            NBTTagCompound data = (NBTTagCompound)blockData.getCompoundTagAt(i);
-            parts.add(new CustomEquipmentPartData(data));
-        }
     }
     
     public void writeToStream(DataOutputStream stream) throws IOException {
@@ -146,7 +104,7 @@ public class CustomEquipmentItemData {
         stream.writeUTF(this.authorName);
         stream.writeUTF(this.customName);
         stream.writeUTF(this.tags);
-        stream.writeByte(type.ordinal());
+        stream.writeUTF(this.skinType.getRegistryName());
         stream.writeByte(parts.size());
         for (int i = 0; i < parts.size(); i++) {
             parts.get(i).writeToStream(stream);
@@ -165,7 +123,11 @@ public class CustomEquipmentItemData {
         } else {
             this.tags = "";
         }
-        type = EnumEquipmentType.getOrdinal(stream.readByte());
+        if (fileVersion < 5) {
+            skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(stream.readByte() - 1);
+        } else {
+            skinType = SkinTypeRegistry.INSTANCE.getSkinFromRegistryName(stream.readUTF());
+        }
         int size = stream.readByte();
         parts = new ArrayList<CustomEquipmentPartData>();
         for (int i = 0; i < size; i++) {
@@ -173,8 +135,8 @@ public class CustomEquipmentItemData {
         }
     }
     
-    public EnumEquipmentType getType() {
-        return type;
+    public ISkinType getSkinType() {
+        return skinType;
     }
     
     public ArrayList<CustomEquipmentPartData> getParts() {
@@ -240,7 +202,7 @@ public class CustomEquipmentItemData {
                 return false;
         } else if (!parts.equals(other.parts))
             return false;
-        if (type != other.type)
+        if (skinType != other.skinType)
             return false;
         return true;
     }
@@ -248,6 +210,6 @@ public class CustomEquipmentItemData {
     @Override
     public String toString() {
         return "CustomArmourItemData [authorName=" + authorName
-                + ", customName=" + customName + ", type=" + type + "]";
+                + ", customName=" + customName + ", type=" + skinType.getName().toUpperCase() + "]";
     }
 }

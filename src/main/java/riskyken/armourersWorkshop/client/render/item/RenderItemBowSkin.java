@@ -13,10 +13,10 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 
 public class RenderItemBowSkin implements IItemRenderer {
     
@@ -87,7 +87,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                 break;
             }
             GL11.glEnable(GL11.GL_CULL_FACE);
-            ItemStackRenderHelper.renderItemAsArmourModel(stack, EnumEquipmentType.BOW);
+            ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinBow);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
