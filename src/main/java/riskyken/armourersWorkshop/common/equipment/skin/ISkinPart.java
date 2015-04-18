@@ -22,8 +22,7 @@ public interface ISkinPart {
     @SideOnly(Side.CLIENT)
     public void renderBuildingGrid(float scale);
     
-    public void removeBoundingBoxesForPart(World world, int x, int y, int z);
-    
     public void createBoundingBoxesForPart(World world, int x, int y, int z);
     
+    public void removeBoundingBoxesForPart(World world, int x, int y, int z);
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import net.minecraft.util.StatCollector;
+import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinFeet;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinHead;
@@ -65,6 +66,26 @@ public final class SkinTypeRegistry {
         default:
             return null;
         }
+    }
+    
+    public EnumEquipmentType getLegacyEquipmentTypeForSkin(ISkinType skinType) {
+        String skinName = skinType.getRegistryName();
+        if (skinName.equals("armourers:head")) {
+            return EnumEquipmentType.HEAD;
+        } else if (skinName.equals("armourers:chest")) {
+            return EnumEquipmentType.CHEST;
+        } else if (skinName.equals("armourers:legs")) {
+            return EnumEquipmentType.LEGS;
+        } else if (skinName.equals("armourers:skirt")) {
+            return EnumEquipmentType.SKIRT;
+        } else if (skinName.equals("armourers:feet")) {
+            return EnumEquipmentType.FEET;
+        } else if (skinName.equals("armourers:sword")) {
+            return EnumEquipmentType.SWORD;
+        } else if (skinName.equals("armourers:bow")) {
+            return EnumEquipmentType.BOW;
+        }
+        return EnumEquipmentType.NONE;
     }
     
     public ArrayList<ISkinType> getRegisteredSkins() {
