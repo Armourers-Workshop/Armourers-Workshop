@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDropDownList extends GuiButtonExt {
 
-    private List<String> listItems;
+    private List<DropDownListItem> listItems;
     private int selectedIndex;
     private int hoverIndex;
     private boolean isMouseDownOver;
@@ -26,7 +26,7 @@ public class GuiDropDownList extends GuiButtonExt {
     public GuiDropDownList(int id, int xPos, int yPos, int width, String displayString, IDropDownListCallback callback) {
         super(id, xPos, yPos, width, 14, displayString);
         this.callback = callback;
-        this.listItems = new ArrayList<String>();
+        this.listItems = new ArrayList<DropDownListItem>();
         this.selectedIndex = 0;
         this.hoverIndex = -1;
         this.isMouseDownOver = false;
@@ -51,17 +51,23 @@ public class GuiDropDownList extends GuiButtonExt {
                 int listSize = listItems.size();
                 GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition + this.height + 1, 0, 46, this.width, 10 * listSize + 4, 200, 20, 2, 3, 2, 2, this.zLevel);
                 for (int i = 0; i < listSize; i++) {
-                    String listItem = listItems.get(i);
+                    DropDownListItem listItem = listItems.get(i);
                     int textX = this.xPosition + 4;
                     int textY = this.yPosition + this.height + 4 + (i * 10);
-                    int textWidth = mc.fontRenderer.getStringWidth(listItem);
+                    int textWidth = mc.fontRenderer.getStringWidth(listItem.displayText);
                     int textHeight = 10;
                     int textColour = 16777215;
-                    if (mouseX >= textX && mouseY >= textY && mouseX < textX + textWidth && mouseY < textY + textHeight) {
-                        textColour = 16777120;
-                        this.hoverIndex = i;
+                    if (!listItem.enabled) {
+                        textColour = 0xFFCC0000;
+                    } else {
+                        if (mouseX >= textX && mouseY >= textY && mouseX < textX + textWidth && mouseY < textY + textHeight) {
+                            if (listItem.enabled) {
+                                textColour = 16777120;
+                                this.hoverIndex = i;
+                            }
+                        }
                     }
-                    mc.fontRenderer.drawString(listItem, textX, textY, textColour);
+                    mc.fontRenderer.drawString(listItem.displayText, textX, textY, textColour);
                 } 
             }
             
@@ -125,11 +131,19 @@ public class GuiDropDownList extends GuiButtonExt {
         listItems.clear();
     }
     
-    public void addListItem(String listItem) {
+    public void addListItem(DropDownListItem listItem) {
         listItems.add(listItem);
     }
     
-    public String getListIndex(int index) {
+    public void addListItem(String displayText) {
+        addListItem(displayText, "", true);
+    }
+    
+    public void addListItem(String displayText, String tag, boolean enabled) {
+        listItems.add(new DropDownListItem(displayText, tag, enabled));
+    }
+    
+    public DropDownListItem getListIndex(int index) {
         return this.listItems.get(index);
     }
     
@@ -137,9 +151,13 @@ public class GuiDropDownList extends GuiButtonExt {
         return selectedIndex;
     }
     
+    public DropDownListItem getListSelectedItem() {
+        return this.listItems.get(this.selectedIndex);
+    }
+    
     public void setListSelectedIndex(int index) {
         this.selectedIndex = index;
-        this.displayString = listItems.get(this.selectedIndex);
+        this.displayString = listItems.get(this.selectedIndex).displayText;
     }
     
     public int getListSize() {
@@ -148,5 +166,17 @@ public class GuiDropDownList extends GuiButtonExt {
     
     public interface IDropDownListCallback {
         public void onDropDownListChanged(GuiDropDownList dropDownList);
+    }
+    
+    public class DropDownListItem {
+        public String displayText;
+        public String tag;
+        public boolean enabled;
+        
+        public DropDownListItem(String displayText, String tag, boolean enabled) {
+            this.displayText = displayText;
+            this.tag = tag;
+            this.enabled = enabled;
+        }
     }
 }

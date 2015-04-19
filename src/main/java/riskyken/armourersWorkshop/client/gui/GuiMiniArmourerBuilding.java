@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL12;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.LightingHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
 import riskyken.armourersWorkshop.client.model.armourer.ModelFeet;
@@ -33,7 +34,7 @@ import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiButton;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetArmourerSkinType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -95,7 +96,9 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinTypes.size(); i++) {
             ISkinType skinType = skinTypes.get(i);
-            dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType));
+            String skinLocalizedName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
+            String skinRegistryName = skinType.getRegistryName();
+            dropDownList.addListItem(skinLocalizedName, skinRegistryName, true);
             if (skinType == tileEntity.getSkinType()) {
                 dropDownList.setListSelectedIndex(i);
             }
@@ -445,6 +448,8 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
 
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
-        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) dropDownList.getListSelectedIndex()));
+        DropDownListItem listItem = dropDownList.getListSelectedItem();
+        ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinType(skinType));
     }
 }
