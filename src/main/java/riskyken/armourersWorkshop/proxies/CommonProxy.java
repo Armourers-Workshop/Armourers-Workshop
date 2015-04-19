@@ -7,6 +7,7 @@ import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
 
 public class CommonProxy {
     
@@ -55,6 +56,10 @@ public class CommonProxy {
     }
     
     public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
+        
+    }
+    
+    public void receivedCommandFromSever(CommandType command) {
         
     }
 }

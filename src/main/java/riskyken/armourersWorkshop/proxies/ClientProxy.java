@@ -31,6 +31,7 @@ import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -141,5 +142,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
         ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
+    }
+    
+    @Override
+    public void receivedCommandFromSever(CommandType command) {
+        ClientEquipmentModelCache.INSTANCE.clearCache();
     }
 }

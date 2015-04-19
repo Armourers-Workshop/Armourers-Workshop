@@ -60,15 +60,6 @@ item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to put on NPC's.
 
-# Armour types
-armourTypes.armourersworkshop:head.name=Head
-armourTypes.armourersworkshop:chest.name=Chest
-armourTypes.armourersworkshop:legs.name=Legs
-armourTypes.armourersworkshop:skirt.name=Skirt
-armourTypes.armourersworkshop:feet.name=Feet
-armourTypes.armourersworkshop:sword.name=Sword
-armourTypes.armourersworkshop:bow.name=Bow
-
 # Skin Types
 skinType.armourersworkshop:armourers:head.name=Head
 skinType.armourersworkshop:armourers:chest.name=Chest
@@ -141,7 +132,7 @@ chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but yo
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin> <player> [skinName]
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache> <player> [skinName]
 commands.armourers.fileNotFound=The file %1$s was not found.
 
 # Creative tab

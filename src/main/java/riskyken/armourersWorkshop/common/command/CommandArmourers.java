@@ -6,11 +6,14 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
@@ -28,7 +31,7 @@ public class CommandArmourers extends CommandBase {
     
     @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
-        String[] commands = {"giveSkin", "clearSkins", "setSkin"};
+        String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache"};
         
         switch (currentCommand.length) {
         case 1:
@@ -50,7 +53,7 @@ public class CommandArmourers extends CommandBase {
         }
         String command = args[0];
         String playerName = args[1];
-        EntityPlayer player = getPlayer(commandSender, playerName);
+        EntityPlayerMP player = getPlayer(commandSender, playerName);
         if (player == null) {
             return;
         }
@@ -87,6 +90,8 @@ public class CommandArmourers extends CommandBase {
             }
             ItemStack skinStack = EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
             ExtendedPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
+        } else if (command.equals("clearModelCache")) {
+            PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);
         } else {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }

@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.network.messages.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
@@ -42,5 +43,6 @@ public class PacketHandler {
         networkWrapper.registerMessage(MessageServerSendEquipmentData.class, MessageServerSendEquipmentData.class, 13, Side.CLIENT);
         networkWrapper.registerMessage(MessageClientGuiSetArmourerCustomName.class, MessageClientGuiSetArmourerCustomName.class, 14, Side.SERVER);
         networkWrapper.registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, 15, Side.SERVER);
+        networkWrapper.registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, 16, Side.CLIENT);
     }
 }

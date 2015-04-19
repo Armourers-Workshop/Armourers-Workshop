@@ -62,7 +62,6 @@ public class ClientEquipmentModelCache {
             }
         }
         
-        
         Thread t = (new Thread(new FaceCullThread(equipmentData, equipmentId),LibModInfo.NAME + " model bake thread."));
         t.setPriority(Thread.MIN_PRIORITY);
         t.start();
@@ -71,6 +70,12 @@ public class ClientEquipmentModelCache {
     public int getCacheSize() {
         synchronized (equipmentDataMap) {
             return equipmentDataMap.size();
+        }
+    }
+    
+    public void clearCache() {
+        synchronized (equipmentDataMap) {
+            equipmentDataMap.clear();
         }
     }
     
