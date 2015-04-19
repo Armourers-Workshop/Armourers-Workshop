@@ -18,7 +18,6 @@ import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
@@ -131,38 +130,13 @@ public final class ArmourerWorldHelper {
     private static void loadSkinBlockIntoWorld(World world, int x, int y, int z, int xOrigin, int yOrigin, int zOrigin,
             ICube blockData, ForgeDirection direction) {
         
-        
         int shiftX = -blockData.getX() - 1;
         int shiftY = blockData.getY() + 1;
         int shiftZ = blockData.getZ();
-        /*
-        switch (direction) {
-        case SOUTH:
-            shiftZ += 1;
-            shiftX += 1;
-            break;
-        case EAST:
-            shiftZ += 1;
-            break;
-        case WEST:
-            shiftX += 1;
-            break;
-        default:
-            break;
-        }
         
-        int targetX = x + (shiftX * -direction.offsetZ) + (shiftZ * -direction.offsetX);
-        int targetY = y + shiftY;
-        int targetZ = z + (shiftZ * -direction.offsetZ) + (shiftX * direction.offsetX);
-        */
         int targetX = x + shiftX + xOrigin;
         int targetY = y + yOrigin - shiftY;
         int targetZ = z + shiftZ + zOrigin;
-        
-        ModLogger.log(targetX);
-        ModLogger.log(targetY);
-        ModLogger.log(targetZ);
-        
         
         if (world.isAirBlock(targetX, targetY, targetZ)) {
             Block targetBlock = ModBlocks.colourable;
