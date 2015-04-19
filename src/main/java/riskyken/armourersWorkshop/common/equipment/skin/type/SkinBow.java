@@ -12,6 +12,9 @@ public class SkinBow extends SkinTypeBase {
     public SkinBow() {
         this.skinParts = new ArrayList<ISkinPart>();
         skinParts.add(new SkinBowPartBase(this));
+        skinParts.add(new SkinBowPartFrame1(this));
+        skinParts.add(new SkinBowPartFrame2(this));
+        skinParts.add(new SkinBowPartArrow(this));
     }
     
     @Override

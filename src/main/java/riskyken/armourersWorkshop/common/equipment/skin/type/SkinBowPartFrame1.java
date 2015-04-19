@@ -11,7 +11,7 @@ import riskyken.armourersWorkshop.common.equipment.skin.SkinTypePartBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SkinBowPartBase extends SkinTypePartBase {
+public class SkinBowPartFrame1 extends SkinTypePartBase {
 
     @SideOnly(Side.CLIENT)
     private static final ModelHand partModel = new ModelHand();
@@ -20,16 +20,16 @@ public class SkinBowPartBase extends SkinTypePartBase {
     private Rectangle3D guideSpace;
     private Point3i offset;
     
-    public SkinBowPartBase(ISkinType baseType) {
+    public SkinBowPartFrame1(ISkinType baseType) {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-6, -20, -18, 12, 40, 28);
         this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);
-        this.offset = new Point3i(-13, 0, 0);
+        this.offset = new Point3i(0, 0, 0);
     }
 
     @Override
     public String getPartName() {
-        return "base";
+        return "frame1";
     }
 
     @Override

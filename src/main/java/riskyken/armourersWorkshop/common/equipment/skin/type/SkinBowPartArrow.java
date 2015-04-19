@@ -11,7 +11,7 @@ import riskyken.armourersWorkshop.common.equipment.skin.SkinTypePartBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SkinBowPartBase extends SkinTypePartBase {
+public class SkinBowPartArrow extends SkinTypePartBase {
 
     @SideOnly(Side.CLIENT)
     private static final ModelHand partModel = new ModelHand();
@@ -20,16 +20,16 @@ public class SkinBowPartBase extends SkinTypePartBase {
     private Rectangle3D guideSpace;
     private Point3i offset;
     
-    public SkinBowPartBase(ISkinType baseType) {
+    public SkinBowPartArrow(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-6, -20, -18, 12, 40, 28);
-        this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);
-        this.offset = new Point3i(-13, 0, 0);
+        this.buildingSpace = new Rectangle3D(-4, -4, -14, 8, 8, 28);
+        this.guideSpace = new Rectangle3D(0, 0, 0, 1, 1, 1);
+        this.offset = new Point3i(25, 0, 0);
     }
 
     @Override
     public String getPartName() {
-        return "base";
+        return "arrow";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class SkinBowPartBase extends SkinTypePartBase {
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.y * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.y * scale, 0);
-        partModel.render(scale);
+        //partModel.render(scale);
         GL11.glTranslated(0, this.guideSpace.y * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.y * scale, 0);
     }
