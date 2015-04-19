@@ -59,6 +59,9 @@ public class GuiArmourer extends GuiContainer {
         for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
             GuiButtonExt equipmentButton = new GuiButtonExt(i, guiLeft + 5, guiTop + 16 + (i * 20), 50, 16, SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType));
+            if (skinType == SkinTypeRegistry.skinBow) {
+                //equipmentButton.enabled = false;
+            }
             buttonList.add(equipmentButton);
         }
         

@@ -98,15 +98,13 @@ public final class EntityEquipmentDataManager {
                     EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
-            /*
             if (isBowRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow)) {
-                    EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(EnumEquipmentType.BOW));
+                    EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(SkinTypeRegistry.skinBow));
                 } else {
                     EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
-            */
         }
     }
     

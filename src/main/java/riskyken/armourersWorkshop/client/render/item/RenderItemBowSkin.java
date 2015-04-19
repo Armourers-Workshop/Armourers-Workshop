@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.common.addons.AbstractAddon;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 
 public class RenderItemBowSkin implements IItemRenderer {
@@ -30,20 +31,51 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        if (type == ItemRenderType.INVENTORY) {
-            return false;
+        IItemRenderer render = AbstractAddon.getItemRenderer(stack, type);
+        if (canRenderModel(stack)) {
+            if (type == ItemRenderType.INVENTORY) {
+                if (render != null) {
+                    return render.handleRenderType(stack, type);
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            if (render != null) {
+                return render.handleRenderType(stack, type);
+            } else {
+                return false;
+            }
         }
-        return canRenderModel(stack);
     }
     
     @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        return type == ItemRenderType.ENTITY;
+    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
+        IItemRenderer render = AbstractAddon.getItemRenderer(stack, type);
+        if (canRenderModel(stack)) {
+            if (type == ItemRenderType.INVENTORY) {
+                if (render != null) {
+                    return render.shouldUseRenderHelper(type, stack, helper);
+                } else {
+                    return false;
+                }
+            } else {
+                return type == ItemRenderType.ENTITY;
+            }
+        } else {
+            if (render != null) {
+                return render.shouldUseRenderHelper(type, stack, helper);
+            } else {
+                return false;
+            }
+        }
     }
     
     @Override
     public void renderItem(ItemRenderType type, ItemStack stack, Object... data) {
-        if (canRenderModel(stack)) {
+        if (canRenderModel(stack) & type != ItemRenderType.INVENTORY) {
             if (type != ItemRenderType.ENTITY) {
                 GL11.glPopMatrix();
                 //GL11.glPopMatrix(); 
@@ -92,12 +124,16 @@ public class RenderItemBowSkin implements IItemRenderer {
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
-                //GL11.glPushMatrix();
                 GL11.glPushMatrix();
             }
 
         } else {
-            renderNomalIcon(stack);
+            IItemRenderer render = AbstractAddon.getItemRenderer(stack, type);
+            if (render != null) {
+                render.renderItem(type, stack, data);
+            } else {
+                renderNomalIcon(stack);
+            }
         }
     }
     

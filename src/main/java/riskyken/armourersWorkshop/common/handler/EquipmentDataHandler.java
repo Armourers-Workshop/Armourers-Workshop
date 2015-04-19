@@ -70,7 +70,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
         Item item = stack.getItem();
         if (item == ModItems.equipmentSkin) {
             int damage = stack.getItemDamage();
-            if (damage >= 0 & damage < 6) {
+            if (damage >= 0 & damage < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered()) {
                 return SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(damage);
             }
         }

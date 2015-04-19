@@ -237,8 +237,9 @@ public final class EquipmentModelRenderer {
             return customFeet;
         } else if (skinType == SkinTypeRegistry.skinSword) {
             return customSword;
+        } else if (skinType == SkinTypeRegistry.skinBow) {
+            return customBow;
         }
-        //return customBow;
         return null;
     }
 

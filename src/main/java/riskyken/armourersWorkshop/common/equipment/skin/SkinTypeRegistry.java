@@ -8,6 +8,7 @@ import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
+import riskyken.armourersWorkshop.common.equipment.skin.type.SkinBow;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinFeet;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinHead;
@@ -51,6 +52,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinSkirt = new SkinSkirt();
         skinFeet = new SkinFeet();
         skinSword = new SkinSword();
+        skinBow = new SkinBow();
         
         registerSkin(skinHead);
         registerSkin(skinChest);
@@ -58,6 +60,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinSkirt);
         registerSkin(skinFeet);
         registerSkin(skinSword);
+        registerSkin(skinBow);
     }
     
     @Override
