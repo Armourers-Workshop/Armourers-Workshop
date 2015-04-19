@@ -8,6 +8,7 @@ import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinBow;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinFeet;
@@ -66,7 +67,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     @Override
     public void registerSkin(ISkinType skinType) {
         skinType.setId(skinTypeMap.size());
-        ModLogger.log("Registering skin type - id: " + skinType.getId() + " name:" + skinType.getRegistryName());
+        ModLogger.log("Registering skin type - id:" + skinType.getId() + " name:" + skinType.getRegistryName());
         skinTypeMap.put(skinType.getRegistryName(), skinType);
         ArrayList<ISkinPart> skinParts = skinType.getSkinParts();
         for (int i = 0; i < skinParts.size(); i++) {
@@ -77,9 +78,22 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         }
     }
     
+    public boolean isSkinDisabled(ISkinType skinType) {
+        for (int i = 0; i < ConfigHandler.disabledSkins.length; i++) {
+            if (skinType.getRegistryName().equals(ConfigHandler.disabledSkins[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
     public ISkinType getSkinTypeFromRegistryName(String registryName) {
-        return skinTypeMap.get(registryName);
+        ISkinType skinType = skinTypeMap.get(registryName);
+        if (skinType != null && isSkinDisabled(skinType)) {
+            return null;
+        }
+        return skinType;
     }
     
     public ISkinType getSkinTypeFromLegacyId(int legacyId) {
@@ -145,8 +159,11 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public ArrayList<ISkinType> getRegisteredSkinTypes() {
         ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
         for (int i = 0; i < skinTypeMap.size(); i++) {
-            String key = (String) skinTypeMap.keySet().toArray()[i];
-            skinTypes.add(skinTypeMap.get(key));
+            String registryName = (String) skinTypeMap.keySet().toArray()[i];
+            ISkinType skinType = getSkinTypeFromRegistryName(registryName);
+            if (skinType != null) {
+                skinTypes.add(skinType);
+            }
         }
         return skinTypes;
     }

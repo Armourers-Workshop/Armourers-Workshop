@@ -23,6 +23,7 @@ public class ConfigHandler {
     public static boolean downloadSkins;
     public static boolean compatibilityRender = false;
     public static boolean allowEquipmentWardrobe = true;
+    public static String[] disabledSkins = {};
     
     /** Should skins be dropped on player death.<br/>
      * <br/>
@@ -45,6 +46,21 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "Disable Recipes", false,
                 "Disable all mod recipes. Use if you want to manually add recipes for a mod pack.")
                 .getBoolean(false);
+        
+        disabledSkins = config
+                .getStringList("Disabled Skins", CATEGORY_GENERAL, new String[] {"armourers:block"},
+                "List of skins that will be disabled.\n"
+                + "\n"
+                + "Here is a list of all the skins that come with the mod.\n" 
+                + "armourers:head\n"
+                + "armourers:chest\n"
+                + "armourers:legs\n"
+                + "armourers:skirt\n"
+                + "armourers:feet\n"
+                + "armourers:sword\n"
+                + "armourers:bow\n"
+                + "armourers:block\n"
+                + "\n");
         
         downloadSkins = config
                 .get(CATEGORY_GENERAL, "Allow Auto Skin Downloads", true,
