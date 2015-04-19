@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
@@ -134,5 +135,10 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
             ExtendedPropsPlayerEquipmentData.register(player);
         }
         return ExtendedPropsPlayerEquipmentData.get(player);
+    }
+
+    @Override
+    public ISkinTypeRegistry getISkinTypeRegistry() {
+        return SkinTypeRegistry.INSTANCE;
     }
 }

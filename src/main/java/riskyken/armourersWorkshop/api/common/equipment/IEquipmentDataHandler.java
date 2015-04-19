@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
 
 public interface IEquipmentDataHandler {
     
@@ -85,4 +86,10 @@ public interface IEquipmentDataHandler {
      * @return
      */
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId);
+    
+    /**
+     * Gets the SkinTypeRegistry.
+     * @return 
+     */
+    public ISkinTypeRegistry getISkinTypeRegistry();
 }

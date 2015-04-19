@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinFeet;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinHead;
@@ -18,7 +19,7 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public final class SkinTypeRegistry {
+public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
     public static SkinTypeRegistry INSTANCE;
     
@@ -59,7 +60,8 @@ public final class SkinTypeRegistry {
         registerSkin(skinSword);
     }
     
-    private void registerSkin(ISkinType skinType) {
+    @Override
+    public void registerSkin(ISkinType skinType) {
         skinType.setId(skinTypeMap.size());
         ModLogger.log("Registering skin type - id: " + skinType.getId() + " name:" + skinType.getRegistryName());
         skinTypeMap.put(skinType.getRegistryName(), skinType);
@@ -72,6 +74,7 @@ public final class SkinTypeRegistry {
         }
     }
     
+    @Override
     public ISkinType getSkinTypeFromRegistryName(String registryName) {
         return skinTypeMap.get(registryName);
     }
@@ -101,6 +104,7 @@ public final class SkinTypeRegistry {
         return skinType.getId();
     }
     
+    @Override
     public ISkinPart getSkinPartFromRegistryName(String registryName) {
         return skinPartMap.get(registryName);
     }
@@ -134,6 +138,7 @@ public final class SkinTypeRegistry {
         }
     }
     
+    @Override
     public ArrayList<ISkinType> getRegisteredSkinTypes() {
         ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
         for (int i = 0; i < skinTypeMap.size(); i++) {
@@ -143,6 +148,7 @@ public final class SkinTypeRegistry {
         return skinTypes;
     }
     
+    @Override
     public int getNumberOfSkinRegistered() {
         return skinTypeMap.size();
     }
