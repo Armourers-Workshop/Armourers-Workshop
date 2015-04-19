@@ -64,7 +64,7 @@ public class CustomEquipmentItemData {
         readFromBuf(buf);
     }
     
-    public CustomEquipmentItemData(DataInputStream stream) throws IOException, NewerFileVersionException {
+    public CustomEquipmentItemData(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
         readFromStream(stream);
     }
     
@@ -107,7 +107,7 @@ public class CustomEquipmentItemData {
         }
     }
     
-    private void readFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
+    private void readFromStream(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
         int fileVersion = stream.readInt();
         if (fileVersion > FILE_VERSION) {
             throw new NewerFileVersionException();

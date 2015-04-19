@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
@@ -24,7 +25,7 @@ public final class ArmourerWorldHelper {
     
     public static CustomEquipmentItemData saveSkinFromWorld(World world, ISkinType skinType,
             String authorName, String customName, String tags,
-            int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
         
         ArrayList<CustomEquipmentPartData> parts = new ArrayList<CustomEquipmentPartData>();
         
@@ -41,7 +42,7 @@ public final class ArmourerWorldHelper {
     }
     
     private static void saveArmourPart(World world, ArrayList<CustomEquipmentPartData> armourData,
-            ISkinPart skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+            ISkinPart skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
         ArrayList<ICube> armourBlockData = new ArrayList<ICube>();
         
         Rectangle3D buildSpace = skinPart.getBuildingSpace();
@@ -74,7 +75,7 @@ public final class ArmourerWorldHelper {
     }
     
     private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz,
-            ArrayList<ICube> list, ForgeDirection direction) {
+            ArrayList<ICube> list, ForgeDirection direction) throws InvalidCubeTypeException {
         if (world.isAirBlock(x, y, z)) {
             return;
         }

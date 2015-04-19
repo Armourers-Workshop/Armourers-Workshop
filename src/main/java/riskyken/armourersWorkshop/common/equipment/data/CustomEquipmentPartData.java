@@ -8,10 +8,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.GLAllocation;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -74,7 +78,7 @@ public class CustomEquipmentPartData {
         readFromBuf(buf);
     }
 
-    public CustomEquipmentPartData(DataInputStream stream, int version) throws IOException {
+    public CustomEquipmentPartData(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         readFromStream(stream, version);
     }
 
@@ -100,9 +104,16 @@ public class CustomEquipmentPartData {
         armourData = new ArrayList<ICube>();
         for (int i = 0; i < size; i++) {
             byte id = buf.readByte();
-            ICube cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(id);
-            cube.readFromBuf(buf);
-            armourData.add(cube);
+            ICube cube;
+            try {
+                cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(id);
+                cube.readFromBuf(buf);
+                armourData.add(cube);
+            } catch (InvalidCubeTypeException e) {
+                ModLogger.log(Level.ERROR, "Unable to load skin. Unknown cube types found.");
+                e.printStackTrace();
+                return;
+            }
         }
     }
     
@@ -114,7 +125,7 @@ public class CustomEquipmentPartData {
         }
     }
     
-    private void readFromStream(DataInputStream stream, int version) throws IOException {
+    private void readFromStream(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         if (version < 6) {
             skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromLegacyId(stream.readByte());
         } else {

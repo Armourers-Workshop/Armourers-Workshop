@@ -9,7 +9,7 @@ import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 
 public final class LegacyCubeHelper {
 
-    public static ICube loadlegacyCube(DataInputStream stream, int version, ISkinPart skinPart) throws IOException {
+    public static ICube loadlegacyCube(DataInputStream stream, int version, ISkinPart skinPart) throws IOException, InvalidCubeTypeException {
         byte x;
         byte y;
         byte z;

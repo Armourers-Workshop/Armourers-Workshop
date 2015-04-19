@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.equipment.cubes;
 
 import java.util.ArrayList;
 
+import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 
@@ -30,7 +31,7 @@ public final class CubeRegistry {
         return -1;
     }
     
-    public ICube getCubeInstanceFormId(byte id) {
+    public ICube getCubeInstanceFormId(byte id) throws InvalidCubeTypeException {
         Class<? extends ICube> cube = getCubeFormId(id);
         if (cube != null) {
             try {
@@ -43,7 +44,7 @@ public final class CubeRegistry {
                 e.printStackTrace();
             }
         }
-        return null;
+        throw new InvalidCubeTypeException();
     }
     
     public Class<? extends ICube> getCubeFormId(byte id) {

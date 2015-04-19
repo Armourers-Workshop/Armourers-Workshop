@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Level;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.equipment.data.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -189,6 +190,9 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             e.printStackTrace();
         } catch (NewerFileVersionException e) {
             ModLogger.log(Level.ERROR, "Can not load custom armour, was saved in newer version.");
+            e.printStackTrace();
+        } catch (InvalidCubeTypeException e) {
+            ModLogger.log(Level.ERROR, "Unable to load skin. Unknown cube types found.");
             e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(stream);

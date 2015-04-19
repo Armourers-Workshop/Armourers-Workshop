@@ -11,15 +11,20 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
@@ -77,10 +82,15 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         String authorName = player.getCommandSenderName();
         String customName = name;
         
-        CustomEquipmentItemData armourItemData;
+        CustomEquipmentItemData armourItemData = null;
         
-        armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinType, authorName, customName, tags,
-                xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+        try {
+            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinType, authorName, customName, tags,
+                    xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+        } catch (InvalidCubeTypeException e) {
+            ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
+            e.printStackTrace();
+        }
         
         if (armourItemData == null) {
             return;
