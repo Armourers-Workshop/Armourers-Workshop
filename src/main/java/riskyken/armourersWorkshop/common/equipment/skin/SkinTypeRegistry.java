@@ -1,9 +1,11 @@
 package riskyken.armourersWorkshop.common.equipment.skin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import net.minecraft.util.StatCollector;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinFeet;
@@ -29,6 +31,7 @@ public final class SkinTypeRegistry {
     public static ISkinType skinBow;
     
     private LinkedHashMap<String, ISkinType> skinTypeMap;
+    private HashMap<String, ISkinPart> skinPartMap;
     
     public static void init() {
         INSTANCE = new SkinTypeRegistry();
@@ -36,6 +39,7 @@ public final class SkinTypeRegistry {
     
     public SkinTypeRegistry() {
         skinTypeMap = new LinkedHashMap<String, ISkinType>();
+        skinPartMap = new HashMap<String, ISkinPart>();
         registerSkins();
     }
     
@@ -57,30 +61,37 @@ public final class SkinTypeRegistry {
     
     private void registerSkin(ISkinType skinType) {
         skinType.setId(skinTypeMap.size());
+        ModLogger.log("Registering skin type - id: " + skinType.getId() + " name:" + skinType.getRegistryName());
         skinTypeMap.put(skinType.getRegistryName(), skinType);
-        ModLogger.log("Registering equipment skin id: " + skinType.getId() + " type:" + skinType.getRegistryName());
+        ArrayList<ISkinPart> skinParts = skinType.getSkinParts();
+        for (int i = 0; i < skinParts.size(); i++) {
+            ISkinPart skinPart = skinParts.get(i);
+            String partName = skinType.getRegistryName() + "." + skinPart.getPartName();
+            ModLogger.log("Registering skin part - name:" + partName);
+            skinPartMap.put(partName, skinPart);
+        }
     }
     
-    public ISkinType getSkinFromRegistryName(String registryName) {
+    public ISkinType getSkinTypeFromRegistryName(String registryName) {
         return skinTypeMap.get(registryName);
     }
     
-    public ISkinType getSkinFromLegacyId(int legacyId) {
+    public ISkinType getSkinTypeFromLegacyId(int legacyId) {
         switch (legacyId) {
         case 0:
-            return getSkinFromRegistryName("armourers:head");
+            return getSkinTypeFromRegistryName("armourers:head");
         case 1:
-            return getSkinFromRegistryName("armourers:chest");
+            return getSkinTypeFromRegistryName("armourers:chest");
         case 2:
-            return getSkinFromRegistryName("armourers:legs");
+            return getSkinTypeFromRegistryName("armourers:legs");
         case 3:
-            return getSkinFromRegistryName("armourers:skirt");
+            return getSkinTypeFromRegistryName("armourers:skirt");
         case 4:
-            return getSkinFromRegistryName("armourers:feet");
+            return getSkinTypeFromRegistryName("armourers:feet");
         case 5:
-            return getSkinFromRegistryName("armourers:sword");
+            return getSkinTypeFromRegistryName("armourers:sword");
         case 6:
-            return getSkinFromRegistryName("armourers:bow");
+            return getSkinTypeFromRegistryName("armourers:bow");
         default:
             return null;
         }
@@ -90,7 +101,40 @@ public final class SkinTypeRegistry {
         return skinType.getId();
     }
     
-    public ArrayList<ISkinType> getRegisteredSkins() {
+    public ISkinPart getSkinPartFromRegistryName(String registryName) {
+        return skinPartMap.get(registryName);
+    }
+    
+    public ISkinPart getSkinPartFromLegacyId(int legacyId) {
+        switch (legacyId) {
+        case 0:
+            return getSkinPartFromRegistryName("armourers:head.base");
+        case 1:
+            return getSkinPartFromRegistryName("armourers:chest.base");
+        case 2:
+            return getSkinPartFromRegistryName("armourers:chest.leftArm");
+        case 3:
+            return getSkinPartFromRegistryName("armourers:chest.rightArm");
+        case 4:
+            return getSkinPartFromRegistryName("armourers:legs.leftLeg");
+        case 5:
+            return getSkinPartFromRegistryName("armourers:legs.rightLeg");
+        case 6:
+            return getSkinPartFromRegistryName("armourers:skirt.base");
+        case 7:
+            return getSkinPartFromRegistryName("armourers:feet.leftFoot");
+        case 8:
+            return getSkinPartFromRegistryName("armourers:feet.rightFoot");
+        case 9:
+            return getSkinPartFromRegistryName("armourers:sword.base");
+        case 10:
+            return getSkinPartFromRegistryName("armourers:bow.base");
+        default:
+            return null;
+        }
+    }
+    
+    public ArrayList<ISkinType> getRegisteredSkinTypes() {
         ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
         for (int i = 0; i < skinTypeMap.size(); i++) {
             String key = (String) skinTypeMap.keySet().toArray()[i];

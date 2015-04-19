@@ -45,8 +45,24 @@ public abstract class SkinTypeBase implements ISkinType {
         
     }
     
+    /*
+    private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
+        if (worldObj.isAirBlock(x, y, z)) {
+            worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
+            TileEntity te = null;
+            te = worldObj.getTileEntity(x, y, z);
+            if (te != null && te instanceof TileEntityBoundingBox) {
+                ((TileEntityBoundingBox)te).setParent(xCoord, yCoord, zCoord, bodyPart);
+            } else {
+                te = new TileEntityBoundingBox(xCoord, yCoord, zCoord, bodyPart);
+                worldObj.setTileEntity(x, y, z, te);
+            }
+        }
+    }
+    */
+    
     @Override
-    public void removeBoundingBoxed(World world, int x, int y, int z) {
+    public void removeBoundingBoxes(World world, int x, int y, int z) {
         // TODO Auto-generated method stub
         
     }

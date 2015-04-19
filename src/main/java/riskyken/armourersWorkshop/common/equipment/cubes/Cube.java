@@ -7,11 +7,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class Cube implements ICube {
@@ -121,24 +119,6 @@ public class Cube implements ICube {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        compound.setByte(TAG_ID, id);
-        compound.setByte(TAG_X, x);
-        compound.setByte(TAG_Y, y);
-        compound.setByte(TAG_Z, z);
-        compound.setInteger(TAG_COLOUR, colour);
-    }
-    
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        id = compound.getByte(TAG_ID);
-        x = compound.getByte(TAG_X);
-        y = compound.getByte(TAG_Y);
-        z = compound.getByte(TAG_Z);
-        colour = compound.getInteger(TAG_COLOUR);
-    }
-    
-    @Override
     public void writeToStream(DataOutputStream stream) throws IOException {
         stream.writeByte(id);
         stream.writeByte(x);
@@ -148,7 +128,7 @@ public class Cube implements ICube {
     }
     
     @Override
-    public void readFromStream(DataInputStream stream, int version, EnumEquipmentPart part) throws IOException {
+    public void readFromStream(DataInputStream stream, int version, ISkinPart skinPart) throws IOException {
         //id = stream.readByte();
         x = stream.readByte();
         y = stream.readByte();

@@ -11,7 +11,7 @@ public class SkinSword extends SkinTypeBase {
     
     public SkinSword() {
         this.skinParts = new ArrayList<ISkinPart>();
-        skinParts.add(new SkinSwordPartBase());
+        skinParts.add(new SkinSwordPartBase(this));
     }
     
     @Override

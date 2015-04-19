@@ -4,6 +4,7 @@ import javax.vecmath.Point3i;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
 import riskyken.armourersWorkshop.common.Rectangle3D;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypePartBase;
@@ -19,10 +20,16 @@ public class SkinChestPartRightArm extends SkinTypePartBase {
     private Rectangle3D guideSpace;
     private Point3i offset;
     
-    public SkinChestPartRightArm() {
+    public SkinChestPartRightArm(ISkinType baseType) {
+        super(baseType);
         this.buildingSpace = new Rectangle3D(-3, -11, -4, 9, 17, 8);
         this.guideSpace = new Rectangle3D(-1, -10, -2, 4, 12, 4);
         this.offset = new Point3i(-10, 0, 0);
+    }
+    
+    @Override
+    public String getPartName() {
+        return "rightArm";
     }
     
     @Override

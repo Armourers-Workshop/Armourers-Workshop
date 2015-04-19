@@ -2,32 +2,37 @@ package riskyken.armourersWorkshop.common.equipment;
 
 import java.util.ArrayList;
 
+import javax.vecmath.Point3i;
+
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.common.Rectangle3D;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomEquipmentItemData saveArmourItem(World world, ISkinType skinType,
+    public static CustomEquipmentItemData saveSkinFromWorld(World world, ISkinType skinType,
             String authorName, String customName, String tags,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+        
         ArrayList<CustomEquipmentPartData> parts = new ArrayList<CustomEquipmentPartData>();
         
-        /*
-        for (int i = 0; i < type.getParts().length; i++) {
-            saveArmourPart(world, parts, type.getParts()[i], xCoord, yCoord, zCoord, direction);
+        
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            saveArmourPart(world, parts, skinType.getSkinParts().get(i), xCoord, yCoord, zCoord, direction);
         }
-        */
+        
         if (parts.size() > 0) {
             return new CustomEquipmentItemData(authorName, customName, tags, skinType, parts);
         } else {
@@ -36,40 +41,44 @@ public final class ArmourerWorldHelper {
     }
     
     private static void saveArmourPart(World world, ArrayList<CustomEquipmentPartData> armourData,
-            EnumEquipmentPart part, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+            ISkinPart skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
         ArrayList<ICube> armourBlockData = new ArrayList<ICube>();
         
+        Rectangle3D buildSpace = skinPart.getBuildingSpace();
+        Point3i offset = skinPart.getOffset();
         
-        for (int ix = 0; ix < part.getTotalXSize(); ix++) {
-            for (int iy = 0; iy < part.getTotalYSize(); iy++) {
-                for (int iz = 0; iz < part.getTotalZSize(); iz++) {
+        for (int ix = 0; ix < buildSpace.width; ix++) {
+            for (int iy = 0; iy < buildSpace.height; iy++) {
+                for (int iz = 0; iz < buildSpace.depth; iz++) {
                     
-                    int x = xCoord + part.getStartX() - part.xLocation + ix;
-                    int y = yCoord + part.getStartY() + part.yLocation + iy;
-                    int z = zCoord + part.getStartZ() + part.zLocation + iz;
+                    int x = xCoord + ix + -offset.x + buildSpace.x;
+                    int y = yCoord + iy + -offset.y;
+                    int z = zCoord + iz + -offset.z + buildSpace.z;
                     
-                    int xOrigin = xCoord - part.xLocation - x + ((part.xSize / 2) + part.xOrigin);
-                    int yOrigin = iy + part.yOrigin - part.getBuildSpaceForDirection(ForgeDirection.DOWN);
-                    int zOrigin = zCoord + part.zLocation - z;
+                    int xOrigin = -ix + -buildSpace.x;
+                    int yOrigin = -iy + -buildSpace.y;
+                    int zOrigin = -iz + -buildSpace.z;
                     
                     saveArmourBlockToList(world, x, y, z,
                             xOrigin - 1,
-                            -yOrigin - 1,
+                            yOrigin - 1,
                             -zOrigin,
                             armourBlockData, direction);
-                    
                 }
             }
         }
         
         if (armourBlockData.size() > 0) {
-            armourData.add(new CustomEquipmentPartData(armourBlockData, part));
+            armourData.add(new CustomEquipmentPartData(armourBlockData, skinPart));
         }
     }
     
     private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz,
             ArrayList<ICube> list, ForgeDirection direction) {
-        if (world.isAirBlock(x, y, z)) { return; }
+        if (world.isAirBlock(x, y, z)) {
+            return;
+        }
+        
         Block block = world.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing | block == ModBlocks.colourableGlass | block == ModBlocks.colourableGlassGlowing) {
             int colour = UtilBlocks.getColourFromTileEntity(world ,x, y, z);
@@ -94,28 +103,31 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void loadArmourItem(World world, int x, int y, int z, CustomEquipmentItemData armourData,
-            ForgeDirection direction) {
+    public static void loadSkinIntoWorld(World world, int x, int y, int z, CustomEquipmentItemData armourData, ForgeDirection direction) {
         ArrayList<CustomEquipmentPartData> parts = armourData.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
-            loadArmourPart(world, parts.get(i), x, y, z, direction);
+            loadSkinPartIntoWorld(world, parts.get(i), x, y, z, direction);
         }
     }
     
-    private static void loadArmourPart(World world, CustomEquipmentPartData partData, int xCoord, int yCoord, int zCoord,
-            ForgeDirection direction) {
+    private static void loadSkinPartIntoWorld(World world, CustomEquipmentPartData partData, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+        ISkinPart skinPart = partData.getSkinPart();
+        Rectangle3D buildSpace = skinPart.getBuildingSpace();
+        Point3i offset = skinPart.getOffset();
+        
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             ICube blockData = partData.getArmourData().get(i);
             
-            int xOrigin = -partData.getArmourPart().xLocation  + ((partData.getArmourPart().xSize / 2) + partData.getArmourPart().xOrigin);
-            int yOrigin = -partData.getArmourPart().yOrigin + partData.getArmourPart().yLocation;
-            int zOrigin = partData.getArmourPart().zLocation;
-            loadArmourBlock(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction);
+            int xOrigin = -offset.x;
+            int yOrigin = -offset.y + -buildSpace.y;
+            int zOrigin = -offset.z;
+            
+            loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction);
         }
     }
     
-    private static void loadArmourBlock(World world, int x, int y, int z, int xOrigin, int yOrigin, int zOrigin,
+    private static void loadSkinBlockIntoWorld(World world, int x, int y, int z, int xOrigin, int yOrigin, int zOrigin,
             ICube blockData, ForgeDirection direction) {
         
         
@@ -146,8 +158,10 @@ public final class ArmourerWorldHelper {
         int targetY = y + yOrigin - shiftY;
         int targetZ = z + shiftZ + zOrigin;
         
-        //ModLogger.log(targetX);
-        //ModLogger.log(targetZ);
+        ModLogger.log(targetX);
+        ModLogger.log(targetY);
+        ModLogger.log(targetZ);
+        
         
         if (world.isAirBlock(targetX, targetY, targetZ)) {
             Block targetBlock = ModBlocks.colourable;

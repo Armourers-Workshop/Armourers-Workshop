@@ -60,7 +60,7 @@ public final class CubeRegistry {
     private void registerCube(Class<? extends Cube> cubeClass) {
         byte id = getTotalCubes();
         cubeList.add(cubeClass);
-        ModLogger.log("Registering equipment cube: " + cubeClass.getSimpleName() + " - id: " + id);
+        ModLogger.log("Registering equipment cube - id:" + id + " name:" + cubeClass.getSimpleName());
     }
     
     private void registerCubes() {

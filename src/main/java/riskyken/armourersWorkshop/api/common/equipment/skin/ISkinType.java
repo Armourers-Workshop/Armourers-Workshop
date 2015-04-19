@@ -22,7 +22,7 @@ public interface ISkinType {
     
     public void createBoundingBoxes(World world, int x, int y, int z);
     
-    public void removeBoundingBoxed(World world, int x, int y, int z);
+    public void removeBoundingBoxes(World world, int x, int y, int z);
 
     public int clearArmourCubes(World world, int x, int y, int z);
     

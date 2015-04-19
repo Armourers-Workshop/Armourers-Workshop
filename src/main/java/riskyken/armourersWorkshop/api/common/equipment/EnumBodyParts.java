@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.api.common.equipment;
 
-public enum EnumBodyPart {
+public enum EnumBodyParts {
     HEAD(
             8, 8, 8,
             0, 0, false,
@@ -49,7 +49,7 @@ public enum EnumBodyPart {
     public final int yOrigin;
     public final int zOrigin;
     
-    EnumBodyPart(int xSize, int ySize, int zSize, int textureX, int textureY, boolean mirrorTexture, int xOrigin, int yOrigin, int zOrigin) {
+    EnumBodyParts(int xSize, int ySize, int zSize, int textureX, int textureY, boolean mirrorTexture, int xOrigin, int yOrigin, int zOrigin) {
         this.xSize = xSize;
         this.ySize = ySize;
         this.zSize = zSize;

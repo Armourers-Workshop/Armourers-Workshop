@@ -5,26 +5,26 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 
 public class TileEntityBoundingBox extends TileEntity {
     
     private static final String TAG_PARENT_X = "parentX";
     private static final String TAG_PARENT_Y = "parentY";
     private static final String TAG_PARENT_Z = "parentZ";
-    private static final String TAG_BODY_PART = "bodyPart";
+    private static final String TAG_SKIN_PART = "skinPart";
     
     private int parentX;
     private int parentY;
     private int parentZ;
-    private EnumBodyPart bodyPart;
+    private ISkinPart skinPart;
     
     public TileEntityBoundingBox() {
-        bodyPart = EnumBodyPart.CHEST;
     }
     
-    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, EnumBodyPart bodyPart) {
-        setParent(parentX, parentY, parentZ, bodyPart);
+    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, ISkinPart skinPart) {
+        setParent(parentX, parentY, parentZ, skinPart);
     }
     
     @Override
@@ -38,9 +38,7 @@ public class TileEntityBoundingBox extends TileEntity {
         this.parentX = compound.getInteger(TAG_PARENT_X);
         this.parentY = compound.getInteger(TAG_PARENT_Y);
         this.parentZ = compound.getInteger(TAG_PARENT_Z);
-        if (compound.hasKey(TAG_BODY_PART)) {
-            this.bodyPart = EnumBodyPart.values()[compound.getByte(TAG_BODY_PART)];
-        }
+        this.skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(compound.getString(TAG_SKIN_PART));
     }
     
     @Override
@@ -49,8 +47,8 @@ public class TileEntityBoundingBox extends TileEntity {
         compound.setInteger(TAG_PARENT_X, this.parentX);
         compound.setInteger(TAG_PARENT_Y, this.parentY);
         compound.setInteger(TAG_PARENT_Z, this.parentZ);
-        if (this.bodyPart != null) {
-            compound.setByte(TAG_BODY_PART, (byte)this.bodyPart.ordinal());
+        if (this.skinPart != null) {
+            compound.setString(TAG_SKIN_PART, this.skinPart.getRegistryName());
         }
     }
     
@@ -75,15 +73,15 @@ public class TileEntityBoundingBox extends TileEntity {
         return null;
     }
     
-    public EnumBodyPart getBodyPart() {
-        return bodyPart;
+    public ISkinPart getSkinPart() {
+        return this.skinPart;
     }
     
-    public void setParent(int x, int y, int z, EnumBodyPart bodyPart) {
+    public void setParent(int x, int y, int z, ISkinPart skinPart) {
         this.parentX = x;
         this.parentY = y;
         this.parentZ = z;
-        this.bodyPart = bodyPart;
+        this.skinPart = skinPart;
         this.markDirty();
     }
 }

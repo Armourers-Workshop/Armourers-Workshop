@@ -23,7 +23,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     @SideOnly(Side.CLIENT)
     public int blue;
     
-    private ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(0);
+    private ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(0);
     
     public TileEntityMiniArmourer() {
         this.items = new ItemStack[2];
@@ -55,7 +55,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        skinType = SkinTypeRegistry.INSTANCE.getSkinFromRegistryName(compound.getString(TAG_TYPE));
+        skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
     }
     
     @Override

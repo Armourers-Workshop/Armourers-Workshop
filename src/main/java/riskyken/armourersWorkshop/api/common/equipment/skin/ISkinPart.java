@@ -10,6 +10,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public interface ISkinPart {
     
+    public String getRegistryName();
+    
+    public String getPartName();
+    
     public Rectangle3D getBuildingSpace();
     
     public Rectangle3D getGuideSpace();

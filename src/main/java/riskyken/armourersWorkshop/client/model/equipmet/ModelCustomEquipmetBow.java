@@ -59,13 +59,10 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
 
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
-            switch (part.getArmourPart()) {
-            case BOW:
+            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getSkinPart());
+            
+            if (part.getSkinPart().getPartName().equals("base")) {
                 renderRightArm(part, SCALE);
-                break;
-            default:
-                break;
             }
             
             GL11.glPopMatrix();

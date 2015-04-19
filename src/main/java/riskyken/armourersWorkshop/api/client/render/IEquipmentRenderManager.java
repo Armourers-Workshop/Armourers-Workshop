@@ -1,8 +1,6 @@
 package riskyken.armourersWorkshop.api.client.render;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 
 import com.mojang.authlib.GameProfile;
 
@@ -19,8 +17,6 @@ import com.mojang.authlib.GameProfile;
 public interface IEquipmentRenderManager {
     
     public void onLoad(IEquipmentRenderHandler handler);
-    
-    public void onRenderEquipmentPart(Entity entity, EnumEquipmentPart armourPart);
     
     public void onRenderMannequin(TileEntity TileEntity, GameProfile gameProfile);
 }

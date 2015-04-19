@@ -44,7 +44,7 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
             
             if (message.buttonId >= 0 & message.buttonId < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered()) {
-                ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(message.buttonId);
+                ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(message.buttonId);
                 armourerBrain.setSkinType(skinType);
             }
             if (message.buttonId == 14) {
@@ -69,7 +69,7 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         
         if (container != null && container instanceof ContainerMiniArmourerBuilding) {
             TileEntityMiniArmourer miniArmourer = ((ContainerMiniArmourerBuilding) container).getTileEntity();
-            ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(message.buttonId);
+            ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(message.buttonId);
             miniArmourer.setSkinType(skinType);
         }
         

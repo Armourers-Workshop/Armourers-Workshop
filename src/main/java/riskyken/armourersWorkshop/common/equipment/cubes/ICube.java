@@ -7,8 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
 
-import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 
 public interface ICube {
     
@@ -48,11 +47,7 @@ public interface ICube {
     
     public void readFromBuf(ByteBuf buf);
     
-    public void writeToNBT(NBTTagCompound compound);
-    
-    public void readFromNBT(NBTTagCompound compound);
-    
     public void writeToStream(DataOutputStream stream) throws IOException;
     
-    public void readFromStream(DataInputStream stream, int version, EnumEquipmentPart part) throws IOException;
+    public void readFromStream(DataInputStream stream, int version, ISkinPart skinPart) throws IOException;
 }

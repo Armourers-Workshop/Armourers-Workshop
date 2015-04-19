@@ -11,9 +11,9 @@ public class SkinChest extends SkinTypeBase {
     
     public SkinChest() {
         skinParts = new ArrayList<ISkinPart>();
-        skinParts.add(new SkinChestPartBase());
-        skinParts.add(new SkinChestPartLeftArm());
-        skinParts.add(new SkinChestPartRightArm());
+        skinParts.add(new SkinChestPartBase(this));
+        skinParts.add(new SkinChestPartLeftArm(this));
+        skinParts.add(new SkinChestPartRightArm(this));
     }
     
     @Override

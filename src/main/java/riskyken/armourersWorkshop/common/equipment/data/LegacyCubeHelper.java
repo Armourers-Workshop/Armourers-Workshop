@@ -3,13 +3,13 @@ package riskyken.armourersWorkshop.common.equipment.data;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 
 public final class LegacyCubeHelper {
 
-    public static ICube loadlegacyCube(DataInputStream stream, int version, EnumEquipmentPart part) throws IOException {
+    public static ICube loadlegacyCube(DataInputStream stream, int version, ISkinPart skinPart) throws IOException {
         byte x;
         byte y;
         byte z;
@@ -23,27 +23,19 @@ public final class LegacyCubeHelper {
         blockType = stream.readByte();
         
         if (version < 2) {
-            switch (part) {
-            case WEAPON:
+            String partName = skinPart.getRegistryName();
+            if (partName.equals("armourers:sword.base")) {
                 y -= 1;
-                break;
-            case SKIRT:
+            } else if (partName.equals("armourers:skirt.base")) {
                 y -= 1;
-                break;
-            case LEFT_LEG:
+            } else if (partName.equals("armourers:legs.leftLeg")) {
                 y -= 1;
-                break;
-            case RIGHT_LEG:
+            } else if (partName.equals("armourers:legs.rightLeg")) {
                 y -= 1;
-                break;
-            case LEFT_FOOT:
+            } else if (partName.equals("armourers:feet.leftFoot")) {
                 y -= 1;
-                break;
-            case RIGHT_FOOT:
+            } else if (partName.equals("armourers:feet.rightFoot")) {
                 y -= 1;
-                break;
-            default:
-                break;
             }
         }
 

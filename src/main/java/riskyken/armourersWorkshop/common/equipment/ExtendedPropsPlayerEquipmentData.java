@@ -77,7 +77,7 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     }
     
     public void clearAllEquipmentStacks() {
-        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkins();
+        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinList.size() - 1; i++) {
             ISkinType skinType = skinList.get(i);
             int slot = SkinTypeHelper.getSlotForSkinType(skinType);

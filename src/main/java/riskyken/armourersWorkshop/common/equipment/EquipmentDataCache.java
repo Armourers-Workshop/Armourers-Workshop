@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -163,19 +164,21 @@ public final class EquipmentDataCache {
             return null;
         }
         
-        CustomEquipmentItemData equipmentData;
+        CustomEquipmentItemData equipmentData = null;
         DataInputStream stream = null;
+        
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(targetFile)));
             equipmentData = new CustomEquipmentItemData(stream);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Armour file not found.");
             e.printStackTrace();
-            return null;
         } catch (IOException e) {
             ModLogger.log(Level.ERROR, "Armour file load failed.");
             e.printStackTrace();
-            return null;
+        } catch (NewerFileVersionException e) {
+            ModLogger.log(Level.ERROR, "Can not load custom armour, was saved in newer version.");
+            e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(stream);
         }

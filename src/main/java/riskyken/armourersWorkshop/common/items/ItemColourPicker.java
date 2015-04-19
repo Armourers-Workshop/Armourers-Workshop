@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.common.items;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -12,13 +11,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPartWithTexture;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
-import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
@@ -27,7 +25,6 @@ import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOp
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.PaintingNBTHelper;
-import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -77,8 +74,10 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             if (te != null && te instanceof TileEntityBoundingBox && world.isRemote) {
                 TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
                 if (parent != null) {
-                    int colour = getColourFromSkin(parent, ((TileEntityBoundingBox)te).getBodyPart(), player, world, x, y, z, side);
-                    PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
+                    if (skinPartHasTexture(((TileEntityBoundingBox)te).getSkinPart())) {
+                        int colour = getColourFromSkin(parent, ((TileEntityBoundingBox)te).getSkinPart(), player, world, x, y, z, side);
+                        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
+                    }
                 }
             }
             if (!world.isRemote) {
@@ -89,9 +88,15 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         return false;
     }
     
-    private int getColourFromSkin(TileEntityArmourerBrain te, EnumBodyPart bodyPart, EntityPlayer player, World world, int x, int y, int z, int side) {
-        int textureX = bodyPart.textureX;
-        int textureY = bodyPart.textureY;
+    private boolean skinPartHasTexture(ISkinPart skinPart) {
+        return skinPart instanceof ISkinPartWithTexture;
+    }
+    
+    private int getColourFromSkin(TileEntityArmourerBrain te, ISkinPart skinPart, EntityPlayer player, World world, int x, int y, int z, int side) {
+        /*
+        
+        int textureX = skinPart.getTextureX();
+        int textureY = skinPart.getTextureY();
         boolean holdMirror = true;
         
         ForgeDirection dir = ForgeDirection.getOrientation(side);
@@ -100,36 +105,36 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         
         switch (dir) {
         case DOWN:
-            textureX += bodyPart.zSize + bodyPart.xSize;
+            textureX += skinPart.getTextureHeight() + skinPart.getTextureWidth();
             ySearchAxis = ForgeDirection.SOUTH;
             xSearchAxis = ForgeDirection.EAST;
             break;
         case UP:
-            textureX += bodyPart.zSize;
+            textureX += skinPart.getTextureHeight();
             ySearchAxis = ForgeDirection.SOUTH;
             xSearchAxis = ForgeDirection.EAST;
             break;
         case NORTH:
-            textureX += bodyPart.zSize;
-            textureY += bodyPart.zSize;
+            textureX += skinPart.getTextureHeight();
+            textureY += skinPart.getTextureHeight();
             ySearchAxis = ForgeDirection.UP;
             xSearchAxis = ForgeDirection.EAST;
             break;
         case SOUTH:
-            textureX += bodyPart.zSize + bodyPart.xSize + bodyPart.zSize;
-            textureY += bodyPart.zSize;
+            textureX += skinPart.getTextureHeight() + skinPart.getTextureWidth() + skinPart.getTextureHeight();
+            textureY += skinPart.getTextureHeight();
             ySearchAxis = ForgeDirection.UP;
             xSearchAxis = ForgeDirection.WEST;
             break;
         case WEST:
-            textureX += bodyPart.zSize + bodyPart.xSize;
-            textureY += bodyPart.zSize;
+            textureX += skinPart.getTextureHeight() + skinPart.getTextureWidth();
+            textureY += skinPart.getTextureHeight();
             ySearchAxis = ForgeDirection.UP;
             xSearchAxis = ForgeDirection.NORTH;
             holdMirror = false;
             break;
         case EAST:
-            textureY += bodyPart.zSize;
+            textureY += skinPart.getTextureHeight();
             ySearchAxis = ForgeDirection.UP;
             xSearchAxis = ForgeDirection.SOUTH;
             holdMirror = false;
@@ -143,7 +148,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             int yOffset = xSearchAxis.offsetY;
             int zOffset = xSearchAxis.offsetZ;
             Block block = null;
-            if (bodyPart.mirrorTexture & holdMirror) {
+            if (skinPart.isTextureMirrored() & holdMirror) {
                 block = world.getBlock(x - xOffset * ix, y - yOffset * ix, z - zOffset * ix);
             } else {
                 block = world.getBlock(x + xOffset * ix, y + yOffset * ix, z + zOffset * ix);
@@ -167,7 +172,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             } else {
                 TileEntity teTar = world.getTileEntity(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
                 if (teTar != null && teTar instanceof TileEntityBoundingBox) {
-                    if (((TileEntityBoundingBox)teTar).getBodyPart() != bodyPart) {
+                    if (((TileEntityBoundingBox)teTar).getSkinPart() != skinPart) {
                         textureY += iy - 1;
                         break;
                     }
@@ -182,6 +187,8 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             colour = playerSkin.getRGB(textureX, textureY);
         }
         return colour;
+        */
+        return 0;
     }
     
     @Override

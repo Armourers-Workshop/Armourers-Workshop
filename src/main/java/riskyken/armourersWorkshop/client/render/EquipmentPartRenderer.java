@@ -38,7 +38,7 @@ public class EquipmentPartRenderer extends ModelBase {
     }
     
     public void renderPart(CustomEquipmentPartData armourPart, float scale) {
-        mc.mcProfiler.startSection(armourPart.getArmourPart().name());
+        mc.mcProfiler.startSection(armourPart.getSkinPart().getPartName());
         
         GL11.glColor3f(1F, 1F, 1F);
         if (!armourPart.displayNormalCompiled) {

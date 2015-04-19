@@ -45,7 +45,6 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
                 this.heldItemRight = 1;
             }
         }
-
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSkirt);
         armourData.onRender();
@@ -60,13 +59,10 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
             
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
-            switch (part.getArmourPart()) {
-            case SKIRT:
+            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getSkinPart());
+            
+            if (part.getSkinPart().getPartName().equals("base")) {
                 renderSkirt(part, SCALE);
-                break;
-            default:
-                break;
             }
             
             GL11.glPopMatrix();

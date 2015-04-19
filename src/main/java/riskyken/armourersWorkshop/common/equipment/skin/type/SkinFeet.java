@@ -11,8 +11,8 @@ public class SkinFeet extends SkinTypeBase {
     
     public SkinFeet() {
         skinParts = new ArrayList<ISkinPart>();
-        skinParts.add(new SkinFeetPartLeftFoot());
-        skinParts.add(new SkinFeetPartRightFoot());
+        skinParts.add(new SkinFeetPartLeftFoot(this));
+        skinParts.add(new SkinFeetPartRightFoot(this));
     }
     
     @Override

@@ -11,7 +11,7 @@ public class SkinHead extends SkinTypeBase {
     
     public SkinHead() {
         this.skinParts = new ArrayList<ISkinPart>();
-        skinParts.add(new SkinHeadPartBase());
+        skinParts.add(new SkinHeadPartBase(this));
     }
     
     @Override

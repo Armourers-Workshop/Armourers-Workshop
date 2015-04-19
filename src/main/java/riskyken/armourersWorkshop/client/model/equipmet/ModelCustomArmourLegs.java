@@ -59,17 +59,14 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
             
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
-            switch (part.getArmourPart()) {
-            case LEFT_LEG:
+            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getSkinPart());
+            
+            if (part.getSkinPart().getPartName().equals("leftLeg")) {
                 renderLeftLeg(part, SCALE);
-                break;
-            case RIGHT_LEG:
+            } else if (part.getSkinPart().getPartName().equals("rightLeg")) {
                 renderRightLeg(part, SCALE);
-                break;   
-            default:
-                break;
             }
+            
             GL11.glPopMatrix();
         }
         

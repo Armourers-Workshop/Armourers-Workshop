@@ -8,23 +8,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.nbt.NBTTagCompound;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class CustomEquipmentItemData {
     
-    public static final int FILE_VERSION = 5;
+    public static final int FILE_VERSION = 6;
     
     private String authorName;
     private String customName;
@@ -68,7 +64,7 @@ public class CustomEquipmentItemData {
         readFromBuf(buf);
     }
     
-    public CustomEquipmentItemData(DataInputStream stream) throws IOException {
+    public CustomEquipmentItemData(DataInputStream stream) throws IOException, NewerFileVersionException {
         readFromStream(stream);
     }
     
@@ -87,7 +83,7 @@ public class CustomEquipmentItemData {
         this.authorName = ByteBufUtils.readUTF8String(buf);
         this.customName = ByteBufUtils.readUTF8String(buf);
         this.tags = ByteBufUtils.readUTF8String(buf);
-        this.skinType = SkinTypeRegistry.INSTANCE.getSkinFromRegistryName(ByteBufUtils.readUTF8String(buf));
+        this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(ByteBufUtils.readUTF8String(buf));
         int size = buf.readByte();
         parts = new ArrayList<CustomEquipmentPartData>();
         for (int i = 0; i < size; i++) {
@@ -111,10 +107,10 @@ public class CustomEquipmentItemData {
         }
     }
     
-    private void readFromStream(DataInputStream stream) throws IOException {
+    private void readFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
         int fileVersion = stream.readInt();
         if (fileVersion > FILE_VERSION) {
-            ModLogger.log(Level.ERROR, "Can not load custom armour, was saved in newer version.");
+            throw new NewerFileVersionException();
         }
         this.authorName = stream.readUTF();
         this.customName = stream.readUTF();
@@ -124,9 +120,9 @@ public class CustomEquipmentItemData {
             this.tags = "";
         }
         if (fileVersion < 5) {
-            skinType = SkinTypeRegistry.INSTANCE.getSkinFromLegacyId(stream.readByte() - 1);
+            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
         } else {
-            skinType = SkinTypeRegistry.INSTANCE.getSkinFromRegistryName(stream.readUTF());
+            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(stream.readUTF());
         }
         int size = stream.readByte();
         parts = new ArrayList<CustomEquipmentPartData>();

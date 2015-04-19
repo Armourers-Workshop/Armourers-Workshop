@@ -15,7 +15,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
@@ -136,15 +135,15 @@ public final class EquipmentModelRenderer {
         if (!addedRenderAttachment & !ConfigHandler.compatibilityRender) {
             ModelBiped playerBiped = event.renderer.modelBipedMain;
             
-            playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinHead, EnumEquipmentPart.HEAD));
-            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, EnumEquipmentPart.CHEST));
-            playerBiped.bipedLeftArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, EnumEquipmentPart.LEFT_ARM));
-            playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, EnumEquipmentPart.RIGHT_ARM));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, EnumEquipmentPart.LEFT_LEG));
-            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, EnumEquipmentPart.RIGHT_LEG));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinSkirt, EnumEquipmentPart.SKIRT));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, EnumEquipmentPart.LEFT_FOOT));
-            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, EnumEquipmentPart.RIGHT_FOOT));            
+            playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinHead, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
+            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.base")));
+            playerBiped.bipedLeftArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.leftArm")));
+            playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.rightArm")));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.leftLeg")));
+            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.rightLeg")));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinSkirt, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:skirt.base")));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.leftFoot")));
+            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));            
             
             addedRenderAttachment = true;
         }
@@ -250,7 +249,7 @@ public final class EquipmentModelRenderer {
             return;
         }
         
-        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkins();
+        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
             if (equipmentData.haveEquipment(skinType)) {

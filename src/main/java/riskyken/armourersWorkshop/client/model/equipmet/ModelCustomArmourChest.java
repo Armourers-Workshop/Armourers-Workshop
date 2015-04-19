@@ -58,20 +58,14 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
 
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getArmourPart());
-            switch (part.getArmourPart()) {
-            case CHEST:
+            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getSkinPart());
+            
+            if (part.getSkinPart().getPartName().equals("base")) {
                 renderChest(part, SCALE);
-                break;
-            case LEFT_ARM:
+            } else if (part.getSkinPart().getPartName().equals("leftArm")) {
                 renderLeftArm(part, SCALE);
-                break;
-            case RIGHT_ARM:
+            } else if (part.getSkinPart().getPartName().equals("rightArm")) {
                 renderRightArm(part, SCALE);
-                break;   
-                
-            default:
-                break;
             }
             
             GL11.glPopMatrix();

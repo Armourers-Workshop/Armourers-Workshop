@@ -5,12 +5,24 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class SkinTypePartBase implements ISkinPart {
 
+    private ISkinType baseType;
+    
+    public SkinTypePartBase(ISkinType baseType) {
+        this.baseType = baseType;
+    }
+    
+    @Override
+    public String getRegistryName() {
+        return baseType.getRegistryName() + "." + getPartName();
+    }
+    
     @SideOnly(Side.CLIENT)
     @Override
     public void renderBuildingGrid(float scale) {

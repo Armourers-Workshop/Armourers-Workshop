@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Level;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -175,7 +176,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
         
         DataInputStream stream = null;
-        CustomEquipmentItemData armourItemData;
+        CustomEquipmentItemData armourItemData = null;
         
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(targetFile)));
@@ -183,11 +184,12 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Armour file not found.");
             e.printStackTrace();
-            return null;
         } catch (IOException e) {
             ModLogger.log(Level.ERROR, "Armour file load failed.");
             e.printStackTrace();
-            return null;
+        } catch (NewerFileVersionException e) {
+            ModLogger.log(Level.ERROR, "Can not load custom armour, was saved in newer version.");
+            e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(stream);
         }

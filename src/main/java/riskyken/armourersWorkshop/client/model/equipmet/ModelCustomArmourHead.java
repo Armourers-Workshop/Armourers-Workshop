@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
@@ -51,7 +50,7 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinHead);
         
-        ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, EnumEquipmentPart.HEAD);
+        ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, armourData.getParts().get(0).getSkinPart());
         armourData.onRender();
         
         GL11.glPushMatrix();

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
@@ -26,16 +26,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ModelRendererAttachment extends ModelRenderer {
 
     private final ISkinType skinType;
-    private final EnumEquipmentPart equipmentPart;
+    private final ISkinPart skinPart;
     private final Minecraft mc;
     private ModelBiped baseModel;
     
-    public ModelRendererAttachment(ModelBiped modelBase, ISkinType skinType, EnumEquipmentPart equipmentPart) {
+    public ModelRendererAttachment(ModelBiped modelBase, ISkinType skinType, ISkinPart skinPart) {
         super(modelBase);
         this.baseModel = modelBase;
         mc = Minecraft.getMinecraft();
         this.skinType = skinType;
-        this.equipmentPart = equipmentPart;
+        this.skinPart = skinPart;
         addBox(0, 0, 0, 0, 0, 0);
     }
     
@@ -69,9 +69,9 @@ public class ModelRendererAttachment extends ModelRenderer {
         int size = data.getParts().size();
         for (int i = 0; i < size; i++) {
             CustomEquipmentPartData partData = data.getParts().get(i);
-            if (partData.getArmourPart() == equipmentPart) {
+            if (partData.getSkinPart() == skinPart) {
                 GL11.glPushMatrix();
-                if (skinType == SkinTypeRegistry.skinSkirt && equipmentPart == EnumEquipmentPart.SKIRT) {
+                if (skinType == SkinTypeRegistry.skinSkirt && skinPart.getRegistryName().equals("armourers:skirt.base")) {
                     GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
                     GL11.glTranslatef(-2 * scale, 0, 0);
                     if (player.isSneaking()) {
