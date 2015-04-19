@@ -124,6 +124,11 @@ public class CustomEquipmentItemData {
         } else {
             skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(stream.readUTF());
         }
+        
+        if (skinType == null) {
+            throw new InvalidCubeTypeException();
+        }
+        
         int size = stream.readByte();
         parts = new ArrayList<CustomEquipmentPartData>();
         for (int i = 0; i < size; i++) {

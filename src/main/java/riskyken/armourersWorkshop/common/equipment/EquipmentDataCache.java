@@ -94,6 +94,9 @@ public final class EquipmentDataCache {
     }
     
     public void addEquipmentDataToCache(CustomEquipmentItemData equipmentData, int equipmentId) {
+        if (equipmentData == null) {
+            return;
+        }
         if (!equipmentDataCache.containsKey(equipmentId)) {
             equipmentDataCache.put(equipmentId, equipmentData);
             if (!haveEquipmentOnDisk(equipmentId)) {
