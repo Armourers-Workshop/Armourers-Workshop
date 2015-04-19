@@ -81,6 +81,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
                         } else {
                             list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
                         }
+                    } else {
+                        list.add("Downloading...");
                     }
                 }
             }
