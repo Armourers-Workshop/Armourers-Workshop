@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.equipment.skin;
 
 import javax.vecmath.Point3i;
 
-import net.minecraft.world.World;
+import net.minecraft.util.IIcon;
 
 import org.lwjgl.opengl.GL11;
 
@@ -14,6 +14,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class SkinTypeBase implements ISkinType {
 
     private int id = -1;
+    @SideOnly(Side.CLIENT)
+    protected IIcon icon = null;
     
     @SideOnly(Side.CLIENT)
     @Override
@@ -39,62 +41,10 @@ public abstract class SkinTypeBase implements ISkinType {
         }
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public void createBoundingBoxes(World world, int x, int y, int z) {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    /*
-    private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
-        if (worldObj.isAirBlock(x, y, z)) {
-            worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
-            TileEntity te = null;
-            te = worldObj.getTileEntity(x, y, z);
-            if (te != null && te instanceof TileEntityBoundingBox) {
-                ((TileEntityBoundingBox)te).setParent(xCoord, yCoord, zCoord, bodyPart);
-            } else {
-                te = new TileEntityBoundingBox(xCoord, yCoord, zCoord, bodyPart);
-                worldObj.setTileEntity(x, y, z, te);
-            }
-        }
-    }
-    */
-    
-    @Override
-    public void removeBoundingBoxes(World world, int x, int y, int z) {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    @Override
-    public int clearArmourCubes(World world, int x, int y, int z) {
-        // TODO Auto-generated method stub
-        /*
-        for (int i = 0; i < type.getParts().length; i++) {
-            EnumEquipmentPart part = type.getParts()[i];
-            ModLogger.log("Clearing " + part);
-            for (int ix = 0; ix <  part.getTotalXSize(); ix++) {
-                for (int iy = 0; iy < part.getTotalYSize(); iy++) {
-                    for (int iz = 0; iz <  part.getTotalZSize(); iz++) {
-                        int tarX = xCoord + part.getStartX() - part.xLocation + ix;
-                        int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
-                        int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
-                        Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
-                        if (
-                                tarBlock == ModBlocks.colourable |
-                                tarBlock == ModBlocks.colourableGlowing |
-                                tarBlock == ModBlocks.colourableGlass |
-                                tarBlock == ModBlocks.colourableGlassGlowing
-                            ) {
-                            worldObj.setBlockToAir(tarX, tarY, tarZ);
-                        }
-                    }
-                }
-            }
-        }
-        */
-        return 0;
+    public IIcon getIcon() {
+        return this.icon;
     }
     
     @Override

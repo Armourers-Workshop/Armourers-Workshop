@@ -4,9 +4,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
@@ -34,18 +32,10 @@ public class ItemEquipmentSkin extends AbstractModItem {
 
     public ItemEquipmentSkin() {
         super(LibItemNames.EQUIPMENT_SKIN, false);
-        setHasSubtypes(true);
     }
     
     public ISkinType getSkinType(ItemStack stack) {
         return EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
-    }
-    
-    @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered(); i++) {
-            list.add(new ItemStack(item, 1, i));
-        }
     }
     
     @Override
@@ -65,6 +55,10 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 }
                 if (!data.getAuthorName().trim().isEmpty()) {
                     list.add(cGold + "Author: " + cGray + data.getAuthorName());
+                }
+                
+                if (skinData.skinType != null) {
+                    list.add(cGold + "Skin Type: " + cGray + SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType));
                 }
                 
                 if (GuiScreen.isShiftKeyDown()) {
@@ -108,33 +102,30 @@ public class ItemEquipmentSkin extends AbstractModItem {
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon[] icons;
+    private IIcon loadingIcon;
     
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        icons = new IIcon[8];
-        icons[0] = register.registerIcon(LibItemResources.TEMPLATE_HEAD);
-        icons[1] = register.registerIcon(LibItemResources.TEMPLATE_CHEST);
-        icons[2] = register.registerIcon(LibItemResources.TEMPLATE_LEGS);
-        icons[3] = register.registerIcon(LibItemResources.TEMPLATE_SKIRT);
-        icons[4] = register.registerIcon(LibItemResources.TEMPLATE_FEET);
-        icons[5] = register.registerIcon(LibItemResources.TEMPLATE_WEAPON);
-        icons[6] = register.registerIcon(LibItemResources.TEMPLATE_BOW);
-        icons[7] = register.registerIcon(LibItemResources.TEMPLATE_LOADING);
+        this.itemIcon = register.registerIcon(LibItemResources.TEMPLATE_BLANK);
+        this.loadingIcon = register.registerIcon(LibItemResources.TEMPLATE_LOADING);
     }
     
     @Override
     public IIcon getIcon(ItemStack stack, int pass) {
-        int damage = stack.getItemDamage();
-        
         if (pass == 1) {
-            return icons[7];
+            return this.loadingIcon;
         }
         
-        if (damage < 7 & damage >= 0) {
-            return icons[damage];
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            if (skinData.skinType != null) {
+                if (skinData.skinType.getIcon() != null) {
+                    return skinData.skinType.getIcon();
+                }
+            }
         }
-        return super.getIcon(stack, pass);
+        
+        return this.itemIcon;
     }
 }

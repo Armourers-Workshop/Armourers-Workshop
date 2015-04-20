@@ -45,11 +45,7 @@ public final class CraftingManager {
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[1], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[2], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
-                /*
-                for (int i = 0; i < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered(); i++) {
-                    ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1, i));
-                }
-                */
+                ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }

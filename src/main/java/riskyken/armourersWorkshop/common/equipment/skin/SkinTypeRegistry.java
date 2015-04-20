@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
@@ -18,6 +20,7 @@ import riskyken.armourersWorkshop.common.equipment.skin.type.SkinSkirt;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinSword;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -41,6 +44,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     }
     
     public SkinTypeRegistry() {
+        MinecraftForge.EVENT_BUS.register(this);
         skinTypeMap = new LinkedHashMap<String, ISkinType>();
         skinPartMap = new HashMap<String, ISkinPart>();
         registerSkins();
@@ -178,5 +182,19 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         String localizedName = "skinType." + LibModInfo.ID.toLowerCase() + ":" + skinType.getRegistryName() + ".name";
         localizedName = StatCollector.translateToLocal(localizedName);
         return localizedName;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+        if (event.map.getTextureType() == 1) {
+            for (int i = 0; i < skinTypeMap.size(); i++) {
+                String registryName = (String) skinTypeMap.keySet().toArray()[i];
+                ISkinType skinType = getSkinTypeFromRegistryName(registryName);
+                if (skinType != null) {
+                    skinType.registerIcon(event.map);
+                }
+            }
+        }
     }
 }

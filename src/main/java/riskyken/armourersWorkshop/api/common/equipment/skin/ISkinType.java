@@ -2,7 +2,8 @@ package riskyken.armourersWorkshop.api.common.equipment.skin;
 
 import java.util.ArrayList;
 
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -43,11 +44,11 @@ public interface ISkinType {
     @SideOnly(Side.CLIENT)
     public void renderBuildingGrid(float scale);
     
-    public void createBoundingBoxes(World world, int x, int y, int z);
+    @SideOnly(Side.CLIENT)
+    public void registerIcon(IIconRegister register);
     
-    public void removeBoundingBoxes(World world, int x, int y, int z);
-
-    public int clearArmourCubes(World world, int x, int y, int z);
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon();
     
     /**
      * Should the show skin overlay check box be shown in the armourer and mini armourer.

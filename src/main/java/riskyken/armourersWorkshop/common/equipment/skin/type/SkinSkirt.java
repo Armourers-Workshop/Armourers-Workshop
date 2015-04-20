@@ -2,7 +2,9 @@ package riskyken.armourersWorkshop.common.equipment.skin.type;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeBase;
 
 public class SkinSkirt extends SkinTypeBase {
@@ -27,6 +29,11 @@ public class SkinSkirt extends SkinTypeBase {
     @Override
     public String getName() {
         return "Skirt";
+    }
+    
+    @Override
+    public void registerIcon(IIconRegister register) {
+        this.icon = register.registerIcon(LibItemResources.TEMPLATE_SKIRT);
     }
 
     @Override

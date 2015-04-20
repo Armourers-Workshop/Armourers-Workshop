@@ -150,7 +150,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public void preRemove() {
-        removeBoundingBoxed();
+        removeBoundingBoxes();
     }
     
     public int getHeightOffset() {
@@ -159,19 +159,19 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
 
     public void clearArmourCubes() {
         if (skinType != null) {
-            skinType.clearArmourCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord);
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
         }
     }
     
-    protected void removeBoundingBoxed() {
+    protected void removeBoundingBoxes() {
         if (skinType != null) {
-            skinType.removeBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord);
+            ArmourerWorldHelper.removeBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
         }
     }
     
     protected void createBoundingBoxes() {
         if (skinType != null) {
-            skinType.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord);
+            ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
         }
     }
     
@@ -215,7 +215,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         if (this.skinType == skinType) {
             return;
         }
-        removeBoundingBoxed();
+        removeBoundingBoxes();
         this.skinType = skinType;
         createBoundingBoxes(); 
         this.markDirty();

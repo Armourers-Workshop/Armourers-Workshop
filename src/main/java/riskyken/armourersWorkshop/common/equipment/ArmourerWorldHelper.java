@@ -156,4 +156,63 @@ public final class ArmourerWorldHelper {
             }
         }
     }
+    
+    public static void createBoundingBoxes(World world, int x, int y, int z, ISkinType skinType) {
+        
+    }
+    
+    public static void removeBoundingBoxes(World world, int x, int y, int z, ISkinType skinType) {
+        
+    }
+    
+    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType) {
+        return 0;
+    }
+    /*
+    
+    private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
+        if (worldObj.isAirBlock(x, y, z)) {
+            worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
+            TileEntity te = null;
+            te = worldObj.getTileEntity(x, y, z);
+            if (te != null && te instanceof TileEntityBoundingBox) {
+                ((TileEntityBoundingBox)te).setParent(xCoord, yCoord, zCoord, bodyPart);
+            } else {
+                te = new TileEntityBoundingBox(xCoord, yCoord, zCoord, bodyPart);
+                worldObj.setTileEntity(x, y, z, te);
+            }
+        }
+    }
+    
+    
+    @Override
+    public int clearArmourCubes(World world, int x, int y, int z) {
+        // TODO Auto-generated method stub
+        
+        for (int i = 0; i < type.getParts().length; i++) {
+            EnumEquipmentPart part = type.getParts()[i];
+            ModLogger.log("Clearing " + part);
+            for (int ix = 0; ix <  part.getTotalXSize(); ix++) {
+                for (int iy = 0; iy < part.getTotalYSize(); iy++) {
+                    for (int iz = 0; iz <  part.getTotalZSize(); iz++) {
+                        int tarX = xCoord + part.getStartX() - part.xLocation + ix;
+                        int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
+                        int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
+                        Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
+                        if (
+                                tarBlock == ModBlocks.colourable |
+                                tarBlock == ModBlocks.colourableGlowing |
+                                tarBlock == ModBlocks.colourableGlass |
+                                tarBlock == ModBlocks.colourableGlassGlowing
+                            ) {
+                            worldObj.setBlockToAir(tarX, tarY, tarZ);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return 0;
+    }
+     */
 }
