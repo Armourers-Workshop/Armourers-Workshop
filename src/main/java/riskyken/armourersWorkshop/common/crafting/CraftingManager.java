@@ -7,6 +7,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
 import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import cpw.mods.fml.common.Loader;
@@ -20,6 +21,7 @@ public final class CraftingManager {
         ModBlockRecipes.init();
         ModItemRecipes.init();
         new DollCraftinghandler();
+        GameRegistry.addRecipe(new RecipeSkinUpdate());
     }
 
     public static void addShapelessRecipe(ItemStack result, Object[] recipe) {
