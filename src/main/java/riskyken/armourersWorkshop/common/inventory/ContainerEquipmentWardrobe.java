@@ -9,6 +9,7 @@ import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentD
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class ContainerEquipmentWardrobe extends Container {
     
@@ -58,44 +59,18 @@ public class ContainerEquipmentWardrobe extends Container {
                     }
                 }
             } else {
-                if (stack.getItem() instanceof ItemEquipmentSkin) {
-                    switch (stack.getItemDamage()) {
-                    case 0:
-                        if (!this.mergeItemStack(stack, 0, 1, false)) {
-                            return null;
+                if (stack.getItem() instanceof ItemEquipmentSkin & EquipmentNBTHelper.stackHasSkinData(stack)) {
+                    boolean slotted = false;
+                    for (int i = 0; i < 7; i++) {
+                        Slot targetSlot = getSlot(i);
+                        if (targetSlot.isItemValid(stack)) {
+                            if (this.mergeItemStack(stack, i, i + 1, false)) {
+                                slotted = true;
+                                break;
+                            }
                         }
-                        break;
-                    case 1:
-                        if (!this.mergeItemStack(stack, 1, 2, false)) {
-                            return null;
-                        }
-                        break;
-                    case 2:
-                        if (!this.mergeItemStack(stack, 3, 4, false)) {
-                            return null;
-                        }
-                        break;
-                    case 3:
-                        if (!this.mergeItemStack(stack, 4, 5, false)) {
-                            return null;
-                        }
-                        break;
-                    case 4:
-                        if (!this.mergeItemStack(stack, 5, 6, false)) {
-                            return null;
-                        }
-                        break;
-                    case 5:
-                        if (!this.mergeItemStack(stack, 2, 3, false)) {
-                            return null;
-                        }
-                        break;
-                    case 6:
-                        if (!this.mergeItemStack(stack, 6, 7, false)) {
-                            return null;
-                        }
-                        break;    
-                    default:
+                    }
+                    if (!slotted) {
                         return null;
                     }
                 } else if(stack.getItem() instanceof ItemColourPicker) {

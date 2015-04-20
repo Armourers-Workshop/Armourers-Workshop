@@ -8,14 +8,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 
 import org.lwjgl.input.Keyboard;
 
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
@@ -27,6 +25,8 @@ import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -55,46 +55,44 @@ public class ItemEquipmentSkin extends AbstractModItem {
         String cRed = EnumChatFormatting.RED.toString();
         String cGold = EnumChatFormatting.GOLD.toString();
         String cYellow = EnumChatFormatting.YELLOW.toString();
-        if (stack.hasTagCompound()) {
-            NBTTagCompound itemData = stack.getTagCompound();
-            if (itemData.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-                NBTTagCompound armourData = itemData.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-                if (armourData.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) {
-                    int equipmentId = armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-                    if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(equipmentId)) {
-                        CustomEquipmentItemData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
-                        if (!data.getCustomName().trim().isEmpty()) {
-                            list.add(cGold + "Name: " + cGray + data.getCustomName());
-                        }
-                        if (!data.getAuthorName().trim().isEmpty()) {
-                            list.add(cGold + "Author: " + cGray + data.getAuthorName());
-                        }
-                        
-                        if (GuiScreen.isShiftKeyDown()) {
-                            list.add(cYellow + "Equipment Id: " + cGray + equipmentId);
-                            list.add(cYellow + "Total Cubes: " + cGray + data.getTotalCubes());
-                            list.add(cYellow + "Cubes: " + cGray + data.getTotalOfCubeType(Cube.class));
-                            list.add(cYellow + "Cubes Glowing: " + cGray + data.getTotalOfCubeType(CubeGlowing.class));
-                            list.add(cYellow + "Cubes Glass: " + cGray + data.getTotalOfCubeType(CubeGlass.class));
-                            list.add(cYellow + "Cubes Glass Glowing: " + cGray + data.getTotalOfCubeType(CubeGlassGlowing.class));
-                            
-                        } else {
-                            list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
-                        }
-                    } else {
-                        list.add("Downloading...");
-                    }
+        
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+                CustomEquipmentItemData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+                if (!data.getCustomName().trim().isEmpty()) {
+                    list.add(cGold + "Name: " + cGray + data.getCustomName());
                 }
+                if (!data.getAuthorName().trim().isEmpty()) {
+                    list.add(cGold + "Author: " + cGray + data.getAuthorName());
+                }
+                
+                if (GuiScreen.isShiftKeyDown()) {
+                    list.add(cYellow + "Equipment Id: " + cGray + skinData.skinId);
+                    list.add(cYellow + "Total Cubes: " + cGray + data.getTotalCubes());
+                    list.add(cYellow + "Cubes: " + cGray + data.getTotalOfCubeType(Cube.class));
+                    list.add(cYellow + "Cubes Glowing: " + cGray + data.getTotalOfCubeType(CubeGlowing.class));
+                    list.add(cYellow + "Cubes Glass: " + cGray + data.getTotalOfCubeType(CubeGlass.class));
+                    list.add(cYellow + "Cubes Glass Glowing: " + cGray + data.getTotalOfCubeType(CubeGlassGlowing.class));
+                    
+                } else {
+                    list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
+                }
+            } else {
+                list.add("Downloading skin...");
             }
+            
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
-
             keyName = cGreen + keyName + cGray;
             list.add("Press the " + keyName + " key to open the " + cGreen + "Equipment Wardrobe");
         } else {
-            list.add(cRed + "ERROR: Invalid equipment skin.");
-            list.add(cRed + "Please delete.");
+            if (EquipmentNBTHelper.stackHasLegacySkinData(stack)) {
+                list.add(cRed + "Old skin type. Place in crafting grid to restore.");
+            } else {
+                list.add(cRed + "ERROR: Invalid equipment skin.");
+                list.add(cRed + "Please delete.");
+            }
         }
-        
 
         super.addInformation(stack, player, list, p_77624_4_);
     }

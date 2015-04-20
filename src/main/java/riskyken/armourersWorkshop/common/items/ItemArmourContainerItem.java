@@ -25,6 +25,6 @@ public class ItemArmourContainerItem extends AbstractModItem implements ISkinHol
 
     @Override
     public ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData) {
-        return EquipmentNBTHelper.makeStackForEquipment(armourItemData, true);
+        return EquipmentNBTHelper.makeArmouerContainerStack(armourItemData);
     }
 }

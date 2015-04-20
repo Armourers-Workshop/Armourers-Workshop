@@ -15,8 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
@@ -25,6 +23,8 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerUpdateSkinInfo;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
@@ -146,12 +146,11 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
             return;
         }
         
-        NBTTagCompound data = stack.getTagCompound();
-        if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-            return ;
+        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
+            return;
         }
-        NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        loadFromItemNBT(armourNBT);
+        
+        loadFromItemStack(stack);
     }
     
     private void removeArmourFromSlot(byte slotId) {
@@ -206,11 +205,9 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
         }
     }
     
-    private void loadFromItemNBT(NBTTagCompound compound) {
-        int equipmentId = compound.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
-        
-        addCustomEquipment(equipmentData.getSkinType(), equipmentId);
+    private void loadFromItemStack(ItemStack stack) {
+        SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+        addCustomEquipment(skinData.skinType, skinData.skinId);
     }
     
     @Override

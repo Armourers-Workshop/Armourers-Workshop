@@ -127,7 +127,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             return;
         }
         
-        if (!EquipmentNBTHelper.itemStackHasCustomEquipment(stackInput)) {
+        if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
 
@@ -135,7 +135,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             return;
         }
         
-        int equipmentId = EquipmentNBTHelper.getEquipmentIdFromStack(stackInput);
+        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
         CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         

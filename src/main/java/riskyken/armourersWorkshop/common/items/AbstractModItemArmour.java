@@ -8,15 +8,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -43,25 +43,11 @@ public class AbstractModItemArmour extends ItemArmor {
         String unlocalized;
         String localized;
         
-        if (stack.hasTagCompound()) {
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            list.add(cGold + "Equipment Id: " + cGray + skinData.skinId);
+        } else {
             
-            NBTTagCompound itemData = stack.getTagCompound();
-            if (itemData.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-                NBTTagCompound armourData = itemData.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-                if (armourData.hasKey(LibCommonTags.TAG_CUSTOM_NAME)) {
-                    if (!armourData.getString(LibCommonTags.TAG_CUSTOM_NAME).trim().isEmpty()) {
-                        list.add(cGold + "Name: " + cGray + armourData.getString(LibCommonTags.TAG_CUSTOM_NAME));
-                    }
-                    
-                }
-                if (armourData.hasKey(LibCommonTags.TAG_AUTHOR_NAME)) {
-                    list.add(cGold + "Author: " + cGray + armourData.getString(LibCommonTags.TAG_AUTHOR_NAME));
-                }
-                if (armourData.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) {
-                    list.add(cGold + "Equipment Id: " + cGray + armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID));
-                }
-                
-            }
         }
         
         unlocalized = stack.getUnlocalizedName() + ".flavour";
@@ -117,27 +103,16 @@ public class AbstractModItemArmour extends ItemArmor {
     @Override
     @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack stack, int armorSlot) {
-        if (!stack.hasTagCompound()) {
-            return null;
-        }
-        NBTTagCompound itemData = stack.getTagCompound();
         
-        if (!itemData.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-            return null;
-        }
-        NBTTagCompound armourData = itemData.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        if (!armourData.hasKey(LibCommonTags.TAG_CUSTOM_NAME)) {
+        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
             return null;
         }
         
-        if (!armourData.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) {
-            return null;
-        }
-        int equipmentId = armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
+        SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
         
         AbstractModelCustomEquipment targetModel = null;
         EquipmentModelRenderer emr = EquipmentModelRenderer.INSTANCE;
-        CustomEquipmentItemData data = emr.getCustomArmourItemData(equipmentId);
+        CustomEquipmentItemData data = emr.getCustomArmourItemData(skinData.skinId);
         if (data == null) {
             return null;
         }

@@ -2,95 +2,211 @@ package riskyken.armourersWorkshop.utils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 
 public class EquipmentNBTHelper {
     
-    public static boolean itemStackHasCustomEquipment(ItemStack stack) {
-        NBTTagCompound itemNbt = NBTHelper.getNBTForStack(stack);
+    private static final String TAG_OLD_SKIN_DATA = "armourData";
+    public static final String TAG_OLD_SKIN_ID = "equpmentId";
+    
+    private static final String TAG_SKIN_DATA = "armourersWorkshop";
+    private static final String TAG_SKIN_TYPE = "skinType";
+    private static final String TAG_SKIN_ID = "skinId";
+    private static final String TAG_SKIN_LOCK = "lock";
+    
+    public static boolean stackHasSkinData(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
         
-        if (!itemNbt.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return false;}
-        NBTTagCompound armourNBT = itemNbt.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
+        if (!stack.hasTagCompound()) {
+            return false;
+        }
         
-        if (!armourNBT.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) { return false; }
+        NBTTagCompound itemCompound = stack.getTagCompound();
+        if (!itemCompound.hasKey(TAG_SKIN_DATA)) {
+            return false;
+        }
+        
         return true;
     }
     
-    public static int getEquipmentIdFromStack(ItemStack stack) {
-        if (stack == null) {
-            return 0;
+    public static void removeSkinDataFromStack(ItemStack stack, boolean overrideLock) {
+        if (!stackHasSkinData(stack)) {
+            return;
         }
-        if (!stack.hasTagCompound()) {
-            return 0;
+        
+        SkinNBTData skinData = getSkinNBTDataFromStack(stack);
+        if (skinData.lockSkin) {
+            if (!overrideLock) {
+                return;
+            }
         }
-        NBTTagCompound itemNbt = stack.getTagCompound();
         
-        if (!itemNbt.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return 0;}
-        NBTTagCompound armourNBT = itemNbt.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        
-        if (!armourNBT.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) { return 0; }
-        
-        return armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
+        NBTTagCompound itemCompound = stack.getTagCompound();
+        if (itemCompound.hasKey(TAG_SKIN_DATA)) {
+            itemCompound.removeTag(TAG_SKIN_DATA);
+        }
     }
     
-    public static ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData, boolean armouerContainer) {
-        ItemStack stack = null;
-        if (!armouerContainer) {
-            stack = new ItemStack(ModItems.equipmentSkin, 1, SkinTypeRegistry.INSTANCE.getLegacyIdForSkin(armourItemData.getSkinType()));
-        } else {
-            stack = new ItemStack(ModItems.armourContainer[armourItemData.getSkinType().getVanillaArmourSlotId()], 1);
+    public static SkinNBTData getSkinNBTDataFromStack(ItemStack stack) {
+        if (!stackHasSkinData(stack)) {
+            return null;
         }
         
-        NBTTagCompound itemNBT = new NBTTagCompound();
-        NBTTagCompound armourNBT = new NBTTagCompound();
+        SkinNBTData skinData = new SkinNBTData();
+        skinData.readFromCompound(stack.getTagCompound());
         
-        armourItemData.writeClientDataToNBT(armourNBT);
-        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
-        itemNBT.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);
+        return skinData;
+    }
+    
+    public static ISkinType getSkinTypeFromStack(ItemStack stack) {
+        if (!stackHasSkinData(stack)) {
+            return null;
+        }
         
-        stack.setTagCompound(itemNBT);
+        SkinNBTData skinData = new SkinNBTData();
+        skinData.readFromCompound(stack.getTagCompound());
         
+        return skinData.skinType;
+    }
+    
+    public static int getSkinIdFromStack(ItemStack stack) {
+        if (!stackHasSkinData(stack)) {
+            return -1;
+        }
+        
+        SkinNBTData skinData = new SkinNBTData();
+        skinData.readFromCompound(stack.getTagCompound());
+        
+        return skinData.skinId;
+    }
+    
+    public static boolean isSkinLockedOnStack(ItemStack stack) {
+        if (!stackHasSkinData(stack)) {
+            return false;
+        }
+        
+        SkinNBTData skinData = new SkinNBTData();
+        skinData.readFromCompound(stack.getTagCompound());
+        
+        return skinData.lockSkin;
+    }
+    
+    public static void addSkinDataToStack(ItemStack stack, ISkinType skinType, int skinId, boolean lockSkin) {
+        SkinNBTData skinData = new SkinNBTData(skinType, skinId, lockSkin);
+        addSkinDataToStack(stack, skinData);
+    }
+    
+    public static void addSkinDataToStack(ItemStack stack, SkinNBTData skinData) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        skinData.writeToCompound(stack.getTagCompound());
+    }
+    
+    public static boolean stackHasLegacySkinData(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+        
+        if (!stack.hasTagCompound()) {
+            return false;
+        }
+        
+        NBTTagCompound itemCompound = stack.getTagCompound();
+        if (!itemCompound.hasKey(TAG_OLD_SKIN_DATA)) {
+            return false;
+        }
+        
+        NBTTagCompound skinDataCompound = itemCompound.getCompoundTag(TAG_OLD_SKIN_DATA);
+        if (!skinDataCompound.hasKey(TAG_OLD_SKIN_ID)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public static int getLegacyIdFromStack(ItemStack stack) {
+        if (stack == null) {
+            return -1;
+        }
+        if (!stack.hasTagCompound()) {
+            return -1;
+        }
+        
+        NBTTagCompound itemCompound = stack.getTagCompound();
+        if (!itemCompound.hasKey(TAG_OLD_SKIN_DATA)) {
+            return -1;
+        }
+        
+        NBTTagCompound skinDataCompound = itemCompound.getCompoundTag(TAG_OLD_SKIN_DATA);
+        if (!skinDataCompound.hasKey(TAG_OLD_SKIN_ID)) {
+            return -1;
+        }
+        
+        return skinDataCompound.getInteger(TAG_OLD_SKIN_ID);
+    }
+    
+    public static ItemStack makeEquipmentSkinStack(CustomEquipmentItemData equipmentItemData) {
+        ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
+        stack.setTagCompound(new NBTTagCompound());
+        addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
         return stack;
     }
     
-    public static void addRenderIdToStack(ItemStack stack, int equipmentId) {
-        if (stack.hasTagCompound()) {
-            NBTTagCompound compound = stack.getTagCompound();
-            if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-                //The stack already has a render id. Check if it needs updated.
-                NBTTagCompound armourData = compound.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-                int newId = equipmentId;
-                int oldId = armourData.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-                if (newId != oldId) {
-                    armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, newId);
-                    compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
-                }
-            } else {
-                //The stack has NBT but no render id.
-                NBTTagCompound armourData = new NBTTagCompound();
-                armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentId);
-                compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+    public static ItemStack makeArmouerContainerStack(CustomEquipmentItemData equipmentItemData) {
+        ItemStack stack = new ItemStack(ModItems.armourContainer[equipmentItemData.getSkinType().getVanillaArmourSlotId()], 1);
+        stack.setTagCompound(new NBTTagCompound());
+        addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
+        return stack;
+    }
+    
+    public static void addRenderIdToStack(ItemStack stack, ISkinType skinType, int skinId) {
+        if (stackHasSkinData(stack)) {
+            SkinNBTData skinData = getSkinNBTDataFromStack(stack);
+            if (skinData.skinId != skinId & !skinData.lockSkin) {
+                addSkinDataToStack(stack, skinType, skinId, false);
             }
         } else {
-            //The stack has no NBT so just add the render id.
-            stack.setTagCompound(new NBTTagCompound());
-            NBTTagCompound compound = stack.getTagCompound();
-            NBTTagCompound armourData = new NBTTagCompound();
-            armourData.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, equipmentId);
-            compound.setTag(LibCommonTags.TAG_ARMOUR_DATA, armourData);
+            addSkinDataToStack(stack, skinType, skinId, false);
         }
     }
     
     public static void removeRenderIdFromStack(ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            NBTTagCompound compound = stack.getTagCompound();
-            if (compound.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) {
-                compound.removeTag(LibCommonTags.TAG_ARMOUR_DATA);
-            }
+        removeSkinDataFromStack(stack, false);
+    }
+    
+    public static class SkinNBTData {
+        public ISkinType skinType;
+        public int skinId;
+        public boolean lockSkin;
+        
+        public SkinNBTData() {
+        }
+        
+        public SkinNBTData(ISkinType skinType, int skinId, boolean lockSkin) {
+            this.skinType = skinType;
+            this.skinId = skinId;
+            this.lockSkin = lockSkin;
+        }
+        
+        public void readFromCompound(NBTTagCompound compound) {
+            NBTTagCompound skinDataCompound = compound.getCompoundTag(TAG_SKIN_DATA);
+            this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinDataCompound.getString(TAG_SKIN_TYPE));
+            this.skinId = skinDataCompound.getInteger(TAG_SKIN_ID);
+            this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
+        }
+
+        public void writeToCompound(NBTTagCompound compound) {
+            NBTTagCompound skinDataCompound = new NBTTagCompound();
+            skinDataCompound.setString(TAG_SKIN_TYPE, this.skinType.getRegistryName());
+            skinDataCompound.setInteger(TAG_SKIN_ID, this.skinId);
+            skinDataCompound.setBoolean(TAG_SKIN_LOCK, this.lockSkin);
+            compound.setTag(TAG_SKIN_DATA, skinDataCompound);
         }
     }
 }

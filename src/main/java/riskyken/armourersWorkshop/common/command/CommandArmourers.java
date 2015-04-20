@@ -70,7 +70,7 @@ public class CommandArmourers extends CommandBase {
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
-            ItemStack skinStack = EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
+            ItemStack skinStack = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
             EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
             entityItem.delayBeforeCanPickup = 0;
             entityItem.func_145797_a(player.getCommandSenderName());
@@ -88,7 +88,7 @@ public class CommandArmourers extends CommandBase {
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
-            ItemStack skinStack = EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
+            ItemStack skinStack = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
             ExtendedPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {
             PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);

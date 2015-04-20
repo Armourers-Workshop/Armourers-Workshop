@@ -54,7 +54,7 @@ public final class EntityEquipmentDataManager {
         bowSkinItems.add(className);
     }
     
-    private boolean isSwordRenderItem(Item item) {
+    public boolean isSwordRenderItem(Item item) {
         if (swordSkinItems.contains(item.getClass().getName())) {
             return true;
         }
@@ -93,14 +93,14 @@ public final class EntityEquipmentDataManager {
         if (stack != null) {
             if (isSwordRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword)) {
-                    EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(SkinTypeRegistry.skinSword));
+                    EquipmentNBTHelper.addRenderIdToStack(stack, SkinTypeRegistry.skinSword, equipmentData.getEquipmentId(SkinTypeRegistry.skinSword));
                 } else {
                     EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isBowRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow)) {
-                    EquipmentNBTHelper.addRenderIdToStack(stack, equipmentData.getEquipmentId(SkinTypeRegistry.skinBow));
+                    EquipmentNBTHelper.addRenderIdToStack(stack, SkinTypeRegistry.skinBow, equipmentData.getEquipmentId(SkinTypeRegistry.skinBow));
                 } else {
                     EquipmentNBTHelper.removeRenderIdFromStack(stack);
                 }

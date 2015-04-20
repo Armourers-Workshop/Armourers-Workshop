@@ -7,9 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
@@ -89,10 +87,6 @@ public class CustomEquipmentItemData {
         for (int i = 0; i < size; i++) {
             parts.add(new CustomEquipmentPartData(buf));
         }
-    }
-    
-    public void writeClientDataToNBT(NBTTagCompound compound) {
-        compound.setInteger(LibCommonTags.TAG_EQUIPMENT_ID, this.hashCode());
     }
     
     public void writeToStream(DataOutputStream stream) throws IOException {

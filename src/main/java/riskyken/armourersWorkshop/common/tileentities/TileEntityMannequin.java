@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -20,6 +19,8 @@ import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 import com.google.common.collect.Iterables;
@@ -75,13 +76,11 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     }
     
     public void setEquipment(ItemStack stack) {
-        if (!stack.hasTagCompound()) { return; }
-        NBTTagCompound data = stack.getTagCompound();
-        if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
-        NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
-        setEquipment(equipmentData.getSkinType(), equipmentId);
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(skinData.skinId);
+            setEquipment(equipmentData.getSkinType(), skinData.skinId);
+        }
     }
     
     public void setOwner(ItemStack stack) {

@@ -7,17 +7,17 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.common.addons.AbstractAddon;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 
 public class RenderItemBowSkin implements IItemRenderer {
     
@@ -138,17 +138,15 @@ public class RenderItemBowSkin implements IItemRenderer {
     }
     
     private boolean canRenderModel(ItemStack stack) {
-        if (!stack.hasTagCompound()) {
-            return false;
-        }
-        NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        if (armourNBT == null) { return false; }
-        if (!armourNBT.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) { return false; }
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(equipmentId)) {
-            return true;
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+                return true;
+            } else {
+                ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
+                return false;
+            }
         } else {
-            ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(equipmentId);
             return false;
         }
     }

@@ -67,6 +67,6 @@ public class ItemEquipmentSkinTemplate extends AbstractModItem implements ISkinH
 
     @Override
     public ItemStack makeStackForEquipment(CustomEquipmentItemData armourItemData) {
-        return EquipmentNBTHelper.makeStackForEquipment(armourItemData, false);
+        return EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
     }
 }

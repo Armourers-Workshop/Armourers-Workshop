@@ -65,11 +65,11 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
         
-        if (!EquipmentNBTHelper.itemStackHasCustomEquipment(stackInput)) {
+        if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
         
-        int equipmentId = EquipmentNBTHelper.getEquipmentIdFromStack(stackInput);
+        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
         
         if (!createArmourDirectory()) { return; }
 

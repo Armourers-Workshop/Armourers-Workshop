@@ -4,6 +4,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 
 public class SlotEquipmentSkin extends SlotHidable {
     
@@ -17,8 +19,11 @@ public class SlotEquipmentSkin extends SlotHidable {
     @Override
     public boolean isItemValid(ItemStack stack) {
         if (stack.getItem() instanceof ItemEquipmentSkin) {
-            if (this.skinType != null && stack.getItemDamage() == this.skinType.getId()) {
-                return true;
+            if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+                SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+                if (this.skinType != null && this.skinType == skinData.skinType) {
+                    return true;
+                }
             }
         }
         return false;

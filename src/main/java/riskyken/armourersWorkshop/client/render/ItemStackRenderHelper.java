@@ -2,17 +2,16 @@
 package riskyken.armourersWorkshop.client.render;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,14 +26,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 public final class ItemStackRenderHelper {
 
     public static void renderItemAsArmourModel(ItemStack stack) {
-        ISkinType skinType =  EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
-        renderItemAsArmourModel(stack, skinType);
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            renderItemModelFromId(skinData.skinId, skinData.skinType);
+        }
     }
     
     public static void renderItemAsArmourModel(ItemStack stack, ISkinType skinType) {
-        NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        
+        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
         renderItemModelFromId(equipmentId, skinType);
     }
     

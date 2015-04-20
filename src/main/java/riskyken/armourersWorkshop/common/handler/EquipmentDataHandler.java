@@ -5,20 +5,14 @@ import java.util.BitSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -64,52 +58,19 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     
     @Override
     public ISkinType getSkinTypeFromStack(ItemStack stack) {
-        if (!hasItemStackGotEquipmentData(stack)) {
-            return null;
-        }
-        Item item = stack.getItem();
-        if (item == ModItems.equipmentSkin) {
-            int damage = stack.getItemDamage();
-            if (damage >= 0 & damage < SkinTypeRegistry.INSTANCE.getNumberOfSkinRegistered()) {
-                return SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(damage);
-            }
-        }
-        if (item == ModItems.armourContainer[0]) {
-            return SkinTypeRegistry.skinHead;
-        }
-        if (item == ModItems.armourContainer[1]) {
-            return SkinTypeRegistry.skinChest;
-        }
-        if (item == ModItems.armourContainer[2]) {
-            return SkinTypeRegistry.skinLegs;
-        }
-        if (item == ModItems.armourContainer[3]) {
-            return SkinTypeRegistry.skinFeet;
-        }
-        return null;
+        return EquipmentNBTHelper.getSkinTypeFromStack(stack);
     }
     
     @Override
     public boolean hasItemStackGotEquipmentData(ItemStack stack) {
-        return EquipmentNBTHelper.itemStackHasCustomEquipment(stack);
+        return EquipmentNBTHelper.stackHasSkinData(stack);
     }
     
     @Override
     public int getEquipmentIdFromItemStack(ItemStack stack) {
-        return EquipmentNBTHelper.getEquipmentIdFromStack(stack);
+        return EquipmentNBTHelper.getSkinIdFromStack(stack);
     }
-
-    public ItemStack getCustomEquipmentItemStack(int equipmentId) {
-        CustomEquipmentItemData armourItemData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
-        if (armourItemData == null) { return null; }
-        ItemStack stackOutput = new ItemStack(ModItems.equipmentSkin, 1, SkinTypeRegistry.INSTANCE.getLegacyIdForSkin(armourItemData.getSkinType()));
-        NBTTagCompound armourNBT = new NBTTagCompound();
-        armourItemData.writeClientDataToNBT(armourNBT);
-        stackOutput.setTagCompound(new NBTTagCompound());
-        stackOutput.getTagCompound().setTag(LibCommonTags.TAG_ARMOUR_DATA, armourNBT);;
-        return stackOutput;
-    }
-
+    
     @Override
     public IInventory getPlayersEquipmentInventory(EntityPlayer player) {
         ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
