@@ -59,8 +59,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         if (skinType != null) {
             skinType.renderBuildingGuide(scale, te.isShowOverlay(), false);
-            
-            skinType.renderBuildingGrid(scale);
+            if (te.isShowGuides()) {
+                skinType.renderBuildingGrid(scale);
+            }
         }
         
         GL11.glPopMatrix();
