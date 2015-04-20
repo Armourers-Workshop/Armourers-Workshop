@@ -73,6 +73,14 @@ public class TileEntityBoundingBox extends TileEntity {
         return null;
     }
     
+    public boolean isParentValid() {
+        TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
+        if (te != null && te instanceof TileEntityArmourerBrain) {
+            return true;
+        }
+        return false;
+    }
+    
     public ISkinPart getSkinPart() {
         return this.skinPart;
     }
