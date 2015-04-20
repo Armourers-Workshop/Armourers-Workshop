@@ -70,6 +70,7 @@ inventory.armourersworkshop:armourLibrary.name=Equipment Library
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
+inventory.armourersworkshop:entityEquipment.name=Entity Equipment
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:

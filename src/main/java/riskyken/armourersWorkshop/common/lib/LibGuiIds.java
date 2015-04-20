@@ -10,4 +10,5 @@ public class LibGuiIds {
     public static final int MANNEQUIN = 6;
     public static final int MINI_ARMOURER = 7;
     public static final int MINI_ARMOURER_BUILDING = 8;
+    public static final int ENTITY_SKIN_INVENTORY = 9;
 }

@@ -23,6 +23,7 @@ import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.item.RenderItemBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
+import riskyken.armourersWorkshop.client.render.npc.NpcEquipmentRenderHandler;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
@@ -31,6 +32,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.npc.NpcEquipmentDataHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -61,6 +63,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void initRenderers() {
         EquipmentModelRenderer.init();
+        NpcEquipmentRenderHandler.init();
         ModelMannequin modelMannequin = new ModelMannequin();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
@@ -149,5 +152,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void receivedCommandFromSever(CommandType command) {
         ClientEquipmentModelCache.INSTANCE.clearCache();
+    }
+    
+    @Override
+    public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
+        NpcEquipmentDataHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
     }
 }

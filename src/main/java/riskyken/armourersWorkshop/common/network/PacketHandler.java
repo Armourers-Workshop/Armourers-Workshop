@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.common.network.messages.MessageClientLoadArmou
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerAddEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerEntityEquipmentData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerRemoveEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
@@ -49,6 +50,7 @@ public class PacketHandler {
         registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, Side.SERVER);
         registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, Side.CLIENT);
         registerMessage(MessageClientGuiSetArmourerSkinType.class, MessageClientGuiSetArmourerSkinType.class, Side.SERVER);
+        registerMessage(MessageServerEntityEquipmentData.class, MessageServerEntityEquipmentData.class, Side.CLIENT);
     }
     
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {

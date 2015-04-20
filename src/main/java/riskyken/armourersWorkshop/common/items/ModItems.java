@@ -17,6 +17,7 @@ public class ModItems {
     public static Item guideBook;
     public static Item armourContainerItem;
     public static Item[] armourContainer;
+    public static Item wandOfStyle;
     
     public static void init() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
@@ -36,5 +37,6 @@ public class ModItems {
         armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, 1);
         armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, 2);
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, 3);
+        wandOfStyle = new ItemWandOfStyle();
     }
 }

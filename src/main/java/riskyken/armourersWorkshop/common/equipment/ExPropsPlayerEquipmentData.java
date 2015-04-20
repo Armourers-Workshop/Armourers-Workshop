@@ -28,7 +28,7 @@ import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
-public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventory {
+public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventory {
 
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_ITEMS = "items";
@@ -42,16 +42,16 @@ public class ExtendedPropsPlayerEquipmentData implements IExtendedEntityProperti
     private EntityNakedInfo nakedInfo = new EntityNakedInfo(); 
     public int lastXmasYear;
     
-    public ExtendedPropsPlayerEquipmentData(EntityPlayer player) {
+    public ExPropsPlayerEquipmentData(EntityPlayer player) {
         this.player = player;
     }
     
     public static final void register(EntityPlayer player) {
-        player.registerExtendedProperties(ExtendedPropsPlayerEquipmentData.TAG_EXT_PROP_NAME, new ExtendedPropsPlayerEquipmentData(player));
+        player.registerExtendedProperties(ExPropsPlayerEquipmentData.TAG_EXT_PROP_NAME, new ExPropsPlayerEquipmentData(player));
     }
     
-    public static final ExtendedPropsPlayerEquipmentData get(EntityPlayer player) {
-        return (ExtendedPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
+    public static final ExPropsPlayerEquipmentData get(EntityPlayer player) {
+        return (ExPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
     public void setEquipmentStack(ItemStack stack) {

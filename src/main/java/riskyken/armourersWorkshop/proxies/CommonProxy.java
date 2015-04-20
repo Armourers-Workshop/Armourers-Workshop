@@ -62,4 +62,8 @@ public class CommonProxy {
     public void receivedCommandFromSever(CommandType command) {
         
     }
+    
+    public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
+        
+    }
 }

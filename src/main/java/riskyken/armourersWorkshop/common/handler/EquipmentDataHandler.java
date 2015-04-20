@@ -11,7 +11,7 @@ import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -23,31 +23,31 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     
     @Override
     public void setCustomEquipmentOnPlayer(EntityPlayer player, ItemStack stack) {
-        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.setEquipmentStack(stack);
     }
 
     @Override
     public ItemStack[] getAllCustomEquipmentForPlayer(EntityPlayer player) {
-        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         return entityProps.getAllEquipmentStacks();
     }
 
     @Override
     public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, ISkinType skinType) {
-        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         return entityProps.getEquipmentStack(skinType);
     }
 
     @Override
     public void clearAllCustomEquipmentFromPlayer(EntityPlayer player) {
-        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.clearAllEquipmentStacks();
     }
 
     @Override
     public void clearCustomEquipmentFromPlayer(EntityPlayer player, ISkinType skinType) {
-        ExtendedPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.clearEquipmentStack(skinType);
     }
     
@@ -73,7 +73,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     
     @Override
     public IInventory getPlayersEquipmentInventory(EntityPlayer player) {
-        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
         if (entityProps == null) {
             return null;
         }
@@ -82,7 +82,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
 
     @Override
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId) {
-        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+        ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
         BitSet armourOverride = entityProps.getArmourOverride();
         if (slotId < 4 & slotId >= 0) {
             return armourOverride.get(slotId);
@@ -90,12 +90,12 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
         return false;
     }
     
-    private ExtendedPropsPlayerEquipmentData getExtendedPropsPlayerForPlayer(EntityPlayer player) {
-        ExtendedPropsPlayerEquipmentData entityProps = ExtendedPropsPlayerEquipmentData.get(player);
+    private ExPropsPlayerEquipmentData getExtendedPropsPlayerForPlayer(EntityPlayer player) {
+        ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
         if (entityProps == null) {
-            ExtendedPropsPlayerEquipmentData.register(player);
+            ExPropsPlayerEquipmentData.register(player);
         }
-        return ExtendedPropsPlayerEquipmentData.get(player);
+        return ExPropsPlayerEquipmentData.get(player);
     }
 
     @Override

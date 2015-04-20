@@ -9,7 +9,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand;
@@ -75,7 +75,7 @@ public class CommandArmourers extends CommandBase {
             entityItem.delayBeforeCanPickup = 0;
             entityItem.func_145797_a(player.getCommandSenderName());
         } else if (command.equals("clearSkins")) {
-            ExtendedPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
+            ExPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
         } else if (command.equals("setSkin")) {
             if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
@@ -89,7 +89,7 @@ public class CommandArmourers extends CommandBase {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
             ItemStack skinStack = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
-            ExtendedPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
+            ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {
             PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);
         } else {

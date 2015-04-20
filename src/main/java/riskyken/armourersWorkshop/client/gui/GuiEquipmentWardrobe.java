@@ -21,7 +21,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.equipment.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.inventory.SlotHidable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -49,7 +49,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
     boolean headOverlay;
     boolean limitLimbs;
 
-    ExtendedPropsPlayerEquipmentData customEquipmentData;
+    ExPropsPlayerEquipmentData customEquipmentData;
     PlayerSkinInfo skinInfo;
     EntityNakedInfo nakedInfo;
     EntityPlayer player;
@@ -64,7 +64,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
     private float mouseX;
     private float mouseY;
 
-    public GuiEquipmentWardrobe(InventoryPlayer inventory, ExtendedPropsPlayerEquipmentData customEquipmentData) {
+    public GuiEquipmentWardrobe(InventoryPlayer inventory, ExPropsPlayerEquipmentData customEquipmentData) {
         super(new ContainerEquipmentWardrobe(inventory, customEquipmentData));
         
         this.customEquipmentData = customEquipmentData;
