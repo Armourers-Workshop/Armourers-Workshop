@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelBlockArmourer;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.Rectangle3D;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -109,16 +110,12 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        ModRenderHelper.enableAlphaBlend();
         
         
         float scale1 = 0.999F;
         //GL11.glScalef(scale1, scale1, scale1);
         GL11.glTranslated(x * scale, y * scale, z * scale);
-        
-        
-        
         
         switch (dir) {
         case EAST:
@@ -147,7 +144,7 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         tessellator.addVertexWithUV(sizeX * scale, 0, 0, 0, sizeX);
         tessellator.draw();
         
-        GL11.glDisable(GL11.GL_BLEND);
+        ModRenderHelper.disableAlphaBlend();
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();
     }

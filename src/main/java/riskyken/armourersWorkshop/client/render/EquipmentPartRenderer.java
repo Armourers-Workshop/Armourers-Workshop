@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.LightingHelper;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
@@ -81,9 +80,9 @@ public class EquipmentPartRenderer extends ModelBase {
         
         if (armourPart.hasGlowingBlocks) {
             GL11.glDisable(GL11.GL_LIGHTING);
-            LightingHelper.disableLighting();
+            ModRenderHelper.disableLighting();
             GL11.glCallList(armourPart.displayListGlowing);
-            LightingHelper.enableLighting();
+            ModRenderHelper.enableLighting();
             GL11.glEnable(GL11.GL_LIGHTING);
         }
         

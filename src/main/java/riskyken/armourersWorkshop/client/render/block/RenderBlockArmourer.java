@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.client.LightingHelper;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -32,7 +32,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         GL11.glPushMatrix();
         GL11.glColor3f(0.77F, 0.77F, 0.77F);
-        LightingHelper.disableLighting();
+        ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glTranslated(x, y, z);
         
@@ -67,7 +67,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glPopMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         
-        LightingHelper.enableLighting();
+        ModRenderHelper.enableLighting();
         GL11.glEnable(GL11.GL_LIGHTING);
     }
 }

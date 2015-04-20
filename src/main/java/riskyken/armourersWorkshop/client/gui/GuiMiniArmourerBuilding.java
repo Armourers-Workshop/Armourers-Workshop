@@ -17,7 +17,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.client.LightingHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -27,6 +26,7 @@ import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.cubes.Cube;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
@@ -142,7 +142,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
             if (cube != null) {
                 if (cube.isGlowing() & !fake) {
                     GL11.glDisable(GL11.GL_LIGHTING);
-                    LightingHelper.disableLighting();
+                    ModRenderHelper.disableLighting();
                 }
                 int colour[];
                 if (fake) {
@@ -159,7 +159,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
                 
                 EquipmentPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), colour, scale, null, false);
                 if (cube.isGlowing() & !fake) {
-                    LightingHelper.enableLighting();
+                    ModRenderHelper.enableLighting();
                     GL11.glEnable(GL11.GL_LIGHTING);
                 }
             }
@@ -210,7 +210,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         
         renderModels(mouseX, mouseY);
         
-        LightingHelper.disableLighting();
+        ModRenderHelper.disableLighting();
         RenderHelper.enableGUIStandardItemLighting();
         
         super.drawScreen(mouseX, mouseY, p_73863_3_);
