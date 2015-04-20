@@ -48,7 +48,7 @@ public class ConfigHandler {
                 .getBoolean(false);
         
         disabledSkins = config
-                .getStringList("Disabled Skins", CATEGORY_GENERAL, new String[] {"armourers:block"},
+                .getStringList("Disabled Skins", CATEGORY_GENERAL, new String[] {},
                 "List of skins that will be disabled.\n"
                 + "\n"
                 + "Here is a list of all the skins that come with the mod.\n" 
@@ -59,7 +59,6 @@ public class ConfigHandler {
                 + "armourers:feet\n"
                 + "armourers:sword\n"
                 + "armourers:bow\n"
-                + "armourers:block\n"
                 + "\n");
         
         downloadSkins = config
