@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
+import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -72,6 +73,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing(RenderingRegistry.getNextAvailableRenderId()));
         new BlockHighlightRenderHandler();
+        new ItemTooltipHandler();
     }
 
     @Override
