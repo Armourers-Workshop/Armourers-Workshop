@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
 import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
@@ -157,62 +158,117 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void createBoundingBoxes(World world, int x, int y, int z, ISkinType skinType) {
-        
-    }
-    
-    public static void removeBoundingBoxes(World world, int x, int y, int z, ISkinType skinType) {
-        
-    }
-    
-    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType) {
-        return 0;
-    }
-    /*
-    
-    private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
-        if (worldObj.isAirBlock(x, y, z)) {
-            worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
-            TileEntity te = null;
-            te = worldObj.getTileEntity(x, y, z);
-            if (te != null && te instanceof TileEntityBoundingBox) {
-                ((TileEntityBoundingBox)te).setParent(xCoord, yCoord, zCoord, bodyPart);
-            } else {
-                te = new TileEntityBoundingBox(xCoord, yCoord, zCoord, bodyPart);
-                worldObj.setTileEntity(x, y, z, te);
-            }
+    public static void createBoundingBoxes(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinType skinType) {
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            ISkinPart skinPart = skinType.getSkinParts().get(i);
+            createBoundingBoxesForSkinPart(world, x, y, z, parentX, parentY, parentZ, skinPart);
         }
     }
     
-    
-    @Override
-    public int clearArmourCubes(World world, int x, int y, int z) {
-        // TODO Auto-generated method stub
+    private static void createBoundingBoxesForSkinPart(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinPart skinPart) {
+        Rectangle3D buildSpace = skinPart.getBuildingSpace();
+        Rectangle3D guideSpace = skinPart.getGuideSpace();
+        Point3i offset = skinPart.getOffset();
         
-        for (int i = 0; i < type.getParts().length; i++) {
-            EnumEquipmentPart part = type.getParts()[i];
-            ModLogger.log("Clearing " + part);
-            for (int ix = 0; ix <  part.getTotalXSize(); ix++) {
-                for (int iy = 0; iy < part.getTotalYSize(); iy++) {
-                    for (int iz = 0; iz <  part.getTotalZSize(); iz++) {
-                        int tarX = xCoord + part.getStartX() - part.xLocation + ix;
-                        int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
-                        int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
-                        Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
-                        if (
-                                tarBlock == ModBlocks.colourable |
-                                tarBlock == ModBlocks.colourableGlowing |
-                                tarBlock == ModBlocks.colourableGlass |
-                                tarBlock == ModBlocks.colourableGlassGlowing
-                            ) {
-                            worldObj.setBlockToAir(tarX, tarY, tarZ);
+        if (guideSpace == null) {
+            return;
+        }
+        
+        for (int ix = 0; ix < guideSpace.width; ix++) {
+            for (int iy = 0; iy < guideSpace.height; iy++) {
+                for (int iz = 0; iz < guideSpace.depth; iz++) {
+                    int xTar = x + ix + -offset.x + guideSpace.x;
+                    int yTar = y + iy + -offset.y + guideSpace.y - buildSpace.y;
+                    int zTar = z + iz + -offset.z + guideSpace.z;
+                    
+                    if (world.isAirBlock(xTar, yTar, zTar)) {
+                        world.setBlock(xTar, yTar, zTar, ModBlocks.boundingBox);
+                        TileEntity te = null;
+                        te = world.getTileEntity(xTar, yTar, zTar);
+                        if (te != null && te instanceof TileEntityBoundingBox) {
+                            ((TileEntityBoundingBox)te).setParent(parentX, parentY, parentZ, skinPart);
+                        } else {
+                            te = new TileEntityBoundingBox(parentX, parentY, parentZ, skinPart);
+                            world.setTileEntity(xTar, yTar, zTar, te);
                         }
                     }
+                    
                 }
             }
         }
-        
-        return 0;
     }
-     */
+    
+    public static void removeBoundingBoxes(World world, int x, int y, int z, ISkinType skinType) {
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            ISkinPart skinPart = skinType.getSkinParts().get(i);
+            removeBoundingBoxesForSkinPart(world, x, y, z, skinPart);
+        }
+    }
+    
+    private static void removeBoundingBoxesForSkinPart(World world, int x, int y, int z, ISkinPart skinPart) {
+        Rectangle3D buildSpace = skinPart.getBuildingSpace();
+        Rectangle3D guideSpace = skinPart.getGuideSpace();
+        Point3i offset = skinPart.getOffset();
+        
+        if (guideSpace == null) {
+            return;
+        }
+        
+        for (int ix = 0; ix < guideSpace.width; ix++) {
+            for (int iy = 0; iy < guideSpace.height; iy++) {
+                for (int iz = 0; iz < guideSpace.depth; iz++) {
+                    int xTar = x + ix + -offset.x + guideSpace.x;
+                    int yTar = y + iy + -offset.y + guideSpace.y - buildSpace.y;
+                    int zTar = z + iz + -offset.z + guideSpace.z;
+                    
+                    if (world.blockExists(xTar, yTar, zTar)) {
+                        if (world.getBlock(xTar, yTar, zTar) == ModBlocks.boundingBox) {
+                            world.setBlockToAir(xTar, yTar, zTar);
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+    
+    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType) {
+        int blockCount = 0;
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            ISkinPart skinPart = skinType.getSkinParts().get(i);
+            blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+        }
+        return blockCount;
+    }
+    
+    private static int clearEquipmentCubesForSkinPart(World world, int x, int y, int z, ISkinPart skinPart) {
+        Rectangle3D buildSpace = skinPart.getBuildingSpace();
+        Point3i offset = skinPart.getOffset();
+        int blockCount = 0;
+        
+        for (int ix = 0; ix < buildSpace.width; ix++) {
+            for (int iy = 0; iy < buildSpace.height; iy++) {
+                for (int iz = 0; iz < buildSpace.depth; iz++) {
+                    int xTar = x + ix + -offset.x + buildSpace.x;
+                    int yTar = y + iy + -offset.y;
+                    int zTar = z + iz + -offset.z + buildSpace.z;
+                    
+                    if (world.blockExists(xTar, yTar, zTar)) {
+                        Block block = world.getBlock(xTar, yTar, zTar);
+                        if (
+                            block == ModBlocks.colourable |
+                            block == ModBlocks.colourableGlowing |
+                            block == ModBlocks.colourableGlass |
+                            block == ModBlocks.colourableGlassGlowing
+                            ) {
+                            world.setBlockToAir(xTar, yTar, zTar);
+                            blockCount++;
+                        }
+                    }
+                    
+                }
+            }
+        }
+        return blockCount;
+    }
 }

@@ -171,7 +171,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     protected void createBoundingBoxes() {
         if (skinType != null) {
-            ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
+            ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType);
         }
     }
     
