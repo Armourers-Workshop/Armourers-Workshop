@@ -7,7 +7,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
@@ -42,7 +42,7 @@ public class ItemTooltipHandler {
             if (skinData.lockSkin) {
                 list.add(cGold + "Has armouerer's skin" + cGray);
                 if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                    CustomEquipmentItemData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+                    EquipmentSkinTypeData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                     if (!data.getCustomName().trim().isEmpty()) {
                         list.add(cGold + "Name: " + cGray + data.getCustomName());
                     }

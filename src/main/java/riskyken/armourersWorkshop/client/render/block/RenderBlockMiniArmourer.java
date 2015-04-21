@@ -14,8 +14,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelBlockArmourer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.Rectangle3D;
@@ -41,7 +41,7 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         
         GL11.glTranslated(0D, -0.5D, 0D);
         
-        ISkinType skinType = tileEntity.getSkinType();
+        IEquipmentSkinType skinType = tileEntity.getSkinType();
         if (skinType != null) {
             float rotation = (float)((double)System.currentTimeMillis() / 25 % 360);
             GL11.glRotatef(rotation, 0F, 1F, 0F);
@@ -54,18 +54,18 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         GL11.glPopMatrix();
     }
     
-    public static void renderGuide(ISkinType type, float scale) {
+    public static void renderGuide(IEquipmentSkinType type, float scale) {
         
         int heightOffset = 1;
         
-        ArrayList<ISkinPart> skinParts = type.getSkinParts();
+        ArrayList<IEquipmentSkinPart> skinParts = type.getSkinParts();
         for (int i = 0; i < skinParts.size(); i++) {
-            ISkinPart skinPart = skinParts.get(i);
+            IEquipmentSkinPart skinPart = skinParts.get(i);
             renderGuidePart(skinPart, scale);
         }
     }
     
-    public static void renderGuidePart(ISkinPart part, float scale) {
+    public static void renderGuidePart(IEquipmentSkinPart part, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();

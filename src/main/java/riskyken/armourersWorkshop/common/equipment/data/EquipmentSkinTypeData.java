@@ -7,7 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
@@ -16,15 +16,15 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class CustomEquipmentItemData {
+public class EquipmentSkinTypeData {
     
     public static final int FILE_VERSION = 6;
     
     private String authorName;
     private String customName;
     private String tags;
-    private ISkinType skinType;
-    private ArrayList<CustomEquipmentPartData> parts;
+    private IEquipmentSkinType skinType;
+    private ArrayList<EquipmentSkinPartData> parts;
     
     private int timeFromRender = 0;
     
@@ -43,7 +43,7 @@ public class CustomEquipmentItemData {
         return false;
     }
     
-    public CustomEquipmentItemData(String authorName, String customName, String tags, ISkinType skinType, ArrayList<CustomEquipmentPartData> parts) {
+    public EquipmentSkinTypeData(String authorName, String customName, String tags, IEquipmentSkinType skinType, ArrayList<EquipmentSkinPartData> parts) {
         this.authorName = authorName;
         this.customName = customName;
         this.tags = tags;
@@ -58,11 +58,11 @@ public class CustomEquipmentItemData {
         }
     }
     
-    public CustomEquipmentItemData(ByteBuf buf) {
+    public EquipmentSkinTypeData(ByteBuf buf) {
         readFromBuf(buf);
     }
     
-    public CustomEquipmentItemData(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
+    public EquipmentSkinTypeData(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
         readFromStream(stream);
     }
     
@@ -83,9 +83,9 @@ public class CustomEquipmentItemData {
         this.tags = ByteBufUtils.readUTF8String(buf);
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(ByteBufUtils.readUTF8String(buf));
         int size = buf.readByte();
-        parts = new ArrayList<CustomEquipmentPartData>();
+        parts = new ArrayList<EquipmentSkinPartData>();
         for (int i = 0; i < size; i++) {
-            parts.add(new CustomEquipmentPartData(buf));
+            parts.add(new EquipmentSkinPartData(buf));
         }
     }
     
@@ -124,17 +124,17 @@ public class CustomEquipmentItemData {
         }
         
         int size = stream.readByte();
-        parts = new ArrayList<CustomEquipmentPartData>();
+        parts = new ArrayList<EquipmentSkinPartData>();
         for (int i = 0; i < size; i++) {
-            parts.add(new CustomEquipmentPartData(stream, fileVersion));
+            parts.add(new EquipmentSkinPartData(stream, fileVersion));
         }
     }
     
-    public ISkinType getSkinType() {
+    public IEquipmentSkinType getSkinType() {
         return skinType;
     }
     
-    public ArrayList<CustomEquipmentPartData> getParts() {
+    public ArrayList<EquipmentSkinPartData> getParts() {
         return parts;
     }
     
@@ -181,7 +181,7 @@ public class CustomEquipmentItemData {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CustomEquipmentItemData other = (CustomEquipmentItemData) obj;
+        EquipmentSkinTypeData other = (EquipmentSkinTypeData) obj;
         if (authorName == null) {
             if (other.authorName != null)
                 return false;

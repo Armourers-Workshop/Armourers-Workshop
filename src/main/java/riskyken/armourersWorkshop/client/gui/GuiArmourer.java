@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.DropDownListItem;
@@ -60,9 +60,9 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         
         SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
         GuiDropDownList dropDownList = new GuiDropDownList(0, guiLeft + 5, guiTop + 16, 50, "", this);
-        ArrayList<ISkinType> skinList = str.getRegisteredSkinTypes();
+        ArrayList<IEquipmentSkinType> skinList = str.getRegisteredSkinTypes();
         for (int i = 0; i < skinList.size(); i++) {
-            ISkinType skinType = skinList.get(i);
+            IEquipmentSkinType skinType = skinList.get(i);
             String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
             String skinRegistryName = skinType.getRegistryName();
             dropDownList.addListItem(skinLocalizedName, skinRegistryName, true);
@@ -182,7 +182,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
         DropDownListItem listItem = dropDownList.getListSelectedItem();
-        ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
+        IEquipmentSkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinType(skinType));
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 
 public class TileEntityBoundingBox extends TileEntity {
@@ -18,12 +18,12 @@ public class TileEntityBoundingBox extends TileEntity {
     private int parentX;
     private int parentY;
     private int parentZ;
-    private ISkinPart skinPart;
+    private IEquipmentSkinPart skinPart;
     
     public TileEntityBoundingBox() {
     }
     
-    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, ISkinPart skinPart) {
+    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, IEquipmentSkinPart skinPart) {
         setParent(parentX, parentY, parentZ, skinPart);
     }
     
@@ -81,11 +81,11 @@ public class TileEntityBoundingBox extends TileEntity {
         return false;
     }
     
-    public ISkinPart getSkinPart() {
+    public IEquipmentSkinPart getSkinPart() {
         return this.skinPart;
     }
     
-    public void setParent(int x, int y, int z, ISkinPart skinPart) {
+    public void setParent(int x, int y, int z, IEquipmentSkinPart skinPart) {
         this.parentX = x;
         this.parentY = y;
         this.parentZ = z;

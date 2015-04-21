@@ -3,13 +3,13 @@ package riskyken.armourersWorkshop.common.equipment.data;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 
 public final class LegacyCubeHelper {
 
-    public static ICube loadlegacyCube(DataInputStream stream, int version, ISkinPart skinPart) throws IOException, InvalidCubeTypeException {
+    public static ICube loadlegacyCube(DataInputStream stream, int version, IEquipmentSkinPart skinPart) throws IOException, InvalidCubeTypeException {
         byte x;
         byte y;
         byte z;

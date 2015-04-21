@@ -3,8 +3,8 @@ package riskyken.armourersWorkshop.api.common.equipment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinTypeRegistry;
 
 public interface IEquipmentDataHandler {
     
@@ -27,7 +27,7 @@ public interface IEquipmentDataHandler {
      * @param entity
      * @return IEntityEquipment
      */
-    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, ISkinType skinType);
+    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, IEquipmentSkinType skinType);
     
     /**
      * Removes all custom equipment data from a player.
@@ -40,7 +40,7 @@ public interface IEquipmentDataHandler {
      * @param entity Entity to remove the custom equipment from.
      * @param armourType The type of equipment to remove.
      */
-    public void clearCustomEquipmentFromPlayer(EntityPlayer player, ISkinType skinType);
+    public void clearCustomEquipmentFromPlayer(EntityPlayer player, IEquipmentSkinType skinType);
     
     /** 
      * Get the EnumArmourType for an item stack.
@@ -48,7 +48,7 @@ public interface IEquipmentDataHandler {
      * @return The EnumArmourType for this equipment id.
      * Returns EnumArmourType.NONE if no armour exists for this item stack.
      */
-    public ISkinType getSkinTypeFromStack(ItemStack stack);
+    public IEquipmentSkinType getSkinTypeFromStack(ItemStack stack);
     
     /**
      * Checks if an item stack has equipment data.
@@ -91,5 +91,5 @@ public interface IEquipmentDataHandler {
      * Gets the SkinTypeRegistry.
      * @return 
      */
-    public ISkinTypeRegistry getISkinTypeRegistry();
+    public IEquipmentSkinTypeRegistry getISkinTypeRegistry();
 }

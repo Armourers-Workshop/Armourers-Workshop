@@ -6,7 +6,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import cpw.mods.fml.relauncher.Side;
@@ -23,17 +23,17 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     @SideOnly(Side.CLIENT)
     public int blue;
     
-    private ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(0);
+    private IEquipmentSkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(0);
     
     public TileEntityMiniArmourer() {
         this.items = new ItemStack[2];
     }
     
-    public ISkinType getSkinType() {
+    public IEquipmentSkinType getSkinType() {
         return skinType;
     }
     
-    public void setSkinType(ISkinType skinType) {
+    public void setSkinType(IEquipmentSkinType skinType) {
         this.skinType = skinType;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);

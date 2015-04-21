@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
@@ -59,7 +59,7 @@ public class RecipeSkinUpdate implements IRecipe {
         
         if  (oldSkinStack != null) {
             int skinId = EquipmentNBTHelper.getLegacyIdFromStack(oldSkinStack);
-            CustomEquipmentItemData equipmentItemData = EquipmentDataCache.INSTANCE.getEquipmentData(skinId);
+            EquipmentSkinTypeData equipmentItemData = EquipmentDataCache.INSTANCE.getEquipmentData(skinId);
             if (equipmentItemData == null) {
                 return null;
             }

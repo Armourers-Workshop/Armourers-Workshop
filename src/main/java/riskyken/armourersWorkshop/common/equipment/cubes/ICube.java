@@ -7,7 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
 
 public interface ICube {
     
@@ -49,5 +49,5 @@ public interface ICube {
     
     public void writeToStream(DataOutputStream stream) throws IOException;
     
-    public void readFromStream(DataInputStream stream, int version, ISkinPart skinPart) throws IOException;
+    public void readFromStream(DataInputStream stream, int version, IEquipmentSkinPart skinPart) throws IOException;
 }

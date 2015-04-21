@@ -21,7 +21,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -99,7 +99,7 @@ public class GuiArmourLibrary extends GuiContainer {
                 break;
             case 1:
                 if (checkClientFiles.isChecked()) {
-                    CustomEquipmentItemData itemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(filename);
+                    EquipmentSkinTypeData itemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(filename);
                     if (itemData != null) {
                         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(itemData, true));
                     }

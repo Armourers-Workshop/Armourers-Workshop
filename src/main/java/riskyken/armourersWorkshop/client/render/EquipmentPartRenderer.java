@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinPartData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
@@ -36,7 +36,7 @@ public class EquipmentPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(CustomEquipmentPartData armourPart, float scale) {
+    public void renderPart(EquipmentSkinPartData armourPart, float scale) {
         mc.mcProfiler.startSection(armourPart.getSkinPart().getPartName());
         
         GL11.glColor3f(1F, 1F, 1F);

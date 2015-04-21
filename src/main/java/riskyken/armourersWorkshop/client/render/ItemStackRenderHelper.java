@@ -5,10 +5,10 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
@@ -32,18 +32,18 @@ public final class ItemStackRenderHelper {
         }
     }
     
-    public static void renderItemAsArmourModel(ItemStack stack, ISkinType skinType) {
+    public static void renderItemAsArmourModel(ItemStack stack, IEquipmentSkinType skinType) {
         int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
         renderItemModelFromId(equipmentId, skinType);
     }
     
-    public static void renderItemModelFromId(int equipmentId, ISkinType skinType) {
+    public static void renderItemModelFromId(int equipmentId, IEquipmentSkinType skinType) {
         IEquipmentModel targetModel = EquipmentModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
         if (targetModel == null) {
             return;
         }
         
-        CustomEquipmentItemData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+        EquipmentSkinTypeData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
         if (data == null) {
             return;
         }

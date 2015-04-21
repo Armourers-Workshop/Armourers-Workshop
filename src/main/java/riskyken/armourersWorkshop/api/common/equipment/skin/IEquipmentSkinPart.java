@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public interface ISkinPart {
+public interface IEquipmentSkinPart {
     
     public String getRegistryName();
     

@@ -6,15 +6,15 @@ import javax.vecmath.Point3i;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPartWithTexture;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPartTextured;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
 import riskyken.armourersWorkshop.common.Rectangle3D;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypePartBase;
+import riskyken.armourersWorkshop.common.equipment.skin.EquipmentSkinPartBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SkinHeadPartBase extends SkinTypePartBase implements ISkinPartWithTexture {
+public class SkinHeadPartBase extends EquipmentSkinPartBase implements IEquipmentSkinPartTextured {
 
     @SideOnly(Side.CLIENT)
     private static final ModelHead partModel = new ModelHead();
@@ -23,7 +23,7 @@ public class SkinHeadPartBase extends SkinTypePartBase implements ISkinPartWithT
     private Rectangle3D guideSpace;
     private Point3i offset;
     
-    public SkinHeadPartBase(ISkinType baseType) {
+    public SkinHeadPartBase(IEquipmentSkinType baseType) {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-10, -12, -10, 20, 32, 20);
         this.guideSpace = new Rectangle3D(-4, 0, -4, 8, 8, 8);

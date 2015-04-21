@@ -14,11 +14,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
 import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
@@ -43,7 +43,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     private ForgeDirection direction;
     private GameProfile gameProfile = null;
-    private ISkinType skinType;
+    private IEquipmentSkinType skinType;
     private boolean showGuides;
     private boolean showOverlay;
     private String customName;
@@ -82,7 +82,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         String authorName = player.getCommandSenderName();
         String customName = name;
         
-        CustomEquipmentItemData armourItemData = null;
+        EquipmentSkinTypeData armourItemData = null;
         
         try {
             armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinType, authorName, customName, tags,
@@ -136,7 +136,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         }
         
         int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
-        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
+        EquipmentSkinTypeData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
@@ -195,7 +195,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return bb;
     }
 
-    public ISkinType getSkinType() {
+    public IEquipmentSkinType getSkinType() {
         return skinType;
     }
     
@@ -211,7 +211,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return gameProfile;
     }
     
-    public void setSkinType(ISkinType skinType) {
+    public void setSkinType(IEquipmentSkinType skinType) {
         if (this.skinType == skinType) {
             return;
         }

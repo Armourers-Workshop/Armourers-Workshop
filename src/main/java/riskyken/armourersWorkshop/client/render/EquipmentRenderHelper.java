@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinPartData;
 
 public final class EquipmentRenderHelper {
     
@@ -21,7 +21,7 @@ public final class EquipmentRenderHelper {
         return true;
     }
     
-    public static void cullFacesOnEquipmentPart(CustomEquipmentPartData partData) {
+    public static void cullFacesOnEquipmentPart(EquipmentSkinPartData partData) {
         ArrayList<ICube> blocks = partData.getArmourData();
         partData.totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
         for (int i = 0; i < blocks.size(); i++) {

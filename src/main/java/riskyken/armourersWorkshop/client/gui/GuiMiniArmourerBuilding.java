@@ -16,7 +16,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -93,9 +93,9 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         
         GuiDropDownList dropDownList = new GuiDropDownList(2, 2, 2, 80, "", this);
         
-        ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        ArrayList<IEquipmentSkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinTypes.size(); i++) {
-            ISkinType skinType = skinTypes.get(i);
+            IEquipmentSkinType skinType = skinTypes.get(i);
             String skinLocalizedName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
             String skinRegistryName = skinType.getRegistryName();
             dropDownList.addListItem(skinLocalizedName, skinRegistryName, true);
@@ -319,7 +319,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         
         mc.renderEngine.bindTexture(mc.thePlayer.getLocationSkin());
         
-        ISkinType skinType = tileEntity.getSkinType();
+        IEquipmentSkinType skinType = tileEntity.getSkinType();
         float scale = 0.0625F;
         if (skinType != null) {
             skinType.renderBuildingGuide(scale, true, false);
@@ -449,7 +449,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
         DropDownListItem listItem = dropDownList.getListSelectedItem();
-        ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
+        IEquipmentSkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinType(skinType));
     }
 }

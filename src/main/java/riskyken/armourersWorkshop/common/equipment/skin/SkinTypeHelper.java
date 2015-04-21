@@ -1,10 +1,10 @@
 package riskyken.armourersWorkshop.common.equipment.skin;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 
 public final class SkinTypeHelper {
     
-    public static ISkinType getSkinTypeForSlot(int slotId) {
+    public static IEquipmentSkinType getSkinTypeForSlot(int slotId) {
         switch (slotId) {
         case 0:
             return SkinTypeRegistry.skinHead;
@@ -25,7 +25,7 @@ public final class SkinTypeHelper {
         }
     }
     
-    public static int getSlotForSkinType(ISkinType skinType) {
+    public static int getSlotForSkinType(IEquipmentSkinType skinType) {
         if (skinType == SkinTypeRegistry.skinHead) {
             return 0;
         } else if (skinType == SkinTypeRegistry.skinChest) {

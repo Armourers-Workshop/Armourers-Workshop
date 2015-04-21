@@ -4,14 +4,14 @@ import javax.vecmath.Point3i;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
 import riskyken.armourersWorkshop.common.Rectangle3D;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypePartBase;
+import riskyken.armourersWorkshop.common.equipment.skin.EquipmentSkinPartBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SkinFeetPartLeftFoot extends SkinTypePartBase  {
+public class SkinFeetPartLeftFoot extends EquipmentSkinPartBase  {
 
     @SideOnly(Side.CLIENT)
     private static final ModelLegs partModel = new ModelLegs();
@@ -20,7 +20,7 @@ public class SkinFeetPartLeftFoot extends SkinTypePartBase  {
     private Rectangle3D guideSpace;
     private Point3i offset;
     
-    public SkinFeetPartLeftFoot(ISkinType baseType) {
+    public SkinFeetPartLeftFoot(IEquipmentSkinType baseType) {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-4, -13, -6, 7, 5, 10);
         this.guideSpace = new Rectangle3D(-2, -12, -2, 4, 12, 4);

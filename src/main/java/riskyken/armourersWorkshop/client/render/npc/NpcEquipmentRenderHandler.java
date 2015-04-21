@@ -7,7 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.npc.ExPropsEntityEquipmentData;
@@ -63,7 +63,7 @@ public final class NpcEquipmentRenderHandler {
         GL11.glPopMatrix();
     }
     
-    private void renderEquipmentType(ISkinType skinType, EntityEquipmentData equipmentData) {
+    private void renderEquipmentType(IEquipmentSkinType skinType, EntityEquipmentData equipmentData) {
         if (equipmentData.haveEquipment(skinType)) {
             int id = equipmentData.getEquipmentId(skinType);
             ItemStackRenderHelper.renderItemModelFromId(id, skinType);

@@ -4,17 +4,17 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class SkinTypePartBase implements ISkinPart {
+public abstract class EquipmentSkinPartBase implements IEquipmentSkinPart {
 
-    private ISkinType baseType;
+    private IEquipmentSkinType baseType;
     
-    public SkinTypePartBase(ISkinType baseType) {
+    public EquipmentSkinPartBase(IEquipmentSkinType baseType) {
         this.baseType = baseType;
     }
     

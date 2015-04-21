@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinTypeRegistry;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinBow;
 import riskyken.armourersWorkshop.common.equipment.skin.type.SkinChest;
@@ -24,20 +24,20 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public final class SkinTypeRegistry implements ISkinTypeRegistry {
+public final class SkinTypeRegistry implements IEquipmentSkinTypeRegistry {
     
     public static SkinTypeRegistry INSTANCE;
     
-    public static ISkinType skinHead;
-    public static ISkinType skinChest;
-    public static ISkinType skinLegs;
-    public static ISkinType skinSkirt;
-    public static ISkinType skinFeet;
-    public static ISkinType skinSword;
-    public static ISkinType skinBow;
+    public static IEquipmentSkinType skinHead;
+    public static IEquipmentSkinType skinChest;
+    public static IEquipmentSkinType skinLegs;
+    public static IEquipmentSkinType skinSkirt;
+    public static IEquipmentSkinType skinFeet;
+    public static IEquipmentSkinType skinSword;
+    public static IEquipmentSkinType skinBow;
     
-    private LinkedHashMap<String, ISkinType> skinTypeMap;
-    private HashMap<String, ISkinPart> skinPartMap;
+    private LinkedHashMap<String, IEquipmentSkinType> skinTypeMap;
+    private HashMap<String, IEquipmentSkinPart> skinPartMap;
     
     public static void init() {
         INSTANCE = new SkinTypeRegistry();
@@ -45,8 +45,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
     public SkinTypeRegistry() {
         MinecraftForge.EVENT_BUS.register(this);
-        skinTypeMap = new LinkedHashMap<String, ISkinType>();
-        skinPartMap = new HashMap<String, ISkinPart>();
+        skinTypeMap = new LinkedHashMap<String, IEquipmentSkinType>();
+        skinPartMap = new HashMap<String, IEquipmentSkinPart>();
         registerSkins();
     }
     
@@ -69,20 +69,20 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     }
     
     @Override
-    public void registerSkin(ISkinType skinType) {
+    public void registerSkin(IEquipmentSkinType skinType) {
         skinType.setId(skinTypeMap.size());
         ModLogger.log("Registering skin type - id:" + skinType.getId() + " name:" + skinType.getRegistryName());
         skinTypeMap.put(skinType.getRegistryName(), skinType);
-        ArrayList<ISkinPart> skinParts = skinType.getSkinParts();
+        ArrayList<IEquipmentSkinPart> skinParts = skinType.getSkinParts();
         for (int i = 0; i < skinParts.size(); i++) {
-            ISkinPart skinPart = skinParts.get(i);
+            IEquipmentSkinPart skinPart = skinParts.get(i);
             String partName = skinType.getRegistryName() + "." + skinPart.getPartName();
             ModLogger.log("Registering skin part - name:" + partName);
             skinPartMap.put(partName, skinPart);
         }
     }
     
-    public boolean isSkinDisabled(ISkinType skinType) {
+    public boolean isSkinDisabled(IEquipmentSkinType skinType) {
         for (int i = 0; i < ConfigHandler.disabledSkins.length; i++) {
             if (skinType.getRegistryName().equals(ConfigHandler.disabledSkins[i])) {
                 return true;
@@ -92,15 +92,15 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     }
     
     @Override
-    public ISkinType getSkinTypeFromRegistryName(String registryName) {
-        ISkinType skinType = skinTypeMap.get(registryName);
+    public IEquipmentSkinType getSkinTypeFromRegistryName(String registryName) {
+        IEquipmentSkinType skinType = skinTypeMap.get(registryName);
         if (skinType != null && isSkinDisabled(skinType)) {
             return null;
         }
         return skinType;
     }
     
-    public ISkinType getSkinTypeFromLegacyId(int legacyId) {
+    public IEquipmentSkinType getSkinTypeFromLegacyId(int legacyId) {
         switch (legacyId) {
         case 0:
             return getSkinTypeFromRegistryName("armourers:head");
@@ -121,16 +121,16 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         }
     }
     
-    public int getLegacyIdForSkin(ISkinType skinType) {
+    public int getLegacyIdForSkin(IEquipmentSkinType skinType) {
         return skinType.getId();
     }
     
     @Override
-    public ISkinPart getSkinPartFromRegistryName(String registryName) {
+    public IEquipmentSkinPart getSkinPartFromRegistryName(String registryName) {
         return skinPartMap.get(registryName);
     }
     
-    public ISkinPart getSkinPartFromLegacyId(int legacyId) {
+    public IEquipmentSkinPart getSkinPartFromLegacyId(int legacyId) {
         switch (legacyId) {
         case 0:
             return getSkinPartFromRegistryName("armourers:head.base");
@@ -160,11 +160,11 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     }
     
     @Override
-    public ArrayList<ISkinType> getRegisteredSkinTypes() {
-        ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
+    public ArrayList<IEquipmentSkinType> getRegisteredSkinTypes() {
+        ArrayList<IEquipmentSkinType> skinTypes = new ArrayList<IEquipmentSkinType>();
         for (int i = 0; i < skinTypeMap.size(); i++) {
             String registryName = (String) skinTypeMap.keySet().toArray()[i];
-            ISkinType skinType = getSkinTypeFromRegistryName(registryName);
+            IEquipmentSkinType skinType = getSkinTypeFromRegistryName(registryName);
             if (skinType != null) {
                 skinTypes.add(skinType);
             }
@@ -178,7 +178,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     }
     
     @SideOnly(Side.CLIENT)
-    public String getLocalizedSkinTypeName(ISkinType skinType) {
+    public String getLocalizedSkinTypeName(IEquipmentSkinType skinType) {
         String localizedName = "skinType." + LibModInfo.ID.toLowerCase() + ":" + skinType.getRegistryName() + ".name";
         localizedName = StatCollector.translateToLocal(localizedName);
         return localizedName;
@@ -190,7 +190,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         if (event.map.getTextureType() == 1) {
             for (int i = 0; i < skinTypeMap.size(); i++) {
                 String registryName = (String) skinTypeMap.keySet().toArray()[i];
-                ISkinType skinType = getSkinTypeFromRegistryName(registryName);
+                IEquipmentSkinType skinType = getSkinTypeFromRegistryName(registryName);
                 if (skinType != null) {
                     skinType.registerIcon(event.map);
                 }

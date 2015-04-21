@@ -9,7 +9,7 @@ import java.util.BitSet;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class Cube implements ICube {
@@ -128,7 +128,7 @@ public class Cube implements ICube {
     }
     
     @Override
-    public void readFromStream(DataInputStream stream, int version, ISkinPart skinPart) throws IOException {
+    public void readFromStream(DataInputStream stream, int version, IEquipmentSkinPart skinPart) throws IOException {
         //id = stream.readByte();
         x = stream.readByte();
         y = stream.readByte();

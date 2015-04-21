@@ -8,14 +8,14 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.Rectangle3D;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinPartData;
 import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -23,11 +23,11 @@ import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public final class ArmourerWorldHelper {
     
-    public static CustomEquipmentItemData saveSkinFromWorld(World world, ISkinType skinType,
+    public static EquipmentSkinTypeData saveSkinFromWorld(World world, IEquipmentSkinType skinType,
             String authorName, String customName, String tags,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
         
-        ArrayList<CustomEquipmentPartData> parts = new ArrayList<CustomEquipmentPartData>();
+        ArrayList<EquipmentSkinPartData> parts = new ArrayList<EquipmentSkinPartData>();
         
         
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
@@ -35,14 +35,14 @@ public final class ArmourerWorldHelper {
         }
         
         if (parts.size() > 0) {
-            return new CustomEquipmentItemData(authorName, customName, tags, skinType, parts);
+            return new EquipmentSkinTypeData(authorName, customName, tags, skinType, parts);
         } else {
             return null;
         }
     }
     
-    private static void saveArmourPart(World world, ArrayList<CustomEquipmentPartData> armourData,
-            ISkinPart skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
+    private static void saveArmourPart(World world, ArrayList<EquipmentSkinPartData> armourData,
+            IEquipmentSkinPart skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
         ArrayList<ICube> armourBlockData = new ArrayList<ICube>();
         
         Rectangle3D buildSpace = skinPart.getBuildingSpace();
@@ -70,7 +70,7 @@ public final class ArmourerWorldHelper {
         }
         
         if (armourBlockData.size() > 0) {
-            armourData.add(new CustomEquipmentPartData(armourBlockData, skinPart));
+            armourData.add(new EquipmentSkinPartData(armourBlockData, skinPart));
         }
     }
     
@@ -104,16 +104,16 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void loadSkinIntoWorld(World world, int x, int y, int z, CustomEquipmentItemData armourData, ForgeDirection direction) {
-        ArrayList<CustomEquipmentPartData> parts = armourData.getParts();
+    public static void loadSkinIntoWorld(World world, int x, int y, int z, EquipmentSkinTypeData armourData, ForgeDirection direction) {
+        ArrayList<EquipmentSkinPartData> parts = armourData.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
             loadSkinPartIntoWorld(world, parts.get(i), x, y, z, direction);
         }
     }
     
-    private static void loadSkinPartIntoWorld(World world, CustomEquipmentPartData partData, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
-        ISkinPart skinPart = partData.getSkinPart();
+    private static void loadSkinPartIntoWorld(World world, EquipmentSkinPartData partData, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+        IEquipmentSkinPart skinPart = partData.getSkinPart();
         Rectangle3D buildSpace = skinPart.getBuildingSpace();
         Point3i offset = skinPart.getOffset();
         
@@ -158,14 +158,14 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void createBoundingBoxes(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinType skinType) {
+    public static void createBoundingBoxes(World world, int x, int y, int z, int parentX, int parentY, int parentZ, IEquipmentSkinType skinType) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-            ISkinPart skinPart = skinType.getSkinParts().get(i);
+            IEquipmentSkinPart skinPart = skinType.getSkinParts().get(i);
             createBoundingBoxesForSkinPart(world, x, y, z, parentX, parentY, parentZ, skinPart);
         }
     }
     
-    private static void createBoundingBoxesForSkinPart(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinPart skinPart) {
+    private static void createBoundingBoxesForSkinPart(World world, int x, int y, int z, int parentX, int parentY, int parentZ, IEquipmentSkinPart skinPart) {
         Rectangle3D buildSpace = skinPart.getBuildingSpace();
         Rectangle3D guideSpace = skinPart.getGuideSpace();
         Point3i offset = skinPart.getOffset();
@@ -198,14 +198,14 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void removeBoundingBoxes(World world, int x, int y, int z, ISkinType skinType) {
+    public static void removeBoundingBoxes(World world, int x, int y, int z, IEquipmentSkinType skinType) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-            ISkinPart skinPart = skinType.getSkinParts().get(i);
+            IEquipmentSkinPart skinPart = skinType.getSkinParts().get(i);
             removeBoundingBoxesForSkinPart(world, x, y, z, skinPart);
         }
     }
     
-    private static void removeBoundingBoxesForSkinPart(World world, int x, int y, int z, ISkinPart skinPart) {
+    private static void removeBoundingBoxesForSkinPart(World world, int x, int y, int z, IEquipmentSkinPart skinPart) {
         Rectangle3D buildSpace = skinPart.getBuildingSpace();
         Rectangle3D guideSpace = skinPart.getGuideSpace();
         Point3i offset = skinPart.getOffset();
@@ -232,16 +232,16 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType) {
+    public static int clearEquipmentCubes(World world, int x, int y, int z, IEquipmentSkinType skinType) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-            ISkinPart skinPart = skinType.getSkinParts().get(i);
+            IEquipmentSkinPart skinPart = skinType.getSkinParts().get(i);
             blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
         }
         return blockCount;
     }
     
-    private static int clearEquipmentCubesForSkinPart(World world, int x, int y, int z, ISkinPart skinPart) {
+    private static int clearEquipmentCubesForSkinPart(World world, int x, int y, int z, IEquipmentSkinPart skinPart) {
         Rectangle3D buildSpace = skinPart.getBuildingSpace();
         Point3i offset = skinPart.getOffset();
         int blockCount = 0;

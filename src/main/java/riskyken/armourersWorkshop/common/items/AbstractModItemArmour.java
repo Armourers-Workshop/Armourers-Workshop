@@ -19,7 +19,7 @@ import riskyken.armourersWorkshop.common.equipment.cubes.Cube;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlass;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlassGlowing;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlowing;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
@@ -54,7 +54,7 @@ public class AbstractModItemArmour extends ItemArmor {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
             SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
             if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                CustomEquipmentItemData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+                EquipmentSkinTypeData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                 if (!data.getCustomName().trim().isEmpty()) {
                     list.add(cGold + "Name: " + cGray + data.getCustomName());
                 }
@@ -142,7 +142,7 @@ public class AbstractModItemArmour extends ItemArmor {
         
         AbstractModelCustomEquipment targetModel = null;
         EquipmentModelRenderer emr = EquipmentModelRenderer.INSTANCE;
-        CustomEquipmentItemData data = emr.getCustomArmourItemData(skinData.skinId);
+        EquipmentSkinTypeData data = emr.getCustomArmourItemData(skinData.skinId);
         if (data == null) {
             return null;
         }

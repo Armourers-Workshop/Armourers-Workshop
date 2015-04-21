@@ -6,12 +6,12 @@ import net.minecraft.util.IIcon;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class SkinTypeBase implements ISkinType {
+public abstract class EquipmentSkinTypeBase implements IEquipmentSkinType {
 
     private int id = -1;
     @SideOnly(Side.CLIENT)
@@ -21,7 +21,7 @@ public abstract class SkinTypeBase implements ISkinType {
     @Override
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
         for (int i = 0; i < this.getSkinParts().size(); i++) {
-            ISkinPart skinPart = this.getSkinParts().get(i);
+            IEquipmentSkinPart skinPart = this.getSkinParts().get(i);
             Point3i partOffset = skinPart.getOffset();
             GL11.glTranslated(partOffset.x * scale, partOffset.y * scale, partOffset.z * scale);
             skinPart.renderBuildingGuide(scale, showSkinOverlay, showHelper);
@@ -33,7 +33,7 @@ public abstract class SkinTypeBase implements ISkinType {
     @Override
     public void renderBuildingGrid(float scale) {
         for (int i = 0; i < this.getSkinParts().size(); i++) {
-            ISkinPart skinPart = this.getSkinParts().get(i);
+            IEquipmentSkinPart skinPart = this.getSkinParts().get(i);
             Point3i partOffset = skinPart.getOffset();
             GL11.glTranslated(partOffset.x * scale, partOffset.y * scale, partOffset.z * scale);
             skinPart.renderBuildingGrid(scale);

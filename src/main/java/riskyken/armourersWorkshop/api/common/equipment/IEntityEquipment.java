@@ -1,15 +1,15 @@
 package riskyken.armourersWorkshop.api.common.equipment;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 
 
 public interface IEntityEquipment {
     
-    public void addEquipment(ISkinType skinType, int equipmentId);
+    public void addEquipment(IEquipmentSkinType equipmentSkinType, int equipmentId);
     
-    public void removeEquipment(ISkinType skinType);
+    public void removeEquipment(IEquipmentSkinType equipmentSkinType);
     
-    public boolean haveEquipment(ISkinType skinType);
+    public boolean haveEquipment(IEquipmentSkinType equipmentSkinType);
     
-    public int getEquipmentId(ISkinType skinType);
+    public int getEquipmentId(IEquipmentSkinType equipmentSkinType);
 }

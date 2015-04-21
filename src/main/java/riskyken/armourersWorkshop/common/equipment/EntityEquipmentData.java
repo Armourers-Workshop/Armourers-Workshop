@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class EntityEquipmentData implements IEntityEquipment {
@@ -27,7 +27,7 @@ public class EntityEquipmentData implements IEntityEquipment {
     }
     
     @Override
-    public void addEquipment(ISkinType skinType, int equipmentId) {
+    public void addEquipment(IEquipmentSkinType skinType, int equipmentId) {
         String key = skinType.getRegistryName();
         if (this.equipment.containsKey(key)) {
             this.equipment.remove(key);
@@ -36,7 +36,7 @@ public class EntityEquipmentData implements IEntityEquipment {
     }
     
     @Override
-    public void removeEquipment(ISkinType skinType) {
+    public void removeEquipment(IEquipmentSkinType skinType) {
         String key = skinType.getRegistryName();
         if (this.equipment.containsKey(key)) {
             this.equipment.remove(key);
@@ -44,13 +44,13 @@ public class EntityEquipmentData implements IEntityEquipment {
     }
     
     @Override
-    public boolean haveEquipment(ISkinType skinType) {
+    public boolean haveEquipment(IEquipmentSkinType skinType) {
         String key = skinType.getRegistryName();
         return this.equipment.containsKey(key);
     }
     
     @Override
-    public int getEquipmentId(ISkinType skinType) {
+    public int getEquipmentId(IEquipmentSkinType skinType) {
         String key = skinType.getRegistryName();
         if (this.equipment.containsKey(key)) {
             return this.equipment.get(key);

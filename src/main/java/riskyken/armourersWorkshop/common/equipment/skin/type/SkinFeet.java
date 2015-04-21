@@ -3,22 +3,22 @@ package riskyken.armourersWorkshop.common.equipment.skin.type;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeBase;
+import riskyken.armourersWorkshop.common.equipment.skin.EquipmentSkinTypeBase;
 
-public class SkinFeet extends SkinTypeBase {
+public class SkinFeet extends EquipmentSkinTypeBase {
 
-    private ArrayList<ISkinPart> skinParts;
+    private ArrayList<IEquipmentSkinPart> skinParts;
     
     public SkinFeet() {
-        skinParts = new ArrayList<ISkinPart>();
+        skinParts = new ArrayList<IEquipmentSkinPart>();
         skinParts.add(new SkinFeetPartLeftFoot(this));
         skinParts.add(new SkinFeetPartRightFoot(this));
     }
     
     @Override
-    public ArrayList<ISkinPart> getSkinParts() {
+    public ArrayList<IEquipmentSkinPart> getSkinParts() {
         return this.skinParts;
     }
 

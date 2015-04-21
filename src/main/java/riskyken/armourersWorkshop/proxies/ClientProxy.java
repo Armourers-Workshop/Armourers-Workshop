@@ -31,7 +31,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.npc.NpcEquipmentDataHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
@@ -145,7 +145,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
+    public void receivedEquipmentData(EquipmentSkinTypeData equipmentData) {
         ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
     }
     

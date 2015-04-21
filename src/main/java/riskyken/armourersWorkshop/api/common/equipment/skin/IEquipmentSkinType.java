@@ -12,9 +12,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author RiskyKen
  *
  */
-public interface ISkinType {
+public interface IEquipmentSkinType {
 
-    public ArrayList<ISkinPart> getSkinParts();
+    public ArrayList<IEquipmentSkinPart> getSkinParts();
     
     /**
      * Gets the name this skin will be registered with.

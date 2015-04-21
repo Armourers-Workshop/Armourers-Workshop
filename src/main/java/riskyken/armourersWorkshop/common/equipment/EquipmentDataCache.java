@@ -17,7 +17,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.equipment.data.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -41,7 +41,7 @@ public final class EquipmentDataCache {
     
     public static EquipmentDataCache INSTANCE = null;
     
-    private HashMap<Integer, CustomEquipmentItemData> equipmentDataCache = new HashMap<Integer, CustomEquipmentItemData>();
+    private HashMap<Integer, EquipmentSkinTypeData> equipmentDataCache = new HashMap<Integer, EquipmentSkinTypeData>();
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     private long lastTick;
     
@@ -77,23 +77,23 @@ public final class EquipmentDataCache {
         
         if (!equipmentDataCache.containsKey(queueMessage.equipmentId)) {
             if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
-                CustomEquipmentItemData equipmentData;
+                EquipmentSkinTypeData equipmentData;
                 equipmentData = loadEquipmentFromDisk(queueMessage.equipmentId);
                 addEquipmentDataToCache(equipmentData, queueMessage.equipmentId);
             }
         }
         
         if (equipmentDataCache.containsKey(queueMessage.equipmentId)) {
-            CustomEquipmentItemData equpmentData = equipmentDataCache.get(queueMessage.equipmentId);
+            EquipmentSkinTypeData equpmentData = equipmentDataCache.get(queueMessage.equipmentId);
             PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData), queueMessage.player);
         }
     }
     
-    public void addEquipmentDataToCache(CustomEquipmentItemData equipmentData) {
+    public void addEquipmentDataToCache(EquipmentSkinTypeData equipmentData) {
         addEquipmentDataToCache(equipmentData, equipmentData.hashCode());
     }
     
-    public void addEquipmentDataToCache(CustomEquipmentItemData equipmentData, int equipmentId) {
+    public void addEquipmentDataToCache(EquipmentSkinTypeData equipmentData, int equipmentId) {
         if (equipmentData == null) {
             return;
         }
@@ -105,10 +105,10 @@ public final class EquipmentDataCache {
         }
     }
     
-    public CustomEquipmentItemData getEquipmentData(int equipmentId) {
+    public EquipmentSkinTypeData getEquipmentData(int equipmentId) {
         if (!equipmentDataCache.containsKey(equipmentId)) {
             if (haveEquipmentOnDisk(equipmentId)) {
-                CustomEquipmentItemData equipmentData;
+                EquipmentSkinTypeData equipmentData;
                 equipmentData = loadEquipmentFromDisk(equipmentId);
                 addEquipmentDataToCache(equipmentData, equipmentId);
             }
@@ -133,7 +133,7 @@ public final class EquipmentDataCache {
         return targetFile.exists();
     }
     
-    private void saveEquipmentToDisk(CustomEquipmentItemData equipmentData) {
+    private void saveEquipmentToDisk(EquipmentSkinTypeData equipmentData) {
         createEquipmentDirectory();
         File equipmentDir = new File(System.getProperty("user.dir"));
         equipmentDir = new File(equipmentDir, "equipment-database");
@@ -158,7 +158,7 @@ public final class EquipmentDataCache {
         }
     }
     
-    private CustomEquipmentItemData loadEquipmentFromDisk(int equipmentId) {
+    private EquipmentSkinTypeData loadEquipmentFromDisk(int equipmentId) {
         createEquipmentDirectory();
         File equipmentDir = new File(System.getProperty("user.dir"));
         equipmentDir = new File(equipmentDir, "equipment-database");
@@ -168,12 +168,12 @@ public final class EquipmentDataCache {
             return null;
         }
         
-        CustomEquipmentItemData equipmentData = null;
+        EquipmentSkinTypeData equipmentData = null;
         DataInputStream stream = null;
         
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(targetFile)));
-            equipmentData = new CustomEquipmentItemData(stream);
+            equipmentData = new EquipmentSkinTypeData(stream);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Armour file not found.");
             e.printStackTrace();

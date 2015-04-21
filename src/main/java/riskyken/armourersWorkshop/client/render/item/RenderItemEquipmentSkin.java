@@ -10,7 +10,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
@@ -47,7 +47,7 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             GL11.glScalef(scale, scale, scale);
             GL11.glRotatef(180, 0, 1, 0);
             
-            ISkinType skinType = EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
+            IEquipmentSkinType skinType = EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
             if (skinType == SkinTypeRegistry.skinSword) {
                 GL11.glScalef(0.7F, 0.7F, 0.7F);
             }

@@ -5,15 +5,15 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinPartData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class AbstractModelCustomEquipment extends ModelBiped implements IEquipmentModel {
 
-    public CustomEquipmentItemData npcEquipmentData = null;
+    public EquipmentSkinTypeData npcEquipmentData = null;
     protected static float SCALE = 0.0625F;
     
     protected void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -66,7 +66,7 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
     }
     
     
-    public abstract void render(Entity entity, CustomEquipmentItemData armourData);
+    public abstract void render(Entity entity, EquipmentSkinTypeData armourData);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
@@ -92,7 +92,7 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
         }
     }
     
-    protected void renderPart(CustomEquipmentPartData armourPart, float scale) {
+    protected void renderPart(EquipmentSkinPartData armourPart, float scale) {
         EquipmentPartRenderer.INSTANCE.renderPart(armourPart, scale);
     }
 }

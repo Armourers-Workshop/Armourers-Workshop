@@ -8,8 +8,8 @@ import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
 import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderManager;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataManager;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -51,10 +51,10 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
     public void onLoad(IEquipmentRenderHandler handler) {}
 
     
-    public void onRenderEquipment(Entity entity, ISkinType skinType) {
+    public void onRenderEquipment(Entity entity, IEquipmentSkinType skinType) {
     }
     
-    public void onRenderEquipmentPart(Entity entity, ISkinPart skinPart) {
+    public void onRenderEquipmentPart(Entity entity, IEquipmentSkinPart skinPart) {
     }
 
     @Override

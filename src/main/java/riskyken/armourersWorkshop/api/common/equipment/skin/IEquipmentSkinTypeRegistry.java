@@ -9,19 +9,19 @@ import java.util.ArrayList;
  * @author RiskyKen
  *
  */
-public interface ISkinTypeRegistry {
+public interface IEquipmentSkinTypeRegistry {
     
     /**
      * Register a new skin type.
      * @param skinType
      */
-    public void registerSkin(ISkinType skinType) ;
+    public void registerSkin(IEquipmentSkinType skinType) ;
     
-    public ISkinType getSkinTypeFromRegistryName(String registryName);
+    public IEquipmentSkinType getSkinTypeFromRegistryName(String registryName);
     
-    public ISkinPart getSkinPartFromRegistryName(String registryName);
+    public IEquipmentSkinPart getSkinPartFromRegistryName(String registryName);
     
-    public ArrayList<ISkinType> getRegisteredSkinTypes();
+    public ArrayList<IEquipmentSkinType> getRegisteredSkinTypes();
     
     public int getNumberOfSkinRegistered();
 }

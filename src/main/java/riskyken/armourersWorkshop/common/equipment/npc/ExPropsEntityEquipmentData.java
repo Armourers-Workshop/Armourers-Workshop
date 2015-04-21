@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
@@ -32,7 +32,7 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     @Override
     public void setInventorySlotContents(int slotId, ItemStack stack) {
         if (stack == null) {
-            ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
+            IEquipmentSkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
             equipmentData.removeEquipment(skinType);
         } else {
             SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);

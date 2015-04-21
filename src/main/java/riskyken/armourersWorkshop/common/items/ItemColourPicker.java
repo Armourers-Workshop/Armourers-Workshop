@@ -11,8 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPartWithTexture;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPartTextured;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
@@ -88,11 +88,11 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         return false;
     }
     
-    private boolean skinPartHasTexture(ISkinPart skinPart) {
-        return skinPart instanceof ISkinPartWithTexture;
+    private boolean skinPartHasTexture(IEquipmentSkinPart skinPart) {
+        return skinPart instanceof IEquipmentSkinPartTextured;
     }
     
-    private int getColourFromSkin(TileEntityArmourerBrain te, ISkinPart skinPart, EntityPlayer player, World world, int x, int y, int z, int side) {
+    private int getColourFromSkin(TileEntityArmourerBrain te, IEquipmentSkinPart skinPart, EntityPlayer player, World world, int x, int y, int z, int side) {
         /*
         
         int textureX = skinPart.getTextureX();

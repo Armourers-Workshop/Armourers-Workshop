@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
@@ -31,7 +31,7 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -73,7 +73,7 @@ public final class EquipmentModelRenderer {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
-    public CustomEquipmentItemData getPlayerCustomArmour(Entity entity, ISkinType skinType) {
+    public EquipmentSkinTypeData getPlayerCustomArmour(Entity entity, IEquipmentSkinType skinType) {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
@@ -100,7 +100,7 @@ public final class EquipmentModelRenderer {
         return equipmentData;
     }
     
-    public CustomEquipmentItemData getCustomArmourItemData(int equipmentId) {
+    public EquipmentSkinTypeData getCustomArmourItemData(int equipmentId) {
         return ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
     }
     
@@ -117,7 +117,7 @@ public final class EquipmentModelRenderer {
         }
     }
 
-    private boolean playerHasCustomArmourType(UUID playerId, ISkinType skinType) {
+    private boolean playerHasCustomArmourType(UUID playerId, IEquipmentSkinType skinType) {
         if (!playerEquipmentMap.containsKey(playerId)) {
             return false;
         }
@@ -189,31 +189,31 @@ public final class EquipmentModelRenderer {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glEnable(GL11.GL_BLEND);
             if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead);
+                EquipmentSkinTypeData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead);
                 if (data != null) {
                     customHead.render(player, render.modelBipedMain, data);
                 }
             }
             if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest);
+                EquipmentSkinTypeData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest);
                 if (data != null) {
                     customChest.render(player, render.modelBipedMain, data);
                 }
             }
             if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs);
+                EquipmentSkinTypeData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs);
                 if (data != null) {
                     customLegs.render(player, render.modelBipedMain, data);
                 }
             }
             if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt);
+                EquipmentSkinTypeData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt);
                 if (data != null) {
                     customSkirt.render(player, render.modelBipedMain, data);
                 }
             }
             if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
-                CustomEquipmentItemData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet);
+                EquipmentSkinTypeData data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet);
                 if (data != null) {
                     customFeet.render(player, render.modelBipedMain, data);
                 }
@@ -224,7 +224,7 @@ public final class EquipmentModelRenderer {
         }
     }
     
-    public AbstractModelCustomEquipment getModelForEquipmentType(ISkinType skinType) {
+    public AbstractModelCustomEquipment getModelForEquipmentType(IEquipmentSkinType skinType) {
         if (skinType == SkinTypeRegistry.skinHead) {
             return customHead;
         } else if (skinType == SkinTypeRegistry.skinChest) {
@@ -250,11 +250,11 @@ public final class EquipmentModelRenderer {
             return;
         }
         
-        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        ArrayList<IEquipmentSkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinList.size(); i++) {
-            ISkinType skinType = skinList.get(i);
+            IEquipmentSkinType skinType = skinList.get(i);
             if (equipmentData.haveEquipment(skinType)) {
-                CustomEquipmentItemData data = getCustomArmourItemData(equipmentData.getEquipmentId(skinType));
+                EquipmentSkinTypeData data = getCustomArmourItemData(equipmentData.getEquipmentId(skinType));
                 if (skinType == SkinTypeRegistry.skinSword) {
                     float scale = 0.0625F;
                     GL11.glPushMatrix();
@@ -292,7 +292,7 @@ public final class EquipmentModelRenderer {
             return;
         }
         int equipmentId = EquipmentDataHandler.INSTANCE.getEquipmentIdFromItemStack(stack);
-        CustomEquipmentItemData data = getCustomArmourItemData(equipmentId);
+        EquipmentSkinTypeData data = getCustomArmourItemData(equipmentId);
         renderEquipmentPart(null, modelBiped, data);
     }
     
@@ -301,11 +301,11 @@ public final class EquipmentModelRenderer {
             return;
         }
         int equipmentId = EquipmentDataHandler.INSTANCE.getEquipmentIdFromItemStack(stack);
-        CustomEquipmentItemData data = getCustomArmourItemData(equipmentId);
+        EquipmentSkinTypeData data = getCustomArmourItemData(equipmentId);
         renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
-    private void renderEquipmentPart(Entity entity, ModelBiped modelBiped, CustomEquipmentItemData data) {
+    private void renderEquipmentPart(Entity entity, ModelBiped modelBiped, EquipmentSkinTypeData data) {
         if (data == null) {
             return;
         }
@@ -321,7 +321,7 @@ public final class EquipmentModelRenderer {
         GL11.glDisable(GL11.GL_CULL_FACE);
     }
     
-    private void renderEquipmentPartRotated(Entity entity, CustomEquipmentItemData data, float limb1, float limb2, float limb3, float headY, float headX) {
+    private void renderEquipmentPartRotated(Entity entity, EquipmentSkinTypeData data, float limb1, float limb2, float limb3, float headY, float headX) {
         if (data == null) {
             return;
         }

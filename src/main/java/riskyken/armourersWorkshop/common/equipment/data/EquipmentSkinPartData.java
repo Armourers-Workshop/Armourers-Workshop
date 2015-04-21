@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GLAllocation;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinPart;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
@@ -20,14 +20,14 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class CustomEquipmentPartData {
+public class EquipmentSkinPartData {
     
     private static final String TAG_BLOCK_DATA = "blockData";
     private static final String TAG_PART = "part";
     private static final String TAG_ID = "id";
     
     private ArrayList<ICube> armourData;
-    private ISkinPart skinPart;
+    private IEquipmentSkinPart skinPart;
     
     public boolean facesBuild;
     
@@ -69,20 +69,20 @@ public class CustomEquipmentPartData {
         }
     }
     
-    public CustomEquipmentPartData(ArrayList armourData, ISkinPart skinPart) {
+    public EquipmentSkinPartData(ArrayList armourData, IEquipmentSkinPart skinPart) {
         this.armourData = armourData;
         this.skinPart = skinPart;
     }
 
-    public CustomEquipmentPartData(ByteBuf buf) {
+    public EquipmentSkinPartData(ByteBuf buf) {
         readFromBuf(buf);
     }
 
-    public CustomEquipmentPartData(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
+    public EquipmentSkinPartData(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         readFromStream(stream, version);
     }
 
-    public ISkinPart getSkinPart() {
+    public IEquipmentSkinPart getSkinPart() {
         return this.skinPart;
     }
 

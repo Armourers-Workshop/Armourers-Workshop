@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.SkinHelper;
@@ -23,7 +23,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         float scale = 0.0625F;
         
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
-        ISkinType skinType = te.getSkinType();
+        IEquipmentSkinType skinType = te.getSkinType();
         
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;

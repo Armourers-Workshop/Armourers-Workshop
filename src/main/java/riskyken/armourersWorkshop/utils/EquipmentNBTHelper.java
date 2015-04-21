@@ -2,8 +2,8 @@ package riskyken.armourersWorkshop.utils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 
@@ -63,7 +63,7 @@ public class EquipmentNBTHelper {
         return skinData;
     }
     
-    public static ISkinType getSkinTypeFromStack(ItemStack stack) {
+    public static IEquipmentSkinType getSkinTypeFromStack(ItemStack stack) {
         if (!stackHasSkinData(stack)) {
             return null;
         }
@@ -96,7 +96,7 @@ public class EquipmentNBTHelper {
         return skinData.lockSkin;
     }
     
-    public static void addSkinDataToStack(ItemStack stack, ISkinType skinType, int skinId, boolean lockSkin) {
+    public static void addSkinDataToStack(ItemStack stack, IEquipmentSkinType skinType, int skinId, boolean lockSkin) {
         SkinNBTData skinData = new SkinNBTData(skinType, skinId, lockSkin);
         addSkinDataToStack(stack, skinData);
     }
@@ -151,21 +151,21 @@ public class EquipmentNBTHelper {
         return skinDataCompound.getInteger(TAG_OLD_SKIN_ID);
     }
     
-    public static ItemStack makeEquipmentSkinStack(CustomEquipmentItemData equipmentItemData) {
+    public static ItemStack makeEquipmentSkinStack(EquipmentSkinTypeData equipmentItemData) {
         ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
         return stack;
     }
     
-    public static ItemStack makeArmouerContainerStack(CustomEquipmentItemData equipmentItemData) {
+    public static ItemStack makeArmouerContainerStack(EquipmentSkinTypeData equipmentItemData) {
         ItemStack stack = new ItemStack(ModItems.armourContainer[equipmentItemData.getSkinType().getVanillaArmourSlotId()], 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
         return stack;
     }
     
-    public static void addRenderIdToStack(ItemStack stack, ISkinType skinType, int skinId) {
+    public static void addRenderIdToStack(ItemStack stack, IEquipmentSkinType skinType, int skinId) {
         if (stackHasSkinData(stack)) {
             SkinNBTData skinData = getSkinNBTDataFromStack(stack);
             if (skinData.skinId != skinId & !skinData.lockSkin) {
@@ -181,14 +181,14 @@ public class EquipmentNBTHelper {
     }
     
     public static class SkinNBTData {
-        public ISkinType skinType;
+        public IEquipmentSkinType skinType;
         public int skinId;
         public boolean lockSkin;
         
         public SkinNBTData() {
         }
         
-        public SkinNBTData(ISkinType skinType, int skinId, boolean lockSkin) {
+        public SkinNBTData(IEquipmentSkinType skinType, int skinId, boolean lockSkin) {
             this.skinType = skinType;
             this.skinId = skinId;
             this.lockSkin = lockSkin;

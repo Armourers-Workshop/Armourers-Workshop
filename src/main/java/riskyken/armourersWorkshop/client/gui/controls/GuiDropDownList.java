@@ -54,8 +54,8 @@ public class GuiDropDownList extends GuiButtonExt {
                     DropDownListItem listItem = listItems.get(i);
                     int textX = this.xPosition + 4;
                     int textY = this.yPosition + this.height + 4 + (i * 10);
-                    int textWidth = mc.fontRenderer.getStringWidth(listItem.displayText);
-                    int textHeight = 10;
+                    int textWidth = this.width - 8;
+                    int textHeight = 8;
                     int textColour = 16777215;
                     if (!listItem.enabled) {
                         textColour = 0xFFCC0000;
@@ -64,6 +64,7 @@ public class GuiDropDownList extends GuiButtonExt {
                             if (listItem.enabled) {
                                 textColour = 16777120;
                                 this.hoverIndex = i;
+                                drawRect(textX, textY, textX + textWidth, textY + textHeight, 0x44CCCCCC);
                             }
                         }
                     }

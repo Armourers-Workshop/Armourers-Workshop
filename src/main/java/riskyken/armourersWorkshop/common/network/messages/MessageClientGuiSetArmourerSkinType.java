@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
@@ -16,12 +16,12 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageClientGuiSetArmourerSkinType implements IMessage, IMessageHandler<MessageClientGuiSetArmourerSkinType, IMessage> {
 
-    private ISkinType skinType = null;
+    private IEquipmentSkinType skinType = null;
     
     public MessageClientGuiSetArmourerSkinType() {
     }
     
-    public MessageClientGuiSetArmourerSkinType(ISkinType skinType) {
+    public MessageClientGuiSetArmourerSkinType(IEquipmentSkinType skinType) {
         this.skinType = skinType;
     }
     

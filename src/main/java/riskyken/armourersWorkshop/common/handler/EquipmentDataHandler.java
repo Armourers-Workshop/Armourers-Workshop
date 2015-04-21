@@ -8,8 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.equipment.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinTypeRegistry;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinTypeRegistry;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.equipment.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
@@ -34,7 +34,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
 
     @Override
-    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, ISkinType skinType) {
+    public ItemStack getCustomEquipmentForPlayer(EntityPlayer player, IEquipmentSkinType skinType) {
         ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         return entityProps.getEquipmentStack(skinType);
     }
@@ -46,7 +46,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
 
     @Override
-    public void clearCustomEquipmentFromPlayer(EntityPlayer player, ISkinType skinType) {
+    public void clearCustomEquipmentFromPlayer(EntityPlayer player, IEquipmentSkinType skinType) {
         ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.clearEquipmentStack(skinType);
     }
@@ -57,7 +57,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
     
     @Override
-    public ISkinType getSkinTypeFromStack(ItemStack stack) {
+    public IEquipmentSkinType getSkinTypeFromStack(ItemStack stack) {
         return EquipmentNBTHelper.getSkinTypeFromStack(stack);
     }
     
@@ -99,7 +99,7 @@ public class EquipmentDataHandler implements IEquipmentDataHandler {
     }
 
     @Override
-    public ISkinTypeRegistry getISkinTypeRegistry() {
+    public IEquipmentSkinTypeRegistry getISkinTypeRegistry() {
         return SkinTypeRegistry.INSTANCE;
     }
 }

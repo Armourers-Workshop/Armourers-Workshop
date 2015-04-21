@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.util.Constants.NBT;
-import riskyken.armourersWorkshop.api.common.equipment.skin.ISkinType;
+import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
@@ -55,7 +55,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     public void setEquipmentStack(ItemStack stack) {
-        ISkinType skinType = EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
+        IEquipmentSkinType skinType = EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
         if (skinType != null) {
             int slot = SkinTypeHelper.getSlotForSkinType(skinType);
             if (slot != -1) {
@@ -68,7 +68,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         return customArmourInventory;
     }
     
-    public ItemStack getEquipmentStack(ISkinType skinType) {
+    public ItemStack getEquipmentStack(IEquipmentSkinType skinType) {
         int slot = SkinTypeHelper.getSlotForSkinType(skinType);
         if (slot != -1) {
             return getStackInSlot(slot);
@@ -77,9 +77,9 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     public void clearAllEquipmentStacks() {
-        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        ArrayList<IEquipmentSkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinList.size() - 1; i++) {
-            ISkinType skinType = skinList.get(i);
+            IEquipmentSkinType skinType = skinList.get(i);
             int slot = SkinTypeHelper.getSlotForSkinType(skinType);
             if (slot != -1) {
                 setInventorySlotContents(slot, null);
@@ -87,19 +87,19 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         }
     }
     
-    public void clearEquipmentStack(ISkinType skinType) {
+    public void clearEquipmentStack(IEquipmentSkinType skinType) {
         int slot = SkinTypeHelper.getSlotForSkinType(skinType);
         if (slot != -1) {
             setInventorySlotContents(slot, null);
         }
     }
     
-    public void addCustomEquipment(ISkinType skinType, int equipmentId) {
+    public void addCustomEquipment(IEquipmentSkinType skinType, int equipmentId) {
         equipmentData.addEquipment(skinType, equipmentId);
         updateEquipmentDataToPlayersAround();
     }
     
-    public void removeCustomEquipment(ISkinType skinType) {
+    public void removeCustomEquipment(IEquipmentSkinType skinType) {
         equipmentData.removeEquipment(skinType);
         updateEquipmentDataToPlayersAround();
     }
@@ -154,7 +154,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     private void removeArmourFromSlot(byte slotId) {
-        ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
+        IEquipmentSkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
         if (slotId != -1) {
             removeCustomEquipment(skinType);
         }
