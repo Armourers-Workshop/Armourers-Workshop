@@ -1,35 +1,24 @@
 package riskyken.armourersWorkshop.client.render;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayer;
 
 import com.mojang.authlib.GameProfile;
 
-public class MannequinFakePlayer extends AbstractClientPlayer {
+public class MannequinFakePlayer extends FakePlayer {
     
-    public MannequinFakePlayer(World world, GameProfile gameProfile) {
+    public MannequinFakePlayer(WorldServer world, GameProfile gameProfile) {
         super(world, gameProfile);
     }
     
     @Override
-    public void addChatMessage(IChatComponent p_145747_1_) {
+    public String getCommandSenderName() {
+        return "[Mannequin]";
     }
     
     @Override
     public String getDisplayName() {
-        return "Mannequin";
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_) {
-        return false;
-    }
-
-    @Override
-    public ChunkCoordinates getPlayerCoordinates() {
-        return null;
+        return "[Mannequin]";
     }
 
     @Override
@@ -75,6 +64,5 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
         this.field_71094_bP += d3 * 0.25D;
         this.field_71085_bR += d1 * 0.25D;
         this.field_71095_bQ += d0 * 0.25D;
-
     }
 }
