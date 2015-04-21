@@ -136,7 +136,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
         }
         
-        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
         
         ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
         
@@ -149,30 +148,32 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         te.getBipedRotations().applyRotationsToBiped(targetBiped);
         
-        //GL11.glTranslated(0, heightOffset * scale * 1.0F / f6, 0);
-        if (!hasCustomHead(te, fakePlayer)) {
-            if (te.getBipedRotations().isChild) {
-                ModelHelper.enableChildModelScale(true, SCALE);
-            }
-            targetBiped.bipedHead.render(SCALE);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            targetBiped.bipedHeadwear.render(SCALE);
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            if (te.getBipedRotations().isChild) {
-                ModelHelper.disableChildModelScale();
-            }
+        //TODO Fade in skins
+        /*
+        GL11.glPushMatrix();
+        mc.renderEngine.bindTexture(AbstractClientPlayer.locationStevePng);
+        renderModel(te, targetBiped, fakePlayer);
+        GL11.glPopMatrix();
+        
+        float alpha = (float)((double)System.currentTimeMillis() / 5000 % 2);
+        if (alpha > 1F) {
+            alpha -= 1F;
+            alpha = 1 - alpha;
         }
-        if (te.getBipedRotations().isChild) {
-            ModelHelper.enableChildModelScale(false, SCALE);
-        }
-        targetBiped.bipedBody.render(SCALE);
-        targetBiped.bipedRightArm.render(SCALE);
-        targetBiped.bipedLeftArm.render(SCALE);
-        targetBiped.bipedRightLeg.render(SCALE);
-        targetBiped.bipedLeftLeg.render(SCALE);
-        if (te.getBipedRotations().isChild) {
-            ModelHelper.disableChildModelScale();
-        }
+        
+        ModRenderHelper.enableAlphaBlend();
+        //GL11.glAlphaFunc(GL11.GL_GREATER, 0F);
+        GL11.glColor4f(1F, 1F, 1F, alpha);
+        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
+        renderModel(te, targetBiped, fakePlayer);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        ModRenderHelper.disableAlphaBlend();
+        */
+        
+        //Render model
+        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
+        renderModel(te, targetBiped, fakePlayer);
+        
         
         //Render items.
         renderEquippedItems(te, fakePlayer, targetBiped);
@@ -208,6 +209,32 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
+    }
+    
+    private void renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
+        if (!hasCustomHead(te, fakePlayer)) {
+            if (te.getBipedRotations().isChild) {
+                ModelHelper.enableChildModelScale(true, SCALE);
+            }
+            targetBiped.bipedHead.render(SCALE);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            targetBiped.bipedHeadwear.render(SCALE);
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            if (te.getBipedRotations().isChild) {
+                ModelHelper.disableChildModelScale();
+            }
+        }
+        if (te.getBipedRotations().isChild) {
+            ModelHelper.enableChildModelScale(false, SCALE);
+        }
+        targetBiped.bipedBody.render(SCALE);
+        targetBiped.bipedRightArm.render(SCALE);
+        targetBiped.bipedLeftArm.render(SCALE);
+        targetBiped.bipedRightLeg.render(SCALE);
+        targetBiped.bipedLeftLeg.render(SCALE);
+        if (te.getBipedRotations().isChild) {
+            ModelHelper.disableChildModelScale();
+        }
     }
     
     private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {

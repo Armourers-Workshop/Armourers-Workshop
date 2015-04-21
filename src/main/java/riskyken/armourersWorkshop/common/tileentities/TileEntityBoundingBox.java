@@ -13,18 +13,26 @@ public class TileEntityBoundingBox extends TileEntity {
     private static final String TAG_PARENT_X = "parentX";
     private static final String TAG_PARENT_Y = "parentY";
     private static final String TAG_PARENT_Z = "parentZ";
+    private static final String TAG_GUIDE_X = "guideX";
+    private static final String TAG_GUIDE_Y = "guideY";
+    private static final String TAG_GUIDE_Z = "guideZ";
     private static final String TAG_SKIN_PART = "skinPart";
     
     private int parentX;
     private int parentY;
     private int parentZ;
+    private byte guideX;
+    private byte guideY;
+    private byte guideZ;
     private IEquipmentSkinPart skinPart;
     
     public TileEntityBoundingBox() {
+        setParent(0, 0, 0, (byte) 0, (byte) 0, (byte) 0, null);
     }
     
-    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, IEquipmentSkinPart skinPart) {
-        setParent(parentX, parentY, parentZ, skinPart);
+    public TileEntityBoundingBox(int parentX, int parentY, int parentZ,
+            byte guideX, byte guideY, byte guideZ, IEquipmentSkinPart skinPart) {
+        setParent(parentX, parentY, parentZ, guideX, guideY, guideZ, skinPart);
     }
     
     @Override
@@ -38,6 +46,9 @@ public class TileEntityBoundingBox extends TileEntity {
         this.parentX = compound.getInteger(TAG_PARENT_X);
         this.parentY = compound.getInteger(TAG_PARENT_Y);
         this.parentZ = compound.getInteger(TAG_PARENT_Z);
+        this.guideX = compound.getByte(TAG_GUIDE_X);
+        this.guideY = compound.getByte(TAG_GUIDE_Y);
+        this.guideZ = compound.getByte(TAG_GUIDE_Z);
         this.skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(compound.getString(TAG_SKIN_PART));
     }
     
@@ -47,6 +58,9 @@ public class TileEntityBoundingBox extends TileEntity {
         compound.setInteger(TAG_PARENT_X, this.parentX);
         compound.setInteger(TAG_PARENT_Y, this.parentY);
         compound.setInteger(TAG_PARENT_Z, this.parentZ);
+        compound.setByte(TAG_GUIDE_X, this.guideX);
+        compound.setByte(TAG_GUIDE_Y, this.guideY);
+        compound.setByte(TAG_GUIDE_Z, this.guideZ);
         if (this.skinPart != null) {
             compound.setString(TAG_SKIN_PART, this.skinPart.getRegistryName());
         }
@@ -85,11 +99,27 @@ public class TileEntityBoundingBox extends TileEntity {
         return this.skinPart;
     }
     
-    public void setParent(int x, int y, int z, IEquipmentSkinPart skinPart) {
+    public void setParent(int x, int y, int z,byte guideX, byte guideY, byte guideZ,
+            IEquipmentSkinPart skinPart) {
         this.parentX = x;
         this.parentY = y;
         this.parentZ = z;
+        this.guideX = guideX;
+        this.guideY = guideY;
+        this.guideZ = guideZ;
         this.skinPart = skinPart;
         this.markDirty();
+    }
+    
+    public byte getGuideX() {
+        return this.guideX;
+    }
+    
+    public byte getGuideY() {
+        return this.guideY;
+    }
+    
+    public byte getGuideZ() {
+        return this.guideZ;
     }
 }

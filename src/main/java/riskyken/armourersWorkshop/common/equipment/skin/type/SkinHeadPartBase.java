@@ -69,4 +69,9 @@ public class SkinHeadPartBase extends EquipmentSkinPartBase implements IEquipmen
     public boolean isTextureMirrored() {
         return false;
     }
+    
+    @Override
+    public Point3i getTextureModelSize() {
+        return new Point3i(8, 8, 8);
+    }
 }

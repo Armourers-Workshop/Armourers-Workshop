@@ -14,8 +14,8 @@ import riskyken.armourersWorkshop.common.Rectangle3D;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinPartData;
+import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -181,14 +181,22 @@ public final class ArmourerWorldHelper {
                     int yTar = y + iy + -offset.y + guideSpace.y - buildSpace.y;
                     int zTar = z + iz + -offset.z + guideSpace.z;
                     
+                    //TODO Set skinPart to left and right legs for skirt.
+                    IEquipmentSkinPart guidePart = skinPart;
+                    byte guideX = (byte) ix;
+                    byte guideY = (byte) iy;
+                    byte guideZ = (byte) iz;
+                    
                     if (world.isAirBlock(xTar, yTar, zTar)) {
                         world.setBlock(xTar, yTar, zTar, ModBlocks.boundingBox);
                         TileEntity te = null;
                         te = world.getTileEntity(xTar, yTar, zTar);
                         if (te != null && te instanceof TileEntityBoundingBox) {
-                            ((TileEntityBoundingBox)te).setParent(parentX, parentY, parentZ, skinPart);
+                            ((TileEntityBoundingBox)te).setParent(parentX, parentY, parentZ,
+                                    guideX, guideY, guideZ, guidePart);
                         } else {
-                            te = new TileEntityBoundingBox(parentX, parentY, parentZ, skinPart);
+                            te = new TileEntityBoundingBox(parentX, parentY, parentZ,
+                                    guideX, guideY, guideZ, guidePart);
                             world.setTileEntity(xTar, yTar, zTar, te);
                         }
                     }

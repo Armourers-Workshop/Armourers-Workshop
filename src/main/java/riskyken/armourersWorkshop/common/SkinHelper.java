@@ -75,7 +75,6 @@ public final class SkinHelper {
         Minecraft mc = Minecraft.getMinecraft();
         Map map = mc.func_152342_ad().func_152788_a(gameProfile);
         
-        
         try {
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
