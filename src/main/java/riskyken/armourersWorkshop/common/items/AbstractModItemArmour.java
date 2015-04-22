@@ -78,6 +78,13 @@ public class AbstractModItemArmour extends ItemArmor {
                     list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
                 }
             }
+        } else {
+            if (EquipmentNBTHelper.stackHasLegacySkinData(stack)) {
+                list.add(cRed + "Old skin type. Place in crafting grid to restore.");
+            } else {
+                list.add(cRed + "ERROR: Invalid equipment skin.");
+                list.add(cRed + "Please delete.");
+            }
         }
         
         unlocalized = stack.getUnlocalizedName() + ".flavour";
