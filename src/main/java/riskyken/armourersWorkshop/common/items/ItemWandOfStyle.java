@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.equipment.npc.NpcEquipmentDataHandler;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
@@ -26,10 +27,12 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
-        if (entity.worldObj.isRemote) {
-            return false;
+        if (NpcEquipmentDataHandler.INSTANCE.isValidEntity(entity)) {
+            if (entity.worldObj.isRemote) {
+                return true;
+            }
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ENTITY_SKIN_INVENTORY, entity.worldObj, entity.getEntityId(), 0, 0);
         }
-        FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ENTITY_SKIN_INVENTORY, entity.worldObj, entity.getEntityId(), 0, 0);
-        return true;
+        return false;
     }
 }

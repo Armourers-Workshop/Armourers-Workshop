@@ -1,8 +1,10 @@
 package riskyken.armourersWorkshop.common.equipment.npc;
 
+import java.util.HashSet;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -16,12 +18,16 @@ public final class NpcEquipmentDataHandler {
     
     public static NpcEquipmentDataHandler INSTANCE;
     
+    private static HashSet<Class<? extends EntityLivingBase>> validEntities;
+    
     public static void init() {
         INSTANCE = new NpcEquipmentDataHandler();
     }
     
     public NpcEquipmentDataHandler() {
         MinecraftForge.EVENT_BUS.register(this);
+        validEntities = new HashSet<Class<? extends EntityLivingBase>>();
+        validEntities.add(EntityZombie.class);
     }
     
     @SubscribeEvent
@@ -37,17 +43,18 @@ public final class NpcEquipmentDataHandler {
         }
     }
     
-    @SubscribeEvent
-    public void onStopTracking(PlayerEvent.StopTracking event) {
-        //ModLogger.log("stop tracking");
+    public boolean isValidEntity(Entity entity) {
+        if (entity instanceof EntityLivingBase) {
+            if (validEntities.contains(entity.getClass())) {
+                return true;
+            }
+        }
+        return false;
     }
     
     @SubscribeEvent
     public void onEntityConstructing(EntityConstructing event) {
-        if (event.entity instanceof EntityZombie) {
-            ExPropsEntityEquipmentData.register(event.entity);
-        }
-        if (event.entity instanceof EntitySkeleton) {
+        if (isValidEntity(event.entity)) {
             ExPropsEntityEquipmentData.register(event.entity);
         }
     }

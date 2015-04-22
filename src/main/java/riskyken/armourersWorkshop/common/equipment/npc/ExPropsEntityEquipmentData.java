@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
+import riskyken.armourersWorkshop.common.inventory.InventoryEntitySkin;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerEntityEquipmentData;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
