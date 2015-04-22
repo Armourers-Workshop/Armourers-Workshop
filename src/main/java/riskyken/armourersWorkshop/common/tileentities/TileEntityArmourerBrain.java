@@ -22,6 +22,7 @@ import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -95,6 +96,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
             return;
         }
         
+        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
             return;
@@ -129,8 +132,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
+        
+        SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stackInput);
 
-        if (skinType != null && stackInput.getItemDamage() != skinType.getId()) {
+        if (skinType != null && skinType != skinData.skinType) {
             return;
         }
         

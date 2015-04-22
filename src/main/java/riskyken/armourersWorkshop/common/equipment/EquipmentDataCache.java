@@ -86,6 +86,9 @@ public final class EquipmentDataCache {
         if (equipmentDataCache.containsKey(queueMessage.equipmentId)) {
             EquipmentSkinTypeData equpmentData = equipmentDataCache.get(queueMessage.equipmentId);
             PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData), queueMessage.player);
+        } else {
+            ModLogger.log(Level.ERROR, "Equipment id:" + queueMessage.equipmentId +" was requested by "
+        + queueMessage.player.getCommandSenderName() + " but was not found.");
         }
     }
     
