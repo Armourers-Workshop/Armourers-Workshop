@@ -7,11 +7,11 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.npc.ExPropsEntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.npc.ExPropsEntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -63,7 +63,7 @@ public final class NpcEquipmentRenderHandler {
         GL11.glPopMatrix();
     }
     
-    private void renderEquipmentType(IEquipmentSkinType skinType, EntityEquipmentData equipmentData) {
+    private void renderEquipmentType(ISkinType skinType, EntityEquipmentData equipmentData) {
         if (equipmentData.haveEquipment(skinType)) {
             int id = equipmentData.getEquipmentId(skinType);
             ItemStackRenderHelper.renderItemModelFromId(id, skinType);

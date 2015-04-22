@@ -12,17 +12,17 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
-import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.data.InvalidCubeTypeException;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.ISkinHolder;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -43,7 +43,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     private ForgeDirection direction;
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;
-    private IEquipmentSkinType skinType;
+    private ISkinType skinType;
     private boolean showGuides;
     private boolean showOverlay;
     private String customName;
@@ -82,7 +82,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         String authorName = player.getCommandSenderName();
         String customName = name;
         
-        EquipmentSkinTypeData armourItemData = null;
+        Skin armourItemData = null;
         
         try {
             armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinType, authorName, customName, tags,
@@ -96,7 +96,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
             return;
         }
         
-        EquipmentDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
@@ -133,14 +133,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
             return;
         }
         
-        SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stackInput);
+        SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stackInput);
 
         if (skinType != null && skinType != skinData.skinType) {
             return;
         }
         
         int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
-        EquipmentSkinTypeData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
+        Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
@@ -199,7 +199,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         return bb;
     }
 
-    public IEquipmentSkinType getSkinType() {
+    public ISkinType getSkinType() {
         return skinType;
     }
     
@@ -215,7 +215,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         return gameProfile;
     }
     
-    public void setSkinType(IEquipmentSkinType skinType) {
+    public void setSkinType(ISkinType skinType) {
         if (this.skinType == skinType) {
             return;
         }

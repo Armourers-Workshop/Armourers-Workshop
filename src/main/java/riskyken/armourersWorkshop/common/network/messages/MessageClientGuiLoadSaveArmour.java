@@ -3,8 +3,8 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -15,12 +15,12 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
 
     Byte type;
     String filename;
-    EquipmentSkinTypeData itemData;
+    Skin itemData;
     boolean load;
     
     public MessageClientGuiLoadSaveArmour() { }
     
-    public MessageClientGuiLoadSaveArmour(EquipmentSkinTypeData itemData, boolean load) {
+    public MessageClientGuiLoadSaveArmour(Skin itemData, boolean load) {
         this.type = 1;
         this.itemData = itemData;
         this.load = load;
@@ -39,7 +39,7 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
         if (type == 0) {
             this.filename = ByteBufUtils.readUTF8String(buf);
         } else {
-            itemData = new EquipmentSkinTypeData(buf);
+            itemData = new Skin(buf);
         }
     }
 

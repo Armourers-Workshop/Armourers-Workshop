@@ -10,7 +10,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
-import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;

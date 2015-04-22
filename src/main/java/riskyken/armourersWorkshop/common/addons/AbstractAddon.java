@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 

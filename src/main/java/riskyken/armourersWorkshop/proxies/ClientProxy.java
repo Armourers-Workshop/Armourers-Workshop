@@ -29,12 +29,12 @@ import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.npc.NpcEquipmentDataHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.npc.NpcEquipmentDataHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -145,7 +145,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void receivedEquipmentData(EquipmentSkinTypeData equipmentData) {
+    public void receivedEquipmentData(Skin equipmentData) {
         ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
     }
     

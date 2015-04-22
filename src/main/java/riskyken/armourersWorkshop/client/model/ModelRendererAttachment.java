@@ -8,16 +8,16 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinPartData;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,12 +25,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelRendererAttachment extends ModelRenderer {
 
-    private final IEquipmentSkinType skinType;
-    private final IEquipmentSkinPart skinPart;
+    private final ISkinType skinType;
+    private final ISkinPartType skinPart;
     private final Minecraft mc;
     private ModelBiped baseModel;
     
-    public ModelRendererAttachment(ModelBiped modelBase, IEquipmentSkinType skinType, IEquipmentSkinPart skinPart) {
+    public ModelRendererAttachment(ModelBiped modelBase, ISkinType skinType, ISkinPartType skinPart) {
         super(modelBase);
         this.baseModel = modelBase;
         mc = Minecraft.getMinecraft();
@@ -59,7 +59,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.mcProfiler.endSection();
             return;
         }
-        EquipmentSkinTypeData data = modelRenderer.getPlayerCustomArmour(player, skinType);
+        Skin data = modelRenderer.getPlayerCustomArmour(player, skinType);
         if (data == null) {
             mc.mcProfiler.endSection();
             return;
@@ -68,8 +68,8 @@ public class ModelRendererAttachment extends ModelRenderer {
         data.onRender();
         int size = data.getParts().size();
         for (int i = 0; i < size; i++) {
-            EquipmentSkinPartData partData = data.getParts().get(i);
-            if (partData.getSkinPart() == skinPart) {
+            SkinPart partData = data.getParts().get(i);
+            if (partData.getPartType() == skinPart) {
                 GL11.glPushMatrix();
                 if (skinType == SkinTypeRegistry.skinSkirt && skinPart.getRegistryName().equals("armourers:skirt.base")) {
                     GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);

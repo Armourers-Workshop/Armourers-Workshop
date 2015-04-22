@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -28,7 +28,7 @@ public class MessageClientRequestEquipmentDataData implements IMessage, IMessage
 
     @Override
     public IMessage onMessage(MessageClientRequestEquipmentDataData message, MessageContext ctx) {
-        EquipmentDataCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, ctx.getServerHandler().playerEntity);
+        SkinDataCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, ctx.getServerHandler().playerEntity);
         return null;
     }
 

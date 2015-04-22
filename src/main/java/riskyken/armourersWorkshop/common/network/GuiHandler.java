@@ -15,8 +15,6 @@ import riskyken.armourersWorkshop.client.gui.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
-import riskyken.armourersWorkshop.common.equipment.ExPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.npc.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
@@ -28,6 +26,8 @@ import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.npc.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;

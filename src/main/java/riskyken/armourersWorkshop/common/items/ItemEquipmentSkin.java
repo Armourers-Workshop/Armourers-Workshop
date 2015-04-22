@@ -11,20 +11,19 @@ import net.minecraft.util.IIcon;
 
 import org.lwjgl.input.Keyboard;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
-import riskyken.armourersWorkshop.common.equipment.cubes.Cube;
-import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlass;
-import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlassGlowing;
-import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlowing;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.common.skin.cubes.Cube;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeGlass;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeGlassGlowing;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeGlowing;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -34,8 +33,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
         super(LibItemNames.EQUIPMENT_SKIN, false);
     }
     
-    public IEquipmentSkinType getSkinType(ItemStack stack) {
-        return EquipmentDataHandler.INSTANCE.getSkinTypeFromStack(stack);
+    public ISkinType getSkinType(ItemStack stack) {
+        return EquipmentNBTHelper.getSkinTypeFromStack(stack);
     }
     
     @Override
@@ -47,9 +46,9 @@ public class ItemEquipmentSkin extends AbstractModItem {
         String cYellow = EnumChatFormatting.YELLOW.toString();
         
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
             if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                EquipmentSkinTypeData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+                Skin data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                 if (!data.getCustomName().trim().isEmpty()) {
                     list.add(cGold + "Name: " + cGray + data.getCustomName());
                 }
@@ -118,7 +117,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
         }
         
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
             if (skinData.skinType != null) {
                 if (skinData.skinType.getIcon() != null) {
                     return skinData.skinType.getIcon();

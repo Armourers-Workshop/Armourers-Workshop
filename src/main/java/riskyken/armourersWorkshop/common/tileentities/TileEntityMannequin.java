@@ -8,17 +8,17 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
@@ -61,7 +61,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         if (!worldObj.isRemote) {
             if (itemstack == null) {
-                IEquipmentSkinType skinType = SkinTypeHelper.getSkinTypeForSlot(i);
+                ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(i);
                 if (skinType != null) {
                     equipmentData.removeEquipment(skinType);
                     markDirty();
@@ -76,8 +76,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public void setEquipment(ItemStack stack) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
-            EquipmentSkinTypeData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(skinData.skinId);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(skinData.skinId);
             setEquipment(equipmentData.getSkinType(), skinData.skinId);
         }
     }
@@ -128,7 +128,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         }
     }
     
-    public void setEquipment(IEquipmentSkinType skinType, int equipmentId) {
+    public void setEquipment(ISkinType skinType, int equipmentId) {
         equipmentData.addEquipment(skinType, equipmentId);
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);

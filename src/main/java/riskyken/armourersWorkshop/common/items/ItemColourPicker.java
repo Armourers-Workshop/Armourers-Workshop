@@ -16,12 +16,12 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPart;
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinPartTextured;
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -85,7 +85,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             if (te != null && te instanceof TileEntityBoundingBox && world.isRemote) {
                 TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
                 if (parent != null) {
-                    IEquipmentSkinType skinType = parent.getSkinType();
+                    ISkinType skinType = parent.getSkinType();
                     if (skinPartHasTexture(((TileEntityBoundingBox)te).getSkinPart())) {
                         int colour = getColourFromSkin((TileEntityBoundingBox)te, player, world, x, y, z, side);
                         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
@@ -100,12 +100,12 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         return false;
     }
     
-    private boolean skinPartHasTexture(IEquipmentSkinPart skinPart) {
-        return skinPart instanceof IEquipmentSkinPartTextured;
+    private boolean skinPartHasTexture(ISkinPartType skinPart) {
+        return skinPart instanceof ISkinPartTypeTextured;
     }
     
     private int getColourFromSkin(TileEntityBoundingBox te, EntityPlayer player, World world, int x, int y, int z, int side) {
-        IEquipmentSkinPartTextured skinPart = (IEquipmentSkinPartTextured) te.getSkinPart();
+        ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
         Point textureLocation = skinPart.getTextureLocation();
         Point3i textureModelSize = skinPart.getTextureModelSize();
         ForgeDirection blockFace = ForgeDirection.getOrientation(side);

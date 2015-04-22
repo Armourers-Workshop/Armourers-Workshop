@@ -13,11 +13,14 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.common.addons.AbstractAddon;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 
 public class RenderItemBowSkin implements IItemRenderer {
     
@@ -92,10 +95,13 @@ public class RenderItemBowSkin implements IItemRenderer {
 
             boolean isBlocking = false;
             
+            int useCount = 0;
+            
             if (data.length >= 2) {
                 if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
                     RenderBlocks renderBlocks = (RenderBlocks) data[0];
                     AbstractClientPlayer player = (AbstractClientPlayer) data[1];
+                    useCount = player.getItemInUseDuration();
                     isBlocking = player.isBlocking();
                 }
             }
@@ -119,7 +125,17 @@ public class RenderItemBowSkin implements IItemRenderer {
                 break;
             }
             GL11.glEnable(GL11.GL_CULL_FACE);
-            ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinBow);
+            
+            ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
+            if (model != null) {
+                model.bowUse = useCount;
+                int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
+                Skin skin = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+                model.render(null, skin);
+            } else {
+                ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinBow);
+            }
+            
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
@@ -139,7 +155,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     private boolean canRenderModel(ItemStack stack) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
             if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 return true;
             } else {

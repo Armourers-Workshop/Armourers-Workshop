@@ -15,15 +15,15 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.common.equipment.cubes.Cube;
-import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlass;
-import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlassGlowing;
-import riskyken.armourersWorkshop.common.equipment.cubes.CubeGlowing;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.skin.cubes.Cube;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeGlass;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeGlassGlowing;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeGlowing;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -52,9 +52,9 @@ public class AbstractModItemArmour extends ItemArmor {
         String localized;
         
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
             if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                EquipmentSkinTypeData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+                Skin data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                 if (!data.getCustomName().trim().isEmpty()) {
                     list.add(cGold + "Name: " + cGray + data.getCustomName());
                 }
@@ -145,11 +145,11 @@ public class AbstractModItemArmour extends ItemArmor {
             return null;
         }
         
-        SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+        SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
         
         AbstractModelCustomEquipment targetModel = null;
         EquipmentModelRenderer emr = EquipmentModelRenderer.INSTANCE;
-        EquipmentSkinTypeData data = emr.getCustomArmourItemData(skinData.skinId);
+        Skin data = emr.getCustomArmourItemData(skinData.skinId);
         if (data == null) {
             return null;
         }

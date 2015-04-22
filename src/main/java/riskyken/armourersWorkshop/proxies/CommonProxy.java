@@ -4,10 +4,10 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 
 public class CommonProxy {
     
@@ -55,7 +55,7 @@ public class CommonProxy {
         return 0;
     }
     
-    public void receivedEquipmentData(EquipmentSkinTypeData equipmentData) {
+    public void receivedEquipmentData(Skin equipmentData) {
         
     }
     

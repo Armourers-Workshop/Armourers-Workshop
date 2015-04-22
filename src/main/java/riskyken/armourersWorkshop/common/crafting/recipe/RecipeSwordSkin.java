@@ -5,11 +5,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 
 public class RecipeSwordSkin implements IRecipe {
 
@@ -73,7 +73,7 @@ public class RecipeSwordSkin implements IRecipe {
         if (skinStack != null && swordStack != null) {
             ItemStack returnStack = swordStack.copy();
             
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(skinStack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
             EquipmentNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, true);
             
             return returnStack;

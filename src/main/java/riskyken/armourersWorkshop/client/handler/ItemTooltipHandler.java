@@ -7,10 +7,10 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -38,11 +38,11 @@ public class ItemTooltipHandler {
         String cYellow = EnumChatFormatting.YELLOW.toString();
         
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
             if (skinData.lockSkin) {
                 list.add(cGold + "Has armouerer's skin" + cGray);
                 if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                    EquipmentSkinTypeData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+                    Skin data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                     if (!data.getCustomName().trim().isEmpty()) {
                         list.add(cGold + "Name: " + cGray + data.getCustomName());
                     }

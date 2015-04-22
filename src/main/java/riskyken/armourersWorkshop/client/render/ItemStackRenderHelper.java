@@ -5,13 +5,13 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,23 +27,23 @@ public final class ItemStackRenderHelper {
 
     public static void renderItemAsArmourModel(ItemStack stack) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(stack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
             renderItemModelFromId(skinData.skinId, skinData.skinType);
         }
     }
     
-    public static void renderItemAsArmourModel(ItemStack stack, IEquipmentSkinType skinType) {
+    public static void renderItemAsArmourModel(ItemStack stack, ISkinType skinType) {
         int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
         renderItemModelFromId(equipmentId, skinType);
     }
     
-    public static void renderItemModelFromId(int equipmentId, IEquipmentSkinType skinType) {
+    public static void renderItemModelFromId(int equipmentId, ISkinType skinType) {
         IEquipmentModel targetModel = EquipmentModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
         if (targetModel == null) {
             return;
         }
         
-        EquipmentSkinTypeData data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+        Skin data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
         if (data == null) {
             return;
         }

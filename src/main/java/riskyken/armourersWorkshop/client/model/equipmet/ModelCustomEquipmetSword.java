@@ -9,9 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinPartData;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -19,22 +19,22 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ModelCustomEquipmetSword extends AbstractModelCustomEquipment {
 
     @Override
-    public void render(Entity entity, EquipmentSkinTypeData armourData, float limb1, float limb2, float limb3, float headY, float headX) {
+    public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
         render(entity, armourData);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, EquipmentSkinTypeData armourData) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData) {
         setRotationFromModelBiped(modelBiped);
         render(entity, armourData);
     }
     
     @Override
-    public void render(Entity entity, EquipmentSkinTypeData armourData) {
+    public void render(Entity entity, Skin armourData) {
         if (armourData == null) { return; }
         
-        ArrayList<EquipmentSkinPartData> parts = armourData.getParts();
+        ArrayList<SkinPart> parts = armourData.getParts();
         
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -50,7 +50,7 @@ public class ModelCustomEquipmetSword extends AbstractModelCustomEquipment {
         armourData.onRender();
         
         for (int i = 0; i < parts.size(); i++) {
-            EquipmentSkinPartData part = parts.get(i);
+            SkinPart part = parts.get(i);
             
             GL11.glPushMatrix();
             if (isChild) {
@@ -59,9 +59,9 @@ public class ModelCustomEquipmetSword extends AbstractModelCustomEquipment {
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
 
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getSkinPart());
+            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
-            if (part.getSkinPart().getPartName().equals("base")) {
+            if (part.getPartType().getPartName().equals("base")) {
                 renderRightArm(part, SCALE);
             }
             
@@ -73,7 +73,7 @@ public class ModelCustomEquipmetSword extends AbstractModelCustomEquipment {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderRightArm(EquipmentSkinPartData part, float scale) {
+    private void renderRightArm(SkinPart part, float scale) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);

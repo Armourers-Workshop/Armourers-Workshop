@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
 
 public class RecipeSkinCopy implements IRecipe {
 
@@ -21,7 +21,7 @@ public class RecipeSkinCopy implements IRecipe {
             if (stack != null) {
                 Item item = stack.getItem();
                 
-                if (EquipmentNBTHelper.stackHasSkinData(stack) && EquipmentNBTHelper.getSkinNBTDataFromStack(stack).lockSkin && item != ModItems.equipmentSkin) {
+                if (EquipmentNBTHelper.stackHasSkinData(stack) && EquipmentNBTHelper.getSkinPointerFromStack(stack).lockSkin && item != ModItems.equipmentSkin) {
                     if (skinStack != null) {
                         return false;
                     }
@@ -51,7 +51,7 @@ public class RecipeSkinCopy implements IRecipe {
             if (stack != null) {
                 Item item = stack.getItem();
                 
-                if (EquipmentNBTHelper.stackHasSkinData(stack) && EquipmentNBTHelper.getSkinNBTDataFromStack(stack).lockSkin && item != ModItems.equipmentSkin) {
+                if (EquipmentNBTHelper.stackHasSkinData(stack) && EquipmentNBTHelper.getSkinPointerFromStack(stack).lockSkin && item != ModItems.equipmentSkin) {
                     if (skinStack != null) {
                         return null;
                     }
@@ -70,7 +70,7 @@ public class RecipeSkinCopy implements IRecipe {
         
         if (skinStack != null && blackStack != null) {
             ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
-            SkinNBTData skinData = EquipmentNBTHelper.getSkinNBTDataFromStack(skinStack);
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
             EquipmentNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, false);
             return returnStack;
         }

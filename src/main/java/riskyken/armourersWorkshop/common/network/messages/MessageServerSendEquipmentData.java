@@ -2,24 +2,24 @@ package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageServerSendEquipmentData implements IMessage, IMessageHandler<MessageServerSendEquipmentData, IMessage> {
 
-    EquipmentSkinTypeData equipmentData;
+    Skin equipmentData;
     
     public MessageServerSendEquipmentData() {}
     
-    public MessageServerSendEquipmentData(EquipmentSkinTypeData equipmentData) {
+    public MessageServerSendEquipmentData(Skin equipmentData) {
         this.equipmentData = equipmentData;
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.equipmentData = new EquipmentSkinTypeData(buf);
+        this.equipmentData = new Skin(buf);
     }
 
     @Override

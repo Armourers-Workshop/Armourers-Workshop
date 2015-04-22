@@ -9,15 +9,15 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
 import riskyken.armourersWorkshop.common.download.SkinDownloadManager;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentDataManager;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.cubes.CubeRegistry;
-import riskyken.armourersWorkshop.common.equipment.npc.NpcEquipmentDataHandler;
-import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.npc.NpcEquipmentDataHandler;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
@@ -87,7 +87,7 @@ public class ArmourersWorkshop {
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandArmourers());
-        EquipmentDataCache.init();
+        SkinDataCache.init();
     }
     
     @Mod.EventHandler

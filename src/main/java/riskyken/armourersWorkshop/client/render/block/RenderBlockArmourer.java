@@ -7,9 +7,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.relauncher.Side;
@@ -23,7 +24,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         float scale = 0.0625F;
         
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
-        IEquipmentSkinType skinType = te.getSkinType();
+        ISkinType skinType = te.getSkinType();
         
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;
@@ -58,9 +59,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glScalef(16, 16, 16);
         
         if (skinType != null) {
-            skinType.renderBuildingGuide(scale, te.isShowOverlay(), false);
+            SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), false);
             if (te.isShowGuides()) {
-                skinType.renderBuildingGrid(scale);
+                SkinRenderHelper.renderBuildingGrid(skinType, scale);
             }
         }
         

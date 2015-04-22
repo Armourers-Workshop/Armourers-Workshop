@@ -5,8 +5,8 @@ import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.network.ByteBufHelper;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

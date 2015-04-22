@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
-import riskyken.armourersWorkshop.common.equipment.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 
 public final class HolidayHelper {
     

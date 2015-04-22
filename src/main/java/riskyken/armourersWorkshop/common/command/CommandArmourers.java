@@ -9,11 +9,11 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import riskyken.armourersWorkshop.common.equipment.ExPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.data.EquipmentSkinTypeData;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
@@ -66,7 +66,7 @@ public class CommandArmourers extends CommandBase {
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
-            EquipmentSkinTypeData armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
+            Skin armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
@@ -84,7 +84,7 @@ public class CommandArmourers extends CommandBase {
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
-            EquipmentSkinTypeData armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
+            Skin armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
