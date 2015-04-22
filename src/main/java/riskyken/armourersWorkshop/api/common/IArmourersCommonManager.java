@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.api.common;
 
 import riskyken.armourersWorkshop.api.common.skin.ISkinDataHandler;
+import riskyken.armourersWorkshop.api.common.skin.npc.INpcSkinDataHandler;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
 
 /**
@@ -15,5 +16,5 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
  */
 public interface IArmourersCommonManager {
     
-    public void onLoad(ISkinDataHandler dataHandler, ISkinTypeRegistry skinTypeRegistry);
+    public void onLoad(ISkinDataHandler skinDataHandler, ISkinTypeRegistry skinTypeRegistry, INpcSkinDataHandler npcSkinDataHandler);
 }

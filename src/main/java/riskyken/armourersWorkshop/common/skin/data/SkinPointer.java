@@ -7,7 +7,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class SkinPointer implements ISkinPointer {
 
-    private static final String TAG_SKIN_DATA = "armourersWorkshop";
+    public static final String TAG_SKIN_DATA = "armourersWorkshop";
     private static final String TAG_SKIN_TYPE = "skinType";
     private static final String TAG_SKIN_ID = "skinId";
     private static final String TAG_SKIN_LOCK = "lock";
@@ -17,6 +17,12 @@ public class SkinPointer implements ISkinPointer {
     public boolean lockSkin;
     
     public SkinPointer() {
+    }
+    
+    public SkinPointer(ISkinPointer skinPointer) {
+        this.skinType = skinPointer.getSkinType();
+        this.skinId = skinPointer.getSkinId();
+        this.lockSkin = false;
     }
     
     public SkinPointer(ISkinType skinType, int skinId, boolean lockSkin) {
@@ -35,7 +41,6 @@ public class SkinPointer implements ISkinPointer {
         return skinType;
     }
     
-    @Override
     public void readFromCompound(NBTTagCompound compound) {
         NBTTagCompound skinDataCompound = compound.getCompoundTag(TAG_SKIN_DATA);
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinDataCompound.getString(TAG_SKIN_TYPE));
@@ -43,7 +48,6 @@ public class SkinPointer implements ISkinPointer {
         this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
     }
     
-    @Override
     public void writeToCompound(NBTTagCompound compound) {
         NBTTagCompound skinDataCompound = new NBTTagCompound();
         skinDataCompound.setString(TAG_SKIN_TYPE, this.skinType.getRegistryName());

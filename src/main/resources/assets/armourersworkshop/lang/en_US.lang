@@ -55,13 +55,19 @@ item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to put on NPC's.
 
 # Skin Types
-skinType.armourersworkshop:armourers:head.name=Head
-skinType.armourersworkshop:armourers:chest.name=Chest
-skinType.armourersworkshop:armourers:legs.name=Legs
-skinType.armourersworkshop:armourers:skirt.name=Skirt
-skinType.armourersworkshop:armourers:feet.name=Feet
-skinType.armourersworkshop:armourers:sword.name=Sword
-skinType.armourersworkshop:armourers:bow.name=Bow
+skinType.armourers:head.name=Head
+skinType.armourers:chest.name=Chest
+skinType.armourers:legs.name=Legs
+skinType.armourers:skirt.name=Skirt
+skinType.armourers:feet.name=Feet
+skinType.armourers:sword.name=Sword
+skinType.armourers:bow.name=Bow
+
+# Skin Part Types
+skinPartType.armourers:head.base.name=Head
+skinPartType.armourers:chest.base.name=Head
+skinPartType.armourers:chest.leftArm.name=Left Arm
+skinPartType.armourers:chest.rightArm.name=Right Arm
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer

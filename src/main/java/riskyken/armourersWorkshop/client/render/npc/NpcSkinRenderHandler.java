@@ -17,15 +17,15 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public final class NpcEquipmentRenderHandler {
+public final class NpcSkinRenderHandler {
     
-    public static NpcEquipmentRenderHandler INSTANCE;
+    public static NpcSkinRenderHandler INSTANCE;
     
     public static void init() {
-        INSTANCE = new NpcEquipmentRenderHandler();
+        INSTANCE = new NpcSkinRenderHandler();
     }
     
-    public NpcEquipmentRenderHandler() {
+    public NpcSkinRenderHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     

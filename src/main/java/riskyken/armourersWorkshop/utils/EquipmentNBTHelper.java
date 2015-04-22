@@ -10,12 +10,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 public class EquipmentNBTHelper {
     
     private static final String TAG_OLD_SKIN_DATA = "armourData";
-    public static final String TAG_OLD_SKIN_ID = "equpmentId";
-    
-    private static final String TAG_SKIN_DATA = "armourersWorkshop";
-    private static final String TAG_SKIN_TYPE = "skinType";
-    private static final String TAG_SKIN_ID = "skinId";
-    private static final String TAG_SKIN_LOCK = "lock";
+    private static final String TAG_OLD_SKIN_ID = "equpmentId";
     
     public static boolean stackHasSkinData(ItemStack stack) {
         if (stack == null) {
@@ -27,10 +22,20 @@ public class EquipmentNBTHelper {
         }
         
         NBTTagCompound itemCompound = stack.getTagCompound();
-        if (!itemCompound.hasKey(TAG_SKIN_DATA)) {
+        if (!itemCompound.hasKey(SkinPointer.TAG_SKIN_DATA)) {
             return false;
         }
         
+        return true;
+    }
+    
+    public static boolean compoundHasSkinData(NBTTagCompound compound) {
+        if (compound == null) {
+            return false;
+        }
+        if (!compound.hasKey(SkinPointer.TAG_SKIN_DATA)) {
+            return false;
+        }
         return true;
     }
     
@@ -47,8 +52,8 @@ public class EquipmentNBTHelper {
         }
         
         NBTTagCompound itemCompound = stack.getTagCompound();
-        if (itemCompound.hasKey(TAG_SKIN_DATA)) {
-            itemCompound.removeTag(TAG_SKIN_DATA);
+        if (itemCompound.hasKey(SkinPointer.TAG_SKIN_DATA)) {
+            itemCompound.removeTag(SkinPointer.TAG_SKIN_DATA);
         }
     }
     
@@ -101,11 +106,11 @@ public class EquipmentNBTHelper {
         addSkinDataToStack(stack, skinData);
     }
     
-    public static void addSkinDataToStack(ItemStack stack, SkinPointer skinData) {
+    public static void addSkinDataToStack(ItemStack stack, SkinPointer skinPointer) {
         if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
         }
-        skinData.writeToCompound(stack.getTagCompound());
+        skinPointer.writeToCompound(stack.getTagCompound());
     }
     
     public static boolean stackHasLegacySkinData(ItemStack stack) {

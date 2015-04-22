@@ -2,18 +2,15 @@ package riskyken.armourersWorkshop.common.handler;
 
 import java.util.BitSet;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.ISkinDataHandler;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class EquipmentDataHandler implements ISkinDataHandler {
 
@@ -27,13 +24,13 @@ public class EquipmentDataHandler implements ISkinDataHandler {
     }
 
     @Override
-    public ItemStack getSkinForPlayer(EntityPlayer player, ISkinType skinType) {
+    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType) {
         ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         return entityProps.getEquipmentStack(skinType);
     }
 
     @Override
-    public void removeSkinTypeFromPlayer(EntityPlayer player, ISkinType skinType) {
+    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType) {
         ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.clearEquipmentStack(skinType);
     }
@@ -47,10 +44,38 @@ public class EquipmentDataHandler implements ISkinDataHandler {
     public ISkinPointer getSkinPointerFromStack(ItemStack stack) {
         return EquipmentNBTHelper.getSkinPointerFromStack(stack);
     }
+
+    @Override
+    public void saveSkinPointerOnStack(ISkinPointer skinPointer, ItemStack stack) {
+        if (stack == null) {
+            return;
+        }
+        SkinPointer sp = new SkinPointer(skinPointer);
+        EquipmentNBTHelper.addSkinDataToStack(stack, sp);
+    }
     
     @Override
-    public ISkinType getSkinTypeFromStack(ItemStack stack) {
-        return EquipmentNBTHelper.getSkinTypeFromStack(stack);
+    public boolean compoundHasSkinPointer(NBTTagCompound compound) {
+        return EquipmentNBTHelper.compoundHasSkinData(compound);
+    }
+
+    @Override
+    public ISkinPointer readSkinPointerFromCompound(NBTTagCompound compound) {
+        if (!EquipmentNBTHelper.compoundHasSkinData(compound)) {
+            return null;
+        }
+        SkinPointer sp = new SkinPointer();
+        sp.readFromCompound(compound);
+        return sp;
+    }
+
+    @Override
+    public void writeSkinPointerToCompound(ISkinPointer skinPointer, NBTTagCompound compound) {
+        if (compound == null) {
+            return;
+        }
+        SkinPointer sp = new SkinPointer(skinPointer);
+        sp.writeToCompound(compound);
     }
     
     @Override
@@ -61,11 +86,6 @@ public class EquipmentDataHandler implements ISkinDataHandler {
             return armourOverride.get(slotId);
         }
         return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IEntityEquipment getLocalPlayerEquipment(Entity entity) {
-        return EquipmentModelRenderer.INSTANCE.getPlayerCustomEquipmentData(entity);
     }
     
     private ExPropsPlayerEquipmentData getExtendedPropsPlayerForPlayer(EntityPlayer player) {

@@ -12,7 +12,6 @@ import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -52,13 +51,11 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinBow);
         armourData.onRender();
         
-        int tarPart = bowUse / 25;
+        int tarPart = bowUse / 10;
         
         if (tarPart > parts.size() - 1) {
             tarPart = parts.size() - 1;
         }
-        
-        ModLogger.log(tarPart);
         
         SkinPart part = parts.get(tarPart);
             

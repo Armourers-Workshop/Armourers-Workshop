@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
-import riskyken.armourersWorkshop.common.skin.npc.NpcEquipmentDataHandler;
+import riskyken.armourersWorkshop.common.skin.npc.NpcSkinDataHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
@@ -74,7 +74,7 @@ public class ArmourersWorkshop {
         proxy.registerKeyBindings();
         proxy.initRenderers();
         EntityEquipmentDataManager.init();
-        NpcEquipmentDataHandler.init();
+        NpcSkinDataHandler.init();
     }
     
     @Mod.EventHandler

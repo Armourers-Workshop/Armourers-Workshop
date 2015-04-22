@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common.skin.npc;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -11,23 +11,30 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import riskyken.armourersWorkshop.api.common.skin.npc.INpcSkinDataHandler;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public final class NpcEquipmentDataHandler {
+public final class NpcSkinDataHandler implements INpcSkinDataHandler {
     
-    public static NpcEquipmentDataHandler INSTANCE;
+    public static NpcSkinDataHandler INSTANCE;
     
-    private static HashSet<Class<? extends EntityLivingBase>> validEntities;
+    private static HashMap<Class<? extends EntityLivingBase>, INpcSkinDataHandler> entityMap;
+    //private static HashMap<Class<? extends EntityLivingBase>> validEntities;
     
     public static void init() {
-        INSTANCE = new NpcEquipmentDataHandler();
+        INSTANCE = new NpcSkinDataHandler();
     }
     
-    public NpcEquipmentDataHandler() {
+    public NpcSkinDataHandler() {
         MinecraftForge.EVENT_BUS.register(this);
-        validEntities = new HashSet<Class<? extends EntityLivingBase>>();
-        validEntities.add(EntityZombie.class);
+        //validEntities = new HashSet<Class<? extends EntityLivingBase>>();
+        registerEntity(EntityZombie.class);
+    }
+    
+    @Override
+    public void registerEntity(Class<? extends EntityLivingBase> entityClass) {
+        //validEntities.add(entityClass);
     }
     
     @SubscribeEvent
@@ -43,11 +50,12 @@ public final class NpcEquipmentDataHandler {
         }
     }
     
+    @Override
     public boolean isValidEntity(Entity entity) {
         if (entity instanceof EntityLivingBase) {
-            if (validEntities.contains(entity.getClass())) {
-                return true;
-            }
+            //if (validEntities.contains(entity.getClass())) {
+                //return true;
+            //}
         }
         return false;
     }

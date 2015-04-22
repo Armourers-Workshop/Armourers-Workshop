@@ -15,7 +15,7 @@ public interface ISkinTypeRegistry {
      * Register a new skin type.
      * @param skinType
      */
-    public void registerSkin(ISkinType skinType) ;
+    public boolean registerSkin(ISkinType skinType) ;
     
     public ISkinType getSkinTypeFromRegistryName(String registryName);
     
@@ -23,5 +23,13 @@ public interface ISkinTypeRegistry {
     
     public ArrayList<ISkinType> getRegisteredSkinTypes();
     
-    public int getNumberOfSkinRegistered();
+    public ISkinType getSkinTypeHead();
+    
+    public ISkinType getSkinTypeChest();
+    
+    public ISkinType getSkinTypeLegs();
+    
+    public ISkinType getSkinTypeSkirt();
+    
+    public ISkinType getSkinTypeFeet();
 }

@@ -7,11 +7,13 @@ import java.util.LinkedHashMap;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -62,7 +64,24 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     }
     
     @Override
-    public void registerSkin(ISkinType skinType) {
+    public boolean registerSkin(ISkinType skinType) {
+        if (skinType == null) {
+            ModLogger.log(Level.WARN, "A mod tried to register a null skin type.");
+            return false;
+        }
+        if (skinType.getRegistryName() == null | skinType.getRegistryName().trim().isEmpty()) {
+            ModLogger.log(Level.WARN, "A mod tried to register a skin type with an invalid registry name.");
+            return false;
+        }
+        if (skinPartMap.containsKey(skinType.getRegistryName())) {
+            ModLogger.log(Level.WARN, "A mod tried to register a skin type with a registry name that is in use.");
+            return false;
+        }
+        if (skinType.getSkinParts() == null | skinType.getSkinParts().size() == 0) {
+            ModLogger.log(Level.WARN, "A mod tried to register a skin type no skin type parts.");
+            return false;
+        }
+        
         skinType.setId(skinTypeMap.size());
         ModLogger.log("Registering skin type - id:" + skinType.getId() + " name:" + skinType.getRegistryName());
         skinTypeMap.put(skinType.getRegistryName(), skinType);
@@ -73,6 +92,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             ModLogger.log("Registering skin part - name:" + partName);
             skinPartMap.put(partName, skinPart);
         }
+        return true;
     }
     
     public boolean isSkinDisabled(ISkinType skinType) {
@@ -86,6 +106,9 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
     @Override
     public ISkinType getSkinTypeFromRegistryName(String registryName) {
+        if (registryName == null | registryName.trim().isEmpty()) {
+            return null;
+        }
         ISkinType skinType = skinTypeMap.get(registryName);
         if (skinType != null && isSkinDisabled(skinType)) {
             return null;
@@ -120,6 +143,9 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
     @Override
     public ISkinPartType getSkinPartFromRegistryName(String registryName) {
+        if (registryName == null | registryName.trim().isEmpty()) {
+            return null;
+        }
         return skinPartMap.get(registryName);
     }
     
@@ -165,16 +191,20 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         return skinTypes;
     }
     
-    @Override
     public int getNumberOfSkinRegistered() {
         return skinTypeMap.size();
     }
     
     @SideOnly(Side.CLIENT)
     public String getLocalizedSkinTypeName(ISkinType skinType) {
-        String localizedName = "skinType." + LibModInfo.ID.toLowerCase() + ":" + skinType.getRegistryName() + ".name";
-        localizedName = StatCollector.translateToLocal(localizedName);
-        return localizedName;
+        String localizedName = "skinType." + skinType.getRegistryName() + ".name";
+        return StatCollector.translateToLocal(localizedName);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public String getLocalizedSkinPartTypeName(ISkinPartType skinPartType) {
+        String localizedName = "skinPartType." + skinPartType.getRegistryName() + ".name";
+        return StatCollector.translateToLocal(localizedName);
     }
     
     @SideOnly(Side.CLIENT)
@@ -189,5 +219,30 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
                 }
             }
         }
+    }
+
+    @Override
+    public ISkinType getSkinTypeHead() {
+        return skinHead;
+    }
+
+    @Override
+    public ISkinType getSkinTypeChest() {
+        return skinChest;
+    }
+
+    @Override
+    public ISkinType getSkinTypeLegs() {
+        return skinLegs;
+    }
+
+    @Override
+    public ISkinType getSkinTypeSkirt() {
+        return skinSkirt;
+    }
+
+    @Override
+    public ISkinType getSkinTypeFeet() {
+        return skinFeet;
     }
 }
