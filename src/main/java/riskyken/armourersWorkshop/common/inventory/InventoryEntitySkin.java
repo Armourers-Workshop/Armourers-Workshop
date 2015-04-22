@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.equipment.npc;
+package riskyken.armourersWorkshop.common.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
-import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
 
 public class InventoryEntitySkin implements IInventory {
     

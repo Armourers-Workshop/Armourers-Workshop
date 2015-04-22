@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.equipment.npc.InventoryEntitySkin;
 import riskyken.armourersWorkshop.common.inventory.ContainerEntityEquipment;
+import riskyken.armourersWorkshop.common.inventory.InventoryEntitySkin;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 public class GuiEntityEquipment extends GuiContainer {
