@@ -7,9 +7,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.Level;
@@ -24,13 +22,13 @@ import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.GameProfileUtils;
+import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
-import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
-public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
+public class TileEntityArmourerBrain extends AbstractTileEntityInventory implements IGameProfileCallback {
     
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_OWNER = "owner";
@@ -43,6 +41,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     
     private ForgeDirection direction;
     private GameProfile gameProfile = null;
+    private GameProfile newProfile = null;
     private IEquipmentSkinType skinType;
     private boolean showGuides;
     private boolean showOverlay;
@@ -251,20 +250,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    private void updateProfileData(){
-        if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
-            if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
-                GameProfile gameprofile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.gameProfile.getName());
-                if (gameprofile != null) {
-                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
-                    if (property == null) {
-                        gameprofile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameprofile, true);
-                    }
-                    this.gameProfile = gameprofile;
-                    this.markDirty();
-                }
-            }
-        }
+    private void updateProfileData() {
+        GameProfileUtils.updateProfileData(gameProfile, this);
     }
     
     @Override
@@ -331,10 +318,21 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setString(TAG_CUSTOM_NAME, customName);
+        if (this.newProfile != null) {
+            this.gameProfile = newProfile;
+            this.newProfile = null;
+        }
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
+    }
+
+    @Override
+    public void profileUpdated(GameProfile gameProfile) {
+        newProfile = gameProfile;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

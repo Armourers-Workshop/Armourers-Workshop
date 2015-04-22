@@ -7,9 +7,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.api.common.equipment.skin.IEquipmentSkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.BipedRotations;
@@ -21,13 +19,13 @@ import riskyken.armourersWorkshop.common.equipment.skin.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper.SkinNBTData;
+import riskyken.armourersWorkshop.utils.GameProfileUtils;
+import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
-import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
-public class TileEntityMannequin extends AbstractTileEntityInventory {
+public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_ROTATION = "rotation";
@@ -35,6 +33,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     private static final String TAG_HEIGHT_OFFSET = "heightOffset";
     
     private GameProfile gameProfile = null;
+    private GameProfile newProfile = null;
     private MannequinFakePlayer fakePlayer = null;
     
     private EntityEquipmentData equipmentData;
@@ -180,20 +179,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     }
     
     private void updateProfileData(){
-        if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
-            if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
-                GameProfile gameprofile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.gameProfile.getName());
-                if (gameprofile != null) {
-                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
-                    if (property == null) {
-                        gameprofile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameprofile, true);
-                    }
-                    this.gameProfile = gameprofile;
-                    this.markDirty();
-                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                }
-            }
-        }
+        GameProfileUtils.updateProfileData(gameProfile, this);
     }
     
     @Override
@@ -215,6 +201,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         bipedRotations.saveNBTData(compound);
         compound.setBoolean(TAG_IS_DOLL, this.isDoll);
         compound.setInteger(TAG_ROTATION, this.rotation);
+        if (this.newProfile != null) {
+            this.gameProfile = newProfile;
+            this.newProfile = null;
+        }
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
@@ -262,5 +252,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     @Override
     public String getInventoryName() {
         return LibBlockNames.MANNEQUIN;
+    }
+
+    @Override
+    public void profileUpdated(GameProfile gameProfile) {
+        newProfile = gameProfile;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }
