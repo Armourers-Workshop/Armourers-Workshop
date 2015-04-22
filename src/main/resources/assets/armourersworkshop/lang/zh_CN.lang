@@ -136,30 +136,30 @@ keys.armourersworkshop.undo=撤销
 
 # Guide Book
 # Chapter 1
-book.armourersworkshop:guideBook.chapter1.title=内容
+book.armourersworkshop:guideBook.contents.name=内容
 
 # Chapter 2
-book.armourersworkshop:guideBook.chapter2.title=介绍
-book.armourersworkshop:guideBook.chapter2.page1.text=注: 这本书尚未完成.&p欢迎查看时装工坊指导大全.&p这本书将帮你学会使用时装制造.
-book.armourersworkshop:guideBook.chapter2.page2.text=时装制作会是你拥有独一无二的武器和衣服
+book.armourersworkshop:guideBook.introduction.name=介绍
+book.armourersworkshop:guideBook.introduction.paragraph1=注: 这本书尚未完成.&p欢迎查看时装工坊指导大全.&p这本书将帮你学会使用时装制造.
+book.armourersworkshop:guideBook.introduction.paragraph2=时装制作会是你拥有独一无二的武器和衣服
 
 # Chapter 3
-book.armourersworkshop:guideBook.chapter3.title=时装
-book.armourersworkshop:guideBook.chapter3.page1.text=首先你需要制作一个时装工坊.&p将方块放置在空旷地方后右键打开. 你可以看到左边可选择要制作时装的部位.
-book.armourersworkshop:guideBook.chapter3.page2.text=选好部位以后开始使用造型方块来创建你的创意.&p在你完成造型后输入一个物品名然后保存.
+book.armourersworkshop:guideBook.armourer.name=时装
+book.armourersworkshop:guideBook.armourer.paragraph1=首先你需要制作一个时装工坊.&p将方块放置在空旷地方后右键打开. 你可以看到左边可选择要制作时装的部位.
+book.armourersworkshop:guideBook.armourer.paragraph2=选好部位以后开始使用造型方块来创建你的创意.&p在你完成造型后输入一个物品名然后保存.
 
 # Chapter 4
-book.armourersworkshop:guideBook.chapter4.title=时装模板
-book.armourersworkshop:guideBook.chapter4.page1.text=时装模板可以将资源库中的储存好的数据拷贝出来从而直接穿上。
+book.armourersworkshop:guideBook.equipmentTemplates.name=时装模板
+book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=时装模板可以将资源库中的储存好的数据拷贝出来从而直接穿上。
 
 # Chapter 5
-book.armourersworkshop:guideBook.chapter5.title=上色工具
-book.armourersworkshop:guideBook.chapter5.page1.text=大量的便捷上色工具有助于你的创作!&p调色器可以让你使用所有你喜欢的颜色.&p笔刷可以给单个造型方块上色.
-book.armourersworkshop:guideBook.chapter5.page2.text=拾色器&n可以让你复制这个颜色到调色器.&p油漆滚筒&n可以在 3*3*1 方块范围上色.
-book.armourersworkshop:guideBook.chapter5.page3.text=加深工具&n使得造型方块颜色更深.&p减淡工具&n是一个方块.&p随机颜色工具&n在一个有颜色造型方块上在一定范围内随机变色.
-book.armourersworkshop:guideBook.chapter5.page4.text=随机阴影工具&n在一个造型方块上随机改变明度.&p一些工具可以通过潜行和右击来改变设置.
+book.armourersworkshop:guideBook.paintingTools.name=上色工具
+book.armourersworkshop:guideBook.paintingTools.paragraph1=大量的便捷上色工具有助于你的创作!&p调色器可以让你使用所有你喜欢的颜色.&p笔刷可以给单个造型方块上色.
+book.armourersworkshop:guideBook.paintingTools.paragraph2=拾色器&n可以让你复制这个颜色到调色器.&p油漆滚筒&n可以在 3*3*1 方块范围上色.
+book.armourersworkshop:guideBook.paintingTools.paragraph3=加深工具&n使得造型方块颜色更深.&p减淡工具&n是一个方块.&p随机颜色工具&n在一个有颜色造型方块上在一定范围内随机变色.
+book.armourersworkshop:guideBook.paintingTools.paragraph4=随机阴影工具&n在一个造型方块上随机改变明度.&p一些工具可以通过潜行和右击来改变设置.
 
 # Chapter 6
-book.armourersworkshop:guideBook.chapter6.title=设备的衣柜
-book.armourersworkshop:guideBook.chapter6.page1.text=WIP
-book.armourersworkshop:guideBook.chapter6.page2.text=WIP
+book.armourersworkshop:guideBook.equipmentWardrobe.name=设备的衣柜
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=WIP
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
