@@ -33,6 +33,9 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     
     @Override
     public void setInventorySlotContents(int slotId, ItemStack stack) {
+        if (entity.worldObj.isRemote) {
+            return;
+        }
         if (stack == null) {
             ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
             equipmentData.removeEquipment(skinType);

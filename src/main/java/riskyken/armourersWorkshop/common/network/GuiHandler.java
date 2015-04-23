@@ -4,6 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
@@ -33,6 +36,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
@@ -91,6 +95,8 @@ public class GuiHandler implements IGuiHandler {
                         break;
                     }
                     return new ContainerEntityEquipment(player.inventory, entityProps.getSkinInventory());
+                } else {
+                    ModLogger.log(Level.WARN, "Error entity not found");
                 }
                 break;
         }
@@ -156,6 +162,8 @@ public class GuiHandler implements IGuiHandler {
                         break;
                     }
                     return new GuiEntityEquipment(player.inventory, entityProps.getSkinInventory());
+                } else {
+                    ModLogger.log(Level.WARN, "Error entity not found");
                 }
                 break;
         }

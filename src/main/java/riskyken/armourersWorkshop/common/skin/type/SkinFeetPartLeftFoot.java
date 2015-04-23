@@ -14,9 +14,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinFeetPartLeftFoot extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured  {
-
-    @SideOnly(Side.CLIENT)
-    private static final ModelLegs partModel = new ModelLegs();
     
     private Rectangle3D buildingSpace;
     private Rectangle3D guideSpace;
@@ -54,7 +51,7 @@ public class SkinFeetPartLeftFoot extends AbstractSkinPartTypeBase implements IS
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.y * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.y * scale, 0);
-        partModel.renderLeftLeft(scale);
+        ModelLegs.MODEL.renderLeftLeft(scale);
         GL11.glTranslated(0, this.guideSpace.y * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.y * scale, 0);
     }

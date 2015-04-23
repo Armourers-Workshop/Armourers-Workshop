@@ -8,6 +8,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelLegs extends ModelBase {
 
+    public static final ModelLegs MODEL = new ModelLegs();
+    
     private ModelRenderer legLeft;
     private ModelRenderer legRight;
 

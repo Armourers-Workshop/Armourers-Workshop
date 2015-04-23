@@ -15,12 +15,14 @@ import riskyken.armourersWorkshop.api.common.skin.entity.IEntitySkinHandler;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public final class EntitySkinHandler implements IEntitySkinHandler {
     
     public static EntitySkinHandler INSTANCE;
     
-    private static HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity> entityMap;
+    private HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity> entityMap;
     
     public static void init() {
         INSTANCE = new EntitySkinHandler();
@@ -86,6 +88,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         }
     }
     
+    @SideOnly(Side.CLIENT)
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
         World world = Minecraft.getMinecraft().theWorld;
         Entity entity = world.getEntityByID(entityId);

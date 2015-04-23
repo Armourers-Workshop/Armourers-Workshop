@@ -15,9 +15,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured {
 
-    @SideOnly(Side.CLIENT)
-    private static final ModelHead partModel = new ModelHead();
-    
     private Rectangle3D buildingSpace;
     private Rectangle3D guideSpace;
     private Point3i offset;
@@ -54,7 +51,7 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.y * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.y * scale, 0);
-        partModel.render(scale, showSkinOverlay);
+        ModelHead.MODEL.render(scale, showSkinOverlay);
         GL11.glTranslated(0, this.guideSpace.y * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.y * scale, 0);
     }

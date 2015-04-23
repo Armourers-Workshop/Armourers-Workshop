@@ -8,10 +8,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class AbstractSkinTypeBase implements ISkinType {
 
     private int id = -1;
+    
     @SideOnly(Side.CLIENT)
-    protected IIcon icon = null;
+    protected IIcon icon;
+    
     @SideOnly(Side.CLIENT)
-    protected IIcon emptySlotIcon = null;
+    protected IIcon emptySlotIcon;
     
     @SideOnly(Side.CLIENT)
     @Override

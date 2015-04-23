@@ -6,14 +6,10 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinBowPartArrow extends AbstractSkinPartTypeBase {
-
-    @SideOnly(Side.CLIENT)
-    private static final ModelHand partModel = new ModelHand();
     
     private Rectangle3D buildingSpace;
     private Rectangle3D guideSpace;

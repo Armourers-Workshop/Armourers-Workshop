@@ -6,8 +6,13 @@ import net.minecraft.client.model.ModelRenderer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ModelHand extends ModelBase {
+    
+    public static final ModelHand MODEL = new ModelHand();
     
     private ModelRenderer armSolid;
     private ModelRenderer armTransparent;

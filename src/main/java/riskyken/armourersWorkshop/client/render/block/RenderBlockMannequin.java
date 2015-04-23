@@ -13,9 +13,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -87,8 +85,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.getGameProfile() != null) {
             if (te.getGameProfile() != null & te.getWorldObj() != null) {
                 if (fakePlayer == null) {
-                    WorldServer worldServer = MinecraftServer.getServer().worldServerForDimension(te.getWorldObj().provider.dimensionId);
-                    fakePlayer = new MannequinFakePlayer(worldServer, te.getGameProfile());
+                    fakePlayer = new MannequinFakePlayer(te.getWorldObj(), te.getGameProfile());
                     fakePlayer.posX = x;
                     fakePlayer.posY = y;
                     fakePlayer.posZ = z;

@@ -1,13 +1,17 @@
 package riskyken.armourersWorkshop.client.render;
 
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.FakePlayer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.stats.StatBase;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.World;
 
 import com.mojang.authlib.GameProfile;
 
-public class MannequinFakePlayer extends FakePlayer {
+public class MannequinFakePlayer extends EntityPlayer {
     
-    public MannequinFakePlayer(WorldServer world, GameProfile gameProfile) {
+    public MannequinFakePlayer(World world, GameProfile gameProfile) {
         super(world, gameProfile);
     }
     
@@ -65,4 +69,19 @@ public class MannequinFakePlayer extends FakePlayer {
         this.field_71085_bR += d1 * 0.25D;
         this.field_71095_bQ += d0 * 0.25D;
     }
+    
+    @Override public boolean canCommandSenderUseCommand(int i, String s){ return false; }
+    @Override public ChunkCoordinates getPlayerCoordinates()
+    {
+        return new ChunkCoordinates(0,0,0);
+    }
+
+    @Override public void addChatComponentMessage(IChatComponent chatmessagecomponent){}
+    @Override public void addStat(StatBase par1StatBase, int par2){}
+    @Override public void openGui(Object mod, int modGuiId, World world, int x, int y, int z){}
+    @Override public boolean isEntityInvulnerable(){ return true; }
+    @Override public boolean canAttackPlayer(EntityPlayer player){ return false; }
+    @Override public void onDeath(DamageSource source){ return; }
+    @Override public void travelToDimension(int dim){ return; }
+    @Override public void addChatMessage(IChatComponent p_145747_1_) {}
 }

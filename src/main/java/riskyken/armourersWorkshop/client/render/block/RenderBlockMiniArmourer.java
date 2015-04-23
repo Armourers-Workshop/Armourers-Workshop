@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.client.render.block;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -33,7 +33,7 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         if (skinType != null) {
             float rotation = (float)((double)System.currentTimeMillis() / 25 % 360);
             GL11.glRotatef(rotation, 0F, 1F, 0F);
-            bindTexture(AbstractClientPlayer.locationStevePng);
+            bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
             SkinRenderHelper.renderBuildingGuide(skinType, scale, true, false);
             
             //skinType.renderBuildingGrid(scale);

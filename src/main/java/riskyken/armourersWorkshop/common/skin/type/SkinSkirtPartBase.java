@@ -11,9 +11,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinSkirtPartBase extends AbstractSkinPartTypeBase {
-
-    @SideOnly(Side.CLIENT)
-    private static final ModelLegs partModel = new ModelLegs();
     
     private Rectangle3D buildingSpace;
     private Rectangle3D guideSpace;
@@ -53,9 +50,9 @@ public class SkinSkirtPartBase extends AbstractSkinPartTypeBase {
         GL11.glTranslated(0, this.buildingSpace.y * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.y * scale, 0);
         GL11.glTranslated(2 * scale, 0, 0);
-        partModel.renderLeftLeft(scale);
+        ModelLegs.MODEL.renderLeftLeft(scale);
         GL11.glTranslated(-4 * scale, 0, 0);
-        partModel.renderRightLeg(scale);
+        ModelLegs.MODEL.renderRightLeg(scale);
         GL11.glTranslated(2 * scale, 0, 0);
         GL11.glTranslated(0, this.guideSpace.y * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.y * scale, 0);

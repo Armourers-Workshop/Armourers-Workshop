@@ -10,6 +10,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelHead extends ModelBase {
+    
+    public static final ModelHead MODEL = new ModelHead();
 
     private ModelRenderer main;
     private ModelRenderer overlay;

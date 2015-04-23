@@ -163,10 +163,24 @@ public class EquipmentNBTHelper {
         return stack;
     }
     
+    public static ItemStack makeEquipmentSkinStack(SkinPointer skinPointer) {
+        ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
+        stack.setTagCompound(new NBTTagCompound());
+        addSkinDataToStack(stack, skinPointer.getSkinType(), skinPointer.getSkinId(), false);
+        return stack;
+    }
+    
     public static ItemStack makeArmouerContainerStack(Skin equipmentItemData) {
         ItemStack stack = new ItemStack(ModItems.armourContainer[equipmentItemData.getSkinType().getVanillaArmourSlotId()], 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
+        return stack;
+    }
+    
+    public static ItemStack makeArmouerContainerStack(SkinPointer skinPointer) {
+        ItemStack stack = new ItemStack(ModItems.armourContainer[skinPointer.getSkinType().getVanillaArmourSlotId()], 1);
+        stack.setTagCompound(new NBTTagCompound());
+        addSkinDataToStack(stack, skinPointer.getSkinType(), skinPointer.skinId, false);
         return stack;
     }
     

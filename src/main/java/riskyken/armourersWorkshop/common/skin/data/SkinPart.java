@@ -38,7 +38,7 @@ public class SkinPart implements ISkinPart {
     public boolean hasGlowingBlocks;
     
     @SideOnly(Side.CLIENT)
-    public int[] totalCubesInPart = null;
+    public int[] totalCubesInPart;
     @SideOnly(Side.CLIENT)
     public boolean displayNormalCompiled;
     @SideOnly(Side.CLIENT)

@@ -8,6 +8,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelChest extends ModelBase {
 
+    public static final ModelChest MODEL = new ModelChest();
+    
     private ModelRenderer main;
     private ModelRenderer leftArm;
     private ModelRenderer rightArm;

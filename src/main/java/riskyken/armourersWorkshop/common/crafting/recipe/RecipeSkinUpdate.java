@@ -5,9 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.AbstractModItemArmour;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class RecipeSkinUpdate implements IRecipe {
@@ -59,14 +60,14 @@ public class RecipeSkinUpdate implements IRecipe {
         
         if  (oldSkinStack != null) {
             int skinId = EquipmentNBTHelper.getLegacyIdFromStack(oldSkinStack);
-            Skin equipmentItemData = SkinDataCache.INSTANCE.getEquipmentData(skinId);
-            if (equipmentItemData == null) {
-                return null;
-            }
+            ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(oldSkinStack.getItemDamage());
+            
+            SkinPointer skinPointer = new SkinPointer(skinType, skinId, false);
+            
             if (oldSkinStack.getItem() instanceof AbstractModItemArmour) {
-                return EquipmentNBTHelper.makeArmouerContainerStack(equipmentItemData);
+                return EquipmentNBTHelper.makeArmouerContainerStack(skinPointer);
             } else {
-                return EquipmentNBTHelper.makeEquipmentSkinStack(equipmentItemData);
+                return EquipmentNBTHelper.makeEquipmentSkinStack(skinPointer);
             }
         } else {
             return null;
