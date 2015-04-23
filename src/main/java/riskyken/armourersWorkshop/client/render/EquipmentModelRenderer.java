@@ -305,7 +305,7 @@ public final class EquipmentModelRenderer {
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
-    private boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data) {
+    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data) {
         if (data == null) {
             return false;
         }

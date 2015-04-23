@@ -20,10 +20,10 @@ import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
+import riskyken.armourersWorkshop.client.render.entity.EntitySkinRenderHandler;
 import riskyken.armourersWorkshop.client.render.item.RenderItemBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
-import riskyken.armourersWorkshop.client.render.npc.NpcSkinRenderHandler;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
@@ -34,7 +34,7 @@ import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCom
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.npc.NpcSkinDataHandler;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -63,7 +63,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void initRenderers() {
         EquipmentModelRenderer.init();
-        NpcSkinRenderHandler.init();
+        EntitySkinRenderHandler.init();
         ModelMannequin modelMannequin = new ModelMannequin();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
@@ -103,6 +103,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         Addons.initRenderers();
+        EntitySkinRenderHandler.INSTANCE.initRenderer();
     }
 
     @Override
@@ -156,6 +157,6 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
-        NpcSkinDataHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
+        EntitySkinHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
     }
 }

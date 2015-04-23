@@ -1,40 +1,50 @@
-package riskyken.armourersWorkshop.common.skin.npc;
+package riskyken.armourersWorkshop.common.skin.entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.api.common.skin.npc.INpcSkinDataHandler;
+import riskyken.armourersWorkshop.api.common.skin.entity.IEntitySkinHandler;
+import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public final class NpcSkinDataHandler implements INpcSkinDataHandler {
+public final class EntitySkinHandler implements IEntitySkinHandler {
     
-    public static NpcSkinDataHandler INSTANCE;
+    public static EntitySkinHandler INSTANCE;
     
-    private static HashMap<Class<? extends EntityLivingBase>, INpcSkinDataHandler> entityMap;
-    //private static HashMap<Class<? extends EntityLivingBase>> validEntities;
+    private static HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity> entityMap;
     
     public static void init() {
-        INSTANCE = new NpcSkinDataHandler();
+        INSTANCE = new EntitySkinHandler();
     }
     
-    public NpcSkinDataHandler() {
+    public EntitySkinHandler() {
         MinecraftForge.EVENT_BUS.register(this);
-        //validEntities = new HashSet<Class<? extends EntityLivingBase>>();
-        registerEntity(EntityZombie.class);
+        entityMap = new HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity>();
+        registerEntities();
+    }
+    
+    private void registerEntities() {
+        registerEntity(new SkinnableEntityZombie());
     }
     
     @Override
-    public void registerEntity(Class<? extends EntityLivingBase> entityClass) {
-        //validEntities.add(entityClass);
+    public void registerEntity(ISkinnableEntity skinnableEntity) {
+        if (skinnableEntity == null) {
+            return;
+        }
+        if (skinnableEntity.getEntityClass() == null) {
+            return;
+        }
+        entityMap.put(skinnableEntity.getEntityClass(), skinnableEntity);
     }
     
     @SubscribeEvent
@@ -53,9 +63,9 @@ public final class NpcSkinDataHandler implements INpcSkinDataHandler {
     @Override
     public boolean isValidEntity(Entity entity) {
         if (entity instanceof EntityLivingBase) {
-            //if (validEntities.contains(entity.getClass())) {
-                //return true;
-            //}
+            if (entityMap.containsKey(entity.getClass())) {
+                return true;
+            }
         }
         return false;
     }
@@ -76,5 +86,18 @@ public final class NpcSkinDataHandler implements INpcSkinDataHandler {
                 props.setEquipmentData(equipmentData);
             }
         }
+    }
+
+    public ArrayList<ISkinnableEntity> getRegisteredEntities() {
+        ArrayList<ISkinnableEntity> entityList = new ArrayList<ISkinnableEntity>();
+        for (int i = 0; i < entityMap.size(); i++) {
+            Class <? extends EntityLivingBase> entityClass;
+            entityClass = (Class <? extends EntityLivingBase>)entityMap.keySet().toArray()[i];
+            ISkinnableEntity entity = entityMap.get(entityClass);
+            if (entity != null) {
+                entityList.add(entity);
+            }
+        }
+        return entityList;
     }
 }

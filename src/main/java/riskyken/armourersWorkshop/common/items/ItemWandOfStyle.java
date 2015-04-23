@@ -8,7 +8,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.skin.npc.NpcSkinDataHandler;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,7 +27,7 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
-        if (NpcSkinDataHandler.INSTANCE.isValidEntity(entity)) {
+        if (EntitySkinHandler.INSTANCE.isValidEntity(entity)) {
             if (entity.worldObj.isRemote) {
                 return true;
             }

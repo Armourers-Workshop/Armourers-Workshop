@@ -10,7 +10,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
-import riskyken.armourersWorkshop.common.skin.npc.NpcSkinDataHandler;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -31,7 +31,7 @@ public final class ApiRegistrar {
                 ModLogger.log(String.format("Loading %s API addon for %s", "data manager", modName));
                 equipmentDataManagers.put(modName, ((IArmourersCommonManager)classObject));
                 ((IArmourersCommonManager)classObject).onLoad(EquipmentDataHandler.INSTANCE,
-                        SkinTypeRegistry.INSTANCE, NpcSkinDataHandler.INSTANCE);
+                        SkinTypeRegistry.INSTANCE, EntitySkinHandler.INSTANCE);
             }
             if (classObject instanceof IArmourersClientManager) {
                 ModLogger.log(String.format("Loading %s API addon for %s", "render manager", modName));

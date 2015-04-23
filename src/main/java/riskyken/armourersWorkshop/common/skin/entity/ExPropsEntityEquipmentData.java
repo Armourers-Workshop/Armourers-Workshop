@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.npc;
+package riskyken.armourersWorkshop.common.skin.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
