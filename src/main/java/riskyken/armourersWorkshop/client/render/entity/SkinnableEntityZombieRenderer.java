@@ -19,8 +19,6 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
     
     @Override
     public void render(EntityLivingBase entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
-        // TODO Auto-generated method stub
-        
         GL11.glPushMatrix();
         float scale = 0.0625F;
         
