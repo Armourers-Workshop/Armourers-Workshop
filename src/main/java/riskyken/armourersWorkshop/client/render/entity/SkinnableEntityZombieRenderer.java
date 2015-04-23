@@ -27,6 +27,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
         
+        //-24.0F * f5 - 0.0078125F
         GL11.glTranslated(0, -entity.height + 4.7F * scale, 0);
         
         GL11.glRotatef(entity.renderYawOffset, 0, 1, 0);
@@ -54,7 +55,13 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
                 if (isZombieVillager) {
                     GL11.glTranslated(0, -2.0F * scale, 0);
                 }
+                if (rz.modelBipedMain.isChild) {
+                    GL11.glEnable(GL11.GL_NORMALIZE);
+                }
                 EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, rz.modelBipedMain, skin);
+                if (rz.modelBipedMain.isChild) {
+                    GL11.glDisable(GL11.GL_NORMALIZE);
+                }
                 if (isZombieVillager) {
                     GL11.glTranslated(0, 2.0F * scale, 0);
                 }
