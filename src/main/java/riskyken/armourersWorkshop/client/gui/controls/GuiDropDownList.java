@@ -36,6 +36,10 @@ public class GuiDropDownList extends GuiButtonExt {
         this.dropButtonY = this.yPosition;
         this.dropButtonX = this.xPosition + this.width - this.dropButtonWidth;
     }
+    
+    public boolean getIsDroppedDown() {
+        return this.isDroppedDown;
+    }
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {

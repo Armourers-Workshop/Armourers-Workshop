@@ -17,7 +17,9 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
@@ -26,6 +28,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiButtonExt;
@@ -46,6 +49,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private GuiTextField filenameTextbox;
     private GuiTextField searchTextbox;
     private GuiCheckBox checkClientFiles;
+    private GuiDropDownList dropDownList;
     
     public GuiArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
         super(new ContainerArmourLibrary(invPlayer, armourLibrary));
@@ -74,13 +78,24 @@ public class GuiArmourLibrary extends GuiContainer {
         searchTextbox = new GuiTextField(fontRendererObj, guiLeft + 7, guiTop + 36, 131, 14);
         searchTextbox.setMaxStringLength(24);
         
-        fileList = new GuiList(this.guiLeft + 7, this.guiTop + 63, 131, 96, 12);
+        fileList = new GuiList(this.guiLeft + 7, this.guiTop + 80, 131, 80, 12);
         
-        scrollbar = new GuiScrollbar(2, this.guiLeft + 138, this.guiTop + 63, 10, 96, "", false);
+        scrollbar = new GuiScrollbar(2, this.guiLeft + 138, this.guiTop + 80, 10, 80, "", false);
         buttonList.add(scrollbar);
         
         checkClientFiles = new GuiCheckBox(3, this.guiLeft + 152, this.guiTop + 63, GuiHelper.getLocalizedControlName(guiName, "showClientFiles"), false);
         buttonList.add(checkClientFiles);
+        
+        dropDownList = new GuiDropDownList(5, this.guiLeft + 7, this.guiTop + 63, 141, "", null);
+        ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        dropDownList.addListItem("*");
+        dropDownList.setListSelectedIndex(0);
+        for (int i = 0; i < skinTypes.size(); i++) {
+            ISkinType skinType = skinTypes.get(i);
+            dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType),
+                    skinType.getRegistryName(), true);
+        }
+        buttonList.add(dropDownList);
     }
     
     @Override
@@ -163,16 +178,22 @@ public class GuiArmourLibrary extends GuiContainer {
         
         saveButton.enabled = !checkClientFiles.isChecked();
         
+        String typeFilter = dropDownList.getListSelectedItem().tag;
         if (fileNames!= null) {
             fileList.clearList();
             for (int i = 0; i < fileNames.size(); i++) {
                 String fileName = fileNames.get(i);
-                if (!searchTextbox.getText().equals("")) {
-                    if (fileName.toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
-                        fileList.addListItem(new GuiFileListItem(fileName));
+                String[] splitName = fileName.split("\n");
+                //ModLogger.log(splitName.length);
+                
+                if (typeFilter.isEmpty() | splitName[1].equals(typeFilter)) {
+                    if (!searchTextbox.getText().equals("")) {
+                        if (splitName[0].toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
+                            fileList.addListItem(new GuiFileListItem(splitName[0], splitName[1]));
+                        }
+                    } else {
+                        fileList.addListItem(new GuiFileListItem(splitName[0], splitName[1]));
                     }
-                } else {
-                    fileList.addListItem(new GuiFileListItem(fileName));
                 }
             }
         }
@@ -183,6 +204,7 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
+        
         
         searchTextbox.mouseClicked(mouseX, mouseY, button);
         filenameTextbox.mouseClicked(mouseX, mouseY, button);
@@ -196,9 +218,11 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
 
-        
-        if (fileList.mouseClicked(mouseX, mouseY, button)) {
-            filenameTextbox.setText(fileList.getSelectedListEntry().getDisplayName());
+        if (!dropDownList.getIsDroppedDown()) {
+            if (fileList.mouseClicked(mouseX, mouseY, button)) {
+                filenameTextbox.setText(fileList.getSelectedListEntry().getDisplayName());
+            }
+            
         }
         scrollbar.mousePressed(mc, mouseX, mouseY);
     }
@@ -206,7 +230,9 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         super.mouseMovedOrUp(mouseX, mouseY, button);
-        fileList.mouseMovedOrUp(mouseX, mouseY, button);
+        if (!dropDownList.getIsDroppedDown()) {
+            fileList.mouseMovedOrUp(mouseX, mouseY, button);
+        }
         scrollbar.mouseReleased(mouseX, mouseY);
     }
     

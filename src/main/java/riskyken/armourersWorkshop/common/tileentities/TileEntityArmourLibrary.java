@@ -24,8 +24,8 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -200,7 +200,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         return armourItemData;
     }
     
-    public static ArrayList<String> getFileNames() {
+    public static ArrayList<String> getFileNames(boolean addSkinTypes) {
         ArrayList<String> files = new ArrayList<String>();
         if (!createArmourDirectory()) { return null; }
         
@@ -219,16 +219,40 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         for (int i = 0; i < templateFiles.length; i++) {
             if (templateFiles[i].getName().endsWith(".armour")) {
                 String cleanName = FilenameUtils.removeExtension(templateFiles[i].getName());
-                files.add(cleanName);
+                if (addSkinTypes) {
+                    String skinTypeName = getSkinTypeNameFromFile(templateFiles[i]);
+                    files.add(cleanName + "\n" + skinTypeName);
+                } else {
+                    files.add(cleanName);
+                }
             }
         }
         Collections.sort(files);
         return files;
     }
     
+    private static String getSkinTypeNameFromFile(File file) {
+        DataInputStream stream = null;
+        Skin skin = null;
+        String skinTypeName = "";
+        
+        try {
+            stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+            skinTypeName = Skin.readSkinTypeNameFromStream(stream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NewerFileVersionException e) {
+            e.printStackTrace();
+        }
+    
+        return skinTypeName;
+    }
+    
     public void setArmourList(ArrayList<String> fileNames) {
         this.serverFileNames = fileNames;
-        this.clientFileNames = getFileNames();
+        this.clientFileNames = getFileNames(true);
     }
     
     public static boolean createArmourDirectory() {

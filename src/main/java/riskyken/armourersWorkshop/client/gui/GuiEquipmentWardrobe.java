@@ -101,8 +101,8 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         autoButton = new GuiButtonExt(0, this.guiLeft + 27, this.guiTop + 116, 80, 18, GuiHelper.getLocalizedControlName(guiName, "autoColour"));
         skinList = new GuiList(this.guiLeft + 165, this.guiTop + 30, 80, 96, 12);
         skinList.clearList();
-        skinList.addListItem(new GuiFileListItem("Default", true));
-        skinList.addListItem(new GuiFileListItem("None", true));
+        skinList.addListItem(new GuiFileListItem("Default", "", true));
+        skinList.addListItem(new GuiFileListItem("None", "", true));
         skinList.setSelectedIndex(0);
         if (skinInfo.getNakedInfo().isNaked) {
             skinList.setSelectedIndex(1);
