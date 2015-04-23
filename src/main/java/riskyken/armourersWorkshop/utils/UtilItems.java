@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.utils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 
 public final class UtilItems {
 

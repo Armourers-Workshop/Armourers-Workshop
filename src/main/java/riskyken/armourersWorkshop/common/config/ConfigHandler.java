@@ -21,7 +21,7 @@ public class ConfigHandler {
     public static int modelCacheTime = 12000;
     public static int maxRenderDistance = 40;
     public static boolean downloadSkins;
-    public static boolean compatibilityRender = false;
+    public static boolean compatibilityRender = true;
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
     

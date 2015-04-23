@@ -1,21 +1,22 @@
 package riskyken.armourersWorkshop.common.inventory;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public class ContainerEntityEquipment extends Container {
 
     public ContainerEntityEquipment(InventoryPlayer invPlayer, InventoryEntitySkin skinInventory) {
         
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinHead, skinInventory, 0, 44, 28));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinChest, skinInventory, 1, 62, 28));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinLegs, skinInventory, 2, 80, 28));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinSkirt, skinInventory, 3, 98, 28));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinFeet, skinInventory, 4, 116, 28));
+        ArrayList<ISkinType> skinTypes = skinInventory.getSkinTypes();
+        for (int i = 0; i < skinTypes.size(); i++) {
+            addSlotToContainer(new SlotEquipmentSkin(skinTypes.get(i), skinInventory, i, 8 + i * 18, 21));
+        }
         
         int hotBarY = 124;
         int playerInvY = 66;

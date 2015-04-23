@@ -39,6 +39,9 @@ public interface ISkinType {
     @SideOnly(Side.CLIENT)
     public IIcon getIcon();
     
+    @SideOnly(Side.CLIENT)
+    public IIcon getEmptySlotIcon();
+    
     /**
      * Should the show skin overlay check box be shown in the armourer and mini armourer.
      * @return

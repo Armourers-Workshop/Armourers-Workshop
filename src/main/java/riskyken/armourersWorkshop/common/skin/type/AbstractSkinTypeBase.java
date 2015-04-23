@@ -10,11 +10,19 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     private int id = -1;
     @SideOnly(Side.CLIENT)
     protected IIcon icon = null;
+    @SideOnly(Side.CLIENT)
+    protected IIcon emptySlotIcon = null;
     
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon() {
         return this.icon;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getEmptySlotIcon() {
+        return this.emptySlotIcon;
     }
     
     @Override

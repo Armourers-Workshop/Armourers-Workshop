@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.api.common.lib;
+package riskyken.armourersWorkshop.common.lib;
 
 public class LibCommonTags {
     

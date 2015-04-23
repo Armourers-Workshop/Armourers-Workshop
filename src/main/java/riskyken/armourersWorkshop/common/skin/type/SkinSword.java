@@ -33,5 +33,6 @@ public class SkinSword extends AbstractSkinTypeBase {
     @Override
     public void registerIcon(IIconRegister register) {
         this.icon = register.registerIcon(LibItemResources.TEMPLATE_WEAPON);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_SWORD);
     }
 }

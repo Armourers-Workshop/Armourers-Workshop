@@ -27,7 +27,7 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
-        if (EntitySkinHandler.INSTANCE.isValidEntity(entity)) {
+        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entity)) {
             if (entity.worldObj.isRemote) {
                 return true;
             }

@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
 import riskyken.armourersWorkshop.common.inventory.InventoryEntitySkin;
@@ -24,10 +25,10 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     private EntityEquipmentData equipmentData;
     private final InventoryEntitySkin skinInventory;
     
-    public ExPropsEntityEquipmentData(Entity entity) {
+    public ExPropsEntityEquipmentData(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;
         this.equipmentData = new EntityEquipmentData();
-        this.skinInventory = new InventoryEntitySkin(this);
+        this.skinInventory = new InventoryEntitySkin(this, skinnableEntity.getValidSkinTypes());
     }
     
     @Override
@@ -79,8 +80,8 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     public void init(Entity entity, World world) {
     }
     
-    public static final void register(Entity entity) {
-        entity.registerExtendedProperties(TAG_EXT_PROP_NAME, new ExPropsEntityEquipmentData(entity));
+    public static final void register(Entity entity, ISkinnableEntity skinnableEntity) {
+        entity.registerExtendedProperties(TAG_EXT_PROP_NAME, new ExPropsEntityEquipmentData(entity, skinnableEntity));
     }
     
     private static final ExPropsEntityEquipmentData get(Entity entity) {

@@ -70,10 +70,19 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         return false;
     }
     
+    public boolean canUseWandOfStyleOnEntity(Entity entity) {
+        if (isValidEntity(entity)) {
+            ISkinnableEntity skinnableEntity = entityMap.get(entity.getClass());
+            return skinnableEntity.canUseWandOfStyle();
+        }
+        return false;
+    }
+    
     @SubscribeEvent
     public void onEntityConstructing(EntityConstructing event) {
         if (isValidEntity(event.entity)) {
-            ExPropsEntityEquipmentData.register(event.entity);
+            ISkinnableEntity skinnableEntity = entityMap.get(event.entity.getClass());
+            ExPropsEntityEquipmentData.register(event.entity, skinnableEntity);
         }
     }
     

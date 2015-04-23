@@ -34,6 +34,7 @@ public class SkinFeet extends AbstractSkinTypeBase {
     @Override
     public void registerIcon(IIconRegister register) {
         this.icon = register.registerIcon(LibItemResources.TEMPLATE_FEET);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_FEET);
     }
 
     @Override

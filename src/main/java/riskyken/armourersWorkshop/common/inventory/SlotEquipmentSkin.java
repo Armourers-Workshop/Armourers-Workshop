@@ -2,10 +2,13 @@ package riskyken.armourersWorkshop.common.inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SlotEquipmentSkin extends SlotHidable {
     
@@ -27,5 +30,14 @@ public class SlotEquipmentSkin extends SlotHidable {
             }
         }
         return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getBackgroundIconIndex() {
+        if (this.skinType != null) {
+            return this.skinType.getEmptySlotIcon();
+        }
+        return super.getBackgroundIconIndex();
     }
 }

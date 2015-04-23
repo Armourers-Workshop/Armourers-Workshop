@@ -40,6 +40,7 @@ item.armourersworkshop:armourContainerHead.name=Head Armour Container
 item.armourersworkshop:armourContainerChest.name=Chest Armour Container
 item.armourersworkshop:armourContainerLegs.name=Legs Armour Container
 item.armourersworkshop:armourContainerFeet.name=Feet Armour Container
+item.armourersworkshop:wandOfStyle=Wand Of Style
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen

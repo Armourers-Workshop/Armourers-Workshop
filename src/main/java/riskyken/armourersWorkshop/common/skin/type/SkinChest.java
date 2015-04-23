@@ -35,6 +35,7 @@ public class SkinChest extends AbstractSkinTypeBase {
     @Override
     public void registerIcon(IIconRegister register) {
         this.icon = register.registerIcon(LibItemResources.TEMPLATE_CHEST);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_CHEST);
     }
 
     @Override

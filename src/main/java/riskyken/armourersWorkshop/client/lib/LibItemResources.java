@@ -34,4 +34,13 @@ public final class LibItemResources {
     public static final String BURN_TOOL = PREFIX_RESOURCE + "burnTool";
     public static final String SHADE_NOISE_TOOL = PREFIX_RESOURCE + "shadeNoiseTool";
     public static final String COLOUR_NOISE_TOOL = PREFIX_RESOURCE + "colourNoiseTool";
+    
+    //Slots
+    public static final String SLOT_SKIN_HEAD = PREFIX_RESOURCE + "slot/skinHead";
+    public static final String SLOT_SKIN_CHEST = PREFIX_RESOURCE + "slot/skinChest";
+    public static final String SLOT_SKIN_LEGS = PREFIX_RESOURCE + "slot/skinLegs";
+    public static final String SLOT_SKIN_SKIRT = PREFIX_RESOURCE + "slot/skinSkirt";
+    public static final String SLOT_SKIN_FEET = PREFIX_RESOURCE + "slot/skinFeet";
+    public static final String SLOT_SKIN_SWORD = PREFIX_RESOURCE + "slot/skinSword";
+    public static final String SLOT_SKIN_BOW = PREFIX_RESOURCE + "slot/skinBow";
 }

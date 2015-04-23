@@ -38,6 +38,7 @@ public class SkinHead extends AbstractSkinTypeBase {
     @Override
     public void registerIcon(IIconRegister register) {
         this.icon = register.registerIcon(LibItemResources.TEMPLATE_HEAD);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_HEAD);
     }
 
     @Override

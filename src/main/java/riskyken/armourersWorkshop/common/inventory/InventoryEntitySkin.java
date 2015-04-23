@@ -1,22 +1,31 @@
 package riskyken.armourersWorkshop.common.inventory;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public class InventoryEntitySkin implements IInventory {
     
     private static final String TAG_ITEMS = "items";
     private static final String TAG_SLOT = "slot";
     private final ItemStack[] skinSlots;
-    private IInventorySlotUpdate callback;
+    private final IInventorySlotUpdate callback;
+    private final ArrayList<ISkinType> skinTypes;
     
-    public InventoryEntitySkin(IInventorySlotUpdate callback) {
-        this.skinSlots = new ItemStack[5];
+    public InventoryEntitySkin(IInventorySlotUpdate callback, ArrayList<ISkinType> skinTypes) {
+        this.skinSlots = new ItemStack[skinTypes.size()];
         this.callback = callback;
+        this.skinTypes = skinTypes;
+    }
+    
+    public ArrayList<ISkinType> getSkinTypes() {
+        return skinTypes;
     }
     
     @Override
