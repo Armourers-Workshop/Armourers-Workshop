@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.client.render;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -30,12 +29,12 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.UtilPlayer;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -52,7 +51,7 @@ public final class EquipmentModelRenderer {
     
     public static EquipmentModelRenderer INSTANCE;
     
-    private HashMap<UUID, EntityEquipmentData> playerEquipmentMap = new HashMap<UUID, EntityEquipmentData>();
+    private HashMap<PlayerPointer, EntityEquipmentData> playerEquipmentMap = new HashMap<PlayerPointer, EntityEquipmentData>();
     
     public ModelCustomArmourChest customChest = new ModelCustomArmourChest();
     public ModelCustomArmourHead customHead = new ModelCustomArmourHead();
@@ -77,7 +76,7 @@ public final class EquipmentModelRenderer {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(UtilPlayer.getIDFromPlayer(player));
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         if (equipmentData == null) {
             return null;
@@ -95,7 +94,7 @@ public final class EquipmentModelRenderer {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(UtilPlayer.getIDFromPlayer(player));
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         return equipmentData;
     }
@@ -104,24 +103,24 @@ public final class EquipmentModelRenderer {
         return ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
     }
     
-    public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
-        if (playerEquipmentMap.containsKey(playerId)) {
-            playerEquipmentMap.remove(playerId);
+    public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
+        if (playerEquipmentMap.containsKey(playerPointer)) {
+            playerEquipmentMap.remove(playerPointer);
         }
-        playerEquipmentMap.put(playerId, equipmentData);
+        playerEquipmentMap.put(playerPointer, equipmentData);
     }
     
-    public void removeEquipmentData(UUID playerId) {
-        if (playerEquipmentMap.containsKey(playerId)) {
-            playerEquipmentMap.remove(playerId);
+    public void removeEquipmentData(PlayerPointer playerPointer) {
+        if (playerEquipmentMap.containsKey(playerPointer)) {
+            playerEquipmentMap.remove(playerPointer);
         }
     }
 
-    private boolean playerHasCustomArmourType(UUID playerId, ISkinType skinType) {
-        if (!playerEquipmentMap.containsKey(playerId)) {
+    private boolean playerHasCustomArmourType(PlayerPointer playerPointer, ISkinType skinType) {
+        if (!playerEquipmentMap.containsKey(playerPointer)) {
             return false;
         }
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(playerId);
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(playerPointer);
         return equipmentData.haveEquipment(skinType);
     }
     
@@ -148,9 +147,14 @@ public final class EquipmentModelRenderer {
             addedRenderAttachment = true;
         }
         
-        if (playerHasCustomArmourType(UtilPlayer.getIDFromPlayer(player), SkinTypeRegistry.skinSkirt)) {
+        if (player.getGameProfile() == null) {
+            return;
+        }
+        PlayerPointer playerPointer = new PlayerPointer(player);
+        
+        if (playerHasCustomArmourType(playerPointer, SkinTypeRegistry.skinSkirt)) {
             if (!Loader.isModLoaded("SmartMoving")) {
-                PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(UtilPlayer.getIDFromPlayer(player));
+                PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
                 if (skinInfo != null && skinInfo.getNakedInfo().limitLimbs) {
                     if (player.limbSwingAmount > 0.25F) {
                         player.limbSwingAmount = 0.25F;
@@ -175,7 +179,8 @@ public final class EquipmentModelRenderer {
         if (player.getGameProfile() == null) {
             return;
         }
-        if (!playerEquipmentMap.containsKey(UtilPlayer.getIDFromPlayer(player))) {
+        PlayerPointer playerPointer = new PlayerPointer(player);
+        if (!playerEquipmentMap.containsKey(playerPointer)) {
             return;
         }
         

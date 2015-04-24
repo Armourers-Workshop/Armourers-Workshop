@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
@@ -104,7 +105,8 @@ public final class SkinHelper {
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;
         if (gameProfile != null) {
-            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(gameProfile.getId());
+            PlayerPointer playerPointer = new PlayerPointer(gameProfile);
+            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
             resourcelocation = getSkinResourceLocation(gameProfile, MinecraftProfileTexture.Type.SKIN);
         }
         

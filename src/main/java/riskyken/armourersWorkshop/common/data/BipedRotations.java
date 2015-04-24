@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common;
+package riskyken.armourersWorkshop.common.data;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.model.ModelBiped;

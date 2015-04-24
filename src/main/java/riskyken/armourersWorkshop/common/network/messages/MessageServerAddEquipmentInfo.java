@@ -1,11 +1,8 @@
 package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.UUID;
-
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.network.ByteBufHelper;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -18,11 +15,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
  */
 public class MessageServerAddEquipmentInfo implements IMessage, IMessageHandler<MessageServerAddEquipmentInfo, IMessage> {
 
-    UUID playerId;
+    PlayerPointer playerPointer;
     EntityEquipmentData equipmentData;
     
-    public MessageServerAddEquipmentInfo(UUID playerId, EntityEquipmentData equipmentData) {
-        this.playerId = playerId;
+    public MessageServerAddEquipmentInfo(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
+        this.playerPointer = playerPointer;
         this.equipmentData = equipmentData;
     }
     
@@ -30,19 +27,19 @@ public class MessageServerAddEquipmentInfo implements IMessage, IMessageHandler<
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.playerId = ByteBufHelper.readUUID(buf);
+        this.playerPointer = new PlayerPointer(buf);
         this.equipmentData = new EntityEquipmentData(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufHelper.writeUUID(buf, this.playerId);
+        this.playerPointer.writeToByteBuffer(buf);
         this.equipmentData.toBytes(buf);
     }
     
     @Override
     public IMessage onMessage(MessageServerAddEquipmentInfo message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.addEquipmentData(message.playerId, message.equipmentData);
+        ArmourersWorkshop.proxy.addEquipmentData(message.playerPointer, message.equipmentData);
         return null;
     }
 }

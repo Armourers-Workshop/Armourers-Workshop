@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.BipedRotations;
+import riskyken.armourersWorkshop.common.data.BipedRotations;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

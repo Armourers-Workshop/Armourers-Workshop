@@ -20,6 +20,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.inventory.SlotHidable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -70,7 +71,8 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         this.customEquipmentData = customEquipmentData;
         this.player = inventory.player;
         
-        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getUniqueID());
+        PlayerPointer playerPointer = new PlayerPointer(player);
+        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(playerPointer);
         
         if (skinInfo == null) {
             skinInfo = new PlayerSkinInfo(new EntityNakedInfo());

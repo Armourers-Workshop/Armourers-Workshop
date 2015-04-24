@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.proxies;
 
-import java.util.UUID;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -29,6 +27,7 @@ import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
@@ -114,13 +113,13 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
-        EquipmentModelRenderer.INSTANCE.addEquipmentData(playerId, equipmentData);
+    public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
+        EquipmentModelRenderer.INSTANCE.addEquipmentData(playerPointer, equipmentData);
     }
 
     @Override
-    public void removeEquipmentData(UUID playerId) {
-        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerId);
+    public void removeEquipmentData(PlayerPointer playerPointer) {
+        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
     }
 
     @Override
@@ -129,13 +128,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
-        PlayerSkinHandler.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
+    public void setPlayersNakedData(PlayerPointer playerPointer, EntityNakedInfo nakedInfo) {
+        PlayerSkinHandler.INSTANCE.setPlayersSkinData(playerPointer, nakedInfo);
     }
 
     @Override
-    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        return PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerId);
+    public PlayerSkinInfo getPlayersNakedData(PlayerPointer playerPointer) {
+        return PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
     }
 
     @Override
