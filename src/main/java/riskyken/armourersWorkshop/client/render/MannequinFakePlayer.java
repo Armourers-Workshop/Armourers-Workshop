@@ -1,10 +1,12 @@
 package riskyken.armourersWorkshop.client.render;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.mojang.authlib.GameProfile;
@@ -13,11 +15,6 @@ public class MannequinFakePlayer extends EntityPlayer {
     
     public MannequinFakePlayer(World world, GameProfile gameProfile) {
         super(world, gameProfile);
-    }
-    
-    @Override
-    public String getCommandSenderName() {
-        return "[Mannequin]";
     }
     
     @Override
@@ -84,4 +81,10 @@ public class MannequinFakePlayer extends EntityPlayer {
     @Override public void onDeath(DamageSource source){ return; }
     @Override public void travelToDimension(int dim){ return; }
     @Override public void addChatMessage(IChatComponent p_145747_1_) {}
+    @Override
+    public IIcon getItemIcon(ItemStack p_70620_1_, int p_70620_2_) {
+        IIcon icon = p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
+        //ModLogger.log(icon);
+        return p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
+    }
 }

@@ -30,6 +30,9 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.HolidayHelper.EnumHoliday;
+
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -39,16 +42,24 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
     private static boolean isHalloween;
+    private MannequinFakePlayer mannequinFakePlayer;
     private ModelMannequin model;
     private RenderPlayer renderPlayer;
     private final Minecraft mc;
     private final float SCALE = 0.0625F;
+    private final ModelBiped targetBiped;
     
     public RenderBlockMannequin() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
         isHalloween = HolidayHelper.getHoliday(1) == EnumHoliday.HALLOWEEN;
+        
+        if (Loader.isModLoaded("moreplayermodels")) {
+            targetBiped = model;
+        } else {
+            targetBiped = renderPlayer.modelBipedMain;
+        }
     }
     
     @Override
@@ -59,10 +70,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         double heightOffset = te.getHeightOffset();
         //heightOffset = 12;
-        ModelBiped targetBiped = renderPlayer.modelBipedMain;
-        if (Loader.isModLoaded("moreplayermodels")) {
-            targetBiped = model;
-        }
         
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_NORMALIZE);
@@ -80,6 +87,16 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             float dollScale = 0.5F;
             GL11.glScalef(dollScale, dollScale, dollScale);
             GL11.glTranslatef(0, SCALE * 24, 0);
+        }
+        
+        if (mannequinFakePlayer == null) {
+            mannequinFakePlayer = new MannequinFakePlayer(te.getWorldObj(), new GameProfile(null, "[Mannequin]"));
+            mannequinFakePlayer.posX = x;
+            mannequinFakePlayer.posY = y;
+            mannequinFakePlayer.posZ = z;
+            mannequinFakePlayer.prevPosX = x;
+            mannequinFakePlayer.prevPosY = y;
+            mannequinFakePlayer.prevPosZ = z;
         }
         
         if (te.getGameProfile() != null) {
@@ -144,28 +161,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         targetBiped.bipedLeftLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
         
         te.getBipedRotations().applyRotationsToBiped(targetBiped);
-        
-        //TODO Fade in skins
-        /*
-        GL11.glPushMatrix();
-        mc.renderEngine.bindTexture(AbstractClientPlayer.locationStevePng);
-        renderModel(te, targetBiped, fakePlayer);
-        GL11.glPopMatrix();
-        
-        float alpha = (float)((double)System.currentTimeMillis() / 5000 % 2);
-        if (alpha > 1F) {
-            alpha -= 1F;
-            alpha = 1 - alpha;
-        }
-        
-        ModRenderHelper.enableAlphaBlend();
-        //GL11.glAlphaFunc(GL11.GL_GREATER, 0F);
-        GL11.glColor4f(1F, 1F, 1F, alpha);
-        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
-        renderModel(te, targetBiped, fakePlayer);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        ModRenderHelper.disableAlphaBlend();
-        */
         
         //Render model
         SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
@@ -236,14 +231,18 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
+        MannequinFakePlayer renderEntity = fakePlayer;
+        if (renderEntity == null) {
+            renderEntity = mannequinFakePlayer;
+        }
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (fakePlayer != null) {
+            if (renderEntity != null) {
                 if (i == 0 & isHalloween) {
-                    renderEquippedItem(fakePlayer, new ItemStack(Blocks.lit_pumpkin), targetBiped, i);
+                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i);
                 } else {
                     if (stack != null) {
-                        renderEquippedItem(fakePlayer, stack, targetBiped, i);
+                        renderEquippedItem(renderEntity, stack, targetBiped, i);
                     }
                 }
             }
@@ -256,7 +255,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private boolean hasCustomHead(IInventory inventory, MannequinFakePlayer fakePlayer) {
         ItemStack stack = getStackInMannequinSlot(inventory, MannequinSlotType.HEAD);
-        if (stack != null & fakePlayer != null) {
+        if (stack != null) {
             if (stack.getItem() instanceof ItemBlock) {
                 return true;
             }
