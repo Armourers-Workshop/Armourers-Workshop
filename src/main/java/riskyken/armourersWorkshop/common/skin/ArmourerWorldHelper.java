@@ -2,13 +2,12 @@ package riskyken.armourersWorkshop.common.skin;
 
 import java.util.ArrayList;
 
-import javax.vecmath.Point3i;
-
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -45,20 +44,20 @@ public final class ArmourerWorldHelper {
             ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
         ArrayList<ICube> armourBlockData = new ArrayList<ICube>();
         
-        Rectangle3D buildSpace = skinPart.getBuildingSpace();
-        Point3i offset = skinPart.getOffset();
+        IRectangle3D buildSpace = skinPart.getBuildingSpace();
+        IPoint3D offset = skinPart.getOffset();
         
-        for (int ix = 0; ix < buildSpace.width; ix++) {
-            for (int iy = 0; iy < buildSpace.height; iy++) {
-                for (int iz = 0; iz < buildSpace.depth; iz++) {
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
                     
-                    int x = xCoord + ix + -offset.x + buildSpace.x;
-                    int y = yCoord + iy + -offset.y;
-                    int z = zCoord + iz + -offset.z + buildSpace.z;
+                    int x = xCoord + ix + -offset.getX() + buildSpace.getX();
+                    int y = yCoord + iy + -offset.getY();
+                    int z = zCoord + iz + -offset.getZ() + buildSpace.getZ();
                     
-                    int xOrigin = -ix + -buildSpace.x;
-                    int yOrigin = -iy + -buildSpace.y;
-                    int zOrigin = -iz + -buildSpace.z;
+                    int xOrigin = -ix + -buildSpace.getX();
+                    int yOrigin = -iy + -buildSpace.getY();
+                    int zOrigin = -iz + -buildSpace.getZ();
                     
                     saveArmourBlockToList(world, x, y, z,
                             xOrigin - 1,
@@ -114,15 +113,15 @@ public final class ArmourerWorldHelper {
     
     private static void loadSkinPartIntoWorld(World world, SkinPart partData, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
         ISkinPartType skinPart = partData.getPartType();
-        Rectangle3D buildSpace = skinPart.getBuildingSpace();
-        Point3i offset = skinPart.getOffset();
+        IRectangle3D buildSpace = skinPart.getBuildingSpace();
+        IPoint3D offset = skinPart.getOffset();
         
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             ICube blockData = partData.getArmourData().get(i);
             
-            int xOrigin = -offset.x;
-            int yOrigin = -offset.y + -buildSpace.y;
-            int zOrigin = -offset.z;
+            int xOrigin = -offset.getX();
+            int yOrigin = -offset.getY() + -buildSpace.getY();
+            int zOrigin = -offset.getZ();
             
             loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction);
         }
@@ -166,20 +165,20 @@ public final class ArmourerWorldHelper {
     }
     
     private static void createBoundingBoxesForSkinPart(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinPartType skinPart) {
-        Rectangle3D buildSpace = skinPart.getBuildingSpace();
-        Rectangle3D guideSpace = skinPart.getGuideSpace();
-        Point3i offset = skinPart.getOffset();
+        IRectangle3D buildSpace = skinPart.getBuildingSpace();
+        IRectangle3D guideSpace = skinPart.getGuideSpace();
+        IPoint3D offset = skinPart.getOffset();
         
         if (guideSpace == null) {
             return;
         }
         
-        for (int ix = 0; ix < guideSpace.width; ix++) {
-            for (int iy = 0; iy < guideSpace.height; iy++) {
-                for (int iz = 0; iz < guideSpace.depth; iz++) {
-                    int xTar = x + ix + -offset.x + guideSpace.x;
-                    int yTar = y + iy + -offset.y + guideSpace.y - buildSpace.y;
-                    int zTar = z + iz + -offset.z + guideSpace.z;
+        for (int ix = 0; ix < guideSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < guideSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
+                    int xTar = x + ix + -offset.getX() + guideSpace.getX();
+                    int yTar = y + iy + -offset.getY() + guideSpace.getY() - buildSpace.getY();
+                    int zTar = z + iz + -offset.getZ() + guideSpace.getZ();
                     
                     //TODO Set skinPart to left and right legs for skirt.
                     ISkinPartType guidePart = skinPart;
@@ -214,20 +213,20 @@ public final class ArmourerWorldHelper {
     }
     
     private static void removeBoundingBoxesForSkinPart(World world, int x, int y, int z, ISkinPartType skinPart) {
-        Rectangle3D buildSpace = skinPart.getBuildingSpace();
-        Rectangle3D guideSpace = skinPart.getGuideSpace();
-        Point3i offset = skinPart.getOffset();
+        IRectangle3D buildSpace = skinPart.getBuildingSpace();
+        IRectangle3D guideSpace = skinPart.getGuideSpace();
+        IPoint3D offset = skinPart.getOffset();
         
         if (guideSpace == null) {
             return;
         }
         
-        for (int ix = 0; ix < guideSpace.width; ix++) {
-            for (int iy = 0; iy < guideSpace.height; iy++) {
-                for (int iz = 0; iz < guideSpace.depth; iz++) {
-                    int xTar = x + ix + -offset.x + guideSpace.x;
-                    int yTar = y + iy + -offset.y + guideSpace.y - buildSpace.y;
-                    int zTar = z + iz + -offset.z + guideSpace.z;
+        for (int ix = 0; ix < guideSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < guideSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
+                    int xTar = x + ix + -offset.getX() + guideSpace.getX();
+                    int yTar = y + iy + -offset.getY() + guideSpace.getY() - buildSpace.getY();
+                    int zTar = z + iz + -offset.getZ() + guideSpace.getZ();
                     
                     if (world.blockExists(xTar, yTar, zTar)) {
                         if (world.getBlock(xTar, yTar, zTar) == ModBlocks.boundingBox) {
@@ -250,16 +249,16 @@ public final class ArmourerWorldHelper {
     }
     
     private static int clearEquipmentCubesForSkinPart(World world, int x, int y, int z, ISkinPartType skinPart) {
-        Rectangle3D buildSpace = skinPart.getBuildingSpace();
-        Point3i offset = skinPart.getOffset();
+        IRectangle3D buildSpace = skinPart.getBuildingSpace();
+        IPoint3D offset = skinPart.getOffset();
         int blockCount = 0;
         
-        for (int ix = 0; ix < buildSpace.width; ix++) {
-            for (int iy = 0; iy < buildSpace.height; iy++) {
-                for (int iz = 0; iz < buildSpace.depth; iz++) {
-                    int xTar = x + ix + -offset.x + buildSpace.x;
-                    int yTar = y + iy + -offset.y;
-                    int zTar = z + iz + -offset.z + buildSpace.z;
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    int xTar = x + ix + -offset.getX() + buildSpace.getX();
+                    int yTar = y + iy + -offset.getY();
+                    int zTar = z + iz + -offset.getZ() + buildSpace.getZ();
                     
                     if (world.blockExists(xTar, yTar, zTar)) {
                         Block block = world.getBlock(xTar, yTar, zTar);

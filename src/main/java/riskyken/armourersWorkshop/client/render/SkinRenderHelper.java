@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.render;
 
-import javax.vecmath.Point3i;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,7 +9,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -26,29 +25,29 @@ public final class SkinRenderHelper {
     public static void renderBuildingGuide(ISkinType skinType, float scale, boolean showSkinOverlay, boolean showHelper) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            Point3i partOffset = skinPart.getOffset();
-            GL11.glTranslated(partOffset.x * scale, partOffset.y * scale, partOffset.z * scale);
+            IPoint3D partOffset = skinPart.getOffset();
+            GL11.glTranslated(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
             skinPart.renderBuildingGuide(scale, showSkinOverlay, showHelper);
-            GL11.glTranslated(-partOffset.x * scale, -partOffset.y * scale, -partOffset.z * scale);
+            GL11.glTranslated(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
         }
     }
     
     public static void renderBuildingGrid(ISkinType skinType, float scale) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPartType = skinType.getSkinParts().get(i);
-            Point3i partOffset = skinPartType.getOffset();
-            GL11.glTranslated(partOffset.x * scale, partOffset.y * scale, partOffset.z * scale);
+            IPoint3D partOffset = skinPartType.getOffset();
+            GL11.glTranslated(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
             renderBuildingGrid(skinPartType, scale);
-            GL11.glTranslated(-partOffset.x * scale, -partOffset.y * scale, -partOffset.z * scale);
+            GL11.glTranslated(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
         }
     }
     
     private static void renderBuildingGrid(ISkinPartType skinPartType, float scale) {
-        GL11.glTranslated(0, skinPartType.getBuildingSpace().y * scale, 0);
+        GL11.glTranslated(0, skinPartType.getBuildingSpace().getY() * scale, 0);
         GL11.glScalef(-1, -1, 1);
         SkinRenderHelper.renderGuidePart(skinPartType, scale);
         GL11.glScalef(-1, -1, 1);
-        GL11.glTranslated(0, -skinPartType.getBuildingSpace().y * scale, 0);
+        GL11.glTranslated(0, -skinPartType.getBuildingSpace().getY() * scale, 0);
     }
     
     public static void renderGuidePart(ISkinPartType part, float scale) {
@@ -58,17 +57,17 @@ public final class SkinRenderHelper {
         
         boolean debugRender = false;
         
-        Rectangle3D buildRec = part.getBuildingSpace();
-        Rectangle3D guideRec = part.getGuideSpace();
+        IRectangle3D buildRec = part.getBuildingSpace();
+        IRectangle3D guideRec = part.getGuideSpace();
         
         GL11.glDisable(GL11.GL_LIGHTING);
         
         GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
-        renderGuideBox(buildRec.x, buildRec.y, buildRec.z, buildRec.width, buildRec.height, buildRec.depth, scale);
+        renderGuideBox(buildRec.getX(), buildRec.getY(), buildRec.getZ(), buildRec.getWidth(), buildRec.getHeight(), buildRec.getDepth(), scale);
         
         if (debugRender) {
             GL11.glColor4f(1F, 0F, 0F, 0.5F);
-            renderGuideBox(guideRec.x, guideRec.y, guideRec.z, guideRec.width, guideRec.height, guideRec.depth, scale);
+            renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(), guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale);
             
             GL11.glColor4f(0F, 1F, 0F, 0.5F);
             renderGuideBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, scale);

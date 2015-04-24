@@ -5,8 +5,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import javax.vecmath.Point3i;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +14,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
@@ -107,7 +106,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     private int getColourFromSkin(TileEntityBoundingBox te, EntityPlayer player, World world, int x, int y, int z, int side) {
         ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
         Point textureLocation = skinPart.getTextureLocation();
-        Point3i textureModelSize = skinPart.getTextureModelSize();
+        IPoint3D textureModelSize = skinPart.getTextureModelSize();
         ForgeDirection blockFace = ForgeDirection.getOrientation(side);
         GameProfile gameProfile = te.getParent().getGameProfile();
         
@@ -123,37 +122,37 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         
         switch (blockFace) {
         case EAST:
-            textureY += textureModelSize.z;
-            shiftX = (byte) (-blockZ + textureModelSize.z - 1);
-            shiftY = (byte) (-blockY + textureModelSize.y - 1);
+            textureY += textureModelSize.getZ();
+            shiftX = (byte) (-blockZ + textureModelSize.getZ() - 1);
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case NORTH:
-            textureX += textureModelSize.z;
-            textureY += textureModelSize.z;
-            shiftX = (byte) (-blockX + textureModelSize.x - 1);
-            shiftY = (byte) (-blockY + textureModelSize.y - 1);
+            textureX += textureModelSize.getZ();
+            textureY += textureModelSize.getZ();
+            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case WEST:
-            textureX += textureModelSize.z + textureModelSize.x;
-            textureY += textureModelSize.z;
+            textureX += textureModelSize.getZ() + textureModelSize.getX();
+            textureY += textureModelSize.getZ();
             shiftX = blockZ;
-            shiftY = (byte) (-blockY + textureModelSize.y - 1);
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case SOUTH:
-            textureX += textureModelSize.z + textureModelSize.x + textureModelSize.z;
-            textureY += textureModelSize.z;
+            textureX += textureModelSize.getZ() + textureModelSize.getX() + textureModelSize.getZ();
+            textureY += textureModelSize.getZ();
             shiftX = blockX;
-            shiftY = (byte) (-blockY + textureModelSize.y - 1);
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case DOWN:
-            textureX += textureModelSize.z + textureModelSize.x;
-            shiftX = (byte) (-blockX + textureModelSize.x - 1);
-            shiftY = (byte) (-blockZ + textureModelSize.z - 1);
+            textureX += textureModelSize.getZ() + textureModelSize.getX();
+            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            shiftY = (byte) (-blockZ + textureModelSize.getX() - 1);
             break;
         case UP:
-            textureX += textureModelSize.z;
-            shiftX = (byte) (-blockX + textureModelSize.x - 1);
-            shiftY = (byte) (-blockZ + textureModelSize.z - 1);
+            textureX += textureModelSize.getZ();
+            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            shiftY = (byte) (-blockZ + textureModelSize.getZ() - 1);
             break;
         default:
             break;

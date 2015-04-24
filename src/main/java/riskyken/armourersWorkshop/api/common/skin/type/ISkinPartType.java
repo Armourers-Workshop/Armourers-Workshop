@@ -1,8 +1,7 @@
 package riskyken.armourersWorkshop.api.common.skin.type;
 
-import javax.vecmath.Point3i;
-
-import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -13,11 +12,11 @@ public interface ISkinPartType {
     
     public String getPartName();
     
-    public Rectangle3D getBuildingSpace();
+    public IRectangle3D getBuildingSpace();
     
-    public Rectangle3D getGuideSpace();
+    public IRectangle3D getGuideSpace();
     
-    public Point3i getOffset();
+    public IPoint3D getOffset();
     
     /**
      * 
