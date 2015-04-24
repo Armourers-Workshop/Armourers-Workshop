@@ -20,11 +20,6 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
-import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
-import riskyken.armourersWorkshop.client.model.armourer.ModelFeet;
-import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
-import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
-import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
@@ -45,12 +40,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListCallback {
-    
-    private static final ModelHead modelHead = new ModelHead();
-    private static final ModelChest modelChest = new ModelChest();
-    private static final ModelLegs modelLegs = new ModelLegs();
-    private static final ModelFeet modelFeet = new ModelFeet();
-    private static final ModelHand modelHand = new ModelHand();
     
     private TileEntityMiniArmourer tileEntity;
     private ArrayList<ICube> cubes;
