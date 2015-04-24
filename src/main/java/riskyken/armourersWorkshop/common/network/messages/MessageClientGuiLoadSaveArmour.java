@@ -84,7 +84,7 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
             TileEntityArmourLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
             
             
-            switch (this.packetType) {
+            switch (message.packetType) {
             case CLIENT_LOAD:
                 te.loadArmour(message.skin, player);
                 break;

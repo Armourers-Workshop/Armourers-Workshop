@@ -150,7 +150,8 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         if (armourItemData == null) {
             return;
         }
-
+        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        
         ItemStack stackArmour = inputItem.makeStackForEquipment(armourItemData);
         if (stackArmour == null) {
             return;
@@ -250,7 +251,6 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             IOUtils.closeQuietly(stream);
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         
         return armourItemData;
     }
