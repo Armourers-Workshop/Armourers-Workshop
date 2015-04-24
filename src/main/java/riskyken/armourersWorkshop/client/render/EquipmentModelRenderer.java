@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import org.lwjgl.opengl.GL11;
 
@@ -97,6 +98,24 @@ public final class EquipmentModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         return equipmentData;
+    }
+    
+    @SubscribeEvent
+    public void onStopTracking(PlayerEvent.StopTracking event) {
+        if (event.target instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.target;
+            if (player.getGameProfile() == null) {
+                return;
+            }
+            PlayerPointer playerPointer = new PlayerPointer(player);
+            if (playerEquipmentMap.containsKey(playerPointer)) {
+                playerEquipmentMap.remove(playerPointer);
+            }
+        }
+    }
+    
+    public int getSkinDataMapSize() {
+        return playerEquipmentMap.size();
     }
     
     public Skin getCustomArmourItemData(int equipmentId) {
