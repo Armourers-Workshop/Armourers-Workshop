@@ -105,7 +105,7 @@ public final class SkinHelper {
         PlayerSkinInfo skinInfo = null;
         if (gameProfile != null) {
             skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(gameProfile.getId());
-            resourcelocation = getSkinResourceLocation(gameProfile);
+            resourcelocation = getSkinResourceLocation(gameProfile, MinecraftProfileTexture.Type.SKIN);
         }
         
         if (skinInfo != null) {
@@ -121,12 +121,12 @@ public final class SkinHelper {
         }
     }
     
-    public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile) {
+    public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile, MinecraftProfileTexture.Type type) {
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
         Minecraft mc = Minecraft.getMinecraft();
-        Map map = mc.func_152342_ad().func_152788_a(gameProfile);
-        if (map.containsKey(Type.SKIN)) {
-            skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
+        Map<?, ?> map = mc.func_152342_ad().func_152788_a(gameProfile);
+        if (map.containsKey(type)) {
+            skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(type), type);
         }
         return skin;
     }

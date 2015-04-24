@@ -163,6 +163,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         te.getBipedRotations().applyRotationsToBiped(targetBiped);
         
         //Render model
+        
         SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
         renderModel(te, targetBiped, fakePlayer);
         

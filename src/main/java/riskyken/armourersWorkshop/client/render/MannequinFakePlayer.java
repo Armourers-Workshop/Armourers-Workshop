@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.render;
 
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
@@ -11,10 +12,15 @@ import net.minecraft.world.World;
 
 import com.mojang.authlib.GameProfile;
 
-public class MannequinFakePlayer extends EntityPlayer {
+public class MannequinFakePlayer extends AbstractClientPlayer {
     
     public MannequinFakePlayer(World world, GameProfile gameProfile) {
         super(world, gameProfile);
+    }
+    
+    @Override
+    public String getCommandSenderName() {
+        return "[Mannequin]";
     }
     
     @Override
