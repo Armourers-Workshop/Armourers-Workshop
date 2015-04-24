@@ -23,6 +23,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -189,7 +190,11 @@ public class GuiArmourLibrary extends GuiContainer {
             fileNames = armourLibrary.clientFileNames;
         }
         
-        //saveButton.enabled = !checkClientFiles.isChecked();
+        if (checkClientFiles.isChecked()) {
+            saveButton.enabled = ConfigHandler.allowClientsToSaveSkins;
+        } else {
+            saveButton.enabled = true;
+        }
         
         String typeFilter = dropDownList.getListSelectedItem().tag;
         if (fileNames!= null) {

@@ -19,6 +19,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
@@ -48,6 +49,9 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     }
     
     public void sendArmourToClient(String filename, EntityPlayerMP player) {
+        if (!ConfigHandler.allowClientsToSaveSkins) {
+            return;
+        }
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         

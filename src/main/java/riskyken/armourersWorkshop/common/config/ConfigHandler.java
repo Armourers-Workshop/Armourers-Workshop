@@ -24,6 +24,7 @@ public class ConfigHandler {
     public static boolean compatibilityRender = false;
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
+    public static boolean allowClientsToSaveSkins = false;
     
     /** Should skins be dropped on player death.<br/>
      * <br/>
@@ -42,6 +43,11 @@ public class ConfigHandler {
 
     public static void loadConfigFile() {
         // recipe
+        allowClientsToSaveSkins = config
+                .get(CATEGORY_GENERAL, "Allow Clients To Save Skins", false,
+                "Allows clients to save skins from a server to their local computer using the library.")
+                .getBoolean(false);
+        
         disableRecipes = config
                 .get(CATEGORY_GENERAL, "Disable Recipes", false,
                 "Disable all mod recipes. Use if you want to manually add recipes for a mod pack.")
