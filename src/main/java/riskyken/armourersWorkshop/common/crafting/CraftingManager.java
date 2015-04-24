@@ -3,6 +3,8 @@ package riskyken.armourersWorkshop.common.crafting;
 import java.lang.reflect.Method;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -18,6 +20,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public final class CraftingManager {
 
     public static void init() {
+        RecipeSorter.setCategory(RecipeSwordSkin.class, Category.SHAPELESS);
+        RecipeSorter.setCategory(RecipeSkinUpdate.class, Category.SHAPELESS);
+        RecipeSorter.setCategory(RecipeSkinCopy.class, Category.SHAPELESS);
         GameRegistry.addRecipe(new RecipeSwordSkin());
         GameRegistry.addRecipe(new RecipeSkinUpdate());
         GameRegistry.addRecipe(new RecipeSkinCopy());
