@@ -35,6 +35,7 @@ import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -158,5 +159,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
         EntitySkinHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
+    }
+    
+    @Override
+    public void receivedSkinFromLibrary(String fileName, Skin skin) {
+        TileEntityArmourLibrary.saveSkinToDisk(fileName, skin);
     }
 }

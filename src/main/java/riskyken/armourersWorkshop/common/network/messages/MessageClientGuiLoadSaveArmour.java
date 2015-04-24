@@ -12,45 +12,65 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler<MessageClientGuiLoadSaveArmour, IMessage> {
-
-    Byte type;
-    String filename;
-    Skin itemData;
-    boolean load;
     
-    public MessageClientGuiLoadSaveArmour() { }
+    private LibraryPacketType packetType;
+    private String filename;
+    private Skin skin;
     
-    public MessageClientGuiLoadSaveArmour(Skin itemData, boolean load) {
-        this.type = 1;
-        this.itemData = itemData;
-        this.load = load;
+    public MessageClientGuiLoadSaveArmour() {
     }
     
-    public MessageClientGuiLoadSaveArmour(String filename, boolean load) {
-        this.type = 0;
+    public MessageClientGuiLoadSaveArmour(Skin skin) {
+        this.packetType = LibraryPacketType.CLIENT_LOAD;
+        this.skin = skin;
+    }
+    
+    public MessageClientGuiLoadSaveArmour(String filename, LibraryPacketType packetType) {
+        this.packetType = packetType;
         this.filename = filename;
-        this.load = load;
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.type = buf.readByte();
-        this.load = buf.readBoolean();
-        if (type == 0) {
+        this.packetType = LibraryPacketType.values()[buf.readByte()];
+        
+        switch (this.packetType) {
+        case CLIENT_LOAD:
+            this.skin = new Skin(buf);
+            break;
+        case CLIENT_SAVE:
             this.filename = ByteBufUtils.readUTF8String(buf);
-        } else {
-            itemData = new Skin(buf);
+            break;
+        case SERVER_LOAD:
+            this.filename = ByteBufUtils.readUTF8String(buf);
+            break;
+        case SERVER_SAVE:
+            this.filename = ByteBufUtils.readUTF8String(buf);
+            break;
+        default:
+            break;
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(this.type);
-        buf.writeBoolean(this.load);
-        if (type == 0) {
+        buf.writeByte(this.packetType.ordinal());
+        
+        switch (this.packetType) {
+        case CLIENT_LOAD:
+            this.skin.writeToBuf(buf);
+            break;
+        case CLIENT_SAVE:
             ByteBufUtils.writeUTF8String(buf, this.filename);
-        } else {
-            itemData.writeToBuf(buf);
+            break;
+        case SERVER_LOAD:
+            ByteBufUtils.writeUTF8String(buf, this.filename);
+            break;
+        case SERVER_SAVE:
+            ByteBufUtils.writeUTF8String(buf, this.filename);
+            break;
+        default:
+            break;
         }
     }
     
@@ -62,19 +82,34 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
         
         if (container != null && container instanceof ContainerArmourLibrary) {
             TileEntityArmourLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
-            if (message.load) {
-                if (message.type == 0) {
-                    te.loadArmour(message.filename, player);
-                } else {
-                    te.loadArmour(message.itemData, player);
-                }
-                
-            } else {
+            
+            
+            switch (this.packetType) {
+            case CLIENT_LOAD:
+                te.loadArmour(message.skin, player);
+                break;
+            case CLIENT_SAVE:
+                te.sendArmourToClient(message.filename, player);
+                break;
+            case SERVER_LOAD:
+                te.loadArmour(message.filename, player);
+                break;
+            case SERVER_SAVE:
                 te.saveArmour(message.filename, player);
+                break;
+            default:
+                break;
             }
             
             ((ContainerArmourLibrary)container).sentList = false;
         }
         return null;
+    }
+    
+    public enum LibraryPacketType {
+        SERVER_LOAD,
+        SERVER_SAVE,
+        CLIENT_LOAD,
+        CLIENT_SAVE;
     }
 }

@@ -24,9 +24,12 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerLibrarySendSkin;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -42,6 +45,43 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     @Override
     public String getInventoryName() {
         return LibBlockNames.ARMOUR_LIBRARY;
+    }
+    
+    public void sendArmourToClient(String filename, EntityPlayerMP player) {
+        ItemStack stackInput = getStackInSlot(0);
+        ItemStack stackOutput = getStackInSlot(1);
+        
+        if (stackInput == null) {
+            return;
+        }
+        
+        if (stackOutput != null) {
+            return;
+        }
+        
+        if (!(stackInput.getItem() instanceof ItemEquipmentSkin)) {
+            return;
+        }
+        
+        if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
+            return;
+        }
+        
+        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stackInput);
+        if (!createArmourDirectory()) {
+            return;
+        }
+        
+        Skin skin = SkinDataCache.INSTANCE.getEquipmentData(skinPointer.skinId);
+        if (skin == null) {
+            return;
+        }
+        
+        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, skin);
+        PacketHandler.networkWrapper.sendTo(message, player);
+        
+        this.decrStackSize(0, 1);
+        this.setInventorySlotContents(1, stackInput);
     }
 
     /**
@@ -71,33 +111,13 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         
         int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
         
-        if (!createArmourDirectory()) { return; }
-
-        File armourDir = new File(System.getProperty("user.dir"));
-        armourDir = new File(armourDir, LibModInfo.ID);
-        
-        DataOutputStream stream = null;
-        File targetFile = new File(armourDir, File.separatorChar + filename + ".armour");
-        
-        Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
-        if (equipmentData == null) {
+        Skin skin = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
+        if (skin == null) {
             return;
         }
         
-        try {
-            stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(targetFile)));
-            equipmentData.writeToStream(stream);
-            stream.flush();
-        } catch (FileNotFoundException e) {
-            ModLogger.log(Level.WARN, "Armour file not found.");
-            e.printStackTrace();
+        if (!saveSkinToDisk(filename, skin)) {
             return;
-        } catch (IOException e) {
-            ModLogger.log(Level.ERROR, "Armour file save failed.");
-            e.printStackTrace();
-            return;
-        } finally {
-            IOUtils.closeQuietly(stream);
         }
         
         this.decrStackSize(0, 1);
@@ -162,8 +182,40 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
             return;
         }
         
+        SkinDataCache.INSTANCE.addEquipmentDataToCache(itemData);
+        
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, stackArmour);
+    }
+    
+    public static boolean saveSkinToDisk(String fileName, Skin skin) {
+        if (!createArmourDirectory()) {
+            return false;
+        }
+
+        File armourDir = new File(System.getProperty("user.dir"));
+        armourDir = new File(armourDir, LibModInfo.ID);
+        
+        DataOutputStream stream = null;
+        File targetFile = new File(armourDir, File.separatorChar + fileName + ".armour");
+        
+        try {
+            stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(targetFile)));
+            skin.writeToStream(stream);
+            stream.flush();
+        } catch (FileNotFoundException e) {
+            ModLogger.log(Level.WARN, "Armour file not found.");
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            ModLogger.log(Level.ERROR, "Armour file save failed.");
+            e.printStackTrace();
+            return false;
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
+        
+        return true;
     }
     
     public static Skin loadCustomArmourItemDataFromFile(String filename) {
@@ -197,6 +249,9 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         } finally {
             IOUtils.closeQuietly(stream);
         }
+        
+        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        
         return armourItemData;
     }
     

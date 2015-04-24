@@ -66,4 +66,8 @@ public class CommonProxy {
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
         
     }
+    
+    public void receivedSkinFromLibrary(String fileName, Skin skin) {
+        
+    }
 }

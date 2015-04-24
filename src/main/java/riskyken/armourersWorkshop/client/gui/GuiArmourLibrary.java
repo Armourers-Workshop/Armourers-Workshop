@@ -27,6 +27,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour;
+import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour.LibraryPacketType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
@@ -39,6 +40,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiArmourLibrary extends GuiContainer {
 
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourLibrary.png");
+    private static final int BUTTON_ID_SAVE = 0;
+    private static final int BUTTON_ID_LOAD = 1;
     
     private TileEntityArmourLibrary armourLibrary;
     private GuiList fileList;
@@ -63,10 +66,10 @@ public class GuiArmourLibrary extends GuiContainer {
         super.initGui();
         String guiName = armourLibrary.getInventoryName();
         buttonList.clear();
-        saveButton = new GuiButtonExt(0, guiLeft + 152, guiTop + 100, 60, 16, GuiHelper.getLocalizedControlName(guiName, "save"));
+        saveButton = new GuiButtonExt(BUTTON_ID_SAVE, guiLeft + 152, guiTop + 100, 60, 16, GuiHelper.getLocalizedControlName(guiName, "save"));
         buttonList.add(saveButton);
         
-        loadButton = new GuiButtonExt(1, guiLeft + 152, guiTop + 120, 60, 16, GuiHelper.getLocalizedControlName(guiName, "load"));
+        loadButton = new GuiButtonExt(BUTTON_ID_LOAD, guiLeft + 152, guiTop + 120, 60, 16, GuiHelper.getLocalizedControlName(guiName, "load"));
         buttonList.add(loadButton);
         
         openFolderButton = new GuiButtonExt(4, guiLeft + 152, guiTop + 80, 96, 16, GuiHelper.getLocalizedControlName(guiName, "openFolder"));
@@ -107,19 +110,29 @@ public class GuiArmourLibrary extends GuiContainer {
         }
         
         if (!filename.equals("")) {
+            MessageClientGuiLoadSaveArmour message;
             switch (button.id) {
-            case 0:
-                PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(filename, false));
+            case BUTTON_ID_SAVE:
+                if (checkClientFiles.isChecked()) {
+                    message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.CLIENT_SAVE);
+                    PacketHandler.networkWrapper.sendToServer(message);
+                } else {
+                    message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_SAVE);
+                    PacketHandler.networkWrapper.sendToServer(message);
+                }
+                
                 filenameTextbox.setText("");
                 break;
-            case 1:
+            case BUTTON_ID_LOAD:
                 if (checkClientFiles.isChecked()) {
                     Skin itemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(filename);
                     if (itemData != null) {
-                        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(itemData, true));
+                        message = new MessageClientGuiLoadSaveArmour(itemData);
+                        PacketHandler.networkWrapper.sendToServer(message);
                     }
                 } else {
-                    PacketHandler.networkWrapper.sendToServer(new MessageClientGuiLoadSaveArmour(filename, true));
+                    message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_LOAD);
+                    PacketHandler.networkWrapper.sendToServer(message);
                 }
                 filenameTextbox.setText("");
                 break;
@@ -176,7 +189,7 @@ public class GuiArmourLibrary extends GuiContainer {
             fileNames = armourLibrary.clientFileNames;
         }
         
-        saveButton.enabled = !checkClientFiles.isChecked();
+        //saveButton.enabled = !checkClientFiles.isChecked();
         
         String typeFilter = dropDownList.getListSelectedItem().tag;
         if (fileNames!= null) {
