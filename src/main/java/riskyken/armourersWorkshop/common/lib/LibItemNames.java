@@ -17,4 +17,5 @@ public class LibItemNames {
     public static final String ARMOUR_CONTAINER_CHEST = "armourContainerChest";
     public static final String ARMOUR_CONTAINER_LEGS = "armourContainerLegs";
     public static final String ARMOUR_CONTAINER_FEET = "armourContainerFeet";
+    public static final String WAND_OF_STYLE = "wandOfStyle";
 }

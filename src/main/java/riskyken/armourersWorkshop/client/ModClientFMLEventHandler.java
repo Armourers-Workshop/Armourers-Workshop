@@ -2,7 +2,10 @@ package riskyken.armourersWorkshop.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -19,6 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class ModClientFMLEventHandler {
     
+    private static final String DOWNLOAD_URL = "http://minecraft.curseforge.com/mc-mods/229523-armourers-workshop/files";
     private boolean shownUpdateInfo = false;
     
     @SubscribeEvent
@@ -30,12 +34,18 @@ public class ModClientFMLEventHandler {
     
     public void onPlayerTickEndEvent() {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-        //RiskyKensUtilities.proxy.onPlayerTick(player);
         
-        if (shownUpdateInfo) { return; }
-        if (UpdateCheck.updateFound) {
+        if (!shownUpdateInfo && UpdateCheck.updateFound) {
+            //http://minecraft.curseforge.com/mc-mods/229523-armourers-workshop/files
             shownUpdateInfo = true;
-            player.addChatMessage(new ChatComponentText(LibModInfo.NAME + " update " + UpdateCheck.remoteModVersion + " is available."));
+            ChatComponentText updateMessage = new ChatComponentText(LibModInfo.NAME + " update " + UpdateCheck.remoteModVersion + " is available. ");
+            ChatComponentText updateURL = new ChatComponentText("[Download]");
+            updateURL.getChatStyle().setUnderlined(true);
+            updateURL.getChatStyle().setColor(EnumChatFormatting.BLUE);
+            updateURL.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Click to goto the download page")));
+            updateURL.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, DOWNLOAD_URL));
+            updateMessage.appendSibling(updateURL);
+            player.addChatMessage(updateMessage);
         }
     }
     

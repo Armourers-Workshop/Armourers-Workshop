@@ -121,7 +121,7 @@ public final class SkinDownloadManager implements Runnable {
     @Override
     public void run() {
         ArrayList<String> remoteFileList = downloadSkinList();
-        ArrayList<String> localFileList = TileEntityArmourLibrary.getFileNames();
+        ArrayList<String> localFileList = TileEntityArmourLibrary.getFileNames(false);
         for (int i = 0; i < remoteFileList.size(); i++) {
             String file = remoteFileList.get(i);
             downloadSkin(file, localFileList);

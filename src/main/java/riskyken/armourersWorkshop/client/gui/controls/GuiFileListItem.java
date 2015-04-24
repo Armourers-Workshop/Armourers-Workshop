@@ -10,14 +10,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiFileListItem extends Gui implements IGuiListItem {
 
     private final String displayText;
+    private final String tag;
     private final boolean showSelected;
     
-    public GuiFileListItem(String displayText) {
-        this(displayText, false);
+    public GuiFileListItem(String displayText, String tag) {
+        this(displayText, tag, false);
     }
     
-    public GuiFileListItem(String displayText, boolean showSelected) {
+    public GuiFileListItem(String displayText, String tag, boolean showSelected) {
         this.displayText = displayText;
+        this.tag = tag;
         this.showSelected = showSelected;
     }
 

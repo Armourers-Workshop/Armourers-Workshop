@@ -5,7 +5,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
 public class ContainerMannequin extends Container {
@@ -15,7 +14,7 @@ public class ContainerMannequin extends Container {
     public ContainerMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
         this.tileEntity = tileEntity;
         
-        for (int y = 0; y < EnumEquipmentType.values().length - 1; y++) {
+        for (int y = 0; y < MannequinSlotType.values().length; y++) {
             addSlotToContainer(new SlotMannequin(MannequinSlotType.getOrdinal(y) ,tileEntity, y, 11, 25 + 19 * y));
         }
         

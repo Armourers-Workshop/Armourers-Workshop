@@ -50,7 +50,17 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider {
     
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-        return false;
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity != null && tileEntity instanceof TileEntityBoundingBox) {
+            if (((TileEntityBoundingBox)tileEntity).isParentValid()) {
+                return false;
+            } else {
+                world.setBlockToAir(x, y, z);
+                return true;
+            }
+        }
+        world.setBlockToAir(x, y, z);
+        return true;
     }
     
     @SideOnly(Side.CLIENT)

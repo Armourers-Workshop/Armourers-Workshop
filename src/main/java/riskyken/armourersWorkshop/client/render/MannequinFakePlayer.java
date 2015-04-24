@@ -1,8 +1,13 @@
 package riskyken.armourersWorkshop.client.render;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatBase;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 import com.mojang.authlib.GameProfile;
@@ -14,22 +19,13 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
     }
     
     @Override
-    public void addChatMessage(IChatComponent p_145747_1_) {
+    public String getCommandSenderName() {
+        return "[Mannequin]";
     }
     
     @Override
     public String getDisplayName() {
-        return "Mannequin";
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_) {
-        return false;
-    }
-
-    @Override
-    public ChunkCoordinates getPlayerCoordinates() {
-        return null;
+        return "[Mannequin]";
     }
 
     @Override
@@ -75,6 +71,26 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
         this.field_71094_bP += d3 * 0.25D;
         this.field_71085_bR += d1 * 0.25D;
         this.field_71095_bQ += d0 * 0.25D;
+    }
+    
+    @Override public boolean canCommandSenderUseCommand(int i, String s){ return false; }
+    @Override public ChunkCoordinates getPlayerCoordinates()
+    {
+        return new ChunkCoordinates(0,0,0);
+    }
 
+    @Override public void addChatComponentMessage(IChatComponent chatmessagecomponent){}
+    @Override public void addStat(StatBase par1StatBase, int par2){}
+    @Override public void openGui(Object mod, int modGuiId, World world, int x, int y, int z){}
+    @Override public boolean isEntityInvulnerable(){ return true; }
+    @Override public boolean canAttackPlayer(EntityPlayer player){ return false; }
+    @Override public void onDeath(DamageSource source){ return; }
+    @Override public void travelToDimension(int dim){ return; }
+    @Override public void addChatMessage(IChatComponent p_145747_1_) {}
+    @Override
+    public IIcon getItemIcon(ItemStack p_70620_1_, int p_70620_2_) {
+        IIcon icon = p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
+        //ModLogger.log(icon);
+        return p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
     }
 }

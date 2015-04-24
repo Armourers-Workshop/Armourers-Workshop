@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 
 public final class HolidayHelper {
     
@@ -87,7 +87,7 @@ public final class HolidayHelper {
     
     public static void giftPlayer(EntityPlayerMP player) {
         if (getHoliday() == EnumHoliday.CHRISTMAS) {
-            ExtendedPropsPlayerEquipmentData playerData = ExtendedPropsPlayerEquipmentData.get(player);
+            ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get(player);
             if (playerData.lastXmasYear < getYear()) {
                 Random rnd = new Random();
                 ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);

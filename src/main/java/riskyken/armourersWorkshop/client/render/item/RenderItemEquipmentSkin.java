@@ -5,17 +5,17 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
-import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
 
@@ -46,8 +46,8 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             GL11.glScalef(scale, scale, scale);
             GL11.glRotatef(180, 0, 1, 0);
             
-            EnumEquipmentType equipmentType = EquipmentDataHandler.INSTANCE.getEquipmentTypeFromStack(stack);
-            if (equipmentType == EnumEquipmentType.SWORD) {
+            ISkinType skinType = EquipmentNBTHelper.getSkinTypeFromStack(stack);
+            if (skinType == SkinTypeRegistry.skinSword) {
                 GL11.glScalef(0.7F, 0.7F, 0.7F);
             }
             switch (type) {
@@ -77,17 +77,15 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     }
     
     private boolean canRenderModel(ItemStack stack) {
-        if (!stack.hasTagCompound()) {
-            return false;
-        }
-        NBTTagCompound armourNBT = stack.getTagCompound().getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        if (armourNBT == null) { return false; }
-        if (!armourNBT.hasKey(LibCommonTags.TAG_EQUIPMENT_ID)) { return false; }
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(equipmentId)) {
-            return true;
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+                return true;
+            } else {
+                ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
+                return false;
+            }
         } else {
-            ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(equipmentId);
             return false;
         }
     }

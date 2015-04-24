@@ -4,39 +4,39 @@ import java.util.LinkedHashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderHandler;
-import riskyken.armourersWorkshop.api.client.render.IEquipmentRenderManager;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataHandler;
-import riskyken.armourersWorkshop.api.common.equipment.IEquipmentDataManager;
+import riskyken.armourersWorkshop.api.client.IArmourersClientManager;
+import riskyken.armourersWorkshop.api.common.IArmourersCommonManager;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.mojang.authlib.GameProfile;
 
-public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRenderManager {
+public final class ApiRegistrar {
     
     public static final ApiRegistrar INSTANCE = new ApiRegistrar();
     
-    public LinkedHashMap<String, IEquipmentDataManager> equipmentDataManagers = new LinkedHashMap<String, IEquipmentDataManager>();
-    public LinkedHashMap<String, IEquipmentRenderManager> equipmentRenderManagers = new LinkedHashMap<String, IEquipmentRenderManager>();
+    public LinkedHashMap<String, IArmourersCommonManager> equipmentDataManagers = new LinkedHashMap<String, IArmourersCommonManager>();
+    public LinkedHashMap<String, IArmourersClientManager> equipmentRenderManagers = new LinkedHashMap<String, IArmourersClientManager>();
     
     public void addApiRequest(String modName, String className) {
         try {
-            
             Class<?> c = Class.forName(className);
             Object classObject = c.newInstance();
-            if (classObject instanceof IEquipmentDataManager) {
+            if (classObject instanceof IArmourersCommonManager) {
                 ModLogger.log(String.format("Loading %s API addon for %s", "data manager", modName));
-                equipmentDataManagers.put(modName, ((IEquipmentDataManager)classObject));
-                ((IEquipmentDataManager)classObject).onLoad(EquipmentDataHandler.INSTANCE);
+                equipmentDataManagers.put(modName, ((IArmourersCommonManager)classObject));
+                ((IArmourersCommonManager)classObject).onLoad(EquipmentDataHandler.INSTANCE,
+                        SkinTypeRegistry.INSTANCE, EntitySkinHandler.INSTANCE);
             }
-            if (classObject instanceof IEquipmentRenderManager) {
+            if (classObject instanceof IArmourersClientManager) {
                 ModLogger.log(String.format("Loading %s API addon for %s", "render manager", modName));
-                equipmentRenderManagers.put(modName, ((IEquipmentRenderManager)classObject)) ;
-                ((IEquipmentRenderManager)classObject).onLoad(EquipmentRenderHandler.INSTANCE);
+                equipmentRenderManagers.put(modName, ((IArmourersClientManager)classObject)) ;
+                ((IArmourersClientManager)classObject).onLoad(EquipmentRenderHandler.INSTANCE);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -47,34 +47,12 @@ public final class ApiRegistrar implements IEquipmentDataManager, IEquipmentRend
         }
     }
     
-    @Override
-    public void onLoad(IEquipmentRenderHandler handler) {}
-
-    @Override
-    public void onRenderEquipment(Entity entity, EnumEquipmentType armourType) {
-        for (int i = 0; i < equipmentRenderManagers.size(); i++) {
-            String key = (String) equipmentRenderManagers.keySet().toArray()[i];
-            equipmentRenderManagers.get(key).onRenderEquipment(entity, armourType);
-        }
+    public void onRenderEquipment(Entity entity, ISkinType skinType) {
     }
-
-    @Override
-    public void onRenderEquipmentPart(Entity entity, EnumEquipmentPart armourPart) {
-        for (int i = 0; i < equipmentRenderManagers.size(); i++) {
-            String key = (String) equipmentRenderManagers.keySet().toArray()[i];
-            equipmentRenderManagers.get(key).onRenderEquipmentPart(entity, armourPart);
-        }
+    
+    public void onRenderEquipmentPart(Entity entity, ISkinPartType skinPart) {
     }
-
-    @Override
-    public void onLoad(IEquipmentDataHandler dataHandler) {
-    }
-
-    @Override
+    
     public void onRenderMannequin(TileEntity TileEntity, GameProfile gameProfile) {
-        for (int i = 0; i < equipmentRenderManagers.size(); i++) {
-            String key = (String) equipmentRenderManagers.keySet().toArray()[i];
-            equipmentRenderManagers.get(key).onRenderMannequin(TileEntity, gameProfile);
-        }
     }
 }

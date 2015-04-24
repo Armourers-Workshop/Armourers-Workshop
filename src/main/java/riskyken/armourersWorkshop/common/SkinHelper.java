@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
@@ -75,7 +76,6 @@ public final class SkinHelper {
         Minecraft mc = Minecraft.getMinecraft();
         Map map = mc.func_152342_ad().func_152788_a(gameProfile);
         
-        
         try {
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
@@ -105,8 +105,9 @@ public final class SkinHelper {
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;
         if (gameProfile != null) {
-            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(gameProfile.getId());
-            resourcelocation = getSkinResourceLocation(gameProfile);
+            PlayerPointer playerPointer = new PlayerPointer(gameProfile);
+            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
+            resourcelocation = getSkinResourceLocation(gameProfile, MinecraftProfileTexture.Type.SKIN);
         }
         
         if (skinInfo != null) {
@@ -122,12 +123,12 @@ public final class SkinHelper {
         }
     }
     
-    public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile) {
+    public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile, MinecraftProfileTexture.Type type) {
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
         Minecraft mc = Minecraft.getMinecraft();
-        Map map = mc.func_152342_ad().func_152788_a(gameProfile);
-        if (map.containsKey(Type.SKIN)) {
-            skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
+        Map<?, ?> map = mc.func_152342_ad().func_152788_a(gameProfile);
+        if (map.containsKey(type)) {
+            skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(type), type);
         }
         return skin;
     }

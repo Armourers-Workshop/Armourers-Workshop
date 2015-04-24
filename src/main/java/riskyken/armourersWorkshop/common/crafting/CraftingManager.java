@@ -3,11 +3,15 @@ package riskyken.armourersWorkshop.common.crafting;
 import java.lang.reflect.Method;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinCopy;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSwordSkin;
 import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import cpw.mods.fml.common.Loader;
@@ -16,6 +20,12 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public final class CraftingManager {
 
     public static void init() {
+        RecipeSorter.setCategory(RecipeSwordSkin.class, Category.SHAPELESS);
+        RecipeSorter.setCategory(RecipeSkinUpdate.class, Category.SHAPELESS);
+        RecipeSorter.setCategory(RecipeSkinCopy.class, Category.SHAPELESS);
+        GameRegistry.addRecipe(new RecipeSwordSkin());
+        GameRegistry.addRecipe(new RecipeSkinUpdate());
+        GameRegistry.addRecipe(new RecipeSkinCopy());
         hideItemsInNEI();
         if (ConfigHandler.disableRecipes) { return; }
         ModBlockRecipes.init();
@@ -42,9 +52,7 @@ public final class CraftingManager {
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[1], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[2], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
-                for (int i = 1; i < EnumEquipmentType.values().length; i++) {
-                    ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1, i - 1));
-                }
+                ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }

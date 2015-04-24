@@ -18,8 +18,8 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -28,7 +28,10 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequin extends GuiContainer implements ISlider  {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequin.png");

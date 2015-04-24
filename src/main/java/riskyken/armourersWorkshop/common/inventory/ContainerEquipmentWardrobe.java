@@ -5,25 +5,26 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class ContainerEquipmentWardrobe extends Container {
     
-    private ExtendedPropsPlayerEquipmentData customEquipmentData;
+    private ExPropsPlayerEquipmentData customEquipmentData;
     
-    public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, ExtendedPropsPlayerEquipmentData customEquipmentData) {
+    public ContainerEquipmentWardrobe(InventoryPlayer invPlayer, ExPropsPlayerEquipmentData customEquipmentData) {
         this.customEquipmentData = customEquipmentData;
         
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.HEAD, customEquipmentData, 0, 88, 18));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.CHEST, customEquipmentData, 1, 88, 37));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SWORD, customEquipmentData, 5, 69, 113));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.LEGS, customEquipmentData, 2, 88, 75));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.SKIRT, customEquipmentData, 3, 88, 56));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.FEET, customEquipmentData, 4, 88, 94));
-        addSlotToContainer(new SlotEquipmentSkin(EnumEquipmentType.BOW, customEquipmentData, 6, 28, 113));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinHead, customEquipmentData, 0, 88, 18));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinChest, customEquipmentData, 1, 88, 37));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinSword, customEquipmentData, 5, 69, 113));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinLegs, customEquipmentData, 2, 88, 75));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinSkirt, customEquipmentData, 3, 88, 56));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinFeet, customEquipmentData, 4, 88, 94));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinBow, customEquipmentData, 6, 28, 113));
 
         addSlotToContainer(new SlotColourTool(customEquipmentData, 7, 91, 35));
         addSlotToContainer(new SlotOutput(customEquipmentData, 8, 130, 35));
@@ -58,44 +59,18 @@ public class ContainerEquipmentWardrobe extends Container {
                     }
                 }
             } else {
-                if (stack.getItem() instanceof ItemEquipmentSkin) {
-                    switch (stack.getItemDamage()) {
-                    case 0:
-                        if (!this.mergeItemStack(stack, 0, 1, false)) {
-                            return null;
+                if (stack.getItem() instanceof ItemEquipmentSkin & EquipmentNBTHelper.stackHasSkinData(stack)) {
+                    boolean slotted = false;
+                    for (int i = 0; i < 7; i++) {
+                        Slot targetSlot = getSlot(i);
+                        if (targetSlot.isItemValid(stack)) {
+                            if (this.mergeItemStack(stack, i, i + 1, false)) {
+                                slotted = true;
+                                break;
+                            }
                         }
-                        break;
-                    case 1:
-                        if (!this.mergeItemStack(stack, 1, 2, false)) {
-                            return null;
-                        }
-                        break;
-                    case 2:
-                        if (!this.mergeItemStack(stack, 3, 4, false)) {
-                            return null;
-                        }
-                        break;
-                    case 3:
-                        if (!this.mergeItemStack(stack, 4, 5, false)) {
-                            return null;
-                        }
-                        break;
-                    case 4:
-                        if (!this.mergeItemStack(stack, 5, 6, false)) {
-                            return null;
-                        }
-                        break;
-                    case 5:
-                        if (!this.mergeItemStack(stack, 2, 3, false)) {
-                            return null;
-                        }
-                        break;
-                    case 6:
-                        if (!this.mergeItemStack(stack, 6, 7, false)) {
-                            return null;
-                        }
-                        break;    
-                    default:
+                    }
+                    if (!slotted) {
                         return null;
                     }
                 } else if(stack.getItem() instanceof ItemColourPicker) {

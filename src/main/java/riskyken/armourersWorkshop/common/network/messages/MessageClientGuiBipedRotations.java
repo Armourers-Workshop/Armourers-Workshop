@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.network.messages;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import riskyken.armourersWorkshop.common.BipedRotations;
+import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

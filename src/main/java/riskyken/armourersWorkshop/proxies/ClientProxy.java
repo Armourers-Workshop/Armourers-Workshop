@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.proxies;
 
-import java.util.UUID;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -10,6 +8,7 @@ import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
+import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -19,6 +18,7 @@ import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
+import riskyken.armourersWorkshop.client.render.entity.EntitySkinRenderHandler;
 import riskyken.armourersWorkshop.client.render.item.RenderItemBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
@@ -27,10 +27,14 @@ import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -59,6 +63,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void initRenderers() {
         EquipmentModelRenderer.init();
+        EntitySkinRenderHandler.init();
         ModelMannequin modelMannequin = new ModelMannequin();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
@@ -71,6 +76,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing(RenderingRegistry.getNextAvailableRenderId()));
         new BlockHighlightRenderHandler();
+        new ItemTooltipHandler();
     }
 
     @Override
@@ -97,6 +103,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         Addons.initRenderers();
+        EntitySkinRenderHandler.INSTANCE.initRenderer();
     }
 
     @Override
@@ -106,13 +113,13 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
-        EquipmentModelRenderer.INSTANCE.addEquipmentData(playerId, equipmentData);
+    public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
+        EquipmentModelRenderer.INSTANCE.addEquipmentData(playerPointer, equipmentData);
     }
 
     @Override
-    public void removeEquipmentData(UUID playerId) {
-        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerId);
+    public void removeEquipmentData(PlayerPointer playerPointer) {
+        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
     }
 
     @Override
@@ -121,13 +128,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
-        PlayerSkinHandler.INSTANCE.setPlayersSkinData(playerId, nakedInfo);
+    public void setPlayersNakedData(PlayerPointer playerPointer, EntityNakedInfo nakedInfo) {
+        PlayerSkinHandler.INSTANCE.setPlayersSkinData(playerPointer, nakedInfo);
     }
 
     @Override
-    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
-        return PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerId);
+    public PlayerSkinInfo getPlayersNakedData(PlayerPointer playerPointer) {
+        return PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
     }
 
     @Override
@@ -139,7 +146,22 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
+    public void receivedEquipmentData(Skin equipmentData) {
         ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
+    }
+    
+    @Override
+    public void receivedCommandFromSever(CommandType command) {
+        ClientEquipmentModelCache.INSTANCE.clearCache();
+    }
+    
+    @Override
+    public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
+        EntitySkinHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
+    }
+    
+    @Override
+    public void receivedSkinFromLibrary(String fileName, Skin skin) {
+        TileEntityArmourLibrary.saveSkinToDisk(fileName, skin);
     }
 }

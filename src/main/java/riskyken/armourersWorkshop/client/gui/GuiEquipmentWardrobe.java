@@ -20,13 +20,14 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
-import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
-import riskyken.armourersWorkshop.common.equipment.ExtendedPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.inventory.SlotHidable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
+import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
@@ -49,7 +50,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
     boolean headOverlay;
     boolean limitLimbs;
 
-    ExtendedPropsPlayerEquipmentData customEquipmentData;
+    ExPropsPlayerEquipmentData customEquipmentData;
     PlayerSkinInfo skinInfo;
     EntityNakedInfo nakedInfo;
     EntityPlayer player;
@@ -64,13 +65,14 @@ public class GuiEquipmentWardrobe extends GuiContainer {
     private float mouseX;
     private float mouseY;
 
-    public GuiEquipmentWardrobe(InventoryPlayer inventory, ExtendedPropsPlayerEquipmentData customEquipmentData) {
+    public GuiEquipmentWardrobe(InventoryPlayer inventory, ExPropsPlayerEquipmentData customEquipmentData) {
         super(new ContainerEquipmentWardrobe(inventory, customEquipmentData));
         
         this.customEquipmentData = customEquipmentData;
         this.player = inventory.player;
         
-        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(this.player.getUniqueID());
+        PlayerPointer playerPointer = new PlayerPointer(player);
+        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(playerPointer);
         
         if (skinInfo == null) {
             skinInfo = new PlayerSkinInfo(new EntityNakedInfo());
@@ -101,8 +103,8 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         autoButton = new GuiButtonExt(0, this.guiLeft + 27, this.guiTop + 116, 80, 18, GuiHelper.getLocalizedControlName(guiName, "autoColour"));
         skinList = new GuiList(this.guiLeft + 165, this.guiTop + 30, 80, 96, 12);
         skinList.clearList();
-        skinList.addListItem(new GuiFileListItem("Default", true));
-        skinList.addListItem(new GuiFileListItem("None", true));
+        skinList.addListItem(new GuiFileListItem("Default", "", true));
+        skinList.addListItem(new GuiFileListItem("None", "", true));
         skinList.setSelectedIndex(0);
         if (skinInfo.getNakedInfo().isNaked) {
             skinList.setSelectedIndex(1);

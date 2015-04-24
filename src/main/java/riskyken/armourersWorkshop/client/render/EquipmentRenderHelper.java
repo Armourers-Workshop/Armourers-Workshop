@@ -6,10 +6,10 @@ import java.util.BitSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 
 public final class EquipmentRenderHelper {
     
@@ -21,28 +21,24 @@ public final class EquipmentRenderHelper {
         return true;
     }
     
-    public static void cullFacesOnEquipmentPart(CustomEquipmentPartData partData) {
+    public static void cullFacesOnEquipmentPart(SkinPart partData) {
         ArrayList<ICube> blocks = partData.getArmourData();
-        partData.totalCubesInPart = blocks.size();
+        partData.totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
         for (int i = 0; i < blocks.size(); i++) {
             ICube blockData = blocks.get(i);
-            setBlockFaceFlags(blocks, blockData, partData.getArmourPart().bodyPart);
+            int cubeId = CubeRegistry.INSTANCE.getIdForCubeClass(blockData.getClass());
+            partData.totalCubesInPart[cubeId] += 1;
+            setBlockFaceFlags(blocks, blockData);
             partData.facesBuild = true;
         }
     }
     
-    private static void setBlockFaceFlags(ArrayList<ICube> partBlocks, ICube block, EnumBodyPart bodyPart) {
+    private static void setBlockFaceFlags(ArrayList<ICube> partBlocks, ICube block) {
         block.setFaceFlags(new BitSet(6));
         for (int j = 0; j < partBlocks.size(); j++) {
             ICube checkBlock = partBlocks.get(j);
             checkFaces(block, checkBlock);
         }
-        
-        if (bodyPart != null) {
-            //TODO Re enable culling faces that touch the players body.
-            //checkBlockFaceIntersectsBodyPart(bodyPart, block);
-        }
-        
     }
     
     private static void checkFaces(ICube block, ICube checkBlock) {
@@ -59,7 +55,7 @@ public final class EquipmentRenderHelper {
         }
 
     }
-    
+    /*
     private static void checkBlockFaceIntersectsBodyPart(EnumBodyPart bodyPart, ICube block) {
         ForgeDirection[] dirs = { ForgeDirection.EAST, ForgeDirection.WEST,  ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH };
         for (int i = 0; i < dirs.length; i++) {
@@ -84,4 +80,5 @@ public final class EquipmentRenderHelper {
         }
         return false;
     }
+    */
 }

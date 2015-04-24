@@ -46,7 +46,7 @@ public class RenderBlockMannequinItems {
             GL11.glScalef(-blockScale, -blockScale, blockScale);
             GL11.glRotatef(90F, 0F, 1F, 0F);
             
-            rm.itemRenderer.renderItem(fakePlayer, stack, 0);
+            rm.itemRenderer.renderItem(fakePlayer, stack, stack.getItemDamage());
         } else {
             if (targetItem instanceof ItemArmor) {
                 int passes = targetItem.getRenderPasses(stack.getItemDamage());
@@ -250,7 +250,7 @@ public class RenderBlockMannequinItems {
                 GL11.glScalef(0.75F, 0.75F, 0.75F);
             }
         }
-            
+        
         rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
     }
     

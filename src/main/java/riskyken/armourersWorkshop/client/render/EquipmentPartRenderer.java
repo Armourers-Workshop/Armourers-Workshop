@@ -8,16 +8,13 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.ResourceLocation;
 
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.LightingHelper;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
-import riskyken.armourersWorkshop.common.equipment.cubes.ICube;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -39,8 +36,8 @@ public class EquipmentPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(CustomEquipmentPartData armourPart, float scale) {
-        mc.mcProfiler.startSection(armourPart.getArmourPart().name());
+    public void renderPart(SkinPart armourPart, float scale) {
+        mc.mcProfiler.startSection(armourPart.getPartType().getPartName());
         
         GL11.glColor3f(1F, 1F, 1F);
         if (!armourPart.displayNormalCompiled) {
@@ -83,9 +80,9 @@ public class EquipmentPartRenderer extends ModelBase {
         
         if (armourPart.hasGlowingBlocks) {
             GL11.glDisable(GL11.GL_LIGHTING);
-            LightingHelper.disableLighting();
+            ModRenderHelper.disableLighting();
             GL11.glCallList(armourPart.displayListGlowing);
-            LightingHelper.enableLighting();
+            ModRenderHelper.enableLighting();
             GL11.glEnable(GL11.GL_LIGHTING);
         }
         
@@ -122,7 +119,8 @@ public class EquipmentPartRenderer extends ModelBase {
         for (int i = 0; i < armourBlockData.size(); i++) {
             ICube blockData = armourBlockData.get(i);
             if (!blockData.isGlowing()) {
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
+                int colour[] = {blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour()};
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), colour, scale, blockData.getFaceFlags(), blockData.needsPostRender());
             }
         }
     }
@@ -131,25 +129,27 @@ public class EquipmentPartRenderer extends ModelBase {
         for (int i = 0; i < armourBlockData.size(); i++) {
             ICube blockData = armourBlockData.get(i);
             if (blockData.isGlowing()) {
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
+                int colour[] = {blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour()};
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), colour, scale, blockData.getFaceFlags(), blockData.needsPostRender());
             }
         }
     }
 
-    public void renderArmourBlock(int x, int y, int z, int colour, float scale, BitSet faceFlags, boolean glass) {
-        float colourRed = (colour >> 16 & 0xff) / 255F;
-        float colourGreen = (colour >> 8 & 0xff) / 255F;
-        float colourBlue = (colour & 0xff) / 255F;
-        float colourAlpha = 1F;
-        
-        if (glass) {
-            colourAlpha = 0.5F;
+    public void renderArmourBlock(int x, int y, int z, int[] colour, float scale, BitSet faceFlags, boolean glass) {
+        float[] r = new float[6];
+        float[] g = new float[6];
+        float[] b = new float[6];
+        float[] a = new float[6];
+        for (int i = 0; i < 6; i++) {
+            r[i] = (colour[i] >> 16 & 0xff) / 255F;
+            g[i] = (colour[i] >> 8 & 0xff) / 255F;
+            b[i] = (colour[i] & 0xff) / 255F;
+            a[i] = 1F;
+            if (glass) {
+                a[i] = 0.5F;
+            }
         }
         
-        if (faceFlags != null) {
-            main.render(scale, faceFlags, x, y, z, colourRed, colourGreen, colourBlue, colourAlpha);
-        } else {
-            ModLogger.log(Level.WARN, "No face flags found on armour part.");
-        }
+        main.render(scale, faceFlags, x, y, z, r, g, b, a);
     }
 }

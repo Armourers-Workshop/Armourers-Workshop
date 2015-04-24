@@ -42,6 +42,10 @@ public class UpdateCheck implements Runnable {
 		ModLogger.log("Starting Update Check");
 		String localVersion = LibModInfo.VERSION;
 		
+		if(localVersion.equals("@VERSION@")) {
+		    return;
+		}
+		
 		try {
 		    if (localVersion.contains("-")) {
 		        String[] lvSplit = localVersion.split("-");

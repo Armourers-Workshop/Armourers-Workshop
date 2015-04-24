@@ -8,6 +8,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelLegs extends ModelBase {
 
+    public static final ModelLegs MODEL = new ModelLegs();
+    
     private ModelRenderer legLeft;
     private ModelRenderer legRight;
 
@@ -22,13 +24,11 @@ public class ModelLegs extends ModelBase {
         legRight.setRotationPoint(0, 0, 0);
     }
 
-    public void renderLeftLeft() {
-        float mult = 0.0625F;
-        legLeft.render(mult);
+    public void renderLeftLeft(float scale) {
+        legLeft.render(scale);
     }
     
-    public void renderRightLeg() {
-        float mult = 0.0625F;
-        legRight.render(mult);
+    public void renderRightLeg(float scale) {
+        legRight.render(scale);
     }
 }

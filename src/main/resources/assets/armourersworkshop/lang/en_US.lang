@@ -25,13 +25,7 @@ tile.armourersworkshop:doll.flavour=Mini mannequin!
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=Equipment Skin Template
 item.armourersworkshop:equipmentSkinTemplate.1000.name=Gift Sack
-item.armourersworkshop:equipmentSkin.0.name=Head Armour Skin
-item.armourersworkshop:equipmentSkin.1.name=Chest Armour Skin
-item.armourersworkshop:equipmentSkin.2.name=Leg Armour Skin
-item.armourersworkshop:equipmentSkin.3.name=Skirt Armour Skin
-item.armourersworkshop:equipmentSkin.4.name=Foot Armour Skin
-item.armourersworkshop:equipmentSkin.5.name=Sword Skin
-item.armourersworkshop:equipmentSkin.6.name=Bow Skin
+item.armourersworkshop:equipmentSkin.name=Equipment Skin
 item.armourersworkshop:paintbrush.name=Paintbrush
 item.armourersworkshop:paintRoller.name=Paint Roller
 item.armourersworkshop:colourPicker.name=Colour Picker
@@ -46,6 +40,7 @@ item.armourersworkshop:armourContainerHead.name=Head Armour Container
 item.armourersworkshop:armourContainerChest.name=Chest Armour Container
 item.armourersworkshop:armourContainerLegs.name=Legs Armour Container
 item.armourersworkshop:armourContainerFeet.name=Feet Armour Container
+item.armourersworkshop:wandOfStyle=Wand Of Style
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -60,14 +55,20 @@ item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to put on NPC's.
 
-# Armour types
-armourTypes.armourersworkshop:head.name=Head
-armourTypes.armourersworkshop:chest.name=Chest
-armourTypes.armourersworkshop:legs.name=Legs
-armourTypes.armourersworkshop:skirt.name=Skirt
-armourTypes.armourersworkshop:feet.name=Feet
-armourTypes.armourersworkshop:sword.name=Sword
-armourTypes.armourersworkshop:bow.name=Bow
+# Skin Types
+skinType.armourers:head.name=Head
+skinType.armourers:chest.name=Chest
+skinType.armourers:legs.name=Legs
+skinType.armourers:skirt.name=Skirt
+skinType.armourers:feet.name=Feet
+skinType.armourers:sword.name=Sword
+skinType.armourers:bow.name=Bow
+
+# Skin Part Types
+skinPartType.armourers:head.base.name=Head
+skinPartType.armourers:chest.base.name=Head
+skinPartType.armourers:chest.leftArm.name=Left Arm
+skinPartType.armourers:chest.rightArm.name=Right Arm
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
@@ -75,6 +76,8 @@ inventory.armourersworkshop:armourerBrain.name=Armourer
 inventory.armourersworkshop:armourLibrary.name=Equipment Library
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
+inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
+inventory.armourersworkshop:entityEquipment.name=Entity Equipment
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:
@@ -117,6 +120,10 @@ inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
 
+inventory.armourersworkshop:miniArmourer.save=Save
+inventory.armourersworkshop:miniArmourer.load=Load
+inventory.armourersworkshop:miniArmourer.label.buildingAccess=Sneak right click the mini armourer to access the building interface.
+
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=No more undos
 chat.armourersworkshop:undo.undoing=Undoing
@@ -127,7 +134,7 @@ chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but yo
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin> <player> [skinName]
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache> <player> [skinName]
 commands.armourers.fileNotFound=The file %1$s was not found.
 
 # Creative tab
@@ -140,30 +147,30 @@ keys.armourersworkshop.undo=Undo
 
 # Guide Book
 # Chapter 1
-book.armourersworkshop:guideBook.chapter1.title=Contents
+book.armourersworkshop:guideBook.contents.name=Contents
 
 # Chapter 2
-book.armourersworkshop:guideBook.chapter2.title=Introduction
-book.armourersworkshop:guideBook.chapter2.page1.text=Note: This book is still a WIP.&pWelcome to the Armourer's Workshop Guide Book.&pThis book will help you get started with Armourer's Workshop.
-book.armourersworkshop:guideBook.chapter2.page2.text=Armourer's Workshop will let you build your own equipment skins for armour and weapons to replace their look!
+book.armourersworkshop:guideBook.introduction.name=Introduction
+book.armourersworkshop:guideBook.introduction.paragraph1=Note: This book is still a WIP.&pWelcome to the Armourer's Workshop Guide Book.&pThis book will help you get started with Armourer's Workshop.
+book.armourersworkshop:guideBook.introduction.paragraph2=Armourer's Workshop will let you build your own equipment skins for armour and weapons to replace their look!
 
 # Chapter 3
-book.armourersworkshop:guideBook.chapter3.title=Armourer
-book.armourersworkshop:guideBook.chapter3.page1.text=The first thing you will need to get started building your custom armour is the armourer.&pAfter placing the block down right click it to open the GUI. Down the left side you will see all the types of equipment that can be build.
-book.armourersworkshop:guideBook.chapter3.page2.text=Select the type of equipment that you would like to crate then start building your equipment using Equipment Cubes.&pAfter you have finished place an equipment template into the armourer type in a name and press save.
+book.armourersworkshop:guideBook.armourer.name=Armourer
+book.armourersworkshop:guideBook.armourer.paragraph1=The first thing you will need to get started building your custom armour is the armourer.&pAfter placing the block down right click it to open the GUI. Down the left side you will see all the types of equipment that can be build.
+book.armourersworkshop:guideBook.armourer.paragraph2=Select the type of equipment that you would like to crate then start building your equipment using Equipment Cubes.&pAfter you have finished place an equipment template into the armourer type in a name and press save.
 
 # Chapter 4
-book.armourersworkshop:guideBook.chapter4.title=Equipment Templates
-book.armourersworkshop:guideBook.chapter4.page1.text=Equipment templates are what equipment skins are saved on simply place the equipment skin into the equipment wardrobe to apply the skin.
+book.armourersworkshop:guideBook.equipmentTemplates.name=Equipment Templates
+book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=Equipment templates are what equipment skins are saved on simply place the equipment skin into the equipment wardrobe to apply the skin.
 
 # Chapter 5
-book.armourersworkshop:guideBook.chapter5.title=Painting Tools
-book.armourersworkshop:guideBook.chapter5.page1.text=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Equipment Cube.
-book.armourersworkshop:guideBook.chapter5.page2.text=Colour Picker&nLets you pick a colour from an Equipment Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
-book.armourersworkshop:guideBook.chapter5.page3.text=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Equipment Cube.
-book.armourersworkshop:guideBook.chapter5.page4.text=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
+book.armourersworkshop:guideBook.paintingTools.name=Painting Tools
+book.armourersworkshop:guideBook.paintingTools.paragraph1=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Equipment Cube.
+book.armourersworkshop:guideBook.paintingTools.paragraph2=Colour Picker&nLets you pick a colour from an Equipment Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
+book.armourersworkshop:guideBook.paintingTools.paragraph3=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Equipment Cube.
+book.armourersworkshop:guideBook.paintingTools.paragraph4=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
 
 # Chapter 6
-book.armourersworkshop:guideBook.chapter6.title=Equipment Wardrobe
-book.armourersworkshop:guideBook.chapter6.page1.text=WIP
-book.armourersworkshop:guideBook.chapter6.page2.text=WIP
+book.armourersworkshop:guideBook.equipmentWardrobe.name=Equipment Wardrobe
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=WIP
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP

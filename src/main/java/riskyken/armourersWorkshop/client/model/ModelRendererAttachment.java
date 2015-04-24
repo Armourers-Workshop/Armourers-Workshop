@@ -8,15 +8,16 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,17 +25,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelRendererAttachment extends ModelRenderer {
 
-    private final EnumEquipmentType equipmentType;
-    private final EnumEquipmentPart equipmentPart;
+    private final ISkinType skinType;
+    private final ISkinPartType skinPart;
     private final Minecraft mc;
     private ModelBiped baseModel;
     
-    public ModelRendererAttachment(ModelBiped modelBase, EnumEquipmentType equipmentType, EnumEquipmentPart equipmentPart) {
+    public ModelRendererAttachment(ModelBiped modelBase, ISkinType skinType, ISkinPartType skinPart) {
         super(modelBase);
         this.baseModel = modelBase;
         mc = Minecraft.getMinecraft();
-        this.equipmentType = equipmentType;
-        this.equipmentPart = equipmentPart;
+        this.skinType = skinType;
+        this.skinPart = skinPart;
         addBox(0, 0, 0, 0, 0, 0);
     }
     
@@ -58,7 +59,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.mcProfiler.endSection();
             return;
         }
-        CustomEquipmentItemData data = modelRenderer.getPlayerCustomArmour(player, equipmentType);
+        Skin data = modelRenderer.getPlayerCustomArmour(player, skinType);
         if (data == null) {
             mc.mcProfiler.endSection();
             return;
@@ -67,10 +68,10 @@ public class ModelRendererAttachment extends ModelRenderer {
         data.onRender();
         int size = data.getParts().size();
         for (int i = 0; i < size; i++) {
-            CustomEquipmentPartData partData = data.getParts().get(i);
-            if (partData.getArmourPart() == equipmentPart) {
+            SkinPart partData = data.getParts().get(i);
+            if (partData.getPartType() == skinPart) {
                 GL11.glPushMatrix();
-                if (equipmentType == EnumEquipmentType.SKIRT && equipmentPart == EnumEquipmentPart.SKIRT) {
+                if (skinType == SkinTypeRegistry.skinSkirt && skinPart.getRegistryName().equals("armourers:skirt.base")) {
                     GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
                     GL11.glTranslatef(-2 * scale, 0, 0);
                     if (player.isSneaking()) {

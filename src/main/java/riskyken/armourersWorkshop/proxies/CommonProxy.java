@@ -1,12 +1,12 @@
 package riskyken.armourersWorkshop.proxies;
 
-import java.util.UUID;
-
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.EntityNakedInfo;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 
 public class CommonProxy {
     
@@ -30,11 +30,11 @@ public class CommonProxy {
         
     }
     
-    public void addEquipmentData(UUID playerId, EntityEquipmentData equipmentData) {
+    public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
         
     }
     
-    public void removeEquipmentData(UUID playerId) {
+    public void removeEquipmentData(PlayerPointer playerPointer) {
         
     }
     
@@ -42,11 +42,11 @@ public class CommonProxy {
         return 0;
     }
 
-    public void setPlayersNakedData(UUID playerId, EntityNakedInfo nakedInfo) {
+    public void setPlayersNakedData(PlayerPointer playerPointer, EntityNakedInfo nakedInfo) {
         
     }
     
-    public PlayerSkinInfo getPlayersNakedData(UUID playerId) {
+    public PlayerSkinInfo getPlayersNakedData(PlayerPointer playerPointer) {
         return null;
     }
     
@@ -54,7 +54,19 @@ public class CommonProxy {
         return 0;
     }
     
-    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
+    public void receivedEquipmentData(Skin equipmentData) {
+        
+    }
+    
+    public void receivedCommandFromSever(CommandType command) {
+        
+    }
+    
+    public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
+        
+    }
+    
+    public void receivedSkinFromLibrary(String fileName, Skin skin) {
         
     }
 }

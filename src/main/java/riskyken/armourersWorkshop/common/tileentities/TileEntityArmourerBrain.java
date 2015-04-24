@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,48 +7,49 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentPart;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.equipment.ArmourerWorldHelper;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.ISkinHolder;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+
+import org.apache.logging.log4j.Level;
+
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.ISkinHolder;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.GameProfileUtils;
+import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
-import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
-public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
+public class TileEntityArmourerBrain extends AbstractTileEntityInventory implements IGameProfileCallback {
     
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_OWNER = "owner";
-    private static final String TAG_TYPE = "type";
+    private static final String TAG_TYPE = "skinType";
+    private static final String TAG_TYPE_OLD = "type";
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
     private static final String TAG_CUSTOM_NAME = "customeName";
-    private static final int HEIGHT_OFFSET = 2;
+    private static final int HEIGHT_OFFSET = 1;
     
     private ForgeDirection direction;
     private GameProfile gameProfile = null;
-    private EnumEquipmentType type;
+    private GameProfile newProfile = null;
+    private ISkinType skinType;
     private boolean showGuides;
     private boolean showOverlay;
     private String customName;
     
     public TileEntityArmourerBrain() {
-        this.type = EnumEquipmentType.HEAD;
+        this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
         this.items = new ItemStack[2];
         this.showOverlay = true;
         this.showGuides = true;
@@ -82,13 +82,21 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         String authorName = player.getCommandSenderName();
         String customName = name;
         
-        CustomEquipmentItemData armourItemData;
-        armourItemData = ArmourerWorldHelper.saveArmourItem(worldObj, type, authorName, customName, tags,
-                xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+        Skin armourItemData = null;
+        
+        try {
+            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinType, authorName, customName, tags,
+                    xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+        } catch (InvalidCubeTypeException e) {
+            ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
+            e.printStackTrace();
+        }
         
         if (armourItemData == null) {
             return;
         }
+        
+        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
@@ -97,6 +105,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         
         this.decrStackSize(0, 1);
         setInventorySlotContents(1, stackOutput);
+        
     }
 
     /**
@@ -120,19 +129,21 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
             return;
         }
         
-        if (!EquipmentNBTHelper.itemStackHasCustomEquipment(stackInput)) {
+        if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
+        
+        SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stackInput);
 
-        if (stackInput.getItemDamage() != type.ordinal() - 1) {
+        if (skinType != null && skinType != skinData.skinType) {
             return;
         }
-
-        int equipmentId = EquipmentNBTHelper.getEquipmentIdFromStack(stackInput);
-        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
+        
+        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
+        Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         
-        ArmourerWorldHelper.loadArmourItem(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
+        ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
     
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
@@ -143,20 +154,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
     
     public void preRemove() {
-        removeBoundingBoxed();
-    }
-    
-    private void checkForTemplateItem() {
-        if (this.worldObj.isRemote) { return; }
-        ItemStack stackInput = getStackInSlot(0);
-        if (stackInput == null) {
-            setType(EnumEquipmentType.NONE);
-            return;
-        }
-        
-        if (stackInput.getItem() instanceof ItemEquipmentSkinTemplate) {
-            setType(EnumEquipmentType.getOrdinal(stackInput.getItemDamage() + 1));
-        }
+        removeBoundingBoxes();
     }
     
     public int getHeightOffset() {
@@ -164,141 +162,20 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     }
 
     public void clearArmourCubes() {
-        for (int i = 0; i < type.getParts().length; i++) {
-            EnumEquipmentPart part = type.getParts()[i];
-            ModLogger.log("Clearing " + part);
-            for (int ix = 0; ix <  part.getTotalXSize(); ix++) {
-                for (int iy = 0; iy < part.getTotalYSize(); iy++) {
-                    for (int iz = 0; iz <  part.getTotalZSize(); iz++) {
-                        int tarX = xCoord + part.getStartX() - part.xLocation + ix;
-                        int tarY = yCoord + part.getStartY() + getHeightOffset() + part.yLocation + iy;
-                        int tarZ = zCoord + part.getStartZ() - part.zLocation + iz;
-                        Block tarBlock = worldObj.getBlock(tarX, tarY, tarZ);
-                        if (
-                                tarBlock == ModBlocks.colourable |
-                                tarBlock == ModBlocks.colourableGlowing |
-                                tarBlock == ModBlocks.colourableGlass |
-                                tarBlock == ModBlocks.colourableGlassGlowing
-                            ) {
-                            worldObj.setBlockToAir(tarX, tarY, tarZ);
-                        }
-                    }
-                }
-            }
+        if (skinType != null) {
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
         }
     }
     
-    public void cloneToSide(ForgeDirection side) {
-        /*
-        int ySize = MULTI_BLOCK_SIZE;
-        if (type == EnumEquipmentType.WEAPON) {
-            ySize += 20;
-        }
-        for (int ix = 0; ix < MULTI_BLOCK_SIZE / 2; ix++) {
-            for (int iy = 1; iy < ySize - 1; iy++) {
-                for (int iz = 1; iz < MULTI_BLOCK_SIZE; iz++) {
-                    int x = xCoord + xOffset + ix;
-                    int newX = xCoord + xOffset + MULTI_BLOCK_SIZE - ix - 1;
-                    if (side == ForgeDirection.EAST) {
-                        x += MULTI_BLOCK_SIZE / 2;
-                        newX = xCoord + xOffset + (MULTI_BLOCK_SIZE / 2) - ix - 1;
-                    }
-                    int y = yCoord + iy;
-                    int z = zCoord + zOffset + iz;
-                    
-                    if (!worldObj.isAirBlock(x, y, z)) {
-                        Block block = worldObj.getBlock(x, y, z);
-                        if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing) {
-                            TileEntity te1 = worldObj.getTileEntity(x, y, z);
-                            worldObj.setBlock(newX, y, z, block);
-                            if (te1 != null && te1 instanceof IPantable) {
-                                TileEntity te3 = worldObj.getTileEntity(newX, y, z);
-                                if (te3 != null && te3 instanceof IPantable) {
-                                    ((IPantable)te3).setColour(((IPantable)te1).getColour());
-                                } else {
-                                    TileEntityColourable te2 = new TileEntityColourable(((IPantable)te1).getColour());
-                                    worldObj.setTileEntity(newX, y, z, te2);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        */
-    }
-    
-    protected void removeBoundingBoxed() {
-        EnumEquipmentPart[] parts = type.getParts();
-        for (int i = 0; i < parts.length; i++) {
-            EnumEquipmentPart part = parts[i];
-            removeBoundingBoxesForPart(part);
-        }
-    }
-    
-    private void removeBoundingBoxesForPart(EnumEquipmentPart part) {
-        for (int ix = 0; ix < part.xSize; ix++) {
-            for (int iy = 0; iy < part.ySize; iy++) {
-                for (int iz = 0; iz < part.zSize; iz++) {
-                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
-                    int y = yCoord + part.yLocation + getHeightOffset() + iy;
-                    int z = zCoord + part.zLocation  - (part.zSize / 2) + iz;
-                    if (part == EnumEquipmentPart.WEAPON | part == EnumEquipmentPart.BOW) {
-                        z += 4;
-                    }
-                    if (worldObj.getBlock(x, y, z) == ModBlocks.boundingBox) {
-                        worldObj.setBlockToAir(x, y, z);
-                    }
-                }
-            }
+    protected void removeBoundingBoxes() {
+        if (skinType != null) {
+            ArmourerWorldHelper.removeBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
         }
     }
     
     protected void createBoundingBoxes() {
-        EnumEquipmentPart[] parts = type.getParts();
-        for (int i = 0; i < parts.length; i++) {
-            EnumEquipmentPart part = parts[i];
-            createBoundingBoxesForPart(part);
-        }
-    }
-    
-    private void createBoundingBoxesForPart(EnumEquipmentPart part) {
-        int xSize = part.xSize;
-        int ySize = part.ySize;
-        int zSize = part.zSize;
-        if (part == EnumEquipmentPart.WEAPON | part == EnumEquipmentPart.BOW) {
-            zSize -= 4;
-        }
-        for (int ix = 0; ix < xSize; ix++) {
-            for (int iy = 0; iy < ySize; iy++) {
-                for (int iz = 0; iz < zSize; iz++) {
-                    int x = xCoord - part.xLocation - (part.xSize / 2) + ix;
-                    int y = yCoord + part.yLocation + getHeightOffset() + iy;
-                    int z = zCoord + part.zLocation - (part.zSize / 2) + iz;
-                    if (part == EnumEquipmentPart.WEAPON | part == EnumEquipmentPart.BOW) {
-                        z += 8;
-                    }
-                    if (part == EnumEquipmentPart.SKIRT & ix > 3) {
-                        createBoundingBox(x, y, z, EnumBodyPart.RIGHT_LEG);
-                    } else {
-                        createBoundingBox(x, y, z, part.bodyPart);
-                    }
-                }
-            }
-        }
-    }
-    
-    private void createBoundingBox(int x, int y, int z, EnumBodyPart bodyPart) {
-        if (worldObj.isAirBlock(x, y, z)) {
-            worldObj.setBlock(x, y, z, ModBlocks.boundingBox);
-            TileEntity te = null;
-            te = worldObj.getTileEntity(x, y, z);
-            if (te != null && te instanceof TileEntityBoundingBox) {
-                ((TileEntityBoundingBox)te).setParent(xCoord, yCoord, zCoord, bodyPart);
-            } else {
-                te = new TileEntityBoundingBox(xCoord, yCoord, zCoord, bodyPart);
-                worldObj.setTileEntity(x, y, z, te);
-            }
+        if (skinType != null) {
+            ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType);
         }
     }
     
@@ -322,8 +199,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return bb;
     }
 
-    public EnumEquipmentType getType() {
-        return type;
+    public ISkinType getSkinType() {
+        return skinType;
     }
     
     public boolean isShowGuides() {
@@ -338,12 +215,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         return gameProfile;
     }
     
-    public void setType(EnumEquipmentType type) {
-        if (this.type == type) {
+    public void setSkinType(ISkinType skinType) {
+        if (this.skinType == skinType) {
             return;
         }
-        removeBoundingBoxed();
-        this.type = type;
+        removeBoundingBoxes();
+        this.skinType = skinType;
         createBoundingBoxes(); 
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -378,20 +255,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    private void updateProfileData(){
-        if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
-            if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
-                GameProfile gameprofile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.gameProfile.getName());
-                if (gameprofile != null) {
-                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
-                    if (property == null) {
-                        gameprofile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameprofile, true);
-                    }
-                    this.gameProfile = gameprofile;
-                    this.markDirty();
-                }
-            }
-        }
+    private void updateProfileData() {
+        GameProfileUtils.updateProfileData(gameProfile, this);
     }
     
     @Override
@@ -435,7 +300,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
         direction = ForgeDirection.getOrientation(compound.getByte(TAG_DIRECTION));
-        type = EnumEquipmentType.getOrdinal(compound.getInteger(TAG_TYPE));
+        skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
+        //Update code for old saves
+        if (skinType == null && compound.hasKey(TAG_TYPE_OLD)) {
+            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(compound.getInteger(TAG_TYPE_OLD) - 1);
+        }
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         customName = compound.getString(TAG_CUSTOM_NAME);
@@ -448,14 +317,27 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory {
     public void writeCommonToNBT(NBTTagCompound compound) {
         super.writeCommonToNBT(compound);
         compound.setByte(TAG_DIRECTION, (byte) direction.ordinal());
-        compound.setInteger(TAG_TYPE, type.ordinal());
+        if (skinType != null) {
+            compound.setString(TAG_TYPE, skinType.getRegistryName());
+        }
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setString(TAG_CUSTOM_NAME, customName);
+        if (this.newProfile != null) {
+            this.gameProfile = newProfile;
+            this.newProfile = null;
+        }
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
+    }
+
+    @Override
+    public void profileUpdated(GameProfile gameProfile) {
+        newProfile = gameProfile;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

@@ -5,26 +5,34 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class TileEntityBoundingBox extends TileEntity {
     
     private static final String TAG_PARENT_X = "parentX";
     private static final String TAG_PARENT_Y = "parentY";
     private static final String TAG_PARENT_Z = "parentZ";
-    private static final String TAG_BODY_PART = "bodyPart";
+    private static final String TAG_GUIDE_X = "guideX";
+    private static final String TAG_GUIDE_Y = "guideY";
+    private static final String TAG_GUIDE_Z = "guideZ";
+    private static final String TAG_SKIN_PART = "skinPart";
     
     private int parentX;
     private int parentY;
     private int parentZ;
-    private EnumBodyPart bodyPart;
+    private byte guideX;
+    private byte guideY;
+    private byte guideZ;
+    private ISkinPartType skinPart;
     
     public TileEntityBoundingBox() {
-        bodyPart = EnumBodyPart.CHEST;
+        setParent(0, 0, 0, (byte) 0, (byte) 0, (byte) 0, null);
     }
     
-    public TileEntityBoundingBox(int parentX, int parentY, int parentZ, EnumBodyPart bodyPart) {
-        setParent(parentX, parentY, parentZ, bodyPart);
+    public TileEntityBoundingBox(int parentX, int parentY, int parentZ,
+            byte guideX, byte guideY, byte guideZ, ISkinPartType skinPart) {
+        setParent(parentX, parentY, parentZ, guideX, guideY, guideZ, skinPart);
     }
     
     @Override
@@ -38,9 +46,10 @@ public class TileEntityBoundingBox extends TileEntity {
         this.parentX = compound.getInteger(TAG_PARENT_X);
         this.parentY = compound.getInteger(TAG_PARENT_Y);
         this.parentZ = compound.getInteger(TAG_PARENT_Z);
-        if (compound.hasKey(TAG_BODY_PART)) {
-            this.bodyPart = EnumBodyPart.values()[compound.getByte(TAG_BODY_PART)];
-        }
+        this.guideX = compound.getByte(TAG_GUIDE_X);
+        this.guideY = compound.getByte(TAG_GUIDE_Y);
+        this.guideZ = compound.getByte(TAG_GUIDE_Z);
+        this.skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(compound.getString(TAG_SKIN_PART));
     }
     
     @Override
@@ -49,8 +58,11 @@ public class TileEntityBoundingBox extends TileEntity {
         compound.setInteger(TAG_PARENT_X, this.parentX);
         compound.setInteger(TAG_PARENT_Y, this.parentY);
         compound.setInteger(TAG_PARENT_Z, this.parentZ);
-        if (this.bodyPart != null) {
-            compound.setByte(TAG_BODY_PART, (byte)this.bodyPart.ordinal());
+        compound.setByte(TAG_GUIDE_X, this.guideX);
+        compound.setByte(TAG_GUIDE_Y, this.guideY);
+        compound.setByte(TAG_GUIDE_Z, this.guideZ);
+        if (this.skinPart != null) {
+            compound.setString(TAG_SKIN_PART, this.skinPart.getRegistryName());
         }
     }
     
@@ -75,15 +87,39 @@ public class TileEntityBoundingBox extends TileEntity {
         return null;
     }
     
-    public EnumBodyPart getBodyPart() {
-        return bodyPart;
+    public boolean isParentValid() {
+        TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
+        if (te != null && te instanceof TileEntityArmourerBrain) {
+            return true;
+        }
+        return false;
     }
     
-    public void setParent(int x, int y, int z, EnumBodyPart bodyPart) {
+    public ISkinPartType getSkinPart() {
+        return this.skinPart;
+    }
+    
+    public void setParent(int x, int y, int z,byte guideX, byte guideY, byte guideZ,
+            ISkinPartType skinPart) {
         this.parentX = x;
         this.parentY = y;
         this.parentZ = z;
-        this.bodyPart = bodyPart;
+        this.guideX = guideX;
+        this.guideY = guideY;
+        this.guideZ = guideZ;
+        this.skinPart = skinPart;
         this.markDirty();
+    }
+    
+    public byte getGuideX() {
+        return this.guideX;
+    }
+    
+    public byte getGuideY() {
+        return this.guideY;
+    }
+    
+    public byte getGuideZ() {
+        return this.guideZ;
     }
 }

@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.items;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -13,10 +14,13 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.equipment.EnumBodyPart;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -28,6 +32,9 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.PaintingNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilColour;
+
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -77,8 +84,11 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
             if (te != null && te instanceof TileEntityBoundingBox && world.isRemote) {
                 TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
                 if (parent != null) {
-                    int colour = getColourFromSkin(parent, ((TileEntityBoundingBox)te).getBodyPart(), player, world, x, y, z, side);
-                    PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
+                    ISkinType skinType = parent.getSkinType();
+                    if (skinPartHasTexture(((TileEntityBoundingBox)te).getSkinPart())) {
+                        int colour = getColourFromSkin((TileEntityBoundingBox)te, player, world, x, y, z, side);
+                        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
+                    }
                 }
             }
             if (!world.isRemote) {
@@ -89,94 +99,69 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         return false;
     }
     
-    private int getColourFromSkin(TileEntityArmourerBrain te, EnumBodyPart bodyPart, EntityPlayer player, World world, int x, int y, int z, int side) {
-        int textureX = bodyPart.textureX;
-        int textureY = bodyPart.textureY;
-        boolean holdMirror = true;
+    private boolean skinPartHasTexture(ISkinPartType skinPart) {
+        return skinPart instanceof ISkinPartTypeTextured;
+    }
+    
+    private int getColourFromSkin(TileEntityBoundingBox te, EntityPlayer player, World world, int x, int y, int z, int side) {
+        ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
+        Point textureLocation = skinPart.getTextureLocation();
+        IPoint3D textureModelSize = skinPart.getTextureModelSize();
+        ForgeDirection blockFace = ForgeDirection.getOrientation(side);
+        GameProfile gameProfile = te.getParent().getGameProfile();
         
-        ForgeDirection dir = ForgeDirection.getOrientation(side);
-        ForgeDirection xSearchAxis = ForgeDirection.UNKNOWN;
-        ForgeDirection ySearchAxis = ForgeDirection.UNKNOWN;
+        byte blockX = te.getGuideX();
+        byte blockY = te.getGuideY();
+        byte blockZ = te.getGuideZ();
         
-        switch (dir) {
-        case DOWN:
-            textureX += bodyPart.zSize + bodyPart.xSize;
-            ySearchAxis = ForgeDirection.SOUTH;
-            xSearchAxis = ForgeDirection.EAST;
-            break;
-        case UP:
-            textureX += bodyPart.zSize;
-            ySearchAxis = ForgeDirection.SOUTH;
-            xSearchAxis = ForgeDirection.EAST;
+        int textureX = textureLocation.x;
+        int textureY = textureLocation.y;
+        
+        int shiftX = 0;
+        int shiftY = 0;
+        
+        switch (blockFace) {
+        case EAST:
+            textureY += textureModelSize.getZ();
+            shiftX = (byte) (-blockZ + textureModelSize.getZ() - 1);
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case NORTH:
-            textureX += bodyPart.zSize;
-            textureY += bodyPart.zSize;
-            ySearchAxis = ForgeDirection.UP;
-            xSearchAxis = ForgeDirection.EAST;
-            break;
-        case SOUTH:
-            textureX += bodyPart.zSize + bodyPart.xSize + bodyPart.zSize;
-            textureY += bodyPart.zSize;
-            ySearchAxis = ForgeDirection.UP;
-            xSearchAxis = ForgeDirection.WEST;
+            textureX += textureModelSize.getZ();
+            textureY += textureModelSize.getZ();
+            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case WEST:
-            textureX += bodyPart.zSize + bodyPart.xSize;
-            textureY += bodyPart.zSize;
-            ySearchAxis = ForgeDirection.UP;
-            xSearchAxis = ForgeDirection.NORTH;
-            holdMirror = false;
+            textureX += textureModelSize.getZ() + textureModelSize.getX();
+            textureY += textureModelSize.getZ();
+            shiftX = blockZ;
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
-        case EAST:
-            textureY += bodyPart.zSize;
-            ySearchAxis = ForgeDirection.UP;
-            xSearchAxis = ForgeDirection.SOUTH;
-            holdMirror = false;
+        case SOUTH:
+            textureX += textureModelSize.getZ() + textureModelSize.getX() + textureModelSize.getZ();
+            textureY += textureModelSize.getZ();
+            shiftX = blockX;
+            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
-        case UNKNOWN:
+        case DOWN:
+            textureX += textureModelSize.getZ() + textureModelSize.getX();
+            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            shiftY = (byte) (-blockZ + textureModelSize.getX() - 1);
+            break;
+        case UP:
+            textureX += textureModelSize.getZ();
+            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            shiftY = (byte) (-blockZ + textureModelSize.getZ() - 1);
+            break;
+        default:
             break;
         }
         
-        for (int ix = 1; ix < 13; ix++) {
-            int xOffset = xSearchAxis.offsetX;
-            int yOffset = xSearchAxis.offsetY;
-            int zOffset = xSearchAxis.offsetZ;
-            Block block = null;
-            if (bodyPart.mirrorTexture & holdMirror) {
-                block = world.getBlock(x - xOffset * ix, y - yOffset * ix, z - zOffset * ix);
-            } else {
-                block = world.getBlock(x + xOffset * ix, y + yOffset * ix, z + zOffset * ix);
-            }
-            
-            if (block != ModBlocks.boundingBox) {
-                textureX += ix - 1;
-                break;
-            }
-        }
+        textureX += shiftX;
+        textureY += shiftY;
         
-        for (int iy = 1; iy < 13; iy++) {
-            int xOffset = ySearchAxis.offsetX;
-            int yOffset = ySearchAxis.offsetY;
-            int zOffset = ySearchAxis.offsetZ;
-            Block block = world.getBlock(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
-            
-            if (block != ModBlocks.boundingBox) {
-                textureY += iy - 1;
-                break;
-            } else {
-                TileEntity teTar = world.getTileEntity(x + xOffset * iy, y + yOffset * iy, z + zOffset * iy);
-                if (teTar != null && teTar instanceof TileEntityBoundingBox) {
-                    if (((TileEntityBoundingBox)teTar).getBodyPart() != bodyPart) {
-                        textureY += iy - 1;
-                        break;
-                    }
-                }
-            }
-        }
-        
-        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(te.getGameProfile());
-        
+        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
         int colour = UtilColour.getMinecraftColor(0);
         if (playerSkin != null) {
             colour = playerSkin.getRGB(textureX, textureY);

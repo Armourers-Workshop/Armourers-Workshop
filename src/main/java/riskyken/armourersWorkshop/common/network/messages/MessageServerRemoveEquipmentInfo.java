@@ -1,38 +1,35 @@
 package riskyken.armourersWorkshop.common.network.messages;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.UUID;
-
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.network.ByteBufHelper;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageServerRemoveEquipmentInfo implements IMessage, IMessageHandler<MessageServerRemoveEquipmentInfo, IMessage> {
 
-    UUID playerId;
+    PlayerPointer playerPointer;
     
     public MessageServerRemoveEquipmentInfo() {}
     
-    public MessageServerRemoveEquipmentInfo(UUID playerId) {
-        this.playerId = playerId;
+    public MessageServerRemoveEquipmentInfo(PlayerPointer playerPointer) {
+        this.playerPointer = playerPointer;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.playerId = ByteBufHelper.readUUID(buf);
+        this.playerPointer = new PlayerPointer(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufHelper.writeUUID(buf, this.playerId);
+        this.playerPointer.writeToByteBuffer(buf);
     }
     
     @Override
     public IMessage onMessage(MessageServerRemoveEquipmentInfo message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.removeEquipmentData(message.playerId);
+        ArmourersWorkshop.proxy.removeEquipmentData(message.playerPointer);
         return null;
     }
 }

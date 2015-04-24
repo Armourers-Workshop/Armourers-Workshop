@@ -6,11 +6,11 @@ import java.util.HashSet;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentPartData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -25,7 +25,7 @@ public class ClientEquipmentModelCache {
     
     public static ClientEquipmentModelCache INSTANCE;
     
-    private final HashMap<Integer, CustomEquipmentItemData> equipmentDataMap;
+    private final HashMap<Integer, Skin> equipmentDataMap;
     private final HashSet<Integer> requestedEquipmentIds;
     
     public static void init() {
@@ -33,7 +33,7 @@ public class ClientEquipmentModelCache {
     }
     
     public ClientEquipmentModelCache() {
-        equipmentDataMap = new HashMap<Integer, CustomEquipmentItemData>();
+        equipmentDataMap = new HashMap<Integer, Skin>();
         requestedEquipmentIds = new HashSet<Integer>();
         FMLCommonHandler.instance().bus().register(this);
     }
@@ -53,7 +53,7 @@ public class ClientEquipmentModelCache {
         }
     }
     
-    public void receivedEquipmentData(CustomEquipmentItemData equipmentData) {
+    public void receivedEquipmentData(Skin equipmentData) {
         int equipmentId = equipmentData.hashCode();
         
         synchronized (equipmentDataMap) {
@@ -61,7 +61,6 @@ public class ClientEquipmentModelCache {
                 equipmentDataMap.remove(equipmentId);
             }
         }
-        
         
         Thread t = (new Thread(new FaceCullThread(equipmentData, equipmentId),LibModInfo.NAME + " model bake thread."));
         t.setPriority(Thread.MIN_PRIORITY);
@@ -74,7 +73,13 @@ public class ClientEquipmentModelCache {
         }
     }
     
-    public CustomEquipmentItemData getEquipmentItemData(int equipmentId) {
+    public void clearCache() {
+        synchronized (equipmentDataMap) {
+            equipmentDataMap.clear();
+        }
+    }
+    
+    public Skin getEquipmentItemData(int equipmentId) {
         synchronized (equipmentDataMap) {
             if (equipmentDataMap.containsKey(equipmentId)) {
                 return equipmentDataMap.get(equipmentId);
@@ -100,7 +105,7 @@ public class ClientEquipmentModelCache {
             
             for (int i = 0; i < equipmentDataMap.size(); i++) {
                 int key = (Integer) equipmentDataMap.keySet().toArray()[i];
-                CustomEquipmentItemData customArmourItemData = equipmentDataMap.get(key);
+                Skin customArmourItemData = equipmentDataMap.get(key);
                 if (customArmourItemData.needsCleanup()) {
                     equipmentDataMap.remove(key);
                     customArmourItemData.cleanUpDisplayLists();
@@ -112,10 +117,10 @@ public class ClientEquipmentModelCache {
     
     public class FaceCullThread implements Runnable {
         
-        private CustomEquipmentItemData equipmentData;
+        private Skin equipmentData;
         private int equipmentId;
         
-        public FaceCullThread(CustomEquipmentItemData equipmentData, int equipmentId) {
+        public FaceCullThread(Skin equipmentData, int equipmentId) {
             this.equipmentData = equipmentData;
             this.equipmentId = equipmentId;
         }
@@ -123,7 +128,7 @@ public class ClientEquipmentModelCache {
         @Override
         public void run() {
             for (int i = 0; i < equipmentData.getParts().size(); i++) {
-                CustomEquipmentPartData partData = equipmentData.getParts().get(i);
+                SkinPart partData = equipmentData.getParts().get(i);
                 if (!partData.facesBuild) {
                     EquipmentRenderHelper.cullFacesOnEquipmentPart(partData);
                 }

@@ -7,25 +7,25 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.StringUtils;
-import riskyken.armourersWorkshop.api.common.equipment.EnumEquipmentType;
-import riskyken.armourersWorkshop.api.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
-import riskyken.armourersWorkshop.common.BipedRotations;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.equipment.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.equipment.EquipmentDataCache;
-import riskyken.armourersWorkshop.common.equipment.data.CustomEquipmentItemData;
+import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.GameProfileUtils;
+import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
-import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 
-public class TileEntityMannequin extends AbstractTileEntityInventory {
+public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_ROTATION = "rotation";
@@ -33,6 +33,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     private static final String TAG_HEIGHT_OFFSET = "heightOffset";
     
     private GameProfile gameProfile = null;
+    private GameProfile newProfile = null;
     private MannequinFakePlayer fakePlayer = null;
     
     private EntityEquipmentData equipmentData;
@@ -60,9 +61,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         if (!worldObj.isRemote) {
             if (itemstack == null) {
-                equipmentData.removeEquipment(EnumEquipmentType.getOrdinal(i + 1)); 
-                markDirty();
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(i);
+                if (skinType != null) {
+                    equipmentData.removeEquipment(skinType);
+                    markDirty();
+                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                }
             } else {
                 setEquipment(itemstack);
             }
@@ -71,13 +75,11 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     }
     
     public void setEquipment(ItemStack stack) {
-        if (!stack.hasTagCompound()) { return; }
-        NBTTagCompound data = stack.getTagCompound();
-        if (!data.hasKey(LibCommonTags.TAG_ARMOUR_DATA)) { return ;}
-        NBTTagCompound armourNBT = data.getCompoundTag(LibCommonTags.TAG_ARMOUR_DATA);
-        int equipmentId = armourNBT.getInteger(LibCommonTags.TAG_EQUIPMENT_ID);
-        CustomEquipmentItemData equipmentData = EquipmentDataCache.INSTANCE.getEquipmentData(equipmentId);
-        setEquipment(equipmentData.getType(), equipmentId);
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(skinData.skinId);
+            setEquipment(equipmentData.getSkinType(), skinData.skinId);
+        }
     }
     
     public void setOwner(ItemStack stack) {
@@ -126,8 +128,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         }
     }
     
-    public void setEquipment(EnumEquipmentType armourType, int equipmentId) {
-        equipmentData.addEquipment(armourType, equipmentId);
+    public void setEquipment(ISkinType skinType, int equipmentId) {
+        equipmentData.addEquipment(skinType, equipmentId);
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -177,20 +179,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     }
     
     private void updateProfileData(){
-        if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
-            if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
-                GameProfile gameprofile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.gameProfile.getName());
-                if (gameprofile != null) {
-                    Property property = (Property)Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
-                    if (property == null) {
-                        gameprofile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameprofile, true);
-                    }
-                    this.gameProfile = gameprofile;
-                    this.markDirty();
-                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                }
-            }
-        }
+        GameProfileUtils.updateProfileData(gameProfile, this);
     }
     
     @Override
@@ -212,6 +201,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
         bipedRotations.saveNBTData(compound);
         compound.setBoolean(TAG_IS_DOLL, this.isDoll);
         compound.setInteger(TAG_ROTATION, this.rotation);
+        if (this.newProfile != null) {
+            this.gameProfile = newProfile;
+            this.newProfile = null;
+        }
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
@@ -259,5 +252,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory {
     @Override
     public String getInventoryName() {
         return LibBlockNames.MANNEQUIN;
+    }
+
+    @Override
+    public void profileUpdated(GameProfile gameProfile) {
+        newProfile = gameProfile;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }
