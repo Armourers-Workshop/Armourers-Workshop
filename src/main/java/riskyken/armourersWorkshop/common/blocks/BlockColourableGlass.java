@@ -92,7 +92,7 @@ public class BlockColourableGlass extends AbstractModBlock implements ITileEntit
     }
 
     @Override
-    public boolean setColour(World world, int x, int y, int z, int colour) {
+    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {
             ((IPantable)te).setColour(colour);
@@ -102,7 +102,7 @@ public class BlockColourableGlass extends AbstractModBlock implements ITileEntit
     }
 
     @Override
-    public int getColour(World world, int x, int y, int z) {
+    public int getColour(IBlockAccess world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour();

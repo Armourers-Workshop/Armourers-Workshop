@@ -1,10 +1,10 @@
 package riskyken.armourersWorkshop.api.common.painting;
 
-import net.minecraft.world.World;
+import net.minecraft.world.IBlockAccess;
 
 public interface IPantableBlock {
     
-    public boolean setColour(World world, int x, int y, int z, int colour);
+    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour);
     
-    public int getColour(World world, int x, int y, int z);
+    public int getColour(IBlockAccess world, int x, int y, int z);
 }
