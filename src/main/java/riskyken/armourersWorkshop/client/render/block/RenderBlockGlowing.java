@@ -91,6 +91,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
         boolean rendered = false;
         
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
+        renderBuffer.setBrightness(0xF000F0);
         
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y - 1, z, 0)) {
             renderBuffer.setColorOpaque_B(colour.getRed(0), colour.getGreen(0), colour.getBlue(0));
