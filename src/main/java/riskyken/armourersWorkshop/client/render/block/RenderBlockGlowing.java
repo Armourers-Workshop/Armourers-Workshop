@@ -8,7 +8,6 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.mcWrapper.client.IRenderBuffer;
 import riskyken.mcWrapper.client.RenderBridge;
@@ -71,8 +70,8 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
         if (block instanceof IPantableBlock) {
             int light = block.getLightValue(world, x, y, z);
             Tessellator tessellator = Tessellator.instance;
-            int l = ((IPantableBlock)block).getColour(world, x, y, z);
-            CubeColour colour = new CubeColour(l);
+            
+            ICubeColour colour = ((IPantableBlock)block).getColour(world, x, y, z);
             
             boolean rendered = false;
             

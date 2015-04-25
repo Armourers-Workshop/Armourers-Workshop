@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import cpw.mods.fml.relauncher.Side;
@@ -119,8 +120,7 @@ public class EquipmentPartRenderer extends ModelBase {
         for (int i = 0; i < armourBlockData.size(); i++) {
             ICube blockData = armourBlockData.get(i);
             if (!blockData.isGlowing()) {
-                int colour[] = {blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour()};
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), colour, scale, blockData.getFaceFlags(), blockData.needsPostRender());
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getCubeColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
             }
         }
     }
@@ -129,27 +129,17 @@ public class EquipmentPartRenderer extends ModelBase {
         for (int i = 0; i < armourBlockData.size(); i++) {
             ICube blockData = armourBlockData.get(i);
             if (blockData.isGlowing()) {
-                int colour[] = {blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour(), blockData.getColour()};
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), colour, scale, blockData.getFaceFlags(), blockData.needsPostRender());
+                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getCubeColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
             }
         }
     }
 
-    public void renderArmourBlock(int x, int y, int z, int[] colour, float scale, BitSet faceFlags, boolean glass) {
-        float[] r = new float[6];
-        float[] g = new float[6];
-        float[] b = new float[6];
-        float[] a = new float[6];
-        for (int i = 0; i < 6; i++) {
-            r[i] = (colour[i] >> 16 & 0xff) / 255F;
-            g[i] = (colour[i] >> 8 & 0xff) / 255F;
-            b[i] = (colour[i] & 0xff) / 255F;
-            a[i] = 1F;
-            if (glass) {
-                a[i] = 0.5F;
-            }
+    public void renderArmourBlock(int x, int y, int z, ICubeColour colour, float scale, BitSet faceFlags, boolean glass) {
+        byte a = (byte) 255;
+        if (glass) {
+            a = (byte) 127;
         }
         
-        main.render(scale, faceFlags, x, y, z, r, g, b, a);
+        main.render(scale, faceFlags, x, y, z, colour.getRed(), colour.getGreen(), colour.getBlue(), a);
     }
 }

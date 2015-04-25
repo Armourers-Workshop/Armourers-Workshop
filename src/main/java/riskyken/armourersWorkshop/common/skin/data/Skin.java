@@ -21,13 +21,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class Skin implements ISkin {
     
-    public static final int FILE_VERSION = 6;
+    public static final int FILE_VERSION = 7;
     
     private String authorName;
     private String customName;
     private String tags;
     private ISkinType equipmentSkinType;
     private ArrayList<SkinPart> parts;
+    public int requestId;
+    private int lightHash = 0;
     
     private int timeFromRender = 0;
     
@@ -61,6 +63,13 @@ public class Skin implements ISkin {
         }
     }
     
+    public int lightHash() {
+        if (lightHash == 0) {
+            lightHash = this.hashCode();
+        }
+        return lightHash;
+    }
+    
     public Skin(ByteBuf buf) {
         readFromBuf(buf);
     }
@@ -70,6 +79,7 @@ public class Skin implements ISkin {
     }
     
     public void writeToBuf(ByteBuf buf) {
+        buf.writeInt(this.requestId);
         ByteBufUtils.writeUTF8String(buf, this.authorName);
         ByteBufUtils.writeUTF8String(buf, this.customName);
         ByteBufUtils.writeUTF8String(buf, this.tags);
@@ -81,6 +91,7 @@ public class Skin implements ISkin {
     }
 
     private void readFromBuf(ByteBuf buf) {
+        this.requestId = buf.readInt();
         this.authorName = ByteBufUtils.readUTF8String(buf);
         this.customName = ByteBufUtils.readUTF8String(buf);
         this.tags = ByteBufUtils.readUTF8String(buf);

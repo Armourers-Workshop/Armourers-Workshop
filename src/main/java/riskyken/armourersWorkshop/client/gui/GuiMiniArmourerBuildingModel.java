@@ -162,7 +162,7 @@ public class GuiMiniArmourerBuildingModel {
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
-                EquipmentPartRenderer.INSTANCE.renderArmourBlock(newCube.getX(), newCube.getY(), newCube.getZ(), colour, scale, null, true);
+                EquipmentPartRenderer.INSTANCE.renderArmourBlock(newCube.getX(), newCube.getY(), newCube.getZ(), newCube.getCubeColour(), scale, null, true);
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
                 GL11.glDisable(GL11.GL_BLEND);
             }
@@ -253,7 +253,7 @@ public class GuiMiniArmourerBuildingModel {
                     colour = new int[] {cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour()};
                 }
                 
-                EquipmentPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), colour, scale, null, false);
+                EquipmentPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), cube.getCubeColour(), scale, null, false);
                 if (cube.isGlowing() & !fake) {
                     ModRenderHelper.enableLighting();
                     GL11.glEnable(GL11.GL_LIGHTING);

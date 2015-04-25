@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.cubes;
 
 import io.netty.buffer.ByteBuf;
 
+import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -24,8 +25,12 @@ public class Cube implements ICube {
     protected byte x;
     protected byte y;
     protected byte z;
-    protected int colour;
+    protected ICubeColour colour;
     protected BitSet faceFlags;
+    
+    public Cube() {
+        this.colour = new CubeColour();
+    }
     
     @Override
     public byte getX() {
@@ -68,13 +73,34 @@ public class Cube implements ICube {
     }
     
     @Override
-    public int getColour() {
+    public ICubeColour getCubeColour() {
         return colour;
     }
     
     @Override
-    public void setColour(int colour) {
+    public int getColour() {
+        return getColourSide(0);
+    }
+    
+    @Override
+    public int getColourSide(int side) {
+        Color saveColour = new Color(colour.getRed(side) & 0xFF, colour.getGreen(side) & 0xFF, colour.getBlue(side) & 0xFF);
+        return saveColour.getRGB();
+    }
+    
+    @Override
+    public void setColour(ICubeColour colour) {
         this.colour = colour;
+    }
+    
+    @Override
+    public void setColour(int colour) {
+        this.colour.setColour(colour);
+    }
+    
+    @Override
+    public void setColour(int colour, int side) {
+        this.colour.setColour(colour, side);
     }
     
     @Override
@@ -106,16 +132,15 @@ public class Cube implements ICube {
         buf.writeByte(x);
         buf.writeByte(y);
         buf.writeByte(z);
-        buf.writeInt(colour);
+        colour.writeToBuf(buf);
     }
     
     @Override
     public void readFromBuf(ByteBuf buf) {
-        //id = buf.readByte();
         x = buf.readByte();
         y = buf.readByte();
         z = buf.readByte();
-        colour = buf.readInt();
+        colour = new CubeColour(buf);
     }
     
     @Override
@@ -124,28 +149,19 @@ public class Cube implements ICube {
         stream.writeByte(x);
         stream.writeByte(y);
         stream.writeByte(z);
-        stream.writeInt(colour);
+        colour.writeToStream(stream);
     }
     
     @Override
     public void readFromStream(DataInputStream stream, int version, ISkinPartType skinPart) throws IOException {
-        //id = stream.readByte();
         x = stream.readByte();
         y = stream.readByte();
         z = stream.readByte();
-        colour = stream.readInt();
-    }
-    
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + id;
-        result = prime * result + colour;
-        result = prime * result + x;
-        result = prime * result + y;
-        result = prime * result + z;
-        return result;
+        if (version < 7) {
+            colour = new CubeColour(stream.readInt());
+        } else {
+            colour = new CubeColour(stream, version);
+        }
     }
     
     @Override

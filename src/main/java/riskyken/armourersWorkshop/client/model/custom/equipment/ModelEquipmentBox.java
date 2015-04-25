@@ -81,7 +81,7 @@ public class ModelEquipmentBox extends ModelBox {
         }
     }
 
-    public void render(IRenderBuffer renderBuffer, float scale, BitSet faceFlags, int x, int y, int z, float[] r, float[] g, float[] b, float[] a) {
+    public void render(IRenderBuffer renderBuffer, float scale, BitSet faceFlags, int x, int y, int z, byte[] r, byte[] g, byte[] b, byte a) {
         //0 = west
         //1 = east
         //2 = up
@@ -90,12 +90,33 @@ public class ModelEquipmentBox extends ModelBox {
         //5 = south
         int size = this.quadList.length;
         for (int i = 0; i < size; ++i) {
+            int side = 0;
+            switch (i) {
+            case 3:
+                side = 0;
+                break;
+            case 2:
+                side = 1;
+                break;
+            case 0:
+                side = 4;
+                break;
+            case 1:
+                side = 5;
+                break;
+            case 4:
+                side = 2;
+                break;
+            case 5:
+                side = 3;
+                break;  
+            }
             if (faceFlags != null) {
                 if (!faceFlags.get(i)) {
-                    this.quadList[i].draw(renderBuffer, scale, x, y, z, r[i], g[i], b[i], a[i]);
+                    this.quadList[i].draw(renderBuffer, scale, x, y, z, r[side], g[side], b[side], a);
                 }
             } else {
-                this.quadList[i].draw(renderBuffer, scale, x, y, z, r[i], g[i], b[i], a[i]);
+                this.quadList[i].draw(renderBuffer, scale, x, y, z, r[side], g[side], b[side], a);
             }
         }
     }

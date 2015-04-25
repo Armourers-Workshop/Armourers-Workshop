@@ -1,5 +1,13 @@
 package riskyken.armourersWorkshop.common.skin.cubes;
 
+import io.netty.buffer.ByteBuf;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import net.minecraft.nbt.NBTTagCompound;
+
 public interface ICubeColour {
     
     public byte getRed(int side);
@@ -30,4 +38,16 @@ public interface ICubeColour {
     public void setGreen(byte[] green);
     
     public void setBlue(byte[] blue);
+    
+    public void readFromNBT(NBTTagCompound compound);
+    
+    public void writeToNBT(NBTTagCompound compound);
+    
+    public void readFromBuf(ByteBuf buf);
+    
+    public void writeToBuf(ByteBuf buf);
+    
+    public void readFromStream(DataInputStream stream, int version) throws IOException;
+    
+    public void writeToStream(DataOutputStream stream) throws IOException;
 }

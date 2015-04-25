@@ -18,7 +18,6 @@ import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -81,7 +80,6 @@ public class ArmourersWorkshop {
     public void postInit(FMLPostInitializationEvent event) {
         Addons.init();
         proxy.postInit();
-        TileEntityArmourLibrary.createArmourDirectory();
     }
     
     @Mod.EventHandler

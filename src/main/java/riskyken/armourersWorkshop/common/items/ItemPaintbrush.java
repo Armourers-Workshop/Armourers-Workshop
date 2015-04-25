@@ -51,7 +51,7 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
-                    int colour = ((IPantable)te).getColour();
+                    int colour = ((IPantable)te).getColour(0);
                     setToolColour(stack, colour);
                 }
             }
@@ -66,9 +66,9 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
             int newColour = getToolColour(stack);
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
-                int oldColour = worldColourable.getColour(world, x, y, z);
+                int oldColour = worldColourable.getColour(world, x, y, z, side);
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
-                ((IPantableBlock)block).setColour(world, x, y, z, newColour);
+                ((IPantableBlock)block).setColour(world, x, y, z, newColour, side);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             } else {
                 spawnPaintParticles(world, x, y, z, side, newColour);

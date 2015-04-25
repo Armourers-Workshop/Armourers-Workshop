@@ -71,6 +71,13 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 } else {
                     list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
                 }
+                
+                if (skinData.skinId != data.lightHash()) {
+                    list.add(cRed + "Warning: This skin is using an old file format.");
+                    list.add(cRed + "Please save and reload it from the library to fix this.");
+                    list.add(cRed + "DEBUG - Old ID:" + data.requestId + " New ID:" + data.lightHash());
+                }
+                //Warning
             } else {
                 list.add("Downloading skin...");
             }

@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -81,7 +82,10 @@ public final class ArmourerWorldHelper {
         
         Block block = world.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing | block == ModBlocks.colourableGlass | block == ModBlocks.colourableGlassGlowing) {
-            int colour = UtilBlocks.getColourFromTileEntity(world ,x, y, z);
+            
+            
+            ICubeColour colour = UtilBlocks.getColourFromTileEntity(world, x, y, z);
+            
             byte blockType = 0;
             if (block == ModBlocks.colourableGlowing) {
                 blockType = 1;
@@ -152,7 +156,7 @@ public final class ArmourerWorldHelper {
             world.setBlock(targetX, targetY, targetZ, targetBlock);
             TileEntity te = world.getTileEntity(targetX, targetY, targetZ);
             if (te != null && te instanceof TileEntityColourable) {
-                ((TileEntityColourable)te).setColour(blockData.getColour());
+                ((TileEntityColourable)te).setColour(blockData.getCubeColour());
             }
         }
     }

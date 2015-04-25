@@ -42,10 +42,10 @@ public class ItemDodgeTool extends AbstractModItem {
             if (!world.isRemote) {
                 int intensity = UtilItems.getIntensityFromStack(stack, 16);
                 IPantableBlock worldColourable = (IPantableBlock) block;
-                int oldColour = worldColourable.getColour(world, x, y, z);
+                int oldColour = worldColourable.getColour(world, x, y, z, side);
                 int newColour = UtilColour.makeColourBighter(new Color(oldColour), intensity).getRGB();
                 UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
-                ((IPantableBlock) block).setColour(world, x, y, z, newColour);
+                ((IPantableBlock) block).setColour(world, x, y, z, newColour, side);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.DODGE, 1.0F, 1.0F);
             }
             return true;

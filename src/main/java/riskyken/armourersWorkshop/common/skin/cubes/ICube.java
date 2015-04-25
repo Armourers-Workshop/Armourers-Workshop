@@ -27,9 +27,17 @@ public interface ICube {
     
     public void setFaceFlags(BitSet faceFlags);
     
+    public ICubeColour getCubeColour();
+    
     public int getColour();
     
+    public int getColourSide(int side);
+    
+    public void setColour(ICubeColour colour);
+    
     public void setColour(int colour);
+    
+    public void setColour(int colour, int side);
     
     /** Will this cube glow in the dark? */
     public boolean isGlowing();

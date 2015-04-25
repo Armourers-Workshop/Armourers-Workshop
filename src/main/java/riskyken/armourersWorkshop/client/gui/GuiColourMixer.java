@@ -47,7 +47,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     @Override
     public void initGui() {
         super.initGui();
-        colour = new Color(tileEntityColourMixer.getColour());
+        colour = new Color(tileEntityColourMixer.getColour(0));
         float[] hsbvals = Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null);
         slidersHSB = new GuiHSBSlider[3];
         slidersHSB[0] = new GuiHSBSlider(0, this.guiLeft + 5, this.guiTop + 30, 128, 10, this, HSBSliderType.HUE, hsbvals[0], hsbvals[0], hsbvals[2]);
@@ -65,7 +65,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     
     private void checkForColourUpdates() {
         if (tileEntityColourMixer.getHasItemUpdateAndReset()) {
-            this.colour = new Color(tileEntityColourMixer.getColour());
+            this.colour = new Color(tileEntityColourMixer.getColour(0));
             updateSliders();
         }
     }
@@ -111,7 +111,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     }
     
     private void updateColour() {
-        Color colourOld = new Color(tileEntityColourMixer.getColour());
+        Color colourOld = new Color(tileEntityColourMixer.getColour(0));
         if (this.colour.equals(colourOld)) { return; }
         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiColourUpdate(this.colour.getRGB(), false));
     }

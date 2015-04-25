@@ -14,8 +14,8 @@ import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCom
 import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 public class CommandArmourers extends CommandBase {
 
@@ -66,7 +66,7 @@ public class CommandArmourers extends CommandBase {
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
-            Skin armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
+            Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName);
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
@@ -84,7 +84,7 @@ public class CommandArmourers extends CommandBase {
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
-            Skin armourItemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(skinName);
+            Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName);
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }

@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import java.awt.Color;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -7,18 +9,19 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
-import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 
 public class TileEntityColourable extends TileEntity implements IPantable {
     
-    private int colour;
+    private ICubeColour colour;
 
     public TileEntityColourable() {
-        this.colour = UtilColour.getMinecraftColor(0);
+        this.colour = new CubeColour();
     }
     
     public TileEntityColourable(int colour) {
-        this.colour = colour;
+        this.colour = new CubeColour(colour);
     }
     
     @Override
@@ -29,13 +32,17 @@ public class TileEntityColourable extends TileEntity implements IPantable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
+        if (compound.hasKey(LibCommonTags.TAG_COLOUR)) {
+            colour.setColour(compound.getInteger(LibCommonTags.TAG_COLOUR));
+        } else {
+            colour.readFromNBT(compound);
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
+        colour.writeToNBT(compound);
     }
 
     @Override
@@ -53,13 +60,31 @@ public class TileEntityColourable extends TileEntity implements IPantable {
 
     @Override
     public void setColour(int colour) {
-        this.colour = colour;
+        this.colour.setColour(colour);
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
+    
+    @Override
+    public void setColour(int colour, int side) {
+        this.colour.setColour(colour, side);
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    @Override
+    public void setColour(ICubeColour colour) {
+        this.colour = colour;
+    }
 
     @Override
-    public int getColour() {
+    public int getColour(int side) {
+        Color saveColour = new Color(colour.getRed(side) & 0xFF, colour.getGreen(side) & 0xFF, colour.getBlue(side) & 0xFF);
+        return saveColour.getRGB();
+    }
+    
+    @Override
+    public ICubeColour getColour() {
         return colour;
     }
 }

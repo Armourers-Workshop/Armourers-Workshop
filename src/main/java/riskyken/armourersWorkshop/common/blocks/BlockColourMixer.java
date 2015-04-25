@@ -79,7 +79,7 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
         if (ClientProxy.renderPass == 0) {
             TileEntity te = blockAccess.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityColourMixer) {
-                return ((TileEntityColourMixer)te).getColour();
+                return ((TileEntityColourMixer)te).getColour(0);
             }
         }
         return 16777215;

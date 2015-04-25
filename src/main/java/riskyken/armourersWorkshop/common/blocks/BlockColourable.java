@@ -13,6 +13,8 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -41,16 +43,6 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
         blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
     }
     
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z) {
-        TileEntity te = blockAccess.getTileEntity(x, y, z);
-        if (te != null & te instanceof TileEntityColourable) {
-            return ((TileEntityColourable)te).getColour();
-        }
-        return super.colorMultiplier(blockAccess, x, y, z);
-    }
-    
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.dye) {
@@ -75,14 +67,33 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
         }
         return false;
     }
+    
+    @Override
+    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null & te instanceof IPantable) {
+            ((IPantable)te).setColour(colour, side);
+            return true;
+        }
+        return false;
+    }
 
     @Override
-    public int getColour(IBlockAccess world, int x, int y, int z) {
+    public int getColour(IBlockAccess world, int x, int y, int z, int side) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null & te instanceof IPantable) {
+            return ((IPantable)te).getColour(side);
+        }
+        return 0;
+    }
+    
+    @Override
+    public ICubeColour getColour(IBlockAccess world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour();
         }
-        return 0;
+        return new CubeColour();
     }
     
     @Override
