@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -23,6 +22,7 @@ import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.PaintingNBTHelper;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -51,7 +51,7 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
-                    int colour = ((IPantable)te).getColour();
+                    int colour = ((IPantable)te).getColour(0);
                     setToolColour(stack, colour);
                 }
             }
@@ -62,13 +62,13 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
             return false;
         }
         
-        if (!player.isSneaking() & block instanceof IPantableBlock) {
+        if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
-                int oldColour = worldColourable.getColour(world, x, y, z);
-                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
-                ((IPantableBlock)block).setColour(world, x, y, z, newColour);
+                int oldColour = worldColourable.getColour(world, x, y, z, side);
+                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, side);
+                ((IPantableBlock)block).setColour(world, x, y, z, newColour, side);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             } else {
                 spawnPaintParticles(world, x, y, z, side, newColour);
@@ -90,12 +90,12 @@ public class ItemPaintbrush extends AbstractModItem implements IPaintingTool {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(stack, player, list, p_77624_4_);
-        String cGray = EnumChatFormatting.GRAY.toString();
-        String cGold = EnumChatFormatting.GOLD.toString();
         Color c = new Color(getToolColour(stack));
         String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-        list.add(cGold + "Colour: " + cGray + c.getRGB());
-        list.add(cGold + "Hex: " + cGray + hex);
+        String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
+        String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
+        list.add(colourText);
+        list.add(hexText);
     }
     
     @Override

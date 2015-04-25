@@ -13,6 +13,8 @@ import riskyken.armourersWorkshop.common.items.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -122,13 +124,30 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         }
         return false;
     }
-
-    public int getColour() {
+    
+    @Override
+    public int getColour(int side) {
         return this.colour;
     }
-
+    
+    @Override
+    public ICubeColour getColour() {
+        return new CubeColour(colour);
+    }
+    
     @Override
     public void setColour(int colour) {
         setColour(colour, false);
+    }
+
+    @Override
+    public void setColour(int colour, int side) {
+        setColour(colour, false);
+    }
+    
+    @Override
+    public void setColour(ICubeColour colour) {
+        //NO-OP
+        //setColour(colour.g);
     }
 }

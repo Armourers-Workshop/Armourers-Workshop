@@ -16,6 +16,14 @@ public interface IRenderBuffer {
     
     public void setColourRGBA_F(float r, float g, float b, float a);
     
+    public void setColourRGBA_B(byte r, byte g, byte b, byte a);
+    
+    public void setColorOpaque_F(float r, float g, float b);
+    
+    public void setColorOpaque_I(int r, int g, int b);
+    
+    public void setColorOpaque_B(byte r, byte g, byte b);
+    
     public void setNormal(float x, float y, float z);
     
     public void setTextureUV(double u, double v);

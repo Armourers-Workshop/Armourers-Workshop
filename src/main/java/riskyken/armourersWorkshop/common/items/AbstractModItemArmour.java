@@ -2,27 +2,19 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.skin.cubes.Cube;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeGlass;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeGlassGlowing;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeGlowing;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -43,52 +35,8 @@ public class AbstractModItemArmour extends ItemArmor {
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-        String cGreen = EnumChatFormatting.GREEN.toString();
-        String cGray = EnumChatFormatting.GRAY.toString();
-        String cRed = EnumChatFormatting.RED.toString();
-        String cGold = EnumChatFormatting.GOLD.toString();
-        String cYellow = EnumChatFormatting.YELLOW.toString();
-        String unlocalized;
-        String localized;
-        
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                Skin data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
-                if (!data.getCustomName().trim().isEmpty()) {
-                    list.add(cGold + "Name: " + cGray + data.getCustomName());
-                }
-                if (!data.getAuthorName().trim().isEmpty()) {
-                    list.add(cGold + "Author: " + cGray + data.getAuthorName());
-                }
-                
-                if (skinData.skinType != null) {
-                    list.add(cGold + "Skin Type: " + cGray + SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType));
-                }
-                
-                if (GuiScreen.isShiftKeyDown()) {
-                    list.add(cYellow + "Equipment Id: " + cGray + skinData.skinId);
-                    list.add(cYellow + "Total Cubes: " + cGray + data.getTotalCubes());
-                    list.add(cYellow + "Cubes: " + cGray + data.getTotalOfCubeType(Cube.class));
-                    list.add(cYellow + "Cubes Glowing: " + cGray + data.getTotalOfCubeType(CubeGlowing.class));
-                    list.add(cYellow + "Cubes Glass: " + cGray + data.getTotalOfCubeType(CubeGlass.class));
-                    list.add(cYellow + "Cubes Glass Glowing: " + cGray + data.getTotalOfCubeType(CubeGlassGlowing.class));
-                    
-                } else {
-                    list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
-                }
-            }
-        } else {
-            if (EquipmentNBTHelper.stackHasLegacySkinData(stack)) {
-                list.add(cRed + "Old skin type. Place in crafting grid to restore.");
-            } else {
-                list.add(cRed + "ERROR: Invalid equipment skin.");
-                list.add(cRed + "Please delete.");
-            }
-        }
-        
-        unlocalized = stack.getUnlocalizedName() + ".flavour";
-        localized = StatCollector.translateToLocal(unlocalized);
+        String unlocalized = stack.getUnlocalizedName() + ".flavour";
+        String localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");
@@ -99,7 +47,6 @@ public class AbstractModItemArmour extends ItemArmor {
                 list.add(localized);
             }
         }
-        
         super.addInformation(stack, player, list, par4);
     }
 

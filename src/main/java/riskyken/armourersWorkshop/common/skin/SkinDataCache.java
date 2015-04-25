@@ -1,28 +1,20 @@
 package riskyken.armourersWorkshop.common.skin;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
-import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -44,6 +36,7 @@ public final class SkinDataCache {
     private HashMap<Integer, Skin> equipmentDataCache = new HashMap<Integer, Skin>();
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     private long lastTick;
+    private boolean madeDatabase = false;
     
     public static void init() {
         if (INSTANCE == null) {
@@ -53,6 +46,7 @@ public final class SkinDataCache {
     
     public SkinDataCache() {
         FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
     
     @SubscribeEvent
@@ -60,6 +54,11 @@ public final class SkinDataCache {
         if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
             processMessageQueue();
         }
+    }
+    
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event) {
+        SkinIOUtils.makeDatabaseDirectory();
     }
     
     public void processMessageQueue() {
@@ -79,7 +78,11 @@ public final class SkinDataCache {
             if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
                 Skin equipmentData;
                 equipmentData = loadEquipmentFromDisk(queueMessage.equipmentId);
+                equipmentData.requestId = queueMessage.equipmentId;
                 addEquipmentDataToCache(equipmentData, queueMessage.equipmentId);
+                if (equipmentData.hashCode() != queueMessage.equipmentId) {
+                    addEquipmentDataToCache(equipmentData, equipmentData.hashCode());
+                }
             }
         }
         
@@ -128,88 +131,18 @@ public final class SkinDataCache {
     }
     
     private boolean haveEquipmentOnDisk(int equipmentId) {
-        createEquipmentDirectory();
-        File equipmentDir = new File(System.getProperty("user.dir"));
-        equipmentDir = new File(equipmentDir, "equipment-database");
-        
-        File targetFile = new File(equipmentDir, File.separatorChar + String.valueOf(equipmentId));
-        return targetFile.exists();
+        File file = new File(SkinIOUtils.getSkinDatabaseDirectory(), String.valueOf(equipmentId));
+        return file.exists();
     }
     
-    private void saveEquipmentToDisk(Skin equipmentData) {
-        createEquipmentDirectory();
-        File equipmentDir = new File(System.getProperty("user.dir"));
-        equipmentDir = new File(equipmentDir, "equipment-database");
-        
-        File targetFile = new File(equipmentDir, File.separatorChar + String.valueOf(equipmentData.hashCode()));
-        
-        DataOutputStream stream = null;
-        try {
-            stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(targetFile)));
-            equipmentData.writeToStream(stream);
-            stream.flush();
-        } catch (FileNotFoundException e) {
-            ModLogger.log(Level.WARN, "Armour file not found.");
-            e.printStackTrace();
-            return;
-        } catch (IOException e) {
-            ModLogger.log(Level.ERROR, "Armour file save failed.");
-            e.printStackTrace();
-            return;
-        } finally {
-            IOUtils.closeQuietly(stream);
-        }
+    private void saveEquipmentToDisk(Skin skin) {
+        File file = new File(SkinIOUtils.getSkinDatabaseDirectory(), String.valueOf(skin.hashCode()));
+        SkinIOUtils.saveSkinToFile(file, skin);
     }
     
     private Skin loadEquipmentFromDisk(int equipmentId) {
-        createEquipmentDirectory();
-        File equipmentDir = new File(System.getProperty("user.dir"));
-        equipmentDir = new File(equipmentDir, "equipment-database");
-        
-        File targetFile = new File(equipmentDir, File.separatorChar + String.valueOf(equipmentId));
-        if (!targetFile.exists()) {
-            return null;
-        }
-        
-        Skin equipmentData = null;
-        DataInputStream stream = null;
-        
-        try {
-            stream = new DataInputStream(new BufferedInputStream(new FileInputStream(targetFile)));
-            equipmentData = new Skin(stream);
-        } catch (FileNotFoundException e) {
-            ModLogger.log(Level.WARN, "Armour file not found.");
-            e.printStackTrace();
-        } catch (IOException e) {
-            ModLogger.log(Level.ERROR, "Armour file load failed.");
-            e.printStackTrace();
-        } catch (NewerFileVersionException e) {
-            ModLogger.log(Level.ERROR, "Can not load custom armour, was saved in newer version.");
-            e.printStackTrace();
-        } catch (InvalidCubeTypeException e) {
-            ModLogger.log(Level.ERROR, "Unable to load skin. Unknown cube types found.");
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(stream);
-        }
-        
-        return equipmentData;
-    }
-    
-    private boolean createEquipmentDirectory() {
-        File equipmentDir = new File(System.getProperty("user.dir"));
-        equipmentDir = new File(equipmentDir, "equipment-database");
-        
-        if (!equipmentDir.exists()) {
-            try {
-                equipmentDir.mkdir();
-            } catch (Exception e) {
-                ModLogger.log(Level.WARN, "Unable to create equipment directory.");
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return true;
+        File file = new File(SkinIOUtils.getSkinDatabaseDirectory(), String.valueOf(equipmentId));
+        return SkinIOUtils.loadSkinFromFile(file);
     }
     
     public class QueueMessage {

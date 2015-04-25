@@ -40,7 +40,7 @@ item.armourersworkshop:armourContainerHead.name=Head Armour Container
 item.armourersworkshop:armourContainerChest.name=Chest Armour Container
 item.armourersworkshop:armourContainerLegs.name=Legs Armour Container
 item.armourersworkshop:armourContainerFeet.name=Feet Armour Container
-item.armourersworkshop:wandOfStyle=Wand Of Style
+item.armourersworkshop:wandOfStyle.name=Wand Of Style
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -53,7 +53,35 @@ item.armourersworkshop:colourNoiseTool.flavour=Applies random colour noise to a 
 item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
 item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%nRight click to apply setting.%nSneak right click to save settings.
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
-item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to put on NPC's.
+item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to placed on NPC's.
+
+# Rollover Text
+item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s
+item.armourersworkshop:rollover.colour=&6Colour:&7 %s
+item.armourersworkshop:rollover.hex=&6Hex:&7 %s
+item.armourersworkshop:rollover.nopaint=&6No paint.
+item.armourersworkshop:rollover.settingsSaved=&6Settings Saved.
+item.armourersworkshop:rollover.noSettingsSaved=&cNo Settings Saved.
+item.armourersworkshop:rollover.user=&6User:&7 %s
+
+item.armourersworkshop:rollover.hasSkin=&6Has Armouerer's Workshop Skin
+item.armourersworkshop:rollover.skinName=&6Name:&7 %s
+item.armourersworkshop:rollover.skinAuthor=&6Author:&7 %s
+item.armourersworkshop:rollover.skinType=&6Type:&7 %s
+item.armourersworkshop:rollover.skinHoldShiftForInfo=Hold &ashift&7 for more info.
+item.armourersworkshop:rollover.skinId=&eSkin Id:&7 %s
+item.armourersworkshop:rollover.skinTotalCubes=&eTotal Cubes:&7 %s
+item.armourersworkshop:rollover.skinNumCubes=&eCubes:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlowing=&eGlowing Cubes:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlass=&eGlass Cubes:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eGlowing Glass Cubes:&7 %s
+item.armourersworkshop:rollover.skindownloading=Skin Downloading...
+item.armourersworkshop:rollover.skinOpenWardrobe=Press the &a%s&7 key to open the &aEquipment Wardrobe
+item.armourersworkshop:rollover.skinOldType=&cOld skin type, place in crafting grid to update.
+item.armourersworkshop:rollover.skinInvalidItem=&cError: Invalid equipment skin, please delete.
+item.armourersworkshop:rollover.skinIdError1=&cWarning: This skin is using an old file format.
+item.armourersworkshop:rollover.skinIdError2=&cPlease save and reload it from the library to fix this.
+item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
 
 # Skin Types
 skinType.armourers:head.name=Head
@@ -65,10 +93,20 @@ skinType.armourers:sword.name=Sword
 skinType.armourers:bow.name=Bow
 
 # Skin Part Types
-skinPartType.armourers:head.base.name=Head
-skinPartType.armourers:chest.base.name=Head
+skinPartType.armourers:head.base.name=Base
+skinPartType.armourers:chest.base.name=Torso
 skinPartType.armourers:chest.leftArm.name=Left Arm
 skinPartType.armourers:chest.rightArm.name=Right Arm
+skinPartType.armourers:legs.leftLeg.name=Left Leg
+skinPartType.armourers:legs.rightLeg.name=Right Leg
+skinPartType.armourers:skirt.base.name=Base
+skinPartType.armourers:feet.leftFoot.name=Left Foot
+skinPartType.armourers:feet.rightFoot.name=Right Foot
+skinPartType.armourers:sword.base.name=Base
+skinPartType.armourers:bow.base.name=Base
+skinPartType.armourers:bow.frame1.name=Frame 1
+skinPartType.armourers:bow.frame2.name=Frame 2
+skinPartType.armourers:bow.arrow.name=Arrow
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer

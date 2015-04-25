@@ -33,6 +33,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -126,7 +127,7 @@ public class GuiArmourLibrary extends GuiContainer {
                 break;
             case BUTTON_ID_LOAD:
                 if (checkClientFiles.isChecked()) {
-                    Skin itemData = TileEntityArmourLibrary.loadCustomArmourItemDataFromFile(filename);
+                    Skin itemData = SkinIOUtils.loadSkinFromFileName(filename);
                     if (itemData != null) {
                         message = new MessageClientGuiLoadSaveArmour(itemData);
                         PacketHandler.networkWrapper.sendToServer(message);

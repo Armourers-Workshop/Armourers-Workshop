@@ -37,7 +37,7 @@ public class PlayerUndoData {
         Block block = world.getBlock(undoData.blockX, undoData.blockY, undoData.blockZ);
         if (block instanceof IPantableBlock) {
             IPantableBlock worldColourable = (IPantableBlock) block;
-            worldColourable.setColour(world, undoData.blockX, undoData.blockY, undoData.blockZ, undoData.colour);
+            worldColourable.setColour(world, undoData.blockX, undoData.blockY, undoData.blockZ, undoData.colour, undoData.side);
         }
         undos.remove(undos.size() - 1);
     }

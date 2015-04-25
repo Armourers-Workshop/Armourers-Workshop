@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 import com.mojang.authlib.GameProfile;
 
@@ -42,7 +43,8 @@ public class ItemBlockMannequin extends ModItemBlock {
             GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
-                list.add(gameProfile.getName());
+                String user = TranslateUtils.translate("item.armourersworkshop:rollover.user", gameProfile.getName());
+                list.add(user);
             }
         }
         super.addInformation(stack, player, list, par4);

@@ -43,6 +43,26 @@ public class RenderBridge implements IRenderBuffer {
     public void setColourRGBA_F(float r, float g, float b, float a) {
         tessellator.setColorRGBA_F(r, g, b, a);
     }
+    
+    @Override
+    public void setColourRGBA_B(byte r, byte g, byte b, byte a) {
+        tessellator.setColorRGBA(r & 0xFF, g & 0xFF, b & 0xFF, a & 0xFF);
+    }
+    
+    @Override
+    public void setColorOpaque_F(float r, float g, float b) {
+        tessellator.setColorOpaque_F(r, g, b);
+    }
+    
+    @Override
+    public void setColorOpaque_I(int r, int g, int b) {
+        tessellator.setColorOpaque(r, g, b);
+    }
+    
+    @Override
+    public void setColorOpaque_B(byte r, byte g, byte b) {
+        tessellator.setColorOpaque(r & 0xFF, g & 0xFF, b & 0xFF);
+    }
 
     @Override
     public void setNormal(float x, float y, float z) {

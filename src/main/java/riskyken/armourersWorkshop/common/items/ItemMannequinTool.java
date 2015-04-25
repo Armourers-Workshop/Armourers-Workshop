@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -16,6 +15,7 @@ import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.NBTHelper;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -88,12 +88,12 @@ public class ItemMannequinTool extends AbstractModItem {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(stack, player, list, p_77624_4_);
-        String cRed = EnumChatFormatting.RED.toString();
-        String cGold = EnumChatFormatting.GOLD.toString();
         if (stack.hasTagCompound()) {
-            list.add(cGold + "Settings saved.");
+            String settingsSaved = TranslateUtils.translate("item.armourersworkshop:rollover.settingsSaved");
+            list.add(settingsSaved);
         } else {
-            list.add(cRed + "No settings saved.");
+            String noSettingsSaved = TranslateUtils.translate("item.armourersworkshop:rollover.noSettingsSaved");
+            list.add(noSettingsSaved);
         }
     }
 }

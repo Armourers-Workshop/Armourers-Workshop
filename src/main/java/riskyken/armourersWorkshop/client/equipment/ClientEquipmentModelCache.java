@@ -124,9 +124,10 @@ public class ClientEquipmentModelCache {
             this.equipmentData = equipmentData;
             this.equipmentId = equipmentId;
         }
-
+        
         @Override
         public void run() {
+            equipmentData.lightHash();
             for (int i = 0; i < equipmentData.getParts().size(); i++) {
                 SkinPart partData = equipmentData.getParts().get(i);
                 if (!partData.facesBuild) {
@@ -134,17 +135,26 @@ public class ClientEquipmentModelCache {
                 }
             }
             
-            synchronized (equipmentDataMap) {
-                equipmentDataMap.put(equipmentId, equipmentData);
-            }
-            
             synchronized (requestedEquipmentIds) {
                 if (requestedEquipmentIds.contains(equipmentId)) {
+                    synchronized (equipmentDataMap) {
+                        equipmentDataMap.put(equipmentId, equipmentData);
+                    }
                     requestedEquipmentIds.remove(equipmentId);
                 } else {
-                    ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
+                    //Out of date skin
+                    if (requestedEquipmentIds.contains(equipmentData.requestId)) {
+                        synchronized (equipmentDataMap) {
+                            equipmentDataMap.put(equipmentData.requestId, equipmentData);
+                        }
+                        requestedEquipmentIds.remove(equipmentData.requestId);
+                    } else {
+                        ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
+                    }
                 }
             }
+            
+            
         }
     }
 }

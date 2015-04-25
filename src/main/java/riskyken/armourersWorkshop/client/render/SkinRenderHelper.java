@@ -42,7 +42,7 @@ public final class SkinRenderHelper {
         }
     }
     
-    private static void renderBuildingGrid(ISkinPartType skinPartType, float scale) {
+    public static void renderBuildingGrid(ISkinPartType skinPartType, float scale) {
         GL11.glTranslated(0, skinPartType.getBuildingSpace().getY() * scale, 0);
         GL11.glScalef(-1, -1, 1);
         SkinRenderHelper.renderGuidePart(skinPartType, scale);
@@ -50,7 +50,7 @@ public final class SkinRenderHelper {
         GL11.glTranslated(0, -skinPartType.getBuildingSpace().getY() * scale, 0);
     }
     
-    public static void renderGuidePart(ISkinPartType part, float scale) {
+    private static void renderGuidePart(ISkinPartType part, float scale) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
@@ -68,10 +68,11 @@ public final class SkinRenderHelper {
         if (debugRender) {
             GL11.glColor4f(1F, 0F, 0F, 0.5F);
             renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(), guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale);
-            
-            GL11.glColor4f(0F, 1F, 0F, 0.5F);
-            renderGuideBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, scale);
         }
+        
+        GL11.glColor4f(0F, 1F, 0F, 0.5F);
+        //renderGuideBox(0.0F, 0.0F, 0.0F, 1, 1, 1, scale);
+        renderGuideBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, scale);
 
         
         GL11.glColor4f(1F, 1F, 1F, 1F);
