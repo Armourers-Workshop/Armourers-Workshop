@@ -37,13 +37,13 @@ public class ItemShadeNoiseTool extends AbstractModItem {
             int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
 
-        if (!player.isSneaking() & block instanceof IPantableBlock) {
+        if (block instanceof IPantableBlock) {
             if (!world.isRemote) {
                 int intensity = UtilItems.getIntensityFromStack(stack, 16);
                 IPantableBlock worldColourable = (IPantableBlock) block;
                 int oldColour = worldColourable.getColour(world, x, y, z, side);
                 int newColour = UtilColour.addShadeNoise(new Color(oldColour), intensity).getRGB();
-                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
+                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, side);
                 ((IPantableBlock) block).setColour(world, x, y, z, newColour, side);
             }
             return true;

@@ -63,7 +63,7 @@ public class ItemPaintRoller extends AbstractModItem implements IPaintingTool {
             return false;
         }
         
-        if (!player.isSneaking() & block instanceof IPantableBlock) {
+        if (block instanceof IPantableBlock) {
             world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             for (int i = -1; i < 2; i++ ) {
                 for (int j = -1; j < 2; j++ ) {
@@ -102,7 +102,7 @@ public class ItemPaintRoller extends AbstractModItem implements IPaintingTool {
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
                 int oldColour = worldColourable.getColour(world, x, y, z, side);
-                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
+                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, side);
                 ((IPantableBlock)block).setColour(world, x, y, z, newColour, side);
             } else {
                 spawnPaintParticles(world, x, y, z, side, newColour);

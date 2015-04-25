@@ -43,7 +43,7 @@ public class ItemColourNoiseTool extends AbstractModItem {
                 IPantableBlock worldColourable = (IPantableBlock) block;
                 int oldColour = worldColourable.getColour(world, x, y, z, side);
                 int newColour = UtilColour.addColourNoise(new Color(oldColour), intensity).getRGB();
-                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour);
+                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, side);
                 ((IPantableBlock) block).setColour(world, x, y, z, newColour, side);
             }
             return true;
