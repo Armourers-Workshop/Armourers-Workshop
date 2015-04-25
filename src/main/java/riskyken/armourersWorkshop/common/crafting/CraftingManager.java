@@ -20,14 +20,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public final class CraftingManager {
 
     public static void init() {
-        RecipeSorter.setCategory(RecipeSwordSkin.class, Category.SHAPELESS);
-        RecipeSorter.setCategory(RecipeSkinUpdate.class, Category.SHAPELESS);
-        RecipeSorter.setCategory(RecipeSkinCopy.class, Category.SHAPELESS);
         GameRegistry.addRecipe(new RecipeSwordSkin());
         GameRegistry.addRecipe(new RecipeSkinUpdate());
         GameRegistry.addRecipe(new RecipeSkinCopy());
+        RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSwordSkin.class, Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinUpdate.class, Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinCopy.class, Category.SHAPELESS, "after:minecraft:shapeless");
         hideItemsInNEI();
-        if (ConfigHandler.disableRecipes) { return; }
+        if (ConfigHandler.disableRecipes) {
+            return;
+        }
         ModBlockRecipes.init();
         ModItemRecipes.init();
         new DollCraftinghandler();
