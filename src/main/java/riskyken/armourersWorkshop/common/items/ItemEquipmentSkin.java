@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -37,64 +38,68 @@ public class ItemEquipmentSkin extends AbstractModItem {
         return EquipmentNBTHelper.getSkinTypeFromStack(stack);
     }
     
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
-        String cGreen = EnumChatFormatting.GREEN.toString();
-        String cGray = EnumChatFormatting.GRAY.toString();
+    public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, boolean showAdvancedItemTooltips) {
         String cRed = EnumChatFormatting.RED.toString();
-        String cGold = EnumChatFormatting.GOLD.toString();
-        String cYellow = EnumChatFormatting.YELLOW.toString();
+        
+        boolean isEquipmentSkin = stack.getItem() == ModItems.equipmentSkin;
+        boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;
         
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            
+            if (!isEquipmentSkin & !skinData.lockSkin & !isEquipmentContainer) {
+                return;
+            }
+            
+            if (!isEquipmentSkin) {
+                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.hasSkin"));
+            }
+            
             if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 Skin data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                 if (!data.getCustomName().trim().isEmpty()) {
-                    list.add(cGold + "Name: " + cGray + data.getCustomName());
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinName", data.getCustomName()));
                 }
                 if (!data.getAuthorName().trim().isEmpty()) {
-                    list.add(cGold + "Author: " + cGray + data.getAuthorName());
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinAuthor", data.getAuthorName()));
                 }
                 
                 if (skinData.skinType != null) {
-                    list.add(cGold + "Skin Type: " + cGray + SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType));
+                    String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
                 }
                 
                 if (GuiScreen.isShiftKeyDown()) {
-                    list.add(cYellow + "Equipment Id: " + cGray + skinData.skinId);
-                    list.add(cYellow + "Total Cubes: " + cGray + data.getTotalCubes());
-                    list.add(cYellow + "Cubes: " + cGray + data.getTotalOfCubeType(Cube.class));
-                    list.add(cYellow + "Cubes Glowing: " + cGray + data.getTotalOfCubeType(CubeGlowing.class));
-                    list.add(cYellow + "Cubes Glass: " + cGray + data.getTotalOfCubeType(CubeGlass.class));
-                    list.add(cYellow + "Cubes Glass Glowing: " + cGray + data.getTotalOfCubeType(CubeGlassGlowing.class));
-                    
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.skinId));
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubes", data.getTotalOfCubeType(Cube.class)));
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlowing", data.getTotalOfCubeType(CubeGlowing.class)));
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlass", data.getTotalOfCubeType(CubeGlass.class)));
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlassGlowing", data.getTotalOfCubeType(CubeGlassGlowing.class)));
                 } else {
-                    list.add("Hold " + cGreen + "shift" + cGray + " for debug info.");
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinHoldShiftForInfo"));
                 }
-                
                 if (skinData.skinId != data.lightHash()) {
-                    list.add(cRed + "Warning: This skin is using an old file format.");
-                    list.add(cRed + "Please save and reload it from the library to fix this.");
-                    list.add(cRed + "DEBUG - Old ID:" + data.requestId + " New ID:" + data.lightHash());
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError1"));
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError2"));
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError3", data.requestId, data.lightHash()));
                 }
-                //Warning
             } else {
-                list.add("Downloading skin...");
+                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading"));
             }
-            
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
-            keyName = cGreen + keyName + cGray;
-            list.add("Press the " + keyName + " key to open the " + cGreen + "Equipment Wardrobe");
+            if (isEquipmentSkin) {
+                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinOpenWardrobe", keyName));
+            }
         } else {
             if (EquipmentNBTHelper.stackHasLegacySkinData(stack)) {
-                list.add(cRed + "Old skin type. Place in crafting grid to restore.");
+                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinOldType"));
             } else {
-                list.add(cRed + "ERROR: Invalid equipment skin.");
-                list.add(cRed + "Please delete.");
+                if (isEquipmentSkin) {
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinInvalidItem"));
+                }
             }
         }
-
-        super.addInformation(stack, player, list, p_77624_4_);
     }
     
     @Override

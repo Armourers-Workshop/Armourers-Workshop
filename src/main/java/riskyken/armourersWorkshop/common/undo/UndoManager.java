@@ -19,10 +19,10 @@ public final class UndoManager {
     
     private static HashMap<String, PlayerUndoData> playerUndoData = new HashMap<String, PlayerUndoData>();
 
-    public static void playerPaintedBlock(EntityPlayer player, World world, int x, int y, int z, int oldColour) {
-        UndoData undoData = new UndoData(x, y, z, world.provider.dimensionId, oldColour);
+    public static void playerPaintedBlock(EntityPlayer player, World world, int x, int y, int z, int oldColour, int side) {
+        UndoData undoData = new UndoData(x, y, z, world.provider.dimensionId, oldColour, side);
         if (!playerUndoData.containsKey(player.getDisplayName())) {
-            playerUndoData.put(player.getDisplayName(), new PlayerUndoData(player));
+            playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
         }
         
         PlayerUndoData playerData = playerUndoData.get(player.getDisplayName());
@@ -30,7 +30,7 @@ public final class UndoManager {
     }
     
     public static void playerPressedUndo(EntityPlayer player) {
-        String key = player.getDisplayName();
+        String key = player.getCommandSenderName();
         if (!playerUndoData.containsKey(key)) {
             String outOfUndosText = StatCollector.translateToLocal("chat." + LibModInfo.ID.toLowerCase() + ":undo.outOfUndos");
             player.addChatMessage(new ChatComponentText(outOfUndosText));

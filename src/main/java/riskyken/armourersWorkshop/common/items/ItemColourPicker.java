@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -31,6 +30,7 @@ import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOp
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.PaintingNBTHelper;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 
 import com.mojang.authlib.GameProfile;
@@ -172,15 +172,16 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(stack, player, list, p_77624_4_);
-        String cGray = EnumChatFormatting.GRAY.toString();
-        String cGold = EnumChatFormatting.GOLD.toString();
         if (getToolHasColour(stack)) {
             Color c = new Color(getToolColour(stack));
             String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-            list.add(cGold + "Colour: " + cGray + c.getRGB());
-            list.add(cGold + "Hex: " + cGray + hex);
+            String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
+            String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
+            list.add(colourText);
+            list.add(hexText);
         } else {
-            list.add("No paint");
+            String noPaint = TranslateUtils.translate("item.armourersworkshop:rollover.nopaint");
+            list.add(noPaint);
         }
     }
     
