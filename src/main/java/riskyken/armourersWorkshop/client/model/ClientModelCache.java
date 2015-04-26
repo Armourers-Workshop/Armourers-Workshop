@@ -89,7 +89,13 @@ public class ClientModelCache {
     
     public void clearCache() {
         synchronized (equipmentDataMap) {
-            equipmentDataMap.clear();
+            Object[] keySet = equipmentDataMap.keySet().toArray();
+            for (int i = 0; i < keySet.length; i++) {
+                int key = (Integer) keySet[i];
+                Skin customArmourItemData = equipmentDataMap.get(key);
+                equipmentDataMap.remove(key);
+                customArmourItemData.cleanUpDisplayLists();
+            }
         }
     }
     
@@ -112,13 +118,14 @@ public class ClientModelCache {
     
     public void tick() {
         synchronized (equipmentDataMap) {
-            for (int i = 0; i < equipmentDataMap.size(); i++) {
-                int key = (Integer) equipmentDataMap.keySet().toArray()[i];
+            Object[] keySet = equipmentDataMap.keySet().toArray();
+            for (int i = 0; i < keySet.length; i++) {
+                int key = (Integer) keySet[i];
                 equipmentDataMap.get(key).tick();
             }
             
-            for (int i = 0; i < equipmentDataMap.size(); i++) {
-                int key = (Integer) equipmentDataMap.keySet().toArray()[i];
+            for (int i = 0; i < keySet.length; i++) {
+                int key = (Integer) keySet[i];
                 Skin customArmourItemData = equipmentDataMap.get(key);
                 if (customArmourItemData.needsCleanup()) {
                     equipmentDataMap.remove(key);
