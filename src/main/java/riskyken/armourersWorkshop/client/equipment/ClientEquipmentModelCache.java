@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
+import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
@@ -27,6 +27,9 @@ public class ClientEquipmentModelCache {
     
     private final HashMap<Integer, Skin> equipmentDataMap;
     private final HashSet<Integer> requestedEquipmentIds;
+    
+    private static boolean isBaking = true;
+    private static Object bakeLock = new Object();
     
     public static void init() {
         INSTANCE = new ClientEquipmentModelCache();
@@ -127,12 +130,18 @@ public class ClientEquipmentModelCache {
         
         @Override
         public void run() {
-            equipmentData.lightHash();
-            for (int i = 0; i < equipmentData.getParts().size(); i++) {
-                SkinPart partData = equipmentData.getParts().get(i);
-                if (!partData.facesBuild) {
-                    EquipmentRenderHelper.cullFacesOnEquipmentPart(partData);
+            
+            synchronized (bakeLock) {
+                isBaking = true;
+                equipmentData.lightHash();
+                for (int i = 0; i < equipmentData.getParts().size(); i++) {
+                    SkinPart partData = equipmentData.getParts().get(i);
+                    if (!partData.facesBuild) {
+                        SkinBaker.cullFacesOnEquipmentPart(partData);
+                        SkinBaker.buildPartDisplayListArray(partData);
+                    }
                 }
+                isBaking = false;
             }
             
             synchronized (requestedEquipmentIds) {

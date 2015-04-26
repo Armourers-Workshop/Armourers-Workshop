@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.client.render;
 
-import java.util.ArrayList;
 import java.util.BitSet;
 
 import net.minecraft.client.Minecraft;
@@ -10,12 +9,14 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.model.custom.equipment.CustomModelRenderer;
+import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
+import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.mcWrapper.client.IRenderBuffer;
+import riskyken.mcWrapper.client.RenderBridge;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,7 +25,7 @@ public class EquipmentPartRenderer extends ModelBase {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     public static final EquipmentPartRenderer INSTANCE = new EquipmentPartRenderer();
-    private final CustomModelRenderer main;
+    public final CustomModelRenderer main;
     private final Minecraft mc;
     
     public EquipmentPartRenderer() {
@@ -42,22 +43,20 @@ public class EquipmentPartRenderer extends ModelBase {
         
         GL11.glColor3f(1F, 1F, 1F);
         if (!armourPart.displayNormalCompiled) {
-            if (hasNormalBlocks(armourPart.getArmourData())) {
-                armourPart.hasNormalBlocks = true;
+            if (armourPart.hasNormalBlocks) {
                 armourPart.displayListNormal = GLAllocation.generateDisplayLists(1);
                 GL11.glNewList(armourPart.displayListNormal, GL11.GL_COMPILE);
-                this.renderNomralPartBlocks(armourPart.getArmourData(), scale);
+                this.renderNomralPartBlocks(armourPart, scale);
                 GL11.glEndList();
             }
             armourPart.displayNormalCompiled = true;
         }
         
         if (!armourPart.displayGlowingCompiled) {
-            if (hasGlowingBlocks(armourPart.getArmourData())) {
-                armourPart.hasGlowingBlocks = true;
+            if (armourPart.hasGlowingBlocks) {
                 armourPart.displayListGlowing = GLAllocation.generateDisplayLists(1);
                 GL11.glNewList(armourPart.displayListGlowing, GL11.GL_COMPILE);
-                this.renderGlowingPartBlocks(armourPart.getArmourData(), scale);
+                this.renderGlowingPartBlocks(armourPart, scale);
                 GL11.glEndList();
             }
             armourPart.displayGlowingCompiled = true;
@@ -96,42 +95,38 @@ public class EquipmentPartRenderer extends ModelBase {
         //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     
-    private boolean hasNormalBlocks(ArrayList<ICube> armourBlockData) {
-        for (int i = 0; i < armourBlockData.size(); i++) {
-            ICube blockData = armourBlockData.get(i);
-            if (!blockData.isGlowing()) {
-                return true;
+    private void renderNomralPartBlocks(SkinPart skinPart, float scale) {
+        IRenderBuffer renderBuffer = new RenderBridge().INSTANCE;
+        renderBuffer.startDrawingQuads();
+        for (int i = 0; i < skinPart.normalVertexList.size(); i++) {
+            ColouredVertexWithUV cVert = skinPart.normalVertexList.get(i);
+            if (ClientProxy.shadersModLoaded) {
+                cVert.renderVertexWithUV(renderBuffer);
+            } else {
+                cVert.renderVertex(renderBuffer);
             }
         }
-        return false;
+        
+        renderBuffer.draw();
+        skinPart.normalVertexList.clear();
+        skinPart.normalVertexList = null;
     }
     
-    private boolean hasGlowingBlocks(ArrayList<ICube> armourBlockData) {
-        for (int i = 0; i < armourBlockData.size(); i++) {
-            ICube blockData = armourBlockData.get(i);
-            if (blockData.isGlowing()) {
-                return true;
+    private void renderGlowingPartBlocks(SkinPart skinPart, float scale) {
+        IRenderBuffer renderBuffer = new RenderBridge().INSTANCE;
+        renderBuffer.startDrawingQuads();
+        for (int i = 0; i < skinPart.glowingVertexList.size(); i++) {
+            ColouredVertexWithUV cVert = skinPart.glowingVertexList.get(i);
+            if (ClientProxy.shadersModLoaded) {
+                cVert.renderVertexWithUV(renderBuffer);
+            } else {
+                cVert.renderVertex(renderBuffer);
             }
         }
-        return false;
-    }
-    
-    private void renderNomralPartBlocks(ArrayList<ICube> armourBlockData, float scale) {
-        for (int i = 0; i < armourBlockData.size(); i++) {
-            ICube blockData = armourBlockData.get(i);
-            if (!blockData.isGlowing()) {
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getCubeColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
-            }
-        }
-    }
-    
-    private void renderGlowingPartBlocks(ArrayList<ICube> armourBlockData, float scale) {
-        for (int i = 0; i < armourBlockData.size(); i++) {
-            ICube blockData = armourBlockData.get(i);
-            if (blockData.isGlowing()) {
-                renderArmourBlock(blockData.getX(), blockData.getY(), blockData.getZ(), blockData.getCubeColour(), scale, blockData.getFaceFlags(), blockData.needsPostRender());
-            }
-        }
+        
+        renderBuffer.draw();
+        skinPart.glowingVertexList.clear();
+        skinPart.glowingVertexList = null;
     }
 
     public void renderArmourBlock(int x, int y, int z, ICubeColour colour, float scale, BitSet faceFlags, boolean glass) {

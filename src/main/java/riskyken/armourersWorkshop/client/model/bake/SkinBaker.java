@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.render;
+package riskyken.armourersWorkshop.client.model.bake;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -6,12 +6,14 @@ import java.util.BitSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 
-public final class EquipmentRenderHelper {
+public final class SkinBaker {
     
     public static boolean withinMaxRenderDistance(double x, double y, double z) {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
@@ -56,6 +58,53 @@ public final class EquipmentRenderHelper {
         }
 
     }
+    
+    public static void buildPartDisplayListArray(SkinPart partData) {
+        ArrayList<ColouredVertexWithUV> normalVertexList = new ArrayList<ColouredVertexWithUV>();
+        ArrayList<ColouredVertexWithUV> glowingVertexList = new ArrayList<ColouredVertexWithUV>();
+        float scale = 0.0625F;
+        
+        for (int i = 0; i < partData.getArmourData().size(); i++) {
+            ICube cube = partData.getArmourData().get(i);
+            
+            ICubeColour cc = cube.getCubeColour();
+            byte a = (byte) 255;
+            if (cube.needsPostRender()) {
+                a = (byte) 127;
+            }
+            
+            if (cube.isGlowing()) {
+                EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(glowingVertexList,
+                        scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
+                        cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+            } else {
+                EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(normalVertexList,
+                        scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
+                        cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+            }
+            /*
+            try {
+                if (i == i % 2) {
+                    Thread.sleep(1L);
+                }
+                
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            */
+        }
+        
+        partData.normalVertexList = normalVertexList;
+        partData.glowingVertexList = glowingVertexList;
+        if (normalVertexList.size() > 0) {
+            partData.hasNormalBlocks = true;
+        }
+        if (glowingVertexList.size() > 0) {
+            partData.hasGlowingBlocks = true;
+        }
+    }
+    
     /*
     private static void checkBlockFaceIntersectsBodyPart(EnumBodyPart bodyPart, ICube block) {
         ForgeDirection[] dirs = { ForgeDirection.EAST, ForgeDirection.WEST,  ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH };

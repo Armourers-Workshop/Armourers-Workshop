@@ -1,4 +1,6 @@
-package riskyken.armourersWorkshop.client.model.custom.equipment;
+package riskyken.armourersWorkshop.client.model.bake;
+
+import java.util.ArrayList;
 
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.model.TexturedQuad;
@@ -29,6 +31,21 @@ public class CustomTexturedQuad extends TexturedQuad {
                 renderBuffer.addVertex((double)((float)(positiontexturevertex.vector3D.xCoord + x) * scale), (double)((float)(positiontexturevertex.vector3D.yCoord + y) * scale), (double)((float)(positiontexturevertex.vector3D.zCoord + z) * scale));
             }
             
+        }
+    }
+
+    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, int x, int y, int z, byte r, byte g, byte b, byte a) {
+        Vec3 vec3 = this.vertexPositions[1].vector3D.subtract(this.vertexPositions[0].vector3D);
+        Vec3 vec31 = this.vertexPositions[1].vector3D.subtract(this.vertexPositions[2].vector3D);
+        Vec3 vec32 = vec31.crossProduct(vec3).normalize();
+        for (int i = 0; i < 4; ++i) {
+            PositionTextureVertex positiontexturevertex = this.vertexPositions[i];
+            ColouredVertexWithUV cVer = new ColouredVertexWithUV(
+                    (double)((float)(positiontexturevertex.vector3D.xCoord + x) * scale), (double)((float)(positiontexturevertex.vector3D.yCoord + y) * scale), (double)((float)(positiontexturevertex.vector3D.zCoord + z) * scale),
+                    positiontexturevertex.texturePositionX, positiontexturevertex.texturePositionY,
+                    r, g, b, a,
+                    (float)vec32.xCoord, (float)vec32.yCoord, (float)vec32.zCoord);
+            vertexList.add(cVer);
         }
     }
 

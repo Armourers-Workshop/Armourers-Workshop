@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -33,6 +34,12 @@ public class SkinPart implements ISkinPart {
     private ISkinPartType skinPart;
     
     public boolean facesBuild;
+    
+    @SideOnly(Side.CLIENT)
+    public ArrayList<ColouredVertexWithUV> normalVertexList;
+    @SideOnly(Side.CLIENT)
+    public ArrayList<ColouredVertexWithUV> glowingVertexList;
+    
     
     public boolean hasNormalBlocks;
     public boolean hasGlowingBlocks;

@@ -19,7 +19,9 @@ public class MessageServerSendEquipmentData implements IMessage, IMessageHandler
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.equipmentData = new Skin(buf);
+        Thread t = new Thread(new DownloadThread(buf), "Skin download thread.");
+        t.setPriority(Thread.MIN_PRIORITY);
+        t.start();
     }
 
     @Override
@@ -29,7 +31,21 @@ public class MessageServerSendEquipmentData implements IMessage, IMessageHandler
 
     @Override
     public IMessage onMessage(MessageServerSendEquipmentData message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.receivedEquipmentData(message.equipmentData);
         return null;
+    }
+    
+    public class DownloadThread implements Runnable {
+
+        private ByteBuf buf;
+        
+        public DownloadThread(ByteBuf buf) {
+            this.buf = buf;
+        }
+        
+        @Override
+        public void run() {
+            Skin skin = new Skin(buf);
+            ArmourersWorkshop.proxy.receivedEquipmentData(skin);
+        }
     }
 }

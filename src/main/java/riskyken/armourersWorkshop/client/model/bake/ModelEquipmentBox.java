@@ -1,5 +1,6 @@
-package riskyken.armourersWorkshop.client.model.custom.equipment;
+package riskyken.armourersWorkshop.client.model.bake;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 
 import net.minecraft.client.model.ModelBox;
@@ -103,13 +104,25 @@ public class ModelEquipmentBox extends ModelBox {
         //5 = south
         int size = this.quadList.length;
         for (int i = 0; i < size; ++i) {
-
             if (faceFlags != null) {
                 if (!faceFlags.get(i)) {
                     this.quadList[i].draw(renderBuffer, scale, x, y, z, r[i], g[i], b[i], a);
                 }
             } else {
                 this.quadList[i].draw(renderBuffer, scale, x, y, z, r[i], g[i], b[i], a);
+            }
+        }
+    }
+
+    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, BitSet faceFlags, int x, int y, int z, byte[] r, byte[] g, byte[] b, byte a) {
+        int size = this.quadList.length;
+        for (int i = 0; i < size; ++i) {
+            if (faceFlags != null) {
+                if (!faceFlags.get(i)) {
+                    this.quadList[i].buildDisplayListArray(vertexList, scale, x, y, z, r[i], g[i], b[i], a);
+                }
+            } else {
+                this.quadList[i].buildDisplayListArray(vertexList, scale, x, y, z, r[i], g[i], b[i], a);
             }
         }
     }

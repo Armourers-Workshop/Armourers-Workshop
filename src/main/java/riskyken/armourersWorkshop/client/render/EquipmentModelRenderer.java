@@ -20,6 +20,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
+import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourChest;
@@ -203,7 +204,7 @@ public final class EquipmentModelRenderer {
             return;
         }
         
-        if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
+        if (!SkinBaker.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
             return;
         }
         
@@ -270,7 +271,7 @@ public final class EquipmentModelRenderer {
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
         EntityEquipmentData equipmentData = teMannequin.getEquipmentData();
         
-        if (!EquipmentRenderHelper.withinMaxRenderDistance(teMannequin.xCoord, teMannequin.yCoord, teMannequin.zCoord)) {
+        if (!SkinBaker.withinMaxRenderDistance(teMannequin.xCoord, teMannequin.yCoord, teMannequin.zCoord)) {
             return;
         }
         
