@@ -14,6 +14,8 @@ public interface ISkinDataHandler {
     
     public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType);
     
+    public boolean isValidEquipmentSkin(ItemStack stack);
+    
     public boolean stackHasSkinPointer(ItemStack stack);
     
     public ISkinPointer getSkinPointerFromStack(ItemStack stack);
