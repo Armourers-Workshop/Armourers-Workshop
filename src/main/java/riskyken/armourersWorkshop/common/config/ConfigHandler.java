@@ -25,7 +25,9 @@ public class ConfigHandler {
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
     public static boolean allowClientsToSaveSkins = false;
+    public static boolean allowModsToRegisterWithAPI = true;
     
+    //Register
     /** Should skins be dropped on player death.<br/>
      * <br/>
      * 0 = use keep inventory rule<br/>
@@ -89,6 +91,11 @@ public class ConfigHandler {
         allowEquipmentWardrobe = config
                 .get(CATEGORY_GENERAL, "Allow equipment wardrobe", true,
                 "Allow the player to open the equipment wardrobe GUI.")
+                .getBoolean(true);
+        
+        allowModsToRegisterWithAPI = config
+                .get(CATEGORY_COMPATIBILITY, "Allow mods to register with API", true,
+                "Allow other mods to register with the Armourer's Workshop API.")
                 .getBoolean(true);
         
         Addons.weaponmodCompatibility = config

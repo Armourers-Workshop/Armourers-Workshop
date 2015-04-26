@@ -7,11 +7,19 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 
 public interface ISkinRenderHandler {
 
+    public boolean renderSkinWithHelper(ItemStack stack);
+    
+    public boolean renderSkinWithHelper(ItemStack stack, ModelBiped modelBiped);
+    
+    public boolean renderSkinWithHelper(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX);
+    
+    public boolean renderSkinWithHelper(ISkinPointer skinPointer);
+    
+    public boolean renderSkinWithHelper(ISkinPointer skinPointer, ModelBiped modelBiped);
+    
+    public boolean renderSkinWithHelper(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX);
+    
     public boolean renderSkin(ItemStack stack);
-    
-    public boolean renderSkin(ItemStack stack, ModelBiped modelBiped);
-    
-    public boolean renderSkin(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX);
     
     public boolean renderSkin(ISkinPointer skinPointer);
     

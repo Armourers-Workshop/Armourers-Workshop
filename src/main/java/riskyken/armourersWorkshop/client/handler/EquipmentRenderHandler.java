@@ -18,7 +18,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     public static final EquipmentRenderHandler INSTANCE = new EquipmentRenderHandler();
     
     @Override
-    public boolean renderSkin(ItemStack stack) {
+    public boolean renderSkinWithHelper(ItemStack stack) {
         if (stack == null) {
             return false;
         }
@@ -26,7 +26,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
 
     @Override
-    public boolean renderSkin(ItemStack stack, ModelBiped modelBiped) {
+    public boolean renderSkinWithHelper(ItemStack stack, ModelBiped modelBiped) {
         if (stack == null) {
             return false;
         }
@@ -34,11 +34,37 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
 
     @Override
-    public boolean renderSkin(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX) {
+    public boolean renderSkinWithHelper(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX) {
         if (stack == null) {
             return false;
         }
         return EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, limb1, limb2, limb3, headY, headX);
+    }
+    
+    @Override
+    public boolean renderSkinWithHelper(ISkinPointer skinPointer) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    @Override
+    public boolean renderSkinWithHelper(ISkinPointer skinPointer,
+            ModelBiped modelBiped) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    @Override
+    public boolean renderSkinWithHelper(ISkinPointer skinPointer, float limb1,
+            float limb2, float limb3, float headY, float headX) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    @Override
+    public boolean renderSkin(ItemStack stack) {
+        // TODO Auto-generated method stub
+        return false;
     }
     
     @Override

@@ -9,6 +9,7 @@ import riskyken.armourersWorkshop.api.common.IArmourersCommonManager;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.handler.EquipmentDataHandler;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -24,6 +25,9 @@ public final class ApiRegistrar {
     public LinkedHashMap<String, IArmourersClientManager> equipmentRenderManagers = new LinkedHashMap<String, IArmourersClientManager>();
     
     public void addApiRequest(String modName, String className) {
+        if (!ConfigHandler.allowModsToRegisterWithAPI) {
+            return;
+        }
         try {
             Class<?> c = Class.forName(className);
             Object classObject = c.newInstance();
