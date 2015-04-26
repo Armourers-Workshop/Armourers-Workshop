@@ -81,17 +81,11 @@ public class RenderItemBowSkin implements IItemRenderer {
         if (canRenderModel(stack) & type != ItemRenderType.INVENTORY) {
             if (type != ItemRenderType.ENTITY) {
                 GL11.glPopMatrix();
-                //GL11.glPopMatrix(); 
-                
-                GL11.glRotatef(-50, 0, 1, 0);
-                GL11.glRotatef(20, 0, 0, 1);
-                GL11.glRotatef(10, 1, 0, 0);
+                //GL11.glRotatef(-135, 0, 1, 0);
+                //GL11.glRotatef(-10, 0, 0, 1);
             }
 
             GL11.glPushMatrix();
-            
-            
-            GL11.glScalef(1.6F, 1.6F, 1.6F);
 
             boolean isBlocking = false;
             
@@ -107,19 +101,34 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
             
             float scale = 0.0625F;
+            float angle = (float) (((double)System.currentTimeMillis() / 5) % 360F);
             
             switch (type) {
             case EQUIPPED:
                 GL11.glScalef(1F, -1F, 1F);
+                GL11.glScalef(1.6F, 1.6F, 1.6F);
+                GL11.glRotatef(-135, 0, 1, 0);
+                GL11.glRotatef(10, 0, 0, 1);
+                GL11.glRotatef(-20, 1, 0, 0);
+                
+                GL11.glRotatef(90, 0, 1, 0);
+                
                 GL11.glTranslatef(0F * scale, -6F * scale, 1F * scale);
-                //GL11.glRotatef(180F, 1F, 0F, 0F);
-                //GL11.glRotatef(180F, 0F, 1F, 0F);
                 break;
             case ENTITY:
+                GL11.glRotatef(180, 0, 0, 1);
                 GL11.glTranslatef(0F, -10F * scale, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
-                GL11.glRotatef(166F, 0F, 0F, 1F);
+                GL11.glScalef(1.6F, 1.6F, 1.6F);
+                GL11.glRotatef(-135, 0, 1, 0);
+                GL11.glRotatef(180, 0, 0, 1);
+                GL11.glRotatef(-90, 0, 1, 0);
+                //Back tilt
+                GL11.glRotatef(-17, 1, 0, 0);
+                GL11.glRotatef(2, 0, 0, 1);
+                GL11.glTranslatef(0F * scale, -2F * scale, 1F * scale);
+                
                 break;
             default:
                 break;
