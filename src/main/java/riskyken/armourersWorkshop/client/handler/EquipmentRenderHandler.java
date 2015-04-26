@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.client.render.ISkinRenderHandler;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -78,7 +78,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null | skinPartType == null) {
             return false;
         }
-        Skin skin = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
         if (skin == null) {
             return false;
         }
@@ -106,7 +106,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return false;
         }
-        return ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId());
+        return ClientModelCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId());
     }
     
     @Override
@@ -123,6 +123,6 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return;
         }
-        ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
+        ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
     }
 }

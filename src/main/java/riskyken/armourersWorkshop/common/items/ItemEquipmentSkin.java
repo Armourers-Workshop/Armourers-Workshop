@@ -12,8 +12,8 @@ import net.minecraft.util.IIcon;
 import org.lwjgl.input.Keyboard;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
@@ -55,8 +55,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.hasSkin"));
             }
             
-            if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                Skin data = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+                Skin data = ClientModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                 if (!data.getCustomName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinName", data.getCustomName()));
                 }

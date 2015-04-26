@@ -17,8 +17,8 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
@@ -120,7 +120,7 @@ public final class EquipmentModelRenderer {
     }
     
     public Skin getCustomArmourItemData(int equipmentId) {
-        return ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+        return ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
     }
     
     public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {

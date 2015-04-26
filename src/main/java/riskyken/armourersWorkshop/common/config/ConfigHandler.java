@@ -26,6 +26,7 @@ public class ConfigHandler {
     public static String[] disabledSkins = {};
     public static boolean allowClientsToSaveSkins = false;
     public static boolean allowModsToRegisterWithAPI = true;
+    public static int maxModelBakingThreads = 1;
     
     //Register
     /** Should skins be dropped on player death.<br/>
@@ -143,6 +144,11 @@ public class ConfigHandler {
                     .get(CATEGORY_CLIENT, "Skin Render Distance", 40,
                     "The max distance away that skins will render.")
                     .getInt(40);
+            
+            maxModelBakingThreads = config
+                    .get(CATEGORY_CLIENT, "Max Model Baking Threads", 1,
+                    "The maximum number of threads that will be used to bake models. Less that 1 equals unlimited.")
+                    .getInt(1);
         }
         
         if (config.hasChanged()) {

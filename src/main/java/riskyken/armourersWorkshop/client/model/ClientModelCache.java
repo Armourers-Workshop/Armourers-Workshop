@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.equipment;
+package riskyken.armourersWorkshop.client.model;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,7 +6,6 @@ import java.util.HashSet;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -21,9 +20,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientEquipmentModelCache {
+public class ClientModelCache {
     
-    public static ClientEquipmentModelCache INSTANCE;
+    public static ClientModelCache INSTANCE;
     
     private final HashMap<Integer, Skin> equipmentDataMap;
     private final HashSet<Integer> requestedEquipmentIds;
@@ -32,10 +31,10 @@ public class ClientEquipmentModelCache {
     private static Object bakeLock = new Object();
     
     public static void init() {
-        INSTANCE = new ClientEquipmentModelCache();
+        INSTANCE = new ClientModelCache();
     }
     
-    public ClientEquipmentModelCache() {
+    public ClientModelCache() {
         equipmentDataMap = new HashMap<Integer, Skin>();
         requestedEquipmentIds = new HashSet<Integer>();
         FMLCommonHandler.instance().bus().register(this);
@@ -56,8 +55,8 @@ public class ClientEquipmentModelCache {
         }
     }
     
-    public void receivedEquipmentData(Skin equipmentData) {
-        int equipmentId = equipmentData.hashCode();
+    public void receivedModelFromBakery(Skin equipmentData) {
+        int equipmentId = equipmentData.lightHash();
         
         synchronized (equipmentDataMap) {
             if (equipmentDataMap.containsKey(equipmentId)) {
@@ -65,9 +64,24 @@ public class ClientEquipmentModelCache {
             }
         }
         
-        Thread t = (new Thread(new FaceCullThread(equipmentData, equipmentId),LibModInfo.NAME + " model bake thread."));
-        t.setPriority(Thread.MIN_PRIORITY);
-        t.start();
+        synchronized (requestedEquipmentIds) {
+            if (requestedEquipmentIds.contains(equipmentId)) {
+                synchronized (equipmentDataMap) {
+                    equipmentDataMap.put(equipmentId, equipmentData);
+                }
+                requestedEquipmentIds.remove(equipmentId);
+            } else {
+                //Out of date skin
+                if (requestedEquipmentIds.contains(equipmentData.requestId)) {
+                    synchronized (equipmentDataMap) {
+                        equipmentDataMap.put(equipmentData.requestId, equipmentData);
+                    }
+                    requestedEquipmentIds.remove(equipmentData.requestId);
+                } else {
+                    ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
+                }
+            }
+        }
     }
     
     public int getCacheSize() {

@@ -12,7 +12,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
@@ -130,7 +130,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             if (model != null) {
                 model.bowUse = useCount;
                 int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-                Skin skin = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+                Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
                 model.render(null, skin);
             } else {
                 ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinBow);
@@ -156,10 +156,10 @@ public class RenderItemBowSkin implements IItemRenderer {
     private boolean canRenderModel(ItemStack stack) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 return true;
             } else {
-                ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
+                ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
                 return false;
             }
         } else {

@@ -82,18 +82,9 @@ public final class SkinBaker {
                         scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
                         cc.getRed(), cc.getGreen(), cc.getBlue(), a);
             }
-            /*
-            try {
-                if (i == i % 2) {
-                    Thread.sleep(1L);
-                }
-                
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            */
         }
+        
+        partData.getArmourData().clear();
         
         partData.normalVertexList = normalVertexList;
         partData.glowingVertexList = glowingVertexList;

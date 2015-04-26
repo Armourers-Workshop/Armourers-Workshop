@@ -5,12 +5,13 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockArmourer;
@@ -82,7 +83,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         PlayerSkinHandler.init();
-        ClientEquipmentModelCache.init();
+        ClientModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
         //Cross mod support
@@ -124,7 +125,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public int getPlayerModelCacheSize() {
-        return ClientEquipmentModelCache.INSTANCE.getCacheSize();
+        return ClientModelCache.INSTANCE.getCacheSize();
     }
 
     @Override
@@ -146,13 +147,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void receivedEquipmentData(Skin equipmentData) {
-        ClientEquipmentModelCache.INSTANCE.receivedEquipmentData(equipmentData);
+    public void receivedEquipmentData(Skin skin) {
+        ModelBakery.INSTANCE.receivedUnbakedModel(skin);
     }
     
     @Override
     public void receivedCommandFromSever(CommandType command) {
-        ClientEquipmentModelCache.INSTANCE.clearCache();
+        ClientModelCache.INSTANCE.clearCache();
     }
     
     @Override

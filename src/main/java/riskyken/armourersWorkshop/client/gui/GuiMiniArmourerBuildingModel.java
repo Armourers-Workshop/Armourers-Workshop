@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
@@ -176,7 +176,7 @@ public class GuiMiniArmourerBuildingModel {
         
         
         if (skinPointer != null) {
-            Skin skin = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+            Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart part = skin.getParts().get(i);
                 if (part.getPartType() == currentSkinPartType) {
