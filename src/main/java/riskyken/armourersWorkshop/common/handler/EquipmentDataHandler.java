@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.ISkinDataHandler;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
@@ -33,6 +34,11 @@ public class EquipmentDataHandler implements ISkinDataHandler {
     public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType) {
         ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.clearEquipmentStack(skinType);
+    }
+    
+    @Override
+    public boolean isValidEquipmentSkin(ItemStack stack) {
+        return (stack != null && stack.getItem() == ModItems.equipmentSkin && stackHasSkinPointer(stack));
     }
 
     @Override
