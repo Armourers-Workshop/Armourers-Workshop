@@ -42,7 +42,8 @@ public final class EquipmentRenderHelper {
     }
     
     private static void checkFaces(ICube block, ICube checkBlock) {
-        ForgeDirection[] dirs = { ForgeDirection.EAST, ForgeDirection.WEST,  ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH };
+        ForgeDirection[] dirs = {ForgeDirection.UP, ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
+        //dirs = ForgeDirection.VALID_DIRECTIONS;
         for (int i = 0; i < dirs.length; i++) {
             ForgeDirection dir = dirs[i];
             if (block.getX() + dir.offsetX == checkBlock.getX()) {
