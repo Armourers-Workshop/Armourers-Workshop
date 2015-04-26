@@ -62,12 +62,6 @@ public class EquipmentPartRenderer extends ModelBase {
             armourPart.displayGlowingCompiled = true;
         }
         
-        if (armourPart.displayNormalCompiled & armourPart.displayGlowingCompiled) {
-            if (!armourPart.modelBaked) {
-                armourPart.bakeModel();
-            }
-        }
-        
         if (ClientProxy.shadersModLoaded) {
             mc.renderEngine.bindTexture(texture);
         } else {
@@ -92,7 +86,6 @@ public class EquipmentPartRenderer extends ModelBase {
         
         GL11.glColor3f(1F, 1F, 1F);
         mc.mcProfiler.endSection();
-        //GL11.glPolygonMode( GL11.GL_FRONT_AND_BACK, GL11.GL_FILL );
     }
     
     private void renderNomralPartBlocks(SkinPart skinPart, float scale) {
@@ -106,8 +99,8 @@ public class EquipmentPartRenderer extends ModelBase {
                 cVert.renderVertex(renderBuffer);
             }
         }
-        
         renderBuffer.draw();
+        
         skinPart.normalVertexList.clear();
         skinPart.normalVertexList = null;
     }
@@ -123,8 +116,8 @@ public class EquipmentPartRenderer extends ModelBase {
                 cVert.renderVertex(renderBuffer);
             }
         }
-        
         renderBuffer.draw();
+        
         skinPart.glowingVertexList.clear();
         skinPart.glowingVertexList = null;
     }

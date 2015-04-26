@@ -23,7 +23,7 @@ public final class ModelBakery {
     /** Lock object use to keep threads in sync. */
     private final Object bakeLock = new Object();
     
-    /** Number of model baking threads currently running */
+    /** Number of model baking threads currently running. */
     private int runningOvens = 0;
     
     /** List of models that still need to be baked. */
@@ -76,6 +76,12 @@ public final class ModelBakery {
             ClientModelCache.INSTANCE.receivedModelFromBakery(bakedModels.get(i));
         }
         bakedModels.clear();
+    }
+    
+    public int getBakingQueueSize() {
+        synchronized (bakeLock) {
+            return unbakedModels.size();
+        }
     }
     
     private class BakingOven implements Runnable {

@@ -55,15 +55,6 @@ public class SkinPart implements ISkinPart {
     public int displayListNormal;
     @SideOnly(Side.CLIENT)
     public int displayListGlowing;
-    
-    @SideOnly(Side.CLIENT)
-    public boolean modelBaked;
-    
-    @SideOnly(Side.CLIENT)
-    public void bakeModel() {
-        armourData.clear();
-        modelBaked = true;
-    }
 
     @SideOnly(Side.CLIENT)
     public void cleanUpDisplayLists() {

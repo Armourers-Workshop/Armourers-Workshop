@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.handler;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -19,9 +20,10 @@ public class DebugTextHandler {
             event.left.add("");
             event.left.add(EnumChatFormatting.GOLD + "[" + LibModInfo.NAME + "]");
             String dataLine = "";
-            dataLine += "ModelCache:" + ArmourersWorkshop.proxy.getPlayerModelCacheSize()+ " - ";
+            dataLine += "ModelCache:" + ArmourersWorkshop.proxy.getPlayerModelCacheSize() + " - ";
             dataLine += "PlayerData:" + EquipmentModelRenderer.INSTANCE.getSkinDataMapSize();
-            
+            event.left.add(dataLine);
+            dataLine = "BakingQueue:" + ModelBakery.INSTANCE.getBakingQueueSize();
             
             event.left.add(dataLine);
         }

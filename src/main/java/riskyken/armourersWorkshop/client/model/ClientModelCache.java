@@ -5,11 +5,9 @@ import java.util.HashSet;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -26,9 +24,6 @@ public class ClientModelCache {
     
     private final HashMap<Integer, Skin> equipmentDataMap;
     private final HashSet<Integer> requestedEquipmentIds;
-    
-    private static boolean isBaking = true;
-    private static Object bakeLock = new Object();
     
     public static void init() {
         INSTANCE = new ClientModelCache();
@@ -60,7 +55,9 @@ public class ClientModelCache {
         
         synchronized (equipmentDataMap) {
             if (equipmentDataMap.containsKey(equipmentId)) {
+                Skin oldSkin = equipmentDataMap.get(equipmentId);
                 equipmentDataMap.remove(equipmentId);
+                oldSkin.cleanUpDisplayLists();
             }
         }
         
@@ -71,8 +68,8 @@ public class ClientModelCache {
                 }
                 requestedEquipmentIds.remove(equipmentId);
             } else {
-                //Out of date skin
                 if (requestedEquipmentIds.contains(equipmentData.requestId)) {
+                    //Out of date skin
                     synchronized (equipmentDataMap) {
                         equipmentDataMap.put(equipmentData.requestId, equipmentData);
                     }
@@ -107,8 +104,8 @@ public class ClientModelCache {
     }
     
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.side == Side.CLIENT & event.type == Type.PLAYER & event.phase == Phase.END) {
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
             tick();
         }
     }
@@ -129,55 +126,6 @@ public class ClientModelCache {
                     break;
                 }
             }
-        }
-    }
-    
-    public class FaceCullThread implements Runnable {
-        
-        private Skin equipmentData;
-        private int equipmentId;
-        
-        public FaceCullThread(Skin equipmentData, int equipmentId) {
-            this.equipmentData = equipmentData;
-            this.equipmentId = equipmentId;
-        }
-        
-        @Override
-        public void run() {
-            
-            synchronized (bakeLock) {
-                isBaking = true;
-                equipmentData.lightHash();
-                for (int i = 0; i < equipmentData.getParts().size(); i++) {
-                    SkinPart partData = equipmentData.getParts().get(i);
-                    if (!partData.facesBuild) {
-                        SkinBaker.cullFacesOnEquipmentPart(partData);
-                        SkinBaker.buildPartDisplayListArray(partData);
-                    }
-                }
-                isBaking = false;
-            }
-            
-            synchronized (requestedEquipmentIds) {
-                if (requestedEquipmentIds.contains(equipmentId)) {
-                    synchronized (equipmentDataMap) {
-                        equipmentDataMap.put(equipmentId, equipmentData);
-                    }
-                    requestedEquipmentIds.remove(equipmentId);
-                } else {
-                    //Out of date skin
-                    if (requestedEquipmentIds.contains(equipmentData.requestId)) {
-                        synchronized (equipmentDataMap) {
-                            equipmentDataMap.put(equipmentData.requestId, equipmentData);
-                        }
-                        requestedEquipmentIds.remove(equipmentData.requestId);
-                    } else {
-                        ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
-                    }
-                }
-            }
-            
-            
         }
     }
 }

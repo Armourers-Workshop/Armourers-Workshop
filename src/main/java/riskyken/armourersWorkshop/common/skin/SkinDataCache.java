@@ -63,7 +63,7 @@ public final class SkinDataCache {
     
     public void processMessageQueue() {
         long curTick = System.currentTimeMillis();
-        if (curTick >= lastTick + 80L) {
+        if (curTick >= lastTick + 20L) {
             lastTick = curTick;
             if (messageQueue.size() > 0) {
                 processMessage(messageQueue.get(0));
