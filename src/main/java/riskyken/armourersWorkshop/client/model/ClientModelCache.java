@@ -87,6 +87,12 @@ public class ClientModelCache {
         }
     }
     
+    public int getRequestQueueSize() {
+        synchronized (requestedEquipmentIds) {
+            return requestedEquipmentIds.size();
+        }
+    }
+    
     public void clearCache() {
         synchronized (equipmentDataMap) {
             Object[] keySet = equipmentDataMap.keySet().toArray();
