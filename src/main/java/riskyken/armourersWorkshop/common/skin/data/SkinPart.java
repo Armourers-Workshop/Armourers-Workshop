@@ -33,13 +33,10 @@ public class SkinPart implements ISkinPart {
     private ArrayList<ICube> armourData;
     private ISkinPartType skinPart;
     
-    public boolean facesBuild;
-    
     @SideOnly(Side.CLIENT)
     public ArrayList<ColouredVertexWithUV> normalVertexList;
     @SideOnly(Side.CLIENT)
     public ArrayList<ColouredVertexWithUV> glowingVertexList;
-    
     
     public boolean hasNormalBlocks;
     public boolean hasGlowingBlocks;

@@ -31,7 +31,6 @@ public final class SkinBaker {
             int cubeId = CubeRegistry.INSTANCE.getIdForCubeClass(blockData.getClass());
             partData.totalCubesInPart[cubeId] += 1;
             setBlockFaceFlags(blocks, blockData);
-            partData.facesBuild = true;
         }
     }
     

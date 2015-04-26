@@ -98,10 +98,8 @@ public final class ModelBakery {
             
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
-                if (!partData.facesBuild) {
-                    SkinBaker.cullFacesOnEquipmentPart(partData);
-                    SkinBaker.buildPartDisplayListArray(partData);
-                }
+                SkinBaker.cullFacesOnEquipmentPart(partData);
+                SkinBaker.buildPartDisplayListArray(partData);
             }
             
             synchronized (bakeLock) {
