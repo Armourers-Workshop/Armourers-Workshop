@@ -36,7 +36,6 @@ public final class SkinDataCache {
     private HashMap<Integer, Skin> equipmentDataCache = new HashMap<Integer, Skin>();
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     private long lastTick;
-    private boolean madeDatabase = false;
     
     public static void init() {
         if (INSTANCE == null) {
@@ -65,9 +64,11 @@ public final class SkinDataCache {
         long curTick = System.currentTimeMillis();
         if (curTick >= lastTick + 20L) {
             lastTick = curTick;
-            if (messageQueue.size() > 0) {
-                processMessage(messageQueue.get(0));
-                messageQueue.remove(0);
+            synchronized (messageQueue) {
+                if (messageQueue.size() > 0) {
+                    processMessage(messageQueue.get(0));
+                    messageQueue.remove(0);
+                }
             }
         }
     }
@@ -127,7 +128,9 @@ public final class SkinDataCache {
     
     public void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
         QueueMessage queueMessage = new QueueMessage(equipmentId, player);
-        messageQueue.add(queueMessage);
+        synchronized (messageQueue) {
+            messageQueue.add(queueMessage);
+        }
     }
     
     private boolean haveEquipmentOnDisk(int equipmentId) {
