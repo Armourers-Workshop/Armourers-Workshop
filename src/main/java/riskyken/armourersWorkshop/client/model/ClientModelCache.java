@@ -51,32 +51,25 @@ public class ClientModelCache {
     }
     
     public void receivedModelFromBakery(Skin equipmentData) {
-        int equipmentId = equipmentData.lightHash();
-        
-        synchronized (equipmentDataMap) {
-            if (equipmentDataMap.containsKey(equipmentId)) {
-                Skin oldSkin = equipmentDataMap.get(equipmentId);
-                equipmentDataMap.remove(equipmentId);
-                oldSkin.cleanUpDisplayLists();
-            }
-        }
+        int equipmentId = equipmentData.requestId;
         
         synchronized (requestedEquipmentIds) {
+            synchronized (equipmentDataMap) {
+                if (equipmentDataMap.containsKey(equipmentId)) {
+                    Skin oldSkin = equipmentDataMap.get(equipmentId);
+                    equipmentDataMap.remove(equipmentId);
+                    oldSkin.cleanUpDisplayLists();
+                    ModLogger.log("removing skin");
+                }
+            }
+            
             if (requestedEquipmentIds.contains(equipmentId)) {
                 synchronized (equipmentDataMap) {
                     equipmentDataMap.put(equipmentId, equipmentData);
                 }
                 requestedEquipmentIds.remove(equipmentId);
             } else {
-                if (requestedEquipmentIds.contains(equipmentData.requestId)) {
-                    //Out of date skin
-                    synchronized (equipmentDataMap) {
-                        equipmentDataMap.put(equipmentData.requestId, equipmentData);
-                    }
-                    requestedEquipmentIds.remove(equipmentData.requestId);
-                } else {
-                    ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
-                }
+                ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);
             }
         }
     }
