@@ -46,7 +46,7 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinChest);
-        armourData.onRender();
+        armourData.onUsed();
         
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);

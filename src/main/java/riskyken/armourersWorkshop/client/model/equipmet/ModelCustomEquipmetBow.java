@@ -50,7 +50,7 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinBow);
-        armourData.onRender();
+        armourData.onUsed();
         
         int tarPart = bowUse / 10;
         

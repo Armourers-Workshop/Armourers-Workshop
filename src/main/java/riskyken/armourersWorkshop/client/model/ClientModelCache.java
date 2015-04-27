@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -126,7 +127,7 @@ public class ClientModelCache {
             for (int i = 0; i < keySet.length; i++) {
                 int key = (Integer) keySet[i];
                 Skin customArmourItemData = equipmentDataMap.get(key);
-                if (customArmourItemData.needsCleanup()) {
+                if (customArmourItemData.needsCleanup(ConfigHandler.clientModelCacheTime)) {
                     equipmentDataMap.remove(key);
                     customArmourItemData.cleanUpDisplayLists();
                     break;

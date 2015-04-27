@@ -10,6 +10,7 @@ import net.minecraftforge.event.world.WorldEvent;
 
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -33,8 +34,11 @@ public final class SkinDataCache {
     
     public static SkinDataCache INSTANCE = null;
     
-    private HashMap<Integer, Skin> equipmentDataCache = new HashMap<Integer, Skin>();
+    /** Cache of skins that are in memory. */
+    private HashMap<Integer, Skin> skinDataCache = new HashMap<Integer, Skin>();
+    
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
+    
     private long lastTick;
     
     public static void init() {
@@ -52,6 +56,7 @@ public final class SkinDataCache {
     public void onServerTickEvent(TickEvent.ServerTickEvent event) {
         if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
             processMessageQueue();
+            checkForOldSkins();
         }
     }
     
@@ -60,7 +65,14 @@ public final class SkinDataCache {
         SkinIOUtils.makeDatabaseDirectory();
     }
     
-    public void processMessageQueue() {
+    public void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
+        QueueMessage queueMessage = new QueueMessage(equipmentId, player);
+        synchronized (messageQueue) {
+            messageQueue.add(queueMessage);
+        }
+    }
+    
+    private void processMessageQueue() {
         long curTick = System.currentTimeMillis();
         if (curTick >= lastTick + 20L) {
             lastTick = curTick;
@@ -73,9 +85,23 @@ public final class SkinDataCache {
         }
     }
     
-    public void processMessage(QueueMessage queueMessage) {
+    private void checkForOldSkins() {
+        synchronized (skinDataCache) {
+            Object[] keySet = skinDataCache.keySet().toArray();
+            for (int i = 0; i < keySet.length; i++) {
+                int key = (Integer) keySet[i];
+                Skin skin = skinDataCache.get(key);
+                skin.tick();
+                if (skin.needsCleanup(ConfigHandler.serverModelCacheTime)) {
+                    skinDataCache.remove(key);
+                }
+            }
+        }
+    }
+    
+    private void processMessage(QueueMessage queueMessage) {
         
-        if (!equipmentDataCache.containsKey(queueMessage.equipmentId)) {
+        if (!skinDataCache.containsKey(queueMessage.equipmentId)) {
             if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
                 Skin equipmentData;
                 equipmentData = loadEquipmentFromDisk(queueMessage.equipmentId);
@@ -87,9 +113,10 @@ public final class SkinDataCache {
             }
         }
         
-        if (equipmentDataCache.containsKey(queueMessage.equipmentId)) {
-            Skin equpmentData = equipmentDataCache.get(queueMessage.equipmentId);
-            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(equpmentData), queueMessage.player);
+        if (skinDataCache.containsKey(queueMessage.equipmentId)) {
+            Skin skin = skinDataCache.get(queueMessage.equipmentId);
+            skin.onUsed();
+            PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(skin), queueMessage.player);
         } else {
             ModLogger.log(Level.ERROR, "Equipment id:" + queueMessage.equipmentId +" was requested by "
         + queueMessage.player.getCommandSenderName() + " but was not found.");
@@ -100,12 +127,12 @@ public final class SkinDataCache {
         addEquipmentDataToCache(equipmentData, equipmentData.hashCode());
     }
     
-    public void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {
+    private void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {
         if (equipmentData == null) {
             return;
         }
-        if (!equipmentDataCache.containsKey(equipmentId)) {
-            equipmentDataCache.put(equipmentId, equipmentData);
+        if (!skinDataCache.containsKey(equipmentId)) {
+            skinDataCache.put(equipmentId, equipmentData);
             if (!haveEquipmentOnDisk(equipmentId)) {
                 saveEquipmentToDisk(equipmentData);
             }
@@ -113,24 +140,19 @@ public final class SkinDataCache {
     }
     
     public Skin getEquipmentData(int equipmentId) {
-        if (!equipmentDataCache.containsKey(equipmentId)) {
+        if (!skinDataCache.containsKey(equipmentId)) {
             if (haveEquipmentOnDisk(equipmentId)) {
                 Skin equipmentData;
                 equipmentData = loadEquipmentFromDisk(equipmentId);
                 addEquipmentDataToCache(equipmentData, equipmentId);
             }
         }
-        if (equipmentDataCache.containsKey(equipmentId)) {
-            return equipmentDataCache.get(equipmentId);
+        if (skinDataCache.containsKey(equipmentId)) {
+            Skin skin = skinDataCache.get(equipmentId);
+            skin.onUsed();
+            return skin;
         }
         return null;
-    }
-    
-    public void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
-        QueueMessage queueMessage = new QueueMessage(equipmentId, player);
-        synchronized (messageQueue) {
-            messageQueue.add(queueMessage);
-        }
     }
     
     private boolean haveEquipmentOnDisk(int equipmentId) {
@@ -148,7 +170,7 @@ public final class SkinDataCache {
         return SkinIOUtils.loadSkinFromFile(file);
     }
     
-    public class QueueMessage {
+    private class QueueMessage {
         
         public final int equipmentId;
         public final EntityPlayerMP player;

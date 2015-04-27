@@ -14,11 +14,13 @@ public class ConfigHandler {
     public static String CATEGORY_GENERAL = "general";
     public static String CATEGORY_COMPATIBILITY = "compatibility";
     public static String CATEGORY_CLIENT = "client";
+    public static String CATEGORY_SERVER = "server";
     
     public static Configuration config;
 
     public static boolean disableRecipes;
-    public static int modelCacheTime = 12000;
+    public static int clientModelCacheTime = 12000;
+    public static int serverModelCacheTime = 12000;
     public static int maxRenderDistance = 40;
     public static boolean downloadSkins;
     public static boolean compatibilityRender = false;
@@ -99,6 +101,7 @@ public class ConfigHandler {
                 "Allow other mods to register with the Armourer's Workshop API.")
                 .getBoolean(true);
         
+        //Addons
         Addons.weaponmodCompatibility = config
                 .get(CATEGORY_COMPATIBILITY, "Balkon's Weapon Mod Compatibility", true,
                 "Allow weapon render override on Balkon's Weapon Mod items.")
@@ -139,6 +142,7 @@ public class ConfigHandler {
                 "Allow weapon render override on More Swords Mod items.")
                 .getBoolean(true);
         
+        //Client
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             maxRenderDistance = config
                     .get(CATEGORY_CLIENT, "Skin Render Distance", 40,
@@ -149,7 +153,21 @@ public class ConfigHandler {
                     .get(CATEGORY_CLIENT, "Max Model Baking Threads", 1,
                     "The maximum number of threads that will be used to bake models. Less that 1 equals unlimited.")
                     .getInt(1);
+            
+            serverModelCacheTime = config
+                    .get(CATEGORY_CLIENT, "Cliet Model Cache Time", 12000,
+                    "How long in ticks the client will keep skins in it's cache.\n" + 
+                    "Default 12000 ticks is 10 minutes.")
+                    .getInt(12000);
         }
+        
+        //Server
+        serverModelCacheTime = config
+                .get(CATEGORY_SERVER, "Server Model Cache Time", 12000,
+                "How long in ticks the server will keep skins in it's cache.\n" + 
+                "Default 12000 ticks is 10 minutes.")
+                .getInt(12000);
+        
         
         if (config.hasChanged()) {
             config.save();
