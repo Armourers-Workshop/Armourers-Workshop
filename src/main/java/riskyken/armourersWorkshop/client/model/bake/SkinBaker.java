@@ -85,12 +85,13 @@ public final class SkinBaker {
         
         partData.getArmourData().clear();
         
-        partData.normalVertexList = normalVertexList;
-        partData.glowingVertexList = glowingVertexList;
         if (normalVertexList.size() > 0) {
+            partData.normalVertexList = normalVertexList;
             partData.hasNormalBlocks = true;
         }
+        
         if (glowingVertexList.size() > 0) {
+            partData.glowingVertexList = glowingVertexList;
             partData.hasGlowingBlocks = true;
         }
     }
