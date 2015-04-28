@@ -52,6 +52,11 @@ public final class SkinDataCache {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
+    public void clearAll() {
+        skinDataCache.clear();
+        messageQueue.clear();
+    }
+    
     @SubscribeEvent
     public void onServerTickEvent(TickEvent.ServerTickEvent event) {
         if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {

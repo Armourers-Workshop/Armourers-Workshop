@@ -30,6 +30,7 @@ import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class ArmourersWorkshop {
@@ -88,6 +89,11 @@ public class ArmourersWorkshop {
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandArmourers());
         SkinDataCache.init();
+    }
+    
+    @Mod.EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+        SkinDataCache.INSTANCE.clearAll();
     }
     
     @Mod.EventHandler
