@@ -103,18 +103,18 @@ public final class SkinDataCache {
         
         if (!skinDataCache.containsKey(queueMessage.equipmentId)) {
             if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
-                Skin equipmentData;
-                equipmentData = loadEquipmentFromDisk(queueMessage.equipmentId);
-                equipmentData.requestId = queueMessage.equipmentId;
-                addEquipmentDataToCache(equipmentData, queueMessage.equipmentId);
-                if (equipmentData.hashCode() != queueMessage.equipmentId) {
-                    addEquipmentDataToCache(equipmentData, equipmentData.hashCode());
+                Skin skin;
+                skin = loadEquipmentFromDisk(queueMessage.equipmentId);
+                addEquipmentDataToCache(skin, queueMessage.equipmentId);
+                if (skin.hashCode() != queueMessage.equipmentId) {
+                    addEquipmentDataToCache(skin, skin.hashCode());
                 }
             }
         }
         
         if (skinDataCache.containsKey(queueMessage.equipmentId)) {
             Skin skin = skinDataCache.get(queueMessage.equipmentId);
+            skin.requestId = queueMessage.equipmentId;
             skin.onUsed();
             PacketHandler.networkWrapper.sendTo(new MessageServerSendEquipmentData(skin), queueMessage.player);
         } else {
