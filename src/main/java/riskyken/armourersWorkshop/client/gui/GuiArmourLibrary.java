@@ -127,7 +127,7 @@ public class GuiArmourLibrary extends GuiContainer {
                 break;
             case BUTTON_ID_LOAD:
                 if (checkClientFiles.isChecked()) {
-                    Skin itemData = SkinIOUtils.loadSkinFromFileName(filename);
+                    Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + ".armour");
                     if (itemData != null) {
                         message = new MessageClientGuiLoadSaveArmour(itemData);
                         PacketHandler.networkWrapper.sendToServer(message);
