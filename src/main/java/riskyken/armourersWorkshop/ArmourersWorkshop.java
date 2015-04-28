@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -80,6 +81,7 @@ public class ArmourersWorkshop {
     public void postInit(FMLPostInitializationEvent event) {
         Addons.init();
         proxy.postInit();
+        SkinIOUtils.makeLibraryDirectory();
     }
     
     @Mod.EventHandler

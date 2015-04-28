@@ -113,6 +113,13 @@ public final class SkinIOUtils {
         }
     }
     
+    public static void makeLibraryDirectory() {
+        File directory = getSkinLibraryDirectory();
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+    }
+    
     public static void copyOldDatabase() {
         ModLogger.log("Moving skin database to a new location.");
         
