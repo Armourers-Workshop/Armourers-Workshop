@@ -179,7 +179,6 @@ public class PlayerSkinInfo {
     
     private void uploadNakedSkin(AbstractClientPlayer player) {
         if (!hasNakedSkin) {
-            ModLogger.log(Level.WARN, "Tryed to upload null naked skin.");
             return;
         }
         if (playerNakedSkin == null) {

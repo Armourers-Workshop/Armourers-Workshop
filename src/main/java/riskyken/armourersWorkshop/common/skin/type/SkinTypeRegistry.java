@@ -89,7 +89,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         for (int i = 0; i < skinParts.size(); i++) {
             ISkinPartType skinPart = skinParts.get(i);
             String partName = skinType.getRegistryName() + "." + skinPart.getPartName();
-            ModLogger.log("Registering skin part - name:" + partName);
             skinPartMap.put(partName, skinPart);
         }
         return true;
