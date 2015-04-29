@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -32,7 +33,7 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     }
     
     @Override
-    public void setInventorySlotContents(int slotId, ItemStack stack) {
+    public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {
         if (entity.worldObj.isRemote) {
             return;
         }

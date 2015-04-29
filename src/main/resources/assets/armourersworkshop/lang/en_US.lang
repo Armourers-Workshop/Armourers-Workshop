@@ -9,6 +9,7 @@ tile.armourersworkshop:colourableGlassGlowing.name=Glass Equipment Cube (Glowing
 tile.armourersworkshop:colourMixer.name=Colour Mixer
 tile.armourersworkshop:mannequin.name=Mannequin
 tile.armourersworkshop:doll.name=Doll
+tile.armourersworkshop:skinningTable.name=Skinning Table
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
@@ -21,6 +22,7 @@ tile.armourersworkshop:colourableGlassGlowing.flavour=Glowing transparent equipm
 tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipment with.%nSneak right click with tool to quickly paint.
 tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!%nRight click with a name tag to set a skin.
 tile.armourersworkshop:doll.flavour=Mini mannequin!
+tile.armourersworkshop:skinningTable.flavour=Apply and remove skins from items.
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=Equipment Skin Template
@@ -116,6 +118,7 @@ inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 inventory.armourersworkshop:entityEquipment.name=Entity Equipment
+inventory.armourersworkshop:skinningTable.name=Skinning Table
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:

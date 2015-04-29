@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
+import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
@@ -26,6 +27,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
+import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.items.ItemGuideBook;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -36,6 +38,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -97,6 +100,11 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerEntityEquipment(player.inventory, entityProps.getSkinInventory());
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
+                }
+                break;
+            case LibGuiIds.SKNNING_TABLE:
+                if (te instanceof TileEntitySkinningTable){
+                    return new ContainerSkinningTable(player.inventory, (TileEntitySkinningTable)te);
                 }
                 break;
         }
@@ -164,6 +172,11 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiEntityEquipment(player.inventory, entityProps.getSkinInventory());
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
+                }
+                break;
+            case LibGuiIds.SKNNING_TABLE:
+                if (te instanceof TileEntitySkinningTable){
+                    return new GuiSkinningTable(player.inventory, (TileEntitySkinningTable)te);
                 }
                 break;
         }

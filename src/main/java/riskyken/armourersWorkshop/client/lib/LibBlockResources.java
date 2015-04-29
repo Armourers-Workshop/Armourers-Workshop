@@ -20,4 +20,8 @@ public final class LibBlockResources {
     public static final String COLOUR_MIXER_SIDE_OVERLAY = PREFIX_RESOURCE + "colourMixerSideOverlay";
     public static final String COLOUR_MIXER_TOP = PREFIX_RESOURCE + "colourMixerTop";
     public static final String COLOUR_MIXER_BOTTOM = PREFIX_RESOURCE + "colourMixerBottom";
+    
+    public static final String SKINNING_TABLE_SIDE = PREFIX_RESOURCE + "skinningTableSide";
+    public static final String SKINNING_TABLE_TOP = PREFIX_RESOURCE + "skinningTableTop";
+    public static final String SKINNING_TABLE_BOTTOM = PREFIX_RESOURCE + "skinningTableBottom";
 }

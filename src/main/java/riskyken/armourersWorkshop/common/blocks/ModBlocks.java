@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
@@ -25,6 +26,7 @@ public class ModBlocks {
     public static Block colourMixer;
     public static Block mannequin;
     public static Block doll;
+    public static Block skinningTable;
     
     public static void init() {
         armourerBrain = new BlockArmourerBrain();
@@ -38,6 +40,7 @@ public class ModBlocks {
         colourMixer = new BlockColourMixer();
         mannequin = new BlockMannequin();
         doll = new BlockDoll();
+        skinningTable = new BlockSkinningTable();
     }
 
     public static void registerTileEntities() {
@@ -48,6 +51,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);
         registerTileEntity(TileEntityBoundingBox.class, LibBlockNames.BOUNDING_BOX);
         registerTileEntity(TileEntityMannequin.class, LibBlockNames.MANNEQUIN);
+        registerTileEntity(TileEntitySkinningTable.class, LibBlockNames.SKINNING_TABLE);
     }
 
     public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
