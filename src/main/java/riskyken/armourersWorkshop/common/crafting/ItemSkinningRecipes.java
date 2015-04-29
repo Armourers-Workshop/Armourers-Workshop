@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeItemSkinning;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinClear;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinCopy;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinSword;
 
@@ -15,6 +16,7 @@ public class ItemSkinningRecipes {
     public static void init() {
         recipes.add(new RecipeSkinSword());
         recipes.add(new RecipeSkinCopy());
+        recipes.add(new RecipeSkinClear());
     }
     
     public static ItemStack getRecipeOutput(IInventory inventory) {
