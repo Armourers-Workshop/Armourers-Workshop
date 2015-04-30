@@ -62,11 +62,11 @@ public final class SkinRenderHelper {
         
         GL11.glDisable(GL11.GL_LIGHTING);
         
-        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.5F);
+        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
         renderGuideBox(buildRec.getX(), buildRec.getY(), buildRec.getZ(), buildRec.getWidth(), buildRec.getHeight(), buildRec.getDepth(), scale);
         
         if (debugRender) {
-            GL11.glColor4f(1F, 0F, 0F, 0.5F);
+            GL11.glColor4f(1F, 0F, 0F, 0.25F);
             renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(), guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale);
         }
         
