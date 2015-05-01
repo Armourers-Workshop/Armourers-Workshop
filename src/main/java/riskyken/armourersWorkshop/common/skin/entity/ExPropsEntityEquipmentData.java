@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
 import riskyken.armourersWorkshop.common.inventory.InventoryEntitySkin;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageServerEntityEquipmentData;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;

@@ -21,7 +21,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiHSBSlider.IHSBSliderCal
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiColourUpdate;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiColourUpdate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

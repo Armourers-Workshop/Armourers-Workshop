@@ -23,7 +23,7 @@ import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiBipedRotations;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;

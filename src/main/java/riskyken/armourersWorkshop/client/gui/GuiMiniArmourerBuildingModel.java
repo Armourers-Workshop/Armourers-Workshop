@@ -21,18 +21,21 @@ import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.UtilColour;
 
 public class GuiMiniArmourerBuildingModel {
 
     private final Minecraft mc;
     private final GuiScreen parent;
+    private TileEntityMiniArmourer tileEntity;
     
     private ArrayList<ICube> cubes;
     
@@ -57,19 +60,25 @@ public class GuiMiniArmourerBuildingModel {
     public ItemStack stack;
     public SkinPointer skinPointer;
     
-    public GuiMiniArmourerBuildingModel(GuiScreen parent, Minecraft mc) {
+    public GuiMiniArmourerBuildingModel(GuiScreen parent, Minecraft mc, TileEntityMiniArmourer tileEntity) {
         this.parent = parent;
         this.mc = mc;
+        this.tileEntity = tileEntity;
         
         this.cubes = new ArrayList<ICube>();
         ICube cube = new Cube();
-        cube.setColour(UtilColour.getMinecraftColor(1));
+        cube.setY((byte) -1);
+        //cube.setColour(0xFF0000, 0);
+        //cube.setColour(0x00FF00, 1);
+        //cube.setColour(0x0000FF, 2);
+        //cube.setColour(0xFF00FF, 3);
+        
         this.cubes.add(cube);
         
-        cube = new Cube();
-        cube.setColour(UtilColour.getMinecraftColor(2));
-        cube.setY((byte) -8);
-        this.cubes.add(cube);
+        //cube = new Cube();
+        //cube.setColour(UtilColour.getMinecraftColor(2));
+        //cube.setY((byte) -8);
+        //this.cubes.add(cube);
     }
     
     public void drawScreen(int mouseX, int mouseY) {
@@ -91,13 +100,13 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glRotatef(180F, 0F, 1F, 0F);
         
         
-        
-        GL11.glRotatef(rotation, 0F, 1F, 0F);
         GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+        GL11.glRotatef(rotation, 0F, 1F, 0F);
+        
         
         GL11.glTranslated(0, 1 * scale, 0);
         
-        
+        GL11.glScalef(-1, -1, 1);
         drawBuildingCubes(true);
         Color c = getColourAtPos(Mouse.getX(), Mouse.getY());
         int hoverCubeId = getIdFromColour(c);
@@ -158,7 +167,6 @@ public class GuiMiniArmourerBuildingModel {
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
                 newCube.setColour(0xFFFFFFFF);
-                int[] colour = {newCube.getColour(), newCube.getColour(), newCube.getColour(), newCube.getColour(), newCube.getColour(), newCube.getColour()};
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -168,12 +176,10 @@ public class GuiMiniArmourerBuildingModel {
             }
         }
         
+        GL11.glScalef(-1, -1, 1);
+        
         RenderHelper.enableStandardItemLighting();
-        
-        
         mc.renderEngine.bindTexture(mc.thePlayer.getLocationSkin());
-        
-        
         
         if (skinPointer != null) {
             Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
@@ -206,12 +212,13 @@ public class GuiMiniArmourerBuildingModel {
 
             if (button == 0) {
                 ICube newCube = new Cube();
-                newCube.setColour(tarCube.getColour());
+                newCube.getCubeColour().setRed(tarCube.getCubeColour().getRed());
+                newCube.getCubeColour().setGreen(tarCube.getCubeColour().getGreen());
+                newCube.getCubeColour().setBlue(tarCube.getCubeColour().getBlue());
                 ForgeDirection dir = getDirectionForCubeFace(cubeFace);
                 newCube.setX((byte) (tarCube.getX() + dir.offsetX));
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
-                ModLogger.log(newCube);
                 cubes.add(newCube);
             }
             
@@ -240,20 +247,19 @@ public class GuiMiniArmourerBuildingModel {
                     GL11.glDisable(GL11.GL_LIGHTING);
                     ModRenderHelper.disableLighting();
                 }
-                int colour[];
+                ICubeColour colour = new CubeColour();
                 if (fake) {
-                    colour = new int[] {
-                            getColourFromId(colourId).getRGB(),
-                            getColourFromId(colourId + 1).getRGB(),
-                            getColourFromId(colourId + 2).getRGB(),
-                            getColourFromId(colourId + 3).getRGB(),
-                            getColourFromId(colourId + 4).getRGB(),
-                            getColourFromId(colourId + 5).getRGB()};
+                    colour.setColour(getColourFromId(colourId).getRGB(), 0);
+                    colour.setColour(getColourFromId(colourId + 1).getRGB(), 1);
+                    colour.setColour(getColourFromId(colourId + 2).getRGB(), 2);
+                    colour.setColour(getColourFromId(colourId + 3).getRGB(), 3);
+                    colour.setColour(getColourFromId(colourId + 4).getRGB(), 4);
+                    colour.setColour(getColourFromId(colourId + 5).getRGB(), 5);
                 } else {
-                    colour = new int[] {cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour()};
+                    colour = cube.getCubeColour();
                 }
                 
-                EquipmentPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), cube.getCubeColour(), scale, null, false);
+                EquipmentPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), colour, scale, null, false);
                 if (cube.isGlowing() & !fake) {
                     ModRenderHelper.enableLighting();
                     GL11.glEnable(GL11.GL_LIGHTING);
@@ -307,22 +313,22 @@ public class GuiMiniArmourerBuildingModel {
         ForgeDirection dir;
         switch (cubeFace) {
         case 1:
-            dir = ForgeDirection.NORTH;
-            break;
-        case 0:
-            dir = ForgeDirection.SOUTH;
-            break;
-        case 4:
-            dir = ForgeDirection.WEST;
-            break;
-        case 5:
             dir = ForgeDirection.EAST;
             break;
-        case 3:
+        case 0:
+            dir = ForgeDirection.WEST;
+            break;
+        case 4:
             dir = ForgeDirection.DOWN;
             break;
-        case 2:
+        case 5:
             dir = ForgeDirection.UP;
+            break;
+        case 3:
+            dir = ForgeDirection.NORTH;
+            break;
+        case 2:
+            dir = ForgeDirection.SOUTH;
             break;
         default:
             dir = ForgeDirection.UNKNOWN;

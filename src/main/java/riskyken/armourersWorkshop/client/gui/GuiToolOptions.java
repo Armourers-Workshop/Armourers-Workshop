@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiToolOptionUpdate;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;

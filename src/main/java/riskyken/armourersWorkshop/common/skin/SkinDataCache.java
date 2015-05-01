@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageServerSendEquipmentData;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSendEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;

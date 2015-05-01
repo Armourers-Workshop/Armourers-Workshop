@@ -116,7 +116,7 @@ public class ModInventory implements IInventory {
 
     @Override
     public boolean isItemValidForSlot(int slotId, ItemStack stack) {
-        return false;
+        return true;
     }
     
     public void saveItemsToNBT(NBTTagCompound compound) {

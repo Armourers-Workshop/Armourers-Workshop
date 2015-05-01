@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.network.messages;
+package riskyken.armourersWorkshop.common.network.messages.server;
 
 import io.netty.buffer.ByteBuf;
 

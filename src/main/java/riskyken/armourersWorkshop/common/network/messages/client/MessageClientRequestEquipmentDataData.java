@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.network.messages;
+package riskyken.armourersWorkshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;

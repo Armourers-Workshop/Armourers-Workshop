@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.proxies;
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.network.messages.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;

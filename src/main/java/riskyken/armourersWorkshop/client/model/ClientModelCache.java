@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientRequestEquipmentDataData;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestEquipmentDataData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;

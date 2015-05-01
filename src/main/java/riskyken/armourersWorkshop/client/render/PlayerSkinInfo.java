@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiUpdateNakedInfo;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 

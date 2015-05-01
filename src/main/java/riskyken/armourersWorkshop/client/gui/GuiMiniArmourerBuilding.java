@@ -23,7 +23,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetArmourerSkinType;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -42,7 +42,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     
     public GuiMiniArmourerBuilding(TileEntityMiniArmourer tileEntity) {
         this.tileEntity = tileEntity;
-        model = new GuiMiniArmourerBuildingModel(this, Minecraft.getMinecraft());
+        model = new GuiMiniArmourerBuildingModel(this, Minecraft.getMinecraft(), tileEntity);
         model.currentSkinType = tileEntity.getSkinType();
     }
     
