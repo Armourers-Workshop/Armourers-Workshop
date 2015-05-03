@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListCallback {
     
-    private TileEntityMiniArmourer tileEntity;
+    public TileEntityMiniArmourer tileEntity;
     
     private GuiMiniArmourerBuildingModel model;
     private GuiDropDownList dropDownSkins;

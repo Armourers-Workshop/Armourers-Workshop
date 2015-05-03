@@ -20,6 +20,9 @@ import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerAddOrEdit;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerRemove;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -65,15 +68,15 @@ public class GuiMiniArmourerBuildingModel {
         this.mc = mc;
         this.tileEntity = tileEntity;
         
-        this.cubes = new ArrayList<ICube>();
-        ICube cube = new Cube();
-        cube.setY((byte) -1);
+        //this.cubes = new ArrayList<ICube>();
+        //ICube cube = new Cube();
+        //cube.setY((byte) -1);
         //cube.setColour(0xFF0000, 0);
         //cube.setColour(0x00FF00, 1);
         //cube.setColour(0x0000FF, 2);
         //cube.setColour(0xFF00FF, 3);
         
-        this.cubes.add(cube);
+        //this.cubes.add(cube);
         
         //cube = new Cube();
         //cube.setColour(UtilColour.getMinecraftColor(2));
@@ -91,6 +94,14 @@ public class GuiMiniArmourerBuildingModel {
     }
     
     private void renderModels(int mouseX, int mouseY) {
+        cubes = null;
+        ArrayList<SkinPart> skinParts = tileEntity.getSkinParts();
+        for (int i = 0; i < skinParts.size(); i++) {
+            if (skinParts.get(i).getPartType() == currentSkinPartType) {
+                cubes = skinParts.get(i).getArmourData();
+            }
+        }
+        
         float scale = 0.0625F;
         GL11.glPushMatrix();
         
@@ -154,7 +165,7 @@ public class GuiMiniArmourerBuildingModel {
         drawBuildingCubes(false);
         
         //Are we hovering over a cube?
-        if (hoverCubeId != 0) {
+        if (hoverCubeId != 0 && cubes != null) {
             int cubeId = (int) Math.ceil((double)hoverCubeId / 6);
             int cubeFace = cubeId * 6 - hoverCubeId;
             
@@ -207,7 +218,7 @@ public class GuiMiniArmourerBuildingModel {
     }
     
     private void cubeClicked(int cubeId, int cubeFace, int button) {
-        if (cubeId - 1 < cubes.size() & cubeId - 1 >= 0) {
+        if (cubes != null && cubeId - 1 < cubes.size() & cubeId - 1 >= 0) {
             ICube tarCube = cubes.get(cubeId - 1);
 
             if (button == 0) {
@@ -219,11 +230,18 @@ public class GuiMiniArmourerBuildingModel {
                 newCube.setX((byte) (tarCube.getX() + dir.offsetX));
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
-                cubes.add(newCube);
+                newCube.setId((byte) 0);
+                ModLogger.log("sending cube: " + newCube);
+                
+                MessageClientGuiMiniArmourerAddOrEdit message;
+                message = new MessageClientGuiMiniArmourerAddOrEdit(currentSkinPartType, newCube);
+                PacketHandler.networkWrapper.sendToServer(message);
             }
             
             if (button == 1) {
-                cubes.remove(cubeId - 1);
+                MessageClientGuiMiniArmourerRemove message;
+                message = new MessageClientGuiMiniArmourerRemove(currentSkinPartType, tarCube.getX(), tarCube.getY(), tarCube.getZ());
+                PacketHandler.networkWrapper.sendToServer(message);
             }
             
             ModLogger.log("cubeId:" + cubeId + " cubeFace:" + cubeFace); 
@@ -231,6 +249,9 @@ public class GuiMiniArmourerBuildingModel {
     }
     
     private void drawBuildingCubes(boolean fake) {
+        if (cubes == null) {
+            return;
+        }
         //GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         if (fake) {

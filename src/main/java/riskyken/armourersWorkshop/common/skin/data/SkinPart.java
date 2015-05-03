@@ -71,7 +71,12 @@ public class SkinPart implements ISkinPart {
         this.armourData = armourData;
         this.skinPart = skinPart;
     }
-
+    
+    public SkinPart(ISkinPartType skinPart) {
+        this.armourData = new ArrayList<ICube>();
+        this.skinPart = skinPart;
+    }
+    
     public SkinPart(ByteBuf buf) {
         readFromBuf(buf);
     }
