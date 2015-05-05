@@ -104,6 +104,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         RenderHelper.enableStandardItemLighting();
         
         model.drawScreen(mouseX, mouseY);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         
         ModRenderHelper.disableLighting();
         RenderHelper.enableGUIStandardItemLighting();

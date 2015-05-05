@@ -14,6 +14,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
@@ -39,6 +40,7 @@ public class GuiMiniArmourerBuildingModel {
     private TileEntityMiniArmourer tileEntity;
     
     private ArrayList<ICube> cubes;
+    ArrayList<ICube> renderCubes = new ArrayList<ICube>();
     
     private int mouseLeftDownId = -1;
     private int mouseRightDownId = -1;
@@ -55,6 +57,9 @@ public class GuiMiniArmourerBuildingModel {
     private int mouseRightDownPosY = 0;
     private int lastMousePosX = 0;
     private int lastMousePosY = 0;
+    
+    private int fakeCubeRenders = 0;
+    private int hoverCubeId = 0;
     
     public ISkinType currentSkinType;
     public ISkinPartType currentSkinPartType;
@@ -86,12 +91,15 @@ public class GuiMiniArmourerBuildingModel {
         if (stack != null) {
             skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
         }
+        renderFakeCubes(mouseX, mouseY);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         renderModels(mouseX, mouseY);
+        
         lastMousePosX = mouseX;
         lastMousePosY = mouseY;
     }
     
-    private void renderModels(int mouseX, int mouseY) {
+    private void renderFakeCubes(int mouseX, int mouseY) {
         cubes = null;
         ArrayList<SkinPart> skinParts = tileEntity.getSkinParts();
         for (int i = 0; i < skinParts.size(); i++) {
@@ -118,8 +126,7 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glScalef(-1, -1, 1);
         drawBuildingCubes(true);
         Color c = getColourAtPos(Mouse.getX(), Mouse.getY());
-        int hoverCubeId = getIdFromColour(c);
-        
+        hoverCubeId = getIdFromColour(c);
         
         if (Mouse.isButtonDown(0)) {
             if (!mouseLeftIsDown) {
@@ -159,16 +166,35 @@ public class GuiMiniArmourerBuildingModel {
                 }
             }
         }
+        GL11.glPopMatrix();
+    }
+    
+    private void renderModels(int mouseX, int mouseY) {
         
-        drawBuildingCubes(false);
+        float scale = 0.0625F;
+        GL11.glPushMatrix();
+        
+        GL11.glTranslatef(parent.width / 2, parent.height / 2, 500.0F);
+        GL11.glScalef((float)(-zoom), (float)zoom, (float)zoom);
+        
+        GL11.glRotatef(180F, 0F, 1F, 0F);
+        
+        
+        GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+        GL11.glRotatef(rotation, 0F, 1F, 0F);
+        
+        
+        GL11.glTranslated(0, 1 * scale, 0);
+        
+        GL11.glScalef(-1, -1, 1);
         
         //Are we hovering over a cube?
-        if (hoverCubeId != 0 && cubes != null) {
+        if (hoverCubeId != 0 && renderCubes != null) {
             int cubeId = (int) Math.ceil((double)hoverCubeId / 6);
             int cubeFace = cubeId * 6 - hoverCubeId;
             
-            if (cubeId - 1 < cubes.size() & cubeId - 1 >= 0) {
-                ICube tarCube = cubes.get(cubeId - 1);
+            if (cubeId - 1 < renderCubes.size() & cubeId - 1 >= 0) {
+                ICube tarCube = renderCubes.get(cubeId - 1);
                 
                 ICube newCube = new Cube();
                 ForgeDirection dir = getDirectionForCubeFace(cubeFace);
@@ -185,6 +211,9 @@ public class GuiMiniArmourerBuildingModel {
             }
         }
         
+        //Gui.drawRect(0, 0, parent.width, parent.height, 0xFF000000);
+        
+        drawBuildingCubes(false);
         GL11.glScalef(-1, -1, 1);
         
         RenderHelper.enableStandardItemLighting();
@@ -217,9 +246,9 @@ public class GuiMiniArmourerBuildingModel {
     }
     
     private void cubeClicked(int cubeId, int cubeFace, int button) {
-        if (cubes != null && cubeId - 1 < cubes.size() & cubeId - 1 >= 0) {
-            ICube tarCube = cubes.get(cubeId - 1);
-
+        if (renderCubes != null && cubeId - 1 < renderCubes.size() & cubeId - 1 >= 0) {
+            ICube tarCube = renderCubes.get(cubeId - 1);
+            
             if (button == 0) {
                 ICube newCube = new Cube();
                 newCube.getCubeColour().setRed(tarCube.getCubeColour().getRed());
@@ -237,6 +266,9 @@ public class GuiMiniArmourerBuildingModel {
             }
             
             if (button == 1) {
+                if (tarCube.getId() == -1) {
+                    return;
+                }
                 MessageClientGuiMiniArmourerCubeEdit message;
                 message = new MessageClientGuiMiniArmourerCubeEdit(currentSkinPartType, tarCube, true);
                 PacketHandler.networkWrapper.sendToServer(message);
@@ -248,17 +280,38 @@ public class GuiMiniArmourerBuildingModel {
         if (cubes == null) {
             return;
         }
+        
+        renderCubes.clear();
+        fakeCubeRenders = 0;
         //GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         if (fake) {
             GL11.glDisable(GL11.GL_LIGHTING);
+            IRectangle3D guideSpace = currentSkinPartType.getGuideSpace();
+            for (int ix = 0; ix < guideSpace.getWidth(); ix++ ) {
+                for (int iy = 0; iy < guideSpace.getHeight(); iy++ ) {
+                    for (int iz = 0; iz < guideSpace.getDepth(); iz++ ) {
+                        byte x = (byte) (ix + guideSpace.getX());
+                        byte y = (byte) (iy + guideSpace.getY());
+                        byte z = (byte) (iz + guideSpace.getZ());
+                        Cube cube = new Cube();
+                        cube.setX(x);
+                        cube.setY(y);
+                        cube.setZ(z);
+                        renderCubes.add(cube);
+                    }
+                }
+            }
+            fakeCubeRenders = renderCubes.size();
         }
 
         float scale = 0.0625F;
         int colourId = 1;
         
-        for (int i = 0; i < cubes.size(); i++) {
-            ICube cube = cubes.get(i);
+        renderCubes.addAll(cubes);
+        
+        for (int i = 0; i < renderCubes.size(); i++) {
+            ICube cube = renderCubes.get(i);
             if (cube != null) {
                 if (cube.isGlowing() & !fake) {
                     GL11.glDisable(GL11.GL_LIGHTING);

@@ -11,7 +11,6 @@ import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.skin.cubes.Cube;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -79,16 +78,11 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         this.skinType = skinType;
         this.skinParts.clear();
         if (this.skinType != null) {
-            
             ArrayList<ISkinPartType> skinPartTypes = this.skinType.getSkinParts();
             for (int i = 0; i <skinPartTypes.size(); i++) {
                 SkinPart skinPart = new SkinPart(skinPartTypes.get(i));
                 skinParts.add(skinPart);
             }
-            Cube cube = new Cube();
-            cube.setY((byte) 0);
-            cube.setId((byte) 0);
-            skinParts.get(0).getArmourData().add(cube);
         }
         if (update) {
             this.markDirty();
