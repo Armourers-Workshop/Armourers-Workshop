@@ -7,14 +7,18 @@ import java.util.ArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
-import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * Sent from the server to the client when a player opens the mini armourer GUI.
+ * COntains all the block data for the model being built.
+ * @author RiskyKen
+ *
+ */
 public class MessageServerMiniArmourerSkinData implements IMessage, IMessageHandler<MessageServerMiniArmourerSkinData, IMessage> {
     
     private ArrayList<SkinPart> skinParts;
@@ -49,14 +53,8 @@ public class MessageServerMiniArmourerSkinData implements IMessage, IMessageHand
         Minecraft mc = Minecraft.getMinecraft();
         
         GuiScreen screen = mc.currentScreen;
-        
         if (screen != null && screen instanceof GuiMiniArmourerBuilding) {
             ((GuiMiniArmourerBuilding)screen).tileEntity.setSkinParts(message.skinParts);
-        }
-        
-        Container container = player.openContainer;
-        if (container != null && container instanceof ContainerMiniArmourerBuilding) {
-            ((ContainerMiniArmourerBuilding)container).setSkinParts(message.skinParts);
         }
         return null;
     }

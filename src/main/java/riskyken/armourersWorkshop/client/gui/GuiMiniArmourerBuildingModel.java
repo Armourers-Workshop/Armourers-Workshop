@@ -21,8 +21,7 @@ import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerAddOrEdit;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerRemove;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -32,7 +31,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class GuiMiniArmourerBuildingModel {
 
@@ -202,9 +200,10 @@ public class GuiMiniArmourerBuildingModel {
             }
             
         }
-        GL11.glTranslated(0, -currentSkinPartType.getBuildingSpace().getY() * scale, 0);
+        
         
         if (currentSkinPartType != null) {
+            GL11.glTranslated(0, -currentSkinPartType.getBuildingSpace().getY() * scale, 0);
             currentSkinPartType.renderBuildingGuide(scale, true, false);
             SkinRenderHelper.renderBuildingGrid(currentSkinPartType, scale);
         }
@@ -231,20 +230,17 @@ public class GuiMiniArmourerBuildingModel {
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
                 newCube.setId((byte) 0);
-                ModLogger.log("sending cube: " + newCube);
                 
-                MessageClientGuiMiniArmourerAddOrEdit message;
-                message = new MessageClientGuiMiniArmourerAddOrEdit(currentSkinPartType, newCube);
+                MessageClientGuiMiniArmourerCubeEdit message;
+                message = new MessageClientGuiMiniArmourerCubeEdit(currentSkinPartType, newCube, false);
                 PacketHandler.networkWrapper.sendToServer(message);
             }
             
             if (button == 1) {
-                MessageClientGuiMiniArmourerRemove message;
-                message = new MessageClientGuiMiniArmourerRemove(currentSkinPartType, tarCube.getX(), tarCube.getY(), tarCube.getZ());
+                MessageClientGuiMiniArmourerCubeEdit message;
+                message = new MessageClientGuiMiniArmourerCubeEdit(currentSkinPartType, tarCube, true);
                 PacketHandler.networkWrapper.sendToServer(message);
             }
-            
-            ModLogger.log("cubeId:" + cubeId + " cubeFace:" + cubeFace); 
         }
     }
     

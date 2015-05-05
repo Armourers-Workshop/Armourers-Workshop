@@ -5,8 +5,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiColourUpdate;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerAddOrEdit;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerRemove;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerCustomName;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
@@ -20,6 +19,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerCl
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntityEquipmentData;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerRemoveEquipmentInfo;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSendEquipmentData;
@@ -57,8 +57,8 @@ public class PacketHandler {
         registerMessage(MessageServerEntityEquipmentData.class, MessageServerEntityEquipmentData.class, Side.CLIENT);
         registerMessage(MessageServerLibrarySendSkin.class, MessageServerLibrarySendSkin.class, Side.CLIENT);
         registerMessage(MessageServerMiniArmourerSkinData.class, MessageServerMiniArmourerSkinData.class, Side.CLIENT);
-        registerMessage(MessageClientGuiMiniArmourerAddOrEdit.class, MessageClientGuiMiniArmourerAddOrEdit.class, Side.SERVER);
-        registerMessage(MessageClientGuiMiniArmourerRemove.class, MessageClientGuiMiniArmourerRemove.class, Side.SERVER);
+        registerMessage(MessageClientGuiMiniArmourerCubeEdit.class, MessageClientGuiMiniArmourerCubeEdit.class, Side.SERVER);
+        registerMessage(MessageServerMiniArmourerCubeEdit.class, MessageServerMiniArmourerCubeEdit.class, Side.CLIENT);
     }
     
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {

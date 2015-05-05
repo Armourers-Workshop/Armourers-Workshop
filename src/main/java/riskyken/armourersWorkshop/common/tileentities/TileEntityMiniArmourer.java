@@ -12,9 +12,9 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
+import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -35,6 +35,26 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     public TileEntityMiniArmourer() {
         this.items = new ItemStack[2];
         this.skinParts = new ArrayList<SkinPart>();
+        setSkinType(SkinTypeRegistry.skinHead, false);
+    }
+    
+    public void cubeUpdateFromServer(ISkinPartType skinPartType, ICube cube, boolean remove) {
+        for (int i = 0; i < skinParts.size(); i++) {
+            if (skinParts.get(i).getPartType() == skinPartType) {
+                ArrayList<ICube> cubeData = skinParts.get(i).getArmourData();
+                for (int j = 0; j < cubeData.size(); j++) {
+                    ICube curCube = cubeData.get(j);
+                    if (curCube.getX() == cube.getX() & curCube.getY() == cube.getY() & curCube.getZ() == cube.getZ()) {
+                        cubeData.remove(j);
+                        break;
+                    }
+                }
+                if (!remove) {
+                    cubeData.add(cube);
+                }
+                return;
+            }
+        }
     }
     
     public ISkinType getSkinType() {
@@ -46,11 +66,16 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     }
     
     public void setSkinParts(ArrayList<SkinPart> skinParts) {
-        ModLogger.log("setting parts");
         this.skinParts = skinParts;
     }
     
     public void setSkinType(ISkinType skinType) {
+        if (skinType != this.skinType) {
+            setSkinType(skinType, true);
+        }
+    }
+    
+    public void setSkinType(ISkinType skinType, boolean update) {
         this.skinType = skinType;
         this.skinParts.clear();
         if (this.skinType != null) {
@@ -61,12 +86,14 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
                 skinParts.add(skinPart);
             }
             Cube cube = new Cube();
-            cube.setY((byte) -1);
+            cube.setY((byte) 0);
             cube.setId((byte) 0);
             skinParts.get(0).getArmourData().add(cube);
         }
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (update) {
+            this.markDirty();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
     
     @Override
