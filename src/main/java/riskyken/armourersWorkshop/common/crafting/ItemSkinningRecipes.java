@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.crafting;
 import java.util.ArrayList;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeItemSkinning;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinClear;
@@ -12,11 +13,25 @@ import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinSword;
 public class ItemSkinningRecipes {
     
     public static ArrayList<RecipeItemSkinning> recipes = new ArrayList<RecipeItemSkinning>();
+    private static ArrayList<Item> skinnableItems = new ArrayList<Item>();
     
     public static void init() {
         recipes.add(new RecipeSkinSword());
         recipes.add(new RecipeSkinCopy());
         recipes.add(new RecipeSkinClear());
+    }
+    
+    public static void addSkinnableItem(Item item) {
+        skinnableItems.add(item);
+    }
+    
+    public static boolean isItemSkinable(Item item) {
+        for (int i = 0; i < skinnableItems.size(); i++) {
+            if (item == skinnableItems.get(i)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public static ItemStack getRecipeOutput(IInventory inventory) {
