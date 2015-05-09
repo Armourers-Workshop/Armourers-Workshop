@@ -16,6 +16,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
@@ -321,12 +322,8 @@ public final class EquipmentModelRenderer {
         return renderEquipmentPart(null, modelBiped, data);
     }
     
-    public boolean renderEquipmentPartFromStack(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX) {
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
-            return false;
-        }
-        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-        Skin data = getCustomArmourItemData(equipmentId);
+    public boolean renderEquipmentPartFromSkinPointer(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
+        Skin data = getCustomArmourItemData(skinPointer.getSkinId());
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
