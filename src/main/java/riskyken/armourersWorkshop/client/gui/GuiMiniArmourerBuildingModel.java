@@ -93,6 +93,8 @@ public class GuiMiniArmourerBuildingModel {
         }
         renderFakeCubes(mouseX, mouseY);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GuiScreen.drawRect(0, 0, parent.width, parent.height, 0xFF000000);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         renderModels(mouseX, mouseY);
         
         lastMousePosX = mouseX;
