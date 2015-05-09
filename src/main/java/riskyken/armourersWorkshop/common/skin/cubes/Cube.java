@@ -8,6 +8,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -124,6 +126,23 @@ public class Cube implements ICube {
     @Override
     public byte getId() {
         return id;
+    }
+    
+    @Override
+    public void writeToCompound(NBTTagCompound compound) {
+        compound.setByte(TAG_ID, id);
+        compound.setByte(TAG_X, x);
+        compound.setByte(TAG_Y, y);
+        compound.setByte(TAG_Z, z);
+        colour.writeToNBT(compound);
+    }
+    
+    @Override
+    public void readFromCompound(NBTTagCompound compound) {
+        x = compound.getByte(TAG_X);
+        y = compound.getByte(TAG_Y);
+        z = compound.getByte(TAG_Z);
+        colour.readFromNBT(compound);
     }
     
     @Override

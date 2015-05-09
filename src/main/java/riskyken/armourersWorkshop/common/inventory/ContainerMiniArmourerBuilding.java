@@ -102,5 +102,6 @@ public class ContainerMiniArmourerBuilding extends Container {
             message = new MessageServerMiniArmourerCubeEdit(skinPartType, cube, remove);
             PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) crafter);
         }
+        tileEntity.markDirty();
     }
 }

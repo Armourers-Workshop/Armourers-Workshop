@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
 
 import org.apache.logging.log4j.Level;
 
@@ -26,8 +29,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
     
-    private static final String TAG_BLOCK_DATA = "blockData";
-    private static final String TAG_PART = "part";
+    private static final String TAG_PART_NAME = "partName";
+    private static final String TAG_CUBE_LIST = "cubeList";
     private static final String TAG_ID = "id";
     
     private ArrayList<ICube> armourData;
@@ -92,6 +95,31 @@ public class SkinPart implements ISkinPart {
 
     public ArrayList<ICube> getArmourData() {
         return armourData;
+    }
+    
+    public void writeToCompound(NBTTagCompound compound) {
+        compound.setString(TAG_PART_NAME, skinPart.getRegistryName());
+        NBTTagList cubeList = new NBTTagList();
+        for (int i = 0; i < armourData.size(); i++) {
+            NBTTagCompound cubeCompound = new NBTTagCompound();
+            ICube cube = armourData.get(i);
+            cube.writeToCompound(cubeCompound);
+            cubeList.appendTag(cubeCompound);
+        }
+        compound.setTag(TAG_CUBE_LIST, cubeList);
+    }
+    
+    public void readFromCompound(NBTTagCompound compound) throws InvalidCubeTypeException {
+        String partName = compound.getString(TAG_PART_NAME);
+        skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(partName);
+        NBTTagList cubeList = compound.getTagList(TAG_CUBE_LIST, NBT.TAG_COMPOUND);
+        for (int i = 0; i < cubeList.tagCount(); i++) {
+            NBTTagCompound cubeCompound = cubeList.getCompoundTagAt(i);
+            byte cubeId = cubeCompound.getByte(TAG_ID);
+            ICube cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(cubeId);
+            cube.readFromCompound(cubeCompound);
+            armourData.add(cube);
+        }
     }
 
     public void writeToBuf(ByteBuf buf) {

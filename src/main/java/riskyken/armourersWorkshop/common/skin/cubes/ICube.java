@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
 
+import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 
 public interface ICube {
@@ -50,6 +51,10 @@ public interface ICube {
     
     /** Get the cubes ID */
     public byte getId();
+    
+    public void writeToCompound(NBTTagCompound compound);
+    
+    public void readFromCompound(NBTTagCompound compound);
     
     public void writeToBuf(ByteBuf buf);
     

@@ -10,6 +10,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -107,6 +108,23 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
+        if (skinType != null) {
+            setSkinType(skinType, false);
+            for (int i = 0; i < skinParts.size(); i++) {
+                SkinPart skinPart = skinParts.get(i);
+                String partName = skinPart.getPartType().getRegistryName();
+                if (compound.hasKey(partName)) {
+                    NBTTagCompound partCompound = compound.getCompoundTag(partName);
+                    try {
+                        skinPart.readFromCompound(partCompound);
+                    } catch (InvalidCubeTypeException e) {
+                        e.printStackTrace();
+                        setSkinType(null, false);
+                        return;
+                    }
+                }
+            }
+        }
     }
     
     @Override
@@ -114,12 +132,21 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         super.writeToNBT(compound);
         if (skinType != null) {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
+            for (int i = 0; i < skinParts.size(); i++) {
+                NBTTagCompound partCompound = new NBTTagCompound();
+                SkinPart skinPart = skinParts.get(i);
+                skinPart.writeToCompound(partCompound);
+                compound.setTag(skinPart.getPartType().getRegistryName(), partCompound);
+            }
         }
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
+        return AxisAlignedBB.getBoundingBox(
+                xCoord, yCoord, zCoord,
+                xCoord + 1, yCoord + 2, zCoord + 1
+                );
     }
 
     @Override
