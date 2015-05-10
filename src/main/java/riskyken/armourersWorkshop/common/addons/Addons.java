@@ -19,6 +19,7 @@ public final class Addons {
     public static boolean zeldaswordskillsCompatibility;
     public static boolean moreSwordsModCompatibility;
     public static boolean battlegear2Compatibility = true;
+    public static boolean mekanismToolsCompatibility;
     
     public static void init() {
         if (minecraftCompatibility) {
@@ -47,6 +48,9 @@ public final class Addons {
         }
         if (Loader.isModLoaded("battlegear2") & battlegear2Compatibility) {
             loadedAddons.add(new AddonBattlegear2());
+        }
+        if (Loader.isModLoaded("MekanismTools") & mekanismToolsCompatibility) {
+            loadedAddons.add(new AddonMekanismTools());
         }
         
         for (int i = 0; i < loadedAddons.size(); i++) {

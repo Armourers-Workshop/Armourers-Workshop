@@ -142,6 +142,11 @@ public class ConfigHandler {
                 "Allow weapon render override on More Swords Mod items.")
                 .getBoolean(true);
         
+        Addons.mekanismToolsCompatibility = config
+                .get(CATEGORY_COMPATIBILITY, "Mekanism Tools Compatibility", true,
+                "Allow weapon render override on Mekanism Tools Mod items.")
+                .getBoolean(true);
+        
         //Client
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             maxRenderDistance = config
