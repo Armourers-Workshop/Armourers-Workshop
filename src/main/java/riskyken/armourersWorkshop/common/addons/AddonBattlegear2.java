@@ -18,27 +18,6 @@ public class AddonBattlegear2 extends AbstractAddon {
     }
 
     @Override
-    public void initRenderers() {
-        overrideItemRenderer("waraxe.wood", RenderType.SWORD);
-        overrideItemRenderer("waraxe.stone", RenderType.SWORD);
-        overrideItemRenderer("waraxe.iron", RenderType.SWORD);
-        overrideItemRenderer("waraxe.diamond", RenderType.SWORD);
-        overrideItemRenderer("waraxe.gold", RenderType.SWORD);
-        
-        overrideItemRenderer("mace.wood", RenderType.SWORD);
-        overrideItemRenderer("mace.stone", RenderType.SWORD);
-        overrideItemRenderer("mace.iron", RenderType.SWORD);
-        overrideItemRenderer("mace.diamond", RenderType.SWORD);
-        overrideItemRenderer("mace.gold", RenderType.SWORD);
-        
-        overrideItemRenderer("spear.wood", RenderType.SWORD);
-        overrideItemRenderer("spear.stone", RenderType.SWORD);
-        overrideItemRenderer("spear.iron", RenderType.SWORD);
-        overrideItemRenderer("spear.diamond", RenderType.SWORD);
-        overrideItemRenderer("spear.gold", RenderType.SWORD);
-    }
-
-    @Override
     public String getModName() {
         return "battlegear2";
     }

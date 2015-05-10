@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.addons;
 
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
+import riskyken.armourersWorkshop.common.addons.Addons.RenderType;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -20,17 +21,6 @@ public class AddonTConstruct extends AbstractAddon {
         addRenderClass("tconstruct.items.tools.Rapier", RenderType.SWORD);
         addRenderClass("tconstruct.items.tools.Cutlass", RenderType.SWORD);
         addRenderClass("tconstruct.items.tools.Shortbow", RenderType.BOW);
-    }
-
-    @Override
-    public void initRenderers() {
-        overrideItemRenderer("longsword", RenderType.SWORD);
-        overrideItemRenderer("broadsword", RenderType.SWORD);
-        overrideItemRenderer("cleaver", RenderType.SWORD);
-        overrideItemRenderer("battleaxe", RenderType.SWORD);
-        overrideItemRenderer("rapier", RenderType.SWORD);
-        overrideItemRenderer("cutlass", RenderType.SWORD);
-        overrideItemRenderer("shortbow", RenderType.BOW);
     }
 
     @Override
