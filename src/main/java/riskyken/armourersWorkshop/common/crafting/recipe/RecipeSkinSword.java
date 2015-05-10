@@ -34,7 +34,8 @@ public class RecipeSkinSword extends RecipeItemSkinning {
                         return null;
                     }
                     skinStack = stack;
-                } else if (EntityEquipmentDataManager.INSTANCE.isSwordRenderItem(item) & !EquipmentNBTHelper.stackHasSkinData(stack)) {
+                } else if (EntityEquipmentDataManager.INSTANCE.isSwordRenderItem(item) &
+                         !EquipmentNBTHelper.isSkinLockedOnStack(stack)) {
                     if (swordStack != null) {
                         return null;
                     }
