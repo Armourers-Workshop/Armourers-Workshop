@@ -71,20 +71,8 @@ public class GuiMiniArmourerBuildingModel {
         this.mc = mc;
         this.tileEntity = tileEntity;
         
-        //this.cubes = new ArrayList<ICube>();
-        //ICube cube = new Cube();
-        //cube.setY((byte) -1);
-        //cube.setColour(0xFF0000, 0);
-        //cube.setColour(0x00FF00, 1);
-        //cube.setColour(0x0000FF, 2);
-        //cube.setColour(0xFF00FF, 3);
-        
-        //this.cubes.add(cube);
-        
-        //cube = new Cube();
-        //cube.setColour(UtilColour.getMinecraftColor(2));
-        //cube.setY((byte) -8);
-        //this.cubes.add(cube);
+        this.rotation = 45;
+        this.pitch = 45;
     }
     
     public void drawScreen(int mouseX, int mouseY) {
