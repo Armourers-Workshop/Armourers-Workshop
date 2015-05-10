@@ -19,6 +19,7 @@ public class AddonBotania extends AbstractAddon {
         overrideItemRenderer("manasteelSword", RenderType.SWORD);
         overrideItemRenderer("terraSword", RenderType.SWORD);
         overrideItemRenderer("elementiumSword", RenderType.SWORD);
+        overrideItemRenderer("excaliber", RenderType.SWORD);
     }
     
     @Override
