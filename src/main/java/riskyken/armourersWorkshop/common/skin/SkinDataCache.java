@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
 
 import org.apache.logging.log4j.Level;
 
@@ -40,6 +38,7 @@ public final class SkinDataCache {
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     
     private long lastTick;
+    private boolean madeDatabase = false;
     
     public static void init() {
         if (INSTANCE == null) {
@@ -49,7 +48,6 @@ public final class SkinDataCache {
     
     public SkinDataCache() {
         FMLCommonHandler.instance().bus().register(this);
-        MinecraftForge.EVENT_BUS.register(this);
     }
     
     public void clearAll() {
@@ -60,14 +58,14 @@ public final class SkinDataCache {
     @SubscribeEvent
     public void onServerTickEvent(TickEvent.ServerTickEvent event) {
         if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
+            if (!madeDatabase) {
+                SkinIOUtils.makeDatabaseDirectory();
+                madeDatabase = true;
+                
+            }
             processMessageQueue();
             checkForOldSkins();
         }
-    }
-    
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        SkinIOUtils.makeDatabaseDirectory();
     }
     
     public void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
