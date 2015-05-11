@@ -1,3 +1,27 @@
+Build 0.32.0
+Added weapon overrides to the configuration file. (weapons that can be skinned can now be added/removed here)
+Added the skinning table. (replaces putting a sword and skin in a crafting table)
+Added soap. (use in a skinning table to remove a skin from a weapon)
+Added Mekanism Tools support.
+Added config option for the number of threads used for model baking.
+Added config options for how long models should stay in the client/server cache.
+Added new info to the F3 debug text.
+Added IArmourersSkinnableItem to the API.
+Added set item as skinnable to the API.
+Added support from Botania's Excaliber.
+Fixed FPS drops when skins first load on clients.
+Fixed a skin id mismatch error for old skins. (should fix skins that stopped working after this last update)
+Fixed old skin database not getting loaded on server. (should fixed skins that stopped working after the last update)
+Fixed the HSB sliders getting stuck when TMI is installed.
+Fixed clear model cache command not fully clearing the cache.
+Fixed server memory leak causing skins to never be unloaded.
+Fixed not being able to upload skins to a server.
+Fixed some API render calls not working.
+Changed the armourer building guide grid to be more transparent.
+Removed some console spam.
+Removed weapon skin locking recipes. (moved to the skinning table)
+
+
 Build 0.31.2
 Re-added is valid equipment skin to the API.
 
