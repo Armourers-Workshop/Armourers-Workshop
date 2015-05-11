@@ -10,10 +10,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiHelper {
     
     public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name) {
-        renderLocalizedGuiName(fontRenderer, xSize, name, null);
+        renderLocalizedGuiName(fontRenderer, xSize, name, null, 4210752);
+    }
+    
+    public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name, int colour) {
+        renderLocalizedGuiName(fontRenderer, xSize, name, null, colour);
     }
     
     public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name, String append) {
+        renderLocalizedGuiName(fontRenderer, xSize, name, append, 4210752);
+    }
+    
+    public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name, String append, int colour) {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + name + ".name";
         String localizedName = StatCollector.translateToLocal(unlocalizedName);
         String renderText = unlocalizedName;
@@ -24,7 +32,7 @@ public class GuiHelper {
             renderText = renderText + " - " + append;
         }
         int xPos = xSize / 2 - fontRenderer.getStringWidth(renderText) / 2;
-        fontRenderer.drawString(renderText, xPos, 6, 4210752);
+        fontRenderer.drawString(renderText, xPos, 6, colour);
     }
     
     public static String getLocalizedControlName(String guiName, String controlName) {

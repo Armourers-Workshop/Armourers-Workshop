@@ -31,9 +31,9 @@ public class ContainerSkinningTable extends Container {
             }
         }
         
-        addSlotToContainer(new SlotInput(craftingInventory, 0, 37, 28, this));
-        addSlotToContainer(new SlotInput(craftingInventory, 1, 37, 64, this));
-        addSlotToContainer(new SlotOutput(outputInventory, 0, 119, 46, this));
+        addSlotToContainer(new SlotInput(craftingInventory, 0, 37, 22, this));
+        addSlotToContainer(new SlotInput(craftingInventory, 1, 37, 58, this));
+        addSlotToContainer(new SlotOutput(outputInventory, 0, 119, 40, this));
     }
     
     @Override
