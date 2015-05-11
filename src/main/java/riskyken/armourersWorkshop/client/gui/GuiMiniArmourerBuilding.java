@@ -122,6 +122,8 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         localizedName = StatCollector.translateToLocal(localizedName);
         
         drawTextCentered(localizedName, this.width / 2, 2, UtilColour.getMinecraftColor(0));
+        drawTextCentered("WARNING - This block is unfinished.", this.width / 2, 12, 0xFF0000);
+        drawTextCentered("!!! Do not use !!!", this.width / 2, 22, 0xFF0000);
         drawTextCentered(guiSizeLabel, this.width / 2, this.height - 10, UtilColour.getMinecraftColor(0));
         drawTextCentered(zoomLabel, this.width / 2, this.height - 20, UtilColour.getMinecraftColor(0));
     }

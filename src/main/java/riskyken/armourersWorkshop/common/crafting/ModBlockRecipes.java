@@ -65,13 +65,13 @@ public final class ModBlockRecipes {
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlowing, 1, 0), new Object[] {
             new ItemStack(ModBlocks.colourable, 1),
             new ItemStack(Items.glowstone_dust, 1)});
-        
+        /*
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.miniArmourer, 1, 0), new Object[] {
             new ItemStack(ModBlocks.armourerBrain, 1)});
         
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.armourerBrain, 1, 0), new Object[] {
             new ItemStack(ModBlocks.miniArmourer, 1)});
-        
+        */
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlass, 1, 0), new Object[] {
             new ItemStack(ModBlocks.colourable, 1),
             new ItemStack(Blocks.glass, 1)});
