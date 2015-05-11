@@ -5,7 +5,8 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.client.render.ISkinRenderHandler;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -38,7 +39,11 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        return EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, limb1, limb2, limb3, headY, headX);
+        ISkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (skinPointer == null) {
+            return false;
+        }
+        return renderSkinWithHelper(skinPointer, limb1, limb2, limb3, headY, headX);
     }
     
     @Override
@@ -55,21 +60,33 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
     
     @Override
-    public boolean renderSkinWithHelper(ISkinPointer skinPointer, float limb1,
-            float limb2, float limb3, float headY, float headX) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean renderSkinWithHelper(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
+        if (skinPointer == null) {
+            return false;
+        }
+        return EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromSkinPointer(skinPointer, limb1, limb2, limb3, headY, headX);
     }
     
     @Override
     public boolean renderSkin(ItemStack stack) {
-        // TODO Auto-generated method stub
+        if (stack == null) {
+            return false;
+        }
+        ISkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (skinPointer != null) {
+            return renderSkin(skinPointer);
+        }
         return false;
     }
     
     @Override
     public boolean renderSkin(ISkinPointer skinPointer) {
-        // TODO Auto-generated method stub
+        ISkinType skinType= skinPointer.getSkinType();
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            //TODO Offset each part when rendering.
+            ISkinPartType skinPartType = skinType.getSkinParts().get(i);
+            renderSkinPart(skinPointer, skinPartType);
+        }
         return false;
     }
     
@@ -78,7 +95,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null | skinPartType == null) {
             return false;
         }
-        Skin skin = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
         if (skin == null) {
             return false;
         }
@@ -106,7 +123,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return false;
         }
-        return ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId());
+        return ClientModelCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId());
     }
     
     @Override
@@ -123,6 +140,6 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return;
         }
-        ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
+        ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
     }
 }

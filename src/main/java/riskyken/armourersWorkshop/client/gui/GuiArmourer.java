@@ -20,11 +20,11 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownL
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiButton;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetArmourerCustomName;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetArmourerSkinType;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetSkin;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientLoadArmour;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerCustomName;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import cpw.mods.fml.client.config.GuiButtonExt;

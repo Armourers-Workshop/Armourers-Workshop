@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
@@ -31,18 +30,19 @@ public class Skin implements ISkin {
     public int requestId;
     private int lightHash = 0;
     
-    private int timeFromRender = 0;
+    /** Number of ticks from when this skin was last used. */
+    private int ticksFromLastAccess = 0;
     
-    public void onRender() {
-        timeFromRender = 0;
+    public void onUsed() {
+        ticksFromLastAccess = 0;
     }
     
     public void tick() {
-        timeFromRender++;
+        ticksFromLastAccess++;
     }
     
-    public boolean needsCleanup() {
-        if (timeFromRender > ConfigHandler.modelCacheTime) {
+    public boolean needsCleanup(int maxUnusedTicks) {
+        if (ticksFromLastAccess > maxUnusedTicks) {
             return true;
         }
         return false;

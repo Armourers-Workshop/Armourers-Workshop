@@ -23,7 +23,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiSetArmourerSkinType;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListCallback {
     
-    private TileEntityMiniArmourer tileEntity;
+    public TileEntityMiniArmourer tileEntity;
     
     private GuiMiniArmourerBuildingModel model;
     private GuiDropDownList dropDownSkins;
@@ -42,7 +42,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     
     public GuiMiniArmourerBuilding(TileEntityMiniArmourer tileEntity) {
         this.tileEntity = tileEntity;
-        model = new GuiMiniArmourerBuildingModel(this, Minecraft.getMinecraft());
+        model = new GuiMiniArmourerBuildingModel(this, Minecraft.getMinecraft(), tileEntity);
         model.currentSkinType = tileEntity.getSkinType();
     }
     
@@ -104,6 +104,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         RenderHelper.enableStandardItemLighting();
         
         model.drawScreen(mouseX, mouseY);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         
         ModRenderHelper.disableLighting();
         RenderHelper.enableGUIStandardItemLighting();
@@ -121,6 +122,8 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         localizedName = StatCollector.translateToLocal(localizedName);
         
         drawTextCentered(localizedName, this.width / 2, 2, UtilColour.getMinecraftColor(0));
+        drawTextCentered("WARNING - This block is unfinished.", this.width / 2, 12, 0xFF0000);
+        drawTextCentered("!!! Do not use !!!", this.width / 2, 22, 0xFF0000);
         drawTextCentered(guiSizeLabel, this.width / 2, this.height - 10, UtilColour.getMinecraftColor(0));
         drawTextCentered(zoomLabel, this.width / 2, this.height - 20, UtilColour.getMinecraftColor(0));
     }

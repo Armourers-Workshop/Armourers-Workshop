@@ -9,6 +9,7 @@ tile.armourersworkshop:colourableGlassGlowing.name=Glass Equipment Cube (Glowing
 tile.armourersworkshop:colourMixer.name=Colour Mixer
 tile.armourersworkshop:mannequin.name=Mannequin
 tile.armourersworkshop:doll.name=Doll
+tile.armourersworkshop:skinningTable.name=Skinning Table
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
@@ -21,6 +22,7 @@ tile.armourersworkshop:colourableGlassGlowing.flavour=Glowing transparent equipm
 tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipment with.%nSneak right click with tool to quickly paint.
 tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!%nRight click with a name tag to set a skin.
 tile.armourersworkshop:doll.flavour=Mini mannequin!
+tile.armourersworkshop:skinningTable.flavour=Apply and remove skins from items.
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=Equipment Skin Template
@@ -41,6 +43,7 @@ item.armourersworkshop:armourContainerChest.name=Chest Armour Container
 item.armourersworkshop:armourContainerLegs.name=Legs Armour Container
 item.armourersworkshop:armourContainerFeet.name=Feet Armour Container
 item.armourersworkshop:wandOfStyle.name=Wand Of Style
+item.armourersworkshop:soap.name=Soap
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -54,6 +57,7 @@ item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
 item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%nRight click to apply setting.%nSneak right click to save settings.
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to placed on NPC's.
+item.armourersworkshop:soap.flavour=Use in the Skinner Table to clear an items skin.%nScrub scrub scrub all the floors in Hyrule!
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s
@@ -116,6 +120,7 @@ inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 inventory.armourersworkshop:entityEquipment.name=Entity Equipment
+inventory.armourersworkshop:skinningTable.name=Skinning Table
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:

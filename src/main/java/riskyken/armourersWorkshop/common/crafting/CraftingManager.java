@@ -9,9 +9,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinCopy;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
-import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSwordSkin;
 import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import cpw.mods.fml.common.Loader;
@@ -19,17 +17,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public final class CraftingManager {
 
+    
+    
     public static void init() {
-        GameRegistry.addRecipe(new RecipeSwordSkin());
         GameRegistry.addRecipe(new RecipeSkinUpdate());
-        GameRegistry.addRecipe(new RecipeSkinCopy());
-        RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSwordSkin.class, Category.SHAPELESS, "after:minecraft:shapeless");
         RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinUpdate.class, Category.SHAPELESS, "after:minecraft:shapeless");
-        RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinCopy.class, Category.SHAPELESS, "after:minecraft:shapeless");
         hideItemsInNEI();
         if (ConfigHandler.disableRecipes) {
             return;
         }
+        ItemSkinningRecipes.init();
         ModBlockRecipes.init();
         ModItemRecipes.init();
         new DollCraftinghandler();

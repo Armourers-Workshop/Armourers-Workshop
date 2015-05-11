@@ -12,11 +12,11 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
-import riskyken.armourersWorkshop.common.addons.AbstractAddon;
+import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -34,7 +34,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        IItemRenderer render = AbstractAddon.getItemRenderer(stack, type);
+        IItemRenderer render = Addons.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -56,7 +56,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-        IItemRenderer render = AbstractAddon.getItemRenderer(stack, type);
+        IItemRenderer render = Addons.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -81,17 +81,11 @@ public class RenderItemBowSkin implements IItemRenderer {
         if (canRenderModel(stack) & type != ItemRenderType.INVENTORY) {
             if (type != ItemRenderType.ENTITY) {
                 GL11.glPopMatrix();
-                //GL11.glPopMatrix(); 
-                
-                GL11.glRotatef(-50, 0, 1, 0);
-                GL11.glRotatef(20, 0, 0, 1);
-                GL11.glRotatef(10, 1, 0, 0);
+                //GL11.glRotatef(-135, 0, 1, 0);
+                //GL11.glRotatef(-10, 0, 0, 1);
             }
 
             GL11.glPushMatrix();
-            
-            
-            GL11.glScalef(1.6F, 1.6F, 1.6F);
 
             boolean isBlocking = false;
             
@@ -107,19 +101,34 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
             
             float scale = 0.0625F;
+            float angle = (float) (((double)System.currentTimeMillis() / 5) % 360F);
             
             switch (type) {
             case EQUIPPED:
                 GL11.glScalef(1F, -1F, 1F);
+                GL11.glScalef(1.6F, 1.6F, 1.6F);
+                GL11.glRotatef(-135, 0, 1, 0);
+                GL11.glRotatef(10, 0, 0, 1);
+                GL11.glRotatef(-20, 1, 0, 0);
+                
+                GL11.glRotatef(90, 0, 1, 0);
+                
                 GL11.glTranslatef(0F * scale, -6F * scale, 1F * scale);
-                //GL11.glRotatef(180F, 1F, 0F, 0F);
-                //GL11.glRotatef(180F, 0F, 1F, 0F);
                 break;
             case ENTITY:
+                GL11.glRotatef(180, 0, 0, 1);
                 GL11.glTranslatef(0F, -10F * scale, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
-                GL11.glRotatef(166F, 0F, 0F, 1F);
+                GL11.glScalef(1.6F, 1.6F, 1.6F);
+                GL11.glRotatef(-135, 0, 1, 0);
+                GL11.glRotatef(180, 0, 0, 1);
+                GL11.glRotatef(-90, 0, 1, 0);
+                //Back tilt
+                GL11.glRotatef(-17, 1, 0, 0);
+                GL11.glRotatef(2, 0, 0, 1);
+                GL11.glTranslatef(0F * scale, -2F * scale, 1F * scale);
+                
                 break;
             default:
                 break;
@@ -130,7 +139,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             if (model != null) {
                 model.bowUse = useCount;
                 int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-                Skin skin = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+                Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
                 model.render(null, skin);
             } else {
                 ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinBow);
@@ -144,7 +153,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
 
         } else {
-            IItemRenderer render = AbstractAddon.getItemRenderer(stack, type);
+            IItemRenderer render = Addons.getItemRenderer(stack, type);
             if (render != null) {
                 render.renderItem(type, stack, data);
             } else {
@@ -156,10 +165,10 @@ public class RenderItemBowSkin implements IItemRenderer {
     private boolean canRenderModel(ItemStack stack) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientEquipmentModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 return true;
             } else {
-                ClientEquipmentModelCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
+                ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
                 return false;
             }
         } else {

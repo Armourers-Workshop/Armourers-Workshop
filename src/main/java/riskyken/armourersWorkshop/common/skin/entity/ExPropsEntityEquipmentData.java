@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -11,7 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
 import riskyken.armourersWorkshop.common.inventory.InventoryEntitySkin;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageServerEntityEquipmentData;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
@@ -32,7 +33,7 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     }
     
     @Override
-    public void setInventorySlotContents(int slotId, ItemStack stack) {
+    public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {
         if (entity.worldObj.isRemote) {
             return;
         }

@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
-import riskyken.armourersWorkshop.client.render.EquipmentRenderHelper;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -55,7 +55,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.mcProfiler.endSection();
             return;
         }
-        if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
+        if (!SkinBaker.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
             mc.mcProfiler.endSection();
             return;
         }
@@ -65,7 +65,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             return;
         }
         
-        data.onRender();
+        data.onUsed();
         int size = data.getParts().size();
         for (int i = 0; i < size; i++) {
             SkinPart partData = data.getParts().get(i);

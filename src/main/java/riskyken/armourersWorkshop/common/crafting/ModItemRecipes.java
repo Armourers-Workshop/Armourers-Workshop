@@ -87,5 +87,10 @@ public final class ModItemRecipes {
         CraftingManager.addShapelessRecipe(new ItemStack(ModItems.guideBook, 1, 0), new Object[] {
             new ItemStack(Items.book, 1),
             new ItemStack(ModBlocks.colourable, 1)});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.soap, 1, 0), new Object[] {
+            new ItemStack(Items.water_bucket, 1),
+            new ItemStack(Items.rotten_flesh, 1),
+            new ItemStack(Items.slime_ball, 1)});
     }
 }

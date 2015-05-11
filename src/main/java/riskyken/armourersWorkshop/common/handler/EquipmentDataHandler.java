@@ -3,11 +3,13 @@ package riskyken.armourersWorkshop.common.handler;
 import java.util.BitSet;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.ISkinDataHandler;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.crafting.ItemSkinningRecipes;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -100,5 +102,10 @@ public class EquipmentDataHandler implements ISkinDataHandler {
             ExPropsPlayerEquipmentData.register(player);
         }
         return ExPropsPlayerEquipmentData.get(player);
+    }
+
+    @Override
+    public void setItemAsSkinnable(Item item) {
+        ItemSkinningRecipes.addSkinnableItem(item);
     }
 }

@@ -14,11 +14,13 @@ public class ConfigHandler {
     public static String CATEGORY_GENERAL = "general";
     public static String CATEGORY_COMPATIBILITY = "compatibility";
     public static String CATEGORY_CLIENT = "client";
+    public static String CATEGORY_SERVER = "server";
     
     public static Configuration config;
 
     public static boolean disableRecipes;
-    public static int modelCacheTime = 12000;
+    public static int clientModelCacheTime = 12000;
+    public static int serverModelCacheTime = 12000;
     public static int maxRenderDistance = 40;
     public static boolean downloadSkins;
     public static boolean compatibilityRender = false;
@@ -26,6 +28,7 @@ public class ConfigHandler {
     public static String[] disabledSkins = {};
     public static boolean allowClientsToSaveSkins = false;
     public static boolean allowModsToRegisterWithAPI = true;
+    public static int maxModelBakingThreads = 1;
     
     //Register
     /** Should skins be dropped on player death.<br/>
@@ -69,6 +72,20 @@ public class ConfigHandler {
                 + "armourers:bow\n"
                 + "\n");
         
+        Addons.overrideSwordsActive = config
+                .getStringList("Sword Overrides", CATEGORY_COMPATIBILITY, Addons.overrideSwordsDefault,
+                "List of swords that can have skins applied.\n"
+                + "Format [mod id:item name]"
+                + "\n"
+                + "\n");
+        
+        Addons.overrideBowsActive = config
+                .getStringList("Bow Overrides", CATEGORY_COMPATIBILITY, Addons.overrideBowsDefault,
+                "List of bows that can have skins applied.\n"
+                + "Format [mod id:item name]"
+                + "\n"
+                + "\n");
+        
         downloadSkins = config
                 .get(CATEGORY_GENERAL, "Allow Auto Skin Downloads", true,
                 "Allow the mod to auto download new skins.")
@@ -98,52 +115,32 @@ public class ConfigHandler {
                 "Allow other mods to register with the Armourer's Workshop API.")
                 .getBoolean(true);
         
-        Addons.weaponmodCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "Balkon's Weapon Mod Compatibility", true,
-                "Allow weapon render override on Balkon's Weapon Mod items.")
-                .getBoolean(true);
-        
-        Addons.betterStorageCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "Better Storage Compatibility", true,
-                "Allow weapon render override on Better Storage items.")
-                .getBoolean(true);
-        
-        Addons.botaniaCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "Botania Compatibility", true,
-                "Allow weapon render override on Botania items.")
-                .getBoolean(true);
-        
-        Addons.minecraftCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "Minecraft Compatibility", true,
-                "Allow weapon render override on Minecraft items.")
-                .getBoolean(true);
-        
-        Addons.tConstructCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "Tinkers' Construct Compatibility", true,
-                "Allow weapon render override on Tinkers' Construct items.")
-                .getBoolean(true);
-        
-        Addons.thaumcraftCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "Thaumcraft Compatibility", true,
-                "Allow weapon render override on Thaumcraft items.")
-                .getBoolean(true);
-        
-        Addons.zeldaswordskillsCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "Zelda Sword Skills Compatibility", true,
-                "Allow weapon render override on Zelda Sword Skills items.")
-                .getBoolean(true);
-        
-        Addons.moreSwordsModCompatibility = config
-                .get(CATEGORY_COMPATIBILITY, "More Swords Mod Compatibility", true,
-                "Allow weapon render override on More Swords Mod items.")
-                .getBoolean(true);
-        
+        //Client
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             maxRenderDistance = config
                     .get(CATEGORY_CLIENT, "Skin Render Distance", 40,
                     "The max distance away that skins will render.")
                     .getInt(40);
+            
+            maxModelBakingThreads = config
+                    .get(CATEGORY_CLIENT, "Max Model Baking Threads", 1,
+                    "The maximum number of threads that will be used to bake models. Less that 1 equals unlimited.")
+                    .getInt(1);
+            
+            serverModelCacheTime = config
+                    .get(CATEGORY_CLIENT, "Client Model Cache Time", 12000,
+                    "How long in ticks the client will keep skins in it's cache.\n" + 
+                    "Default 12000 ticks is 10 minutes.")
+                    .getInt(12000);
         }
+        
+        //Server
+        serverModelCacheTime = config
+                .get(CATEGORY_SERVER, "Server Model Cache Time", 12000,
+                "How long in ticks the server will keep skins in it's cache.\n" + 
+                "Default 12000 ticks is 10 minutes.")
+                .getInt(12000);
+        
         
         if (config.hasChanged()) {
             config.save();

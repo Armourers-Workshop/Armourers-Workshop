@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.api.common.skin;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -35,4 +36,6 @@ public interface ISkinDataHandler {
      * @return
      */
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId);
+    
+    public void setItemAsSkinnable(Item item);
 }

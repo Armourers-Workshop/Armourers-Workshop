@@ -7,11 +7,13 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -37,6 +39,7 @@ public class GuiHSBSlider extends GuiSlider {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
+            mouseCheck();
             this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int k = this.getHoverState(this.field_146123_n);
             GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
@@ -74,6 +77,15 @@ public class GuiHSBSlider extends GuiSlider {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             
             this.mouseDragged(mc, mouseX, mouseY);
+        }
+    }
+    
+    private void mouseCheck() {
+        //Fix for TMI, it stops the mouse released event in container GUI's.
+        if (Loader.isModLoaded("TooManyItems")) {
+            if (Mouse.isCreated() && this.dragging && !Mouse.isButtonDown(0)) {
+                this.dragging = false;
+            }
         }
     }
     

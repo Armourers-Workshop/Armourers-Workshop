@@ -65,7 +65,7 @@ public class InventoryEntitySkin implements IInventory {
         }
         markDirty();
         if (callback != null) {
-            callback.setInventorySlotContents(slotId, stack);
+            callback.setInventorySlotContents(this, slotId, stack);
         }
     }
 

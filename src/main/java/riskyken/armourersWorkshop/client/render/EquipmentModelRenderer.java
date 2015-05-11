@@ -16,10 +16,12 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
 import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
+import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourChest;
@@ -119,7 +121,7 @@ public final class EquipmentModelRenderer {
     }
     
     public Skin getCustomArmourItemData(int equipmentId) {
-        return ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+        return ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
     }
     
     public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
@@ -203,7 +205,7 @@ public final class EquipmentModelRenderer {
             return;
         }
         
-        if (!EquipmentRenderHelper.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
+        if (!SkinBaker.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
             return;
         }
         
@@ -270,7 +272,7 @@ public final class EquipmentModelRenderer {
     public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
         EntityEquipmentData equipmentData = teMannequin.getEquipmentData();
         
-        if (!EquipmentRenderHelper.withinMaxRenderDistance(teMannequin.xCoord, teMannequin.yCoord, teMannequin.zCoord)) {
+        if (!SkinBaker.withinMaxRenderDistance(teMannequin.xCoord, teMannequin.yCoord, teMannequin.zCoord)) {
             return;
         }
         
@@ -320,12 +322,8 @@ public final class EquipmentModelRenderer {
         return renderEquipmentPart(null, modelBiped, data);
     }
     
-    public boolean renderEquipmentPartFromStack(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX) {
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
-            return false;
-        }
-        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-        Skin data = getCustomArmourItemData(equipmentId);
+    public boolean renderEquipmentPartFromSkinPointer(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
+        Skin data = getCustomArmourItemData(skinPointer.getSkinId());
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     

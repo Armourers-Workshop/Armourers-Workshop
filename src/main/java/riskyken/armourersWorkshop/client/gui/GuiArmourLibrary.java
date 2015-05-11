@@ -27,8 +27,8 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour;
-import riskyken.armourersWorkshop.common.network.messages.MessageClientGuiLoadSaveArmour.LibraryPacketType;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
@@ -127,7 +127,7 @@ public class GuiArmourLibrary extends GuiContainer {
                 break;
             case BUTTON_ID_LOAD:
                 if (checkClientFiles.isChecked()) {
-                    Skin itemData = SkinIOUtils.loadSkinFromFileName(filename);
+                    Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + ".armour");
                     if (itemData != null) {
                         message = new MessageClientGuiLoadSaveArmour(itemData);
                         PacketHandler.networkWrapper.sendToServer(message);

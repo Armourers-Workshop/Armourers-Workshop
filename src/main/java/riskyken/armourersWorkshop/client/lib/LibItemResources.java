@@ -10,6 +10,7 @@ public final class LibItemResources {
     public static final String MANNEQUIN_TOOL = PREFIX_RESOURCE + "mannequinTool";
     public static final String ARMOUR_CONTAINER = PREFIX_RESOURCE + "armourContainer";
     public static final String WAND_OF_STYLE = PREFIX_RESOURCE + "wandOfStyle";
+    public static final String SOAP = PREFIX_RESOURCE + "soap";
     
     public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "templateHead";
     public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "templateChest";

@@ -1,0 +1,351 @@
+Build 0.32.0
+Added weapon overrides to the configuration file. (weapons that can be skinned can now be added/removed here)
+Added the skinning table. (replaces putting a sword and skin in a crafting table)
+Added soap. (use in a skinning table to remove a skin from a weapon)
+Added Mekanism Tools support.
+Added config option for the number of threads used for model baking.
+Added config options for how long models should stay in the client/server cache.
+Added new info to the F3 debug text.
+Added IArmourersSkinnableItem to the API.
+Added set item as skinnable to the API.
+Added support from Botania's Excaliber.
+Fixed FPS drops when skins first load on clients.
+Fixed a skin id mismatch error for old skins. (should fix skins that stopped working after this last update)
+Fixed old skin database not getting loaded on server. (should fixed skins that stopped working after the last update)
+Fixed the HSB sliders getting stuck when TMI is installed.
+Fixed clear model cache command not fully clearing the cache.
+Fixed server memory leak causing skins to never be unloaded.
+Fixed not being able to upload skins to a server.
+Fixed some API render calls not working.
+Changed the armourer building guide grid to be more transparent.
+Removed some console spam.
+Removed weapon skin locking recipes. (moved to the skinning table)
+
+
+Build 0.31.2
+Re-added is valid equipment skin to the API.
+
+
+Build 0.31.1
+Added config option to stop mods registering with the API.
+Fixed glass equipment cubes sometimes rendering dark.
+Renamed some things in the API to make it clear what they do.
+
+
+Build 0.31.0
+WARNING - This update makes massive changes to how skins work in code.
+I recommend that you save any skins your care about into the library BEFORE updating.
+After updating skins should show as an error item, simply put them in a crafting grid to restore them.
+
+Added more info the skin tool tips
+Added /armourers clearModelCache command
+Added new system to the API that lets mods resister new skin types.
+Added configuration option to disable some skin types.
+Added recipe to lock skins on swords.
+Added recipe to get skins from swords.
+Added new item wand of style. (unfinished will allow skins to be place on some NPC's)
+Added download link the to update chat message.
+Added extra into to the F3 debug text.
+Added a skin type filter drop down to the library.
+Added ability for clients to save server skins locally. (this is turned off by default in the config)
+Added concept GUI to the mini armourer. (still not finished)
+Added a lot of missing localizations.
+Added ability for equipment cube faces to be coloured independently.
+Changed location of the database folder to the world folder.
+Changed to how skins work, skin now have a text id instead of a number.
+Changed how data is stored on equipment skins.
+Changed glowing equipment cube recipe to require glowstone instead of redstone.
+Changed armourer sword hand model now clearly show what part is sold.
+Fixed sync for players in off-line mode.
+Fixed guide book so that it changes size to fit the current language.
+Fixed crash when loading a corrupt skin file.
+Fixed lag spike when setting armourer or mannequin skin.
+Fixed items not rendering on mannequins with no game profile set.
+Fixed Integrated Circuits extra items not rendering on mannequins.
+Fixed old player skin info staying in memory.
+
+
+Build 0.29.2
+Added missing localizations for the armourers command.
+Fixed dedicated server crash when Battlegear 2 is installed.
+
+
+Build 0.29.1
+Added dropSkinsOnDeath config option.
+Added armourers giveSkin, clearSkins and setSkin commands.
+Added tabs to the equipment wardrobe.
+Added blocks info to skin tool tips.
+Added a config option to stop players from opening the equipment wardrobe.
+Fixed some weapons not getting rendered when on a server.
+Fixed mannequins accepting any item in any slot.
+Fixed blocks being rotated around the wrong point on mannequin heads.
+
+
+Build 0.28.0
+Added Chinese localizations.
+Added basic support for More Player Models.
+Added a recipe for the mannequin tool. (it sucks)
+Added more build space under the head.
+Added more build space on top of weapons.
+Added Halloween event.
+Added More Swords Mod support
+Fixed TCon support.
+Fixed transparent skirts hiding the players legs.
+Fixed skirts getting tilted when sneaking.
+Fixed equipped skins getting dropped on death if keep Inventory rule is active.
+Allowed any block to be placed on a mannequins head.
+Allowed mannequins to equip any armour.
+Skin name is now shown in the mannequins GUI.
+Somewhat fixed Battlegear 2 rendering. (left hand render is still buggy)
+
+
+Build 0.27.2
+Fixed server side crash.
+
+
+Build 0.27.1
+Fixed shaders mod not being detected.
+
+
+Build 0.27.0
+Added a button to the library to open the equipment folder.
+Added compatibility for Zelda Sword Skills mod.
+Added armour container items for use with Custom NPC's mod.
+Fixed the armourer and mannequin sometimes not getting a players skin.
+Fixed armourer weapon model blocking players from building handles.
+Fixed colour mixer pre-sets box not rendering with some texture packs.
+Fixed rendering issues with Shaders Mod.
+Painting tools now have a default colour.
+Increased the length of weapon skins by 8 blocks.
+
+
+Build 0.26.3
+Added a random button to mannequins.
+Fixed FPS drop when a client first renders a skin.
+Fixed colour mixers sometimes not getting rendered.
+Fixed leg and foot skins not having a mannequins Z rotation angles.
+Fixed NPE when an off-line client used the colour picker on an armourer model.
+Fixed equipment skins not getting some values reset when rendered from the API.
+Fixed no skins being listed in the library.
+Made glowing blocks texture glow.
+Made equipment render in the mannequin GUI preview box.
+Stopped player collisions with the armourer bounding boxes.
+Changed the armourers guide box to be enabled by default.
+
+
+Build 0.26.2
+Changed download location for skins.
+
+
+Build 0.26.1
+Dramatically improved performance of skin rendering.
+
+
+Build 0.26.0
+Added a tool to save and load mannequin rotations.
+Added a configuration option to change the max number of undo's a player has.
+Added equipment skin render info to the Minecraft profiler.
+Fixed the reset button on mannequins placing the arms in the wrong location.
+Fixed pick block with mannequins and dolls.
+Change how lighting is handled on glowing equipment cubes.
+Reduced memory usage of equipment skins client side.
+Improved rendering performance of equipment skins.
+
+
+Build 0.25.2
+Fixed crash with More Player Models mod.
+Fixed paint splash particles sometimes rendering dark.
+Fixed the players head z rotation not being reset after rendering a mannequin.
+Added a configuration option to change the max render distance of skins.
+Allowed the equipment library to be scrolled with the scroll wheel.
+
+
+Build 0.25.1
+Added Tinkers' Construct support.
+Added configuration options to turn off weapon render overrides for each add-on.
+Added an option to limit limb movement while wearing a skirt.
+Fixed buggy rendering of glass equipment cubes on players.
+Change flavour text on glass equipment cubes.
+Improved the flavour text on most items and blocks.
+Removed the equipment skins from the creative tab and NEI.
+Tried to fix equipment sometimes not rendering on players.
+
+
+Build 0.24.4
+Added colourable glass equipment cubes.
+Added a system that auto downloads equipment skins. (Can be turned off in the config file)
+Added backend support for tags on equipment skins.
+Added support for bow skins on mod items. (Can't be made yet!)
+Added Mini Armourer block. (Unfinished)
+Fixed the mannequins highlight box rendering strange.
+Fixed weapon skins rendering inside out!
+Fixed NPE crash when game profiles got updated client side.
+Fixed naked skin sometimes using old skin data.
+
+
+Build 0.23.1
+Fixed equipment skins getting re downloaded from the server every 5 minutes.
+Changed mannequins to render more like real players.
+Hid the bounding box block from NEI.
+
+
+Build 0.23.0
+Fixed DollCraftinghandler crash if mine cart has no AxisAlignedBB.
+Removed item models. Items now use the same model as player equipment.
+Added Smart Moving support.
+Massive changed to internals workings!
+
+
+Build 0.22.2
+Added a child model option to mannequins.
+Added player skins rendered on mannequins in item from.
+Added holiday gift item!
+Fixed block bounds on mannequins.
+Fixed the update checker to work with the new version numbers.
+Fixed bright lighting on child mannequins.
+Fixed mannequins sometimes having the naked skin in item from.
+Stopped equipment rendering on far away players.
+Vic mannequin now deals more damage.
+Updated ticksExisted on the mannequins fake player.
+
+
+Build 0.22.0
+Added de_DE localizations .
+Fixed guild book chapters being messed up.
+Fixed the default Steve skin sometimes getting replaced with a players naked skin.
+Fixed the player losing their skin after changing world.
+Fixed head armour not following the head on the z axis.
+Changed GUI's for the new equipment type.
+Changed mannequin rotation limits.
+
+
+Build 0.21.4
+Fixed guide book sometimes being the wrong colour.
+Fixed mannequins spamming packets when the rotation angles changed.
+Fixed getEquipmentTypeFromStack not detecting weapon skins.
+Fixed weapon equipment skins rendering at the wrong size.
+Fixed armourers texture sometimes not getting set.
+Added a head z slider to the mannequin GUI.
+Added a reset button to the mannequin GUI.
+Updated the guide book a little.
+
+
+Build 0.21.3
+Fixed mannequins texture sometimes not getting set.
+Fixed client crash when setting mannequin equipment in multiplayer.
+
+
+Build 0.21.2
+Fixed weapon rendering on players and mannequins.
+Fixed crash if another mod called the player render with slot id greater than 3.
+
+
+Build 0.21.1
+Fixed weapon skins rendering at the wrong scale on mannequins.
+
+
+Build 0.21.0
+Added a rotation system to mannequins.
+Fixed weapons not render on mannequins.
+Fixed rotations on foot and leg armour.
+Changed how equipment is put on mannequins.
+
+
+Build 0.20.4
+Fixed the mannequin and armourer rendering strange if the skin download failed.
+
+
+Build 0.20.3
+Fixed armour on mannequin sometimes rendering like it was holding an item.
+Fixed items in the libraries output slot being replaced.
+Fixed the colour picker giving the wrong colour when used on body parts.
+Changed the size of the skirt and weapon armour.
+Changed the mannequin and armourer to use the players normal skin, even if the naked one is active.
+
+
+Build 0.20.2
+Fixed some API stuff.
+
+
+Build 0.20.1
+Removed some debug text
+Updated the API
+
+
+Build 0.20.0
+WARNING - When updating from 0.19.2 or below anything that is not saved in the library will be lost. Save your creations before updating!
+
+Removed the multi-block
+Added weapon skin support for Botania, Better Storage, Thaumcraft and Balkon's Weapon Mod.
+Lowered the hardness of armour cubes.
+Naming a mannequin now consumes the name tag.
+Added rollover text to the check boxes in the equipment wardrobe GUI.
+Fixed rare NPE crash when a player with naked skin walks into tracking range.
+
+
+Build 0.19.2
+Fixed weapon skins rendering in the wrong location.
+
+
+Build 0.19.1
+Fixed crash when rendering weapon skin.
+
+
+Build 0.19.0
+Allowed mannequins skins to be set with a name tag.
+Fixed key bindings not getting saved.
+Allowed the library to load files from the client.
+
+
+Build 0.18.1
+Fixed getEquipmentTypeFromStack being offset by one slot.
+
+
+Build 0.18.0
+Faces that are against the players body no longer render.
+Fixed crash when an offline client opens the equipment wardrobe.
+Fixed skin data getting reset on death/dimension change.
+Fixed item tooltips being rendered under the file list in the library GUI.
+Allowed API add-ons to register at any time.
+Added getEquipmentTypeFromStack to the API.
+Fixed colour not being reset after rendering some models.
+
+
+Build 0.17.3
+Fixed lighting on armour.
+
+
+Build 0.17.2
+Stopped weapon skins rendering in the inventory.
+Fixed setCustomEquipmentOnEntity not setting the players item stacks.
+
+
+Build 0.17.1
+Fixed equipment skin item localizations.
+Removed unused weapon skin item.
+Fixed west to east button not working.
+Fixed the multi-block not clearing/cloning it's full area.
+Removed debug rendering of origin markers.
+Made the fake weapon arm render solid.
+Fixed shift clicking in the equipment wardrobe.
+Tried to fix lighting not being rendered on armour sometimes.
+Fixed getCustomEquipmentForEntity not working client side.
+
+
+Build 0.17.0
+Added weapon skins.
+
+
+Build 0.16.2
+Added some missing methods to the API.
+
+
+Build 0.16.1
+Small change to how armour is rendered.
+Fixed some API stuff.
+
+
+Build 0.16.0
+Added mannequins.
+Added panting particles.
+Added a basic API.

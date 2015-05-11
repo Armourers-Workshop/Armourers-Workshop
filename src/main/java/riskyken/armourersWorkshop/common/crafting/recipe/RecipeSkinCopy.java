@@ -1,57 +1,34 @@
 package riskyken.armourersWorkshop.common.crafting.recipe;
 
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
-public class RecipeSkinCopy implements IRecipe {
+public class RecipeSkinCopy extends RecipeItemSkinning {
 
-    @Override
-    public boolean matches(InventoryCrafting invCrafting, World world) {
-        ItemStack skinStack = null;
-        ItemStack blackStack = null;
-        
-        for (int slotId = 0; slotId < invCrafting.getSizeInventory(); slotId++) {
-            ItemStack stack = invCrafting.getStackInSlot(slotId);
-            if (stack != null) {
-                Item item = stack.getItem();
-                
-                if (EquipmentNBTHelper.stackHasSkinData(stack) && EquipmentNBTHelper.getSkinPointerFromStack(stack).lockSkin && item != ModItems.equipmentSkin) {
-                    if (skinStack != null) {
-                        return false;
-                    }
-                    skinStack = stack;
-                } else if (item == ModItems.equipmentSkinTemplate & !EquipmentNBTHelper.stackHasSkinData(stack)) {
-                    if (blackStack != null) {
-                        return false;
-                    }
-                    blackStack = stack;
-                } else {
-                    return false;
-                }
-                
-            }
-        }
-        
-        return skinStack != null && blackStack != null;
+    public RecipeSkinCopy() {
+        super(null);
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting invCrafting) {
+    public boolean matches(IInventory inventory) {
+        return getCraftingResult(inventory) != null;
+    }
+    
+    @Override
+    public ItemStack getCraftingResult(IInventory inventory) {
         ItemStack skinStack = null;
         ItemStack blackStack = null;
         
-        for (int slotId = 0; slotId < invCrafting.getSizeInventory(); slotId++) {
-            ItemStack stack = invCrafting.getStackInSlot(slotId);
+        for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
+            ItemStack stack = inventory.getStackInSlot(slotId);
             if (stack != null) {
                 Item item = stack.getItem();
                 
-                if (EquipmentNBTHelper.stackHasSkinData(stack) && EquipmentNBTHelper.getSkinPointerFromStack(stack).lockSkin && item != ModItems.equipmentSkin) {
+                if (item == ModItems.equipmentSkin && EquipmentNBTHelper.stackHasSkinData(stack)) {
                     if (skinStack != null) {
                         return null;
                     }
@@ -76,14 +53,15 @@ public class RecipeSkinCopy implements IRecipe {
         }
         return null;
     }
-
+    
     @Override
-    public int getRecipeSize() {
-        return 2;
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-        return null;
+    public void onCraft(IInventory inventory) {
+        for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
+            ItemStack stack = inventory.getStackInSlot(slotId);
+            Item item = stack.getItem();
+            if (item == ModItems.equipmentSkinTemplate & !EquipmentNBTHelper.stackHasSkinData(stack)) {
+                inventory.decrStackSize(slotId, 1);
+            }
+        }
     }
 }

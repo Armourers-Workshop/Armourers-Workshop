@@ -14,27 +14,33 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.equipment.ClientEquipmentModelCache;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.UtilColour;
 
 public class GuiMiniArmourerBuildingModel {
 
     private final Minecraft mc;
     private final GuiScreen parent;
+    private TileEntityMiniArmourer tileEntity;
     
     private ArrayList<ICube> cubes;
+    ArrayList<ICube> renderCubes = new ArrayList<ICube>();
     
     private int mouseLeftDownId = -1;
     private int mouseRightDownId = -1;
@@ -52,36 +58,46 @@ public class GuiMiniArmourerBuildingModel {
     private int lastMousePosX = 0;
     private int lastMousePosY = 0;
     
+    private int fakeCubeRenders = 0;
+    private int hoverCubeId = 0;
+    
     public ISkinType currentSkinType;
     public ISkinPartType currentSkinPartType;
     public ItemStack stack;
     public SkinPointer skinPointer;
     
-    public GuiMiniArmourerBuildingModel(GuiScreen parent, Minecraft mc) {
+    public GuiMiniArmourerBuildingModel(GuiScreen parent, Minecraft mc, TileEntityMiniArmourer tileEntity) {
         this.parent = parent;
         this.mc = mc;
+        this.tileEntity = tileEntity;
         
-        this.cubes = new ArrayList<ICube>();
-        ICube cube = new Cube();
-        cube.setColour(UtilColour.getMinecraftColor(1));
-        this.cubes.add(cube);
-        
-        cube = new Cube();
-        cube.setColour(UtilColour.getMinecraftColor(2));
-        cube.setY((byte) -8);
-        this.cubes.add(cube);
+        this.rotation = 45;
+        this.pitch = 45;
     }
     
     public void drawScreen(int mouseX, int mouseY) {
         if (stack != null) {
             skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
         }
+        renderFakeCubes(mouseX, mouseY);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GuiScreen.drawRect(0, 0, parent.width, parent.height, 0xFF000000);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         renderModels(mouseX, mouseY);
+        
         lastMousePosX = mouseX;
         lastMousePosY = mouseY;
     }
     
-    private void renderModels(int mouseX, int mouseY) {
+    private void renderFakeCubes(int mouseX, int mouseY) {
+        cubes = null;
+        ArrayList<SkinPart> skinParts = tileEntity.getSkinParts();
+        for (int i = 0; i < skinParts.size(); i++) {
+            if (skinParts.get(i).getPartType() == currentSkinPartType) {
+                cubes = skinParts.get(i).getArmourData();
+            }
+        }
+        
         float scale = 0.0625F;
         GL11.glPushMatrix();
         
@@ -91,17 +107,16 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glRotatef(180F, 0F, 1F, 0F);
         
         
-        
-        GL11.glRotatef(rotation, 0F, 1F, 0F);
         GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+        GL11.glRotatef(rotation, 0F, 1F, 0F);
+        
         
         GL11.glTranslated(0, 1 * scale, 0);
         
-        
+        GL11.glScalef(-1, -1, 1);
         drawBuildingCubes(true);
         Color c = getColourAtPos(Mouse.getX(), Mouse.getY());
-        int hoverCubeId = getIdFromColour(c);
-        
+        hoverCubeId = getIdFromColour(c);
         
         if (Mouse.isButtonDown(0)) {
             if (!mouseLeftIsDown) {
@@ -141,16 +156,35 @@ public class GuiMiniArmourerBuildingModel {
                 }
             }
         }
+        GL11.glPopMatrix();
+    }
+    
+    private void renderModels(int mouseX, int mouseY) {
         
-        drawBuildingCubes(false);
+        float scale = 0.0625F;
+        GL11.glPushMatrix();
+        
+        GL11.glTranslatef(parent.width / 2, parent.height / 2, 500.0F);
+        GL11.glScalef((float)(-zoom), (float)zoom, (float)zoom);
+        
+        GL11.glRotatef(180F, 0F, 1F, 0F);
+        
+        
+        GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+        GL11.glRotatef(rotation, 0F, 1F, 0F);
+        
+        
+        GL11.glTranslated(0, 1 * scale, 0);
+        
+        GL11.glScalef(-1, -1, 1);
         
         //Are we hovering over a cube?
-        if (hoverCubeId != 0) {
+        if (hoverCubeId != 0 && renderCubes != null) {
             int cubeId = (int) Math.ceil((double)hoverCubeId / 6);
             int cubeFace = cubeId * 6 - hoverCubeId;
             
-            if (cubeId - 1 < cubes.size() & cubeId - 1 >= 0) {
-                ICube tarCube = cubes.get(cubeId - 1);
+            if (cubeId - 1 < renderCubes.size() & cubeId - 1 >= 0) {
+                ICube tarCube = renderCubes.get(cubeId - 1);
                 
                 ICube newCube = new Cube();
                 ForgeDirection dir = getDirectionForCubeFace(cubeFace);
@@ -158,7 +192,6 @@ public class GuiMiniArmourerBuildingModel {
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
                 newCube.setColour(0xFFFFFFFF);
-                int[] colour = {newCube.getColour(), newCube.getColour(), newCube.getColour(), newCube.getColour(), newCube.getColour(), newCube.getColour()};
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -168,15 +201,16 @@ public class GuiMiniArmourerBuildingModel {
             }
         }
         
+        //Gui.drawRect(0, 0, parent.width, parent.height, 0xFF000000);
+        
+        drawBuildingCubes(false);
+        GL11.glScalef(-1, -1, 1);
+        
         RenderHelper.enableStandardItemLighting();
-        
-        
         mc.renderEngine.bindTexture(mc.thePlayer.getLocationSkin());
         
-        
-        
         if (skinPointer != null) {
-            Skin skin = ClientEquipmentModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+            Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart part = skin.getParts().get(i);
                 if (part.getPartType() == currentSkinPartType) {
@@ -185,9 +219,10 @@ public class GuiMiniArmourerBuildingModel {
             }
             
         }
-        GL11.glTranslated(0, -currentSkinPartType.getBuildingSpace().getY() * scale, 0);
+        
         
         if (currentSkinPartType != null) {
+            GL11.glTranslated(0, -currentSkinPartType.getBuildingSpace().getY() * scale, 0);
             currentSkinPartType.renderBuildingGuide(scale, true, false);
             SkinRenderHelper.renderBuildingGrid(currentSkinPartType, scale);
         }
@@ -201,59 +236,90 @@ public class GuiMiniArmourerBuildingModel {
     }
     
     private void cubeClicked(int cubeId, int cubeFace, int button) {
-        if (cubeId - 1 < cubes.size() & cubeId - 1 >= 0) {
-            ICube tarCube = cubes.get(cubeId - 1);
-
+        if (renderCubes != null && cubeId - 1 < renderCubes.size() & cubeId - 1 >= 0) {
+            ICube tarCube = renderCubes.get(cubeId - 1);
+            
             if (button == 0) {
                 ICube newCube = new Cube();
-                newCube.setColour(tarCube.getColour());
+                newCube.getCubeColour().setRed(tarCube.getCubeColour().getRed());
+                newCube.getCubeColour().setGreen(tarCube.getCubeColour().getGreen());
+                newCube.getCubeColour().setBlue(tarCube.getCubeColour().getBlue());
                 ForgeDirection dir = getDirectionForCubeFace(cubeFace);
                 newCube.setX((byte) (tarCube.getX() + dir.offsetX));
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
-                ModLogger.log(newCube);
-                cubes.add(newCube);
+                newCube.setId((byte) 0);
+                
+                MessageClientGuiMiniArmourerCubeEdit message;
+                message = new MessageClientGuiMiniArmourerCubeEdit(currentSkinPartType, newCube, false);
+                PacketHandler.networkWrapper.sendToServer(message);
             }
             
             if (button == 1) {
-                cubes.remove(cubeId - 1);
+                if (tarCube.getId() == -1) {
+                    return;
+                }
+                MessageClientGuiMiniArmourerCubeEdit message;
+                message = new MessageClientGuiMiniArmourerCubeEdit(currentSkinPartType, tarCube, true);
+                PacketHandler.networkWrapper.sendToServer(message);
             }
-            
-            ModLogger.log("cubeId:" + cubeId + " cubeFace:" + cubeFace); 
         }
     }
     
     private void drawBuildingCubes(boolean fake) {
+        if (cubes == null) {
+            return;
+        }
+        
+        renderCubes.clear();
+        fakeCubeRenders = 0;
         //GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         if (fake) {
             GL11.glDisable(GL11.GL_LIGHTING);
+            IRectangle3D guideSpace = currentSkinPartType.getGuideSpace();
+            for (int ix = 0; ix < guideSpace.getWidth(); ix++ ) {
+                for (int iy = 0; iy < guideSpace.getHeight(); iy++ ) {
+                    for (int iz = 0; iz < guideSpace.getDepth(); iz++ ) {
+                        byte x = (byte) (ix + guideSpace.getX());
+                        byte y = (byte) (iy + guideSpace.getY());
+                        byte z = (byte) (iz + guideSpace.getZ());
+                        Cube cube = new Cube();
+                        cube.setX(x);
+                        cube.setY(y);
+                        cube.setZ(z);
+                        renderCubes.add(cube);
+                    }
+                }
+            }
+            fakeCubeRenders = renderCubes.size();
         }
 
         float scale = 0.0625F;
         int colourId = 1;
         
-        for (int i = 0; i < cubes.size(); i++) {
-            ICube cube = cubes.get(i);
+        renderCubes.addAll(cubes);
+        
+        for (int i = 0; i < renderCubes.size(); i++) {
+            ICube cube = renderCubes.get(i);
             if (cube != null) {
                 if (cube.isGlowing() & !fake) {
                     GL11.glDisable(GL11.GL_LIGHTING);
                     ModRenderHelper.disableLighting();
                 }
-                int colour[];
+                ICubeColour colour = new CubeColour();
                 if (fake) {
-                    colour = new int[] {
-                            getColourFromId(colourId).getRGB(),
-                            getColourFromId(colourId + 1).getRGB(),
-                            getColourFromId(colourId + 2).getRGB(),
-                            getColourFromId(colourId + 3).getRGB(),
-                            getColourFromId(colourId + 4).getRGB(),
-                            getColourFromId(colourId + 5).getRGB()};
+                    colour.setColour(getColourFromId(colourId).getRGB(), 0);
+                    colour.setColour(getColourFromId(colourId + 1).getRGB(), 1);
+                    colour.setColour(getColourFromId(colourId + 2).getRGB(), 2);
+                    colour.setColour(getColourFromId(colourId + 3).getRGB(), 3);
+                    colour.setColour(getColourFromId(colourId + 4).getRGB(), 4);
+                    colour.setColour(getColourFromId(colourId + 5).getRGB(), 5);
                 } else {
-                    colour = new int[] {cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour(), cube.getColour()};
+                    colour = cube.getCubeColour();
                 }
                 
-                EquipmentPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), cube.getCubeColour(), scale, null, false);
+                EquipmentPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), colour, scale, null, false);
                 if (cube.isGlowing() & !fake) {
                     ModRenderHelper.enableLighting();
                     GL11.glEnable(GL11.GL_LIGHTING);
@@ -307,22 +373,22 @@ public class GuiMiniArmourerBuildingModel {
         ForgeDirection dir;
         switch (cubeFace) {
         case 1:
-            dir = ForgeDirection.NORTH;
-            break;
-        case 0:
-            dir = ForgeDirection.SOUTH;
-            break;
-        case 4:
-            dir = ForgeDirection.WEST;
-            break;
-        case 5:
             dir = ForgeDirection.EAST;
             break;
-        case 3:
+        case 0:
+            dir = ForgeDirection.WEST;
+            break;
+        case 4:
             dir = ForgeDirection.DOWN;
             break;
-        case 2:
+        case 5:
             dir = ForgeDirection.UP;
+            break;
+        case 3:
+            dir = ForgeDirection.NORTH;
+            break;
+        case 2:
+            dir = ForgeDirection.SOUTH;
             break;
         default:
             dir = ForgeDirection.UNKNOWN;

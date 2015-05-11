@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,12 +50,17 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinBow);
-        armourData.onRender();
+        armourData.onUsed();
         
         int tarPart = bowUse / 10;
         
         if (tarPart > parts.size() - 1) {
             tarPart = parts.size() - 1;
+        }
+        
+        if (tarPart < 0 | tarPart > parts.size() - 1) {
+            ModLogger.log("wow");
+            return;
         }
         
         SkinPart part = parts.get(tarPart);
@@ -73,7 +79,7 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         
         
         GL11.glColor3f(1F, 1F, 1F);
-        bowUse = 0;
+        bowUse = 1;
     }
     
     private void renderRightArm(SkinPart part, float scale) {

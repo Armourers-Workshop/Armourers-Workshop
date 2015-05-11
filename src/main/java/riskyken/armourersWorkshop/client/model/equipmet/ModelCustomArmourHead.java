@@ -51,7 +51,7 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinHead);
         
         ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, armourData.getParts().get(0).getPartType());
-        armourData.onRender();
+        armourData.onUsed();
         
         GL11.glPushMatrix();
         if (isChild) {
