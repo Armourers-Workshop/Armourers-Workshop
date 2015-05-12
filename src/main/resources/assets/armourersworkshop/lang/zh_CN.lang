@@ -9,6 +9,7 @@ tile.armourersworkshop:colourableGlassGlowing.name=玻璃造型方块 (发光的
 tile.armourersworkshop:colourMixer.name=调色器
 tile.armourersworkshop:mannequin.name=模特
 tile.armourersworkshop:doll.name=娃娃
+tile.armourersworkshop:skinningTable.name=时装绑定工作台
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=让你来设计皮肤外观.
@@ -21,17 +22,12 @@ tile.armourersworkshop:colourableGlassGlowing.flavour=发光的半透明基础�
 tile.armourersworkshop:colourMixer.flavour=调好颜色来给你的方块上色.%n潜行+右击进行上色.
 tile.armourersworkshop:mannequin.flavour=在模特上展示你的成果!%n右击改变名字来给模特换皮肤.
 tile.armourersworkshop:doll.flavour=迷你模特!
+tile.armourersworkshop:skinningTable.flavour=给装备绑定和移除时装.
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=时装模板
 item.armourersworkshop:equipmentSkinTemplate.1000.name=礼品袋
-item.armourersworkshop:equipmentSkin.0.name=头部时装
-item.armourersworkshop:equipmentSkin.1.name=胸部时装
-item.armourersworkshop:equipmentSkin.2.name=腿部时装
-item.armourersworkshop:equipmentSkin.3.name=裙子时装
-item.armourersworkshop:equipmentSkin.4.name=鞋子时装
-item.armourersworkshop:equipmentSkin.5.name=剑的时装
-item.armourersworkshop:equipmentSkin.6.name=弓的时装
+item.armourersworkshop:equipmentSkin.name=时装
 item.armourersworkshop:paintbrush.name=笔刷
 item.armourersworkshop:paintRoller.name=油漆滚筒
 item.armourersworkshop:colourPicker.name=拾色器
@@ -46,6 +42,8 @@ item.armourersworkshop:armourContainerHead.name=头部时装容器
 item.armourersworkshop:armourContainerChest.name=上身时装容器
 item.armourersworkshop:armourContainerLegs.name=腿部时装容器
 item.armourersworkshop:armourContainerFeet.name=鞋子时装容器
+item.armourersworkshop:wandOfStyle.name=风格棒
+item.armourersworkshop:soap.name=肥皂
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=作者的礼物
@@ -59,15 +57,61 @@ item.armourersworkshop:shadeNoiseTool.flavour=给一个方块随机阴影.
 item.armourersworkshop:mannequinTool.flavour=保存和加载模型.%n右击确定设置.%n潜行右击可保存设置.
 item.armourersworkshop:guideBook.flavour=时装工坊的使用向导.
 item.armourersworkshop:armourContainer.flavour=创造模式才能使用的物品.%n允许将时装穿到NPC身上.
+item.armourersworkshop:soap.flavour=使用时装绑定工作台来清除物品的皮肤!
 
-# Armour types
-armourTypes.armourersworkshop:head.name=头部
-armourTypes.armourersworkshop:chest.name=胸部
-armourTypes.armourersworkshop:legs.name=腿部
-armourTypes.armourersworkshop:skirt.name=裙子
-armourTypes.armourersworkshop:feet.name=脚
-armourTypes.armourersworkshop:sword.name=剑
-armourTypes.armourersworkshop:bow.name=弓
+# Rollover Text
+item.armourersworkshop:rollover.intensity=&6强度:&7 %s
+item.armourersworkshop:rollover.colour=&6颜色:&7 %s
+item.armourersworkshop:rollover.hex=&6十六进制:&7 %s
+item.armourersworkshop:rollover.nopaint=&6没有染色.
+item.armourersworkshop:rollover.settingsSaved=&6设置已保存.
+item.armourersworkshop:rollover.noSettingsSaved=&c未保存.
+item.armourersworkshop:rollover.user=&6使用者:&7 %s
+
+item.armourersworkshop:rollover.hasSkin=&6获得了时装
+item.armourersworkshop:rollover.skinName=&6名字:&7 %s
+item.armourersworkshop:rollover.skinAuthor=&6作者:&7 %s
+item.armourersworkshop:rollover.skinType=&6类型:&7 %s
+item.armourersworkshop:rollover.skinHoldShiftForInfo=按住 &ashift键&7 查看更多信息.
+item.armourersworkshop:rollover.skinId=&e时装编号:&7 %s
+item.armourersworkshop:rollover.skinTotalCubes=&e使用了的方块数量:&7 %s
+item.armourersworkshop:rollover.skinNumCubes=&e造型方块:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlowing=&e发光造型方块:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlass=&e玻璃造型方块:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&e发光玻璃方块:&7 %s
+item.armourersworkshop:rollover.skindownloading=时装下载中...
+item.armourersworkshop:rollover.skinOpenWardrobe=按 &a%s&7 键来打开 &a时装栏
+item.armourersworkshop:rollover.skinOldType=&c旧版本时装类型, 放在工坊方块中更新.
+item.armourersworkshop:rollover.skinInvalidItem=&c错误: 无效的时装, 请删除
+item.armourersworkshop:rollover.skinIdError1=&c警告:这时装使用旧文件格式.
+item.armourersworkshop:rollover.skinIdError2=&c请从资源库保存并重新加载它来解决这个问题。
+item.armourersworkshop:rollover.skinIdError3=&c调试 - 旧 ID: %s 新 ID: %s
+
+# Skin Types
+skinType.armourers:head.name=帽子
+skinType.armourers:chest.name=上衣
+skinType.armourers:legs.name=裤子
+skinType.armourers:skirt.name=裙子
+skinType.armourers:feet.name=鞋子
+skinType.armourers:sword.name=武器
+skinType.armourers:bow.name=弓
+
+# Skin Part Types
+skinPartType.armourers:head.base.name=头基座
+skinPartType.armourers:chest.base.name=躯干基座
+skinPartType.armourers:chest.leftArm.name=左臂
+skinPartType.armourers:chest.rightArm.name=右臂
+skinPartType.armourers:legs.leftLeg.name=左腿
+skinPartType.armourers:legs.rightLeg.name=右腿
+skinPartType.armourers:skirt.base.name=裙子基座
+skinPartType.armourers:feet.leftFoot.name=左脚
+skinPartType.armourers:feet.rightFoot.name=右脚
+skinPartType.armourers:sword.base.name=武器基座
+skinPartType.armourers:bow.base.name=弓基座
+skinPartType.armourers:bow.frame1.name=框架 1
+skinPartType.armourers:bow.frame2.name=框架 2
+skinPartType.armourers:bow.arrow.name=箭矢
+inventory.armourersworkshop:skinningTable.name=时装绑定台
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=调色器
@@ -75,6 +119,8 @@ inventory.armourersworkshop:armourerBrain.name=时装工坊
 inventory.armourersworkshop:armourLibrary.name=资源库
 inventory.armourersworkshop:equipmentWardrobe.name=时装衣柜
 inventory.armourersworkshop:mannequin.name=人体模特
+inventory.armourersworkshop:miniArmourer.name=迷你工坊 - (未完成)
+inventory.armourersworkshop:entityEquipment.name=实体设备
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=搜索:
@@ -104,8 +150,9 @@ inventory.armourersworkshop:colourMixer.label.hex=十六进制
 inventory.armourersworkshop:colourMixer.label.presets=预设
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=皮肤颜色
+inventory.armourersworkshop:equipmentWardrobe.label.hairColour=头发颜色
 inventory.armourersworkshop:equipmentWardrobe.autoColour=自动颜色
-inventory.armourersworkshop:equipmentWardrobe.nakedSkin=只显示皮肤?
+inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=皮肤覆盖
 
 inventory.armourersworkshop:mannequin.label.headRotation=头部的转动
 inventory.armourersworkshop:mannequin.label.leftArmRotation=左手臂转动
@@ -116,6 +163,10 @@ inventory.armourersworkshop:mannequin.label.isChild=小孩子模型?
 inventory.armourersworkshop:mannequin.random=随机
 inventory.armourersworkshop:mannequin.reset=重置
 
+inventory.armourersworkshop:miniArmourer.save=保存
+inventory.armourersworkshop:miniArmourer.load=读取
+inventory.armourersworkshop:miniArmourer.label.buildingAccess=潜行右键迷你工坊来访问.
+
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=没有更多步撤销
 chat.armourersworkshop:undo.undoing=正在撤销
@@ -125,6 +176,9 @@ chat.armourersworkshop:inventoryGiftFail=有人试图给你一份礼物,但你�
 # Death Messages
 death.attack.victorious=%1$s 被皇冠刺死了
 
+# Commands
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache> <player> [skinName] 可以使用指令/armourers <给时装 | 清除时装 | 设置时装 | 明确的模型缓存> <玩家名> [皮肤名]
+commands.armourers.fileNotFound=文件 %1$s 没有找到.
 
 # Creative tab
 itemGroup.armourersworkshop=时装制造工坊
