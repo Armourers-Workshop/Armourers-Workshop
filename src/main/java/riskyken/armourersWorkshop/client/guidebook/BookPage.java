@@ -9,7 +9,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BookPage implements IBookPage {
-
+    
+    public static final int PAGE_WIDTH = 104;
+    public static final int PAGE_HEIGHT = 130;
     private static final int TEXT_COLOUR = 0xFF000000;
     private final ArrayList<String> lines;
     
