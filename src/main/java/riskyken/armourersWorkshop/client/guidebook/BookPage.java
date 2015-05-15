@@ -7,22 +7,31 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
 
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BookPage implements IBookPage {
     
+    private static final ResourceLocation bookPageTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBookPage.png");
+    private static final int TEXT_COLOUR = 0xFF000000;
+    
     public static final int PAGE_WIDTH = 104;
     public static final int PAGE_HEIGHT = 130;
-    private static final int TEXT_COLOUR = 0xFF000000;
     private final ArrayList<String> lines;
     
     public BookPage(ArrayList<String> lines) {
@@ -37,12 +46,12 @@ public class BookPage implements IBookPage {
     
     @Override
     public void renderPage(FontRenderer fontRenderer, int x, int y) {
+        Minecraft mc = Minecraft.getMinecraft();
         if (fbo == null) {
-            fbo = new Framebuffer(256, 256, false);
+            fbo = new Framebuffer(512, 512, false);
         }
         int currentFBO = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
         
-        Minecraft mc = Minecraft.getMinecraft();
         
         ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         
@@ -51,27 +60,35 @@ public class BookPage implements IBookPage {
         //ModLogger.log("Start FBO:" + GL30.GL_FRAMEBUFFER_BINDING);
         
         //fbo.createFramebuffer(100, 100);
-        
-        
+        RenderItem itemRender = new RenderItem();
+        ItemStack stack = new ItemStack(Blocks.stone);
         
         //fbo.createFramebuffer(256, 256);
+        //fbo.createFramebuffer(512, 512);
         
         OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
         GL11.glClear(16384);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
-        GL11.glOrtho(0D, 256D, 256D, 0D, 0D, 1.0D);
-        GL11.glViewport(0, 0, 256, 256);
+        GL11.glOrtho(0D, 256D, 256D, 0D, 1000D, 3000.0D);
+        GL11.glViewport(0, 0, 512, 512);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glDisable(GL11.GL_LIGHTING);
         //GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glTranslatef(0.0F, 0.0F, 0.0F);
+        GL11.glTranslatef(0.0F, 0.0F, -2000.0F);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         
         drawRec(0, 0, 256, 256);
+        
+        RenderHelper.enableGUIStandardItemLighting();
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        itemRender.renderItemIntoGUI(fontRenderer, mc.getTextureManager(), stack, 128, 128);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
         
         Minecraft.getMinecraft().renderEngine.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
         drawTexRec(0, 10, 128, 64);
@@ -92,11 +109,29 @@ public class BookPage implements IBookPage {
         OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, currentFBO);
         
         //Draw FBO
+        GL11.glPushMatrix();
+        float rotation = (float)((double)System.currentTimeMillis() / 25 % 360);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glTranslatef(0, 128, 0);
+        GL11.glRotatef(rotation, 1, 0, 0);
+        GL11.glTranslatef(0, -128, 0);
         fbo.bindFramebufferTexture();
         drawFboRec(reso.getScaledWidth() - 256, 0, 256, 256);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
         
+        GL11.glPopMatrix();
+        
         drawRec(0, 0, 256, 256);
+        
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        RenderHelper.enableGUIStandardItemLighting();
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glScalef(1, 1, 1);
+        itemRender.renderItemIntoGUI(fontRenderer, mc.getTextureManager(), stack, 128, 128);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        
         
         mc.renderEngine.bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
         drawTexRec(0, 10, 128, 64);
