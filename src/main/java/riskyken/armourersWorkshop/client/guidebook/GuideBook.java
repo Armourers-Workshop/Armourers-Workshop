@@ -33,26 +33,27 @@ public class GuideBook extends BookBase {
         chapterRecipes = new  BookChapter(this, "recipes", 0);
         
         //Blocks
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.armourerBrain));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.armourLibrary));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.colourable));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.colourableGlass));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.colourableGlowing));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.colourableGlassGlowing));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.colourMixer));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.mannequin));
-        chapterRecipes.addPage(new BookPageRecipe(ModBlocks.skinningTable));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourerBrain));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourLibrary));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourable));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourableGlass));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourableGlowing));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourableGlassGlowing));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourMixer));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.mannequin));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinningTable));
         
         //Items
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.paintbrush));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.paintRoller));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.burnTool));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.dodgeTool));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.shadeNoiseTool));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.colourNoiseTool));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.colourPicker));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.soap));
-        chapterRecipes.addPage(new BookPageRecipe(ModItems.wandOfStyle));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.paintbrush));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.paintRoller));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.burnTool));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.dodgeTool));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.shadeNoiseTool));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourNoiseTool));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourPicker));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.soap));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.wandOfStyle));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.guideBook));
         
         addChapter(chapterContents);
         addChapter(chapterIntroduction);

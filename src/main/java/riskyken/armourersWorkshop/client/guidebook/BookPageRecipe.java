@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class BookPageRecipe implements IBookPage {
+public class BookPageRecipe extends BookPageBase {
     
     private static final int TEXT_COLOUR = 0xFF000000;
     private static RenderItem itemRender = new RenderItem();
@@ -36,11 +36,12 @@ public class BookPageRecipe implements IBookPage {
     private Item item;
     private List<IRecipe> validRecipes;
     
-    public BookPageRecipe(Block block) {
-        this(Item.getItemFromBlock(block));
+    public BookPageRecipe(IBook parentBook, Block block) {
+        this(parentBook, Item.getItemFromBlock(block));
     }
     
-    public BookPageRecipe(Item item) {
+    public BookPageRecipe(IBook parentBook, Item item) {
+        super(parentBook);
         this.item = item;
         validRecipes = new ArrayList<IRecipe>();
         List<IRecipe> recipeList = CraftingManager.getInstance().getRecipeList();
@@ -55,18 +56,15 @@ public class BookPageRecipe implements IBookPage {
         }
     }
     
-    
-    
     @Override
-    public void renderPage(FontRenderer fontRenderer, int x, int y) {
+    public void renderPage(FontRenderer fontRenderer, int mouseX, int mouseY, boolean turning, int pageNumber) {
+        drawPageTitleAndNumber(fontRenderer, pageNumber);
         ItemStack result = new ItemStack(item);
-        int nameWidth = fontRenderer.getStringWidth(result.getDisplayName());
-        fontRenderer.drawSplitString(result.getDisplayName(), x, y, BookPage.PAGE_WIDTH, TEXT_COLOUR);
-        //fontRenderer.drawString(result.getDisplayName(), x + BookPage.PAGE_WIDTH / 2 - nameWidth / 2, y, TEXT_COLOUR);
+        renderStringCenter(fontRenderer, result.getDisplayName(), PAGE_MARGIN_TOP + PAGE_PADDING_TOP + fontRenderer.FONT_HEIGHT * 2);
         Minecraft mc = Minecraft.getMinecraft();
         
         if (validRecipes.size() > 0) {
-            renderRecipe(mc ,fontRenderer, validRecipes.get(0), x, y);
+            renderRecipe(mc ,fontRenderer, validRecipes.get(0), 0, 0);
         }
     }
     
@@ -114,9 +112,9 @@ public class BookPageRecipe implements IBookPage {
                         }
                         
                         itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
-                                stack, x + 28 + ix * 16, y + 20 + iy * 16 + 10);
+                                stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
                         itemRender.renderItemOverlayIntoGUI(fontRenderer, mc.getTextureManager(),
-                                stack, x + 28 + ix * 16, y + 20 + iy * 16 + 10);
+                                stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
                     }
                 }
             }
@@ -140,9 +138,9 @@ public class BookPageRecipe implements IBookPage {
                         stack = (ItemStack) inputObj;
                     }
                     itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
-                            stack, x + 28 + ix * 16, y + 20 + iy * 16 + 10);
+                            stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
                     itemRender.renderItemOverlayIntoGUI(fontRenderer, mc.getTextureManager(),
-                            stack, x + 28 + ix * 16, y + 20 + iy * 16 + 10);
+                            stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
                 }
                 ix++;
                 if (ix > 2) {
@@ -153,7 +151,7 @@ public class BookPageRecipe implements IBookPage {
         }
         
         itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
-                recipe.getRecipeOutput(), x + 44, y + 100);
+                recipe.getRecipeOutput(), x + 60, y + 100);
         
     }
     
@@ -168,5 +166,11 @@ public class BookPageRecipe implements IBookPage {
         tessellator.addVertexWithUV((double)(p_73729_1_ + p_73729_5_), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + p_73729_5_) * f), (double)((float)(p_73729_4_ + 0) * f1));
         tessellator.addVertexWithUV((double)(p_73729_1_ + 0), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + 0) * f), (double)((float)(p_73729_4_ + 0) * f1));
         tessellator.draw();
+    }
+
+    @Override
+    public void renderRollover(FontRenderer fontRenderer, int mouseX, int mouseY) {
+        // TODO Auto-generated method stub
+        
     }
 }

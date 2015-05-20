@@ -51,12 +51,12 @@ public class BookChapter implements IBookChapter {
             }
             pageLines.add(lines.get(i));
             if (pageLines.size() >= linesPerPage) {
-                pages.add(new BookPage(pageLines));
+                pages.add(new BookPage(parentBook, pageLines));
                 pageLines = new ArrayList<String>();
             }
         }
         if (pageLines.size() > 0) {
-            pages.add(new BookPage(pageLines));
+            pages.add(new BookPage(parentBook, pageLines));
         }
         
         return pages;
