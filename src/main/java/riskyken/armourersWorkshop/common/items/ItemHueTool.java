@@ -10,23 +10,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
-import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
-import riskyken.armourersWorkshop.client.particles.ParticleManager;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
-import riskyken.armourersWorkshop.utils.PaintingNBTHelper;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemHueTool extends AbstractModItem implements IPaintingTool {
+public class ItemHueTool extends AbstractPaintingTool {
     
     @SideOnly(Side.CLIENT)
     private IIcon tipIcon;
@@ -84,15 +79,6 @@ public class ItemHueTool extends AbstractModItem implements IPaintingTool {
         return false;
     }
     
-    @SideOnly(Side.CLIENT)
-    private void spawnPaintParticles (World world, int x, int y, int z, int side, int colour) {
-        for (int i = 0; i < 3; i++) {
-            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
-                    colour, ForgeDirection.getOrientation(side));
-            ParticleManager.INSTANCE.spawnParticle(world, particle);
-        }
-    }
-    
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(stack, player, list, p_77624_4_);
@@ -110,33 +96,5 @@ public class ItemHueTool extends AbstractModItem implements IPaintingTool {
             return itemIcon;
         }
         return tipIcon;
-    }
-    
-    @Override
-    public int getColorFromItemStack(ItemStack stack, int pass) {
-        if (pass == 0) {
-            return super.getColorFromItemStack(stack, pass);
-        }
-        return getToolColour(stack);
-    }
-    
-    @Override
-    public boolean requiresMultipleRenderPasses() {
-        return true;
-    }
-
-    @Override
-    public boolean getToolHasColour(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public int getToolColour(ItemStack stack) {
-        return PaintingNBTHelper.getToolColour(stack);
-    }
-
-    @Override
-    public void setToolColour(ItemStack stack, int colour) {
-        PaintingNBTHelper.setToolColour(stack, colour);
     }
 }
