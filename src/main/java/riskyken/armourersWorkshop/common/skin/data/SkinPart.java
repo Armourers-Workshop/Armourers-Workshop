@@ -18,7 +18,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -116,7 +116,7 @@ public class SkinPart implements ISkinPart {
         for (int i = 0; i < cubeList.tagCount(); i++) {
             NBTTagCompound cubeCompound = cubeList.getCompoundTagAt(i);
             byte cubeId = cubeCompound.getByte(TAG_ID);
-            ICube cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(cubeId);
+            ICube cube = CubeFactory.INSTANCE.getCubeInstanceFormId(cubeId);
             cube.readFromCompound(cubeCompound);
             armourData.add(cube);
         }
@@ -138,7 +138,7 @@ public class SkinPart implements ISkinPart {
             byte id = buf.readByte();
             ICube cube;
             try {
-                cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(id);
+                cube = CubeFactory.INSTANCE.getCubeInstanceFormId(id);
                 cube.readFromBuf(buf);
                 armourData.add(cube);
             } catch (InvalidCubeTypeException e) {
@@ -171,7 +171,7 @@ public class SkinPart implements ISkinPart {
                 cube = LegacyCubeHelper.loadlegacyCube(stream, version, skinPart);
             } else {
                 byte id = stream.readByte();
-                cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(id);
+                cube = CubeFactory.INSTANCE.getCubeInstanceFormId(id);
                 cube.readFromStream(stream, version, skinPart);
             }
             armourData.add(cube);

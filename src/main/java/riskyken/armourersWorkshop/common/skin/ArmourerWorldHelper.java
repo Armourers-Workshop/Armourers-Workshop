@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -96,7 +96,7 @@ public final class ArmourerWorldHelper {
             if (block == ModBlocks.colourableGlassGlowing) {
                 blockType = 3;
             }
-            ICube blockData = CubeRegistry.INSTANCE.getCubeInstanceFormId(blockType);
+            ICube blockData = CubeFactory.INSTANCE.getCubeInstanceFormId(blockType);
             
             blockData.setX((byte) ix);
             blockData.setY((byte) iy);

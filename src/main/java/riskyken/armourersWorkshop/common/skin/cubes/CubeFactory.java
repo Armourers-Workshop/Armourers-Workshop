@@ -6,17 +6,17 @@ import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 
-public final class CubeRegistry {
+public final class CubeFactory {
     
-    public static CubeRegistry INSTANCE;
+    public static CubeFactory INSTANCE;
     
     private ArrayList<Class<? extends ICube>> cubeList;
     
     public static void init() {
-        INSTANCE = new CubeRegistry();
+        INSTANCE = new CubeFactory();
     }
     
-    public CubeRegistry() {
+    public CubeFactory() {
         cubeList = new ArrayList<Class<? extends ICube>>();
         registerCubes();
     }

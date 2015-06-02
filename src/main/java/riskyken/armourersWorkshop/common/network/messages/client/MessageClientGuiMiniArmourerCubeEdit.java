@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -35,7 +35,7 @@ public class MessageClientGuiMiniArmourerCubeEdit implements IMessage, IMessageH
         this.skinPartType = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(partName);
         byte cubeId = buf.readByte();
         try {
-            this.cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(cubeId);
+            this.cube = CubeFactory.INSTANCE.getCubeInstanceFormId(cubeId);
             this.cube.readFromBuf(buf);
         } catch (InvalidCubeTypeException e) {
             e.printStackTrace();

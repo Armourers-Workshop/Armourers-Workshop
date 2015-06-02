@@ -8,7 +8,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -25,10 +25,10 @@ public final class SkinBaker {
     
     public static void cullFacesOnEquipmentPart(SkinPart partData) {
         ArrayList<ICube> blocks = partData.getArmourData();
-        partData.totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
+        partData.totalCubesInPart = new int[CubeFactory.INSTANCE.getTotalCubes()];
         for (int i = 0; i < blocks.size(); i++) {
             ICube blockData = blocks.get(i);
-            int cubeId = CubeRegistry.INSTANCE.getIdForCubeClass(blockData.getClass());
+            int cubeId = CubeFactory.INSTANCE.getIdForCubeClass(blockData.getClass());
             partData.totalCubesInPart[cubeId] += 1;
             setBlockFaceFlags(blocks, blockData);
         }

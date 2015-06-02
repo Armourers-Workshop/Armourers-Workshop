@@ -38,7 +38,7 @@ public final class LegacyCubeHelper {
             }
         }
 
-        ICube cube = CubeRegistry.INSTANCE.getCubeInstanceFormId(blockType);
+        ICube cube = CubeFactory.INSTANCE.getCubeInstanceFormId(blockType);
         cube.setX(x);
         cube.setY(y);
         cube.setZ(z);
