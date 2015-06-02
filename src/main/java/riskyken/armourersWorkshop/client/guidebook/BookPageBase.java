@@ -11,18 +11,21 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.UtilColour;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public abstract class BookPageBase implements IBookPage {
     
-    private static final ResourceLocation bookPageTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBookPage.png");
+    protected static final ResourceLocation bookPageTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBookPage.png");
     
     protected static final int TEXT_COLOUR = 0xFF000000;
     
     public static final int PAGE_TEXTURE_WIDTH = 118;
     public static final int PAGE_TEXTURE_HEIGHT = 165;
     
-    protected static final int PAGE_MARGIN_LEFT = 10;
-    protected static final int PAGE_MARGIN_TOP = 7;
+    public static final int PAGE_MARGIN_LEFT = 10;
+    public static final int PAGE_MARGIN_TOP = 7;
     
     protected static final int PAGE_PADDING_LEFT = 5;
     protected static final int PAGE_PADDING_TOP = 5;
@@ -38,7 +41,7 @@ public abstract class BookPageBase implements IBookPage {
         int stringWidth = fontRenderer.getStringWidth(text) / 2;
         
         int xCenter = 104 / 2 - fontRenderer.getStringWidth(text) / 2;
-        fontRenderer.drawString(text, PAGE_MARGIN_LEFT + contentWidth - stringWidth,
+        fontRenderer.drawString(text, contentWidth - stringWidth,
                 y, UtilColour.getMinecraftColor(7));
     }
     
@@ -47,10 +50,10 @@ public abstract class BookPageBase implements IBookPage {
         chapterTitle = StatCollector.translateToLocal(chapterTitle + ".name");
         
         //Title
-        renderStringCenter(fontRenderer, chapterTitle, PAGE_MARGIN_TOP + PAGE_PADDING_TOP);
+        renderStringCenter(fontRenderer, chapterTitle, PAGE_PADDING_TOP);
         
         //Page number
-        renderStringCenter(fontRenderer, pageNumber + " - " + parentBook.getTotalNumberOfPages(), PAGE_MARGIN_TOP + PAGE_TEXTURE_HEIGHT - PAGE_PADDING_TOP - fontRenderer.FONT_HEIGHT);
+        renderStringCenter(fontRenderer, pageNumber + " - " + parentBook.getTotalNumberOfPages(), PAGE_TEXTURE_HEIGHT - PAGE_PADDING_TOP - fontRenderer.FONT_HEIGHT);
     }
     
     protected void drawTestRec(int x, int y, int width, int height) {
@@ -88,13 +91,13 @@ public abstract class BookPageBase implements IBookPage {
     protected void renderTestRec(int x, int y, int width, int height, float r, float g, float b) {
         double zLevel = 0D;
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        //GL11.glDisable(GL11.GL_ALPHA_TEST);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         Tessellator tess = new Tessellator().instance;
         tess.startDrawingQuads();
-        tess.setColorRGBA_F(r, g, b, 0.25F);
+        tess.setColorRGBA_F(r, g, b, 1F);
         //Bottom Left
         tess.addVertex(x, y + height, zLevel);
         //Bottom Right
@@ -108,7 +111,20 @@ public abstract class BookPageBase implements IBookPage {
         GL11.glDisable(GL11.GL_BLEND);
     }
     
-    protected void drawTexRec(int x, int y, int width, int height) {
+    protected void drawTexturedRec(int x, int y, int u, int v, int width, int height) {
+        double zLevel = 0D;
+        float textureFraction = 0.00390625F;
+        Tessellator tess = new Tessellator().instance;
+        tess.startDrawingQuads();
+        tess.setColorRGBA_F(1F, 1F, 1F, 1F);
+        tess.addVertexWithUV(x, y + height, zLevel, 0, 1);
+        tess.addVertexWithUV(x + width, y + height, zLevel, 1, 1);
+        tess.addVertexWithUV(x + width, y, zLevel, 1, 0);
+        tess.addVertexWithUV(x, y, zLevel, 0, 0);
+        tess.draw();
+    }
+    
+    protected void drawTexturedRec(int x, int y, int width, int height) {
         double zLevel = 0D;
         Tessellator tess = new Tessellator().instance;
         ModRenderHelper.enableAlphaBlend();

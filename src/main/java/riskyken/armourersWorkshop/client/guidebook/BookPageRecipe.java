@@ -63,6 +63,10 @@ public class BookPageRecipe extends BookPageBase {
         renderStringCenter(fontRenderer, result.getDisplayName(), PAGE_MARGIN_TOP + PAGE_PADDING_TOP + fontRenderer.FONT_HEIGHT * 2);
         Minecraft mc = Minecraft.getMinecraft();
         
+        //mc.renderEngine.bindTexture(bookPageTexture);
+        GL11.glColor4f(1, 1, 1, 1);
+        //drawTexturedModalRect(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);
+        drawPageTitleAndNumber(fontRenderer, pageNumber);
         if (validRecipes.size() > 0) {
             renderRecipe(mc ,fontRenderer, validRecipes.get(0), 0, 0);
         }
@@ -74,6 +78,7 @@ public class BookPageRecipe extends BookPageBase {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
         
         if (recipe instanceof ShapedRecipes) {
             ShapedRecipes shapedRecipe = (ShapedRecipes) recipe;
@@ -152,7 +157,7 @@ public class BookPageRecipe extends BookPageBase {
         
         itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
                 recipe.getRecipeOutput(), x + 60, y + 100);
-        
+        GL11.glDisable(GL11.GL_LIGHTING);
     }
     
     public void drawTexturedModalRect(int p_73729_1_, int p_73729_2_, int p_73729_3_, int p_73729_4_, int p_73729_5_, int p_73729_6_) {

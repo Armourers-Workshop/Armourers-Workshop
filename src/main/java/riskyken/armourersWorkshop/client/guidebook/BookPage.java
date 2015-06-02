@@ -8,6 +8,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -31,14 +34,24 @@ public class BookPage extends BookPageBase {
         RenderItem itemRender = new RenderItem();
         ItemStack stack = new ItemStack(Blocks.stone);
         
-        drawPageTitleAndNumber(fontRenderer, pageNumber);
+        mc.renderEngine.bindTexture(bookPageTexture);
+        GL11.glColor4f(1, 1, 1, 1);
         
-        /*
-        renderTestRec(PAGE_MARGIN_LEFT, PAGE_MARGIN_TOP, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT, 1, 0, 1);
+        //drawTexturedModalRect(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);
+        //drawTexturedModalRect(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);
+        //drawTexturedRec(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);
         
-        renderTestRec(PAGE_MARGIN_LEFT + PAGE_PADDING_LEFT, PAGE_MARGIN_TOP + PAGE_PADDING_TOP,
+        
+        
+/*
+        
+        renderTestRec(0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT, 1, 0, 1);
+        
+        renderTestRec(PAGE_PADDING_LEFT, PAGE_PADDING_TOP,
                 PAGE_TEXTURE_WIDTH - PAGE_PADDING_LEFT * 2, PAGE_TEXTURE_HEIGHT - PAGE_PADDING_TOP * 2, 0, 1, 1);
         */
+        drawPageTitleAndNumber(fontRenderer, pageNumber);
+        
         
         
         //drawTestRec(0, 0, PAGE_WIDTH, PAGE_HEIGHT);
@@ -53,11 +66,18 @@ public class BookPage extends BookPageBase {
         RenderHelper.disableStandardItemLighting();
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         */
+        //GL11.glEnable(GL11.GL_DEPTH_TEST);
+        //RenderHelper.enableGUIStandardItemLighting();
+        //GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        //GL11.glScalef(1, 1, 1);
+        //GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        //RenderHelper.disableStandardItemLighting();
+        //GL11.glDisable(GL11.GL_DEPTH_TEST);
         
         for (int i = 0; i < lines.size(); i++) {
             fontRenderer.drawString(lines.get(i),
-                    PAGE_MARGIN_LEFT + PAGE_PADDING_LEFT,
-                    PAGE_MARGIN_TOP + PAGE_PADDING_TOP + fontRenderer.FONT_HEIGHT * 2 + i * 9,
+                    PAGE_PADDING_LEFT,
+                    PAGE_PADDING_TOP + fontRenderer.FONT_HEIGHT * 2 + i * 9,
                     TEXT_COLOUR);
         }
     }

@@ -10,15 +10,16 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 import riskyken.armourersWorkshop.client.gui.controls.GuiBookButton;
 import riskyken.armourersWorkshop.client.guidebook.BookPage;
+import riskyken.armourersWorkshop.client.guidebook.BookPageBase;
 import riskyken.armourersWorkshop.client.guidebook.IBook;
 import riskyken.armourersWorkshop.client.guidebook.IBookPage;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.UtilColour;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -105,6 +106,7 @@ public abstract class GuiBookBase extends GuiScreen {
         buttonForward.visible = pagePanelRight <= book.getTotalNumberOfPages();
         renderPageText(pagePanelLeft, 0, mouseX, mouseY, false);
         renderPageText(pagePanelRight, BookPage.PAGE_TEXTURE_WIDTH, mouseX, mouseY, false);
+        //renderTurningPage();
     }
     
     private void renderPageText(int page, int left, int mouseX, int mouseY, boolean turning) {
@@ -115,7 +117,10 @@ public abstract class GuiBookBase extends GuiScreen {
         IBookPage bookPage = book.getPageNumber(page);
         if (bookPage != null) {
             GL11.glPushMatrix();
-            GL11.glTranslatef(guiLeft + left, guiTop, 0);
+            int xOffset = guiLeft + left + BookPageBase.PAGE_MARGIN_LEFT;
+            int yOffset = guiTop + BookPageBase.PAGE_MARGIN_TOP;
+            //yOffset -= 50;
+            GL11.glTranslatef(xOffset, yOffset, 0);
             bookPage.renderPage(fontRendererObj, mouseX, mouseY, turning, page);
             GL11.glPopMatrix();
         } else {
@@ -123,14 +128,56 @@ public abstract class GuiBookBase extends GuiScreen {
         }
     }
     
-    private void renderStringCenter(String text, int x, int y) {
-        int xCenter = 104 / 2 - fontRendererObj.getStringWidth(text) / 2;
-        fontRendererObj.drawString(text, x + xCenter, y, UtilColour.getMinecraftColor(7));
+    float turnAmount = 0F;
+    int turningPageNumber = 0;
+    
+    private void renderTurningPage() {
+        turningPageNumber = pagePanelLeft;
+        if (turningPageNumber < 1 | turningPageNumber > book.getTotalNumberOfPages()) {
+            return;
+        }
+        IBookPage bookPage = book.getPageNumber(turningPageNumber);
+        if (bookPage != null) {
+            //ModRenderHelper.disableAlphaBlend();
+            ModRenderHelper.disableAlphaBlend();
+            enablePageFramebuffer();
+            ModRenderHelper.enableAlphaBlend(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            //ModRenderHelper.enableAlphaBlend(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            //ModRenderHelper.enableAlphaBlend();
+            //GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+            //GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            bookPage.renderPage(fontRendererObj, 0, 0, true, turningPageNumber);
+            //ModRenderHelper.disableAlphaBlend();
+            disablePageFramebuffer();
+            
+            bindFramebufferTexture();
+            GL11.glColor4f(1, 1, 1, 1);
+            GL11.glColorMask(true, true, true, false);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glDepthMask(false);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            //GL11.glDisable(GL11.GL_ALPHA_TEST);
+            //GL11.glDisable(GL11.GL_BLEND);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            //GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+            ModRenderHelper.enableAlphaBlend();
+            //ModRenderHelper.enableAlphaBlend();
+            //GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            int xOffset = guiLeft + BookPageBase.PAGE_MARGIN_LEFT;
+            int yOffset = guiTop + BookPageBase.PAGE_MARGIN_TOP;
+            drawFboRec(xOffset, yOffset, 256, 256);
+            ModRenderHelper.disableAlphaBlend();
+            unbindFramebufferTexture();
+        }
     }
     
     private static Framebuffer fbo;
     
     protected void enablePageFramebuffer() {
+        mc.getFramebuffer().unbindFramebuffer();
+        
         ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         
         double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
@@ -140,7 +187,8 @@ public abstract class GuiBookBase extends GuiScreen {
         int fboScaledHeight = MathHelper.ceiling_double_int(256 * scaleHeight);
         
         if (fbo == null) {
-            fbo = new Framebuffer(fboScaledWidth, fboScaledHeight, false);
+            fbo = new Framebuffer(fboScaledWidth, fboScaledHeight, true);
+            fbo.setFramebufferColor(0, 0, 0, 0);
         }
         
         if (fbo.framebufferWidth != fboScaledWidth | fbo.framebufferHeight != fboScaledHeight) {
@@ -149,7 +197,9 @@ public abstract class GuiBookBase extends GuiScreen {
         }
         
         OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
-        GL11.glClear(16384);
+        GL11.glClearColor(0F, 0F, 0F, 0F);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glClearDepth(1.0D);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
@@ -158,10 +208,15 @@ public abstract class GuiBookBase extends GuiScreen {
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glPushMatrix();
         GL11.glLoadIdentity();
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glTranslatef(0.0F, 0.0F, -2000.0F);
+        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glClearColor(0, 0, 0, 0);
+        ModRenderHelper.enableAlphaBlend();
+        GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
     
     protected void disablePageFramebuffer() {
@@ -170,6 +225,7 @@ public abstract class GuiBookBase extends GuiScreen {
         GL11.glLoadIdentity();
         GL11.glPopMatrix();
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        ModRenderHelper.disableAlphaBlend();
         mc.getFramebuffer().bindFramebuffer(true);
     }
     
@@ -184,10 +240,13 @@ public abstract class GuiBookBase extends GuiScreen {
     private void drawFboRec(int x, int y, int width, int height) {
         double zLevel = 1D;
         Tessellator tess = new Tessellator().instance;
-        ModRenderHelper.enableAlphaBlend();
+        //ModRenderHelper.enableAlphaBlend();
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        //GL11.glColorMask(true, true, true, false);
+        //OpenGlHelper.glBlendFunc(0, 0, 0, 0);
         tess.startDrawingQuads();
         tess.setColorRGBA_F(1F, 1F, 1F, 1F);
-        
+        tess.setColorOpaque_I(-1);
         //Bottom Left
         tess.addVertexWithUV(x, y + height, zLevel, 0, 0);
         //Bottom Right
