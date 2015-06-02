@@ -8,8 +8,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
-import riskyken.armourersWorkshop.common.items.ItemPaintRoller;
-import riskyken.armourersWorkshop.common.items.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
@@ -54,11 +52,9 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
             setInventorySlotContents(0, null);
             setInventorySlotContents(1, stackInput);
             
-            if (stackInput.getItem() == ModItems.paintbrush) {
-                ((ItemPaintbrush)stackInput.getItem()).setToolColour(stackInput, colour);
-            }
-            if (stackInput.getItem() == ModItems.paintRoller) {
-                ((ItemPaintRoller)stackInput.getItem()).setToolColour(stackInput, colour);
+            if (stackInput.getItem() instanceof IPaintingTool && stackInput.getItem() != ModItems.colourPicker) {
+                IPaintingTool paintingTool = (IPaintingTool) stackInput.getItem();
+                paintingTool.setToolColour(stackInput, colour);
             }
             if (stackInput.getItem() == ModItems.colourPicker) {
                 setColour(((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput), true);

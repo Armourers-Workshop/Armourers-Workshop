@@ -19,6 +19,7 @@ public class ModItems {
     public static Item[] armourContainer;
     public static Item wandOfStyle;
     public static Item soap;
+    public static Item hueTool;
     
     public static void init() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
@@ -40,5 +41,6 @@ public class ModItems {
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, 3);
         wandOfStyle = new ItemWandOfStyle();
         soap = new ItemSoap();
+        hueTool = new ItemHueTool();
     }
 }

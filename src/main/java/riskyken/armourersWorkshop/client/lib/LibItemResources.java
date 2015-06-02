@@ -35,6 +35,8 @@ public final class LibItemResources {
     public static final String BURN_TOOL = PREFIX_RESOURCE + "burnTool";
     public static final String SHADE_NOISE_TOOL = PREFIX_RESOURCE + "shadeNoiseTool";
     public static final String COLOUR_NOISE_TOOL = PREFIX_RESOURCE + "colourNoiseTool";
+    public static final String HUE_TOOL = PREFIX_RESOURCE + "hueTool";
+    public static final String HUE_TOOL_TIP = PREFIX_RESOURCE + "hueToolTip";
     
     //Slots
     public static final String SLOT_SKIN_HEAD = PREFIX_RESOURCE + "slot/skinHead";
