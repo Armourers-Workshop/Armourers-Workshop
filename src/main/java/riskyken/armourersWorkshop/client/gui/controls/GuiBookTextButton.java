@@ -6,6 +6,7 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,10 +23,10 @@ public class GuiBookTextButton extends GuiButtonExt {
         if (this.visible) {
             this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int hoverState = this.getHoverState(this.field_146123_n);
-            int color = UtilColour.getMinecraftColor(8);
+            int color = UtilColour.getMinecraftColor(8, ColourFamily.MINECRAFT);
             
             if (hoverState == 2) {
-                color = UtilColour.getMinecraftColor(7);
+                color = UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT);
             }
             
             String buttonText = this.displayString;

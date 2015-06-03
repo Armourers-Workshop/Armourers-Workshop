@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -72,7 +73,7 @@ public class BlockColourableGlass extends AbstractModBlock implements ITileEntit
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.dye) {
             if (world.isRemote) { return true; }
-            this.setColour(world, x, y, z, UtilColour.getMinecraftColor(-player.getCurrentEquippedItem().getItemDamage() + 15));
+            this.setColour(world, x, y, z, UtilColour.getMinecraftColor(-player.getCurrentEquippedItem().getItemDamage() + 15, ColourFamily.MINECRAFT));
             return true;
         }
         return false;

@@ -3,10 +3,12 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 public class ContainerColourMixer extends Container {
 
@@ -65,6 +67,34 @@ public class ContainerColourMixer extends Container {
         }
 
         return null;
+    }
+    
+    private ColourFamily lastColourFamily;
+    
+    @Override
+    public void addCraftingToCrafters(ICrafting crafter) {
+        super.addCraftingToCrafters(crafter);
+        crafter.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
+        lastColourFamily = tileEntityColourMixer.getColourFamily();
+    }
+    
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        for (int i = 0; i < crafters.size(); i++) {
+            ICrafting crafter = (ICrafting) crafters.get(i);
+            if (lastColourFamily != tileEntityColourMixer.getColourFamily()) {
+                crafter.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
+            }
+        }
+        lastColourFamily = tileEntityColourMixer.getColourFamily();
+    }
+    
+    @Override
+    public void updateProgressBar(int id, int data) {
+        if (id == 0) {
+            tileEntityColourMixer.setColourFamily(ColourFamily.values()[data]);
+        }
     }
 
     @Override

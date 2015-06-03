@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 public class UtilBlocks {
     public static int determineOrientation(World world, int x, int y, int z, EntityLivingBase entity) {
@@ -37,7 +38,7 @@ public class UtilBlocks {
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour(side);
         }
-        return UtilColour.getMinecraftColor(0);
+        return UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
     }
     
     public static ICubeColour getColourFromTileEntity(World world, int x, int y, int z) {

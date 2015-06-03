@@ -15,19 +15,23 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.gui.controls.GuiColourSelector;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import riskyken.armourersWorkshop.client.gui.controls.GuiHSBSlider;
 import riskyken.armourersWorkshop.client.gui.controls.GuiHSBSlider.HSBSliderType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiHSBSlider.IHSBSliderCallback;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiColourUpdate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
+public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, IDropDownListCallback {
 
     private TileEntityColourMixer tileEntityColourMixer;
     private static final ResourceLocation guiTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/colour-mixer.png");
@@ -36,6 +40,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
     private GuiHSBSlider[] slidersHSB;
     private GuiTextField colourHex;
     private GuiColourSelector colourSelector;
+    private GuiDropDownList colourFamilyList;
     
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
@@ -61,6 +66,15 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         updateHexTextbox();
         colourSelector = new GuiColourSelector(3, this.guiLeft + 5, this.guiTop + 110, 82, 22, 10, 10, 8, guiTexture);
         buttonList.add(colourSelector);
+        colourFamilyList = new GuiDropDownList(4, this.guiLeft + 89, this.guiTop + 110, 82, "", this);
+        for (int i = 0; i < ColourFamily.values().length; i++) {
+            ColourFamily cf = ColourFamily.values()[i];
+            colourFamilyList.addListItem(cf.toString());
+        }
+        ColourFamily cf = tileEntityColourMixer.getColourFamily();
+        colourFamilyList.setListSelectedIndex(cf.ordinal());
+        colourSelector.setColourFamily(cf);
+        buttonList.add(colourFamilyList);
     }
     
     private void checkForColourUpdates() {
@@ -187,5 +201,13 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback {
         if (source.getType() == HSBSliderType.BRIGHTNESS) {
             slidersHSB[1].setBrightness((float) source.getValue());
         }
+    }
+
+    @Override
+    public void onDropDownListChanged(GuiDropDownList dropDownList) {
+        ColourFamily cf = ColourFamily.values()[dropDownList.getListSelectedIndex()];
+        colourSelector.setColourFamily(cf);
+        MessageClientGuiButton message = new MessageClientGuiButton((byte) cf.ordinal());
+        PacketHandler.networkWrapper.sendToServer(message);
     }
 }

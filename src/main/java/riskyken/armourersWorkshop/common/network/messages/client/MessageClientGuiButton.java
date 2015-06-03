@@ -4,7 +4,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
+import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -56,6 +59,11 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             if (message.buttonId == 12) {
                 //armourerBrain.cloneToSide(ForgeDirection.EAST);
             }
+        }
+        
+        if (container != null && container instanceof ContainerColourMixer) {
+            TileEntityColourMixer colourMixer = ((ContainerColourMixer)container).getTileEntity();
+            colourMixer.setColourFamily(ColourFamily.values()[message.buttonId]);
         }
         
         return null;

@@ -64,56 +64,64 @@ public class UtilColour {
         return new Color(r, g, b);
     }
     
-    public static int getMinecraftColor(int meta) {
-        if (meta == 0) {
-            return 16777215;
+    public static enum ColourFamily {
+        MINECRAFT("minecraft"),
+        MINECRAFT_WOOL("wool"),
+        PASTEL("pastel");
+        
+        public final String name;
+        
+        private ColourFamily(String name) {
+            this.name = name;
         }
-        if (meta == 1) {
-            return 14188339;
+        
+        @Override
+        public String toString() {
+            return this.name;
         }
-        if (meta == 2) {
-            return 11685080;
+    }
+    
+    public static int[] minecraftChatColours = {
+        0xFFFFFF, 0xFFFF55, 0xFF55FF, 0xFF5555,
+        0x55FFFF, 0x55FF55, 0x5555FF, 0x555555,
+        0xAAAAAA, 0xFFAA00, 0xAA00AA, 0xAA0000,
+        0x00AAAA, 0x00AA00, 0x0000AA, 0x000000
+    };
+    
+    public static int[] minecraftWoolColours = {
+        0xDDDDDD, 0xDB7D3E, 0xB350BC, 0x6B8AC9,
+        0xB1A627, 0x41AE38, 0xD08499, 0x404040,
+        0x9AA1A1, 0x2E6E89, 0x7E3DB5, 0x2E388D,
+        0x4F321F, 0x35461B, 0x963430, 0x191616
+    };
+    
+    
+    
+    public static int getMinecraftColor(int meta, ColourFamily colourFamily) {
+        switch (colourFamily) {
+        case MINECRAFT:
+            if (meta >= 0 && meta < minecraftChatColours.length) {
+                return minecraftChatColours[meta];
+            }
+            break;
+        case MINECRAFT_WOOL:
+            if (meta >= 0 && meta < minecraftWoolColours.length) {
+                return minecraftWoolColours[meta];
+            }
+            break;
+        case PASTEL:
+            int[] pastelColours = {
+                    0xEEEEEE, 0xFFFFCC, 0xFFCCFF, 0xFFCCCC,
+                    0xDDFFFF, 0xDDFFDD, 0xDDDDFF, 0xDDDDDD,
+                    0xCCCCCC, 0xFFEECC, 0xFFEEFF, 0xFFEEEE,
+                    0xEEFFFF, 0xFFEEFF, 0xFFFFEE, 0x808080
+                    };
+            if (meta >= 0 && meta < pastelColours.length) {
+                return pastelColours[meta];
+            }
+            break;
         }
-        if (meta == 3) {
-            return 6724056;
-        }
-        if (meta == 4) {
-            return 15066419;
-        }
-        if (meta == 5) {
-            return 8375321;
-        }
-        if (meta == 6) {
-            return 15892389;
-        }
-        if (meta == 7) {
-            return 5000268;
-        }
-        if (meta == 8) {
-            return 10066329;
-        }
-        if (meta == 9) {
-            return 5013401;
-        }
-        if (meta == 10) {
-            return 8339378;
-        }
-        if (meta == 11) {
-            return 3361970;
-        }
-        if (meta == 12) {
-            return 6704179;
-        }
-        if (meta == 13) {
-            return 6717235;
-        }
-        if (meta == 14) {
-            return 10040115;
-        }
-        if (meta == 15) {
-            return 1644825;
-        }
-        return 0;
+        return 0x000000;
     }
 
     public static String getMinecraftColorName(int meta) {

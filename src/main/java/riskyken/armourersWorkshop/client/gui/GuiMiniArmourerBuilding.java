@@ -27,6 +27,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -121,11 +122,11 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         String localizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".name";
         localizedName = StatCollector.translateToLocal(localizedName);
         
-        drawTextCentered(localizedName, this.width / 2, 2, UtilColour.getMinecraftColor(0));
+        drawTextCentered(localizedName, this.width / 2, 2, UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT));
         drawTextCentered("WARNING - This block is unfinished.", this.width / 2, 12, 0xFF0000);
         drawTextCentered("!!! Do not use !!!", this.width / 2, 22, 0xFF0000);
-        drawTextCentered(guiSizeLabel, this.width / 2, this.height - 10, UtilColour.getMinecraftColor(0));
-        drawTextCentered(zoomLabel, this.width / 2, this.height - 20, UtilColour.getMinecraftColor(0));
+        drawTextCentered(guiSizeLabel, this.width / 2, this.height - 10, UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT));
+        drawTextCentered(zoomLabel, this.width / 2, this.height - 20, UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT));
     }
     
     private void renderToolButtons() {

@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.gui.controls;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -25,12 +26,12 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
 
     @Override
     public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected) {
-        int fontColour = UtilColour.getMinecraftColor(8);
+        int fontColour = UtilColour.getMinecraftColor(8, ColourFamily.MINECRAFT);
         if (selected && showSelected) {
-            fontColour = UtilColour.getMinecraftColor(4);
+            fontColour = UtilColour.getMinecraftColor(4, ColourFamily.MINECRAFT);
         }
         if (isHovering(fontRenderer, x, y, mouseX, mouseY)) {
-            fontColour = UtilColour.getMinecraftColor(0);
+            fontColour = UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
         }
         fontRenderer.drawString(displayText, x, y, fontColour);
     }

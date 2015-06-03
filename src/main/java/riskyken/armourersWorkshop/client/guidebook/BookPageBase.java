@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -42,7 +43,7 @@ public abstract class BookPageBase implements IBookPage {
         
         int xCenter = 104 / 2 - fontRenderer.getStringWidth(text) / 2;
         fontRenderer.drawString(text, contentWidth - stringWidth,
-                y, UtilColour.getMinecraftColor(7));
+                y, UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT));
     }
     
     protected void drawPageTitleAndNumber(FontRenderer fontRenderer, int pageNumber) {

@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,8 +21,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileEntityColourMixer extends AbstractTileEntityInventory implements IPantable {
     
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
+    private static final String TAG_COLOUR_FAMILY = "colourFamily";
     
     public int colour;
+    private ColourFamily colourFamily;
     
     private boolean itemUpdate;
     private boolean colourUpdate;
@@ -30,6 +33,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         items = new ItemStack[2];
         colour = 16777215;
         colourUpdate = false;
+        colourFamily = ColourFamily.MINECRAFT_WOOL;
     }
     
     @Override
@@ -62,6 +66,15 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
             markDirty();
         }
     }
+    
+    public void setColourFamily(ColourFamily colourFamily) {
+        this.colourFamily = colourFamily;
+        markDirty();
+    }
+    
+    public ColourFamily getColourFamily() {
+        return colourFamily;
+    }
 
     @Override
     public String getInventoryName() {
@@ -84,12 +97,14 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
+        colourFamily = ColourFamily.values()[compound.getInteger(TAG_COLOUR_FAMILY)];
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
+        compound.setInteger(TAG_COLOUR_FAMILY, colourFamily.ordinal());
     }
 
     @Override

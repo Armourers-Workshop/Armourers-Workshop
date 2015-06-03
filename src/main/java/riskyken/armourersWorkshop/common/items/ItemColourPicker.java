@@ -32,6 +32,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 import com.mojang.authlib.GameProfile;
 
@@ -162,7 +163,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
         textureY += shiftY;
         
         BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
-        int colour = UtilColour.getMinecraftColor(0);
+        int colour = UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
         if (playerSkin != null) {
             colour = playerSkin.getRGB(textureX, textureY);
         }
