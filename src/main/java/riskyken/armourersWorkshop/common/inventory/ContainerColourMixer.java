@@ -18,8 +18,8 @@ public class ContainerColourMixer extends Container {
             TileEntityColourMixer tileEntityColourMixer) {
         this.tileEntityColourMixer = tileEntityColourMixer;
 
-        addSlotToContainer(new SlotColourTool(tileEntityColourMixer, 0, 144, 39));
-        addSlotToContainer(new SlotOutput(tileEntityColourMixer, 1, 144, 80));
+        addSlotToContainer(new SlotColourTool(tileEntityColourMixer, 0, 144, 32));
+        addSlotToContainer(new SlotOutput(tileEntityColourMixer, 1, 144, 73));
 
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 209));

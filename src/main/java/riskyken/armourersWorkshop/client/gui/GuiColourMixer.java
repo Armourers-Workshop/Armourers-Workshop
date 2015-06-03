@@ -184,7 +184,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         float blue = (float) colour.getBlue() / 255;
         GL11.glColor4f(red, green, blue, 1F);
         
-        drawTexturedModalRect(this.guiLeft + 146, this.guiTop + 59, 146, 59, 12, 13);
+        drawTexturedModalRect(this.guiLeft + 146, this.guiTop + 52, 146, 52, 12, 13);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         colourHex.drawTextBox();
     }
