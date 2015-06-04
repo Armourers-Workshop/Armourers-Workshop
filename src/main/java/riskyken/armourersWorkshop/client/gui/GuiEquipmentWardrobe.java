@@ -27,6 +27,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiUpdateNakedInfo;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.EntityNakedInfo.PlayerSkinTextureType;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.client.config.GuiButtonExt;
@@ -103,12 +104,10 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         autoButton = new GuiButtonExt(0, this.guiLeft + 27, this.guiTop + 116, 80, 18, GuiHelper.getLocalizedControlName(guiName, "autoColour"));
         skinList = new GuiList(this.guiLeft + 165, this.guiTop + 30, 80, 96, 12);
         skinList.clearList();
-        skinList.addListItem(new GuiFileListItem("Default", "", true));
-        skinList.addListItem(new GuiFileListItem("None", "", true));
-        skinList.setSelectedIndex(0);
-        if (skinInfo.getNakedInfo().isNaked) {
-            skinList.setSelectedIndex(1);
+        for (int i = 0; i < PlayerSkinTextureType.values().length; i++) {
+            skinList.addListItem(new GuiFileListItem(PlayerSkinTextureType.values()[i].toString(), "", true));
         }
+        skinList.setSelectedIndex(skinInfo.getNakedInfo().skinTextureType.ordinal());
         
         armourOverrideCheck = new GuiCheckBox[4];
         armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 110, this.guiTop + 17, "Head armour render?", !armourOverride.get(0));
@@ -138,7 +137,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         super.mouseClicked(mouseX, mouseY, button);
         if (skinList.mouseClicked(mouseX, mouseY, button)) {
             String skinName = skinList.getSelectedListEntry().getDisplayName();
-            nakedInfo.isNaked = skinList.getSelectedIndex() == 1;
+            nakedInfo.skinTextureType = PlayerSkinTextureType.fromOrdinal(skinList.getSelectedIndex());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(nakedInfo));
         }
     }
@@ -210,8 +209,19 @@ public class GuiEquipmentWardrobe extends GuiContainer {
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(nakedInfo));
         }
         if (button.id == 0) {
-            skinInfo.autoColourSkin((AbstractClientPlayer) this.player);
-            skinInfo.autoColourHair((AbstractClientPlayer) this.player);
+            int newSkinColour = skinInfo.autoColourSkin((AbstractClientPlayer) this.player);
+            int newHairColour = skinInfo.autoColourHair((AbstractClientPlayer) this.player);
+            
+            EntityNakedInfo newNakedInfo = new EntityNakedInfo();
+            newNakedInfo.skinTextureType = this.nakedInfo.skinTextureType;
+            newNakedInfo.skinColour = newSkinColour;
+            newNakedInfo.hairColour = newHairColour;
+            newNakedInfo.pantsColour = this.nakedInfo.pantsColour;
+            newNakedInfo.pantStripeColour = this.nakedInfo.pantStripeColour;
+            newNakedInfo.armourOverride = this.nakedInfo.armourOverride;
+            newNakedInfo.headOverlay = this.nakedInfo.headOverlay;
+            
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiUpdateNakedInfo(newNakedInfo));
         }
     }
 

@@ -19,7 +19,7 @@ public class EntityNakedInfo {
     private static final String TAG_LIMIT_LIMBS = "limitLimbs";
     
     /** Is the players naked skin active? */
-    public boolean isNaked;
+    public PlayerSkinTextureType skinTextureType;
     /** Colour use for the players naked skin */
     public int skinColour;
     /** Colour use for the players hair */
@@ -36,7 +36,7 @@ public class EntityNakedInfo {
     public boolean limitLimbs;
     
     public EntityNakedInfo() {
-        isNaked = false;
+        skinTextureType = PlayerSkinTextureType.DEFAULT;
         skinColour = Color.decode("#F9DFD2").getRGB();
         hairColour = Color.decode("#804020").getRGB();
         pantsColour = Color.decode("#FCFCFC").getRGB();
@@ -47,7 +47,7 @@ public class EntityNakedInfo {
     }
     
     public void saveNBTData(NBTTagCompound compound) {
-        compound.setBoolean(TAG_NAKED, this.isNaked);
+        compound.setInteger(TAG_NAKED, this.skinTextureType.ordinal());
         compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
         compound.setInteger(TAG_HAIR_COLOUR, this.hairColour);
         compound.setInteger(TAG_PANTS_COLOUR, this.pantsColour);
@@ -60,7 +60,7 @@ public class EntityNakedInfo {
     }
     
     public void loadNBTData(NBTTagCompound compound) {
-        this.isNaked = compound.getBoolean(TAG_NAKED);
+        this.skinTextureType = PlayerSkinTextureType.fromOrdinal(compound.getInteger(TAG_NAKED));
         if (compound.hasKey(TAG_SKIN_COLOUR)) {
             this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
         }
@@ -85,7 +85,7 @@ public class EntityNakedInfo {
     }
     
     public void fromBytes(ByteBuf buf) {
-        this.isNaked = buf.readBoolean();
+        this.skinTextureType = PlayerSkinTextureType.fromOrdinal(buf.readInt());
         this.skinColour = buf.readInt();
         this.hairColour = buf.readInt();
         this.pantsColour = buf.readInt();
@@ -99,7 +99,7 @@ public class EntityNakedInfo {
     }
 
     public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(this.isNaked);
+        buf.writeInt(this.skinTextureType.ordinal());
         buf.writeInt(this.skinColour);
         buf.writeInt(this.hairColour);
         buf.writeInt(this.pantsColour);
@@ -109,5 +109,26 @@ public class EntityNakedInfo {
         }
         buf.writeBoolean(this.headOverlay);
         buf.writeBoolean(this.limitLimbs);
+    }
+    
+    public enum PlayerSkinTextureType {
+        DEFAULT("Default"),
+        NONE("None"),
+        LEGS("Legs");
+        
+        private final String name;
+        
+        private PlayerSkinTextureType(String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public String toString() {
+            return this.name;
+        }
+        
+        public static PlayerSkinTextureType fromOrdinal(int ordinal) {
+            return PlayerSkinTextureType.values()[ordinal];
+        }
     }
 }

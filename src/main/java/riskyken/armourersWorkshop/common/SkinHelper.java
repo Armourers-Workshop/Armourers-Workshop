@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
 import org.apache.commons.io.IOUtils;
@@ -29,18 +28,6 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 
 public final class SkinHelper {
-
-    public static void uploadTexture(ResourceLocation resourceLocation, BufferedImage bufferedImage) {
-        ITextureObject textureObject = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
-        if (textureObject != null & bufferedImage != null) {
-            uploadTexture(textureObject, bufferedImage);
-        }
-    }
-    
-    private static void uploadTexture(ITextureObject textureObject, BufferedImage bufferedImage) {
-        TextureUtil.uploadTextureImage(textureObject.getGlTextureId(), bufferedImage);
-    }
-
     /*
      * Based on @KitsuneKihira texture helper class.
      * https://github.com/kihira/FoxLib/blob/2946cd6033d3039151064ceccfb8d38612d0af02/src/main/scala/kihira/foxlib/client/TextureHelper.scala#L28
@@ -109,18 +96,7 @@ public final class SkinHelper {
             skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
             resourcelocation = getSkinResourceLocation(gameProfile, MinecraftProfileTexture.Type.SKIN);
         }
-        
-        if (skinInfo != null) {
-            if (skinInfo.getNakedInfo().isNaked) {
-                if (!skinInfo.bindNomalSkin()) {
-                    Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-                }
-            } else {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-            }
-        } else {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(resourcelocation);
-        }
+        Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
     }
     
     public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile, MinecraftProfileTexture.Type type) {
