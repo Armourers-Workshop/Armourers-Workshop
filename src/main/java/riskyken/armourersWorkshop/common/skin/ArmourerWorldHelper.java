@@ -54,7 +54,7 @@ public final class ArmourerWorldHelper {
                     
                     int x = xCoord + ix + -offset.getX() + buildSpace.getX();
                     int y = yCoord + iy + -offset.getY();
-                    int z = zCoord + iz + -offset.getZ() + buildSpace.getZ();
+                    int z = zCoord + iz + offset.getZ() + buildSpace.getZ();
                     
                     int xOrigin = -ix + -buildSpace.getX();
                     int yOrigin = -iy + -buildSpace.getY();
@@ -125,7 +125,7 @@ public final class ArmourerWorldHelper {
             
             int xOrigin = -offset.getX();
             int yOrigin = -offset.getY() + -buildSpace.getY();
-            int zOrigin = -offset.getZ();
+            int zOrigin = offset.getZ();
             
             loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction);
         }
@@ -182,7 +182,7 @@ public final class ArmourerWorldHelper {
                 for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
                     int xTar = x + ix + -offset.getX() + guideSpace.getX();
                     int yTar = y + iy + -offset.getY() + guideSpace.getY() - buildSpace.getY();
-                    int zTar = z + iz + -offset.getZ() + guideSpace.getZ();
+                    int zTar = z + iz + offset.getZ() + guideSpace.getZ();
                     
                     //TODO Set skinPart to left and right legs for skirt.
                     ISkinPartType guidePart = skinPart;
@@ -230,7 +230,7 @@ public final class ArmourerWorldHelper {
                 for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
                     int xTar = x + ix + -offset.getX() + guideSpace.getX();
                     int yTar = y + iy + -offset.getY() + guideSpace.getY() - buildSpace.getY();
-                    int zTar = z + iz + -offset.getZ() + guideSpace.getZ();
+                    int zTar = z + iz + offset.getZ() + guideSpace.getZ();
                     
                     if (world.blockExists(xTar, yTar, zTar)) {
                         if (world.getBlock(xTar, yTar, zTar) == ModBlocks.boundingBox) {
@@ -262,7 +262,7 @@ public final class ArmourerWorldHelper {
                 for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
                     int xTar = x + ix + -offset.getX() + buildSpace.getX();
                     int yTar = y + iy + -offset.getY();
-                    int zTar = z + iz + -offset.getZ() + buildSpace.getZ();
+                    int zTar = z + iz + offset.getZ() + buildSpace.getZ();
                     
                     if (world.blockExists(xTar, yTar, zTar)) {
                         Block block = world.getBlock(xTar, yTar, zTar);

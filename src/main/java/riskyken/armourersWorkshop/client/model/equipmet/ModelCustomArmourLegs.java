@@ -65,6 +65,8 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
                 renderLeftLeg(part, SCALE);
             } else if (part.getPartType().getPartName().equals("rightLeg")) {
                 renderRightLeg(part, SCALE);
+            } else if (part.getPartType().getPartName().equals("skirt")) {
+                renderSkirt(part, SCALE);
             }
             
             GL11.glPopMatrix();
@@ -97,6 +99,20 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
+        renderPart(part, scale);
+        GL11.glPopMatrix();
+    }
+    
+    private void renderSkirt(SkinPart part, float scale) {
+        GL11.glPushMatrix();
+        GL11.glColor3f(1F, 1F, 1F);
+      
+        GL11.glTranslated(0, 12 * scale, 0);
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
+        if (isSneak) {
+            GL11.glTranslated(0, -3 * scale, 4 * scale);
+        }
+        
         renderPart(part, scale);
         GL11.glPopMatrix();
     }

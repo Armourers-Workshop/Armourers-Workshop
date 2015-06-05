@@ -67,11 +67,14 @@ public class ModelRendererAttachment extends ModelRenderer {
         
         data.onUsed();
         int size = data.getParts().size();
+        //ModLogger.log("start");
         for (int i = 0; i < size; i++) {
             SkinPart partData = data.getParts().get(i);
+            //ModLogger.log(partData.getPartType());
             if (partData.getPartType() == skinPart) {
+                
                 GL11.glPushMatrix();
-                if (skinType == SkinTypeRegistry.skinSkirt && skinPart.getRegistryName().equals("armourers:skirt.base")) {
+                if (skinType == SkinTypeRegistry.skinLegs && skinPart.getRegistryName().equals("armourers:legs.skirt")) {
                     GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
                     GL11.glTranslatef(-2 * scale, 0, 0);
                     if (player.isSneaking()) {
@@ -85,6 +88,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 GL11.glPopMatrix();
                 break;
             }
+            
         }
         
         if (ClientProxy.shadersModLoaded) {

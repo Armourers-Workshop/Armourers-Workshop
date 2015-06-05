@@ -14,6 +14,7 @@ public class SkinLegs extends AbstractSkinTypeBase {
         skinParts = new ArrayList<ISkinPartType>();
         skinParts.add(new SkinLegsPartLeftLeg(this));
         skinParts.add(new SkinLegsPartRightLeg(this));
+        skinParts.add(new SkinLegsPartSkirt(this));
     }
     
     @Override

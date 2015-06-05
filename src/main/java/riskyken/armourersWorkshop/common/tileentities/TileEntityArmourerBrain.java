@@ -17,8 +17,8 @@ import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -135,8 +135,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         
         SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stackInput);
 
-        if (skinType != null && skinType != skinData.skinType) {
+        if (skinType == null) {
             return;
+        }
+        if (skinType != skinData.skinType) {
+            if (!(skinType == SkinTypeRegistry.skinLegs && skinData.skinType == SkinTypeRegistry.skinSkirt)) {
+                return;
+            }
         }
         
         int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);

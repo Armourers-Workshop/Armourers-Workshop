@@ -136,13 +136,19 @@ public final class EquipmentModelRenderer {
             playerEquipmentMap.remove(playerPointer);
         }
     }
-
-    private boolean playerHasCustomArmourType(PlayerPointer playerPointer, ISkinType skinType) {
+    
+    private boolean playerHasSkirtOn(PlayerPointer playerPointer) {
         if (!playerEquipmentMap.containsKey(playerPointer)) {
             return false;
         }
         EntityEquipmentData equipmentData = playerEquipmentMap.get(playerPointer);
-        return equipmentData.haveEquipment(skinType);
+        if (!equipmentData.haveEquipment(SkinTypeRegistry.skinLegs)) {
+            return false;
+        }
+        int skinId = equipmentData.getEquipmentId(SkinTypeRegistry.skinLegs);
+        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinId);
+        //TODO check for skirt data
+        return true;
     }
     
     ItemStack equippedStack = null;
@@ -161,7 +167,7 @@ public final class EquipmentModelRenderer {
             playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.rightArm")));
             playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.leftLeg")));
             playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.rightLeg")));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinSkirt, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:skirt.base")));
+            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.skirt")));
             playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.leftFoot")));
             playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));            
             
@@ -173,7 +179,7 @@ public final class EquipmentModelRenderer {
         }
         PlayerPointer playerPointer = new PlayerPointer(player);
         
-        if (playerHasCustomArmourType(playerPointer, SkinTypeRegistry.skinSkirt)) {
+        if (playerHasSkirtOn(playerPointer)) {
             if (!Loader.isModLoaded("SmartMoving")) {
                 PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
                 if (skinInfo != null && skinInfo.getNakedInfo().limitLimbs) {
