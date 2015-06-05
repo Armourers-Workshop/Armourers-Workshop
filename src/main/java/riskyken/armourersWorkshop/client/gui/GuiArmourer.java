@@ -61,13 +61,17 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
         GuiDropDownList dropDownList = new GuiDropDownList(0, guiLeft + 5, guiTop + 16, 50, "", this);
         ArrayList<ISkinType> skinList = str.getRegisteredSkinTypes();
+        int skinCount = 0;
         for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
-            String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
-            String skinRegistryName = skinType.getRegistryName();
-            dropDownList.addListItem(skinLocalizedName, skinRegistryName, skinType != SkinTypeRegistry.skinBow);
-            if (skinType == armourerBrain.getSkinType()) {
-                dropDownList.setListSelectedIndex(i);
+            if (skinType != SkinTypeRegistry.skinSkirt) {
+                String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
+                String skinRegistryName = skinType.getRegistryName();
+                dropDownList.addListItem(skinLocalizedName, skinRegistryName, skinType != SkinTypeRegistry.skinBow);
+                if (skinType == armourerBrain.getSkinType()) {
+                    dropDownList.setListSelectedIndex(skinCount);
+                }
+                skinCount++;
             }
         }
         buttonList.add(dropDownList);

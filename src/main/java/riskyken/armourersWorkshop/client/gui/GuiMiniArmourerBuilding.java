@@ -59,14 +59,18 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         
         dropDownSkins = new GuiDropDownList(2, 2, 2, 80, "", this);
         ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        int skinCount = 0;
         for (int i = 0; i < skinTypes.size(); i++) {
             ISkinType skinType = skinTypes.get(i);
-            String skinLocalizedName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
-            String skinRegistryName = skinType.getRegistryName();
-            dropDownSkins.addListItem(skinLocalizedName, skinRegistryName, true);
-            if (skinType == tileEntity.getSkinType()) {
-                dropDownSkins.setListSelectedIndex(i);
-                updatePartsDropDown(skinType);
+            if (skinType != SkinTypeRegistry.skinSkirt) {
+                String skinLocalizedName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
+                String skinRegistryName = skinType.getRegistryName();
+                dropDownSkins.addListItem(skinLocalizedName, skinRegistryName, true);
+                if (skinType == tileEntity.getSkinType()) {
+                    dropDownSkins.setListSelectedIndex(skinCount);
+                    updatePartsDropDown(skinType);
+                }
+                skinCount++;
             }
         }
         
