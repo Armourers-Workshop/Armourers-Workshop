@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -64,6 +65,24 @@ public class BlockDoll extends AbstractModBlock implements ITileEntityProvider {
             }
             
         }
+    }
+    
+    @Override
+    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+        if (world.isRemote) {
+            return false;
+        }
+        
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntityMannequin) {
+            int rotation = ((TileEntityMannequin)te).getRotation();
+            rotation++;
+            if (rotation > 15) {
+                rotation = 0;
+            }
+            ((TileEntityMannequin)te).setRotation(rotation);
+        }
+        return true;
     }
     
     @Override

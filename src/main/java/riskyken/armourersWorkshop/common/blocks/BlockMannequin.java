@@ -20,6 +20,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
@@ -69,6 +70,29 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
             }
         }
         world.setBlock(x, y + 1, z, this, 1, 2);
+    }
+    
+    @Override
+    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+        if (world.isRemote) {
+            return false;
+        }
+        
+        int meta = world.getBlockMetadata(x, y, z);
+        int yOffset = 0;
+        if (meta == 1) {
+            yOffset = -1;
+        }
+        TileEntity te = world.getTileEntity(x, y + yOffset, z);
+        if (te != null && te instanceof TileEntityMannequin) {
+            int rotation = ((TileEntityMannequin)te).getRotation();
+            rotation++;
+            if (rotation > 15) {
+                rotation = 0;
+            }
+            ((TileEntityMannequin)te).setRotation(rotation);
+        }
+        return true;
     }
     
     @Override
