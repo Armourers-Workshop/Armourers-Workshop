@@ -17,7 +17,7 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
     
     public SkinHeadPartBase(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-10, -12, -10, 20, 32, 20);
+        this.buildingSpace = new Rectangle3D(-16, -12, -16, 32, 32, 32);
         this.guideSpace = new Rectangle3D(-4, 0, -4, 8, 8, 8);
         this.offset = new Point3D(0, 0, 0);
     }
