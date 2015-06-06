@@ -15,6 +15,13 @@ buildscript {
     }
 }
 
+repositories {
+    ivy {
+        name "BuildCraft"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
+}
+
 apply plugin: 'forge'
 
 if (System.env.BUILD_NUMBER != null) {
@@ -38,7 +45,7 @@ minecraft {
 }
 
 dependencies {
-	compile "com.mod-buildcraft:buildcraft:7.0.6:dev"
+	compile name: "buildcraft", version: "${buildcraftVersion}", classifier: "dev"
 }
 
 processResources {
