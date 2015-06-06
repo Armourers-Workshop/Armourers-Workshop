@@ -93,7 +93,9 @@ public class ArmourersWorkshop {
     
     @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
-        SkinDataCache.INSTANCE.clearAll();
+        if (SkinDataCache.INSTANCE != null) {
+            SkinDataCache.INSTANCE.clearAll();
+        }
     }
     
     @Mod.EventHandler
