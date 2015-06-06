@@ -19,7 +19,7 @@ repositories {
     ivy {
         name "BuildCraft"
         artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-	}
+    }
 }
 
 apply plugin: 'forge'
@@ -41,11 +41,11 @@ minecraft {
     replace "@VERSION@", project.version
 
     replaceIn "api/common/lib/LibApi.java"
-	replace "@API_VERSION@", apiVersion
+    replace "@API_VERSION@", apiVersion
 }
 
 dependencies {
-	compile name: "buildcraft", version: "${buildcraftVersion}", classifier: "dev"
+    compile name: "buildcraft", version: "${buildcraftVersion}", classifier: "dev"
 }
 
 processResources {
