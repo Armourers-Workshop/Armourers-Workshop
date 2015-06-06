@@ -37,6 +37,10 @@ minecraft {
 	replace "@API_VERSION@", apiVersion
 }
 
+dependencies {
+	compile "com.mod-buildcraft:buildcraft:7.0.6:dev"
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
