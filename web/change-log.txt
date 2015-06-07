@@ -1,3 +1,13 @@
+Build 0.33.0
+Added recipes in the guide book.
+Added hue tool.
+Added colour family selector to the colour mixer.
+Added skin support for BuildCraft robots.
+Added ability for mannequins and dolls to be rotated with any BuildCraft compatible wrench.
+Added more build space around the head and arms.
+Changed leg skins to also hold skirts.
+Updated Chinese localization.
+
 Build 0.32.0
 Added weapon overrides to the configuration file. (weapons that can be skinned can now be added/removed here)
 Added the skinning table. (replaces putting a sword and skin in a crafting table)
