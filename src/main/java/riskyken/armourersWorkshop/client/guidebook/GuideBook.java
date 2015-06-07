@@ -53,6 +53,7 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourPicker));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.soap));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.wandOfStyle));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.hueTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.guideBook));
         
         addChapter(chapterContents);

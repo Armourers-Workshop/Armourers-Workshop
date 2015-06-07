@@ -61,6 +61,15 @@ public final class ModItemRecipes {
             'd', Blocks.cobblestone,
             's', "stickWood"});
         
+        CraftingManager.addShapedRecipe(new ItemStack(ModItems.hueTool, 1, 0), new Object[] {
+            " wd",
+            " iw",
+            "s  ",
+            'w', ModBlocks.colourable,
+            'i', Items.iron_ingot,
+            'd', "dyeGray",
+            's', "stickWood"});
+        
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.colourNoiseTool, 1, 0), new Object[] {
             " wd",
             " iw",
