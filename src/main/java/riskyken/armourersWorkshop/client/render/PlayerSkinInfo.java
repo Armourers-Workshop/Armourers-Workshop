@@ -15,7 +15,6 @@ import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo.PlayerSkinTextureType;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
@@ -161,7 +160,6 @@ public class PlayerSkinInfo {
         
         if (nakedSkinLocation != null) {
             mc.renderEngine.deleteTexture(nakedSkinLocation);
-            ModLogger.log("removing old skin");
         }
         
         SkinTextureObject sto = new SkinTextureObject(playerNakedSkin);
