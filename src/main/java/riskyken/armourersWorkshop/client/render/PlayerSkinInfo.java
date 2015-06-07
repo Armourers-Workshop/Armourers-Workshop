@@ -167,7 +167,6 @@ public class PlayerSkinInfo {
         SkinTextureObject sto = new SkinTextureObject(playerNakedSkin);
         nakedSkinLocation = new ResourceLocation(LibModInfo.ID.toLowerCase(), String.valueOf(playerNakedSkin.hashCode()));
         mc.renderEngine.loadTexture(nakedSkinLocation, sto);
-        ModLogger.log("created naked skin for type " + nakedInfo.skinTextureType);
         hasNakedSkin = true;
     }
     
