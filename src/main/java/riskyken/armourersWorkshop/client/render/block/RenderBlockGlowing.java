@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.mcWrapper.client.IRenderBuffer;
 import riskyken.mcWrapper.client.RenderBridge;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;

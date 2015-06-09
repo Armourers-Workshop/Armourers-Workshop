@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.api.common.painting;
 
 import net.minecraft.world.IBlockAccess;
-import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 
 public interface IPantableBlock {
     

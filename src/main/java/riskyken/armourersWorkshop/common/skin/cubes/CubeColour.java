@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class CubeColour implements ICubeColour {

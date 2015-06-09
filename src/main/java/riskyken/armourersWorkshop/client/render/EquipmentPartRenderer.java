@@ -9,10 +9,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.mcWrapper.client.IRenderBuffer;
