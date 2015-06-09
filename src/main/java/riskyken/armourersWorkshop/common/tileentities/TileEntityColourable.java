@@ -8,9 +8,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
-import riskyken.armourersWorkshop.common.skin.cubes.ICubeColour;
 
 public class TileEntityColourable extends TileEntity implements IPantable {
     

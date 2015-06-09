@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.cubes;
+package riskyken.armourersWorkshop.api.common.skin.cubes;
 
 import io.netty.buffer.ByteBuf;
 

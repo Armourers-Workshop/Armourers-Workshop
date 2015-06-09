@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 

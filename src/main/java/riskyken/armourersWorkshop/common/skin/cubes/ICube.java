@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.BitSet;
 
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 
 public interface ICube {
