@@ -6,7 +6,7 @@ import java.util.BitSet;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.PositionTextureVertex;
-import riskyken.mcWrapper.client.IRenderBuffer;
+import riskyken.minecraftWrapper.client.IRenderBuffer;
 
 public class ModelEquipmentBox extends ModelBox {
     

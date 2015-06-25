@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
-import riskyken.mcWrapper.client.IRenderBuffer;
+import riskyken.minecraftWrapper.client.IRenderBuffer;
 
 public class ColouredVertexWithUV {
     

@@ -1,4 +1,4 @@
-package riskyken.mcWrapper.client;
+package riskyken.minecraftWrapper.client;
 
 import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;

@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.guidebook;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.minecraftWrapper.common.registry.ModRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -51,10 +52,10 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.shadeNoiseTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourNoiseTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourPicker));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.soap));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.wandOfStyle));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.soap)));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.wandOfStyle)));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.hueTool));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.guideBook));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.guideBook)));
         
         addChapter(chapterContents);
         addChapter(chapterIntroduction);

@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.item.Item;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.minecraftWrapper.common.item.ModItem;
+import riskyken.minecraftWrapper.common.registry.ModRegistry;
 
 public class ModItems {
     public static Item equipmentSkinTemplate;
@@ -14,11 +16,11 @@ public class ModItems {
     public static Item colourNoiseTool;
     public static Item shadeNoiseTool;
     public static Item mannequinTool;
-    public static Item guideBook;
+    public static ModItem guideBook;
     public static Item armourContainerItem;
     public static Item[] armourContainer;
-    public static Item wandOfStyle;
-    public static Item soap;
+    public static ModItem wandOfStyle;
+    public static ModItem soap;
     public static Item hueTool;
     
     public static void init() {
@@ -42,5 +44,9 @@ public class ModItems {
         wandOfStyle = new ItemWandOfStyle();
         soap = new ItemSoap();
         hueTool = new ItemHueTool();
+        
+        ModRegistry.registerItem(guideBook);
+        ModRegistry.registerItem(wandOfStyle);
+        ModRegistry.registerItem(soap);
     }
 }

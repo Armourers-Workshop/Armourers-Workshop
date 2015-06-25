@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.minecraftWrapper.common.registry.ModRegistry;
 
 public final class ModItemRecipes {
 
@@ -93,11 +94,11 @@ public final class ModItemRecipes {
             "cc",
             'c', ModBlocks.colourable});
         
-        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.guideBook, 1, 0), new Object[] {
+        CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.guideBook), 1, 0), new Object[] {
             new ItemStack(Items.book, 1),
             new ItemStack(ModBlocks.colourable, 1)});
         
-        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.soap, 1, 0), new Object[] {
+        CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.soap), 1, 0), new Object[] {
             new ItemStack(Items.water_bucket, 1),
             new ItemStack(Items.rotten_flesh, 1),
             new ItemStack(Items.slime_ball, 1)});

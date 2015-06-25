@@ -1,13 +1,14 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.item.ItemStack;
+import java.util.ArrayList;
+
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.minecraftWrapper.common.item.ItemStackPointer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemSoap extends AbstractModItem {
+public class ItemSoap extends AbstractModItemNew {
 
     public ItemSoap() {
         super(LibItemNames.SOAP);
@@ -15,12 +16,12 @@ public class ItemSoap extends AbstractModItem {
     
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.SOAP);
+    public void registerIcons(ArrayList<String> iconList) {
+        iconList.add(LibItemResources.SOAP);
     }
     
     @Override
-    public int getColorFromItemStack(ItemStack stack, int p_82790_2_) {
+    public int getColorFromItemStack(ItemStackPointer stack, int pass) {
         return 0xFFFF7FD2;
     }
 }

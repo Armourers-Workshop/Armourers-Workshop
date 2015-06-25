@@ -15,8 +15,8 @@ import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.mcWrapper.client.IRenderBuffer;
-import riskyken.mcWrapper.client.RenderBridge;
+import riskyken.minecraftWrapper.client.IRenderBuffer;
+import riskyken.minecraftWrapper.client.RenderBridge;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

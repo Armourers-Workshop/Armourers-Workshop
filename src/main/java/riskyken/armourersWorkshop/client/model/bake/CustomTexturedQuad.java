@@ -6,7 +6,7 @@ import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.model.TexturedQuad;
 import net.minecraft.util.Vec3;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.mcWrapper.client.IRenderBuffer;
+import riskyken.minecraftWrapper.client.IRenderBuffer;
 
 public class CustomTexturedQuad extends TexturedQuad {
 

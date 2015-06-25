@@ -29,7 +29,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
-import riskyken.armourersWorkshop.common.items.ItemGuideBook;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
@@ -40,6 +40,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.minecraftWrapper.common.registry.ModRegistry;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
@@ -131,7 +132,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.GUIDE_BOOK:
-                if (player.getCurrentEquippedItem().getItem() instanceof ItemGuideBook) {
+                if (player.getCurrentEquippedItem().getItem() == ModRegistry.getMinecraftItem(ModItems.guideBook)) {
                     return new GuiGuideBook(player.getCurrentEquippedItem());
                 }
                 break;
