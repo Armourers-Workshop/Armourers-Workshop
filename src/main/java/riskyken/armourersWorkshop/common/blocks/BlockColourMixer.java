@@ -92,6 +92,9 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+            return false;
+        }
         if (!world.isRemote) {
             FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.COLOUR_MIXER, world, x, y, z);
         }

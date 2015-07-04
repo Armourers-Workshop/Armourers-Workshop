@@ -26,6 +26,9 @@ public class BlockMiniArmourer extends AbstractModBlock implements ITileEntityPr
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+            return false;
+        }
         if (!world.isRemote) {
             if (!player.isSneaking()) {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MINI_ARMOURER, world, x, y, z);

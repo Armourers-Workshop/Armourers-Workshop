@@ -185,6 +185,9 @@ public class BlockMannequin extends AbstractModBlock implements ITileEntityProvi
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+            return false;
+        }
         if (!world.isRemote) {
             if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
                 return false;

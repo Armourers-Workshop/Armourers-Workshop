@@ -46,6 +46,9 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+            return false;
+        }
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.dye) {
             if (world.isRemote) { return true; }
             this.setColour(world, x, y, z, UtilColour.getMinecraftColor(-player.getCurrentEquippedItem().getItemDamage() + 15, ColourFamily.MINECRAFT));
