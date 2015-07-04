@@ -9,9 +9,11 @@ public final class LibBlockResources {
     public static final String ARMOURER_SIDE = PREFIX_RESOURCE + "armourerSide";
     public static final String ARMOURER_TOP_BOTTOM = PREFIX_RESOURCE + "armourerTopBottom";
     
-    public static final String EQUIPMENT_LIBRARY_SIDE = PREFIX_RESOURCE + "equipmentLibrarySide";
     public static final String EQUIPMENT_LIBRARY_TOP = PREFIX_RESOURCE + "equipmentLibraryTop";
-    public static final String EQUIPMENT_LIBRARY_BOTTOM = PREFIX_RESOURCE + "equipmentLibraryBottom";
+    public static final String EQUIPMENT_LIBRARY_1_SIDE = PREFIX_RESOURCE + "equipmentLibrary1Side";
+    public static final String EQUIPMENT_LIBRARY_1_BOTTOM = PREFIX_RESOURCE + "equipmentLibrary1Bottom";
+    public static final String EQUIPMENT_LIBRARY_0_SIDE = PREFIX_RESOURCE + "equipmentLibrary0Side";
+    public static final String EQUIPMENT_LIBRARY_0_BOTTOM = PREFIX_RESOURCE + "equipmentLibrary0Bottom";
     
     public static final String COLOURABLE = PREFIX_RESOURCE + "colourable";
     public static final String COLOURABLE_GLASS = PREFIX_RESOURCE + "colourableGlass";

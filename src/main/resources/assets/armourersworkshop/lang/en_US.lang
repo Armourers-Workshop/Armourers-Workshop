@@ -1,7 +1,8 @@
 # Block names
 tile.armourersworkshop:armourerBrain.name=Armourer
 tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
-tile.armourersworkshop:armourLibrary.name=Equipment Library
+tile.armourersworkshop:armourLibrary0.name=Equipment Library
+tile.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
 tile.armourersworkshop:colourable.name=Equipment Cube
 tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
 tile.armourersworkshop:colourableGlass.name=Glass Equipment Cube
@@ -14,7 +15,8 @@ tile.armourersworkshop:skinningTable.name=Skinning Table
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
 tile.armourersworkshop:miniArmourer.flavour=Unfinished.
-tile.armourersworkshop:armourLibrary.flavour=Save and load equipment templates from disk.
+tile.armourersworkshop:armourLibrary0.flavour=Save and load equipment templates from disk.
+tile.armourersworkshop:armourLibrary1.flavour=Save and load equipment templates from disk.%nCreative mode only.
 tile.armourersworkshop:colourable.flavour=Main building block for custom equipment.%n(Paintable)
 tile.armourersworkshop:colourableGlowing.flavour=Glow in the dark equipment cubes!%n(Paintable)
 tile.armourersworkshop:colourableGlass.flavour=Transparent equipment cube.%n(Paintable)
@@ -117,7 +119,8 @@ skinPartType.armourers:bow.arrow.name=Arrow
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer
-inventory.armourersworkshop:armourLibrary.name=Equipment Library
+inventory.armourersworkshop:armourLibrary0.name=Equipment Library
+inventory.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)

@@ -6,7 +6,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 public abstract class AbstractModBlock extends Block {
-
+    
     public AbstractModBlock(String name) {
         super(Material.iron);
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);

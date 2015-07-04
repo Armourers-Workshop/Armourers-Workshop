@@ -15,13 +15,15 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 
 public class ContainerArmourLibrary extends Container {
 
-    private TileEntityArmourLibrary armourLibrary;
+    private TileEntityArmourLibrary tileEntity;
     
-    public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
-        this.armourLibrary = armourLibrary;
+    public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary tileEntity) {
+        this.tileEntity = tileEntity;
 
-        addSlotToContainer(new SlotEquipmentSkinTemplate(armourLibrary, 0, 226, 101));
-        addSlotToContainer(new SlotOutput(armourLibrary, 1, 226, 137));
+        if (!tileEntity.isCreativeLibrary()) {
+            addSlotToContainer(new SlotEquipmentSkinTemplate(tileEntity, 0, 226, 101));
+        }
+        addSlotToContainer(new SlotOutput(tileEntity, 1, 226, 137));
 
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 48 + 18 * x, 232));
@@ -76,11 +78,11 @@ public class ContainerArmourLibrary extends Container {
     
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return armourLibrary.isUseableByPlayer(player);
+        return tileEntity.isUseableByPlayer(player);
     }
     
     public TileEntityArmourLibrary getTileEntity() {
-        return armourLibrary;
+        return tileEntity;
     }
     
     public boolean sentList;
@@ -92,7 +94,7 @@ public class ContainerArmourLibrary extends Container {
             if (!sentList) {
                 if (player instanceof EntityPlayerMP) {
                     sentList = true;
-                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(armourLibrary.getFileNames(true)), (EntityPlayerMP) player);
+                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames(true)), (EntityPlayerMP) player);
                 }
             }
         }

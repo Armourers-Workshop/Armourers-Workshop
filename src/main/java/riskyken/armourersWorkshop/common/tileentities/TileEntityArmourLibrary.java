@@ -37,6 +37,14 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         return LibBlockNames.ARMOUR_LIBRARY;
     }
     
+    public boolean isCreativeLibrary() {
+        int meta = getBlockMetadata();
+        if (meta == 1) {
+            return true;
+        }
+        return false;
+    }
+    
     public void sendArmourToClient(String filename, EntityPlayerMP player) {
         if (!ConfigHandler.allowClientsToSaveSkins) {
             return;
@@ -123,31 +131,42 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (stackInput == null) {
-            return;
+        if (!isCreativeLibrary()) {
+            if (stackInput == null) {
+                return;
+            }
         }
         
         if (stackOutput != null) {
             return;
         }
         
-        if (!(stackInput.getItem() instanceof ISkinHolder)) {
-            return;
+        if (!isCreativeLibrary()) {
+            if (!(stackInput.getItem() instanceof ISkinHolder)) {
+                return;
+            }
         }
-        ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
+        
         
         Skin armourItemData = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
         if (armourItemData == null) {
             return;
         }
+        
+        ItemStack inputItem = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
+
         SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         
-        ItemStack stackArmour = inputItem.makeStackForEquipment(armourItemData);
+        ItemStack stackArmour = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
+        
         if (stackArmour == null) {
             return;
         }
         
-        this.decrStackSize(0, 1);
+        if (!isCreativeLibrary()) {
+            this.decrStackSize(0, 1);
+        }
+        
         this.setInventorySlotContents(1, stackArmour);
     }
     

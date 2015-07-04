@@ -269,6 +269,9 @@ public class GuiArmourLibrary extends GuiContainer {
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        if (armourLibrary.isCreativeLibrary()) {
+            drawTexturedModalRect(this.guiLeft + 225, this.guiTop + 100, 10, 10, 18, 18);
+        }
         searchTextbox.drawTextBox();
         filenameTextbox.drawTextBox();
         fileList.drawList(mouseX, mouseY, 0);
@@ -276,7 +279,11 @@ public class GuiArmourLibrary extends GuiContainer {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName());
+        if (armourLibrary.isCreativeLibrary()) {
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "1");
+        } else {
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "0");
+        }
         
         String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");
         String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.filename");
