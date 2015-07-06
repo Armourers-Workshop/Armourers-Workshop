@@ -19,7 +19,7 @@ public final class HolidayHelper {
     public static final Holiday valentins = new Holiday("valentins", 14, Calendar.FEBRUARY, 24);
     public static final Holiday newYears = new Holiday("new_years", 1, Calendar.JANUARY, 24);
     public static final Holiday ponytailDay = new Holiday("ponytail_day", 7, Calendar.JULY, 24);
-    public static final Holiday btm15Anniversary = new Holiday("better_than_minecon_anniversary", 4, Calendar.JULY, 24);
+    public static final Holiday btm15Anniversary = new Holiday("better_than_minecon_anniversary", 4, Calendar.JULY, 48);
     //Should be 12 but making it 24 so more people can see it.
     public static final Holiday aprilFools = new Holiday("april_fools", 1, Calendar.APRIL, 24);
     public static final Holiday riskysbday = new Holiday("risky_kens_birthday", 6, Calendar.FEBRUARY, 24);
