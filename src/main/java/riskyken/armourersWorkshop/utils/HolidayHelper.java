@@ -18,7 +18,9 @@ public final class HolidayHelper {
         CHRISTMAS(Calendar.DECEMBER, 25),
         VALENTINES(Calendar.FEBRUARY, 14),
         NEW_YEARS(Calendar.JANUARY, 1),
-        PONYTAIL_DAY(Calendar.JULY, 7);
+        PONYTAIL_DAY(Calendar.JULY, 7),
+        BTM15_ANNIVERSARY(Calendar.JULY, 4);
+        //TODO Lasts 2 days, update holiday system to deal with this.
         
         public final int month;
         public final int day;
