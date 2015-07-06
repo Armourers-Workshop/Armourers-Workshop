@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.utils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -12,75 +12,38 @@ import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 
 public final class HolidayHelper {
     
-    public enum EnumHoliday {
-        NONE(0,0),
-        HALLOWEEN(Calendar.OCTOBER, 31),
-        CHRISTMAS(Calendar.DECEMBER, 25),
-        VALENTINES(Calendar.FEBRUARY, 14),
-        NEW_YEARS(Calendar.JANUARY, 1),
-        PONYTAIL_DAY(Calendar.JULY, 7),
-        BTM15_ANNIVERSARY(Calendar.JULY, 4);
-        //TODO Lasts 2 days, update holiday system to deal with this.
-        
-        public final int month;
-        public final int day;
-        
-        private EnumHoliday(int month, int day) {
-            this.month = month;
-            this.day = day;
-        }
+    private static ArrayList<Holiday> holidayList;
+    
+    public static final Holiday halloween = new Holiday("halloween", 31, Calendar.OCTOBER, 24);
+    public static final Holiday christmas = new Holiday("christmas", 25, Calendar.DECEMBER, 24);
+    public static final Holiday valentins = new Holiday("valentins", 14, Calendar.FEBRUARY, 24);
+    public static final Holiday newYears = new Holiday("new_years", 1, Calendar.JANUARY, 24);
+    public static final Holiday ponytailDay = new Holiday("ponytail_day", 7, Calendar.JULY, 24);
+    public static final Holiday btm15Anniversary = new Holiday("better_than_minecon_anniversary", 4, Calendar.JULY, 24);
+    //Should be 12 but making it 24 so more people can see it.
+    public static final Holiday aprilFools = new Holiday("april_fools", 1, Calendar.APRIL, 24);
+    public static final Holiday riskysbday = new Holiday("risky_kens_birthday", 6, Calendar.FEBRUARY, 24);
+    
+    static {
+        holidayList = new ArrayList<HolidayHelper.Holiday>();
+        holidayList.add(halloween);
+        holidayList.add(christmas);
+        holidayList.add(valentins);
+        holidayList.add(newYears);
+        holidayList.add(ponytailDay);
+        holidayList.add(btm15Anniversary);
+        holidayList.add(btm15Anniversary);
+        holidayList.add(riskysbday);
     }
     
-    public static EnumHoliday getHoliday() {
-        return getHoliday(3);
-    }
-    
-    public static EnumHoliday getHoliday(int range) {
-        Calendar current = Calendar.getInstance();
-        
-        for (int i = 1; i < EnumHoliday.values().length; i++) {
-            EnumHoliday holiday = EnumHoliday.values()[i];
-            Calendar holidayDate = Calendar.getInstance();
-
-            holidayDate.set(Calendar.MONTH, holiday.month);
-            holidayDate.set(Calendar.DAY_OF_MONTH, holiday.day);
-
-            Calendar cLowerRange = (Calendar)holidayDate.clone();
-            Calendar cUpperRange = (Calendar)holidayDate.clone();
-            
-            cLowerRange.add(Calendar.DAY_OF_MONTH, -range - 1);
-            cUpperRange.add(Calendar.DAY_OF_MONTH, range + 1);
-            
-            if (current.after(cLowerRange) && current.before(cUpperRange)) {
-                return holiday;
+    public static ArrayList<Holiday> getActiveHolidays() {
+        ArrayList<Holiday> activeList = new ArrayList<HolidayHelper.Holiday>();
+        for (int i = 0; i < holidayList.size(); i++) {
+            if (holidayList.get(i).isHolidayActive()) {
+                activeList.add(holidayList.get(i));
             }
         }
-        
-        return EnumHoliday.NONE;
-    }
-    
-    public static EnumHoliday getBeforeHoliday(int range) {
-        Calendar current = Calendar.getInstance();
-        
-        for (int i = 1; i < EnumHoliday.values().length; i++) {
-            EnumHoliday holiday = EnumHoliday.values()[i];
-            Calendar holidayDate = Calendar.getInstance();
-
-            holidayDate.set(Calendar.MONTH, holiday.month);
-            holidayDate.set(Calendar.DAY_OF_MONTH, holiday.day);
-
-            Calendar cLowerRange = (Calendar)holidayDate.clone();
-            Calendar cUpperRange = (Calendar)holidayDate.clone();
-            
-            cLowerRange.add(Calendar.DAY_OF_MONTH, -range - 1);
-            cUpperRange.add(Calendar.DAY_OF_MONTH, + 1);
-            
-            if (current.after(cLowerRange) && current.before(cUpperRange)) {
-                return holiday;
-            }
-        }
-        
-        return EnumHoliday.NONE;
+        return activeList;
     }
     
     public static int getYear() {
@@ -88,10 +51,9 @@ public final class HolidayHelper {
     }
     
     public static void giftPlayer(EntityPlayerMP player) {
-        if (getHoliday() == EnumHoliday.CHRISTMAS) {
+        if (christmas.isHolidayActive()) {
             ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get(player);
             if (playerData.lastXmasYear < getYear()) {
-                Random rnd = new Random();
                 ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);
                 if (!player.inventory.addItemStackToInventory(giftSack)) {
                     player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("chat.armourersworkshop:inventoryGiftFail")));
@@ -99,6 +61,44 @@ public final class HolidayHelper {
                     playerData.lastXmasYear = getYear();
                 }
             }
+        }
+    }
+    
+    public static class Holiday {
+        
+        private final String name;
+        private final Calendar startDate;
+        private final Calendar endDate;
+        
+        /**
+         * Creates and new holiday that spans x number of hours.
+         * @param name Name of the holiday.
+         * @param dayOfMonth The day of the month this holiday takes place on.
+         * @param month Month this holiday takes place on. Zero based 0 = Jan, 11 = Dec
+         * @param lengthInHours Number of hours this holiday lasts.
+         */
+        public Holiday(String name, int dayOfMonth, int month, int lengthInHours) {
+            this.name = name;
+            startDate = Calendar.getInstance();
+            startDate.set(Calendar.MINUTE, 0);
+            startDate.set(Calendar.HOUR_OF_DAY, 0);
+            startDate.set(Calendar.MONTH, month);
+            startDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            endDate = (Calendar) startDate.clone();
+            endDate.set(Calendar.HOUR_OF_DAY, lengthInHours);
+        }
+        
+        public boolean isHolidayActive() {
+            Calendar current = Calendar.getInstance();
+            if (current.after(startDate) & current.before(endDate)) {
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return "Holiday [name=" + name + ", startDate=" + startDate + ", endDate=" + endDate + "]";
         }
     }
 }

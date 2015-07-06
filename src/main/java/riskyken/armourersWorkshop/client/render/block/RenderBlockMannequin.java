@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import java.util.ArrayList;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
@@ -33,7 +35,8 @@ import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
-import riskyken.armourersWorkshop.utils.HolidayHelper.EnumHoliday;
+import riskyken.armourersWorkshop.utils.HolidayHelper.Holiday;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {
@@ -51,7 +54,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
-        isHalloween = HolidayHelper.getHoliday(1) == EnumHoliday.HALLOWEEN;
+        isHalloween = HolidayHelper.halloween.isHolidayActive();
         
         if (Loader.isModLoaded("moreplayermodels")) {
             targetBiped = model;
@@ -62,6 +65,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
+        ArrayList<Holiday> list = HolidayHelper.getActiveHolidays();
+        for (int i = 0; i < list.size(); i++) {
+            Holiday holiday = list.get(i);
+            ModLogger.log(holiday);
+        }
+        
         mc.mcProfiler.startSection("armourersMannequin");
         TileEntityMannequin te = (TileEntityMannequin) tileEntity;
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
