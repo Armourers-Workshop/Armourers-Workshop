@@ -1,21 +1,20 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Sent from the server to the client when a player opens the mini armourer GUI.
- * COntains all the block data for the model being built.
+ * Contains all the block data for the model being built.
  * @author RiskyKen
  *
  */
@@ -35,7 +34,7 @@ public class MessageServerMiniArmourerSkinData implements IMessage, IMessageHand
         int size = buf.readByte();
         skinParts = new ArrayList<SkinPart>();
         for (int i = 0; i < size; i++) {
-            skinParts.add(new SkinPart(buf));
+            //skinParts.add(new SkinPart(buf));
         }
     }
 
@@ -43,7 +42,7 @@ public class MessageServerMiniArmourerSkinData implements IMessage, IMessageHand
     public void toBytes(ByteBuf buf) {
         buf.writeByte(skinParts.size());
         for (int i = 0; i < skinParts.size(); i++) {
-            skinParts.get(i).writeToBuf(buf);
+            //skinParts.get(i).writeToBuf(buf);
         }
     }
     

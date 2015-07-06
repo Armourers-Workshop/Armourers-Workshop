@@ -1,12 +1,12 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -14,9 +14,6 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Skin implements ISkin {
     
@@ -70,37 +67,8 @@ public class Skin implements ISkin {
         return lightHash;
     }
     
-    public Skin(ByteBuf buf) {
-        readFromBuf(buf);
-    }
-    
     public Skin(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
         readFromStream(stream);
-    }
-    
-    public void writeToBuf(ByteBuf buf) {
-        buf.writeInt(this.requestId);
-        ByteBufUtils.writeUTF8String(buf, this.authorName);
-        ByteBufUtils.writeUTF8String(buf, this.customName);
-        ByteBufUtils.writeUTF8String(buf, this.tags);
-        ByteBufUtils.writeUTF8String(buf, this.equipmentSkinType.getRegistryName());
-        buf.writeByte(parts.size());
-        for (int i = 0; i < parts.size(); i++) {
-            parts.get(i).writeToBuf(buf);
-        }
-    }
-
-    private void readFromBuf(ByteBuf buf) {
-        this.requestId = buf.readInt();
-        this.authorName = ByteBufUtils.readUTF8String(buf);
-        this.customName = ByteBufUtils.readUTF8String(buf);
-        this.tags = ByteBufUtils.readUTF8String(buf);
-        this.equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(ByteBufUtils.readUTF8String(buf));
-        int size = buf.readByte();
-        parts = new ArrayList<SkinPart>();
-        for (int i = 0; i < size; i++) {
-            parts.add(new SkinPart(buf));
-        }
     }
     
     public void writeToStream(DataOutputStream stream) throws IOException {

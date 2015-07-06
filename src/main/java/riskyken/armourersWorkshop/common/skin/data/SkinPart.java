@@ -1,19 +1,16 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
@@ -22,10 +19,6 @@ import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
     
@@ -79,10 +72,6 @@ public class SkinPart implements ISkinPart {
         this.armourData = new ArrayList<ICube>();
         this.skinPart = skinPart;
     }
-    
-    public SkinPart(ByteBuf buf) {
-        readFromBuf(buf);
-    }
 
     public SkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         readFromStream(stream, version);
@@ -119,33 +108,6 @@ public class SkinPart implements ISkinPart {
             ICube cube = CubeFactory.INSTANCE.getCubeInstanceFormId(cubeId);
             cube.readFromCompound(cubeCompound);
             armourData.add(cube);
-        }
-    }
-
-    public void writeToBuf(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, skinPart.getRegistryName());
-        buf.writeInt(armourData.size());
-        for (int i = 0; i < armourData.size(); i++) {
-            armourData.get(i).writeToBuf(buf);
-        }
-    }
-
-    private void readFromBuf(ByteBuf buf) {
-        skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(ByteBufUtils.readUTF8String(buf));
-        int size = buf.readInt();
-        armourData = new ArrayList<ICube>();
-        for (int i = 0; i < size; i++) {
-            byte id = buf.readByte();
-            ICube cube;
-            try {
-                cube = CubeFactory.INSTANCE.getCubeInstanceFormId(id);
-                cube.readFromBuf(buf);
-                armourData.add(cube);
-            } catch (InvalidCubeTypeException e) {
-                ModLogger.log(Level.ERROR, "Unable to load skin. Unknown cube types found.");
-                e.printStackTrace();
-                return;
-            }
         }
     }
     

@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.skin.cubes;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -56,10 +54,6 @@ public interface ICube {
     public void writeToCompound(NBTTagCompound compound);
     
     public void readFromCompound(NBTTagCompound compound);
-    
-    public void writeToBuf(ByteBuf buf);
-    
-    public void readFromBuf(ByteBuf buf);
     
     public void writeToStream(DataOutputStream stream) throws IOException;
     

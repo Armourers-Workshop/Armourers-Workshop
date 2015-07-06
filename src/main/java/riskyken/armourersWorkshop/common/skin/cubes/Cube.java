@@ -1,17 +1,14 @@
 package riskyken.armourersWorkshop.common.skin.cubes;
 
-import io.netty.buffer.ByteBuf;
-
 import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.BitSet;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -144,23 +141,6 @@ public class Cube implements ICube {
         y = compound.getByte(TAG_Y);
         z = compound.getByte(TAG_Z);
         colour.readFromNBT(compound);
-    }
-    
-    @Override
-    public void writeToBuf(ByteBuf buf) {
-        buf.writeByte(id);
-        buf.writeByte(x);
-        buf.writeByte(y);
-        buf.writeByte(z);
-        colour.writeToBuf(buf);
-    }
-    
-    @Override
-    public void readFromBuf(ByteBuf buf) {
-        x = buf.readByte();
-        y = buf.readByte();
-        z = buf.readByte();
-        colour = new CubeColour(buf);
     }
     
     @Override

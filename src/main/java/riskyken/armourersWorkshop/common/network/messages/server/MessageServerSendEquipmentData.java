@@ -1,20 +1,27 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
-import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.network.ByteBufHelper;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 
+/**
+ * Sent from server to client. Contains skin model information.
+ * Clients will bake the model when they receive it. 
+ * @author RiskyKen
+ *
+ */
 public class MessageServerSendEquipmentData implements IMessage, IMessageHandler<MessageServerSendEquipmentData, IMessage> {
 
-    Skin equipmentData;
+    Skin skin;
     
     public MessageServerSendEquipmentData() {}
     
-    public MessageServerSendEquipmentData(Skin equipmentData) {
-        this.equipmentData = equipmentData;
+    public MessageServerSendEquipmentData(Skin skin) {
+        this.skin = skin;
     }
     
     @Override
@@ -26,7 +33,7 @@ public class MessageServerSendEquipmentData implements IMessage, IMessageHandler
 
     @Override
     public void toBytes(ByteBuf buf) {
-        this.equipmentData.writeToBuf(buf);
+        ByteBufHelper.writeSkinToByteBuf(buf, this.skin);
     }
 
     @Override
@@ -44,7 +51,7 @@ public class MessageServerSendEquipmentData implements IMessage, IMessageHandler
         
         @Override
         public void run() {
-            Skin skin = new Skin(buf);
+            Skin skin = ByteBufHelper.readSkinFromByteBuf(buf);
             ArmourersWorkshop.proxy.receivedEquipmentData(skin);
         }
     }

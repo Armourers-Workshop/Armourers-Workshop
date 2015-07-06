@@ -1,13 +1,20 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
-import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.network.ByteBufHelper;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 
+/**
+ * Send from the server to the client when a client saves a skin
+ * from the server to their local drive.
+ * @author Riskyken
+ *
+ */
 public class MessageServerLibrarySendSkin implements IMessage, IMessageHandler<MessageServerLibrarySendSkin, IMessage> {
 
     private String fileName;
@@ -24,13 +31,13 @@ public class MessageServerLibrarySendSkin implements IMessage, IMessageHandler<M
     @Override
     public void fromBytes(ByteBuf buf) {
         this.fileName = ByteBufUtils.readUTF8String(buf);
-        this.skin = new Skin(buf);
+        this.skin = ByteBufHelper.readSkinFromByteBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, this.fileName);
-        skin.writeToBuf(buf);
+        ByteBufHelper.writeSkinToByteBuf(buf, skin);
     }
     
     @Override
