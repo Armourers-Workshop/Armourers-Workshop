@@ -1,5 +1,12 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -16,9 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -30,12 +34,6 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.HolidayHelper.EnumHoliday;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {
@@ -231,11 +229,24 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.getBipedRotations().isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
         }
+        
         targetBiped.bipedBody.render(SCALE);
         targetBiped.bipedRightArm.render(SCALE);
         targetBiped.bipedLeftArm.render(SCALE);
         targetBiped.bipedRightLeg.render(SCALE);
         targetBiped.bipedLeftLeg.render(SCALE);
+        if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
+        	GL11.glPushMatrix();
+        	GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleZ), 0, 0, 1);
+        	GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleY), 0, 1, 0);
+        	GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleX), 1, 0, 0);
+        	GL11.glTranslated(-5.5F * SCALE, 0, 0);
+        	GL11.glTranslated(0, -6.5F * SCALE, 0);
+        	targetBiped.bipedEars.render(SCALE);
+        	GL11.glTranslated(11F * SCALE, 0, 0);
+        	targetBiped.bipedEars.render(SCALE);
+        	GL11.glPopMatrix();
+        }
         if (te.getBipedRotations().isChild) {
             ModelHelper.disableChildModelScale();
         }
