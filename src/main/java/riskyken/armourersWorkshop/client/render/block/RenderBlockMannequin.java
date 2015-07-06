@@ -64,7 +64,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
-        mc.mcProfiler.startSection("armourers mannequin");
+        mc.mcProfiler.startSection("armourersMannequin");
         TileEntityMannequin te = (TileEntityMannequin) tileEntity;
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
@@ -117,6 +117,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         float f6 = 2.0F;
         if (fakePlayer != null) {
+        	mc.mcProfiler.startSection("preEvents");
             targetBiped.isChild = te.getBipedRotations().isChild;
             fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
             fakePlayer.prevRotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
@@ -142,12 +143,15 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
             }
             GL11.glDisable(GL11.GL_CULL_FACE);
+            
             MinecraftForge.EVENT_BUS.post(preEvent);
             MinecraftForge.EVENT_BUS.post(preEventSpecials);
+            
             GL11.glEnable(GL11.GL_CULL_FACE);
             if (targetBiped.isChild) {
                 GL11.glPopMatrix();
             }
+            mc.mcProfiler.endSection();
         }
         
         
@@ -164,15 +168,21 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         //Render model
         
+        mc.mcProfiler.startSection("textureBind");
         SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
+        mc.mcProfiler.endSection();
+        mc.mcProfiler.startSection("modelRender");
         renderModel(te, targetBiped, fakePlayer);
-        
+        mc.mcProfiler.endSection();
         
         //Render items.
+        mc.mcProfiler.startSection("equippedItems");
         renderEquippedItems(te, fakePlayer, targetBiped);
+        mc.mcProfiler.endSection();
         
         //Post render events
         if (fakePlayer != null) {
+        	mc.mcProfiler.startSection("postEvents");
             RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, tickTime);
             RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, tickTime);
             if (targetBiped.isChild) {
@@ -187,10 +197,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             if (targetBiped.isChild) {
                 GL11.glPopMatrix();
             }
+            mc.mcProfiler.endSection();
         }
         
         //Render armourer's skins
-        mc.mcProfiler.startSection("mannequin skin");
+        mc.mcProfiler.startSection("armourersSkins");
         EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), targetBiped);
         mc.mcProfiler.endSection();
         

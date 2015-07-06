@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -21,7 +22,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
-        float scale = 0.0625F;
+    	Minecraft mc = Minecraft.getMinecraft();
+    	mc.mcProfiler.startSection("armourersArmourer");
+    	float scale = 0.0625F;
         
         TileEntityArmourerBrain te = (TileEntityArmourerBrain) tileEntity;
         ISkinType skinType = te.getSkinType();
@@ -70,5 +73,6 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         ModRenderHelper.enableLighting();
         GL11.glEnable(GL11.GL_LIGHTING);
+        mc.mcProfiler.endSection();
     }
 }

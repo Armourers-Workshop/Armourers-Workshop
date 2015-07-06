@@ -19,7 +19,9 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
     private static final ModelBlockArmourer modelArmourer = new ModelBlockArmourer();
     
     public void renderTileEntityAt(TileEntityMiniArmourer tileEntity, double x, double y, double z, float tickTime) {
-        float scale = 0.0625F;
+    	Minecraft mc = Minecraft.getMinecraft();
+    	mc.mcProfiler.startSection("armourersMiniArmourer");
+    	float scale = 0.0625F;
         
         GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5D, y + 0.5D, z + 0.5D);
@@ -40,6 +42,7 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         }
         
         GL11.glPopMatrix();
+        mc.mcProfiler.endSection();
     }
     
     @Override
