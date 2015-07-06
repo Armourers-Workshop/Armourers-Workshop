@@ -90,10 +90,7 @@ public final class SkinHelper {
     
     public static void bindPlayersNormalSkin(GameProfile gameProfile) {
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
-        PlayerSkinInfo skinInfo = null;
         if (gameProfile != null) {
-            PlayerPointer playerPointer = new PlayerPointer(gameProfile);
-            skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
             resourcelocation = getSkinResourceLocation(gameProfile, MinecraftProfileTexture.Type.SKIN);
         }
         Minecraft.getMinecraft().renderEngine.bindTexture(resourcelocation);
