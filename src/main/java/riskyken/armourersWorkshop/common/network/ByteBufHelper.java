@@ -6,11 +6,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.logging.log4j.Level;
 
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
-import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ByteBufHelper {
     
@@ -27,38 +31,131 @@ public final class ByteBufHelper {
     
     public static void writeSkinToByteBuf(ByteBuf buf, Skin skin) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(baos);
+        DataOutputStream dataOutputStream = new DataOutputStream(baos);
+        
         try {
-            skin.writeToStream(out);
-            out.writeInt(skin.requestId);
-            out.close();
+            skin.writeToStream(dataOutputStream);
+            dataOutputStream.writeInt(skin.requestId);
+            dataOutputStream.flush();
+            
+            byte[] skinData = baos.toByteArray();
+            //skinData = compressedByteArray(skinData);
+            if (skinData == null) {
+                ModLogger.log(Level.ERROR, "Failed to compress skin data.");
+                return;
+            }
+            
+            writeByteArrayByteBuf(buf, skinData);
+            
         } catch (IOException e2) {
             e2.printStackTrace();
             return;
+        } finally {
+            IOUtils.closeQuietly(dataOutputStream);
+            IOUtils.closeQuietly(baos);
         }
-        byte[] skinData = baos.toByteArray();
-        buf.writeInt(skinData.length);
-        buf.writeBytes(skinData);
     }
     
     public static Skin readSkinFromByteBuf(ByteBuf buf) {
-        int size = buf.readInt();
-        byte[] skinData = new byte[size];
-        buf.readBytes(skinData);
+        byte[] skinData = readByteArrayFromByteBuf(buf);
+        
+        //skinData = decompressByteArray(skinData);
+        if (skinData == null) {
+            ModLogger.log(Level.ERROR, "Failed to decompress skin data.");
+            return null;
+        }
+        
         ByteArrayInputStream bais = new ByteArrayInputStream(skinData);
-        DataInputStream input = new DataInputStream(bais);
+        DataInputStream dataInputStream = new DataInputStream(bais);
         Skin skin = null;
+        
         try {
-            skin = new Skin(input);
-            skin.requestId = input.readInt();
-            input.close();
+            skin = new Skin(dataInputStream);
+            skin.requestId = dataInputStream.readInt();
+            ModLogger.log("got skin with id:" + skin.lightHash() + " name:" + skin.getCustomName());
+            ModLogger.log(skin.requestId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(dataInputStream);
+            IOUtils.closeQuietly(bais);
+        }
+        
+        return skin;
+    }
+    
+    private static byte[] compressedByteArray(byte[] data) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        GZIPOutputStream gzos = null;
+        DataOutputStream dataOutputStream = null;
+        
+        try {
+            gzos = new GZIPOutputStream(baos);
+            dataOutputStream = new DataOutputStream(gzos);
+            writeByteArrayToStream(dataOutputStream, data);
+            dataOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (NewerFileVersionException e) {
-            e.printStackTrace();
-        } catch (InvalidCubeTypeException e) {
-            e.printStackTrace();
+            IOUtils.closeQuietly(baos);
+            return null;
+        } finally {
+            IOUtils.closeQuietly(dataOutputStream);
+            IOUtils.closeQuietly(gzos);
         }
-        return skin;
+        
+        byte[] compressedData = baos.toByteArray();
+        IOUtils.closeQuietly(baos);
+        
+        ModLogger.log("compress - old size:" + data.length + " new size:" + compressedData.length);
+        
+        return compressedData;
+    }
+    
+    private static byte[] decompressByteArray(byte[] compressedData) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
+        GZIPInputStream gzis = null;
+        DataInputStream dataInputStream = null;
+        
+        byte[] data;
+        try {
+            gzis = new GZIPInputStream(bais);
+            dataInputStream = new DataInputStream(gzis);
+            data = readByteArrayFromStream(dataInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            IOUtils.closeQuietly(dataInputStream);
+            IOUtils.closeQuietly(gzis);
+            IOUtils.closeQuietly(bais);
+        }
+        
+        ModLogger.log("decompress - old size:" + data.length + " new size:" + compressedData.length);
+        
+        return data;
+    }
+    
+    public static void writeByteArrayByteBuf(ByteBuf buf, byte[] data) {
+        buf.writeInt(data.length);
+        buf.writeBytes(data);
+    }
+    
+    public static byte[] readByteArrayFromByteBuf(ByteBuf buf) {
+        int size = buf.readInt();
+        byte[] data = new byte[size];
+        buf.readBytes(data);
+        return data;
+    }
+    
+    private static void writeByteArrayToStream(DataOutputStream dataOutputStream, byte[] data) throws IOException {
+        dataOutputStream.writeInt(data.length);
+        dataOutputStream.write(data);
+    }
+    
+    private static byte[] readByteArrayFromStream(DataInputStream dataInputStream) throws IOException {
+        int size = dataInputStream.readInt();
+        byte[] data = new byte[size];
+        dataInputStream.read(data);
+        return data;
     }
 }
