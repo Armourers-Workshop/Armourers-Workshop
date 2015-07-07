@@ -45,7 +45,7 @@ public final class ByteBufHelper {
                 return;
             }
             
-            writeByteArrayByteBuf(buf, skinData);
+            writeByteArrayToByteBuf(buf, skinData);
             
         } catch (IOException e2) {
             e2.printStackTrace();
@@ -96,6 +96,8 @@ public final class ByteBufHelper {
             dataOutputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
+            IOUtils.closeQuietly(dataOutputStream);
+            IOUtils.closeQuietly(gzos);
             IOUtils.closeQuietly(baos);
             return null;
         } finally {
@@ -107,7 +109,6 @@ public final class ByteBufHelper {
         IOUtils.closeQuietly(baos);
         
         ModLogger.log("compress - old size:" + data.length + " new size:" + compressedData.length);
-        
         return compressedData;
     }
     
@@ -123,7 +124,7 @@ public final class ByteBufHelper {
             data = readByteArrayFromStream(dataInputStream);
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            data = null;
         } finally {
             IOUtils.closeQuietly(dataInputStream);
             IOUtils.closeQuietly(gzis);
@@ -131,11 +132,10 @@ public final class ByteBufHelper {
         }
         
         ModLogger.log("decompress - old size:" + data.length + " new size:" + compressedData.length);
-        
         return data;
     }
     
-    public static void writeByteArrayByteBuf(ByteBuf buf, byte[] data) {
+    public static void writeByteArrayToByteBuf(ByteBuf buf, byte[] data) {
         buf.writeInt(data.length);
         buf.writeBytes(data);
     }
