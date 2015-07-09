@@ -1,11 +1,11 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
-import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 
 public class MessageServerEntityEquipmentData implements IMessage, IMessageHandler<MessageServerEntityEquipmentData, IMessage> {
 

@@ -2,6 +2,12 @@ package riskyken.armourersWorkshop.common.skin;
 
 import java.util.HashSet;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,15 +24,12 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerRemoveEquipmentInfo;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.relauncher.Side;
 
 public final class EntityEquipmentDataManager {
     
@@ -119,7 +122,9 @@ public final class EntityEquipmentDataManager {
     @SubscribeEvent
     public void onStopTracking(PlayerEvent.StopTracking event) {
         if (event.target instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) event.entity;
+            EntityPlayerMP target = (EntityPlayerMP) event.target;
+            MessageServerRemoveEquipmentInfo message = new MessageServerRemoveEquipmentInfo(new PlayerPointer(target));
+            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) event.entityPlayer);
         }
     }
     

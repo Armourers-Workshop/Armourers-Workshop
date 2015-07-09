@@ -3,6 +3,12 @@ package riskyken.armourersWorkshop.client.render;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -11,10 +17,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -38,10 +40,6 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Helps render custom equipment on the player and other entities.
@@ -100,20 +98,6 @@ public final class EquipmentModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         return equipmentData;
-    }
-    
-    @SubscribeEvent
-    public void onStopTracking(PlayerEvent.StopTracking event) {
-        if (event.target instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.target;
-            if (player.getGameProfile() == null) {
-                return;
-            }
-            PlayerPointer playerPointer = new PlayerPointer(player);
-            if (playerEquipmentMap.containsKey(playerPointer)) {
-                playerEquipmentMap.remove(playerPointer);
-            }
-        }
     }
     
     public int getSkinDataMapSize() {
