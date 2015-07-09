@@ -76,7 +76,7 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
     }
     
     @Override
-    public IMessage onMessage(MessageClientGuiLoadSaveArmour message,MessageContext ctx) {
+    public IMessage onMessage(MessageClientGuiLoadSaveArmour message, MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         if (player == null) { return null; }
         Container container = player.openContainer;

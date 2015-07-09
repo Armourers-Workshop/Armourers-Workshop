@@ -4,22 +4,21 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSendEquipmentData;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.player.EntityPlayerMP;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSendEquipmentData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 /**
  * Holds a cache of equipment data on the server that will be sent to clients if
@@ -127,7 +126,7 @@ public final class SkinDataCache {
     }
     
     public void addEquipmentDataToCache(Skin equipmentData) {
-        addEquipmentDataToCache(equipmentData, equipmentData.hashCode());
+        addEquipmentDataToCache(equipmentData, equipmentData.lightHash());
     }
     
     private void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {

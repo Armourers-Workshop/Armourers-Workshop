@@ -176,28 +176,31 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (stackInput == null) {
-            return;
+        if (!isCreativeLibrary()) {
+            if (stackInput == null) {
+                return;
+            }
         }
         
         if (stackOutput != null) {
             return;
         }
         
-        if (!(stackInput.getItem() instanceof ISkinHolder)) {
-            return;
+        if (!isCreativeLibrary()) {
+            if (!(stackInput.getItem() instanceof ISkinHolder)) {
+                return;
+            }
         }
-        ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
         
-        ItemStack stackArmour = inputItem.makeStackForEquipment(itemData);
-        if (stackArmour == null) {
+        ItemStack inputItem = EquipmentNBTHelper.makeEquipmentSkinStack(itemData);
+        if (inputItem == null) {
             return;
         }
         
         SkinDataCache.INSTANCE.addEquipmentDataToCache(itemData);
         
         this.decrStackSize(0, 1);
-        this.setInventorySlotContents(1, stackArmour);
+        this.setInventorySlotContents(1, inputItem);
     }
     
     public static ArrayList<String> getFileNames(boolean addSkinTypes) {

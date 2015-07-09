@@ -72,8 +72,6 @@ public final class ByteBufHelper {
         try {
             skin = new Skin(dataInputStream);
             skin.requestId = dataInputStream.readInt();
-            ModLogger.log("got skin with id:" + skin.lightHash() + " name:" + skin.getCustomName());
-            ModLogger.log(skin.requestId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -81,6 +79,40 @@ public final class ByteBufHelper {
             IOUtils.closeQuietly(bais);
         }
         
+        return skin;
+    }
+    
+    public static byte[] convertSkinToByteArray(Skin skin) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(baos);
+        byte[] skinData = null;
+        try {
+            skin.writeToStream(dataOutputStream);
+            dataOutputStream.writeInt(skin.requestId);
+            dataOutputStream.flush();
+            skinData = baos.toByteArray();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(dataOutputStream);
+            IOUtils.closeQuietly(baos);
+        }
+        return skinData;
+    }
+    
+    public static Skin convertByteArrayToSkin(byte[] data) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(data);
+        DataInputStream dataInputStream = new DataInputStream(bais);
+        Skin skin = null;
+        try {
+            skin = new Skin(dataInputStream);
+            skin.requestId = dataInputStream.readInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(dataInputStream);
+            IOUtils.closeQuietly(bais);
+        }
         return skin;
     }
     
