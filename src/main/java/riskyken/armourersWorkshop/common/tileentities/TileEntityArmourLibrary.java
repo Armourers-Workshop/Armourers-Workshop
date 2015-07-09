@@ -4,14 +4,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.items.ItemArmourContainerItem;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
+import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
@@ -23,7 +25,7 @@ import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
-public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
+public class TileEntityArmourLibrary extends AbstractTileEntityInventory implements ISidedInventory {
     
     public ArrayList<String> serverFileNames = null;
     public ArrayList<String> clientFileNames = null;
@@ -233,5 +235,44 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory {
     public void setArmourList(ArrayList<String> fileNames) {
         this.serverFileNames = fileNames;
         this.clientFileNames = getFileNames(true);
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side) {
+        if (isCreativeLibrary()) {
+            int[] slots = new int[1];
+            slots[0] = 1;
+            return slots;
+        } else {
+            int[] slots = new int[2];
+            slots[0] = 0;
+            slots[1] = 1;
+            return slots;
+        }
+    }
+
+    @Override
+    public boolean canInsertItem(int slot, ItemStack stack, int side) {
+        if (isCreativeLibrary()) {
+            return false;
+        }
+        if (slot != 0) {
+            return false;
+        }
+        if (stack.getItem() instanceof ItemEquipmentSkinTemplate && stack.getItemDamage() == 0) {
+            return true;
+        }
+        if (stack.getItem() instanceof ItemEquipmentSkin) {
+            return true;
+        }
+        if (stack.getItem() instanceof ItemArmourContainerItem) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack stack, int side) {
+        return true;
     }
 }
