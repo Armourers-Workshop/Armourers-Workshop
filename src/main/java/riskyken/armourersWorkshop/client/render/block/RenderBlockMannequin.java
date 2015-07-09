@@ -25,12 +25,10 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
-import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
@@ -43,7 +41,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private ModelMannequin model;
     private RenderPlayer renderPlayer;
     private final Minecraft mc;
-    private final float SCALE = 0.0625F;
+    private final static float SCALE = 0.0625F;
     private final ModelBiped targetBiped;
     
     public RenderBlockMannequin() {
@@ -197,11 +195,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             mc.mcProfiler.endSection();
         }
         
-        //Render armourer's skins
-        mc.mcProfiler.startSection("armourersSkins");
-        EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(((TileEntityMannequin)tileEntity), targetBiped);
-        mc.mcProfiler.endSection();
-        
         targetBiped.bipedLeftLeg.rotateAngleZ = 0F;
         targetBiped.bipedRightLeg.rotateAngleZ = 0F;
         targetBiped.bipedHead.rotateAngleZ = 0F;
@@ -289,12 +282,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     }
     
     private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot) {
-        if (slot < 7) {
-            if (stack.getItem() == ModItems.equipmentSkin) {
-                return;
-            }
-        }
-        
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         

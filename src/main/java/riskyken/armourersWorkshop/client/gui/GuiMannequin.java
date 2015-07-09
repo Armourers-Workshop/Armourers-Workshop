@@ -2,6 +2,13 @@ package riskyken.armourersWorkshop.client.gui;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.client.config.GuiSlider;
+import cpw.mods.fml.client.config.GuiSlider.ISlider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -11,13 +18,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
@@ -25,11 +28,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-import cpw.mods.fml.client.config.GuiButtonExt;
-import cpw.mods.fml.client.config.GuiSlider;
-import cpw.mods.fml.client.config.GuiSlider.ISlider;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiMannequin extends GuiContainer implements ISlider  {
@@ -267,7 +265,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         GL11.glRotatef(-20, 0, 1, 0);
         GL11.glScalef(-scale, scale, scale);
         model.render(bipedRotations, true, 0.0625F);
-        EquipmentModelRenderer.INSTANCE.renderMannequinEquipment(tileEntity, model);
+        
         GL11.glPopMatrix();
     }
 

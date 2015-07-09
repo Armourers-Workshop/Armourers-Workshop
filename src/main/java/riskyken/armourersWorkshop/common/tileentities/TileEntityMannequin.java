@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,22 +10,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
-
-import com.mojang.authlib.GameProfile;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -36,7 +29,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private GameProfile newProfile = null;
     private MannequinFakePlayer fakePlayer = null;
     
-    private EntityEquipmentData equipmentData;
     private BipedRotations bipedRotations;
     private int rotation;
     private boolean isDoll;
@@ -47,7 +39,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     public TileEntityMannequin(boolean isDoll) {
-        equipmentData = new EntityEquipmentData();
         bipedRotations = new BipedRotations();
         bipedRotations.leftArm.rotationZ = (float) Math.toRadians(-10);
         bipedRotations.rightArm.rotationZ = (float) Math.toRadians(10);
@@ -59,27 +50,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
-        if (!worldObj.isRemote) {
-            if (itemstack == null) {
-                ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(i);
-                if (skinType != null) {
-                    equipmentData.removeEquipment(skinType);
-                    markDirty();
-                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                }
-            } else {
-                setEquipment(itemstack);
-            }
-        }
         super.setInventorySlotContents(i, itemstack);
-    }
-    
-    public void setEquipment(ItemStack stack) {
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(skinData.skinId);
-            setEquipment(equipmentData.getSkinType(), skinData.skinId);
-        }
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public void setOwner(ItemStack stack) {
@@ -126,12 +98,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (!worldObj.isRemote) {
             updateProfileData();
         }
-    }
-    
-    public void setEquipment(ISkinType skinType, int equipmentId) {
-        equipmentData.addEquipment(skinType, equipmentId);
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public int getHeightOffset() {
@@ -185,7 +151,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @Override
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
-        equipmentData.loadNBTData(compound);
         bipedRotations.loadNBTData(compound);
         this.isDoll = compound.getBoolean(TAG_IS_DOLL);
         this.rotation = compound.getInteger(TAG_ROTATION);
@@ -197,7 +162,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @Override
     public void writeCommonToNBT(NBTTagCompound compound) {
         super.writeCommonToNBT(compound);
-        equipmentData.saveNBTData(compound);
         bipedRotations.saveNBTData(compound);
         compound.setBoolean(TAG_IS_DOLL, this.isDoll);
         compound.setInteger(TAG_ROTATION, this.rotation);
@@ -236,10 +200,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         NBTTagCompound compound = packet.func_148857_g();
         readFromNBT(compound);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-    
-    public EntityEquipmentData getEquipmentData() {
-        return equipmentData;
     }
     
     @Override

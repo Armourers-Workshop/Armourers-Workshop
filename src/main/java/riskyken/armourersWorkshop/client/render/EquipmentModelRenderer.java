@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.client.render;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.lwjgl.opengl.GL11;
@@ -38,7 +37,6 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 /**
@@ -257,50 +255,6 @@ public final class EquipmentModelRenderer {
             return customBow;
         }
         return null;
-    }
-
-    public void renderMannequinEquipment(TileEntityMannequin teMannequin, ModelBiped modelBiped) {
-        EntityEquipmentData equipmentData = teMannequin.getEquipmentData();
-        
-        if (!SkinBaker.withinMaxRenderDistance(teMannequin.xCoord, teMannequin.yCoord, teMannequin.zCoord)) {
-            return;
-        }
-        
-        ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
-        for (int i = 0; i < skinList.size(); i++) {
-            ISkinType skinType = skinList.get(i);
-            if (equipmentData.haveEquipment(skinType)) {
-                Skin data = getCustomArmourItemData(equipmentData.getEquipmentId(skinType));
-                if (skinType == SkinTypeRegistry.skinSword) {
-                    float scale = 0.0625F;
-                    GL11.glPushMatrix();
-                    
-                    if (modelBiped != null) {
-                        if (modelBiped.isChild) {
-                            float f6 = 2.0F;
-                            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-                            GL11.glTranslatef(0.0F, 24.0F * scale, 0.0F);
-                        }
-                    }
-                    
-                    GL11.glTranslatef(-5F * scale, 0, 0);
-                    GL11.glTranslatef(0, 2F * scale, 0);
-                    
-                    GL11.glRotated(Math.toDegrees(modelBiped.bipedRightArm.rotateAngleZ), 0, 0, 1);
-                    GL11.glRotated(Math.toDegrees(modelBiped.bipedRightArm.rotateAngleY), 0, 1, 0);
-                    GL11.glRotated(Math.toDegrees(modelBiped.bipedRightArm.rotateAngleX), 1, 0, 0);
-                    GL11.glRotatef(90, 1, 0, 0);
-                    
-                    GL11.glTranslatef(0, 0, -8 * scale);
-                    GL11.glTranslatef(-1F * scale, 0, 0);
-                    renderEquipmentPart(null, null, data);
-                    
-                    GL11.glPopMatrix();
-                } else {
-                    renderEquipmentPart(null, modelBiped, data);
-                }
-            }
-        }
     }
     
     public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped) {

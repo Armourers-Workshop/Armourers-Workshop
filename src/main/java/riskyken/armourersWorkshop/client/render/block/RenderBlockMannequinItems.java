@@ -2,6 +2,10 @@ package riskyken.armourersWorkshop.client.render.block;
 
 import java.awt.Color;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderBiped;
@@ -16,13 +20,12 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-
-import org.lwjgl.opengl.GL11;
-
+import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilRender;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequinItems {
@@ -36,6 +39,12 @@ public class RenderBlockMannequinItems {
     
     public void renderHeadStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
+        
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            return;
+        }
+        
         if (targetItem instanceof ItemBlock) {
             float blockScale = 0.5F;
             GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleZ), 0, 0, 1);
@@ -77,6 +86,10 @@ public class RenderBlockMannequinItems {
 
     public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            return;
+        }
         if (targetItem instanceof ItemArmor) {
             int passes = targetItem.getRenderPasses(stack.getItemDamage());
             for (int i = 0; i < passes; i++) {
@@ -114,6 +127,10 @@ public class RenderBlockMannequinItems {
     }
     public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            return;
+        }
         if (targetItem instanceof ItemArmor) {
             int passes = targetItem.getRenderPasses(stack.getItemDamage());
             for (int i = 0; i < passes; i++) {
@@ -147,6 +164,10 @@ public class RenderBlockMannequinItems {
     
     public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            return;
+        }
         if (targetItem instanceof ItemArmor) {
             int passes = targetItem.getRenderPasses(stack.getItemDamage());
             for (int i = 0; i < passes; i++) {
@@ -193,6 +214,16 @@ public class RenderBlockMannequinItems {
         GL11.glTranslatef(-2F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 10F * scale, 0F);
         
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
+                GL11.glRotatef(90, 1, 0, 0);
+                GL11.glTranslated(1 * scale, 0 * scale, 2 * scale);
+                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null);
+                return;
+            }
+        }
+        
         GL11.glRotatef(-90, 0, 1, 0);
         GL11.glRotatef(45, 0, 0, 1);
         
@@ -231,6 +262,16 @@ public class RenderBlockMannequinItems {
         
         GL11.glTranslatef(1F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 10F * scale, 0F);
+        
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
+                GL11.glRotatef(90, 1, 0, 0);
+                GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);
+                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null);
+                return;
+            }
+        }
         
         GL11.glRotatef(-90, 0, 1, 0);
         GL11.glRotatef(45, 0, 0, 1);
