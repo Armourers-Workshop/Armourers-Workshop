@@ -200,6 +200,16 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         targetBiped.bipedHead.rotateAngleZ = 0F;
         targetBiped.bipedHeadwear.rotateAngleZ = 0F;
         
+        renderPlayer.modelArmor.bipedLeftLeg.rotateAngleZ = 0F;
+        renderPlayer.modelArmor.bipedRightLeg.rotateAngleZ = 0F;
+        renderPlayer.modelArmor.bipedHead.rotateAngleZ = 0F;
+        renderPlayer.modelArmor.bipedHeadwear.rotateAngleZ = 0F;
+        
+        renderPlayer.modelArmorChestplate.bipedLeftLeg.rotateAngleZ = 0F;
+        renderPlayer.modelArmorChestplate.bipedRightLeg.rotateAngleZ = 0F;
+        renderPlayer.modelArmorChestplate.bipedHead.rotateAngleZ = 0F;
+        renderPlayer.modelArmorChestplate.bipedHeadwear.rotateAngleZ = 0F;
+        
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();

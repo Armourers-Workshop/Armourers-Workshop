@@ -3,17 +3,19 @@ package riskyken.armourersWorkshop.client.handler;
 import java.util.BitSet;
 import java.util.HashMap;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 @SideOnly(Side.CLIENT)
 public class PlayerSkinHandler {
@@ -95,6 +97,13 @@ public class PlayerSkinHandler {
         if (player.getGameProfile() == null) {
             return;
         }
+        
+        //Hide the armour if it had been skinned.
+        ItemStack stack = player.getCurrentArmor(event.slot);
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            result = -2;
+        }
+        
         PlayerPointer playerPointer = new PlayerPointer(player);
         
         if (skinMap.containsKey(playerPointer)) {

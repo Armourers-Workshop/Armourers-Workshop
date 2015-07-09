@@ -36,6 +36,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
@@ -76,6 +77,15 @@ public final class EquipmentModelRenderer {
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
+        
+        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
+            int slot = 3 - skinType.getVanillaArmourSlotId();
+            ItemStack armourStack = player.getCurrentArmor(slot);
+            if (EquipmentNBTHelper.stackHasSkinData(armourStack)) {
+                SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(armourStack);
+                return getCustomArmourItemData(sp.skinId);
+            }
+        }
         
         if (equipmentData == null) {
             return null;
