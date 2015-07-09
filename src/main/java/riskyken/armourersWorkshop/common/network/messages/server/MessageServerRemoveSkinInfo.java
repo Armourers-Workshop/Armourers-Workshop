@@ -13,13 +13,13 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
  * @author RiskyKen
  *
  */
-public class MessageServerRemoveEquipmentInfo implements IMessage, IMessageHandler<MessageServerRemoveEquipmentInfo, IMessage> {
+public class MessageServerRemoveSkinInfo implements IMessage, IMessageHandler<MessageServerRemoveSkinInfo, IMessage> {
 
     PlayerPointer playerPointer;
     
-    public MessageServerRemoveEquipmentInfo() {}
+    public MessageServerRemoveSkinInfo() {}
     
-    public MessageServerRemoveEquipmentInfo(PlayerPointer playerPointer) {
+    public MessageServerRemoveSkinInfo(PlayerPointer playerPointer) {
         this.playerPointer = playerPointer;
     }
 
@@ -34,7 +34,7 @@ public class MessageServerRemoveEquipmentInfo implements IMessage, IMessageHandl
     }
     
     @Override
-    public IMessage onMessage(MessageServerRemoveEquipmentInfo message, MessageContext ctx) {
+    public IMessage onMessage(MessageServerRemoveSkinInfo message, MessageContext ctx) {
         ArmourersWorkshop.proxy.removeEquipmentData(message.playerPointer);
         return null;
     }

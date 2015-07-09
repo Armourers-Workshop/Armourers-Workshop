@@ -19,7 +19,7 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerAddEquipmentInfo;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerAddSkinInfo;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerUpdateSkinInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
@@ -106,7 +106,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     private void updateEquipmentDataToPlayersAround() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddEquipmentInfo(playerPointer, equipmentData), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddSkinInfo(playerPointer, equipmentData), p);
     }
     
     public void colourSlotUpdate(byte slot) {
@@ -172,7 +172,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer) {
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendTo(new MessageServerAddEquipmentInfo(playerPointer, equipmentData), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerAddSkinInfo(playerPointer, equipmentData), targetPlayer);
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {

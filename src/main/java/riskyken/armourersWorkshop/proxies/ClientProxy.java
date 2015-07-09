@@ -1,5 +1,11 @@
 package riskyken.armourersWorkshop.proxies;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -41,12 +47,6 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.minecraftWrapper.client.RenderBridge;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -92,7 +92,7 @@ public class ClientProxy extends CommonProxy {
             ModLogger.log("Shaders mod support active");
             shadersModLoaded = true;
         } catch (Exception e) {
-            ModLogger.log("Shaders mod not found");
+            //ModLogger.log("Shaders mod not found");
         }
         if (Loader.isModLoaded("moreplayermodels")) {
             moreplayermodelsLoaded = true;
@@ -105,6 +105,19 @@ public class ClientProxy extends CommonProxy {
     public void postInit() {
         Addons.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
+        spamSillyMessages();
+    }
+    
+    private void spamSillyMessages() {
+        if (Loader.isModLoaded("Tails")) {
+            ModLogger.log("Tails detected! - Sand praising module active.");
+        }
+        if (Loader.isModLoaded("BuildCraft|Core")) {
+            ModLogger.log("Buildcraft detected! - Enabling knishes support.");
+        }
+        if (Loader.isModLoaded("integratedcircuits")) {
+            ModLogger.log("Integrated Circuits detected! - Applying cosplay to mannequins.");
+        }
     }
 
     @Override

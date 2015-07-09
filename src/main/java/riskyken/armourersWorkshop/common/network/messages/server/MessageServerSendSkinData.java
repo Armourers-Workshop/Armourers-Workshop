@@ -14,13 +14,13 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
  * @author RiskyKen
  *
  */
-public class MessageServerSendEquipmentData implements IMessage, IMessageHandler<MessageServerSendEquipmentData, IMessage> {
+public class MessageServerSendSkinData implements IMessage, IMessageHandler<MessageServerSendSkinData, IMessage> {
 
     Skin skin;
     
-    public MessageServerSendEquipmentData() {}
+    public MessageServerSendSkinData() {}
     
-    public MessageServerSendEquipmentData(Skin skin) {
+    public MessageServerSendSkinData(Skin skin) {
         this.skin = skin;
     }
     
@@ -37,7 +37,7 @@ public class MessageServerSendEquipmentData implements IMessage, IMessageHandler
     }
 
     @Override
-    public IMessage onMessage(MessageServerSendEquipmentData message, MessageContext ctx) {
+    public IMessage onMessage(MessageServerSendSkinData message, MessageContext ctx) {
         return null;
     }
     

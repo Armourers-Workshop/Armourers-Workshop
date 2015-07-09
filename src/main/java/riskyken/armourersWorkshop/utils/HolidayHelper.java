@@ -14,14 +14,21 @@ public final class HolidayHelper {
     
     private static ArrayList<Holiday> holidayList;
     
+    //Spooky scary skeletons.
     public static final Holiday halloween = new Holiday("halloween", 31, Calendar.OCTOBER, 24);
+    //Some guy was born or something.
     public static final Holiday christmas = new Holiday("christmas", 25, Calendar.DECEMBER, 24);
+    //Forever alone.
     public static final Holiday valentins = new Holiday("valentins", 14, Calendar.FEBRUARY, 24);
+    //year++
     public static final Holiday newYears = new Holiday("new_years", 1, Calendar.JANUARY, 24);
+    //The best holiday!
     public static final Holiday ponytailDay = new Holiday("ponytail_day", 7, Calendar.JULY, 24);
+    //It began small! At 10FPS that is.
     public static final Holiday btm15Anniversary = new Holiday("better_than_minecon_anniversary", 4, Calendar.JULY, 48);
     //Should be 12 but making it 24 so more people can see it.
     public static final Holiday aprilFools = new Holiday("april_fools", 1, Calendar.APRIL, 24);
+    //Bday of some scrub that can't code.
     public static final Holiday riskysbday = new Holiday("risky_kens_birthday", 6, Calendar.FEBRUARY, 24);
     
     static {

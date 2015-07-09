@@ -6,13 +6,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageClientRequestEquipmentDataData implements IMessage, IMessageHandler<MessageClientRequestEquipmentDataData, IMessage> {
+public class MessageClientRequestSkinData implements IMessage, IMessageHandler<MessageClientRequestSkinData, IMessage> {
 
     int equpmentId;
     
-    public MessageClientRequestEquipmentDataData() {}
+    public MessageClientRequestSkinData() {}
 
-    public MessageClientRequestEquipmentDataData(int equpmentId) {
+    public MessageClientRequestSkinData(int equpmentId) {
         this.equpmentId = equpmentId;
     }
 
@@ -27,7 +27,7 @@ public class MessageClientRequestEquipmentDataData implements IMessage, IMessage
     }
 
     @Override
-    public IMessage onMessage(MessageClientRequestEquipmentDataData message, MessageContext ctx) {
+    public IMessage onMessage(MessageClientRequestSkinData message, MessageContext ctx) {
         SkinDataCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, ctx.getServerHandler().playerEntity);
         return null;
     }

@@ -13,17 +13,17 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
  * @author RiskyKen
  *
  */
-public class MessageServerAddEquipmentInfo implements IMessage, IMessageHandler<MessageServerAddEquipmentInfo, IMessage> {
+public class MessageServerAddSkinInfo implements IMessage, IMessageHandler<MessageServerAddSkinInfo, IMessage> {
 
     PlayerPointer playerPointer;
     EntityEquipmentData equipmentData;
     
-    public MessageServerAddEquipmentInfo(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
+    public MessageServerAddSkinInfo(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
         this.playerPointer = playerPointer;
         this.equipmentData = equipmentData;
     }
     
-    public MessageServerAddEquipmentInfo() {}
+    public MessageServerAddSkinInfo() {}
     
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -38,7 +38,7 @@ public class MessageServerAddEquipmentInfo implements IMessage, IMessageHandler<
     }
     
     @Override
-    public IMessage onMessage(MessageServerAddEquipmentInfo message, MessageContext ctx) {
+    public IMessage onMessage(MessageServerAddSkinInfo message, MessageContext ctx) {
         ArmourersWorkshop.proxy.addEquipmentData(message.playerPointer, message.equipmentData);
         return null;
     }
