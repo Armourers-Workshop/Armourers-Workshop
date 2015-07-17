@@ -136,7 +136,17 @@ public final class Addons {
         "",
         
         //Glass Shards
-        "glass_shards:glass_sword"
+        "glass_shards:glass_sword",
+        "",
+        
+        //Twilight Forest
+        "TwilightForest:item.ironwoodSword",
+        "TwilightForest:item.fierySword",
+        "TwilightForest:item.steeleafSword",
+        "TwilightForest:item.knightlySword",
+        //"TwilightForest:item.giantSword",
+        "TwilightForest:item.iceSword",
+        "TwilightForest:item.glassSword"
     };
     
     public static final String[] overrideBowsDefault = {
