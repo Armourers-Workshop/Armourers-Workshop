@@ -3,24 +3,22 @@ package riskyken.armourersWorkshop.common.addons;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import net.minecraftforge.client.MinecraftForgeClient;
-
 import org.apache.logging.log4j.Level;
-
-import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
-import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
-import riskyken.armourersWorkshop.utils.EventState;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.google.common.collect.Maps;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
+import net.minecraftforge.client.MinecraftForgeClient;
+import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
+import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
+import riskyken.armourersWorkshop.utils.EventState;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class Addons {
     
@@ -134,7 +132,11 @@ public final class Addons {
         "battlegear2:spear.stone",
         "battlegear2:spear.iron",
         "battlegear2:spear.diamond",
-        "battlegear2:spear.gold"
+        "battlegear2:spear.gold",
+        "",
+        
+        //Glass Shards
+        "glass_shards:glass_sword"
     };
     
     public static final String[] overrideBowsDefault = {
