@@ -45,6 +45,8 @@ public class GuiArmourLibrary extends GuiContainer {
     private static final int BUTTON_ID_SAVE = 0;
     private static final int BUTTON_ID_LOAD = 1;
     
+    private static int scrollAmount = 0;
+    
     private TileEntityArmourLibrary armourLibrary;
     private GuiList fileList;
     private GuiButtonExt saveButton;
@@ -86,6 +88,7 @@ public class GuiArmourLibrary extends GuiContainer {
         fileList = new GuiList(this.guiLeft + 7, this.guiTop + 80, 131, 80, 12);
         
         scrollbar = new GuiScrollbar(2, this.guiLeft + 138, this.guiTop + 80, 10, 80, "", false);
+        scrollbar.setValue(scrollAmount);
         buttonList.add(scrollbar);
         
         checkClientFiles = new GuiCheckBox(3, this.guiLeft + 152, this.guiTop + 63, GuiHelper.getLocalizedControlName(guiName, "showClientFiles"), false);
@@ -218,6 +221,7 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
+        scrollAmount = scrollbar.getValue();
         fileList.setScrollPercentage(scrollbar.getPercentageValue());
     }
     
