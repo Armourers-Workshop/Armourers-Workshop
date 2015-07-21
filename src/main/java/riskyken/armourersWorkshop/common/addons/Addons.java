@@ -163,6 +163,9 @@ public final class Addons {
         if (Loader.isModLoaded("battlegear2")) {
             loadedAddons.add(new AddonBattlegear2());
         }
+        if (Loader.isModLoaded("BuildCraft|Core")) {
+            loadedAddons.add(new AddonBuildCraft());
+        }
         for (int i = 0; i < loadedAddons.size(); i++) {
             loadedAddons.get(i).init();
         }

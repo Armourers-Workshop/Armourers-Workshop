@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.item.Item;
+import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.minecraftWrapper.common.item.ModItem;
 import riskyken.minecraftWrapper.common.registry.ModRegistry;
@@ -25,7 +26,11 @@ public class ModItems {
     
     public static void init() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
-        equipmentSkin = new ItemEquipmentSkin();
+        if (AddonBuildCraft.isSkinCompatibleVersion()) {
+            equipmentSkin = new ItemEquipmentSkinRobotOverlay();
+        } else {
+            equipmentSkin = new ItemEquipmentSkin();
+        }
         paintbrush = new ItemPaintbrush();
         paintRoller = new ItemPaintRoller();
         colourPicker = new ItemColourPicker();
