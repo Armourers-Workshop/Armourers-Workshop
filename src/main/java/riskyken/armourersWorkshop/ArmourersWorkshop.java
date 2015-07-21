@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -23,6 +24,7 @@ import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.minecraftWrapper.common.creativetab.ModCreativeTab;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -81,8 +83,28 @@ public class ArmourersWorkshop {
         proxy.init();
         proxy.registerKeyBindings();
         proxy.initRenderers();
+        
         EntityEquipmentDataManager.init();
         EntitySkinHandler.init();
+        
+        if (Loader.isModLoaded("AquaTweaks")) {
+            ModLogger.log("Aqua Tweaks support active.");
+            NBTTagCompound compound = new NBTTagCompound();
+            
+            compound.setString("modid", LibModInfo.ID);
+            compound.setString("block", "block.mannequin");
+            FMLInterModComms.sendMessage("AquaTweaks", "registerAquaConnectable", compound);
+            
+            compound = new NBTTagCompound();
+            compound.setString("modid", LibModInfo.ID);
+            compound.setString("block", "block.doll");
+            FMLInterModComms.sendMessage("AquaTweaks", "registerAquaConnectable", compound);
+            
+            compound = new NBTTagCompound();
+            compound.setString("modid", LibModInfo.ID);
+            compound.setString("block", "block.miniArmourer");
+            FMLInterModComms.sendMessage("AquaTweaks", "registerAquaConnectable", compound);
+        }
     }
     
     @Mod.EventHandler
