@@ -1,8 +1,11 @@
 package riskyken.armourersWorkshop.common.items;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,14 +16,15 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
+import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
+import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemShadeNoiseTool extends AbstractModItem {
+public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurableTool {
 
     public ItemShadeNoiseTool() {
         super(LibItemNames.SHADE_NOISE_TOOL);
@@ -66,5 +70,11 @@ public class ItemShadeNoiseTool extends AbstractModItem {
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
         String rollover = TranslateUtils.translate("item.armourersworkshop:rollover.intensity", intensity);
         list.add(rollover);
+    }
+
+    @Override
+    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+        toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
+        toolOptionList.add(ToolOptions.INTENSITY);
     }
 }

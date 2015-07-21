@@ -1,8 +1,11 @@
 package riskyken.armourersWorkshop.common.items;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,14 +17,16 @@ import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
+import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
+import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.minecraftWrapper.common.world.BlockLocation;
 
-public class ItemBurnTool extends AbstractModItem {
+public class ItemBurnTool extends AbstractModItem implements IConfigurableTool {
 
     public ItemBurnTool() {
         super(LibItemNames.BURN_TOOL);
@@ -40,17 +45,27 @@ public class ItemBurnTool extends AbstractModItem {
 
         if (block instanceof IPantableBlock) {
             if (!world.isRemote) {
-                int intensity = UtilItems.getIntensityFromStack(stack, 16);
-                IPantableBlock worldColourable = (IPantableBlock) block;
-                int oldColour = worldColourable.getColour(world, x, y, z, side);
-                int newColour = UtilColour.makeColourDarker(new Color(oldColour), intensity).getRGB();
-                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, side);
-                ((IPantableBlock) block).setColour(world, x, y, z, newColour, side);
+                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                    for (int i = 0; i < 6; i++) {
+                        usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
+                    }
+                } else {
+                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
+                }
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
             }
             return true;
         }
         return false;
+    }
+    
+    private void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+        int intensity = (Integer) ToolOptions.INTENSITY.readFromNBT(stack.getTagCompound());
+        IPantableBlock worldColourable = (IPantableBlock) block;
+        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+        int newColour = UtilColour.makeColourDarker(new Color(oldColour), intensity).getRGB();
+        UndoManager.playerPaintedBlock(player, world, bl.x, bl.y, bl.z, oldColour, side);
+        ((IPantableBlock) block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
     }
     
     @Override
@@ -68,5 +83,11 @@ public class ItemBurnTool extends AbstractModItem {
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
         String rollover = TranslateUtils.translate("item.armourersworkshop:rollover.intensity", intensity);
         list.add(rollover);
+    }
+
+    @Override
+    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+        toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
+        toolOptionList.add(ToolOptions.INTENSITY);
     }
 }

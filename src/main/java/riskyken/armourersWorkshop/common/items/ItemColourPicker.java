@@ -5,6 +5,10 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,19 +29,12 @@ import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintingNBTHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     
@@ -88,7 +85,8 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
                     ISkinType skinType = parent.getSkinType();
                     if (skinPartHasTexture(((TileEntityBoundingBox)te).getSkinPart())) {
                         int colour = getColourFromSkin((TileEntityBoundingBox)te, player, world, x, y, z, side);
-                        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
+                        //TODO Fixed skin colour picking
+                        //PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
                     }
                 }
             }

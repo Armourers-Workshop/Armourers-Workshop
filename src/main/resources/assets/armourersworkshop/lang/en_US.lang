@@ -91,6 +91,10 @@ item.armourersworkshop:rollover.skinIdError1=&cWarning: This skin is using an ol
 item.armourersworkshop:rollover.skinIdError2=&cPlease save and reload it from the library to fix this.
 item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
 
+# Tool Options
+tooloption.armourersworkshop:fullBlockMode=Full block mode
+tooloption.armourersworkshop:intensity=Intensity
+
 # Skin Types
 skinType.armourers:head.name=Head
 skinType.armourers:chest.name=Chest

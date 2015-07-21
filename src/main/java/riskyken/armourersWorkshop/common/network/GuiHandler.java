@@ -1,12 +1,13 @@
 package riskyken.armourersWorkshop.common.network;
 
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
@@ -28,9 +29,9 @@ import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
-import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
@@ -41,8 +42,6 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.minecraftWrapper.common.registry.ModRegistry;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -145,7 +144,7 @@ public class GuiHandler implements IGuiHandler {
                 ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
                 return new GuiEquipmentWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.TOOL_OPTIONS:
-                if (player.getCurrentEquippedItem().getItem() instanceof AbstractModItem) {
+                if (player.getCurrentEquippedItem().getItem() instanceof IConfigurableTool) {
                     return new GuiToolOptions(player.getCurrentEquippedItem());
                 }
                 break;

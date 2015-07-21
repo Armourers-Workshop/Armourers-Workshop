@@ -1,8 +1,11 @@
 package riskyken.armourersWorkshop.common.items;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,12 +19,13 @@ import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
+import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
+import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemPaintRoller extends AbstractPaintingTool {
+public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurableTool {
     
     public ItemPaintRoller() {
         super(LibItemNames.PAINT_ROLLER);
@@ -122,5 +126,10 @@ public class ItemPaintRoller extends AbstractPaintingTool {
             return itemIcon;
         }
         return tipIcon;
+    }
+    
+    @Override
+    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+        toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
     }
 }

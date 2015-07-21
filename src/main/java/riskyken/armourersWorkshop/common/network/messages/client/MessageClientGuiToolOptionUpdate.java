@@ -1,38 +1,37 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.AbstractModItem;
-import riskyken.armourersWorkshop.common.items.ItemColourPicker;
-import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.utils.UtilItems;
+import java.util.Iterator;
+import java.util.Set;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 
 public class MessageClientGuiToolOptionUpdate implements IMessage, IMessageHandler<MessageClientGuiToolOptionUpdate, IMessage> {
 
-    byte toolOption;
-    int value;
+    private NBTTagCompound toolOptions;
     
     public MessageClientGuiToolOptionUpdate() { }
     
-    public MessageClientGuiToolOptionUpdate(byte toolOption, int value) {
-        this.toolOption = toolOption;
-        this.value = value;
+    public MessageClientGuiToolOptionUpdate(NBTTagCompound toolOptions) {
+        this.toolOptions = toolOptions;
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        toolOption = buf.readByte();
-        value = buf.readInt();
+        this.toolOptions = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(toolOption);
-        buf.writeInt(value);
+        ByteBufUtils.writeTag(buf, this.toolOptions);
     }
     
     @Override
@@ -40,15 +39,23 @@ public class MessageClientGuiToolOptionUpdate implements IMessage, IMessageHandl
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         if (player != null) {
             ItemStack stack = player.getCurrentEquippedItem();
+            Item item = stack.getItem();
             
-            if (message.toolOption == 0) {
-                if (stack != null && stack.getItem() instanceof AbstractModItem) {
-                    UtilItems.setIntensityOnStack(stack, message.value);
+            if (item instanceof IConfigurableTool) {
+                NBTTagCompound newOptions = message.toolOptions;
+                if (!stack.hasTagCompound()) {
+                    stack.setTagCompound(new NBTTagCompound());
                 }
-            }
-            if (message.toolOption == 1) {
-                if (stack != null && stack.getItem() == ModItems.colourPicker) {
-                    ((ItemColourPicker)stack.getItem()).setToolColour(stack, message.value);
+                NBTTagCompound stackCompound = stack.getTagCompound();
+                Set keySet = newOptions.func_150296_c();
+                
+                Iterator iterator = keySet.iterator();
+                while (iterator.hasNext()) {
+                    String key = (String) iterator.next();
+                    if (stackCompound.hasKey(key)) {
+                        stackCompound.removeTag(key);
+                    }
+                    stackCompound.setTag(key, newOptions.getTag(key));
                 }
             }
         }
