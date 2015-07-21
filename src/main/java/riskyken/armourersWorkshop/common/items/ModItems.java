@@ -1,8 +1,12 @@
 package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.item.Item;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.minecraftWrapper.common.item.ModItem;
 import riskyken.minecraftWrapper.common.registry.ModRegistry;
 
@@ -24,13 +28,13 @@ public class ModItems {
     public static ModItem soap;
     public static Item hueTool;
     
-    public static void init() {
+    public ModItems() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
-        if (AddonBuildCraft.isSkinCompatibleVersion()) {
-            equipmentSkin = new ItemEquipmentSkinRobotOverlay();
-        } else {
-            equipmentSkin = new ItemEquipmentSkin();
-        }
+        ModLogger.log("Loading items");
+        
+        setEquipmentSkinType();
+        
+        
         paintbrush = new ItemPaintbrush();
         paintRoller = new ItemPaintRoller();
         colourPicker = new ItemColourPicker();
@@ -53,5 +57,31 @@ public class ModItems {
         ModRegistry.registerItem(guideBook);
         ModRegistry.registerItem(wandOfStyle);
         ModRegistry.registerItem(soap);
+    }
+    
+    private void setEquipmentSkinType() {
+        boolean skinTypeSet = true;
+        
+        if (AddonBuildCraft.isSkinCompatibleVersion()) {
+            try {
+                Class<?> c = Class.forName("riskyken.armourersWorkshop.common.items.ItemEquipmentSkinRobotOverlay");
+                Object classObject = c.newInstance();
+                
+                if (classObject instanceof ItemEquipmentSkin) {
+                    equipmentSkin = (ItemEquipmentSkin)classObject;
+                } else {
+                    skinTypeSet = false;
+                }
+                
+            } catch (Exception e) {
+                ModLogger.log(Level.WARN, "Failed to load BuildCraft skinned item.");
+                e.printStackTrace();
+                skinTypeSet = false;
+            }
+        } 
+        
+        if (!skinTypeSet) {
+            equipmentSkin = new ItemEquipmentSkin();
+        }
     }
 }

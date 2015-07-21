@@ -28,7 +28,7 @@ public class ModBlocks {
     public static Block doll;
     public static Block skinningTable;
     
-    public static void init() {
+    public ModBlocks() {
         armourerBrain = new BlockArmourerBrain();
         miniArmourer = new BlockMiniArmourer();
         armourLibrary = new BlockArmourLibrary();
@@ -43,7 +43,7 @@ public class ModBlocks {
         skinningTable = new BlockSkinningTable();
     }
 
-    public static void registerTileEntities() {
+    public void registerTileEntities() {
         registerTileEntity(TileEntityArmourerBrain.class, LibBlockNames.ARMOURER_BRAIN);
         registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntityArmourLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
@@ -54,7 +54,7 @@ public class ModBlocks {
         registerTileEntity(TileEntitySkinningTable.class, LibBlockNames.SKINNING_TABLE);
     }
 
-    public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
+    private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
         GameRegistry.registerTileEntity(tileEntityClass, "te." + id);
     }
 }

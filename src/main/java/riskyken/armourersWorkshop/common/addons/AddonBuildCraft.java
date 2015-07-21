@@ -1,10 +1,10 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 
 public class AddonBuildCraft extends AbstractAddon {
     
@@ -32,15 +32,16 @@ public class AddonBuildCraft extends AbstractAddon {
             ModContainer mc = Loader.instance().getIndexedModList().get(MOD_ID);
             if (mc != null) {
                 String version = mc.getVersion();
-                String[] versionSplit = version.split(".");
+                String[] versionSplit = version.split("\\.");
                 try {
                     int majorVersion = Integer.parseInt(versionSplit[0]);
                     if (majorVersion > 6) {
+                        ModLogger.log("BuildCraft robot skin support active.");
                         return true;
                     } else {
                         ModLogger.log("BuildCraft is out of date. Unable to active robot skin support.");
                     }
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     return false;
                 }
             }
