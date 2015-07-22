@@ -1,3 +1,25 @@
+Build 0.34.0
+Added a creative library block.
+Added more info to the Minecraft profiler.
+Added ability for armour to be skinned in the skinning table.
+Added support for Glass Shards swords.
+Added support for Twilight Forest swords.
+Added Aqua Tweaks support.
+Added option to most tools to paint the full block and not just one face.
+Added configuration options to disable doll recipe.
+Added configuration options to disable skinning table recipes.
+Added configuration options to hide debug text.
+Added debug configuration options to help players that have rendering issues.
+Added radius option to the the paint roller.
+Fixed players being able to edit blocks that are in protected zones.
+Fixed deadmau5 ears not showing on mannequins.
+Fixed clients never clearing old player skin data.
+Fixed mannequins equipment getting messed up when placing skinned items in their hand slots.
+Fixed not being able to pump items in and out of the library.
+Fixed client disconnect when trying to upload a large skin to a server.
+Fixed crash with older BuildCraft versions.
+Fixed skin drop down list not working when TMI is installed.
+
 Build 0.33.0
 Added recipes in the guide book.
 Added hue tool.
