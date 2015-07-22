@@ -53,6 +53,7 @@ public class ClientProxy extends CommonProxy {
     
     private static boolean shadersModLoaded;
     private static boolean moreplayermodelsLoaded;
+    public static boolean coloredLightsLoaded;
     public static int blockColourMixerRenderId;
     public static int renderPass;
     
@@ -98,6 +99,10 @@ public class ClientProxy extends CommonProxy {
             moreplayermodelsLoaded = true;
             ModLogger.log("More Player Models support active");
         }
+        if (Loader.isModLoaded("easycoloredlights")) {
+            coloredLightsLoaded = true;
+            ModLogger.log("Colored Lights support active");
+        }
     }
     
     @Override
@@ -122,6 +127,9 @@ public class ClientProxy extends CommonProxy {
             return true;
         }
         if (ConfigHandler.skinTextureRenderOverride) {
+            return true;
+        }
+        if (coloredLightsLoaded) {
             return true;
         }
         return false;
