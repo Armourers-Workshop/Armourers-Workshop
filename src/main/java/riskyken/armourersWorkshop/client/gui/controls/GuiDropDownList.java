@@ -3,11 +3,15 @@ package riskyken.armourersWorkshop.client.gui.controls;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
+import org.lwjgl.input.Mouse;
+
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 
 @SideOnly(Side.CLIENT)
 public class GuiDropDownList extends GuiButtonExt {
@@ -44,6 +48,7 @@ public class GuiDropDownList extends GuiButtonExt {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
+            mouseCheck();
             this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int k = this.getHoverState(this.field_146123_n);
             GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
@@ -77,6 +82,30 @@ public class GuiDropDownList extends GuiButtonExt {
             }
             
             mc.fontRenderer.drawString(this.displayString, this.xPosition + 3, this.yPosition + 3, 16777215);
+        }
+    }
+    
+    private boolean mouseDown = false;
+    
+    private void mouseCheck() {
+        //Fix for TMI, it stops the mouse released event in container GUI's.
+        if (Loader.isModLoaded("TooManyItems")) {
+            if (Mouse.isCreated()) {
+                if (Mouse.isButtonDown(0)) {
+                    mouseDown = true;
+                } else {
+                    if (mouseDown) {
+                        mouseDown = false;
+                        Minecraft mc = Minecraft.getMinecraft();
+                        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+                        double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
+                        double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
+                        int mouseX = (int) (Mouse.getX() / scaleWidth);
+                        int mouseY = (int) (-(Mouse.getY() - mc.displayHeight) / scaleHeight);
+                        mouseReleased(mouseX, mouseY);
+                    }
+                }
+            }
         }
     }
     
