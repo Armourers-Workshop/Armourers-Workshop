@@ -1,26 +1,24 @@
 package riskyken.armourersWorkshop.client.model;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelRendererAttachment extends ModelRenderer {
@@ -41,7 +39,7 @@ public class ModelRendererAttachment extends ModelRenderer {
     
     @Override
     public void render(float scale) {
-        if (ConfigHandler.compatibilityRender) {
+        if (ClientProxy.useSafeModelRender()) {
             return;
         }
         mc.mcProfiler.startSection("armourers player render");
@@ -91,7 +89,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             
         }
         
-        if (ClientProxy.shadersModLoaded) {
+        if (ClientProxy.useSafeTextureRender()) {
             if (player instanceof AbstractClientPlayer) {
                 AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
                 Minecraft.getMinecraft().renderEngine.bindTexture(clientPlayer.getLocationSkin());

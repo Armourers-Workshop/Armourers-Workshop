@@ -51,8 +51,8 @@ import riskyken.minecraftWrapper.client.RenderBridge;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     
-    public static boolean shadersModLoaded;
-    public static boolean moreplayermodelsLoaded;
+    private static boolean shadersModLoaded;
+    private static boolean moreplayermodelsLoaded;
     public static int blockColourMixerRenderId;
     public static int renderPass;
     
@@ -96,7 +96,6 @@ public class ClientProxy extends CommonProxy {
         }
         if (Loader.isModLoaded("moreplayermodels")) {
             moreplayermodelsLoaded = true;
-            ConfigHandler.compatibilityRender = true;
             ModLogger.log("More Player Models support active");
         }
     }
@@ -106,6 +105,26 @@ public class ClientProxy extends CommonProxy {
         Addons.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
         spamSillyMessages();
+    }
+    
+    public static boolean useSafeModelRender() {
+        if (moreplayermodelsLoaded) {
+            return true;
+        }
+        if (ConfigHandler.skinSafeModelRenderOverride) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean useSafeTextureRender() {
+        if (shadersModLoaded) {
+            return true;
+        }
+        if (ConfigHandler.skinTextureRenderOverride) {
+            return true;
+        }
+        return false;
     }
     
     private void spamSillyMessages() {

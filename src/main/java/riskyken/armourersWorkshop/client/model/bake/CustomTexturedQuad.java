@@ -25,7 +25,7 @@ public class CustomTexturedQuad extends TexturedQuad {
         renderBuffer.setColourRGBA_B(r, g, b, a);
         for (int i = 0; i < 4; ++i) {
             PositionTextureVertex positiontexturevertex = this.vertexPositions[i];
-            if (ClientProxy.shadersModLoaded) {
+            if (ClientProxy.useSafeTextureRender()) {
                 renderBuffer.addVertexWithUV((double)((float)(positiontexturevertex.vector3D.xCoord + x) * scale), (double)((float)(positiontexturevertex.vector3D.yCoord + y) * scale), (double)((float)(positiontexturevertex.vector3D.zCoord + z) * scale), (double)positiontexturevertex.texturePositionX, (double)positiontexturevertex.texturePositionY);
             } else {
                 renderBuffer.addVertex((double)((float)(positiontexturevertex.vector3D.xCoord + x) * scale), (double)((float)(positiontexturevertex.vector3D.yCoord + y) * scale), (double)((float)(positiontexturevertex.vector3D.zCoord + z) * scale));

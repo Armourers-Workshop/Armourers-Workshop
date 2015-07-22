@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeGlass;
@@ -63,20 +64,23 @@ public class ItemEquipmentSkin extends AbstractModItem {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinAuthor", data.getAuthorName()));
                 }
                 
-                if (GuiScreen.isShiftKeyDown()) {
-                    if (skinData.skinType != null) {
-                        String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
-                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
+                if (ConfigHandler.showSkinTooltipDebugInfo) {
+                    if (GuiScreen.isShiftKeyDown()) {
+                        if (skinData.skinType != null) {
+                            String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
+                            tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
+                        }
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.skinId));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubes", data.getTotalOfCubeType(Cube.class)));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlowing", data.getTotalOfCubeType(CubeGlowing.class)));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlass", data.getTotalOfCubeType(CubeGlass.class)));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlassGlowing", data.getTotalOfCubeType(CubeGlassGlowing.class)));
+                    } else {
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinHoldShiftForInfo"));
                     }
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.skinId));
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubes", data.getTotalOfCubeType(Cube.class)));
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlowing", data.getTotalOfCubeType(CubeGlowing.class)));
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlass", data.getTotalOfCubeType(CubeGlass.class)));
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlassGlowing", data.getTotalOfCubeType(CubeGlassGlowing.class)));
-                } else {
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinHoldShiftForInfo"));
                 }
+                
                 if (skinData.skinId != data.lightHash()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError1"));
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError2"));

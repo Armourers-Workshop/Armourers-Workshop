@@ -32,12 +32,12 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 /**
@@ -150,7 +150,7 @@ public final class EquipmentModelRenderer {
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
         targetPlayer = player;
-        if (!addedRenderAttachment & !ConfigHandler.compatibilityRender) {
+        if (!addedRenderAttachment & !ClientProxy.useSafeModelRender()) {
             ModelBiped playerBiped = event.renderer.modelBipedMain;
             
             playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinHead, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
@@ -190,7 +190,7 @@ public final class EquipmentModelRenderer {
     
     @SubscribeEvent
     public void onRenderSpecialsPost(RenderPlayerEvent.Specials.Post event) {
-        if (!ConfigHandler.compatibilityRender) {
+        if (!ClientProxy.useSafeModelRender()) {
             return;
         }
         EntityPlayer player = event.entityPlayer;

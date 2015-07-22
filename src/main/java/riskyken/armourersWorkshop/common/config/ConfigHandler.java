@@ -11,10 +11,12 @@ import riskyken.armourersWorkshop.common.update.UpdateCheck;
 
 public class ConfigHandler {
 
+    public static String CATEGORY_RECIPE = "recipe";
     public static String CATEGORY_GENERAL = "general";
     public static String CATEGORY_COMPATIBILITY = "compatibility";
     public static String CATEGORY_CLIENT = "client";
     public static String CATEGORY_SERVER = "server";
+    public static String CATEGORY_DEBUG = "debug";
     
     public static Configuration config;
 
@@ -34,13 +36,18 @@ public class ConfigHandler {
     
     //general
     public static boolean downloadSkins;
-    public static boolean compatibilityRender = false;
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
     public static boolean allowClientsToSaveSkins = false;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
+    
+    //debug
+    public static boolean skinTextureRenderOverride;
+    public static boolean skinSafeModelRenderOverride;
+    public static boolean showF3DebugInfo;
+    public static boolean showSkinTooltipDebugInfo;
     
     
     //Register
@@ -60,31 +67,46 @@ public class ConfigHandler {
     }
 
     public static void loadConfigFile() {
-        // recipe
+        
         allowClientsToSaveSkins = config
                 .get(CATEGORY_GENERAL, "Allow Clients To Save Skins", false,
                 "Allows clients to save skins from a server to their local computer using the library.")
                 .getBoolean(false);
         
+        //recipe
         disableRecipes = config
-                .get(CATEGORY_GENERAL, "Disable Recipes", false,
+                .get(CATEGORY_RECIPE, "Disable Recipes", false,
                 "Disable vanilla recipes. Use if you want to manually add recipes for a mod pack.")
                 .getBoolean(false);
         
         disableDollRecipe = config
-                .get(CATEGORY_GENERAL, "Disable Doll Recipe", false,
+                .get(CATEGORY_RECIPE, "Disable Doll Recipe", false,
                 "Disable hidden in world doll recipe.")
                 .getBoolean(false);
         
         disableSkinningRecipes = config
-                .get(CATEGORY_GENERAL, "Disable Skinning Recipes", false,
+                .get(CATEGORY_RECIPE, "Disable Skinning Recipes", false,
                 "Disable skinning table recipes.")
                 .getBoolean(false);
         
         hideDollFromCreativeTabs = config
-                .get(CATEGORY_GENERAL, "Hide Doll Block", true,
+                .get(CATEGORY_RECIPE, "Hide Doll Block", true,
                 "Hides the doll block from the creative tab and NEI..")
                 .getBoolean(true);
+        
+        //debug
+        skinSafeModelRenderOverride = config
+                .get(CATEGORY_DEBUG, "Safe Model Render Override", false,
+                "Only enable this is you are having rendering issues with skins on players.\n"
+                + "Enable this option will break Smart Moving compatibility")
+                .getBoolean(false);
+        
+        skinTextureRenderOverride = config
+                .get(CATEGORY_DEBUG, "Safe Textue Render Override", false,
+                "Only enable this is you are having rendering issues with skins.\n"
+                + "This option is force on is shaders mod is installed.")
+                .getBoolean(false);
+        
         
         disabledSkins = config
                 .getStringList("Disabled Skins", CATEGORY_GENERAL, new String[] {},

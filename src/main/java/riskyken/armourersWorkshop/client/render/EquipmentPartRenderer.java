@@ -2,13 +2,14 @@ package riskyken.armourersWorkshop.client.render;
 
 import java.util.BitSet;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
@@ -17,8 +18,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.minecraftWrapper.client.IRenderBuffer;
 import riskyken.minecraftWrapper.client.RenderBridge;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class EquipmentPartRenderer extends ModelBase {
@@ -62,7 +61,7 @@ public class EquipmentPartRenderer extends ModelBase {
             armourPart.displayGlowingCompiled = true;
         }
         
-        if (ClientProxy.shadersModLoaded) {
+        if (ClientProxy.useSafeTextureRender()) {
             mc.renderEngine.bindTexture(texture);
         } else {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -80,7 +79,7 @@ public class EquipmentPartRenderer extends ModelBase {
             GL11.glEnable(GL11.GL_LIGHTING);
         }
         
-        if (!ClientProxy.shadersModLoaded) {
+        if (!ClientProxy.useSafeTextureRender()) {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
         
@@ -93,7 +92,7 @@ public class EquipmentPartRenderer extends ModelBase {
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < skinPart.normalVertexList.size(); i++) {
             ColouredVertexWithUV cVert = skinPart.normalVertexList.get(i);
-            if (ClientProxy.shadersModLoaded) {
+            if (ClientProxy.useSafeTextureRender()) {
                 cVert.renderVertexWithUV(renderBuffer);
             } else {
                 cVert.renderVertex(renderBuffer);
@@ -110,7 +109,7 @@ public class EquipmentPartRenderer extends ModelBase {
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < skinPart.glowingVertexList.size(); i++) {
             ColouredVertexWithUV cVert = skinPart.glowingVertexList.get(i);
-            if (ClientProxy.shadersModLoaded) {
+            if (ClientProxy.useSafeTextureRender()) {
                 cVert.renderVertexWithUV(renderBuffer);
             } else {
                 cVert.renderVertex(renderBuffer);
