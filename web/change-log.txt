@@ -18,6 +18,7 @@ Fixed mannequins equipment getting messed up when placing skinned items in their
 Fixed not being able to pump items in and out of the library.
 Fixed client disconnect when trying to upload a large skin to a server.
 Fixed crash with older BuildCraft versions.
+Fixed rendering issues with Colored Lights mod.
 Fixed skin drop down list not working when TMI is installed.
 
 Build 0.33.0
