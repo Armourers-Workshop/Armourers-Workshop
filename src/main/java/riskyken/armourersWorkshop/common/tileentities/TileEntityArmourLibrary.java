@@ -155,8 +155,6 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
             return;
         }
         
-        ItemStack inputItem = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
-
         SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         
         ItemStack stackArmour = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);

@@ -13,10 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
@@ -63,35 +65,41 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         }
         
         if (block instanceof IPantableBlock) {
-            world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
-            for (int i = -1; i < 2; i++ ) {
-                for (int j = -1; j < 2; j++ ) {
-                    switch (side) {
-                        case 0:
-                            paintBlock(world, player, stack, x + j, y, z + i, side);
-                            break;
-                        case 1:
-                            paintBlock(world, player, stack, x + j , y, z + i, side);
-                            break;
-                        case 2:
-                            paintBlock(world, player, stack, x + i, y  + j, z, side);
-                            break;
-                        case 3:
-                            paintBlock(world, player, stack, x + i, y + j, z, side);
-                            break;
-                        case 4:
-                            paintBlock(world, player, stack, x, y + i, z + j, side);
-                            break;
-                        case 5:
-                            paintBlock(world, player, stack, x, y + i, z + j, side);
-                            break;
-                    }
-                }
+            paintArea(world, player, stack, x, y, z, side);
+            if (!world.isRemote) {
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
             return true;
         }
         
         return false;
+    }
+    
+    private void paintArea(World world, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
+        for (int i = -1; i < 2; i++ ) {
+            for (int j = -1; j < 2; j++ ) {
+                switch (side) {
+                    case 0:
+                        paintBlock(world, player, stack, x + j, y, z + i, side);
+                        break;
+                    case 1:
+                        paintBlock(world, player, stack, x + j , y, z + i, side);
+                        break;
+                    case 2:
+                        paintBlock(world, player, stack, x + i, y  + j, z, side);
+                        break;
+                    case 3:
+                        paintBlock(world, player, stack, x + i, y + j, z, side);
+                        break;
+                    case 4:
+                        paintBlock(world, player, stack, x, y + i, z + j, side);
+                        break;
+                    case 5:
+                        paintBlock(world, player, stack, x, y + i, z + j, side);
+                        break;
+                }
+            }
+        }
     }
     
     private void paintBlock(World world, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
@@ -100,13 +108,29 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
             int newColour = getToolColour(stack);
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
-                int oldColour = worldColourable.getColour(world, x, y, z, side);
-                UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, side);
-                ((IPantableBlock)block).setColour(world, x, y, z, newColour, side);
+                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                    for (int i = 0; i < 6; i++) {
+                        int oldColour = worldColourable.getColour(world, x, y, z, i);
+                        UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, i);
+                        ((IPantableBlock)block).setColour(world, x, y, z, newColour, i);
+                    }
+                } else {
+                    int oldColour = worldColourable.getColour(world, x, y, z, side);
+                    UndoManager.playerPaintedBlock(player, world, x, y, z, oldColour, side);
+                    ((IPantableBlock)block).setColour(world, x, y, z, newColour, side);
+                }
             } else {
                 spawnPaintParticles(world, x, y, z, side, newColour);
             }
         }
+    }
+    
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (world.isRemote & player.isSneaking()) {
+            player.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, world, 0, 0, 0);
+        }
+        return stack;
     }
     
     @Override

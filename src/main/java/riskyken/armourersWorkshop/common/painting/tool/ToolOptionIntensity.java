@@ -24,7 +24,7 @@ public class ToolOptionIntensity extends AbstractToolOption {
 
     @Override
     public GuiButton getGuiControl(int id, int x, int y, NBTTagCompound compound) {
-        GuiSlider sliderControl = new GuiSlider(id, x, y, getLocalisedLabel(), 1, 64, (Integer) readFromNBT(compound), null);
+        GuiSlider sliderControl = new GuiSlider(id, x, y, getLocalisedLabel() + " ", 1, 64, (Integer) readFromNBT(compound), null);
         sliderControl.showDecimal = false;
         return sliderControl;
     }
