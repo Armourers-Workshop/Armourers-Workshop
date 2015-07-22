@@ -94,6 +94,7 @@ item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=Full block mode
 tooloption.armourersworkshop:intensity=Intensity
+tooloption.armourersworkshop:radius=Radius
 
 # Skin Types
 skinType.armourers:head.name=Head

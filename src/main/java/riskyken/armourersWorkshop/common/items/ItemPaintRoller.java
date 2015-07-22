@@ -76,8 +76,9 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     }
     
     private void paintArea(World world, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
-        for (int i = -1; i < 2; i++ ) {
-            for (int j = -1; j < 2; j++ ) {
+        int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
+        for (int i = -radius + 1; i < radius; i++ ) {
+            for (int j = -radius + 1; j < radius; j++ ) {
                 switch (side) {
                     case 0:
                         paintBlock(world, player, stack, x + j, y, z + i, side);
@@ -155,5 +156,6 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     @Override
     public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
         toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
+        toolOptionList.add(ToolOptions.RADIUS);
     }
 }
