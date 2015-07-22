@@ -18,17 +18,30 @@ public class ConfigHandler {
     
     public static Configuration config;
 
+    //recipes
     public static boolean disableRecipes;
+    public static boolean disableDollRecipe;
+    public static boolean disableSkinningRecipes;
+    public static boolean hideDollFromCreativeTabs;
+    
+    //client
     public static int clientModelCacheTime = 12000;
-    public static int serverModelCacheTime = 12000;
     public static int maxRenderDistance = 40;
+    public static int maxModelBakingThreads = 1;
+    
+    //server
+    public static int serverModelCacheTime = 12000;
+    
+    //general
     public static boolean downloadSkins;
     public static boolean compatibilityRender = false;
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
     public static boolean allowClientsToSaveSkins = false;
+    
+    //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
-    public static int maxModelBakingThreads = 1;
+    
     
     //Register
     /** Should skins be dropped on player death.<br/>
@@ -55,8 +68,23 @@ public class ConfigHandler {
         
         disableRecipes = config
                 .get(CATEGORY_GENERAL, "Disable Recipes", false,
-                "Disable all mod recipes. Use if you want to manually add recipes for a mod pack.")
+                "Disable vanilla recipes. Use if you want to manually add recipes for a mod pack.")
                 .getBoolean(false);
+        
+        disableDollRecipe = config
+                .get(CATEGORY_GENERAL, "Disable Doll Recipe", false,
+                "Disable hidden in world doll recipe.")
+                .getBoolean(false);
+        
+        disableSkinningRecipes = config
+                .get(CATEGORY_GENERAL, "Disable Skinning Recipes", false,
+                "Disable skinning table recipes.")
+                .getBoolean(false);
+        
+        hideDollFromCreativeTabs = config
+                .get(CATEGORY_GENERAL, "Hide Doll Block", true,
+                "Hides the doll block from the creative tab and NEI..")
+                .getBoolean(true);
         
         disabledSkins = config
                 .getStringList("Disabled Skins", CATEGORY_GENERAL, new String[] {},

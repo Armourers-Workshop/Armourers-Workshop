@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.crafting;
 
 import java.lang.reflect.Method;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
@@ -12,8 +14,6 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
 import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public final class CraftingManager {
 
@@ -23,13 +23,16 @@ public final class CraftingManager {
         GameRegistry.addRecipe(new RecipeSkinUpdate());
         RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinUpdate.class, Category.SHAPELESS, "after:minecraft:shapeless");
         hideItemsInNEI();
-        if (ConfigHandler.disableRecipes) {
-            return;
+        if (!ConfigHandler.disableSkinningRecipes) {
+            ItemSkinningRecipes.init();
         }
-        ItemSkinningRecipes.init();
-        ModBlockRecipes.init();
-        ModItemRecipes.init();
-        new DollCraftinghandler();
+        if (!ConfigHandler.disableRecipes) {
+            ModBlockRecipes.init();
+            ModItemRecipes.init();
+        }
+        if (!ConfigHandler.disableDollRecipe) {
+            new DollCraftinghandler();
+        }
     }
 
     public static void addShapelessRecipe(ItemStack result, Object[] recipe) {
@@ -45,7 +48,9 @@ public final class CraftingManager {
             try {
                 Class ccApi = Class.forName("codechicken.nei.api.API");
                 Method ccHideStack = ccApi.getMethod("hideItem", ItemStack.class);
-                ccHideStack.invoke(null, new ItemStack(ModBlocks.doll, 1));
+                if (ConfigHandler.hideDollFromCreativeTabs) {
+                    ccHideStack.invoke(null, new ItemStack(ModBlocks.doll, 1));
+                }
                 ccHideStack.invoke(null, new ItemStack(ModBlocks.boundingBox, 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[0], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[1], 1));

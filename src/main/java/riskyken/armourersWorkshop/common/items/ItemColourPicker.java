@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.items;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.authlib.GameProfile;
@@ -13,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -27,16 +29,21 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintingNBTHelper;
+import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
+import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
-public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
+public class ItemColourPicker extends AbstractModItem implements IPaintingTool, IConfigurableTool {
     
     public ItemColourPicker() {
         super(LibItemNames.COLOUR_PICKER);
@@ -85,8 +92,9 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
                     ISkinType skinType = parent.getSkinType();
                     if (skinPartHasTexture(((TileEntityBoundingBox)te).getSkinPart())) {
                         int colour = getColourFromSkin((TileEntityBoundingBox)te, player, world, x, y, z, side);
-                        //TODO Fixed skin colour picking
-                        //PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate((byte)1, colour));
+                        NBTTagCompound compound = new NBTTagCompound();
+                        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
+                        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
                     }
                 }
             }
@@ -230,5 +238,10 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool {
     @Override
     public void setToolColour(ItemStack stack, int colour) {
         PaintingNBTHelper.setToolColour(stack, colour);
+    }
+
+    @Override
+    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+        //Only here to allow colour updates
     }
 }
