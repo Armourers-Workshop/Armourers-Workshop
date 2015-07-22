@@ -1,9 +1,8 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.item.Item;
-
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.item.Item;
 import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -30,11 +29,7 @@ public class ModItems {
     
     public ModItems() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
-        ModLogger.log("Loading items");
-        
         setEquipmentSkinType();
-        
-        
         paintbrush = new ItemPaintbrush();
         paintRoller = new ItemPaintRoller();
         colourPicker = new ItemColourPicker();
@@ -78,7 +73,9 @@ public class ModItems {
                 e.printStackTrace();
                 skinTypeSet = false;
             }
-        } 
+        } else {
+            skinTypeSet = false;
+        }
         
         if (!skinTypeSet) {
             equipmentSkin = new ItemEquipmentSkin();
