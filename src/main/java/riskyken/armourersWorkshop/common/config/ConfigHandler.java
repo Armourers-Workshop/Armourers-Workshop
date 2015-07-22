@@ -91,21 +91,32 @@ public class ConfigHandler {
         
         hideDollFromCreativeTabs = config
                 .get(CATEGORY_RECIPE, "Hide Doll Block", true,
-                "Hides the doll block from the creative tab and NEI..")
+                "Hides the doll block from the creative tab and NEI.")
                 .getBoolean(true);
         
         //debug
         skinSafeModelRenderOverride = config
                 .get(CATEGORY_DEBUG, "Safe Model Render Override", false,
                 "Only enable this is you are having rendering issues with skins on players.\n"
-                + "Enable this option will break Smart Moving compatibility")
+                + "This option is force on if More Player Models is installed.\n"
+                + "Enable this option will break Smart Moving compatibility.")
                 .getBoolean(false);
         
         skinTextureRenderOverride = config
-                .get(CATEGORY_DEBUG, "Safe Textue Render Override", false,
-                "Only enable this is you are having rendering issues with skins.\n"
-                + "This option is force on is shaders mod is installed.")
+                .get(CATEGORY_DEBUG, "Safe Texture Render Override", false,
+                "Only enable this is you are having rendering issues with skins. (normally fixes lighting issues)\n"
+                + "This option is force on is Shaders Mod or Colored Lights mod is installed.")
                 .getBoolean(false);
+        
+        showF3DebugInfo = config
+                .get(CATEGORY_DEBUG, "Show F3 Debug Info", true,
+                "Shows extra info on the F3 debug screen.")
+                .getBoolean(true);
+        
+        showSkinTooltipDebugInfo = config
+                .get(CATEGORY_DEBUG, "Show Skin Tooltip Debug Info", true,
+                "Shows extra debug info on skin tooltips.")
+                .getBoolean(true);
         
         
         disabledSkins = config
