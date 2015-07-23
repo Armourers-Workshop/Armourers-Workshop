@@ -97,15 +97,15 @@ public class ConfigHandler {
         //debug
         skinSafeModelRenderOverride = config
                 .get(CATEGORY_DEBUG, "Safe Model Render Override", false,
-                "Only enable this is you are having rendering issues with skins on players.\n"
+                "Only enable this if you are having rendering issues with skins on players.\n"
                 + "This option is force on if More Player Models is installed.\n"
                 + "Enable this option will break Smart Moving compatibility.")
                 .getBoolean(false);
         
         skinTextureRenderOverride = config
                 .get(CATEGORY_DEBUG, "Safe Texture Render Override", false,
-                "Only enable this is you are having rendering issues with skins. (normally fixes lighting issues)\n"
-                + "This option is force on is Shaders Mod or Colored Lights mod is installed.")
+                "Only enable this if you are having rendering issues with skins. (normally fixes lighting issues)\n"
+                + "This option is force on if Shaders Mod or Colored Lights mod is installed.")
                 .getBoolean(false);
         
         showF3DebugInfo = config
