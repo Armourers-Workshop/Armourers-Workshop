@@ -24,11 +24,28 @@ import riskyken.armourersWorkshop.utils.UtilBlocks;
  * Helper class for converting back and forth from
  * in world blocks to skin classes.
  * 
+ * Note: Minecraft models are inside out, blocks are
+ * flipped when loading and saving.
+ * 
  * @author RiskyKen
  *
  */
 public final class ArmourerWorldHelper {
     
+    /**
+     * Converts blocks in the world into a skin class.
+     * @param world The world.
+     * @param skinType The type of skin to save.
+     * @param authorName Author name for this skin.
+     * @param customName Custom display name for this skin.
+     * @param tags Custom search tags for this skin.
+     * @param xCoord Armourers x location.
+     * @param yCoord Armourers y location.
+     * @param zCoord Armourers z location.
+     * @param direction Direction the armourer is facing.
+     * @return
+     * @throws InvalidCubeTypeException
+     */
     public static Skin saveSkinFromWorld(World world, ISkinType skinType,
             String authorName, String customName, String tags,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
@@ -113,8 +130,17 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void loadSkinIntoWorld(World world, int x, int y, int z, Skin armourData, ForgeDirection direction) {
-        ArrayList<SkinPart> parts = armourData.getParts();
+    /**
+     * Converts a skin class into blocks in the world.
+     * @param world The world.
+     * @param x Armourers x location.
+     * @param y Armourers y location.
+     * @param z Armourers z location.
+     * @param skin The skin to load.
+     * @param direction The direction the armourer is facing.
+     */
+    public static void loadSkinIntoWorld(World world, int x, int y, int z, Skin skin, ForgeDirection direction) {
+        ArrayList<SkinPart> parts = skin.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
             loadSkinPartIntoWorld(world, parts.get(i), x, y, z, direction);
@@ -272,6 +298,7 @@ public final class ArmourerWorldHelper {
                     
                     if (world.blockExists(xTar, yTar, zTar)) {
                         Block block = world.getBlock(xTar, yTar, zTar);
+                        //TODO use CubeFactory to check cube.
                         if (
                             block == ModBlocks.colourable |
                             block == ModBlocks.colourableGlowing |
