@@ -1,6 +1,9 @@
 package riskyken.minecraftWrapper.common.world;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class WorldPointer {
@@ -21,5 +24,17 @@ public class WorldPointer {
     
     public World getMinecraftWorld() {
         return world;
+    }
+
+    public TileEntity getTileEntity(BlockLocation blockLocation) {
+        return world.getTileEntity(blockLocation.x, blockLocation.y, blockLocation.z);
+    }
+    
+    public Random rand() {
+        return world.rand;
+    }
+
+    public void playSoundEffect(double x, double y, double z, String soundName, float volume, float pitch) {
+        world.playSoundEffect(x, y, z, soundName, volume, pitch);
     }
 }

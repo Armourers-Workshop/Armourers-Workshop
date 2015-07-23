@@ -1,5 +1,11 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import org.apache.logging.log4j.Level;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,9 +15,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
@@ -21,13 +24,12 @@ import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
-
-import com.mojang.authlib.GameProfile;
 
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -38,6 +40,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
     private static final String TAG_CUSTOM_NAME = "customeName";
+    private static final String TAG_PAINT_DATA = "paintData";
     private static final int HEIGHT_OFFSET = 1;
     
     private ForgeDirection direction;
@@ -47,6 +50,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     private boolean showGuides;
     private boolean showOverlay;
     private String customName;
+    private int[] paintData;
+    @SideOnly(Side.CLIENT)
+    public SkinTexture skinTexture;
     
     public TileEntityArmourerBrain() {
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
@@ -54,6 +60,23 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         this.showOverlay = true;
         this.showGuides = true;
         this.customName = "";
+        this.paintData = new int[SkinTexture.TEXTURE_WIDTH * SkinTexture.TEXTURE_HEIGHT];
+        for (int i = 0; i < SkinTexture.TEXTURE_HEIGHT * SkinTexture.TEXTURE_WIDTH; i++) {
+            this.paintData[i] = 0x00FFFFFF;
+        }
+    }
+    
+    public int[] getPaintData() {
+        return paintData;
+    }
+    
+    public void updatePaintData(int x, int y, int colour) {
+        //int index = x + (y * SkinTexture.TEXTURE_WIDTH);
+        //ModLogger.log("Updating x:" + x + " y:" + y + " at:" + index);
+        //ModLogger.log("array size:" + paintData.length);
+        paintData[x + (y * SkinTexture.TEXTURE_WIDTH)] = colour;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     /**
@@ -316,6 +339,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
+        if (compound.hasKey(TAG_PAINT_DATA)) {
+            paintData = compound.getIntArray(TAG_PAINT_DATA);
+        }
     }
     
     @Override
@@ -337,6 +363,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
+        compound.setIntArray(TAG_PAINT_DATA, this.paintData);
     }
 
     @Override

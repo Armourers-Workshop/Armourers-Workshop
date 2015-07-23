@@ -1,21 +1,20 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
-import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockArmourer extends TileEntitySpecialRenderer {
@@ -32,7 +31,14 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         PlayerSkinInfo skinInfo = null;
         
-        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
+        mc.mcProfiler.startSection("textureBind");
+        if (te.skinTexture == null) {
+            te.skinTexture = new SkinTexture();
+        }
+        te.skinTexture.updateGameProfile(te.getGameProfile());
+        te.skinTexture.updatePaintData(te.getPaintData());
+        te.skinTexture.bindTexture();
+        mc.mcProfiler.endSection();
         
         GL11.glPushMatrix();
         GL11.glColor3f(0.77F, 0.77F, 0.77F);
@@ -62,9 +68,13 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         GL11.glScalef(16, 16, 16);
         
         if (skinType != null) {
+            mc.mcProfiler.startSection("modelRender");
             SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), false);
+            mc.mcProfiler.endSection();
             if (te.isShowGuides()) {
+                mc.mcProfiler.startSection("renderGuideGrid");
                 SkinRenderHelper.renderBuildingGrid(skinType, scale);
+                mc.mcProfiler.endSection();
             }
         }
         
