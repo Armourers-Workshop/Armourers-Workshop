@@ -20,7 +20,13 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
-
+/**
+ * Helper class for converting back and forth from
+ * in world blocks to skin classes.
+ * 
+ * @author RiskyKen
+ *
+ */
 public final class ArmourerWorldHelper {
     
     public static Skin saveSkinFromWorld(World world, ISkinType skinType,

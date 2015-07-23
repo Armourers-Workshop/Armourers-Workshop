@@ -18,8 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
@@ -37,6 +35,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.painting.PaintingNBTHelper;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
+import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
@@ -91,7 +90,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                 if (parent != null) {
                     ISkinType skinType = parent.getSkinType();
                     if (skinPartHasTexture(((TileEntityBoundingBox)te).getSkinPart())) {
-                        int colour = getColourFromSkin((TileEntityBoundingBox)te, player, world, x, y, z, side);
+                        int colour = getColourFromSkin((TileEntityBoundingBox)te, side);
                         NBTTagCompound compound = new NBTTagCompound();
                         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
                         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
@@ -110,68 +109,14 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         return skinPart instanceof ISkinPartTypeTextured;
     }
     
-    private int getColourFromSkin(TileEntityBoundingBox te, EntityPlayer player, World world, int x, int y, int z, int side) {
-        ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
-        Point textureLocation = skinPart.getTextureLocation();
-        IPoint3D textureModelSize = skinPart.getTextureModelSize();
-        ForgeDirection blockFace = ForgeDirection.getOrientation(side);
+    private int getColourFromSkin(TileEntityBoundingBox te, int side) {
         GameProfile gameProfile = te.getParent().getGameProfile();
-        
-        byte blockX = te.getGuideX();
-        byte blockY = te.getGuideY();
-        byte blockZ = te.getGuideZ();
-        
-        int textureX = textureLocation.x;
-        int textureY = textureLocation.y;
-        
-        int shiftX = 0;
-        int shiftY = 0;
-        
-        switch (blockFace) {
-        case EAST:
-            textureY += textureModelSize.getZ();
-            shiftX = (byte) (-blockZ + textureModelSize.getZ() - 1);
-            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
-            break;
-        case NORTH:
-            textureX += textureModelSize.getZ();
-            textureY += textureModelSize.getZ();
-            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
-            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
-            break;
-        case WEST:
-            textureX += textureModelSize.getZ() + textureModelSize.getX();
-            textureY += textureModelSize.getZ();
-            shiftX = blockZ;
-            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
-            break;
-        case SOUTH:
-            textureX += textureModelSize.getZ() + textureModelSize.getX() + textureModelSize.getZ();
-            textureY += textureModelSize.getZ();
-            shiftX = blockX;
-            shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
-            break;
-        case DOWN:
-            textureX += textureModelSize.getZ() + textureModelSize.getX();
-            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
-            shiftY = (byte) (-blockZ + textureModelSize.getX() - 1);
-            break;
-        case UP:
-            textureX += textureModelSize.getZ();
-            shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
-            shiftY = (byte) (-blockZ + textureModelSize.getZ() - 1);
-            break;
-        default:
-            break;
-        }
-        
-        textureX += shiftX;
-        textureY += shiftY;
+        Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock(te, side);
         
         BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
         int colour = UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
         if (playerSkin != null) {
-            colour = playerSkin.getRGB(textureX, textureY);
+            colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
         }
         return colour;
     }
