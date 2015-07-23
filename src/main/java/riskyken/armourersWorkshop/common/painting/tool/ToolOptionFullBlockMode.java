@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.painting.tool;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
@@ -12,16 +14,19 @@ public class ToolOptionFullBlockMode extends AbstractToolOption {
         super(TAG_FULL_BLOCK_MODE);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public int getDisplayWidth() {
         return 180;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public int getDisplayHeight() {
         return 9;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public GuiButton getGuiControl(int id, int x, int y, NBTTagCompound compound) {
         return new GuiCheckBox(id, x, y, getLocalisedLabel(), (Boolean) readFromNBT(compound));

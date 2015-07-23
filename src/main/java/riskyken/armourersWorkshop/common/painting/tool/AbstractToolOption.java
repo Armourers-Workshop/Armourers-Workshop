@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.painting.tool;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -25,10 +27,13 @@ public abstract class AbstractToolOption {
         return StatCollector.translateToLocal(getUnlocalisedlabel());
     }
     
+    @SideOnly(Side.CLIENT)
     public abstract int getDisplayWidth();
     
+    @SideOnly(Side.CLIENT)
     public abstract int getDisplayHeight();
     
+    @SideOnly(Side.CLIENT)
     public abstract GuiButton getGuiControl(int id, int x, int y, NBTTagCompound compound);
     
     public abstract Object readFromNBT(NBTTagCompound compound);
