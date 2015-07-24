@@ -10,12 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import net.minecraftforge.common.DimensionManager;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import net.minecraftforge.common.DimensionManager;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -99,6 +98,8 @@ public final class SkinIOUtils {
             e.printStackTrace();
         } catch (NewerFileVersionException e) {
             e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(stream);
         }
     
         return skinTypeName;
