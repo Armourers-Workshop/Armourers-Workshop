@@ -1,26 +1,35 @@
 package riskyken.armourersWorkshop.common.addons;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 
 public class AddonBuildCraft extends AbstractAddon {
     
     private static final String MOD_ID = "BuildCraft|Core";
     
-    public AddonBuildCraft() {
-        ModLogger.log("Loading BuildCraft Compatibility Addon");
+    @Override
+    public void preInit() {
     }
     
     @Override
     public void init() {
     }
+    
+    @Override
+    public void postInit() {
+    }
+    
+    @Override
+    public String getModId() {
+        return MOD_ID;
+    }
 
     @Override
     public String getModName() {
-        return MOD_ID;
+        return "BuildCraft";
     }
 
     @Override

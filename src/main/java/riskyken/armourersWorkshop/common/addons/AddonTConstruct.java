@@ -3,13 +3,12 @@ package riskyken.armourersWorkshop.common.addons;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import riskyken.armourersWorkshop.common.addons.Addons.RenderType;
 import riskyken.armourersWorkshop.utils.EventState;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 
 public class AddonTConstruct extends AbstractAddon {
-
-    public AddonTConstruct() {
-        ModLogger.log("Loading Tinkers' Construct Compatibility Addon");
+    
+    @Override
+    public void preInit() {
     }
     
     @Override
@@ -22,10 +21,19 @@ public class AddonTConstruct extends AbstractAddon {
         addRenderClass("tconstruct.items.tools.Cutlass", RenderType.SWORD);
         addRenderClass("tconstruct.items.tools.Shortbow", RenderType.BOW);
     }
+    
+    @Override
+    public void postInit() {
+    }
+    
+    @Override
+    public String getModId() {
+        return "TConstruct";
+    }
 
     @Override
     public String getModName() {
-        return "TConstruct";
+        return "Tinkers' Construct";
     }
 
     @Override

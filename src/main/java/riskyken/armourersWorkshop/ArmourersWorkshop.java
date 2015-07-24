@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -11,7 +10,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -56,6 +54,9 @@ public class ArmourersWorkshop {
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
         ConfigHandler.init(event.getSuggestedConfigurationFile());
 
+        Addons.preInit();
+        proxy.preInit();
+        
         SkinIOUtils.makeLibraryDirectory();
         UpdateCheck.checkForUpdates();
         SkinDownloadManager.downloadSkins();
@@ -65,8 +66,6 @@ public class ArmourersWorkshop {
         
         SkinTypeRegistry.init();
         CubeFactory.init();
-        
-        proxy.preInit();
     }
 
     @Mod.EventHandler
@@ -77,41 +76,21 @@ public class ArmourersWorkshop {
 
         new GuiHandler();
         
-        //FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.common.equipment.DemoDataManager");
-        //FMLInterModComms.sendMessage("armourersWorkshop", "register", "riskyken.armourersWorkshop.client.render.DemoRenderManager");
-        
         PacketHandler.init();
+        EntityEquipmentDataManager.init();
+        EntitySkinHandler.init();
+        
         proxy.init();
         proxy.registerKeyBindings();
         proxy.initRenderers();
         
-        EntityEquipmentDataManager.init();
-        EntitySkinHandler.init();
-        
-        if (Loader.isModLoaded("AquaTweaks")) {
-            ModLogger.log("Aqua Tweaks support active.");
-            NBTTagCompound compound = new NBTTagCompound();
-            
-            compound.setString("modid", LibModInfo.ID);
-            compound.setString("block", "block.mannequin");
-            FMLInterModComms.sendMessage("AquaTweaks", "registerAquaConnectable", compound);
-            
-            compound = new NBTTagCompound();
-            compound.setString("modid", LibModInfo.ID);
-            compound.setString("block", "block.doll");
-            FMLInterModComms.sendMessage("AquaTweaks", "registerAquaConnectable", compound);
-            
-            compound = new NBTTagCompound();
-            compound.setString("modid", LibModInfo.ID);
-            compound.setString("block", "block.miniArmourer");
-            FMLInterModComms.sendMessage("AquaTweaks", "registerAquaConnectable", compound);
-        }
+        Addons.init();
     }
     
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        Addons.init();
         proxy.postInit();
+        Addons.postInit();
     }
     
     @Mod.EventHandler

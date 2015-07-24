@@ -1,25 +1,32 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-
 import org.lwjgl.opengl.GL11;
 
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import riskyken.armourersWorkshop.utils.EventState;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class AddonBattlegear2 extends AbstractAddon {
-
-    public AddonBattlegear2() {
-        ModLogger.log("Loading Battlegear 2 Compatibility Addon");
+    
+    @Override
+    public void preInit() {
     }
 
     @Override
     public void init() {
     }
+    
+    @Override
+    public void postInit() {
+    }
+    
+    @Override
+    public String getModId() {
+        return "battlegear2";
+    }
 
     @Override
     public String getModName() {
-        return "battlegear2";
+        return "Battlegear 2";
     }
 
     @Override

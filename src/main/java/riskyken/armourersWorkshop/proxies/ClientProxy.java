@@ -60,6 +60,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit() {
         RenderBridge.init();
+        enableCrossModSupport();
+        spamSillyMessages();
     }
 
     @Override
@@ -87,7 +89,15 @@ public class ClientProxy extends CommonProxy {
         ClientModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
-        //Cross mod support
+    }
+    
+    @Override
+    public void postInit() {
+        Addons.initRenderers();
+        EntitySkinRenderHandler.INSTANCE.initRenderer();
+    }
+    
+    private void enableCrossModSupport() {
         try {
             Class.forName("shadersmodcore.client.Shaders");
             ModLogger.log("Shaders mod support active");
@@ -103,13 +113,6 @@ public class ClientProxy extends CommonProxy {
             coloredLightsLoaded = true;
             ModLogger.log("Colored Lights support active");
         }
-    }
-    
-    @Override
-    public void postInit() {
-        Addons.initRenderers();
-        EntitySkinRenderHandler.INSTANCE.initRenderer();
-        spamSillyMessages();
     }
     
     public static boolean useSafeModelRender() {

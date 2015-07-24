@@ -156,18 +156,38 @@ public final class Addons {
     public static String[] overrideSwordsActive = {};
     public static String[] overrideBowsActive = {};
     
+    private static void loadAddon(Class<? extends AbstractAddon> addonClass, String modId) {
+        if (!Loader.isModLoaded(modId)) {
+            return;
+        }
+        try {
+            AbstractAddon addon = addonClass.getConstructor().newInstance();
+            ModLogger.log(String.format("Loading %s Compatibility Addon", addon.getModName()));
+            loadedAddons.add(addon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void preInit() {
+        loadAddon(AddonTConstruct.class, "TConstruct");
+        loadAddon(AddonBattlegear2.class, "battlegear2");
+        loadAddon(AddonBuildCraft.class, "BuildCraft|Core");
+        loadAddon(AddonAquaTweaks.class, "AquaTweaks");
+        for (int i = 0; i < loadedAddons.size(); i++) {
+            loadedAddons.get(i).preInit();
+        }
+    }
+    
     public static void init() {
-        if (Loader.isModLoaded("TConstruct")) {
-            loadedAddons.add(new AddonTConstruct());
-        }
-        if (Loader.isModLoaded("battlegear2")) {
-            loadedAddons.add(new AddonBattlegear2());
-        }
-        if (Loader.isModLoaded("BuildCraft|Core")) {
-            loadedAddons.add(new AddonBuildCraft());
-        }
         for (int i = 0; i < loadedAddons.size(); i++) {
             loadedAddons.get(i).init();
+        }
+    }
+    
+    public static void postInit() {
+        for (int i = 0; i < loadedAddons.size(); i++) {
+            loadedAddons.get(i).postInit();
         }
     }
     
