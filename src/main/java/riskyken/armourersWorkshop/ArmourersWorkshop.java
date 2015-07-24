@@ -1,5 +1,15 @@
 package riskyken.armourersWorkshop;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
@@ -24,16 +34,6 @@ import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.minecraftWrapper.common.creativetab.ModCreativeTab;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class ArmourersWorkshop {
@@ -56,6 +56,7 @@ public class ArmourersWorkshop {
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
         ConfigHandler.init(event.getSuggestedConfigurationFile());
 
+        SkinIOUtils.makeLibraryDirectory();
         UpdateCheck.checkForUpdates();
         SkinDownloadManager.downloadSkins();
         
@@ -111,7 +112,6 @@ public class ArmourersWorkshop {
     public void postInit(FMLPostInitializationEvent event) {
         Addons.init();
         proxy.postInit();
-        SkinIOUtils.makeLibraryDirectory();
     }
     
     @Mod.EventHandler
