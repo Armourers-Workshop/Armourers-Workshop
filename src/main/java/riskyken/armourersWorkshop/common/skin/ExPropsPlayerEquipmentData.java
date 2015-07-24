@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,13 +20,12 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerAddSkinInfo;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerUpdateSkinInfo;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeUpdate;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventory {
 
@@ -38,7 +38,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     private EntityEquipmentData equipmentData = new EntityEquipmentData();
     private final EntityPlayer player;
     private boolean inventoryChanged;
-    private EntityNakedInfo nakedInfo = new EntityNakedInfo(); 
+    private PlayerEquipmentWardrobeData equipmentWardrobeData = new PlayerEquipmentWardrobeData(); 
     public int lastXmasYear;
     
     public ExPropsPlayerEquipmentData(EntityPlayer player) {
@@ -106,7 +106,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     private void updateEquipmentDataToPlayersAround() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerAddSkinInfo(playerPointer, equipmentData), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), p);
     }
     
     public void colourSlotUpdate(byte slot) {
@@ -114,15 +114,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         ItemStack stackOutput = this.getStackInSlot(slot + 1);
         
         if (stackInput != null && stackInput.getItem() == ModItems.colourPicker && stackOutput == null) {
-            //Silliness!
-            if (stackInput.getDisplayName().toLowerCase().equals("panties!")) {
-                this.nakedInfo.pantsColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
-                this.nakedInfo.pantStripeColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
-            } else if (stackInput.getDisplayName().toLowerCase().equals("stripe!")) {
-                this.nakedInfo.pantStripeColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
-            } else {
-                this.nakedInfo.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
-            }
+            this.equipmentWardrobeData.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
             
             setInventorySlotContents(slot + 1, stackInput);
             setInventorySlotContents(slot, null);
@@ -165,42 +157,42 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         sendNakedData(targetPlayer);
     }
     
-    public void setSkinInfo(EntityNakedInfo nakedInfo) {
-        this.nakedInfo = nakedInfo;
+    public void setSkinInfo(PlayerEquipmentWardrobeData equipmentWardrobeData) {
+        this.equipmentWardrobeData = equipmentWardrobeData;
         sendSkinData();
     }
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer) {
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendTo(new MessageServerAddSkinInfo(playerPointer, equipmentData), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), targetPlayer);
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendTo(new MessageServerUpdateSkinInfo(playerPointer, this.nakedInfo), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerEquipmentWardrobeUpdate(playerPointer, this.equipmentWardrobeData), targetPlayer);
     }
     
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerUpdateSkinInfo(playerPointer, this.nakedInfo), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerEquipmentWardrobeUpdate(playerPointer, this.equipmentWardrobeData), p);
     }
     
     public BitSet getArmourOverride() {
-        return nakedInfo.armourOverride;
+        return equipmentWardrobeData.armourOverride;
     }
     
     @Override
     public void saveNBTData(NBTTagCompound compound) {
         writeItemsToNBT(compound);
-        nakedInfo.saveNBTData(compound);
+        equipmentWardrobeData.saveNBTData(compound);
         compound.setInteger(TAG_LAST_XMAS_YEAR, this.lastXmasYear);
     }
     
     @Override
     public void loadNBTData(NBTTagCompound compound) {
         readItemsFromNBT(compound);
-        nakedInfo.loadNBTData(compound);
+        equipmentWardrobeData.loadNBTData(compound);
         if (compound.hasKey(TAG_LAST_XMAS_YEAR)) {
             this.lastXmasYear = compound.getInteger(TAG_LAST_XMAS_YEAR);
         } else {

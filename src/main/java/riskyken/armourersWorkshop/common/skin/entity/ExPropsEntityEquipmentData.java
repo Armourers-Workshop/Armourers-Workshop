@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
 import riskyken.armourersWorkshop.common.inventory.InventoryEntitySkin;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkintData;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkinData;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
@@ -49,11 +49,11 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     
     private void sendEquipmentDataToPlayerToAllPlayersAround() {
         TargetPoint p = new TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 512);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerEntitySkintData(equipmentData, entity.getEntityId()), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerEntitySkinData(equipmentData, entity.getEntityId()), p);
     }
     
     public void sendEquipmentDataToPlayer(EntityPlayerMP targetPlayer) {
-        PacketHandler.networkWrapper.sendTo(new MessageServerEntitySkintData(equipmentData, entity.getEntityId()), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerEntitySkinData(equipmentData, entity.getEntityId()), targetPlayer);
     }
     
     public InventoryEntitySkin getSkinInventory() {

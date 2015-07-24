@@ -9,17 +9,17 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 
 /**
  * Sent from the server to a client to let them know that they
- * can discard the skin info for a player.
+ * can discard the equipment wardrobe data for a player.
  * @author RiskyKen
  *
  */
-public class MessageServerRemoveSkinInfo implements IMessage, IMessageHandler<MessageServerRemoveSkinInfo, IMessage> {
+public class MessageServerEquipmentWardrobeRemove implements IMessage, IMessageHandler<MessageServerEquipmentWardrobeRemove, IMessage> {
 
     PlayerPointer playerPointer;
     
-    public MessageServerRemoveSkinInfo() {}
+    public MessageServerEquipmentWardrobeRemove() {}
     
-    public MessageServerRemoveSkinInfo(PlayerPointer playerPointer) {
+    public MessageServerEquipmentWardrobeRemove(PlayerPointer playerPointer) {
         this.playerPointer = playerPointer;
     }
 
@@ -34,7 +34,7 @@ public class MessageServerRemoveSkinInfo implements IMessage, IMessageHandler<Me
     }
     
     @Override
-    public IMessage onMessage(MessageServerRemoveSkinInfo message, MessageContext ctx) {
+    public IMessage onMessage(MessageServerEquipmentWardrobeRemove message, MessageContext ctx) {
         ArmourersWorkshop.proxy.removeEquipmentData(message.playerPointer);
         return null;
     }

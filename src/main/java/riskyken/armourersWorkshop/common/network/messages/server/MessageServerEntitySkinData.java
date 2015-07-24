@@ -7,15 +7,15 @@ import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 
-public class MessageServerEntitySkintData implements IMessage, IMessageHandler<MessageServerEntitySkintData, IMessage> {
+public class MessageServerEntitySkinData implements IMessage, IMessageHandler<MessageServerEntitySkinData, IMessage> {
 
     private EntityEquipmentData equipmentData;
     private int entityId;
     
-    public MessageServerEntitySkintData() {
+    public MessageServerEntitySkinData() {
     }
     
-    public MessageServerEntitySkintData(EntityEquipmentData equipmentData, int entityId) {
+    public MessageServerEntitySkinData(EntityEquipmentData equipmentData, int entityId) {
         this.equipmentData = equipmentData;
         this.entityId = entityId;
     }
@@ -33,7 +33,7 @@ public class MessageServerEntitySkintData implements IMessage, IMessageHandler<M
     }
     
     @Override
-    public IMessage onMessage(MessageServerEntitySkintData message, MessageContext ctx) {
+    public IMessage onMessage(MessageServerEntitySkinData message, MessageContext ctx) {
         ArmourersWorkshop.proxy.receivedEquipmentData(message.equipmentData, message.entityId);
         return null;
     }

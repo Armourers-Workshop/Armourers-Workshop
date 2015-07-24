@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,15 +15,17 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class Skin implements ISkin {
     
-    public static final int FILE_VERSION = 7;
+    public static final int FILE_VERSION = 8;
     
     private String authorName;
     private String customName;
     private String tags;
     private ISkinType equipmentSkinType;
+    private int[] paintData;
     private ArrayList<SkinPart> parts;
     public int requestId;
     private int lightHash = 0;
@@ -45,11 +48,26 @@ public class Skin implements ISkin {
         return false;
     }
     
-    public Skin(String authorName, String customName, String tags, ISkinType equipmentSkinType, ArrayList<SkinPart> equipmentSkinParts) {
+    public Skin(String authorName, String customName, String tags, ISkinType equipmentSkinType, int[] paintData, ArrayList<SkinPart> equipmentSkinParts) {
         this.authorName = authorName;
         this.customName = customName;
         this.tags = tags;
         this.equipmentSkinType = equipmentSkinType;
+        this.paintData = null;
+        //Check if the paint data has any paint on it.
+        if (paintData != null) {
+            boolean validPaintData = false;
+            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+                if (paintData[i] >>> 16 != 255) {
+                    validPaintData = true;
+                    break;
+                }
+            }
+            if (validPaintData) {
+                this.paintData = paintData;
+            }
+        }
+        
         this.parts = equipmentSkinParts;
     }
 
@@ -77,6 +95,14 @@ public class Skin implements ISkin {
         stream.writeUTF(this.customName);
         stream.writeUTF(this.tags);
         stream.writeUTF(this.equipmentSkinType.getRegistryName());
+        if (this.paintData != null) {
+            stream.writeBoolean(true);
+            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+                stream.writeInt(paintData[i]);
+            }
+        } else {
+            stream.writeBoolean(false);
+        }
         stream.writeByte(parts.size());
         for (int i = 0; i < parts.size(); i++) {
             parts.get(i).writeToStream(stream);
@@ -103,6 +129,17 @@ public class Skin implements ISkin {
         
         if (equipmentSkinType == null) {
             throw new InvalidCubeTypeException();
+        }
+        
+        this.paintData = null;
+        if (fileVersion > 7) {
+            boolean hasPaintData = stream.readBoolean();
+            if (hasPaintData) {
+                this.paintData = new int[SkinTexture.TEXTURE_SIZE];
+                for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+                    this.paintData[i] = stream.readInt();
+                }
+            }
         }
         
         int size = stream.readByte();
@@ -141,6 +178,14 @@ public class Skin implements ISkin {
     @Override
     public ISkinType getSkinType() {
         return equipmentSkinType;
+    }
+    
+    public boolean hasPaintData() {
+        return paintData != null;
+    }
+    
+    public int[] getPaintData() {
+        return paintData;
     }
     
     public ArrayList<SkinPart> getParts() {
@@ -213,7 +258,12 @@ public class Skin implements ISkin {
 
     @Override
     public String toString() {
-        return "CustomArmourItemData [authorName=" + authorName
-                + ", customName=" + customName + ", type=" + equipmentSkinType.getName().toUpperCase() + "]";
+        String returnString = "CustomArmourItemData [authorName=" + authorName
+                + ", customName=" + customName + ", type=" + equipmentSkinType.getName().toUpperCase();
+        if (this.paintData != null) {ModLogger.log("paintData=" + paintData.hashCode());
+            returnString += ", paintData=" + Arrays.hashCode(paintData);
+        }
+        returnString += "]";
+        return returnString;
     }
 }

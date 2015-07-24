@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayerMP;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSendSkinData;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
@@ -118,7 +118,7 @@ public final class SkinDataCache {
             Skin skin = skinDataCache.get(queueMessage.equipmentId);
             skin.requestId = queueMessage.equipmentId;
             skin.onUsed();
-            PacketHandler.networkWrapper.sendTo(new MessageServerSendSkinData(skin), queueMessage.player);
+            PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), queueMessage.player);
         } else {
             ModLogger.log(Level.ERROR, "Equipment id:" + queueMessage.equipmentId +" was requested by "
         + queueMessage.player.getCommandSenderName() + " but was not found.");

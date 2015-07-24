@@ -1,33 +1,23 @@
 package riskyken.armourersWorkshop.common.skin;
 
-import io.netty.buffer.ByteBuf;
-
 import java.awt.Color;
 import java.util.BitSet;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class EntityNakedInfo {
+public class PlayerEquipmentWardrobeData {
     
-    private static final String TAG_NAKED = "naked";
     private static final String TAG_SKIN_COLOUR = "skinColour";
     private static final String TAG_HAIR_COLOUR = "hairColour";
-    private static final String TAG_PANTS_COLOUR = "pantsColour";
-    private static final String TAG_PANT_STRIPE_COLOUR = "pantStripeColour";
     private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
     private static final String TAG_HEAD_OVERLAY = "headOverlay";
     private static final String TAG_LIMIT_LIMBS = "limitLimbs";
     
-    /** Is the players naked skin active? */
-    public PlayerSkinTextureType skinTextureType;
-    /** Colour use for the players naked skin */
+    /** Colour of the players skin */
     public int skinColour;
-    /** Colour use for the players hair */
+    /** Colour of the players hair */
     public int hairColour;
-    /** 1st colour use for the players panties when naked! */
-    public int pantsColour;
-    /** 2nd colour use for the players panties when naked! */
-    public int pantStripeColour;
     /** Bit set of what armour is hidden on the player. */
     public BitSet armourOverride;
     /** Is the hair/hat overlay hidden? */
@@ -35,23 +25,17 @@ public class EntityNakedInfo {
     /** Should limb movement be limited when the player has a skin on? */
     public boolean limitLimbs;
     
-    public EntityNakedInfo() {
-        skinTextureType = PlayerSkinTextureType.DEFAULT;
+    public PlayerEquipmentWardrobeData() {
         skinColour = Color.decode("#F9DFD2").getRGB();
         hairColour = Color.decode("#804020").getRGB();
-        pantsColour = Color.decode("#FCFCFC").getRGB();
-        pantStripeColour = Color.decode("#FCFCFC").getRGB();
         armourOverride = new BitSet(4);
         headOverlay = false;
         limitLimbs = true;
     }
     
     public void saveNBTData(NBTTagCompound compound) {
-        compound.setInteger(TAG_NAKED, this.skinTextureType.ordinal());
         compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
         compound.setInteger(TAG_HAIR_COLOUR, this.hairColour);
-        compound.setInteger(TAG_PANTS_COLOUR, this.pantsColour);
-        compound.setInteger(TAG_PANT_STRIPE_COLOUR, this.pantStripeColour);
         for (int i = 0; i < 4; i++) {
             compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, this.armourOverride.get(i));
         }
@@ -60,18 +44,11 @@ public class EntityNakedInfo {
     }
     
     public void loadNBTData(NBTTagCompound compound) {
-        this.skinTextureType = PlayerSkinTextureType.fromOrdinal(compound.getInteger(TAG_NAKED));
         if (compound.hasKey(TAG_SKIN_COLOUR)) {
             this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
         }
         if (compound.hasKey(TAG_HAIR_COLOUR)) {
             this.hairColour = compound.getInteger(TAG_HAIR_COLOUR);
-        }
-        if (compound.hasKey(TAG_PANTS_COLOUR)) {
-            this.pantsColour = compound.getInteger(TAG_PANTS_COLOUR);
-        }
-        if (compound.hasKey(TAG_PANT_STRIPE_COLOUR)) {
-            this.pantStripeColour = compound.getInteger(TAG_PANT_STRIPE_COLOUR);
         }
         for (int i = 0; i < 4; i++) {
             this.armourOverride.set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
@@ -85,11 +62,8 @@ public class EntityNakedInfo {
     }
     
     public void fromBytes(ByteBuf buf) {
-        this.skinTextureType = PlayerSkinTextureType.fromOrdinal(buf.readInt());
         this.skinColour = buf.readInt();
         this.hairColour = buf.readInt();
-        this.pantsColour = buf.readInt();
-        this.pantStripeColour = buf.readInt();
         this.armourOverride = new BitSet(4);
         for (int i = 0; i < 4; i++) {
             this.armourOverride.set(i, buf.readBoolean());
@@ -99,36 +73,12 @@ public class EntityNakedInfo {
     }
 
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.skinTextureType.ordinal());
         buf.writeInt(this.skinColour);
         buf.writeInt(this.hairColour);
-        buf.writeInt(this.pantsColour);
-        buf.writeInt(this.pantStripeColour);
         for (int i = 0; i < 4; i++) {
             buf.writeBoolean(this.armourOverride.get(i));
         }
         buf.writeBoolean(this.headOverlay);
         buf.writeBoolean(this.limitLimbs);
-    }
-    
-    public enum PlayerSkinTextureType {
-        DEFAULT("Default"),
-        NONE("None"),
-        LEGS("Legs");
-        
-        private final String name;
-        
-        private PlayerSkinTextureType(String name) {
-            this.name = name;
-        }
-        
-        @Override
-        public String toString() {
-            return this.name;
-        }
-        
-        public static PlayerSkinTextureType fromOrdinal(int ordinal) {
-            return PlayerSkinTextureType.values()[ordinal];
-        }
     }
 }

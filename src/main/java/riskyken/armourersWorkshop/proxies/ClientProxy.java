@@ -14,12 +14,12 @@ import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
-import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
@@ -38,7 +38,7 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -85,7 +85,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init() {
-        PlayerSkinHandler.init();
+        PlayerTextureHandler.init();
         ClientModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
@@ -172,13 +172,13 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void setPlayersNakedData(PlayerPointer playerPointer, EntityNakedInfo nakedInfo) {
-        PlayerSkinHandler.INSTANCE.setPlayersSkinData(playerPointer, nakedInfo);
+    public void setPlayersNakedData(PlayerPointer playerPointer, PlayerEquipmentWardrobeData nakedInfo) {
+        PlayerTextureHandler.INSTANCE.setPlayersSkinData(playerPointer, nakedInfo);
     }
 
     @Override
-    public PlayerSkinInfo getPlayersNakedData(PlayerPointer playerPointer) {
-        return PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
+    public PlayerTextureInfo getPlayersNakedData(PlayerPointer playerPointer) {
+        return PlayerTextureHandler.INSTANCE.getPlayersNakedData(playerPointer);
     }
 
     @Override

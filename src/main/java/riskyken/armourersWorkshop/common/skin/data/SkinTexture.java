@@ -32,6 +32,7 @@ public class SkinTexture {
     
     public static final int TEXTURE_WIDTH = 64;
     public static final int TEXTURE_HEIGHT = 32;
+    public static final int TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
     
     private final Minecraft mc;
     private BufferedImage bufferedPlayerImage;
@@ -47,7 +48,7 @@ public class SkinTexture {
         lastProfileHash = -1;
         needsUpdate = true;
         textureId = -1;
-        paintData = new int[TEXTURE_WIDTH * TEXTURE_HEIGHT];
+        paintData = new int[TEXTURE_SIZE];
     }
     
     @Override

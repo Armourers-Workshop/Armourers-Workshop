@@ -1,11 +1,11 @@
 package riskyken.armourersWorkshop.proxies;
 
 import net.minecraft.block.Block;
-import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 
 public class CommonProxy {
@@ -42,11 +42,11 @@ public class CommonProxy {
         return 0;
     }
 
-    public void setPlayersNakedData(PlayerPointer playerPointer, EntityNakedInfo nakedInfo) {
+    public void setPlayersNakedData(PlayerPointer playerPointer, PlayerEquipmentWardrobeData nakedInfo) {
         
     }
     
-    public PlayerSkinInfo getPlayersNakedData(PlayerPointer playerPointer) {
+    public PlayerTextureInfo getPlayersNakedData(PlayerPointer playerPointer) {
         return null;
     }
     

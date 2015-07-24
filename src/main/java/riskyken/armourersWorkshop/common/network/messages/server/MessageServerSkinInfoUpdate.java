@@ -1,29 +1,30 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 /**
- * 
+ * Send from the server to a client when a player walks into range
+ * or they edit their skins.
  * @author RiskyKen
  *
  */
-public class MessageServerAddSkinInfo implements IMessage, IMessageHandler<MessageServerAddSkinInfo, IMessage> {
+public class MessageServerSkinInfoUpdate implements IMessage, IMessageHandler<MessageServerSkinInfoUpdate, IMessage> {
 
     PlayerPointer playerPointer;
     EntityEquipmentData equipmentData;
     
-    public MessageServerAddSkinInfo(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
+    public MessageServerSkinInfoUpdate(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
         this.playerPointer = playerPointer;
         this.equipmentData = equipmentData;
     }
     
-    public MessageServerAddSkinInfo() {}
+    public MessageServerSkinInfoUpdate() {}
     
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -38,7 +39,7 @@ public class MessageServerAddSkinInfo implements IMessage, IMessageHandler<Messa
     }
     
     @Override
-    public IMessage onMessage(MessageServerAddSkinInfo message, MessageContext ctx) {
+    public IMessage onMessage(MessageServerSkinInfoUpdate message, MessageContext ctx) {
         ArmourersWorkshop.proxy.addEquipmentData(message.playerPointer, message.equipmentData);
         return null;
     }

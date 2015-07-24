@@ -26,7 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerRemoveSkinInfo;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeRemove;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
@@ -123,7 +123,7 @@ public final class EntityEquipmentDataManager {
     public void onStopTracking(PlayerEvent.StopTracking event) {
         if (event.target instanceof EntityPlayerMP) {
             EntityPlayerMP target = (EntityPlayerMP) event.target;
-            MessageServerRemoveSkinInfo message = new MessageServerRemoveSkinInfo(new PlayerPointer(target));
+            MessageServerEquipmentWardrobeRemove message = new MessageServerEquipmentWardrobeRemove(new PlayerPointer(target));
             PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) event.entityPlayer);
         }
     }

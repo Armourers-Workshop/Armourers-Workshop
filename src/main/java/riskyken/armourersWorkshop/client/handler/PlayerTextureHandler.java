@@ -12,39 +12,39 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
-import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.skin.EntityNakedInfo;
+import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 @SideOnly(Side.CLIENT)
-public class PlayerSkinHandler {
+public class PlayerTextureHandler {
 
-    public static PlayerSkinHandler INSTANCE;
+    public static PlayerTextureHandler INSTANCE;
     
-    private HashMap<PlayerPointer, PlayerSkinInfo> skinMap = new HashMap<PlayerPointer, PlayerSkinInfo>();
+    private HashMap<PlayerPointer, PlayerTextureInfo> playerTextureMap = new HashMap<PlayerPointer, PlayerTextureInfo>();
     
     public static void init() {
-        INSTANCE = new PlayerSkinHandler();
+        INSTANCE = new PlayerTextureHandler();
     }
     
-    public PlayerSkinHandler() {
+    public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
-    public void setPlayersSkinData(PlayerPointer playerPointer, EntityNakedInfo nakedInfo) {
-        if (!skinMap.containsKey(playerPointer)) {
-            skinMap.put(playerPointer, new PlayerSkinInfo(nakedInfo));
+    public void setPlayersSkinData(PlayerPointer playerPointer, PlayerEquipmentWardrobeData nakedInfo) {
+        if (!playerTextureMap.containsKey(playerPointer)) {
+            playerTextureMap.put(playerPointer, new PlayerTextureInfo(nakedInfo));
         } else {
-            skinMap.get(playerPointer).setSkinInfo(nakedInfo);
+            playerTextureMap.get(playerPointer).setSkinInfo(nakedInfo);
         }
     }
     
-    public PlayerSkinInfo getPlayersNakedData(PlayerPointer playerPointer) {
-        if (!skinMap.containsKey(playerPointer)) {
+    public PlayerTextureInfo getPlayersNakedData(PlayerPointer playerPointer) {
+        if (!playerTextureMap.containsKey(playerPointer)) {
             return null;
         }
-        return skinMap.get(playerPointer);
+        return playerTextureMap.get(playerPointer);
     }
     
     @SubscribeEvent
@@ -58,8 +58,8 @@ public class PlayerSkinHandler {
         }
         PlayerPointer playerPointer = new PlayerPointer(player);
         
-        if (skinMap.containsKey(playerPointer)) {
-            PlayerSkinInfo skinInfo = skinMap.get(playerPointer);
+        if (playerTextureMap.containsKey(playerPointer)) {
+            PlayerTextureInfo skinInfo = playerTextureMap.get(playerPointer);
             skinInfo.preRender((AbstractClientPlayer) player, event.renderer);
         }
     }
@@ -75,8 +75,8 @@ public class PlayerSkinHandler {
         }
         PlayerPointer playerPointer = new PlayerPointer(player);
         
-        if (skinMap.containsKey(playerPointer)) {
-            PlayerSkinInfo skinInfo = skinMap.get(playerPointer);
+        if (playerTextureMap.containsKey(playerPointer)) {
+            PlayerTextureInfo skinInfo = playerTextureMap.get(playerPointer);
             skinInfo.postRender((AbstractClientPlayer) player, event.renderer);
         }
     }
@@ -106,9 +106,9 @@ public class PlayerSkinHandler {
         
         PlayerPointer playerPointer = new PlayerPointer(player);
         
-        if (skinMap.containsKey(playerPointer)) {
-            PlayerSkinInfo skinInfo = skinMap.get(playerPointer);
-            BitSet armourOverride = skinInfo.getNakedInfo().armourOverride;
+        if (playerTextureMap.containsKey(playerPointer)) {
+            PlayerTextureInfo textureInfo = playerTextureMap.get(playerPointer);
+            BitSet armourOverride = textureInfo.getEquipmentWardrobeData().armourOverride;
             if (armourOverride.get(slot)) {
                 result = -2;
             }

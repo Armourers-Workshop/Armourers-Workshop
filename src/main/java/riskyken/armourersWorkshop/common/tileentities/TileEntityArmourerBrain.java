@@ -60,10 +60,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         this.showOverlay = true;
         this.showGuides = true;
         this.customName = "";
-        this.paintData = new int[SkinTexture.TEXTURE_WIDTH * SkinTexture.TEXTURE_HEIGHT];
-        for (int i = 0; i < SkinTexture.TEXTURE_HEIGHT * SkinTexture.TEXTURE_WIDTH; i++) {
-            this.paintData[i] = 0x00FFFFFF;
-        }
+        clearPaintData();
     }
     
     public int[] getPaintData() {
@@ -109,8 +106,8 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         Skin armourItemData = null;
         
         try {
-            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinType, authorName, customName, tags,
-                    xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinType, authorName, customName,
+                    tags, paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         } catch (InvalidCubeTypeException e) {
             ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
             e.printStackTrace();
@@ -173,9 +170,23 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         setCustomName(equipmentData.getCustomName());
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
-    
+        if (equipmentData.hasPaintData()) {
+            this.paintData = equipmentData.getPaintData();
+        } else {
+            clearPaintData();
+        }
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
+    }
+    
+    private void clearPaintData() {
+        this.paintData = new int[SkinTexture.TEXTURE_SIZE];
+        for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+            this.paintData[i] = 0x00FFFFFF;
+        }
     }
     
     public void onPlaced() {

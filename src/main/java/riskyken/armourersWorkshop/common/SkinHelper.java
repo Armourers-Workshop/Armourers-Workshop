@@ -17,8 +17,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.apache.commons.io.IOUtils;
 
-import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
-import riskyken.armourersWorkshop.client.render.PlayerSkinInfo;
+import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
+import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 
 import com.mojang.authlib.GameProfile;

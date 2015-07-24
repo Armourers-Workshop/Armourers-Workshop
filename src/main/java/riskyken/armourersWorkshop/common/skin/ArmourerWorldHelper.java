@@ -47,7 +47,7 @@ public final class ArmourerWorldHelper {
      * @throws InvalidCubeTypeException
      */
     public static Skin saveSkinFromWorld(World world, ISkinType skinType,
-            String authorName, String customName, String tags,
+            String authorName, String customName, String tags, int[] paintData,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
@@ -58,7 +58,7 @@ public final class ArmourerWorldHelper {
         }
         
         if (parts.size() > 0) {
-            return new Skin(authorName, customName, tags, skinType, parts);
+            return new Skin(authorName, customName, tags, skinType, paintData, parts);
         } else {
             return null;
         }

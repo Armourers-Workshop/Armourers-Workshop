@@ -19,7 +19,7 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.handler.PlayerSkinHandler;
+import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
@@ -173,8 +173,8 @@ public final class EquipmentModelRenderer {
         
         if (playerHasSkirtOn(playerPointer)) {
             if (!Loader.isModLoaded("SmartMoving")) {
-                PlayerSkinInfo skinInfo = PlayerSkinHandler.INSTANCE.getPlayersNakedData(playerPointer);
-                if (skinInfo != null && skinInfo.getNakedInfo().limitLimbs) {
+                PlayerTextureInfo skinInfo = PlayerTextureHandler.INSTANCE.getPlayersNakedData(playerPointer);
+                if (skinInfo != null && skinInfo.getEquipmentWardrobeData().limitLimbs) {
                     if (player.limbSwingAmount > 0.25F) {
                         player.limbSwingAmount = 0.25F;
                     } 

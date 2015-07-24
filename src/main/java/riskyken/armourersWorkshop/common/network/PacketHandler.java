@@ -15,21 +15,21 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiUpdateNakedInfo;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientEquipmentWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerAddSkinInfo;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkintData;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkinData;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerRemoveSkinInfo;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSendSkinData;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerUpdateSkinInfo;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeRemove;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeUpdate;
 
 public class PacketHandler {
 
@@ -39,23 +39,23 @@ public class PacketHandler {
     public static void init() {
         registerMessage(MessageClientGuiColourUpdate.class, MessageClientGuiColourUpdate.class, Side.SERVER);
         registerMessage(MessageClientGuiButton.class, MessageClientGuiButton.class, Side.SERVER);
-        registerMessage(MessageServerAddSkinInfo.class, MessageServerAddSkinInfo.class, Side.CLIENT);
-        registerMessage(MessageServerRemoveSkinInfo.class, MessageServerRemoveSkinInfo.class, Side.CLIENT);
+        registerMessage(MessageServerSkinInfoUpdate.class, MessageServerSkinInfoUpdate.class, Side.CLIENT);
+        registerMessage(MessageServerEquipmentWardrobeRemove.class, MessageServerEquipmentWardrobeRemove.class, Side.CLIENT);
         registerMessage(MessageClientLoadArmour.class, MessageClientLoadArmour.class, Side.SERVER);
         registerMessage(MessageClientGuiSetSkin.class, MessageClientGuiSetSkin.class, Side.SERVER);
         registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, Side.CLIENT);
         registerMessage(MessageClientGuiLoadSaveArmour.class, MessageClientGuiLoadSaveArmour.class, Side.SERVER);
         registerMessage(MessageClientKeyPress.class, MessageClientKeyPress.class, Side.SERVER);
         registerMessage(MessageClientGuiToolOptionUpdate.class, MessageClientGuiToolOptionUpdate.class, Side.SERVER);
-        registerMessage(MessageClientGuiUpdateNakedInfo.class, MessageClientGuiUpdateNakedInfo.class, Side.SERVER);
-        registerMessage(MessageServerUpdateSkinInfo.class, MessageServerUpdateSkinInfo.class, Side.CLIENT);
+        registerMessage(MessageClientEquipmentWardrobeUpdate.class, MessageClientEquipmentWardrobeUpdate.class, Side.SERVER);
+        registerMessage(MessageServerEquipmentWardrobeUpdate.class, MessageServerEquipmentWardrobeUpdate.class, Side.CLIENT);
         registerMessage(MessageClientRequestSkinData.class, MessageClientRequestSkinData.class, Side.SERVER);
-        registerMessage(MessageServerSendSkinData.class, MessageServerSendSkinData.class, Side.CLIENT);
+        registerMessage(MessageServerSkinDataSend.class, MessageServerSkinDataSend.class, Side.CLIENT);
         registerMessage(MessageClientGuiSetArmourerCustomName.class, MessageClientGuiSetArmourerCustomName.class, Side.SERVER);
         registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, Side.SERVER);
         registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, Side.CLIENT);
         registerMessage(MessageClientGuiSetArmourerSkinType.class, MessageClientGuiSetArmourerSkinType.class, Side.SERVER);
-        registerMessage(MessageServerEntitySkintData.class, MessageServerEntitySkintData.class, Side.CLIENT);
+        registerMessage(MessageServerEntitySkinData.class, MessageServerEntitySkinData.class, Side.CLIENT);
         registerMessage(MessageServerLibrarySendSkin.class, MessageServerLibrarySendSkin.class, Side.CLIENT);
         registerMessage(MessageServerMiniArmourerSkinData.class, MessageServerMiniArmourerSkinData.class, Side.CLIENT);
         registerMessage(MessageClientGuiMiniArmourerCubeEdit.class, MessageClientGuiMiniArmourerCubeEdit.class, Side.SERVER);
