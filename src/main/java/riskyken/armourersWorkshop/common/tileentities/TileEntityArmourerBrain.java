@@ -71,12 +71,13 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     }
     
     public void updatePaintData(int x, int y, int colour) {
-        //int index = x + (y * SkinTexture.TEXTURE_WIDTH);
-        //ModLogger.log("Updating x:" + x + " y:" + y + " at:" + index);
-        //ModLogger.log("array size:" + paintData.length);
         paintData[x + (y * SkinTexture.TEXTURE_WIDTH)] = colour;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public int getPaintData(int x, int y) {
+        return paintData[x + (y * SkinTexture.TEXTURE_WIDTH)];
     }
     
     /**

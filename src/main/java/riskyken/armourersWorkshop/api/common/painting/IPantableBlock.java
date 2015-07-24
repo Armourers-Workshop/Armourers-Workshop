@@ -5,8 +5,6 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 
 public interface IPantableBlock {
     
-    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour);
-    
     public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side);
     
     public int getColour(IBlockAccess world, int x, int y, int z, int side);

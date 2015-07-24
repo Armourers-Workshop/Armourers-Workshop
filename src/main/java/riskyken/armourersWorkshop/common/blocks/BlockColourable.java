@@ -1,5 +1,8 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -18,9 +21,6 @@ import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockColourable extends AbstractModBlock implements ITileEntityProvider, IPantableBlock {
     
@@ -51,7 +51,7 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
         }
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.dye) {
             if (world.isRemote) { return true; }
-            this.setColour(world, x, y, z, UtilColour.getMinecraftColor(-player.getCurrentEquippedItem().getItemDamage() + 15, ColourFamily.MINECRAFT));
+            this.setColour(world, x, y, z, UtilColour.getMinecraftColor(-player.getCurrentEquippedItem().getItemDamage() + 15, ColourFamily.MINECRAFT), side);
             return true;
         }
         return false;
@@ -60,16 +60,6 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
         return new TileEntityColourable();
-    }
-
-    @Override
-    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null & te instanceof IPantable) {
-            ((IPantable)te).setColour(colour);
-            return true;
-        }
-        return false;
     }
     
     @Override

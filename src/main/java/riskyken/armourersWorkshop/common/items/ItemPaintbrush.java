@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.common.items;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -26,9 +24,6 @@ import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
-import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.minecraftWrapper.common.world.BlockLocation;
@@ -82,21 +77,6 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             } else {
                 spawnPaintParticles(world, x, y, z, side, newColour);
-            }
-            return true;
-        }
-        
-        if (block == ModBlocks.boundingBox) {
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (te != null && te instanceof TileEntityBoundingBox && !world.isRemote) {
-                TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
-                if (parent != null) {
-                    int toolColour = getToolColour(stack);
-                    ISkinType skinType = parent.getSkinType();
-                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
-                    parent.updatePaintData(texturePoint.x, texturePoint.y, toolColour);
-                }
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
             return true;
         }
