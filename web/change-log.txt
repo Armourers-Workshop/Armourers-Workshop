@@ -1,3 +1,8 @@
+Build 0.34.1
+Fixed NPE crash when using tools with no NBT data.
+Fixed some typos in the config file.
+Removed skin override system.
+
 Build 0.34.0
 Added a creative library block.
 Added more info to the Minecraft profiler.
