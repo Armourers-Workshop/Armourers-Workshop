@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
+import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -29,7 +29,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         ISkinType skinType = te.getSkinType();
         
         ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
-        PlayerTextureInfo skinInfo = null;
+        EntityTextureInfo skinInfo = null;
         
         mc.mcProfiler.startSection("textureBind");
         if (te.skinTexture == null) {

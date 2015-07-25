@@ -4,9 +4,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 /**
  * Sent from the server to a client when a player walks
@@ -17,13 +17,13 @@ import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
 public class MessageServerEquipmentWardrobeUpdate implements IMessage, IMessageHandler<MessageServerEquipmentWardrobeUpdate, IMessage> {
 
     PlayerPointer playerPointer;
-    PlayerEquipmentWardrobeData equipmentWardrobeData;
+    EquipmentWardrobeData equipmentWardrobeData;
     
     public MessageServerEquipmentWardrobeUpdate() {
-        equipmentWardrobeData = new PlayerEquipmentWardrobeData();
+        equipmentWardrobeData = new EquipmentWardrobeData();
     }
 
-    public MessageServerEquipmentWardrobeUpdate(PlayerPointer playerPointer, PlayerEquipmentWardrobeData equipmentWardrobeData) {
+    public MessageServerEquipmentWardrobeUpdate(PlayerPointer playerPointer, EquipmentWardrobeData equipmentWardrobeData) {
         this.playerPointer = playerPointer;
         this.equipmentWardrobeData = equipmentWardrobeData;
     }
@@ -42,7 +42,11 @@ public class MessageServerEquipmentWardrobeUpdate implements IMessage, IMessageH
 
     @Override
     public IMessage onMessage(MessageServerEquipmentWardrobeUpdate message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.setPlayersNakedData(message.playerPointer, message.equipmentWardrobeData);
+        setEquipmentWardrobeData(message.playerPointer, message.equipmentWardrobeData);
         return null;
+    }
+    
+    private void setEquipmentWardrobeData(PlayerPointer playerPointer, EquipmentWardrobeData ewd) {
+        ClientProxy.equipmentWardrobeHandler.setEquipmentWardrobeData(playerPointer, ewd);
     }
 }

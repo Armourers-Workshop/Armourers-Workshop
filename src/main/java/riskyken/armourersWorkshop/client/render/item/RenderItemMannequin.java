@@ -11,7 +11,7 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
+import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 
@@ -71,7 +71,7 @@ public class RenderItemMannequin implements IItemRenderer {
         }
         
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
-        PlayerTextureInfo skinInfo = null;
+        EntityTextureInfo skinInfo = null;
         
         GameProfile gameProfile = null;
         

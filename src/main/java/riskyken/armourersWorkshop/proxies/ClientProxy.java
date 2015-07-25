@@ -13,13 +13,13 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
+import riskyken.armourersWorkshop.client.handler.EquipmentWardrobeHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
@@ -38,7 +38,6 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
@@ -50,6 +49,9 @@ import riskyken.minecraftWrapper.client.RenderBridge;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
+    
+    public static EquipmentWardrobeHandler equipmentWardrobeHandler;
+    public static PlayerTextureHandler playerTextureHandler;
     
     private static boolean shadersModLoaded;
     private static boolean moreplayermodelsLoaded;
@@ -85,6 +87,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init() {
+        equipmentWardrobeHandler = new EquipmentWardrobeHandler();
         PlayerTextureHandler.init();
         ClientModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
@@ -149,6 +152,11 @@ public class ClientProxy extends CommonProxy {
             ModLogger.log("Integrated Circuits detected! - Applying cosplay to mannequins.");
         }
     }
+    
+    public static void playerLeftTrackingRange(PlayerPointer playerPointer) {
+        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
+        equipmentWardrobeHandler.removeEquipmentWardrobeData(playerPointer);
+    }
 
     @Override
     public void registerKeyBindings() {
@@ -162,23 +170,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void removeEquipmentData(PlayerPointer playerPointer) {
-        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
-    }
-
-    @Override
     public int getPlayerModelCacheSize() {
         return ClientModelCache.INSTANCE.getCacheSize();
-    }
-
-    @Override
-    public void setPlayersNakedData(PlayerPointer playerPointer, PlayerEquipmentWardrobeData nakedInfo) {
-        PlayerTextureHandler.INSTANCE.setPlayersSkinData(playerPointer, nakedInfo);
-    }
-
-    @Override
-    public PlayerTextureInfo getPlayersNakedData(PlayerPointer playerPointer) {
-        return PlayerTextureHandler.INSTANCE.getPlayersNakedData(playerPointer);
     }
 
     @Override

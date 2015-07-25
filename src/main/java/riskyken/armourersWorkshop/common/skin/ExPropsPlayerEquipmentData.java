@@ -38,7 +38,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     private EntityEquipmentData equipmentData = new EntityEquipmentData();
     private final EntityPlayer player;
     private boolean inventoryChanged;
-    private PlayerEquipmentWardrobeData equipmentWardrobeData = new PlayerEquipmentWardrobeData(); 
+    private EquipmentWardrobeData equipmentWardrobeData = new EquipmentWardrobeData(); 
     public int lastXmasYear;
     
     public ExPropsPlayerEquipmentData(EntityPlayer player) {
@@ -157,7 +157,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         sendNakedData(targetPlayer);
     }
     
-    public void setSkinInfo(PlayerEquipmentWardrobeData equipmentWardrobeData) {
+    public void setSkinInfo(EquipmentWardrobeData equipmentWardrobeData) {
         this.equipmentWardrobeData = equipmentWardrobeData;
         sendSkinData();
     }

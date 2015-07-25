@@ -19,7 +19,6 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
@@ -34,6 +33,7 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -173,8 +173,8 @@ public final class EquipmentModelRenderer {
         
         if (playerHasSkirtOn(playerPointer)) {
             if (!Loader.isModLoaded("SmartMoving")) {
-                PlayerTextureInfo skinInfo = PlayerTextureHandler.INSTANCE.getPlayersNakedData(playerPointer);
-                if (skinInfo != null && skinInfo.getEquipmentWardrobeData().limitLimbs) {
+                EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+                if (ewd != null && ewd.limitLimbs) {
                     if (player.limbSwingAmount > 0.25F) {
                         player.limbSwingAmount = 0.25F;
                     } 

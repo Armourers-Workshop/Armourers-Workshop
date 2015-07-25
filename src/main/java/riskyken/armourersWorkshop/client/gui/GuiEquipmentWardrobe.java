@@ -17,17 +17,16 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
-import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
 import riskyken.armourersWorkshop.common.inventory.SlotHidable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientEquipmentWardrobeUpdate;
+import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
@@ -48,8 +47,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
     boolean limitLimbs;
 
     ExPropsPlayerEquipmentData customEquipmentData;
-    PlayerTextureInfo skinInfo;
-    PlayerEquipmentWardrobeData equipmentWardrobeData;
+    EquipmentWardrobeData equipmentWardrobeData;
     EntityPlayer player;
     
     private GuiButtonExt autoButton;
@@ -68,15 +66,14 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         this.player = inventory.player;
         
         PlayerPointer playerPointer = new PlayerPointer(player);
-        skinInfo = ArmourersWorkshop.proxy.getPlayersNakedData(playerPointer);
+        equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         
-        if (skinInfo == null) {
-            skinInfo = new PlayerTextureInfo(new PlayerEquipmentWardrobeData());
+        if (equipmentWardrobeData == null) {
+            equipmentWardrobeData = new EquipmentWardrobeData();
             ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
         }
         
-        if (skinInfo != null) {
-            equipmentWardrobeData = skinInfo.getEquipmentWardrobeData();
+        if (equipmentWardrobeData != null) {
             this.skinColour = new Color(equipmentWardrobeData.skinColour);
             this.hairColour = new Color(equipmentWardrobeData.hairColour);
             this.armourOverride = equipmentWardrobeData.armourOverride;
@@ -182,10 +179,10 @@ public class GuiEquipmentWardrobe extends GuiContainer {
             PacketHandler.networkWrapper.sendToServer(new MessageClientEquipmentWardrobeUpdate(equipmentWardrobeData));
         }
         if (button.id == 0) {
-            int newSkinColour = skinInfo.autoColourSkin((AbstractClientPlayer) this.player);
-            int newHairColour = skinInfo.autoColourHair((AbstractClientPlayer) this.player);
+            int newSkinColour = equipmentWardrobeData.autoColourSkin((AbstractClientPlayer) this.player);
+            int newHairColour = equipmentWardrobeData.autoColourHair((AbstractClientPlayer) this.player);
             
-            PlayerEquipmentWardrobeData ewd = new PlayerEquipmentWardrobeData();
+            EquipmentWardrobeData ewd = new EquipmentWardrobeData();
             ewd.skinColour = newSkinColour;
             ewd.hairColour = newHairColour;
             ewd.armourOverride = this.equipmentWardrobeData.armourOverride;

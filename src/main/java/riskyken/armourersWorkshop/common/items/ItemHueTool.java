@@ -89,7 +89,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         Color blockColour = new Color(oldColour);
         blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
         
-        int newColour = Color.HSBtoRGB(toolhsb[0], toolhsb[1], blockhsb[2]);
+        int newColour = Color.HSBtoRGB(toolhsb[0], blockhsb[1], blockhsb[2]);
         
         UndoManager.playerPaintedBlock(player, world, bl.x, bl.y, bl.z, oldColour, side);
         ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);

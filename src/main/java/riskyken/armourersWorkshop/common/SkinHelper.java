@@ -9,23 +9,18 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.util.ResourceLocation;
-
 import org.apache.commons.io.IOUtils;
-
-import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
-import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
-import riskyken.armourersWorkshop.common.data.PlayerPointer;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.util.ResourceLocation;
 
 public final class SkinHelper {
     /*
@@ -53,6 +48,29 @@ public final class SkinHelper {
         } finally {
             IOUtils.closeQuietly(inputStream);
         }
+        return bufferedImage;
+    }
+    
+    public static BufferedImage getBufferedImageSkin(ResourceLocation resourceLocation) {
+        Minecraft mc = Minecraft.getMinecraft();
+        BufferedImage bufferedImage = null;
+        InputStream inputStream = null;
+        
+        try {
+            ITextureObject skintex = mc.getTextureManager().getTexture(resourceLocation);
+            if (skintex instanceof ThreadDownloadImageData) {
+                ThreadDownloadImageData imageData = (ThreadDownloadImageData)skintex;
+                bufferedImage  = ObfuscationReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage", "field_110560_d", "bpr.h");
+            } else {
+                inputStream = Minecraft.getMinecraft().getResourceManager().getResource(resourceLocation).getInputStream();
+                bufferedImage = ImageIO.read(inputStream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        
         return bufferedImage;
     }
     

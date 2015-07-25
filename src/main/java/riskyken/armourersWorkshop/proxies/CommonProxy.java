@@ -1,11 +1,9 @@
 package riskyken.armourersWorkshop.proxies;
 
 import net.minecraft.block.Block;
-import riskyken.armourersWorkshop.client.render.PlayerTextureInfo;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.skin.PlayerEquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 
 public class CommonProxy {
@@ -34,20 +32,8 @@ public class CommonProxy {
         
     }
     
-    public void removeEquipmentData(PlayerPointer playerPointer) {
-        
-    }
-    
     public int getPlayerModelCacheSize() {
         return 0;
-    }
-
-    public void setPlayersNakedData(PlayerPointer playerPointer, PlayerEquipmentWardrobeData nakedInfo) {
-        
-    }
-    
-    public PlayerTextureInfo getPlayersNakedData(PlayerPointer playerPointer) {
-        return null;
     }
     
     public int getRenderType(Block block) {

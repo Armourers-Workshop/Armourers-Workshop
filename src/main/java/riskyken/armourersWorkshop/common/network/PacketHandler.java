@@ -27,7 +27,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLi
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeRemove;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeUpdate;
 
@@ -40,7 +40,7 @@ public class PacketHandler {
         registerMessage(MessageClientGuiColourUpdate.class, MessageClientGuiColourUpdate.class, Side.SERVER);
         registerMessage(MessageClientGuiButton.class, MessageClientGuiButton.class, Side.SERVER);
         registerMessage(MessageServerSkinInfoUpdate.class, MessageServerSkinInfoUpdate.class, Side.CLIENT);
-        registerMessage(MessageServerEquipmentWardrobeRemove.class, MessageServerEquipmentWardrobeRemove.class, Side.CLIENT);
+        registerMessage(MessageServerPlayerLeftTrackingRange.class, MessageServerPlayerLeftTrackingRange.class, Side.CLIENT);
         registerMessage(MessageClientLoadArmour.class, MessageClientLoadArmour.class, Side.SERVER);
         registerMessage(MessageClientGuiSetSkin.class, MessageClientGuiSetSkin.class, Side.SERVER);
         registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, Side.CLIENT);
