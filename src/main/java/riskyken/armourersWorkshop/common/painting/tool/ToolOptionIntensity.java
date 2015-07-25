@@ -37,7 +37,7 @@ public class ToolOptionIntensity extends AbstractToolOption {
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
         int intensityValue = 16;
-        if (compound.hasKey(TAG_INTENSITY)) {
+        if (compound != null && compound.hasKey(TAG_INTENSITY)) {
             intensityValue = compound.getInteger(TAG_INTENSITY);
         }
         return intensityValue;

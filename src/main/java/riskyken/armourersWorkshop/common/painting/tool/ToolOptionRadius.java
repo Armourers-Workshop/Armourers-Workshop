@@ -37,7 +37,7 @@ public class ToolOptionRadius extends AbstractToolOption {
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
         int intensityValue = 2;
-        if (compound.hasKey(TAG_RADIUS)) {
+        if (compound != null && compound.hasKey(TAG_RADIUS)) {
             intensityValue = compound.getInteger(TAG_RADIUS);
         }
         return intensityValue;
