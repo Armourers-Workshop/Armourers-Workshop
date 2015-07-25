@@ -15,7 +15,6 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class Skin implements ISkin {
     
@@ -260,7 +259,7 @@ public class Skin implements ISkin {
     public String toString() {
         String returnString = "CustomArmourItemData [authorName=" + authorName
                 + ", customName=" + customName + ", type=" + equipmentSkinType.getName().toUpperCase();
-        if (this.paintData != null) {ModLogger.log("paintData=" + paintData.hashCode());
+        if (this.paintData != null) {
             returnString += ", paintData=" + Arrays.hashCode(paintData);
         }
         returnString += "]";
