@@ -1,10 +1,6 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.List;
-
-import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -22,20 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 
-public class BlockBoundingBox extends Block implements ITileEntityProvider, IPantableBlock {
+public class BlockBoundingBox extends Block implements ITileEntityProvider/*, IPantableBlock*/ {
 
     protected BlockBoundingBox() {
         super(Material.cloth);
@@ -133,7 +121,7 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntityBoundingBox();
     }
-
+    /*
     @Override
     public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
         ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
@@ -183,4 +171,5 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
     public ICubeColour getColour(IBlockAccess world, int x, int y, int z) {
         return null;
     }
+    */
 }

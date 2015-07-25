@@ -88,7 +88,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         equipmentWardrobeHandler = new EquipmentWardrobeHandler();
-        PlayerTextureHandler.init();
+        //playerTextureHandler = new PlayerTextureHandler();
         ClientModelCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());

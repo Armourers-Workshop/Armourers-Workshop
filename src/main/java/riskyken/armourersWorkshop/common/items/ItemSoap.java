@@ -39,7 +39,7 @@ public class ItemSoap extends AbstractModItemNew {
         if (block == ModBlocks.boundingBox) {
             BlockBoundingBox bb = (BlockBoundingBox) block;
             if (!world.isRemote()) {
-                bb.setColour(world.getMinecraftWorld(), bl.x, bl.y, bl.z, 0x00FFFFFF, side);
+                //bb.setColour(world.getMinecraftWorld(), bl.x, bl.y, bl.z, 0x00FFFFFF, side);
                 world.playSoundEffect(bl.x + 0.5D, bl.y + 0.5D, bl.z + 0.5D, LibSounds.PAINT, 1.0F, world.rand().nextFloat() * 0.1F + 0.9F);
             }
             return true;

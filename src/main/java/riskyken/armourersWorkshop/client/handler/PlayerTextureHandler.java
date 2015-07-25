@@ -28,10 +28,6 @@ public class PlayerTextureHandler {
     
     private HashMap<PlayerPointer, EntityTextureInfo> playerTextureMap = new HashMap<PlayerPointer, EntityTextureInfo>();
     
-    public static void init() {
-        INSTANCE = new PlayerTextureHandler();
-    }
-    
     public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
