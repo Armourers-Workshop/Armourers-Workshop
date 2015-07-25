@@ -129,11 +129,11 @@ public class EntityTextureInfo {
                 for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
                     for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
                         int paintColour = skins[i].getPaintData()[ix + (iy * TEXTURE_WIDTH)];
-                        if (paintColour >>> 16 == 0) {
+                        if (paintColour >>> 24 == 255) {
                             bufferedEntitySkinnedImage.setRGB(ix, iy, skins[i].getPaintData()[ix + (iy * TEXTURE_WIDTH)]);
-                        } else if (paintColour >>> 16 == 1) {
+                        } else if (paintColour >>> 24 == 254) {
                             bufferedEntitySkinnedImage.setRGB(ix, iy, lastEntitySkinColour);
-                        } else if (paintColour >>> 16 == 2) {
+                        } else if (paintColour >>> 24 == 253) {
                             bufferedEntitySkinnedImage.setRGB(ix, iy, lastEntityHairColour);
                         }
                     }

@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -7,9 +9,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
@@ -67,7 +66,7 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             }
             mc.mcProfiler.startSection("armourers item skin");
             GL11.glEnable(GL11.GL_CULL_FACE);
-            ItemStackRenderHelper.renderItemAsArmourModel(stack);
+            ItemStackRenderHelper.renderItemAsArmourModel(stack, true);
             GL11.glDisable(GL11.GL_CULL_FACE);
             mc.mcProfiler.endSection();
             GL11.glPopMatrix();

@@ -1,12 +1,8 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -14,6 +10,14 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import riskyken.armourersWorkshop.client.model.ClientModelCache;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public final class ModelBakery {
@@ -73,7 +77,12 @@ public final class ModelBakery {
     
     private void dispatchBakery() {
         for (int i = 0; i < bakedModels.size(); i++) {
-            ClientModelCache.INSTANCE.receivedModelFromBakery(bakedModels.get(i));
+            Skin skin = bakedModels.get(i);
+            if (skin.hasPaintData()) {
+                skin.paintTextureId = TextureUtil.glGenTextures();
+                TextureUtil.uploadTextureImage(skin.paintTextureId, skin.bufferedImage);
+            }
+            ClientModelCache.INSTANCE.receivedModelFromBakery(skin);
         }
         bakedModels.clear();
     }
@@ -100,6 +109,19 @@ public final class ModelBakery {
                 SkinPart partData = skin.getParts().get(i);
                 SkinBaker.cullFacesOnEquipmentPart(partData);
                 SkinBaker.buildPartDisplayListArray(partData);
+            }
+            
+            if (skin.hasPaintData()) {
+                ModLogger.log("baking skin paint");
+                skin.bufferedImage = new BufferedImage(SkinTexture.TEXTURE_WIDTH, SkinTexture.TEXTURE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+                for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
+                    for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
+                        int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
+                        if (paintColour >>> 24 == 255) {
+                            skin.bufferedImage.setRGB(ix, iy, skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)]);
+                        }
+                    }
+                }
             }
             
             synchronized (bakeLock) {
