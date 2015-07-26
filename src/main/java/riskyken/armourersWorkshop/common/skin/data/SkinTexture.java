@@ -128,8 +128,15 @@ public class SkinTexture {
         for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
             for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
                 int paintColour = paintData[ix + (iy * TEXTURE_WIDTH)];
-                if (paintColour >>> 16 != 255) {
+                int alpha = paintColour >>> 24;
+                if (alpha == 255) {
                     bufferedSkinImage.setRGB(ix, iy, paintData[ix + (iy * TEXTURE_WIDTH)]);
+                } else if (alpha == 1) {
+                    //TODO set skin colour
+                    bufferedSkinImage.setRGB(ix, iy, 0xFFFF0000);
+                } else if (alpha == 2) {
+                    //TODO set hair colour
+                    bufferedSkinImage.setRGB(ix, iy, 0xFF00FF00);
                 }
             }
         }

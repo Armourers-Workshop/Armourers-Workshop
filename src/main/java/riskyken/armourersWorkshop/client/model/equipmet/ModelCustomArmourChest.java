@@ -59,7 +59,7 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
 
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
-            if (armourData.hasPaintData()) {
+            if (armourData.hasPaintData() & showSkinPaint) {
                 armourData.blindPaintTexture();
                 GL11.glDisable(GL11.GL_CULL_FACE);
                 bipedBody.render(SCALE);

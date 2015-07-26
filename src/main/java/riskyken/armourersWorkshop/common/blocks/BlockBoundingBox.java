@@ -34,6 +34,8 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
+import riskyken.armourersWorkshop.utils.BitwiseUtils;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class BlockBoundingBox extends Block implements ITileEntityProvider, IPantableBlock {
 
@@ -167,7 +169,8 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
                 ISkinType skinType = parent.getSkinType();
                 Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
                 int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                if (colour >>> 16 == 255) {
+                ModLogger.log(BitwiseUtils.getSByteFromInt(colour, 3));
+                if (colour >>> 24 == 0) {
                     GameProfile gameProfile = parent.getGameProfile();
                     BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
                     colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
