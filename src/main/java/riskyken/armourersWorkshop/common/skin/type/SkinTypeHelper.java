@@ -13,13 +13,13 @@ public final class SkinTypeHelper {
         case 2:
             return SkinTypeRegistry.skinLegs;
         case 3:
-            return SkinTypeRegistry.skinSkirt;
-        case 4:
             return SkinTypeRegistry.skinFeet;
-        case 5:
+        case 4:
             return SkinTypeRegistry.skinSword;
-        case 6:
+        case 5:
             return SkinTypeRegistry.skinBow;
+        case 6:
+            return SkinTypeRegistry.skinArrow;
         default:
             return null;
         }
@@ -32,13 +32,13 @@ public final class SkinTypeHelper {
             return 1;
         } else if (skinType == SkinTypeRegistry.skinLegs) {
             return 2;
-        } else if (skinType == SkinTypeRegistry.skinSkirt) {
-            return 3;
         } else if (skinType == SkinTypeRegistry.skinFeet) {
-            return 4;
+            return 3;
         } else if (skinType == SkinTypeRegistry.skinSword) {
-            return 5;
+            return 4;
         } else if (skinType == SkinTypeRegistry.skinBow) {
+            return 5;
+        } else if (skinType == SkinTypeRegistry.skinArrow) {
             return 6;
         }
         return -1;

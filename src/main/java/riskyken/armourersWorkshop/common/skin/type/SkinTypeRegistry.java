@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
@@ -30,6 +29,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public static ISkinType skinFeet;
     public static ISkinType skinSword;
     public static ISkinType skinBow;
+    public static ISkinType skinArrow;
     
     private LinkedHashMap<String, ISkinType> skinTypeMap;
     private HashMap<String, ISkinPartType> skinPartMap;
@@ -53,6 +53,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinFeet = new SkinFeet();
         skinSword = new SkinSword();
         skinBow = new SkinBow();
+        skinArrow = new SkinArrow();
         
         registerSkin(skinHead);
         registerSkin(skinChest);
@@ -61,6 +62,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinFeet);
         registerSkin(skinSword);
         registerSkin(skinBow);
+        registerSkin(skinArrow);
     }
     
     @Override
@@ -131,6 +133,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return getSkinTypeFromRegistryName("armourers:sword");
         case 6:
             return getSkinTypeFromRegistryName("armourers:bow");
+        case 7:
+            return getSkinTypeFromRegistryName("armourers:arrow");
         default:
             return null;
         }

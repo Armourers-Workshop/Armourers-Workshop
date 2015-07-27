@@ -49,6 +49,9 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             if (skinType == SkinTypeRegistry.skinSword) {
                 GL11.glScalef(0.7F, 0.7F, 0.7F);
             }
+            if (skinType == SkinTypeRegistry.skinArrow) {
+                GL11.glTranslatef(0F, 0F, -0.4F * scale);
+            }
             switch (type) {
             case EQUIPPED:
                 GL11.glTranslatef(0.6F, -0.5F, -0.5F);

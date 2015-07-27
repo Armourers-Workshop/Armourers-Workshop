@@ -20,11 +20,12 @@ public class ContainerEquipmentWardrobe extends Container {
         
         addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinHead, customEquipmentData, 0, 88, 18));
         addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinChest, customEquipmentData, 1, 88, 37));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinSword, customEquipmentData, 5, 69, 113));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinLegs, customEquipmentData, 2, 88, 75));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinSkirt, customEquipmentData, 3, 88, 56));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinFeet, customEquipmentData, 4, 88, 94));
-        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinBow, customEquipmentData, 6, 28, 113));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinLegs, customEquipmentData, 2, 88, 56));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinFeet, customEquipmentData, 3, 88, 75));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinSword, customEquipmentData, 4, 29, 113));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinBow, customEquipmentData, 5, 49, 113));
+        addSlotToContainer(new SlotEquipmentSkin(SkinTypeRegistry.skinArrow, customEquipmentData, 6, 69, 113));
+        
 
         addSlotToContainer(new SlotColourTool(customEquipmentData, 7, 91, 35));
         addSlotToContainer(new SlotOutput(customEquipmentData, 8, 130, 35));

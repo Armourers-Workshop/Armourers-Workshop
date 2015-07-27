@@ -7,6 +7,9 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,6 +29,7 @@ import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.entity.EntitySkinRenderHandler;
+import riskyken.armourersWorkshop.client.render.entity.RenderSkinnedArrow;
 import riskyken.armourersWorkshop.client.render.item.RenderItemBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
@@ -83,6 +87,9 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing(RenderingRegistry.getNextAvailableRenderId()));
         new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
+        Render arrowRender = new RenderSkinnedArrow();
+        arrowRender.setRenderManager(RenderManager.instance);
+        RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
     }
 
     @Override

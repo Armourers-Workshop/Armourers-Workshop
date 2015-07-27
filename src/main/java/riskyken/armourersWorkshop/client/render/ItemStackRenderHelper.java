@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
@@ -26,23 +27,23 @@ public final class ItemStackRenderHelper {
 
     public static void renderItemAsArmourModel(ItemStack stack, boolean showSkinPaint) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            renderItemModelFromId(skinData.skinId, skinData.skinType, showSkinPaint);
+            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            renderItemModelFromSkinPointer(skinPointer, showSkinPaint);
         }
     }
     
-    public static void renderItemAsArmourModel(ItemStack stack, ISkinType skinType, boolean showSkinPaint) {
-        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-        renderItemModelFromId(equipmentId, skinType, showSkinPaint);
-    }
     
-    public static void renderItemModelFromId(int equipmentId, ISkinType skinType, boolean showSkinPaint) {
+    public static void renderItemModelFromSkinPointer(SkinPointer skinPointer, boolean showSkinPaint) {
+        int skinId = skinPointer.getSkinId();
+        ISkinType skinType = skinPointer.getSkinType();
+        
         IEquipmentModel targetModel = EquipmentModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
         if (targetModel == null) {
+            renderSkinWithoutHelper(skinPointer);
             return;
         }
         
-        Skin data = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+        Skin data = ClientModelCache.INSTANCE.getEquipmentItemData(skinId);
         if (data == null) {
             return;
         }
@@ -71,5 +72,17 @@ public final class ItemStackRenderHelper {
         }
         
         GL11.glDisable(GL11.GL_BLEND);
+    }
+    
+    public static void renderSkinWithoutHelper(SkinPointer skinPointer) {
+        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
+        if (skin == null) {
+            return;
+        }
+        skin.onUsed();
+        for (int i = 0; i < skin.getParts().size(); i++) {
+            SkinPart skinPart = skin.getParts().get(i);
+            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F);
+        }
     }
 }

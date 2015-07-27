@@ -18,7 +18,6 @@ import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class RenderItemBowSkin implements IItemRenderer {
@@ -141,7 +140,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                 Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
                 model.render(null, skin, false);
             } else {
-                ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinBow, false);
+                ItemStackRenderHelper.renderItemAsArmourModel(stack, false);
             }
             
             GL11.glDisable(GL11.GL_CULL_FACE);
