@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -9,9 +11,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -19,7 +18,6 @@ import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class RenderItemBowSkin implements IItemRenderer {
@@ -142,7 +140,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                 Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
                 model.render(null, skin);
             } else {
-                ItemStackRenderHelper.renderItemAsArmourModel(stack, SkinTypeRegistry.skinBow);
+                ItemStackRenderHelper.renderItemAsArmourModel(stack);
             }
             
             GL11.glDisable(GL11.GL_CULL_FACE);

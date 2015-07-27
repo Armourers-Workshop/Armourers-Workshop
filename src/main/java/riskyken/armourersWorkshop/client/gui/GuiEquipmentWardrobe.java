@@ -16,6 +16,7 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -242,10 +243,16 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         
         int sloImageSize = 18;
         if (this.activeTab == TAB_MAIN) {
-            this.drawTexturedModalRect(this.guiLeft + 87, this.guiTop + 17, 18, 173, sloImageSize, 56);
-            this.drawTexturedModalRect(this.guiLeft + 87, this.guiTop + 74, 0, 192, sloImageSize, 37);
-            this.drawTexturedModalRect(this.guiLeft + 68, this.guiTop + 112, 0, 173, sloImageSize, sloImageSize);
-            this.drawTexturedModalRect(this.guiLeft + 27, this.guiTop + 112, 238, 238, sloImageSize, sloImageSize);
+            for (int i = 0; i < 7; i++) {
+                Slot slot = (Slot) inventorySlots.inventorySlots.get(i);
+                this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition - 1,
+                        this.guiTop + slot.yDisplayPosition - 1,
+                        238, 194, sloImageSize, sloImageSize);
+            }
+            //this.drawTexturedModalRect(this.guiLeft + 87, this.guiTop + 17, 18, 173, sloImageSize, 56);
+            //this.drawTexturedModalRect(this.guiLeft + 87, this.guiTop + 74, 0, 192, sloImageSize, 37);
+            //this.drawTexturedModalRect(this.guiLeft + 68, this.guiTop + 112, 0, 173, sloImageSize, sloImageSize);
+            //this.drawTexturedModalRect(this.guiLeft + 27, this.guiTop + 112, 238, 238, sloImageSize, sloImageSize);
         }
         
         if (this.activeTab == TAB_SKIN) {

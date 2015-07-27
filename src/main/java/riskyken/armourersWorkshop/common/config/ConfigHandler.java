@@ -48,6 +48,7 @@ public class ConfigHandler {
     public static boolean skinSafeModelRenderOverride;
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
+    public static boolean showArmourerDebugRender;
     
     
     //Register
@@ -118,6 +119,10 @@ public class ConfigHandler {
                 "Shows extra debug info on skin tooltips.")
                 .getBoolean(true);
         
+        showArmourerDebugRender = config
+                .get(CATEGORY_DEBUG, "Show Armourer Debug Renders", false,
+                "Shows extra debug renders on the armourer.")
+                .getBoolean(false);
         
         disabledSkins = config
                 .getStringList("Disabled Skins", CATEGORY_GENERAL, new String[] {},

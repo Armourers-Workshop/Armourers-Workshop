@@ -1,21 +1,21 @@
 package riskyken.armourersWorkshop.client.render;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class SkinRenderHelper {
@@ -55,8 +55,6 @@ public final class SkinRenderHelper {
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
         
-        boolean debugRender = false;
-        
         IRectangle3D buildRec = part.getBuildingSpace();
         IRectangle3D guideRec = part.getGuideSpace();
         
@@ -65,7 +63,7 @@ public final class SkinRenderHelper {
         GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
         renderGuideBox(buildRec.getX(), buildRec.getY(), buildRec.getZ(), buildRec.getWidth(), buildRec.getHeight(), buildRec.getDepth(), scale);
         
-        if (debugRender) {
+        if (ConfigHandler.showArmourerDebugRender) {
             GL11.glColor4f(1F, 0F, 0F, 0.25F);
             renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(), guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale);
         }
