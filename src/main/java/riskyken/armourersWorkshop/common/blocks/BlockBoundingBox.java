@@ -4,11 +4,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -27,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -36,6 +32,12 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
 import riskyken.armourersWorkshop.utils.ModLogger;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBoundingBox extends Block implements ITileEntityProvider, IPantableBlock {
 
@@ -145,11 +147,13 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
-            if (parent != null) {
-                ISkinType skinType = parent.getSkinType();
-                Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
-                parent.updatePaintData(texturePoint.x, texturePoint.y, colour);
-                return true;
+            if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
+                if (parent != null) {
+                    ISkinType skinType = parent.getSkinType();
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    parent.updatePaintData(texturePoint.x, texturePoint.y, colour);
+                    return true;
+                }
             }
         }
         return false;
@@ -166,16 +170,17 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
-                ISkinType skinType = parent.getSkinType();
-                Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
-                int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                ModLogger.log(BitwiseUtils.getSByteFromInt(colour, 3));
-                if (colour >>> 24 == 0) {
-                    GameProfile gameProfile = parent.getGameProfile();
-                    BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
-                    colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
+                if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
+                    ModLogger.log(BitwiseUtils.getSByteFromInt(colour, 3));
+                    if (colour >>> 24 == 0) {
+                        GameProfile gameProfile = parent.getGameProfile();
+                        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
+                        colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
+                    }
+                    return colour;
                 }
-                return colour;
             }
         }
         
