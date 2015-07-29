@@ -1,13 +1,17 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -28,6 +32,11 @@ public class Skin implements ISkin {
     private ArrayList<SkinPart> parts;
     public int requestId;
     private int lightHash = 0;
+    
+    @SideOnly(Side.CLIENT)
+    public BufferedImage bufferedImage;
+    @SideOnly(Side.CLIENT)
+    public int paintTextureId;
     
     /** Number of ticks from when this skin was last used. */
     private int ticksFromLastAccess = 0;
@@ -74,6 +83,17 @@ public class Skin implements ISkin {
     public void cleanUpDisplayLists() {
         for (int i = 0; i < parts.size(); i++) {
             parts.get(i).cleanUpDisplayLists();
+        }
+        if (hasPaintData()) {
+            TextureUtil.deleteTexture(paintTextureId);
+            bufferedImage = null;
+        }
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void blindPaintTexture() {
+        if (hasPaintData()) {
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, paintTextureId);
         }
     }
     

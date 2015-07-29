@@ -14,7 +14,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -23,20 +22,15 @@ import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintingNBTHelper;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -70,26 +64,6 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                     int colour = getToolColour(stack);
                     ((IPantable)te).setColour(colour);
                 }
-            }
-            return true;
-        }
-        
-        if (block == ModBlocks.boundingBox) {
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (te != null && te instanceof TileEntityBoundingBox && world.isRemote) {
-                TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
-                if (parent != null) {
-                    ISkinType skinType = parent.getSkinType();
-                    if (skinPartHasTexture(((TileEntityBoundingBox)te).getSkinPart())) {
-                        int colour = getColourFromSkin((TileEntityBoundingBox)te, side);
-                        NBTTagCompound compound = new NBTTagCompound();
-                        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
-                        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
-                    }
-                }
-            }
-            if (!world.isRemote) {
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
             return true;
         }

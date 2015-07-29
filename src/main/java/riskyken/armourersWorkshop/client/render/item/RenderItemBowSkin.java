@@ -138,9 +138,9 @@ public class RenderItemBowSkin implements IItemRenderer {
                 model.bowUse = useCount;
                 int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
                 Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
-                model.render(null, skin);
+                model.render(null, skin, false);
             } else {
-                ItemStackRenderHelper.renderItemAsArmourModel(stack);
+                ItemStackRenderHelper.renderItemAsArmourModel(stack, false);
             }
             
             GL11.glDisable(GL11.GL_CULL_FACE);

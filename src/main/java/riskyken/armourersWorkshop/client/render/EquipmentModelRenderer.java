@@ -215,31 +215,31 @@ public final class EquipmentModelRenderer {
             if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
                 Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead);
                 if (data != null) {
-                    customHead.render(player, render.modelBipedMain, data);
+                    customHead.render(player, render.modelBipedMain, data, false);
                 }
             }
             if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
                 Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest);
                 if (data != null) {
-                    customChest.render(player, render.modelBipedMain, data);
+                    customChest.render(player, render.modelBipedMain, data, false);
                 }
             }
             if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
                 Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs);
                 if (data != null) {
-                    customLegs.render(player, render.modelBipedMain, data);
+                    customLegs.render(player, render.modelBipedMain, data, false);
                 }
             }
             if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
                 Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt);
                 if (data != null) {
-                    customSkirt.render(player, render.modelBipedMain, data);
+                    customSkirt.render(player, render.modelBipedMain, data, false);
                 }
             }
             if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
                 Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet);
                 if (data != null) {
-                    customFeet.render(player, render.modelBipedMain, data);
+                    customFeet.render(player, render.modelBipedMain, data, false);
                 }
             }
             GL11.glDisable(GL11.GL_BLEND);
@@ -292,7 +292,7 @@ public final class EquipmentModelRenderer {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
-        model.render(entity, modelBiped, data);
+        model.render(entity, modelBiped, data, false);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);
         return true;

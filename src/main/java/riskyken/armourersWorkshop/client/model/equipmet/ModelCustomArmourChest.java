@@ -2,18 +2,17 @@ package riskyken.armourersWorkshop.client.model.equipmet;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
@@ -21,17 +20,17 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData);
+        render(entity, armourData, false);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData);
+        render(entity, armourData, showSkinPaint);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -59,6 +58,15 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
             }
 
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
+            
+            if (armourData.hasPaintData() & showSkinPaint) {
+                armourData.blindPaintTexture();
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                bipedBody.render(SCALE);
+                bipedLeftArm.render(SCALE);
+                bipedRightArm.render(SCALE);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+            }
             
             if (part.getPartType().getPartName().equals("base")) {
                 renderChest(part, SCALE);
@@ -91,7 +99,6 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-        
         GL11.glTranslatef(5.0F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 2.0F * scale, 0F);
         
@@ -111,7 +118,6 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-        
         GL11.glTranslatef(-5.0F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 2.0F * scale, 0F);
         

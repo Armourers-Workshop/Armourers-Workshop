@@ -25,14 +25,15 @@ import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 @SideOnly(Side.CLIENT)
 public final class ItemStackRenderHelper {
 
-    public static void renderItemAsArmourModel(ItemStack stack) {
+    public static void renderItemAsArmourModel(ItemStack stack, boolean showSkinPaint) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            renderItemModelFromSkinPointer(skinPointer);
+            renderItemModelFromSkinPointer(skinPointer, showSkinPaint);
         }
     }
     
-    public static void renderItemModelFromSkinPointer(SkinPointer skinPointer) {
+    
+    public static void renderItemModelFromSkinPointer(SkinPointer skinPointer, boolean showSkinPaint) {
         int skinId = skinPointer.getSkinId();
         ISkinType skinType = skinPointer.getSkinType();
         
@@ -49,27 +50,25 @@ public final class ItemStackRenderHelper {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
         
-        
-        
         if (skinType == SkinTypeRegistry.skinHead) {
             GL11.glTranslatef(0F, 0.2F, 0F);
-            targetModel.render(null, null, data);
+            targetModel.render(null, null, data, showSkinPaint);
         } else if (skinType == SkinTypeRegistry.skinChest) {
             GL11.glTranslatef(0F, -0.35F, 0F);
-            targetModel.render(null, null, data);
+            targetModel.render(null, null, data, showSkinPaint);
         } else if (skinType == SkinTypeRegistry.skinLegs) {
             GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data);
+            targetModel.render(null, null, data, showSkinPaint);
         } else if (skinType == SkinTypeRegistry.skinSkirt) {
             GL11.glTranslatef(0F, -1.0F, 0F);
-            targetModel.render(null, null, data);
+            targetModel.render(null, null, data, showSkinPaint);
         } else if (skinType == SkinTypeRegistry.skinFeet) {
             GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data);
+            targetModel.render(null, null, data, showSkinPaint);
         } else if (skinType == SkinTypeRegistry.skinSword) {
-            targetModel.render(null, null, data);
+            targetModel.render(null, null, data, showSkinPaint);
         } else if (skinType == SkinTypeRegistry.skinBow) {
-            targetModel.render(null, null, data);
+            targetModel.render(null, null, data, showSkinPaint);
         }
         
         GL11.glDisable(GL11.GL_BLEND);

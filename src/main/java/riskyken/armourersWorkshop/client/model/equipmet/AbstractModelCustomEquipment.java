@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.model.equipmet;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -7,8 +9,6 @@ import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class AbstractModelCustomEquipment extends ModelBiped implements IEquipmentModel {
@@ -60,13 +60,13 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
             bipedHeadwear.rotateAngleZ = 0F;
             super.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, entity);
 
-            render(entity, npcEquipmentData);
+            render(entity, npcEquipmentData, false);
             npcEquipmentData = null;
         }
     }
     
     
-    public abstract void render(Entity entity, Skin armourData);
+    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
