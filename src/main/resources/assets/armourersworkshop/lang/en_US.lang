@@ -107,6 +107,7 @@ skinType.armourers:skirt.name=Skirt
 skinType.armourers:feet.name=Feet
 skinType.armourers:sword.name=Sword
 skinType.armourers:bow.name=Bow
+skinType.armourers:arrow.name=Arrow
 
 # Skin Part Types
 skinPartType.armourers:head.base.name=Base
@@ -115,6 +116,7 @@ skinPartType.armourers:chest.leftArm.name=Left Arm
 skinPartType.armourers:chest.rightArm.name=Right Arm
 skinPartType.armourers:legs.leftLeg.name=Left Leg
 skinPartType.armourers:legs.rightLeg.name=Right Leg
+skinPartType.armourers:legs.skirt.name=Skirt
 skinPartType.armourers:skirt.base.name=Base
 skinPartType.armourers:feet.leftFoot.name=Left Foot
 skinPartType.armourers:feet.rightFoot.name=Right Foot
@@ -122,7 +124,7 @@ skinPartType.armourers:sword.base.name=Base
 skinPartType.armourers:bow.base.name=Base
 skinPartType.armourers:bow.frame1.name=Frame 1
 skinPartType.armourers:bow.frame2.name=Frame 2
-skinPartType.armourers:bow.arrow.name=Arrow
+skinPartType.armourers:arrow.base.name=Base
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
