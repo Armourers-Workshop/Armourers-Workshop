@@ -2,11 +2,11 @@ package riskyken.armourersWorkshop.utils;
 
 public final class BitwiseUtils {
     
-    public static int getSByteFromInt(int source, int index) {
+    public static int getUByteFromInt(int source, int index) {
         return source >>> ((3 - index) * 8) & 0xFF;
     }
     
-    public static int setSByteToInt(int target, int index, int value) {
+    public static int setUByteToInt(int target, int index, int value) {
         int[] bytes = new int[4];
         bytes[0] = target >>> 24 & 0xFF;
         bytes[1] = target >>> 16 & 0xFF;

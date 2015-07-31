@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 /**
@@ -53,7 +54,6 @@ public class SkinTexture {
     
     @Override
     protected void finalize() throws Throwable {
-        ModLogger.log("cleaning up texture");
         deleteTexture();
         super.finalize();
     }
@@ -128,15 +128,19 @@ public class SkinTexture {
         for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
             for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
                 int paintColour = paintData[ix + (iy * TEXTURE_WIDTH)];
-                int alpha = paintColour >>> 24;
-                if (alpha == 255) {
-                    bufferedSkinImage.setRGB(ix, iy, paintData[ix + (iy * TEXTURE_WIDTH)]);
-                } else if (alpha == 1) {
-                    //TODO set skin colour
+                PaintType paintType = PaintType.getPaintTypeFromColour(paintColour);
+                switch (paintType) {
+                case NONE:
+                    break;
+                case SKIN:
                     bufferedSkinImage.setRGB(ix, iy, 0xFFFF0000);
-                } else if (alpha == 2) {
-                    //TODO set hair colour
+                    break;
+                case HAIR:
                     bufferedSkinImage.setRGB(ix, iy, 0xFF00FF00);
+                    break;
+                case NORMAL:
+                    bufferedSkinImage.setRGB(ix, iy, paintData[ix + (iy * TEXTURE_WIDTH)]);
+                    break;
                 }
             }
         }

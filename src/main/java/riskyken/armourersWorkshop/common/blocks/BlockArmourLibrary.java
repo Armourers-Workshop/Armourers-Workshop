@@ -2,6 +2,10 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -19,10 +23,6 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockArmourLibrary extends AbstractModBlock implements ITileEntityProvider {
 
@@ -52,12 +52,6 @@ public class BlockArmourLibrary extends AbstractModBlock implements ITileEntityP
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         UtilBlocks.dropInventoryBlocks(world, x, y, z);
         super.breakBlock(world, x, y, z, block, meta);
-    }
-    
-    @Override
-    public String getUnlocalizedName() {
-        // TODO Auto-generated method stub
-        return super.getUnlocalizedName();
     }
 
     @Override

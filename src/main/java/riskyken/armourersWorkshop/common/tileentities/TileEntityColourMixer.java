@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -14,8 +16,6 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class TileEntityColourMixer extends AbstractTileEntityInventory implements IPantable {
@@ -34,6 +34,14 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         colour = 16777215;
         colourUpdate = false;
         colourFamily = ColourFamily.MINECRAFT_WOOL;
+    }
+    
+    public boolean isSpecial() {
+        int meta = getBlockMetadata();
+        if (meta == 1) {
+            return true;
+        }
+        return false;
     }
     
     @Override

@@ -27,7 +27,7 @@ import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
-import riskyken.armourersWorkshop.common.painting.PaintingNBTHelper;
+import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
@@ -146,17 +146,17 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     
     @Override
     public boolean getToolHasColour(ItemStack stack) {
-        return PaintingNBTHelper.getToolHasColour(stack);
+        return PaintingHelper.getToolHasColour(stack);
     }
 
     @Override
     public int getToolColour(ItemStack stack) {
-        return PaintingNBTHelper.getToolColour(stack);
+        return PaintingHelper.getToolColour(stack);
     }
 
     @Override
     public void setToolColour(ItemStack stack, int colour) {
-        PaintingNBTHelper.setToolColour(stack, colour);
+        PaintingHelper.setToolColour(stack, colour);
     }
 
     @Override

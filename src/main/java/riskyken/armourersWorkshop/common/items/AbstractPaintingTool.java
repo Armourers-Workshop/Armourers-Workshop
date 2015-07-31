@@ -1,19 +1,30 @@
 package riskyken.armourersWorkshop.common.items;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
 import riskyken.armourersWorkshop.client.particles.ParticleManager;
-import riskyken.armourersWorkshop.common.painting.PaintingNBTHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.painting.PaintType;
+import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 
 public abstract class AbstractPaintingTool extends AbstractModItem implements IPaintingTool {
 
     public AbstractPaintingTool(String name) {
         super(name);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean hasEffect(ItemStack stack, int pass) {
+        PaintType paintType = PaintingHelper.getPaintTypeFromTool(stack);
+        if (paintType == PaintType.HAIR | paintType == PaintType.HAIR) {
+            return true;
+        }
+        return false;
     }
     
     @SideOnly(Side.CLIENT)
@@ -45,11 +56,11 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
 
     @Override
     public int getToolColour(ItemStack stack) {
-        return PaintingNBTHelper.getToolColour(stack);
+        return PaintingHelper.getToolColour(stack);
     }
 
     @Override
     public void setToolColour(ItemStack stack, int colour) {
-        PaintingNBTHelper.setToolColour(stack, colour);
+        PaintingHelper.setToolColour(stack, colour);
     }
 }
