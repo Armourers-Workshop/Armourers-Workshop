@@ -1,13 +1,12 @@
 package riskyken.armourersWorkshop.client.render.entity;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -16,6 +15,8 @@ import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderSkinnedArrow extends RenderArrow {
@@ -37,7 +38,7 @@ public class RenderSkinnedArrow extends RenderArrow {
                     ModRenderHelper.enableAlphaBlend();
                     renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinId);
                     ModRenderHelper.disableAlphaBlend();
-                    //return;
+                    return;
                 } else {
                     ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinId);
                 }
