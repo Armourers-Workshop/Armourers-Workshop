@@ -1,3 +1,9 @@
+Build 0.34.2
+Fixed crash from missing Apache library.
+Fixed crash when loading corrupted skin.
+Fixed crash when using painting tools on the weapon hand model.
+Changed equipment wardrobe slot id's. (thing will be muddled up.)
+
 Build 0.34.1
 Fixed NPE crash when using tools with no NBT data.
 Fixed some typos in the config file.
