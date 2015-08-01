@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.skin;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +31,7 @@ import cpw.mods.fml.relauncher.Side;
  */
 public final class SkinDataCache {
     
-    public static SkinDataCache INSTANCE = null;
+    public static final SkinDataCache INSTANCE = new SkinDataCache();
     
     /** Cache of skins that are in memory. */
     private HashMap<Integer, Skin> skinDataCache = new HashMap<Integer, Skin>();
@@ -39,12 +40,6 @@ public final class SkinDataCache {
     
     private long lastTick;
     private boolean madeDatabase = false;
-    
-    public static void init() {
-        if (INSTANCE == null) {
-            INSTANCE = new SkinDataCache();
-        }
-    }
     
     public SkinDataCache() {
         FMLCommonHandler.instance().bus().register(this);
@@ -102,13 +97,11 @@ public final class SkinDataCache {
         }
     }
     
-    public Skin addSkinToCache(File file) {
-        if (file.exists()) {
-            Skin skin = SkinIOUtils.loadSkinFromFile(file);
-            if (skin != null) {
-                addEquipmentDataToCache(skin);
-                return skin;
-            }
+    public Skin addSkinToCache(InputStream inputStream) {
+        Skin skin = SkinIOUtils.loadSkinFromStream(inputStream);
+        if (skin != null) {
+            addEquipmentDataToCache(skin);
+            return skin;
         }
         return null;
     }

@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common.handler;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.BitSet;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,9 +113,9 @@ public class EquipmentDataHandler implements ISkinDataHandler {
     }
 
     @Override
-    public ISkinPointer addSkinToCache(File file) {
-        if (file != null) {
-            Skin skin = SkinDataCache.INSTANCE.addSkinToCache(file);
+    public ISkinPointer addSkinToCache(InputStream inputStream) {
+        if (inputStream != null) {
+            Skin skin = SkinDataCache.INSTANCE.addSkinToCache(inputStream);
             if (skin != null) {
                 SkinPointer sp = new SkinPointer(skin.getSkinType(), skin.lightHash(), false);
                 return sp;
