@@ -4,21 +4,22 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.relauncher.Side;
-import net.minecraft.entity.player.EntityPlayerMP;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * Holds a cache of equipment data on the server that will be sent to clients if
@@ -107,9 +108,13 @@ public final class SkinDataCache {
             if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
                 Skin skin;
                 skin = loadEquipmentFromDisk(queueMessage.equipmentId);
-                addEquipmentDataToCache(skin, queueMessage.equipmentId);
-                if (skin.hashCode() != queueMessage.equipmentId) {
-                    addEquipmentDataToCache(skin, skin.hashCode());
+                if (skin != null) {
+                    addEquipmentDataToCache(skin, queueMessage.equipmentId);
+                    if (skin.hashCode() != queueMessage.equipmentId) {
+                        addEquipmentDataToCache(skin, skin.hashCode());
+                    }
+                } else {
+                    ModLogger.log(Level.ERROR, String.format("Failed to load skin id:%s from disk.", String.valueOf(queueMessage.equipmentId)));
                 }
             }
         }
