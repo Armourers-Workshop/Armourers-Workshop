@@ -53,6 +53,9 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             if (message.buttonId == 10) {
                 armourerBrain.clearArmourCubes();
             }
+            if (message.buttonId == 6) {
+                armourerBrain.toggleHelper();
+            }
             if (message.buttonId == 11) {
                 //armourerBrain.cloneToSide(ForgeDirection.WEST);
             }

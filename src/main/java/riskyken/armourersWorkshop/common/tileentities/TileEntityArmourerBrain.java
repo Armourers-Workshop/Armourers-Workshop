@@ -1,11 +1,5 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import org.apache.logging.log4j.Level;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +9,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
@@ -31,6 +28,11 @@ import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory implements IGameProfileCallback {
     
     private static final String TAG_DIRECTION = "direction";
@@ -39,6 +41,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     private static final String TAG_TYPE_OLD = "type";
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
+    private static final String TAG_SHOW_HELPER = "showHelper";
     private static final String TAG_CUSTOM_NAME = "customeName";
     private static final String TAG_PAINT_DATA = "paintData";
     private static final int HEIGHT_OFFSET = 1;
@@ -49,6 +52,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     private ISkinType skinType;
     private boolean showGuides;
     private boolean showOverlay;
+    private boolean showHelper;
     private String customName;
     private int[] paintData;
     @SideOnly(Side.CLIENT)
@@ -59,6 +63,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         this.items = new ItemStack[2];
         this.showOverlay = true;
         this.showGuides = true;
+        this.showHelper = true;
         this.customName = "";
         clearPaintData();
     }
@@ -251,6 +256,10 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         return showOverlay;
     }
     
+    public boolean isShowHelper() {
+        return showHelper;
+    }
+    
     public GameProfile getGameProfile() {
         return gameProfile;
     }
@@ -281,6 +290,12 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     
     public void toggleOverlay() {
         this.showOverlay = !this.showOverlay;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public void toggleHelper() {
+        this.showHelper = !this.showHelper;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -347,6 +362,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         }
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
+        if (compound.hasKey(TAG_SHOW_HELPER)) {
+            showHelper = compound.getBoolean(TAG_SHOW_HELPER);
+        }
         customName = compound.getString(TAG_CUSTOM_NAME);
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
@@ -365,6 +383,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         }
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
+        compound.setBoolean(TAG_SHOW_HELPER, showHelper);
         compound.setString(TAG_CUSTOM_NAME, customName);
         if (this.newProfile != null) {
             this.gameProfile = newProfile;

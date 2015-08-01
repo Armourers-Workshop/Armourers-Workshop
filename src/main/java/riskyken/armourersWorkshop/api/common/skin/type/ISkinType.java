@@ -49,6 +49,12 @@ public interface ISkinType {
     public boolean showSkinOverlayCheckbox();
     
     /**
+     * Should the helper check box be shown in the armourer and mini armourer.
+     * @return
+     */
+    public boolean showHelperCheckbox();
+    
+    /**
      * If this skin is for vanilla armour return the slot id here, otherwise return -1.
      * @return slotId
      */

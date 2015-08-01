@@ -33,6 +33,11 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     }
     
     @Override
+    public boolean showHelperCheckbox() {
+        return false;
+    }
+    
+    @Override
     public int getVanillaArmourSlotId() {
         return -1;
     }

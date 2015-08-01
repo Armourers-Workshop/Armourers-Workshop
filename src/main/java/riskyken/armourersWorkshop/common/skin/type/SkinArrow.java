@@ -2,11 +2,11 @@ package riskyken.armourersWorkshop.common.skin.type;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinArrow extends AbstractSkinTypeBase {
     
@@ -32,6 +32,11 @@ public class SkinArrow extends AbstractSkinTypeBase {
     @Override
     public String getName() {
         return "arrow";
+    }
+    
+    @Override
+    public boolean showHelperCheckbox() {
+        return true;
     }
 
     @SideOnly(Side.CLIENT)

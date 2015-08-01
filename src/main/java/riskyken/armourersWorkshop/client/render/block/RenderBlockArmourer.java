@@ -1,20 +1,21 @@
 package riskyken.armourersWorkshop.client.render.block;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockArmourer extends TileEntitySpecialRenderer {
@@ -69,7 +70,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         if (skinType != null) {
             mc.mcProfiler.startSection("modelRender");
-            SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), false);
+            SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
             mc.mcProfiler.endSection();
             if (te.isShowGuides()) {
                 mc.mcProfiler.startSection("renderGuideGrid");

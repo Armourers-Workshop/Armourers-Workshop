@@ -151,6 +151,7 @@ inventory.armourersworkshop:armourerBrain.label.username=Username:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:
 inventory.armourersworkshop:armourerBrain.showGuide=Show building guide?
 inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?
+inventory.armourersworkshop:armourerBrain.showHelper=Show helper model?
 inventory.armourersworkshop:armourerBrain.save=Save
 inventory.armourersworkshop:armourerBrain.load=Load
 inventory.armourersworkshop:armourerBrain.set=Set

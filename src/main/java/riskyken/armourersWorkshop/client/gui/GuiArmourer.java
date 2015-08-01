@@ -39,6 +39,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     private TileEntityArmourerBrain armourerBrain;
     private GuiCheckBox checkShowGuides;
     private GuiCheckBox checkShowOverlay;
+    private GuiCheckBox checkShowHelper;
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
@@ -81,6 +82,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         
         checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 118, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides());
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
+        checkShowHelper = new GuiCheckBox(6, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showHelper"), armourerBrain.isShowHelper());
         
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
@@ -98,6 +100,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         
         buttonList.add(checkShowGuides);
         buttonList.add(checkShowOverlay);
+        buttonList.add(checkShowHelper);
         //buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
         //buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
@@ -170,10 +173,24 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         }
         checkShowGuides.setIsChecked(armourerBrain.isShowGuides());
         checkShowOverlay.setIsChecked(armourerBrain.isShowOverlay());
+        
+        int checkY = 134;
         if (armourerBrain.getSkinType() != null) {
             checkShowOverlay.visible = armourerBrain.getSkinType().showSkinOverlayCheckbox();
+            checkShowOverlay.yPosition = guiTop + checkY;
+            if (checkShowOverlay.visible) {
+                checkY += 16;
+            }
         } else {
             checkShowOverlay.visible = false;
+        }
+        
+        if (armourerBrain.getSkinType() != null) {
+            checkShowHelper.visible = armourerBrain.getSkinType().showHelperCheckbox();
+            checkShowHelper.yPosition = guiTop + checkY;
+            //checkY += 16;
+        } else {
+            checkShowHelper.visible = false;
         }
         
         GL11.glColor4f(1, 1, 1, 1);
