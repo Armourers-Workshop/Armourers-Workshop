@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin;
+package riskyken.armourersWorkshop.api.common.skin;
 
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 

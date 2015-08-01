@@ -102,6 +102,17 @@ public final class SkinDataCache {
         }
     }
     
+    public Skin addSkinToCache(File file) {
+        if (file.exists()) {
+            Skin skin = SkinIOUtils.loadSkinFromFile(file);
+            if (skin != null) {
+                addEquipmentDataToCache(skin);
+                return skin;
+            }
+        }
+        return null;
+    }
+    
     private void processMessage(QueueMessage queueMessage) {
         
         if (!skinDataCache.containsKey(queueMessage.equipmentId)) {
