@@ -1,17 +1,20 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
+import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
@@ -79,6 +82,7 @@ public class RenderItemBowSkin implements IItemRenderer {
         if (canRenderModel(stack) & type != ItemRenderType.INVENTORY) {
             if (type != ItemRenderType.ENTITY) {
                 GL11.glPopMatrix();
+                //GL11.glPopMatrix();
                 //GL11.glRotatef(-135, 0, 1, 0);
                 //GL11.glRotatef(-10, 0, 0, 1);
             }
@@ -86,8 +90,8 @@ public class RenderItemBowSkin implements IItemRenderer {
             GL11.glPushMatrix();
 
             boolean isBlocking = false;
-            
             int useCount = 0;
+            boolean hasArrow = false;
             
             if (data.length >= 2) {
                 if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
@@ -95,6 +99,12 @@ public class RenderItemBowSkin implements IItemRenderer {
                     AbstractClientPlayer player = (AbstractClientPlayer) data[1];
                     useCount = player.getItemInUseDuration();
                     isBlocking = player.isBlocking();
+                    hasArrow = player.inventory.hasItem(Items.arrow);
+                    if (!hasArrow) {
+                        if (player.capabilities.isCreativeMode) {
+                            hasArrow = true;
+                        }
+                    }
                 }
             }
             
@@ -127,6 +137,13 @@ public class RenderItemBowSkin implements IItemRenderer {
                 GL11.glRotatef(2, 0, 0, 1);
                 GL11.glTranslatef(0F * scale, -2F * scale, 1F * scale);
                 
+                if (useCount > 0) {
+                    GL11.glTranslatef(-5 * scale, 3 * scale, 1 * scale);
+                    GL11.glRotatef(-6, 1, 0, 0);
+                    GL11.glRotatef(-16, 0, 1, 0);
+                    GL11.glRotatef(2, 0, 0, 1);
+                }
+                
                 break;
             default:
                 break;
@@ -143,10 +160,22 @@ public class RenderItemBowSkin implements IItemRenderer {
                 ItemStackRenderHelper.renderItemAsArmourModel(stack, false);
             }
             
+            if (hasArrow) {
+                GL11.glTranslatef(1 * scale, -4 * scale, -19 * scale);
+                int tarPart = useCount / 10;
+                if (tarPart > 2) {
+                    tarPart = 2;
+                }
+                GL11.glTranslatef(0, 0, tarPart * scale * 2);
+                ModelArrow.MODEL.render(scale, false);
+            }
+
+            
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
+                //GL11.glPushMatrix();
                 GL11.glPushMatrix();
             }
 

@@ -13,9 +13,9 @@ public class SkinBowPartBase extends AbstractSkinPartTypeBase {
     
     public SkinBowPartBase(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-6, -20, -18, 12, 40, 28);
+        this.buildingSpace = new Rectangle3D(-10, -20, -18, 20, 62, 36);
         this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);
-        this.offset = new Point3D(-13, 0, 0);
+        this.offset = new Point3D(-21, 0, 0);
     }
 
     @Override

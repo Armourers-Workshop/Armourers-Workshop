@@ -106,6 +106,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
         
         String authorName = player.getCommandSenderName();
+        //authorName = "";
         String customName = name;
         
         Skin armourItemData = null;

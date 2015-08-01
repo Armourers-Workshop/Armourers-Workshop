@@ -29,7 +29,7 @@ public class SkinArrowPartBase extends AbstractSkinPartTypeBase {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
         if (showHelper) {
-            ModelArrow.MODEL.render(scale);
+            ModelArrow.MODEL.render(scale, true);
         }
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);

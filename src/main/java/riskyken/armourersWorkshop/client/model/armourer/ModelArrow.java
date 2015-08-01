@@ -35,20 +35,24 @@ public class ModelArrow {
         super.finalize();
     }
     
-    public void render(float scale) {
+    public void render(float scale, boolean ghost) {
         buildDisplayList();
         GL11.glPushMatrix();
         GL11.glRotatef(90F, 0F, 1F, 0F);
         GL11.glTranslatef(-3 * scale, -0.5F * scale, -0.5F * scale);
         ModRenderHelper.enableAlphaBlend();
-        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
+        if (ghost) {
+            GL11.glColor4f(1F, 1F, 1F, 0.25F);
+        }
         if (displayList == -1) {
             buildDisplayList();
         } else {
             UtilRender.bindTexture(arrowTextures);
             GL11.glCallList(this.displayList);
         }
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        if (ghost) {
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+        }
         ModRenderHelper.disableAlphaBlend();
         GL11.glPopMatrix();
     }
