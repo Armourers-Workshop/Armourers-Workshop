@@ -27,6 +27,7 @@ public class ModBlocks {
     public static Block mannequin;
     public static Block doll;
     public static Block skinningTable;
+    public static Block marker;
     
     public ModBlocks() {
         armourerBrain = new BlockArmourerBrain();
@@ -41,6 +42,7 @@ public class ModBlocks {
         mannequin = new BlockMannequin();
         doll = new BlockDoll();
         skinningTable = new BlockSkinningTable();
+        marker = new BlockMarker();
     }
 
     public void registerTileEntities() {

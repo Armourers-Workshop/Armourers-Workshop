@@ -12,6 +12,7 @@ tile.armourersworkshop:colourMixer1.name=Special Colour Mixer
 tile.armourersworkshop:mannequin.name=Mannequin
 tile.armourersworkshop:doll.name=Doll
 tile.armourersworkshop:skinningTable.name=Skinning Table
+tile.armourersworkshop:marker0.name=Marker 1
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
