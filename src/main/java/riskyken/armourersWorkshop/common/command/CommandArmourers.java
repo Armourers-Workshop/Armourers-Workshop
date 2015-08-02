@@ -63,7 +63,7 @@ public class CommandArmourers extends CommandBase {
             if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
             } 
-            String skinName = args[2];
+            String skinName = args[2] = ".armour";
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
@@ -82,7 +82,7 @@ public class CommandArmourers extends CommandBase {
             if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
             } 
-            String skinName = args[2];
+            String skinName = args[2] = ".armour";
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
