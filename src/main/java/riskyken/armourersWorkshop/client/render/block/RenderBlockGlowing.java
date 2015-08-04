@@ -97,6 +97,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_B(colour.getRed(0), colour.getGreen(0), colour.getBlue(0));
             renderer.renderFaceYNeg(block, x, y, z, block.getIcon(0, 0));
             if (meta == 1) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceYNeg(block, x, y - 0.01F, z, block.getIcon(0, meta));
             }
             rendered = true;
@@ -105,6 +106,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_B(colour.getRed(1), colour.getGreen(1), colour.getBlue(1));
             renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
             if (meta == 2) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceYPos(block, x, y + 0.01F, z, block.getIcon(1, meta));
             }
             rendered = true;
@@ -113,6 +115,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_B(colour.getRed(2), colour.getGreen(2), colour.getBlue(2));
             renderer.renderFaceZNeg(block, x, y, z, block.getIcon(2, 0));
             if (meta == 3) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceZNeg(block, x, y, z - 0.01F, block.getIcon(2, meta));
             }
             rendered = true;
@@ -121,6 +124,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_B(colour.getRed(3), colour.getGreen(3), colour.getBlue(3));
             renderer.renderFaceZPos(block, x, y, z, block.getIcon(3, 0));
             if (meta == 4) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceZPos(block, x, y, z + 0.01F, block.getIcon(3, meta));
             }
             rendered = true;
@@ -129,6 +133,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_B(colour.getRed(4), colour.getGreen(4), colour.getBlue(4));
             renderer.renderFaceXNeg(block, x, y, z, block.getIcon(4, 0));
             if (meta == 5) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceXNeg(block, x - 0.01F, y, z, block.getIcon(4, meta));
             }
             rendered = true;
@@ -137,6 +142,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_B(colour.getRed(5), colour.getGreen(5), colour.getBlue(5));
             renderer.renderFaceXPos(block, x, y, z, block.getIcon(5, 0));
             if (meta == 6) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceXPos(block, x + 0.01F, y, z, block.getIcon(5, meta));
             }
             rendered = true;
@@ -184,6 +190,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_F(yNegR, yNegG, yNegB);
             renderer.renderFaceYNeg(block, x, y, z, block.getIcon(0, 0));
             if (meta == 1) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceYNeg(block, x, y - 0.01F, z, block.getIcon(0, meta));
             }
             rendered = true;
@@ -193,6 +200,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_F(yPosR, yPosG, yPosB);
             renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
             if (meta == 2) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceYPos(block, x, y + 0.01F, z, block.getIcon(1, meta));
             }
             rendered = true;
@@ -202,6 +210,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_F(zNegR, zNegG, zNegB);
             renderer.renderFaceZNeg(block, x, y, z, block.getIcon(2, 0));
             if (meta == 3) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceZNeg(block, x, y, z - 0.01F, block.getIcon(2, meta));
             }
             rendered = true;
@@ -211,6 +220,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_F(zPosR, zPosG, zPosB);
             renderer.renderFaceZPos(block, x, y, z, block.getIcon(3, 0));
             if (meta == 4) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceZPos(block, x, y, z + 0.01F, block.getIcon(3, meta));
             }
             rendered = true;
@@ -220,6 +230,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_F(xNegR, xNegG, xNegB);
             renderer.renderFaceXNeg(block, x, y, z, block.getIcon(4, 0));
             if (meta == 5) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceXNeg(block, x - 0.01F, y, z, block.getIcon(4, meta));
             }
             rendered = true;
@@ -229,6 +240,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setColorOpaque_F(xPosR, xPosG, xPosB);
             renderer.renderFaceXPos(block, x, y, z, block.getIcon(5, 0));
             if (meta == 6) {
+                renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
                 renderer.renderFaceXPos(block, x + 0.01F, y, z, block.getIcon(5, meta));
             }
             rendered = true;
