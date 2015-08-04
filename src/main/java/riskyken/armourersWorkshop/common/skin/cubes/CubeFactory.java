@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.skin.cubes;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -69,5 +71,17 @@ public final class CubeFactory {
         registerCube(CubeGlowing.class);
         registerCube(CubeGlass.class);
         registerCube(CubeGlassGlowing.class);
+    }
+
+    public boolean isBuildingBlock(Block block) {
+        if (
+                block == ModBlocks.colourable |
+                block == ModBlocks.colourableGlowing |
+                block == ModBlocks.colourableGlass |
+                block == ModBlocks.colourableGlassGlowing
+                ) {
+            return true;
+        }
+        return false;
     }
 }

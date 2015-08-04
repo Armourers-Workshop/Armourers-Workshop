@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
@@ -39,9 +40,21 @@ public class BlockColourableGlass extends AbstractModBlock implements ITileEntit
     }
     
     @SideOnly(Side.CLIENT)
+    private IIcon markerOverlay;
+    
+    @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibBlockResources.COLOURABLE_GLASS);
+        markerOverlay = register.registerIcon(LibBlockResources.MARKER);
+    }
+    
+    @Override
+    public IIcon getIcon(int side, int meta) {
+        if (meta > 0) {
+            return markerOverlay;
+        }
+        return super.getIcon(side, meta);
     }
     
     @SideOnly(Side.CLIENT)

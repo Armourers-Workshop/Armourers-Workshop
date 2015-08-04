@@ -1,17 +1,16 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.minecraftWrapper.client.IRenderBuffer;
 import riskyken.minecraftWrapper.client.RenderBridge;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
 
@@ -89,6 +88,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
     
     private boolean renderFaces(IBlockAccess world, int x, int y, int z, ICubeColour colour, Block block, RenderBlocks renderer) {
         boolean rendered = false;
+        int meta = world.getBlockMetadata(x, y, z);
         
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         renderBuffer.setBrightness(0xF000F0);
@@ -96,31 +96,49 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y - 1, z, 0)) {
             renderBuffer.setColorOpaque_B(colour.getRed(0), colour.getGreen(0), colour.getBlue(0));
             renderer.renderFaceYNeg(block, x, y, z, block.getIcon(0, 0));
+            if (meta == 1) {
+                renderer.renderFaceYNeg(block, x, y - 0.01F, z, block.getIcon(0, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y + 1, z, 1)) {
             renderBuffer.setColorOpaque_B(colour.getRed(1), colour.getGreen(1), colour.getBlue(1));
             renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
+            if (meta == 2) {
+                renderer.renderFaceYPos(block, x, y + 0.01F, z, block.getIcon(1, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y, z - 1, 2)) {
             renderBuffer.setColorOpaque_B(colour.getRed(2), colour.getGreen(2), colour.getBlue(2));
             renderer.renderFaceZNeg(block, x, y, z, block.getIcon(2, 0));
+            if (meta == 3) {
+                renderer.renderFaceZNeg(block, x, y, z - 0.01F, block.getIcon(2, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y, z + 1, 3)) {
             renderBuffer.setColorOpaque_B(colour.getRed(3), colour.getGreen(3), colour.getBlue(3));
             renderer.renderFaceZPos(block, x, y, z, block.getIcon(3, 0));
+            if (meta == 4) {
+                renderer.renderFaceZPos(block, x, y, z + 0.01F, block.getIcon(3, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x - 1, y, z, 4)) {
             renderBuffer.setColorOpaque_B(colour.getRed(4), colour.getGreen(4), colour.getBlue(4));
             renderer.renderFaceXNeg(block, x, y, z, block.getIcon(4, 0));
+            if (meta == 5) {
+                renderer.renderFaceXNeg(block, x - 0.01F, y, z, block.getIcon(4, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x + 1, y, z, 5)) {
             renderBuffer.setColorOpaque_B(colour.getRed(5), colour.getGreen(5), colour.getBlue(5));
             renderer.renderFaceXPos(block, x, y, z, block.getIcon(5, 0));
+            if (meta == 6) {
+                renderer.renderFaceXPos(block, x + 0.01F, y, z, block.getIcon(5, meta));
+            }
             rendered = true;
         }
         return rendered;
@@ -128,6 +146,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
     
     private boolean renderFacesWithLighting(IBlockAccess world, int x, int y, int z, ICubeColour colour, Block block, RenderBlocks renderer) {
         boolean rendered = false;
+        int meta = world.getBlockMetadata(x, y, z);
         
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         
@@ -164,36 +183,54 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderBuffer.setBrightness(block.getMixedBrightnessForBlock(world, x, y - 1, z));
             renderBuffer.setColorOpaque_F(yNegR, yNegG, yNegB);
             renderer.renderFaceYNeg(block, x, y, z, block.getIcon(0, 0));
+            if (meta == 1) {
+                renderer.renderFaceYNeg(block, x, y - 0.01F, z, block.getIcon(0, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y + 1, z, 1)) {
             renderBuffer.setBrightness(block.getMixedBrightnessForBlock(world, x, y + 1, z));
             renderBuffer.setColorOpaque_F(yPosR, yPosG, yPosB);
             renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
+            if (meta == 2) {
+                renderer.renderFaceYPos(block, x, y + 0.01F, z, block.getIcon(1, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y, z - 1, 2)) {
             renderBuffer.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z - 1));
             renderBuffer.setColorOpaque_F(zNegR, zNegG, zNegB);
             renderer.renderFaceZNeg(block, x, y, z, block.getIcon(2, 0));
+            if (meta == 3) {
+                renderer.renderFaceZNeg(block, x, y, z - 0.01F, block.getIcon(2, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y, z + 1, 3)) {
             renderBuffer.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z + 1));
             renderBuffer.setColorOpaque_F(zPosR, zPosG, zPosB);
             renderer.renderFaceZPos(block, x, y, z, block.getIcon(3, 0));
+            if (meta == 4) {
+                renderer.renderFaceZPos(block, x, y, z + 0.01F, block.getIcon(3, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x - 1, y, z, 4)) {
             renderBuffer.setBrightness(block.getMixedBrightnessForBlock(world, x - 1, y, z));
             renderBuffer.setColorOpaque_F(xNegR, xNegG, xNegB);
             renderer.renderFaceXNeg(block, x, y, z, block.getIcon(4, 0));
+            if (meta == 5) {
+                renderer.renderFaceXNeg(block, x - 0.01F, y, z, block.getIcon(4, meta));
+            }
             rendered = true;
         }
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x + 1, y, z, 5)) {
             renderBuffer.setBrightness(block.getMixedBrightnessForBlock(world, x + 1, y, z));
             renderBuffer.setColorOpaque_F(xPosR, xPosG, xPosB);
             renderer.renderFaceXPos(block, x, y, z, block.getIcon(5, 0));
+            if (meta == 6) {
+                renderer.renderFaceXPos(block, x + 0.01F, y, z, block.getIcon(5, meta));
+            }
             rendered = true;
         }
         return rendered;

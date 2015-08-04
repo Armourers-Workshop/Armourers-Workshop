@@ -37,4 +37,18 @@ public class WorldPointer {
     public void playSoundEffect(double x, double y, double z, String soundName, float volume, float pitch) {
         world.playSoundEffect(x, y, z, soundName, volume, pitch);
     }
+
+    public int getBlockMetadata(BlockLocation blockLocation) {
+        return world.getBlockMetadata(blockLocation.x, blockLocation.y, blockLocation.z);
+    }
+    
+    /**
+     * 
+     * @param blockLocation Location of the block to update.
+     * @param meta New meta data for the block.
+     * @param flags 1 = update block, 2 = send to client, 4 = don't re-render (client only).
+     */
+    public void setBlockMetaData(BlockLocation blockLocation, int meta, int flags) {
+        world.setBlockMetadataWithNotify(blockLocation.x, blockLocation.y, blockLocation.z, meta, flags);
+    }
 }
