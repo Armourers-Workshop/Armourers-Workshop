@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -10,17 +12,19 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class RenderItemBowSkin implements IItemRenderer {
@@ -89,17 +93,22 @@ public class RenderItemBowSkin implements IItemRenderer {
 
             GL11.glPushMatrix();
 
-            boolean isBlocking = false;
             int useCount = 0;
             boolean hasArrow = false;
+            boolean hasArrowSkin = false;
+            int arrowSkinId = 0;
             
             if (data.length >= 2) {
                 if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
                     RenderBlocks renderBlocks = (RenderBlocks) data[0];
                     AbstractClientPlayer player = (AbstractClientPlayer) data[1];
                     useCount = player.getItemInUseDuration();
-                    isBlocking = player.isBlocking();
                     hasArrow = player.inventory.hasItem(Items.arrow);
+                    IEntityEquipment entityEquipment = EquipmentModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
+                    if (entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow)) {
+                        hasArrowSkin = true;
+                        arrowSkinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow);
+                    }
                     if (!hasArrow) {
                         if (player.capabilities.isCreativeMode) {
                             hasArrow = true;
@@ -151,23 +160,36 @@ public class RenderItemBowSkin implements IItemRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
             
             ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
-            if (model != null) {
-                model.bowUse = useCount;
-                int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-                Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
-                model.render(null, skin, false);
-            } else {
-                ItemStackRenderHelper.renderItemAsArmourModel(stack, false);
-            }
-            
+            model.bowUse = useCount;
+            int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
+            Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+            model.render(null, skin, false);
             if (hasArrow) {
-                GL11.glTranslatef(1 * scale, -4 * scale, -19 * scale);
+                GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
                 int tarPart = useCount / 10;
                 if (tarPart > 2) {
                     tarPart = 2;
                 }
-                GL11.glTranslatef(0, 0, tarPart * scale * 2);
-                ModelArrow.MODEL.render(scale, false);
+                CubeMarkerData cmd = skin.getParts().get(tarPart).getMarkerBlocks().get(0);
+                ForgeDirection dir = ForgeDirection.getOrientation(cmd.meta).getOpposite();
+                GL11.glTranslatef((dir.offsetX + cmd.x) * scale, (dir.offsetY + cmd.y) * scale, (dir.offsetZ + cmd.z) * scale);
+                
+                if (ClientModelCache.INSTANCE.isEquipmentInCache(arrowSkinId)) {
+                    Skin arrowSkin = ClientModelCache.INSTANCE.getEquipmentItemData(arrowSkinId);
+                    if (arrowSkin != null) {
+                        arrowSkin.onUsed();
+                        for (int i = 0; i < arrowSkin.getParts().size(); i++) {
+                            SkinPart skinPart = arrowSkin.getParts().get(i);
+                            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, scale);
+                        }
+                    } else {
+                        ModelArrow.MODEL.render(scale, false);
+                    }
+                } else {
+                    ClientModelCache.INSTANCE.requestEquipmentDataFromServer(arrowSkinId);
+                    ModelArrow.MODEL.render(scale, false);
+                }
+                
             }
 
             
