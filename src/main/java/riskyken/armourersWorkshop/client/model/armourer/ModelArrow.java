@@ -1,18 +1,17 @@
 package riskyken.armourersWorkshop.client.model.armourer;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.utils.UtilRender;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelArrow {
@@ -46,10 +45,13 @@ public class ModelArrow {
         }
         if (displayList == -1) {
             buildDisplayList();
-        } else {
-            UtilRender.bindTexture(arrowTextures);
-            GL11.glCallList(this.displayList);
         }
+        
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        UtilRender.bindTexture(arrowTextures);
+        GL11.glCallList(this.displayList);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        
         if (ghost) {
             GL11.glColor4f(1F, 1F, 1F, 1F);
         }
@@ -73,7 +75,6 @@ public class ModelArrow {
         float f8 = (float)(5 + b0 * 10) / 32.0F;
         float f9 = (float)(10 + b0 * 10) / 32.0F;
         float f10 = 0.05625F;
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         GL11.glRotatef(45.0F, 1.0F, 0.0F, 0.0F);
         GL11.glScalef(f10, f10, f10);
         GL11.glTranslatef(-4.0F, 0.0F, 0.0F);
@@ -103,7 +104,6 @@ public class ModelArrow {
             tessellator.draw();
         }
 
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         GL11.glPopMatrix();
         GL11.glEndList();
     }
