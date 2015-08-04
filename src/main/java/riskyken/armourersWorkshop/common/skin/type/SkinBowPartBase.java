@@ -2,12 +2,12 @@ package riskyken.armourersWorkshop.common.skin.type;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinBowPartBase extends AbstractSkinPartTypeBase {
     
@@ -31,5 +31,10 @@ public class SkinBowPartBase extends AbstractSkinPartTypeBase {
         ModelHand.MODEL.render(scale);
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
+    }
+    
+    @Override
+    public int getMinimumMarkersNeeded() {
+        return 1;
     }
 }

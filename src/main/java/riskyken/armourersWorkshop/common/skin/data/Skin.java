@@ -22,7 +22,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class Skin implements ISkin {
     
-    public static final int FILE_VERSION = 8;
+    public static final int FILE_VERSION = 9;
     
     private String authorName;
     private String customName;
