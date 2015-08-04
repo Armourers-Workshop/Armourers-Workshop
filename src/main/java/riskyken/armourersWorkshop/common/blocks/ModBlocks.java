@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -11,7 +12,6 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
 
@@ -27,7 +27,6 @@ public class ModBlocks {
     public static Block mannequin;
     public static Block doll;
     public static Block skinningTable;
-    public static Block marker;
     
     public ModBlocks() {
         armourerBrain = new BlockArmourerBrain();
@@ -42,7 +41,6 @@ public class ModBlocks {
         mannequin = new BlockMannequin();
         doll = new BlockDoll();
         skinningTable = new BlockSkinningTable();
-        marker = new BlockMarker();
     }
 
     public void registerTileEntities() {
