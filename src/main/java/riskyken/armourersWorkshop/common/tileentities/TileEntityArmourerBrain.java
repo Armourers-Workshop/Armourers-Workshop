@@ -14,9 +14,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
+import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
@@ -115,6 +117,15 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         } catch (InvalidCubeTypeException e) {
             ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
             e.printStackTrace();
+        } catch (SkinSaveException e) {
+            switch (e.getType()) {
+            case NO_DATA:
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
+                break;
+            case MARKER_ERROR:
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
+                break;
+            }
         }
         
         if (armourItemData == null) {

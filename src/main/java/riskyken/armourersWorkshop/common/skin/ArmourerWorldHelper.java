@@ -14,6 +14,8 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
+import riskyken.armourersWorkshop.common.exception.SkinSaveException;
+import riskyken.armourersWorkshop.common.exception.SkinSaveException.SkinSaveExceptionType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -47,10 +49,11 @@ public final class ArmourerWorldHelper {
      * @param direction Direction the armourer is facing.
      * @return
      * @throws InvalidCubeTypeException
+     * @throws SkinSaveException 
      */
     public static Skin saveSkinFromWorld(World world, EntityPlayerMP player, ISkinType skinType,
             String authorName, String customName, String tags, int[] paintData,
-            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
+            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
@@ -58,19 +61,19 @@ public final class ArmourerWorldHelper {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType partType = skinType.getSkinParts().get(i);
             saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
-            //TODO Check if needed markers are in part.
         }
         
-        if (parts.size() > 0) {
-            return new Skin(authorName, customName, tags, skinType, paintData, parts);
-        } else {
-            //TODO Check if skin has texture data.
-            return null;
+        Skin skin = new Skin(authorName, customName, tags, skinType, paintData, parts);
+        
+        if (skin.getParts().size() == 0 && !skin.hasPaintData()) {
+            throw new SkinSaveException("Nothing to save.", SkinSaveExceptionType.NO_DATA);
         }
+        
+        return skin;
     }
     
     private static void saveArmourPart(World world, ArrayList<SkinPart> armourData,
-            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
+            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
         ArrayList<ICube> armourBlockData = new ArrayList<ICube>();
         ArrayList<CubeMarkerData> markerBlocks = new ArrayList<CubeMarkerData>();
         
@@ -96,6 +99,10 @@ public final class ArmourerWorldHelper {
                             armourBlockData, markerBlocks, direction);
                 }
             }
+        }
+        
+        if (skinPart.getMinimumMarkersNeeded() > markerBlocks.size()) {
+            throw new SkinSaveException("Missing marker for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
         }
         
         if (armourBlockData.size() > 0) {
