@@ -285,4 +285,12 @@ public class Skin implements ISkin {
         returnString += "]";
         return returnString;
     }
+
+    public int getMarkerCount() {
+        int count = 0;
+        for (int i = 0; i < parts.size(); i++) {
+            count += parts.get(i).getMarkerBlocks().size();
+        }
+        return count;
+    }
 }
