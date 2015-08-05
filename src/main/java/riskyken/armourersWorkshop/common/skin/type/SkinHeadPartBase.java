@@ -5,11 +5,11 @@ import java.awt.Point;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.skin.Point3D;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
-import riskyken.armourersWorkshop.common.skin.Point3D;
-import riskyken.armourersWorkshop.common.skin.Rectangle3D;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

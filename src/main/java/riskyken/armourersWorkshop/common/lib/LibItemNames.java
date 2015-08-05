@@ -20,4 +20,5 @@ public class LibItemNames {
     public static final String WAND_OF_STYLE = "wandOfStyle";
     public static final String SOAP = "soap";
     public static final String HUE_TOOL = "hueTool";
+    public static final String BLOCK_MARKER = "blockMarker";
 }

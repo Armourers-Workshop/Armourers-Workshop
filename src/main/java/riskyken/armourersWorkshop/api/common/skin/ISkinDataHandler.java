@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.api.common.skin;
 
+import java.io.InputStream;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,8 @@ public interface ISkinDataHandler {
     public ISkinPointer readSkinPointerFromCompound(NBTTagCompound compound);
     
     public void writeSkinPointerToCompound(ISkinPointer skinPointer, NBTTagCompound compound);
+    
+    public ISkinPointer addSkinToCache(InputStream inputStream);
     
     /**
      * Checks if the armour render has been overridden for this slot.

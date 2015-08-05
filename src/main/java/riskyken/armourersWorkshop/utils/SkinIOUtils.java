@@ -9,12 +9,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import net.minecraftforge.common.DimensionManager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
-import net.minecraftforge.common.DimensionManager;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -81,6 +83,33 @@ public final class SkinIOUtils {
             IOUtils.closeQuietly(stream);
         }
         
+        return skin;
+    }
+    
+    
+    public static Skin loadSkinFromStream(InputStream inputStream) {
+        DataInputStream stream = null;
+        Skin skin = null;
+        
+        try {
+            stream = new DataInputStream(new BufferedInputStream(inputStream));
+            skin = new Skin(stream);
+        } catch (FileNotFoundException e) {
+            ModLogger.log(Level.WARN, "Skin file not found.");
+            e.printStackTrace();
+        } catch (IOException e) {
+            ModLogger.log(Level.ERROR, "Skin file load failed.");
+            e.printStackTrace();
+        } catch (NewerFileVersionException e) {
+            ModLogger.log(Level.ERROR, "Can not load skin file it was saved in newer version.");
+            e.printStackTrace();
+        } catch (InvalidCubeTypeException e) {
+            ModLogger.log(Level.ERROR, "Unable to load skin. Unknown cube types found.");
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(stream);
+            IOUtils.closeQuietly(inputStream);
+        }
         return skin;
     }
     

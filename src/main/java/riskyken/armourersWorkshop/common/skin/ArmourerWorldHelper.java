@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -13,7 +14,10 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
+import riskyken.armourersWorkshop.common.exception.SkinSaveException;
+import riskyken.armourersWorkshop.common.exception.SkinSaveException.SkinSaveExceptionType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -45,28 +49,33 @@ public final class ArmourerWorldHelper {
      * @param direction Direction the armourer is facing.
      * @return
      * @throws InvalidCubeTypeException
+     * @throws SkinSaveException 
      */
-    public static Skin saveSkinFromWorld(World world, ISkinType skinType,
+    public static Skin saveSkinFromWorld(World world, EntityPlayerMP player, ISkinType skinType,
             String authorName, String customName, String tags, int[] paintData,
-            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
+            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
         
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-            saveArmourPart(world, parts, skinType.getSkinParts().get(i), xCoord, yCoord, zCoord, direction);
+            ISkinPartType partType = skinType.getSkinParts().get(i);
+            saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
         }
         
-        if (parts.size() > 0) {
-            return new Skin(authorName, customName, tags, skinType, paintData, parts);
-        } else {
-            return null;
+        Skin skin = new Skin(authorName, customName, tags, skinType, paintData, parts);
+        
+        if (skin.getParts().size() == 0 && !skin.hasPaintData()) {
+            throw new SkinSaveException("Nothing to save.", SkinSaveExceptionType.NO_DATA);
         }
+        
+        return skin;
     }
     
     private static void saveArmourPart(World world, ArrayList<SkinPart> armourData,
-            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException {
+            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
         ArrayList<ICube> armourBlockData = new ArrayList<ICube>();
+        ArrayList<CubeMarkerData> markerBlocks = new ArrayList<CubeMarkerData>();
         
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
@@ -87,25 +96,29 @@ public final class ArmourerWorldHelper {
                             xOrigin - 1,
                             yOrigin - 1,
                             -zOrigin,
-                            armourBlockData, direction);
+                            armourBlockData, markerBlocks, direction);
                 }
             }
         }
         
+        if (skinPart.getMinimumMarkersNeeded() > markerBlocks.size()) {
+            throw new SkinSaveException("Missing marker for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
+        }
+        
         if (armourBlockData.size() > 0) {
-            armourData.add(new SkinPart(armourBlockData, skinPart));
+            armourData.add(new SkinPart(armourBlockData, skinPart, markerBlocks));
         }
     }
     
     private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz,
-            ArrayList<ICube> list, ForgeDirection direction) throws InvalidCubeTypeException {
+            ArrayList<ICube> list, ArrayList<CubeMarkerData> markerBlocks, ForgeDirection direction) throws InvalidCubeTypeException {
         if (world.isAirBlock(x, y, z)) {
             return;
         }
         
         Block block = world.getBlock(x, y, z);
         if (block == ModBlocks.colourable | block == ModBlocks.colourableGlowing | block == ModBlocks.colourableGlass | block == ModBlocks.colourableGlassGlowing) {
-            
+            int meta = world.getBlockMetadata(x, y, z);
             
             ICubeColour colour = UtilBlocks.getColourFromTileEntity(world, x, y, z);
             
@@ -127,6 +140,9 @@ public final class ArmourerWorldHelper {
             blockData.setColour(colour);
             
             list.add(blockData);
+            if (meta > 0) {
+                markerBlocks.add(new CubeMarkerData((byte)ix, (byte)iy, (byte)iz, (byte)meta));
+            }
         }
     }
     
@@ -154,17 +170,25 @@ public final class ArmourerWorldHelper {
         
         for (int i = 0; i < partData.getArmourData().size(); i++) {
             ICube blockData = partData.getArmourData().get(i);
+            int meta = 0;
+            for (int j = 0; j < partData.getMarkerBlocks().size(); j++) {
+                CubeMarkerData cmd = partData.getMarkerBlocks().get(j);
+                if (cmd.x == blockData.getX() & cmd.y == blockData.getY() & cmd.z == blockData.getZ()) {
+                    meta = cmd.meta;
+                    break;
+                }
+            }
             
             int xOrigin = -offset.getX();
             int yOrigin = -offset.getY() + -buildSpace.getY();
             int zOrigin = offset.getZ();
             
-            loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction);
+            loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction, meta);
         }
     }
     
     private static void loadSkinBlockIntoWorld(World world, int x, int y, int z, int xOrigin, int yOrigin, int zOrigin,
-            ICube blockData, ForgeDirection direction) {
+            ICube blockData, ForgeDirection direction, int meta) {
         
         int shiftX = -blockData.getX() - 1;
         int shiftY = blockData.getY() + 1;
@@ -186,6 +210,7 @@ public final class ArmourerWorldHelper {
                 targetBlock = ModBlocks.colourableGlassGlowing;
             }
             world.setBlock(targetX, targetY, targetZ, targetBlock);
+            world.setBlockMetadataWithNotify(targetX, targetY, targetZ, meta, 2);
             TileEntity te = world.getTileEntity(targetX, targetY, targetZ);
             if (te != null && te instanceof TileEntityColourable) {
                 ((TileEntityColourable)te).setColour(blockData.getCubeColour());

@@ -77,6 +77,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlass", data.getTotalOfCubeType(CubeGlass.class)));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlassGlowing", data.getTotalOfCubeType(CubeGlassGlowing.class)));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinPaintData", data.hasPaintData()));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinMarkerCount", data.getMarkerCount()));
                     } else {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinHoldShiftForInfo"));
                     }
@@ -88,7 +89,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError3", data.requestId, data.lightHash()));
                 }
             } else {
-                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading"));
+                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading", skinData.skinId));
             }
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
             if (isEquipmentSkin) {

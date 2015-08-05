@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.handler;
 
+import java.io.InputStream;
 import java.util.BitSet;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +13,8 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.crafting.ItemSkinningRecipes;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
@@ -107,5 +110,17 @@ public class EquipmentDataHandler implements ISkinDataHandler {
     @Override
     public void setItemAsSkinnable(Item item) {
         ItemSkinningRecipes.addSkinnableItem(item);
+    }
+
+    @Override
+    public ISkinPointer addSkinToCache(InputStream inputStream) {
+        if (inputStream != null) {
+            Skin skin = SkinDataCache.INSTANCE.addSkinToCache(inputStream);
+            if (skin != null) {
+                SkinPointer sp = new SkinPointer(skin.getSkinType(), skin.lightHash(), false);
+                return sp;
+            }
+        }
+        return null;
     }
 }

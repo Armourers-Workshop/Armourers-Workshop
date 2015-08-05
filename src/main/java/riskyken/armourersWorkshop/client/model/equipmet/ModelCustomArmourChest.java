@@ -47,6 +47,15 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinChest);
         armourData.onUsed();
         
+        if (armourData.hasPaintData() & showSkinPaint) {
+            armourData.blindPaintTexture();
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            bipedBody.render(SCALE);
+            bipedLeftArm.render(SCALE);
+            bipedRightArm.render(SCALE);
+            GL11.glEnable(GL11.GL_CULL_FACE);
+        }
+        
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
             
@@ -59,14 +68,6 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
 
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
-            if (armourData.hasPaintData() & showSkinPaint) {
-                armourData.blindPaintTexture();
-                GL11.glDisable(GL11.GL_CULL_FACE);
-                bipedBody.render(SCALE);
-                bipedLeftArm.render(SCALE);
-                bipedRightArm.render(SCALE);
-                GL11.glEnable(GL11.GL_CULL_FACE);
-            }
             
             if (part.getPartType().getPartName().equals("base")) {
                 renderChest(part, SCALE);

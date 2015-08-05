@@ -1,5 +1,13 @@
 package riskyken.armourersWorkshop.client;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.event.ClickEvent;
@@ -12,18 +20,12 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.relauncher.Side;
 
 public class ModClientFMLEventHandler {
     
     private static final String DOWNLOAD_URL = "http://minecraft.curseforge.com/mc-mods/229523-armourers-workshop/files";
     private boolean shownUpdateInfo = false;
+    public static float renderTickTime;
     
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
@@ -67,6 +69,13 @@ public class ModClientFMLEventHandler {
                     onPlayerTickEndEvent();
                 }
             }
+        }
+    }
+    
+    @SubscribeEvent
+    public void onRenderTickEvent(RenderTickEvent event) {
+        if (event.phase == Phase.START) {
+            renderTickTime = event.renderTickTime;
         }
     }
 }

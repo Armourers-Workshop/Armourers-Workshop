@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.common.skin.type;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.api.common.skin.Point3D;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
-import riskyken.armourersWorkshop.common.skin.Point3D;
-import riskyken.armourersWorkshop.common.skin.Rectangle3D;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -29,7 +29,7 @@ public class SkinArrowPartBase extends AbstractSkinPartTypeBase {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
         if (showHelper) {
-            ModelArrow.MODEL.render(scale);
+            ModelArrow.MODEL.render(scale, true);
         }
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);

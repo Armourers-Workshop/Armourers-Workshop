@@ -12,6 +12,7 @@ tile.armourersworkshop:colourMixer1.name=Special Colour Mixer
 tile.armourersworkshop:mannequin.name=Mannequin
 tile.armourersworkshop:doll.name=Doll
 tile.armourersworkshop:skinningTable.name=Skinning Table
+tile.armourersworkshop:marker0.name=Marker 1
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
@@ -86,7 +87,8 @@ item.armourersworkshop:rollover.skinNumCubesGlowing=&eGlowing Cubes:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlass=&eGlass Cubes:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eGlowing Glass Cubes:&7 %s
 item.armourersworkshop:rollover.skinPaintData=&eHas Paint Data:&7 %s
-item.armourersworkshop:rollover.skindownloading=Skin Downloading...
+item.armourersworkshop:rollover.skinMarkerCount=&eMarker Count:&7 %d
+item.armourersworkshop:rollover.skindownloading=Downloading skin ID: %d
 item.armourersworkshop:rollover.skinOpenWardrobe=Press the &a%s&7 key to open the &aEquipment Wardrobe
 item.armourersworkshop:rollover.skinOldType=&cOld skin type, place in crafting grid to update.
 item.armourersworkshop:rollover.skinInvalidItem=&cError: Invalid equipment skin, please delete.

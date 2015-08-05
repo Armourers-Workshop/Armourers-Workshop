@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.api.common.skin.type;
 
-import riskyken.armourersWorkshop.api.common.IPoint3D;
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 
 
 public interface ISkinPartType {
@@ -26,4 +26,6 @@ public interface ISkinPartType {
      */
     @SideOnly(Side.CLIENT)
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper);
+    
+    public int getMinimumMarkersNeeded();
 }

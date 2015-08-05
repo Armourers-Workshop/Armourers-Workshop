@@ -22,7 +22,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class Skin implements ISkin {
     
-    public static final int FILE_VERSION = 8;
+    public static final int FILE_VERSION = 9;
     
     private String authorName;
     private String customName;
@@ -284,5 +284,13 @@ public class Skin implements ISkin {
         }
         returnString += "]";
         return returnString;
+    }
+
+    public int getMarkerCount() {
+        int count = 0;
+        for (int i = 0; i < parts.size(); i++) {
+            count += parts.get(i).getMarkerBlocks().size();
+        }
+        return count;
     }
 }

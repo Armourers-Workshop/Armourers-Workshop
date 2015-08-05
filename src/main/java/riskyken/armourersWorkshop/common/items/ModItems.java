@@ -26,6 +26,7 @@ public class ModItems {
     public static ModItem wandOfStyle;
     public static ModItem soap;
     public static Item hueTool;
+    public static ModItem blockMarker;
     
     public ModItems() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
@@ -48,10 +49,12 @@ public class ModItems {
         wandOfStyle = new ItemWandOfStyle();
         soap = new ItemSoap();
         hueTool = new ItemHueTool();
+        blockMarker = new ItemBlockMarker();
         
         ModRegistry.registerItem(guideBook);
         ModRegistry.registerItem(wandOfStyle);
         ModRegistry.registerItem(soap);
+        ModRegistry.registerItem(blockMarker);
     }
     
     private void setEquipmentSkinType() {
