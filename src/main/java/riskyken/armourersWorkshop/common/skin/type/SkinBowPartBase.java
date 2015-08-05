@@ -20,7 +20,7 @@ public class SkinBowPartBase extends AbstractSkinPartTypeBase {
 
     @Override
     public String getPartName() {
-        return "base";
+        return "frame1";
     }
 
     @SideOnly(Side.CLIENT)
