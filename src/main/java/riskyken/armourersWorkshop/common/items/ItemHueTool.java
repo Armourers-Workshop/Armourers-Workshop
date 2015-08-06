@@ -26,7 +26,7 @@ import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import riskyken.minecraftWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTool {
     

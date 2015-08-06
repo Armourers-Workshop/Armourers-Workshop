@@ -10,10 +10,10 @@ import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.BlockBoundingBox;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.minecraftWrapper.common.entity.EntityPlayerPointer;
-import riskyken.minecraftWrapper.common.item.ItemStackPointer;
-import riskyken.minecraftWrapper.common.world.BlockLocation;
-import riskyken.minecraftWrapper.common.world.WorldPointer;
+import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
+import riskyken.plushieWrapper.common.item.ItemStackPointer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 
 public class ItemSoap extends AbstractModItemNew {
 

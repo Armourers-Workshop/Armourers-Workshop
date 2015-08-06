@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.client.guidebook;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.minecraftWrapper.common.registry.ModRegistry;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

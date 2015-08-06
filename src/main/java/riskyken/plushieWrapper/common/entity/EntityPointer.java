@@ -1,4 +1,4 @@
-package riskyken.minecraftWrapper.common.entity;
+package riskyken.plushieWrapper.common.entity;
 
 import net.minecraft.entity.Entity;
 

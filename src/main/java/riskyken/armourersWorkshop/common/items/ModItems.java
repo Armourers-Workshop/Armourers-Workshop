@@ -6,8 +6,8 @@ import net.minecraft.item.Item;
 import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.minecraftWrapper.common.item.ModItem;
-import riskyken.minecraftWrapper.common.registry.ModRegistry;
+import riskyken.plushieWrapper.common.item.ModItem;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class ModItems {
     public static Item equipmentSkinTemplate;

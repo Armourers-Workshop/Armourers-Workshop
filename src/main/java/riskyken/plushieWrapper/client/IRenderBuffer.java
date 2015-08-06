@@ -1,4 +1,4 @@
-package riskyken.minecraftWrapper.client;
+package riskyken.plushieWrapper.client;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

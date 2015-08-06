@@ -5,7 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.minecraftWrapper.common.registry.ModRegistry;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public final class ModItemRecipes {
 

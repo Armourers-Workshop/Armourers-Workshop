@@ -41,7 +41,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.minecraftWrapper.common.registry.ModRegistry;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class GuiHandler implements IGuiHandler {
 

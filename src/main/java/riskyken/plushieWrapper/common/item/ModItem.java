@@ -1,13 +1,13 @@
-package riskyken.minecraftWrapper.common.item;
+package riskyken.plushieWrapper.common.item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import riskyken.minecraftWrapper.common.creativetab.ModCreativeTab;
-import riskyken.minecraftWrapper.common.entity.EntityLivingBasePointer;
-import riskyken.minecraftWrapper.common.entity.EntityPlayerPointer;
-import riskyken.minecraftWrapper.common.world.BlockLocation;
-import riskyken.minecraftWrapper.common.world.WorldPointer;
+import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
+import riskyken.plushieWrapper.common.entity.EntityLivingBasePointer;
+import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

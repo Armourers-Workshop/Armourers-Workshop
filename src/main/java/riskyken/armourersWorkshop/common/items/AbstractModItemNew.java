@@ -5,9 +5,9 @@ import java.util.List;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.minecraftWrapper.common.entity.EntityPlayerPointer;
-import riskyken.minecraftWrapper.common.item.ItemStackPointer;
-import riskyken.minecraftWrapper.common.item.ModItem;
+import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
+import riskyken.plushieWrapper.common.item.ItemStackPointer;
+import riskyken.plushieWrapper.common.item.ModItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -23,7 +23,7 @@ import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
-import riskyken.minecraftWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurableTool {
 

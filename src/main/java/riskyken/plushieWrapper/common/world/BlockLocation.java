@@ -1,4 +1,4 @@
-package riskyken.minecraftWrapper.common.world;
+package riskyken.plushieWrapper.common.world;
 
 public class BlockLocation {
 

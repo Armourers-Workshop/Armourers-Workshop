@@ -49,7 +49,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
-import riskyken.minecraftWrapper.client.RenderBridge;
+import riskyken.plushieWrapper.client.RenderBridge;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {

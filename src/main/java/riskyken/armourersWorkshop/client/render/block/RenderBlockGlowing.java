@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
-import riskyken.minecraftWrapper.client.IRenderBuffer;
-import riskyken.minecraftWrapper.client.RenderBridge;
+import riskyken.plushieWrapper.client.IRenderBuffer;
+import riskyken.plushieWrapper.client.RenderBridge;
 
 public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
 

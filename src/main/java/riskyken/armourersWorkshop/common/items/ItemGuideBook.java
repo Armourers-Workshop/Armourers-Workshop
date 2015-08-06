@@ -6,10 +6,10 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.minecraftWrapper.common.entity.EntityPlayerPointer;
-import riskyken.minecraftWrapper.common.item.ItemStackPointer;
-import riskyken.minecraftWrapper.common.world.BlockLocation;
-import riskyken.minecraftWrapper.common.world.WorldPointer;
+import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
+import riskyken.plushieWrapper.common.item.ItemStackPointer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -5,8 +5,8 @@ import java.util.BitSet;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import riskyken.minecraftWrapper.client.IRenderBuffer;
-import riskyken.minecraftWrapper.client.RenderBridge;
+import riskyken.plushieWrapper.client.IRenderBuffer;
+import riskyken.plushieWrapper.client.RenderBridge;
 
 public class CustomModelRenderer extends ModelRenderer {
 

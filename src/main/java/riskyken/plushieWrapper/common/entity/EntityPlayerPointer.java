@@ -1,8 +1,8 @@
-package riskyken.minecraftWrapper.common.entity;
+package riskyken.plushieWrapper.common.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
-import riskyken.minecraftWrapper.common.world.BlockLocation;
-import riskyken.minecraftWrapper.common.world.WorldPointer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 
 public class EntityPlayerPointer extends EntityLivingBasePointer {
 

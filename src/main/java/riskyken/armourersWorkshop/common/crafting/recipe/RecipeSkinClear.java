@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.minecraftWrapper.common.registry.ModRegistry;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class RecipeSkinClear extends RecipeItemSkinning {
 

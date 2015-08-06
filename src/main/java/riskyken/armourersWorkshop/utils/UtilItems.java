@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
-import riskyken.minecraftWrapper.common.item.ItemStackPointer;
+import riskyken.plushieWrapper.common.item.ItemStackPointer;
 
 public final class UtilItems {
 

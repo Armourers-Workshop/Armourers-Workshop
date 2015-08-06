@@ -22,7 +22,7 @@ import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
-import riskyken.minecraftWrapper.common.creativetab.ModCreativeTab;
+import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

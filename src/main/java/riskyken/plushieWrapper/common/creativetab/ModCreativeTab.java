@@ -1,4 +1,4 @@
-package riskyken.minecraftWrapper.common.creativetab;
+package riskyken.plushieWrapper.common.creativetab;
 
 import net.minecraft.creativetab.CreativeTabs;
 

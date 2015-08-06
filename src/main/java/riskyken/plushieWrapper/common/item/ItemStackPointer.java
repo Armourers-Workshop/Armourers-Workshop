@@ -1,4 +1,4 @@
-package riskyken.minecraftWrapper.common.item;
+package riskyken.plushieWrapper.common.item;
 
 import net.minecraft.item.ItemStack;
 

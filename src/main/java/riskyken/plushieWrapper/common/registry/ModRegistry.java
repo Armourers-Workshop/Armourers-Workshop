@@ -1,10 +1,10 @@
-package riskyken.minecraftWrapper.common.registry;
+package riskyken.plushieWrapper.common.registry;
 
 import java.util.HashMap;
 
 import net.minecraft.item.Item;
-import riskyken.minecraftWrapper.common.item.ModItem;
-import riskyken.minecraftWrapper.common.item.ModItemWrapper;
+import riskyken.plushieWrapper.common.item.ModItem;
+import riskyken.plushieWrapper.common.item.ModItemWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModRegistry {

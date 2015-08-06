@@ -1,4 +1,4 @@
-package riskyken.minecraftWrapper.common.item;
+package riskyken.plushieWrapper.common.item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import riskyken.minecraftWrapper.common.entity.EntityLivingBasePointer;
-import riskyken.minecraftWrapper.common.entity.EntityPlayerPointer;
-import riskyken.minecraftWrapper.common.world.BlockLocation;
-import riskyken.minecraftWrapper.common.world.WorldPointer;
+import riskyken.plushieWrapper.common.entity.EntityLivingBasePointer;
+import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 
 public class ModItemWrapper extends Item {
 
