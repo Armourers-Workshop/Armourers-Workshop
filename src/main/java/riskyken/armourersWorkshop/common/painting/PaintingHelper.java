@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.painting;
 
 import java.awt.Color;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,6 +50,7 @@ public final class PaintingHelper {
         setToolColour(stack, newColour);
     }
     
+    @SideOnly(Side.CLIENT)
     public static int getLoadPlayersSkinColour() {
         PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().thePlayer);
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
@@ -57,6 +60,7 @@ public final class PaintingHelper {
         return Color.decode("#F9DFD2").getRGB();
     }
     
+    @SideOnly(Side.CLIENT)
     public static int getLocalPlayersHairColour() {
         PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().thePlayer);
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
