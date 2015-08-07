@@ -1,28 +1,5 @@
 package riskyken.armourersWorkshop;
 
-import net.minecraft.creativetab.CreativeTabs;
-import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.addons.Addons;
-import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.command.CommandArmourers;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.crafting.CraftingManager;
-import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
-import riskyken.armourersWorkshop.common.download.SkinDownloadManager;
-import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.network.GuiHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.update.UpdateCheck;
-import riskyken.armourersWorkshop.proxies.CommonProxy;
-import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.SkinIOUtils;
-import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -32,6 +9,29 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import net.minecraft.creativetab.CreativeTabs;
+import riskyken.armourersWorkshop.common.ApiRegistrar;
+import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.command.CommandArmourers;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.crafting.CraftingManager;
+import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.GuiHandler;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.SkinExtractor;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.update.UpdateCheck;
+import riskyken.armourersWorkshop.proxies.CommonProxy;
+import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
+import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
 
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class ArmourersWorkshop {
@@ -59,7 +59,7 @@ public class ArmourersWorkshop {
         
         SkinIOUtils.makeLibraryDirectory();
         UpdateCheck.checkForUpdates();
-        SkinDownloadManager.downloadSkins();
+        SkinExtractor.extractSkins();
         
         modItems = new ModItems();
         modBlocks = new ModBlocks();

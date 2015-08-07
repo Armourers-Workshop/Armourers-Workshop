@@ -35,7 +35,7 @@ public class ConfigHandler {
     public static int serverModelCacheTime = 12000;
     
     //general
-    public static boolean downloadSkins;
+    public static boolean extractOfficialSkins;
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
     public static boolean allowClientsToSaveSkins = false;
@@ -152,9 +152,9 @@ public class ConfigHandler {
                 + "\n"
                 + "\n");
         
-        downloadSkins = config
-                .get(CATEGORY_GENERAL, "Allow Auto Skin Downloads", true,
-                "Allow the mod to auto download new skins.")
+        extractOfficialSkins = config
+                .get(CATEGORY_GENERAL, "Extract Official Skins", true,
+                "Allow the mod to extract the official skins that come with the mod into the library folder.")
                 .getBoolean(true);
         
         UndoManager.maxUndos = config
