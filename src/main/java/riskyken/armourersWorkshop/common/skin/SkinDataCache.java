@@ -5,22 +5,21 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.player.EntityPlayerMP;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 /**
  * Holds a cache of equipment data on the server that will be sent to clients if
@@ -29,7 +28,7 @@ import cpw.mods.fml.relauncher.Side;
  * @author RiskyKen
  *
  */
-public final class SkinDataCache {
+public final class SkinDataCache implements Runnable {
     
     public static final SkinDataCache INSTANCE = new SkinDataCache();
     
@@ -38,11 +37,16 @@ public final class SkinDataCache {
     
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     
-    private long lastTick;
+    private volatile Thread serverSkinThread = null;
+    
+    private long lastSendTick;
+    
     private boolean madeDatabase = false;
     
     public SkinDataCache() {
         FMLCommonHandler.instance().bus().register(this);
+        serverSkinThread = new Thread(this, "Armourer's Workshop Server Skin Thread");
+        serverSkinThread.start();
     }
     
     public void clearAll() {
@@ -56,11 +60,23 @@ public final class SkinDataCache {
             if (!madeDatabase) {
                 SkinIOUtils.makeDatabaseDirectory();
                 madeDatabase = true;
-                
             }
-            processMessageQueue();
             checkForOldSkins();
         }
+    }
+    
+    @Override
+    public void run() {
+        Thread thisThread = Thread.currentThread();
+        ModLogger.log("Starting server skin thread.");
+        while (serverSkinThread == thisThread) {
+            try {
+                thisThread.sleep(1);
+            } catch (InterruptedException e) {
+            }
+            processMessageQueue();
+        }
+        ModLogger.log("Stopped server skin thread.");
     }
     
     public void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
@@ -71,14 +87,22 @@ public final class SkinDataCache {
     }
     
     private void processMessageQueue() {
-        long curTick = System.currentTimeMillis();
-        if (curTick >= lastTick + 20L) {
-            lastTick = curTick;
-            synchronized (messageQueue) {
-                if (messageQueue.size() > 0) {
-                    processMessage(messageQueue.get(0));
-                    messageQueue.remove(0);
-                }
+        if (ConfigHandler.serverSkinSendRate > 1) {
+            long curTick = System.currentTimeMillis();
+            if (curTick >= lastSendTick + (60000 / ConfigHandler.serverSkinSendRate)) {
+                lastSendTick = curTick;
+                processNextMessage();
+            }
+        } else {
+            processNextMessage();
+        }
+    }
+    
+    private void processNextMessage() {
+        synchronized (messageQueue) {
+            if (messageQueue.size() > 0) {
+                processMessage(messageQueue.get(0));
+                messageQueue.remove(0);
             }
         }
     }

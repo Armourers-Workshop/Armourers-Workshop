@@ -28,17 +28,18 @@ public class ConfigHandler {
     
     //client
     public static int clientModelCacheTime = 12000;
-    public static int maxRenderDistance = 40;
+    public static int maxSkinRenderDistance = 40;
     public static int maxModelBakingThreads = 1;
     
     //server
     public static int serverModelCacheTime = 12000;
+    public static int serverSkinSendRate = 20;
     
     //general
     public static boolean extractOfficialSkins;
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
-    public static boolean allowClientsToSaveSkins = false;
+    public static boolean allowClientsToDownloadSkins = false;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
@@ -68,64 +69,28 @@ public class ConfigHandler {
     }
 
     public static void loadConfigFile() {
+        loadCategoryGeneral();
+        loadCategoryRecipe();
+        loadCategoryDebug();
+        loadCategoryCompatibility();
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            loadCategoryClient();
+        }
+        loadCategoryServer();
         
-        allowClientsToSaveSkins = config
-                .get(CATEGORY_GENERAL, "Allow Clients To Save Skins", false,
+        if (config.hasChanged()) {
+            config.save();
+        }
+    }
+    
+    private static void loadCategoryGeneral() {
+        allowClientsToDownloadSkins = config
+                .get(CATEGORY_GENERAL, "allowClientsToDownloadSkins", false,
                 "Allows clients to save skins from a server to their local computer using the library.")
                 .getBoolean(false);
         
-        //recipe
-        disableRecipes = config
-                .get(CATEGORY_RECIPE, "Disable Recipes", false,
-                "Disable vanilla recipes. Use if you want to manually add recipes for a mod pack.")
-                .getBoolean(false);
-        
-        disableDollRecipe = config
-                .get(CATEGORY_RECIPE, "Disable Doll Recipe", false,
-                "Disable hidden in world doll recipe.")
-                .getBoolean(false);
-        
-        disableSkinningRecipes = config
-                .get(CATEGORY_RECIPE, "Disable Skinning Recipes", false,
-                "Disable skinning table recipes.")
-                .getBoolean(false);
-        
-        hideDollFromCreativeTabs = config
-                .get(CATEGORY_RECIPE, "Hide Doll Block", true,
-                "Hides the doll block from the creative tab and NEI.")
-                .getBoolean(true);
-        
-        //debug
-        skinSafeModelRenderOverride = config
-                .get(CATEGORY_DEBUG, "Safe Model Render Override", false,
-                "Only enable this if you are having rendering issues with skins on players.\n"
-                + "This option is force on if More Player Models is installed.\n"
-                + "Enable this option will break Smart Moving compatibility.")
-                .getBoolean(false);
-        
-        skinTextureRenderOverride = config
-                .get(CATEGORY_DEBUG, "Safe Texture Render Override", false,
-                "Only enable this if you are having rendering issues with skins. (normally fixes lighting issues)\n"
-                + "This option is force on if Shaders Mod or Colored Lights mod is installed.")
-                .getBoolean(false);
-        
-        showF3DebugInfo = config
-                .get(CATEGORY_DEBUG, "Show F3 Debug Info", true,
-                "Shows extra info on the F3 debug screen.")
-                .getBoolean(true);
-        
-        showSkinTooltipDebugInfo = config
-                .get(CATEGORY_DEBUG, "Show Skin Tooltip Debug Info", true,
-                "Shows extra debug info on skin tooltips.")
-                .getBoolean(true);
-        
-        showArmourerDebugRender = config
-                .get(CATEGORY_DEBUG, "Show Armourer Debug Renders", false,
-                "Shows extra debug renders on the armourer.")
-                .getBoolean(false);
-        
         disabledSkins = config
-                .getStringList("Disabled Skins", CATEGORY_GENERAL, new String[] {},
+                .getStringList("disabledSkins", CATEGORY_GENERAL, new String[] {},
                 "List of skins that will be disabled.\n"
                 + "\n"
                 + "Here is a list of all the skins that come with the mod.\n" 
@@ -136,80 +101,135 @@ public class ConfigHandler {
                 + "armourers:feet\n"
                 + "armourers:sword\n"
                 + "armourers:bow\n"
-                + "\n");
-        
-        Addons.overrideSwordsActive = config
-                .getStringList("Sword Overrides", CATEGORY_COMPATIBILITY, Addons.overrideSwordsDefault,
-                "List of swords that can have skins applied.\n"
-                + "Format [mod id:item name]"
-                + "\n"
-                + "\n");
-        
-        Addons.overrideBowsActive = config
-                .getStringList("Bow Overrides", CATEGORY_COMPATIBILITY, Addons.overrideBowsDefault,
-                "List of bows that can have skins applied.\n"
-                + "Format [mod id:item name]"
-                + "\n"
+                + "armourers:arrow\n"
                 + "\n");
         
         extractOfficialSkins = config
-                .get(CATEGORY_GENERAL, "Extract Official Skins", true,
+                .get(CATEGORY_GENERAL, "extractOfficialSkins", true,
                 "Allow the mod to extract the official skins that come with the mod into the library folder.")
                 .getBoolean(true);
         
         UndoManager.maxUndos = config
-                .get(CATEGORY_GENERAL, "Max Undos", 100,
+                .get(CATEGORY_GENERAL, "maxUndos", 100,
                 "Max number of undos a player has for block painting.")
                 .getInt(100);
         
-        UpdateCheck.checkForUpdates = config.get(CATEGORY_GENERAL, "Check for updates", true,
+        UpdateCheck.checkForUpdates = config.get(CATEGORY_GENERAL, "checkForUpdates", true,
                 "Should the mod check for new versions?").getBoolean(true);
         
-        dropSkinsOnDeath = config.get(CATEGORY_GENERAL, "Drop Skins On Death", 0,
+        dropSkinsOnDeath = config.get(CATEGORY_GENERAL, "dropSkinsOnDeath", 0,
                 "Should skins be dropped on player death.\n"
                 + "0 = use keep inventory rule\n"
                 + "1 = never drop\n"
                 + "2 = always drop").getInt(0);
         
         allowEquipmentWardrobe = config
-                .get(CATEGORY_GENERAL, "Allow equipment wardrobe", true,
+                .get(CATEGORY_GENERAL, "allowEquipmentWardrobe", true,
                 "Allow the player to open the equipment wardrobe GUI.")
                 .getBoolean(true);
+    }
+    
+    private static void loadCategoryRecipe() {
+        disableRecipes = config
+                .get(CATEGORY_RECIPE, "disableRecipes", false,
+                "Disable vanilla recipes. Use if you want to manually add recipes for a mod pack.")
+                .getBoolean(false);
         
+        disableDollRecipe = config
+                .get(CATEGORY_RECIPE, "disableDollRecipe", false,
+                "Disable hidden in world doll recipe.")
+                .getBoolean(false);
+        
+        disableSkinningRecipes = config
+                .get(CATEGORY_RECIPE, "disableSkinningRecipes", false,
+                "Disable skinning table recipes.")
+                .getBoolean(false);
+        
+        hideDollFromCreativeTabs = config
+                .get(CATEGORY_RECIPE, "hideDollFromCreativeTabs", true,
+                "Hides the doll block from the creative tab and NEI.")
+                .getBoolean(true);
+    }
+    
+    private static void loadCategoryDebug() {
+        skinSafeModelRenderOverride = config
+                .get(CATEGORY_DEBUG, "skinSafeModelRenderOverride", false,
+                "Only enable this if you are having rendering issues with skins on players. "
+                + "(normally fixes skins not showing on players)\n"
+                + "This option is force on if More Player Models is installed.\n"
+                + "Enabling this option will break Smart Moving compatibility.")
+                .getBoolean(false);
+        
+        skinTextureRenderOverride = config
+                .get(CATEGORY_DEBUG, "skinTextureRenderOverride", false,
+                "Only enable this if you are having rendering issues with skins. (normally fixes lighting issues)\n"
+                + "This option is force on if Shaders Mod or Colored Lights mod is installed.")
+                .getBoolean(false);
+        
+        showF3DebugInfo = config
+                .get(CATEGORY_DEBUG, "showF3DebugInfo", true,
+                "Shows extra info on the F3 debug screen.")
+                .getBoolean(true);
+        
+        showSkinTooltipDebugInfo = config
+                .get(CATEGORY_DEBUG, "showSkinTooltipDebugInfo", true,
+                "Shows extra debug info on skin tooltips.")
+                .getBoolean(true);
+        
+        showArmourerDebugRender = config
+                .get(CATEGORY_DEBUG, "showArmourerDebugRender", false,
+                "Shows extra debug renders on the armourer.")
+                .getBoolean(false);
+    }
+    
+    private static void loadCategoryCompatibility() {
         allowModsToRegisterWithAPI = config
-                .get(CATEGORY_COMPATIBILITY, "Allow mods to register with API", true,
+                .get(CATEGORY_COMPATIBILITY, "allowModsToRegisterWithAPI", true,
                 "Allow other mods to register with the Armourer's Workshop API.")
                 .getBoolean(true);
         
-        //Client
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            maxRenderDistance = config
-                    .get(CATEGORY_CLIENT, "Skin Render Distance", 40,
-                    "The max distance away that skins will render.")
-                    .getInt(40);
-            
-            maxModelBakingThreads = config
-                    .get(CATEGORY_CLIENT, "Max Model Baking Threads", 1,
-                    "The maximum number of threads that will be used to bake models. Less that 1 equals unlimited.")
-                    .getInt(1);
-            
-            serverModelCacheTime = config
-                    .get(CATEGORY_CLIENT, "Client Model Cache Time", 12000,
-                    "How long in ticks the client will keep skins in it's cache.\n" + 
-                    "Default 12000 ticks is 10 minutes.")
-                    .getInt(12000);
-        }
+        Addons.overrideSwordsActive = config
+                .getStringList("swordOverrides", CATEGORY_COMPATIBILITY, Addons.overrideSwordsDefault,
+                "List of swords that can have skins applied.\n"
+                + "Format [mod id:item name]"
+                + "\n"
+                + "\n");
         
-        //Server
+        Addons.overrideBowsActive = config
+                .getStringList("bowOverrides", CATEGORY_COMPATIBILITY, Addons.overrideBowsDefault,
+                "List of bows that can have skins applied.\n"
+                + "Format [mod id:item name]"
+                + "\n"
+                + "\n");
+    }
+    
+    private static void loadCategoryClient() {
+        maxSkinRenderDistance = config
+                .get(CATEGORY_CLIENT, "maxSkinRenderDistance", 40,
+                "The max distance away that skins will render.")
+                .getInt(40);
+        
+        maxModelBakingThreads = config
+                .get(CATEGORY_CLIENT, "maxModelBakingThreads", 1,
+                "The maximum number of threads that will be used to bake models. Less that 1 equals unlimited.")
+                .getInt(1);
+        
+        clientModelCacheTime = config
+                .get(CATEGORY_CLIENT, "clientModelCacheTime", 12000,
+                "How long in ticks the client will keep skins in it's cache.\n" + 
+                "Default 12000 ticks is 10 minutes.")
+                .getInt(12000);
+    }
+    
+    private static void loadCategoryServer() {
         serverModelCacheTime = config
-                .get(CATEGORY_SERVER, "Server Model Cache Time", 12000,
+                .get(CATEGORY_SERVER, "serverModelCacheTime", 12000,
                 "How long in ticks the server will keep skins in it's cache.\n" + 
                 "Default 12000 ticks is 10 minutes.")
                 .getInt(12000);
         
-        
-        if (config.hasChanged()) {
-            config.save();
-        }
+        serverSkinSendRate = config.getInt("serverModelSendRate", CATEGORY_SERVER, 4000, 0, 8000,
+                "The maxumum number of skins the server is allow to send every minute.\n"
+                + "Less that 1 equals unlimited. (not recommended may cause bandwidth and cpu spikes on the server)");
     }
 }

@@ -196,7 +196,7 @@ public class GuiArmourLibrary extends GuiContainer {
         }
         
         if (checkClientFiles.isChecked()) {
-            saveButton.enabled = ConfigHandler.allowClientsToSaveSkins;
+            saveButton.enabled = ConfigHandler.allowClientsToDownloadSkins;
         } else {
             saveButton.enabled = true;
         }
