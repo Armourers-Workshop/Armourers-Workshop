@@ -67,7 +67,7 @@ public final class EntityEquipmentDataManager {
         return false;
     }
     
-    private boolean isBowRenderItem(Item item) {
+    public boolean isBowRenderItem(Item item) {
         if (bowSkinItems.contains(item.getClass().getName())) {
             return true;
         }

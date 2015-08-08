@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeItemSkinning;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinArmour;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinBow;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinClear;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinCopy;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinSword;
@@ -19,6 +20,7 @@ public class ItemSkinningRecipes {
     
     public static void init() {
         recipes.add(new RecipeSkinSword());
+        recipes.add(new RecipeSkinBow());
         recipes.add(new RecipeSkinCopy());
         recipes.add(new RecipeSkinClear());
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinHead));
