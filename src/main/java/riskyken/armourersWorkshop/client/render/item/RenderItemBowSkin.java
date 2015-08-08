@@ -171,26 +171,27 @@ public class RenderItemBowSkin implements IItemRenderer {
                 if (tarPart > 2) {
                     tarPart = 2;
                 }
-                CubeMarkerData cmd = skin.getParts().get(tarPart).getMarkerBlocks().get(0);
-                ForgeDirection dir = ForgeDirection.getOrientation(cmd.meta).getOpposite();
-                GL11.glTranslatef((dir.offsetX + cmd.x) * scale, (dir.offsetY + cmd.y) * scale, (dir.offsetZ + cmd.z) * scale);
-                GL11.glTranslatef(0.01F * scale, -0.01F * scale, 0.01F * scale);
-                if (hasArrowSkin && ClientModelCache.INSTANCE.isEquipmentInCache(arrowSkinId)) {
-                    Skin arrowSkin = ClientModelCache.INSTANCE.getEquipmentItemData(arrowSkinId);
-                    if (arrowSkin != null) {
-                        arrowSkin.onUsed();
-                        for (int i = 0; i < arrowSkin.getParts().size(); i++) {
-                            SkinPart skinPart = arrowSkin.getParts().get(i);
-                            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, scale);
+                if (skin.getParts().get(tarPart).getMarkerBlocks().size() > 0) {
+                    CubeMarkerData cmd = skin.getParts().get(tarPart).getMarkerBlocks().get(0);
+                    ForgeDirection dir = ForgeDirection.getOrientation(cmd.meta).getOpposite();
+                    GL11.glTranslatef((dir.offsetX + cmd.x) * scale, (dir.offsetY + cmd.y) * scale, (dir.offsetZ + cmd.z) * scale);
+                    GL11.glTranslatef(0.01F * scale, -0.01F * scale, 0.01F * scale);
+                    if (hasArrowSkin && ClientModelCache.INSTANCE.isEquipmentInCache(arrowSkinId)) {
+                        Skin arrowSkin = ClientModelCache.INSTANCE.getEquipmentItemData(arrowSkinId);
+                        if (arrowSkin != null) {
+                            arrowSkin.onUsed();
+                            for (int i = 0; i < arrowSkin.getParts().size(); i++) {
+                                SkinPart skinPart = arrowSkin.getParts().get(i);
+                                EquipmentPartRenderer.INSTANCE.renderPart(skinPart, scale);
+                            }
+                        } else {
+                            ModelArrow.MODEL.render(scale, false);
                         }
                     } else {
+                        ClientModelCache.INSTANCE.requestEquipmentDataFromServer(arrowSkinId);
                         ModelArrow.MODEL.render(scale, false);
                     }
-                } else {
-                    ClientModelCache.INSTANCE.requestEquipmentDataFromServer(arrowSkinId);
-                    ModelArrow.MODEL.render(scale, false);
                 }
-                
             }
 
             
