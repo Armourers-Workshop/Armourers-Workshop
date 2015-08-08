@@ -59,7 +59,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinHead);
         registerSkin(skinChest);
         registerSkin(skinLegs);
-        registerSkin(skinSkirt);
+        //registerSkin(skinSkirt);
         registerSkin(skinFeet);
         registerSkin(skinSword);
         registerSkin(skinBow);
