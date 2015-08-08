@@ -24,6 +24,7 @@ public final class SkinExtractor {
     private static final String SKINS_ASSETS_LOCATION = "assets/armourersworkshop/skins/";
     private static final String[] SKIN_FILES = {
         "Arbalest",
+        "Arrow",
         "Fez",
         "Fox Ears",
         "Halo",
