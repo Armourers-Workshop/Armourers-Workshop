@@ -5,12 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
@@ -20,6 +21,9 @@ import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
     
@@ -135,7 +139,18 @@ public class SkinPart implements ISkinPart {
         if (version < 6) {
             skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromLegacyId(stream.readByte());
         } else {
-            skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(stream.readUTF());
+            String regName = stream.readUTF();
+            if (regName.equals("armourers:skirt.base")) {
+                regName = "armourers:legs.skirt";
+            }
+            if (regName.equals("armourers:bow.base")) {
+                regName = "armourers:bow.frame1";
+            }
+            skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(regName);
+            
+            if (skinPart == null) {
+                ModLogger.log(Level.ERROR,"Skin part was null - reg name: " + regName);
+            }
         }
         int size = stream.readInt();
         armourData = new ArrayList<ICube>();

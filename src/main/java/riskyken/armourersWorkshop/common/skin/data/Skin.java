@@ -7,11 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.minecraft.client.renderer.texture.TextureUtil;
+
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -19,6 +18,8 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class Skin implements ISkin {
     
@@ -143,7 +144,11 @@ public class Skin implements ISkin {
         if (fileVersion < 5) {
             equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
         } else {
-            equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(stream.readUTF());
+            String regName = stream.readUTF();
+            if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
+                regName = SkinTypeRegistry.skinLegs.getRegistryName();
+            }
+            equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
         }
         
         if (equipmentSkinType == null) {
@@ -189,7 +194,11 @@ public class Skin implements ISkin {
                 skinTypeName = ""; 
             }
         } else {
-            skinTypeName = stream.readUTF();
+            String regName = stream.readUTF();
+            if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
+                regName = SkinTypeRegistry.skinLegs.getRegistryName();
+            }
+            skinTypeName = regName;
         }
         return skinTypeName;
     }

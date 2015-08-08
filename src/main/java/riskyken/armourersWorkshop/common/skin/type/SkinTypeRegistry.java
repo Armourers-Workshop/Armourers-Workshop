@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import org.apache.logging.log4j.Level;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
@@ -110,6 +111,9 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         if (registryName == null | registryName.trim().isEmpty()) {
             return null;
         }
+        if(registryName.equals(skinSkirt.getRegistryName())) {
+            return skinLegs;
+        }
         ISkinType skinType = skinTypeMap.get(registryName);
         if (skinType != null && isSkinDisabled(skinType)) {
             return null;
@@ -126,7 +130,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         case 2:
             return getSkinTypeFromRegistryName("armourers:legs");
         case 3:
-            return getSkinTypeFromRegistryName("armourers:skirt");
+            return getSkinTypeFromRegistryName("armourers:legs");
+            //return getSkinTypeFromRegistryName("armourers:skirt");
         case 4:
             return getSkinTypeFromRegistryName("armourers:feet");
         case 5:
@@ -167,7 +172,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         case 5:
             return getSkinPartFromRegistryName("armourers:legs.rightLeg");
         case 6:
-            return getSkinPartFromRegistryName("armourers:skirt.base");
+            //return getSkinPartFromRegistryName("armourers:skirt.base");
+            return getSkinPartFromRegistryName("armourers:legs.skirt");
         case 7:
             return getSkinPartFromRegistryName("armourers:feet.leftFoot");
         case 8:
