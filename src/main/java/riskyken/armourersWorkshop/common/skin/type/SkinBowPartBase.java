@@ -37,4 +37,9 @@ public class SkinBowPartBase extends AbstractSkinPartTypeBase {
     public int getMinimumMarkersNeeded() {
         return 1;
     }
+    
+    @Override
+    public int getMaximumMarkersNeeded() {
+        return 1;
+    }
 }

@@ -123,9 +123,9 @@ skinPartType.armourers:skirt.base.name=Base
 skinPartType.armourers:feet.leftFoot.name=Left Foot
 skinPartType.armourers:feet.rightFoot.name=Right Foot
 skinPartType.armourers:sword.base.name=Base
-skinPartType.armourers:bow.base.name=Base
 skinPartType.armourers:bow.frame1.name=Frame 1
 skinPartType.armourers:bow.frame2.name=Frame 2
+skinPartType.armourers:bow.frame3.name=Frame 3
 skinPartType.armourers:arrow.base.name=Base
 
 # Inventory names

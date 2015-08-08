@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.api.common.skin.type;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
 
 /**
  * 
@@ -71,4 +71,10 @@ public interface ISkinType {
      * @param id
      */
     public void setId(int id);
+    
+    /**
+     * Should this skin be hidden from the user?
+     * @return Is hidden?
+     */
+    public boolean isHidden();
 }

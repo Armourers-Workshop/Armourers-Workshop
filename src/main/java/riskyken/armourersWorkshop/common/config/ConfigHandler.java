@@ -235,7 +235,7 @@ public class ConfigHandler {
                 .getInt(12000);
         
         serverSkinSendRate = config.getInt("serverModelSendRate", CATEGORY_SERVER, 4000, 0, 8000,
-                "The maxumum number of skins the server is allow to send every minute.\n"
+                "The maximum number of skins the server is allow to send every minute.\n"
                 + "Less that 1 equals unlimited. (not recommended may cause bandwidth and cpu spikes on the server)");
     }
 }

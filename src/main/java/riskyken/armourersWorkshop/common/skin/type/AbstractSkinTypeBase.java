@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.common.skin.type;
 
-import net.minecraft.util.IIcon;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.IIcon;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public abstract class AbstractSkinTypeBase implements ISkinType {
 
@@ -50,5 +50,10 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     @Override
     public void setId(int id) {
         this.id = id;
+    }
+    
+    @Override
+    public boolean isHidden() {
+        return false;
     }
 }

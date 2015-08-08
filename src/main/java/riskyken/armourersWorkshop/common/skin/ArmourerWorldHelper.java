@@ -105,6 +105,10 @@ public final class ArmourerWorldHelper {
             throw new SkinSaveException("Missing marker for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
         }
         
+        if (markerBlocks.size() > skinPart.getMaximumMarkersNeeded()) {
+            throw new SkinSaveException("Too many markers for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
+        }
+        
         if (armourBlockData.size() > 0) {
             armourData.add(new SkinPart(armourBlockData, skinPart, markerBlocks));
         }

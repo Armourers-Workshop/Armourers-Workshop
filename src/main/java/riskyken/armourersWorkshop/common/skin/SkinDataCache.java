@@ -71,7 +71,7 @@ public final class SkinDataCache implements Runnable {
         ModLogger.log("Starting server skin thread.");
         while (serverSkinThread == thisThread) {
             try {
-                thisThread.sleep(1);
+                thisThread.sleep(10);
             } catch (InterruptedException e) {
             }
             processMessageQueue();
