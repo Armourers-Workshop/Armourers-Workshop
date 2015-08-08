@@ -2,12 +2,12 @@ package riskyken.armourersWorkshop.common.config;
 
 import java.io.File;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.config.Configuration;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class ConfigHandler {
 
@@ -30,6 +30,7 @@ public class ConfigHandler {
     public static int clientModelCacheTime = 12000;
     public static int maxSkinRenderDistance = 40;
     public static int maxModelBakingThreads = 1;
+    public static boolean mannequinsCallPlayerRenders = true;
     
     //server
     public static int serverModelCacheTime = 12000;
@@ -225,6 +226,10 @@ public class ConfigHandler {
                 "How long in ticks the client will keep skins in it's cache.\n" + 
                 "Default 12000 ticks is 10 minutes.")
                 .getInt(12000);
+        
+        mannequinsCallPlayerRenders = config.getBoolean("mannequinsCallPlayerRenders", CATEGORY_CLIENT, true,
+                "Allows mannequins to call the player render events.\n"
+                + "Disable this if mannequins are using a lot of render time.");
     }
     
     private static void loadCategoryServer() {

@@ -1,12 +1,5 @@
 package riskyken.armourersWorkshop.client.render.block;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -23,14 +16,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {
@@ -113,39 +116,41 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         float f6 = 2.0F;
         if (fakePlayer != null) {
         	mc.mcProfiler.startSection("preEvents");
-            targetBiped.isChild = te.getBipedRotations().isChild;
-            fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
-            fakePlayer.prevRotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
-            fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
-            fakePlayer.prevRotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
-            fakePlayer.onUpdate();
-            
-            fakePlayer.ticksExisted = Minecraft.getMinecraft().thePlayer.ticksExisted;
-            
-            if (te.getBipedRotations() != null) {
-                te.getBipedRotations().applyRotationsToBiped(targetBiped);
-                te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);
-                te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
-            }
-            
-            //Pre render events
-            RenderPlayerEvent.Pre preEvent = new RenderPlayerEvent.Pre(fakePlayer, renderPlayer, tickTime);
-            RenderPlayerEvent.Specials.Pre preEventSpecials = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, tickTime);
+        	if (ConfigHandler.mannequinsCallPlayerRenders) {
+                targetBiped.isChild = te.getBipedRotations().isChild;
+                fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
+                fakePlayer.prevRotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
+                fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
+                fakePlayer.prevRotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
+                fakePlayer.onUpdate();
+                
+                fakePlayer.ticksExisted = Minecraft.getMinecraft().thePlayer.ticksExisted;
+                
+                if (te.getBipedRotations() != null) {
+                    te.getBipedRotations().applyRotationsToBiped(targetBiped);
+                    te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);
+                    te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
+                }
+                
+                //Pre render events
+                RenderPlayerEvent.Pre preEvent = new RenderPlayerEvent.Pre(fakePlayer, renderPlayer, tickTime);
+                RenderPlayerEvent.Specials.Pre preEventSpecials = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, tickTime);
 
-            if (targetBiped.isChild) {
-                GL11.glPushMatrix();
-                GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-                GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
-            }
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            
-            MinecraftForge.EVENT_BUS.post(preEvent);
-            MinecraftForge.EVENT_BUS.post(preEventSpecials);
-            
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            if (targetBiped.isChild) {
-                GL11.glPopMatrix();
-            }
+                if (targetBiped.isChild) {
+                    GL11.glPushMatrix();
+                    GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+                    GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
+                }
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                
+                MinecraftForge.EVENT_BUS.post(preEvent);
+                MinecraftForge.EVENT_BUS.post(preEventSpecials);
+                
+                GL11.glEnable(GL11.GL_CULL_FACE);
+                if (targetBiped.isChild) {
+                    GL11.glPopMatrix();
+                }
+        	}
             mc.mcProfiler.endSection();
         }
         
@@ -178,20 +183,22 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         //Post render events
         if (fakePlayer != null) {
         	mc.mcProfiler.startSection("postEvents");
-            RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, tickTime);
-            RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, tickTime);
-            if (targetBiped.isChild) {
-                GL11.glPushMatrix();
-                GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-                GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
-            }
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            MinecraftForge.EVENT_BUS.post(postEvent);
-            MinecraftForge.EVENT_BUS.post(postEvenSpecialst);
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            if (targetBiped.isChild) {
-                GL11.glPopMatrix();
-            }
+        	if (ConfigHandler.mannequinsCallPlayerRenders) {
+                RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, tickTime);
+                RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, tickTime);
+                if (targetBiped.isChild) {
+                    GL11.glPushMatrix();
+                    GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+                    GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
+                }
+                GL11.glDisable(GL11.GL_CULL_FACE);
+                MinecraftForge.EVENT_BUS.post(postEvent);
+                MinecraftForge.EVENT_BUS.post(postEvenSpecialst);
+                GL11.glEnable(GL11.GL_CULL_FACE);
+                if (targetBiped.isChild) {
+                    GL11.glPopMatrix();
+                }
+        	}
             mc.mcProfiler.endSection();
         }
         
