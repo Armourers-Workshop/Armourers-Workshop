@@ -94,8 +94,8 @@ public final class SkinHelper {
                     bufferedImage = ImageIO.read(inputStream);
                 }
             } else {
-                //inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skinloc).getInputStream();
-                //bufferedImage = ImageIO.read(inputStream);
+                inputStream = Minecraft.getMinecraft().getResourceManager().getResource(skinloc).getInputStream();
+                bufferedImage = ImageIO.read(inputStream);
             }
         } catch (IOException e) {
             e.printStackTrace();
