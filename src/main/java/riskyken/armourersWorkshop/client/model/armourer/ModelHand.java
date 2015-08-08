@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.model.armourer;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
 
@@ -25,6 +26,11 @@ public class ModelHand extends ModelBase {
         armTransparent = new ModelRenderer(this, 40, 24);
         armTransparent.addBox(-2, -2, -4, 4, 4, 4);
         armTransparent.setRotationPoint(0, 0, 0);
+    }
+    
+    @Override
+    public void render(Entity entity, float scale, float f2, float f3, float f4, float f5, float f6) {
+        render(scale);
     }
     
     public void render(float scale) {

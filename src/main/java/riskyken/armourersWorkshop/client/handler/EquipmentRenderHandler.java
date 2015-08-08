@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.handler;
 
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.client.render.ISkinRenderHandler;
@@ -7,6 +8,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
+import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -141,5 +143,10 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
             return;
         }
         ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
+    }
+
+    @Override
+    public ModelBase getArmourerHandModel() {
+        return ModelHand.MODEL;
     }
 }
