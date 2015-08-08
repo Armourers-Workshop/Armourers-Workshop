@@ -33,13 +33,14 @@ public class ConfigHandler {
     
     //server
     public static int serverModelCacheTime = 12000;
-    public static int serverSkinSendRate = 20;
+    public static int serverSkinSendRate = 4000;
     
     //general
     public static boolean extractOfficialSkins;
     public static boolean allowEquipmentWardrobe = true;
     public static String[] disabledSkins = {};
     public static boolean allowClientsToDownloadSkins = false;
+    public static boolean allowClientsToUploadSkins = true;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
@@ -88,6 +89,11 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "allowClientsToDownloadSkins", false,
                 "Allows clients to save skins from a server to their local computer using the library.")
                 .getBoolean(false);
+        
+        allowClientsToUploadSkins = config
+                .get(CATEGORY_GENERAL, "allowClientsToUploadSkins", true,
+                "Allows clients to load skins from their local computer onto the server using the library.")
+                .getBoolean(true);
         
         disabledSkins = config
                 .getStringList("disabledSkins", CATEGORY_GENERAL, new String[] {},

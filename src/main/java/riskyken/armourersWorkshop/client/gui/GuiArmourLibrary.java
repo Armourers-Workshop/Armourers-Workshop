@@ -197,8 +197,10 @@ public class GuiArmourLibrary extends GuiContainer {
         
         if (checkClientFiles.isChecked()) {
             saveButton.enabled = ConfigHandler.allowClientsToDownloadSkins;
+            loadButton.enabled = ConfigHandler.allowClientsToUploadSkins;
         } else {
             saveButton.enabled = true;
+            loadButton.enabled = true;
         }
         
         String typeFilter = dropDownList.getListSelectedItem().tag;

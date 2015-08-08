@@ -7,6 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -26,6 +27,9 @@ public final class SkinUploadHelper {
     private static final int MAX_PACKET_SIZE = 30000;
     
     public static void uploadSkinToServer(Skin skin) {
+        if (!ConfigHandler.allowClientsToUploadSkins) {
+            return;
+        }
         ModLogger.log("Uploading skin to server: " + skin);
         byte[] skinData = ByteBufHelper.convertSkinToByteArray(skin);
         
@@ -73,6 +77,10 @@ public final class SkinUploadHelper {
             Skin skin = ByteBufHelper.convertByteArrayToSkin(newSkinData);
             ModLogger.log("Downloaded skin " + skin + " from client " + player);
             Container container = player.openContainer;
+            
+            if (!ConfigHandler.allowClientsToUploadSkins) {
+                return;
+            }
             
             if (container != null && container instanceof ContainerArmourLibrary) {
                 TileEntityArmourLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
