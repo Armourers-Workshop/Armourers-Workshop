@@ -5,13 +5,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 
-import org.apache.logging.log4j.Level;
-import org.lwjgl.Sys;
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.client.config.GuiButtonExt;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -19,6 +12,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+
+import org.apache.logging.log4j.Level;
+import org.lwjgl.Sys;
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -37,6 +35,9 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiArmourLibrary extends GuiContainer {
@@ -100,7 +101,7 @@ public class GuiArmourLibrary extends GuiContainer {
         dropDownList.setListSelectedIndex(0);
         for (int i = 0; i < skinTypes.size(); i++) {
             ISkinType skinType = skinTypes.get(i);
-            if (skinType != SkinTypeRegistry.skinSkirt) {
+            if (!skinType.isHidden()) {
                 dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType),
                         skinType.getRegistryName(), true);
             }
