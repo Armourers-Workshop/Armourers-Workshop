@@ -45,8 +45,6 @@ public final class SkinDataCache implements Runnable {
     
     public SkinDataCache() {
         FMLCommonHandler.instance().bus().register(this);
-        serverSkinThread = new Thread(this, "Armourer's Workshop Server Skin Thread");
-        serverSkinThread.start();
     }
     
     public void clearAll() {
@@ -54,13 +52,21 @@ public final class SkinDataCache implements Runnable {
         messageQueue.clear();
     }
     
+    
+    public void serverStarted() {
+        SkinIOUtils.makeDatabaseDirectory();
+        serverSkinThread = new Thread(this, "Armourer's Workshop Server Skin Thread");
+        serverSkinThread.start();
+    }
+    
+    public void serverStopped() {
+        clearAll();
+        serverSkinThread = null;
+    }
+    
     @SubscribeEvent
     public void onServerTickEvent(TickEvent.ServerTickEvent event) {
         if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
-            if (!madeDatabase) {
-                SkinIOUtils.makeDatabaseDirectory();
-                madeDatabase = true;
-            }
             checkForOldSkins();
         }
     }

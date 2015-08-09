@@ -96,13 +96,12 @@ public class ArmourersWorkshop {
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandArmourers());
+        SkinDataCache.INSTANCE.serverStarted();
     }
     
     @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
-        if (SkinDataCache.INSTANCE != null) {
-            SkinDataCache.INSTANCE.clearAll();
-        }
+        SkinDataCache.INSTANCE.serverStopped();
     }
     
     @Mod.EventHandler
