@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -11,9 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
@@ -173,9 +172,10 @@ public class RenderItemBowSkin implements IItemRenderer {
                 }
                 if (skin.getParts().get(tarPart).getMarkerBlocks().size() > 0) {
                     CubeMarkerData cmd = skin.getParts().get(tarPart).getMarkerBlocks().get(0);
-                    ForgeDirection dir = ForgeDirection.getOrientation(cmd.meta).getOpposite();
-                    GL11.glTranslatef((dir.offsetX + cmd.x) * scale, (dir.offsetY + cmd.y) * scale, (dir.offsetZ + cmd.z) * scale);
-                    GL11.glTranslatef(0.01F * scale, -0.01F * scale, 0.01F * scale);
+                    ForgeDirection dir = ForgeDirection.getOrientation(cmd.meta - 1);
+                    GL11.glTranslatef((-dir.offsetX + cmd.x) * scale, (-dir.offsetY + cmd.y) * scale, (dir.offsetZ + cmd.z) * scale);
+                    //Shift the arrow a little to stop z fighting.
+                    GL11.glTranslatef(-0.01F * scale, 0.01F * scale, -0.01F * scale);
                     if (hasArrowSkin && ClientModelCache.INSTANCE.isEquipmentInCache(arrowSkinId)) {
                         Skin arrowSkin = ClientModelCache.INSTANCE.getEquipmentItemData(arrowSkinId);
                         if (arrowSkin != null) {
