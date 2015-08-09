@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.api.client.render;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 
@@ -35,4 +36,6 @@ public interface ISkinRenderHandler {
     public void requestSkinModelFromSever(ISkinPointer skinPointer);
     
     public ModelBase getArmourerHandModel();
+    
+    public ISkin getSkinFromModelCache(ISkinPointer skinPointer);
 }

@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
@@ -218,6 +219,15 @@ public class Skin implements ISkin {
     
     public ArrayList<SkinPart> getParts() {
         return parts;
+    }
+    
+    @Override
+    public ArrayList<ISkinPart> getSubParts() {
+        ArrayList<ISkinPart> partList = new ArrayList<ISkinPart>();
+        for (int i = 0; i < parts.size(); i++) {
+            partList.add(parts.get(i));
+        }
+        return partList;
     }
     
     public String getCustomName() {

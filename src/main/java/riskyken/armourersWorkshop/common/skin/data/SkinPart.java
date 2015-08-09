@@ -9,9 +9,11 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
@@ -96,6 +98,29 @@ public class SkinPart implements ISkinPart {
     
     public ArrayList<CubeMarkerData> getMarkerBlocks() {
         return markerBlocks;
+    }
+    
+    @Override
+    public int getMarkerCount() {
+        return markerBlocks.size();
+    }
+    
+    @Override
+    public Point3D getMarker(int index) {
+        if (index >= 0 & index < markerBlocks.size()) {
+            CubeMarkerData cmd = markerBlocks.get(index);
+            return  new Point3D(cmd.x, cmd.y, cmd.z);
+        }
+        return null;
+    }
+    
+    @Override
+    public ForgeDirection getMarkerSide(int index) {
+        if (index >= 0 & index < markerBlocks.size()) {
+            CubeMarkerData cmd = markerBlocks.get(index);
+            return  ForgeDirection.getOrientation(cmd.meta);
+        }
+        return null;
     }
     
     public void writeToCompound(NBTTagCompound compound) {
