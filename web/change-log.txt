@@ -1,3 +1,23 @@
+Build 0.35.0
+Added bow skins.
+Added arrow skin.
+Added block marked tool. (used by bow skins)
+Added wobble to mannequin first person render.
+Added config option serverModelSendRate.
+Added config option allowClientsToUploadSkins.
+Added config option mannequinsCallPlayerRenders.
+Added Arbalest bow skin by VermillionX.
+Added arrow skin.
+Fixed config option clientModelCacheTime not doing anything.
+Fixed give and set skin commands needing the .armour file extension.
+Fixed give and set skin commands not adding the skin to the server cache.
+Fixed dedicated server crash when getting/setting the colour on a painting tools.
+Fixed colour picker not working on armourer models.
+Fixed issues with skin now working when switching single player worlds.
+Changed skins are now unpacked from the jar instead of being downloaded.
+Changed renamed most of the items in the config.
+Changed the way old skirts work, they will now show up as leg skins.
+
 Build 0.34.2
 Fixed crash from missing Apache library.
 Fixed crash when loading corrupted skin.
