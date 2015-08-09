@@ -76,11 +76,13 @@ public final class SkinExtractor {
         try {
             ModLogger.log("Extracting file " + fileName);
             input = SkinExtractor.class.getClassLoader().getSystemResourceAsStream(SKINS_ASSETS_LOCATION + fileName + ".armour");
-            output = new FileOutputStream(outputFile);
-            while (input.available() > 0) {
-                output.write(input.read());
+            if (input != null) {
+                output = new FileOutputStream(outputFile);
+                while (input.available() > 0) {
+                    output.write(input.read());
+                }
+                output.flush();
             }
-            output.flush();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
