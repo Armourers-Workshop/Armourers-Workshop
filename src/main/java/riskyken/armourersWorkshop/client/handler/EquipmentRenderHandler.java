@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.handler;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.client.render.ISkinRenderHandler;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
@@ -12,9 +13,12 @@ import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 
 public class EquipmentRenderHandler implements ISkinRenderHandler {
@@ -157,5 +161,21 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
             return null;
         }
         return ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+    }
+    
+    @Override
+    public boolean isArmourRenderOverridden(EntityPlayer player, int slotId) {
+        if (slotId < 4 & slotId >= 0) {
+            return false;
+        }
+        if (player == null) {
+            return false;
+        }
+        EquipmentWardrobeHandler ewh = ClientProxy.equipmentWardrobeHandler;
+        EquipmentWardrobeData ewd = ewh.getEquipmentWardrobeData(new PlayerPointer(player));
+        if (ewd != null) {
+            return ewd.armourOverride.get(slotId);
+        }
+        return false;
     }
 }

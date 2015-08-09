@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.api.client.render;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -38,4 +39,6 @@ public interface ISkinRenderHandler {
     public ModelBase getArmourerHandModel();
     
     public ISkin getSkinFromModelCache(ISkinPointer skinPointer);
+    
+    public boolean isArmourRenderOverridden(EntityPlayer player, int slotId);
 }
