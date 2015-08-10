@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -70,18 +71,25 @@ public final class SkinExtractor {
         FileOutputStream output = null;
         File outputFile = new File(SkinIOUtils.getSkinLibraryDirectory(), fileName + ".armour");
         if (outputFile.exists()) {
-            return;
+            if (getFileSize(outputFile) > 0) {
+                return;
+            } else {
+                ModLogger.log("Deleting corrupted skin file " + fileName);
+                outputFile.delete();
+            }
         }
         
         try {
             ModLogger.log("Extracting file " + fileName);
-            input = SkinExtractor.class.getClassLoader().getSystemResourceAsStream(SKINS_ASSETS_LOCATION + fileName + ".armour");
+            input = SkinExtractor.class.getClassLoader().getResourceAsStream(SKINS_ASSETS_LOCATION + fileName + ".armour");
             if (input != null) {
                 output = new FileOutputStream(outputFile);
                 while (input.available() > 0) {
                     output.write(input.read());
                 }
                 output.flush();
+            } else {
+                ModLogger.log(Level.ERROR, "Error extracting skin " + fileName);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,5 +97,9 @@ public final class SkinExtractor {
             IOUtils.closeQuietly(input);
             IOUtils.closeQuietly(output);
         }
+    }
+    
+    private static long getFileSize(File file) {
+        return file.length();
     }
 }
