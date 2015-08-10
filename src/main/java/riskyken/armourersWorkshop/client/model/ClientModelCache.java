@@ -5,11 +5,6 @@ import java.util.HashSet;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -17,6 +12,14 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class ClientModelCache {
@@ -68,6 +71,8 @@ public class ClientModelCache {
                 synchronized (equipmentDataMap) {
                     equipmentDataMap.put(equipmentId, equipmentData);
                 }
+                SkinPointer sp = new SkinPointer(equipmentData.getSkinType(), equipmentId, false);
+                TileEntitySkinnable.updateBlocksWithSkin(sp, Minecraft.getMinecraft().theWorld);
                 requestedEquipmentIds.remove(equipmentId);
             } else {
                 ModLogger.log(Level.WARN, "Got an unknown equipment id: " + equipmentId);

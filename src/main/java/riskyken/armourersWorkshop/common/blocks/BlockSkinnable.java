@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.client.render.block.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
@@ -48,5 +49,25 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinnable();
+    }
+    
+    @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+    
+    @Override
+    public boolean isNormalCube() {
+        return false;
+    }
+    
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+    
+    @Override
+    public int getRenderType() {
+        return RenderBlockSkinnable.renderId;
     }
 }

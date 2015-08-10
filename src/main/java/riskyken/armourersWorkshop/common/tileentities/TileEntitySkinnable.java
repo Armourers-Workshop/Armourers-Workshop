@@ -1,15 +1,31 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import java.util.ArrayList;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class TileEntitySkinnable extends TileEntity {
 
+    public static final ArrayList<SkinnableBlockData> BLOCK_UPDATE_LIST = new ArrayList<SkinnableBlockData>();
     private static final String TAG_HAS_SKIN = "hasSkin";
+    
+    public static void updateBlocksWithSkin(SkinPointer skinPointer, World world) {
+        for (int i = 0; i < BLOCK_UPDATE_LIST.size(); i++) {
+            SkinnableBlockData sbd = BLOCK_UPDATE_LIST.get(i);
+            if (sbd.skinPointer.skinId == skinPointer.skinId) {
+                world.markBlockForUpdate(sbd.blockLocation.x, sbd.blockLocation.y, sbd.blockLocation.z);
+                BLOCK_UPDATE_LIST.remove(i);
+            }
+        }
+    }
 
     private SkinPointer skinPointer;
 
@@ -47,12 +63,16 @@ public class TileEntitySkinnable extends TileEntity {
 
     private void addToRenderUpdateList() {
         if (hasSkin()) {
-            // TODO Mark chunk for update.
+            if (EquipmentRenderHandler.INSTANCE.isSkinInModelCache(skinPointer)) {
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            } else {
+                BLOCK_UPDATE_LIST.add(new SkinnableBlockData(new BlockLocation(xCoord, yCoord, zCoord), skinPointer));
+            }
         } else {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
-
+    
     @Override
     public boolean canUpdate() {
         return false;
@@ -76,6 +96,17 @@ public class TileEntitySkinnable extends TileEntity {
             skinPointer.readFromCompound(compound);
         } else {
             skinPointer = null;
+        }
+    }
+    
+    public class SkinnableBlockData {
+        
+        public final BlockLocation blockLocation;
+        public final SkinPointer skinPointer;
+        
+        public SkinnableBlockData(BlockLocation blockLocation, SkinPointer skinPointer) {
+            this.blockLocation = blockLocation;
+            this.skinPointer = skinPointer;
         }
     }
 }
