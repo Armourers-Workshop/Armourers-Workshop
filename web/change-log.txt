@@ -1,3 +1,6 @@
+Build 0.35.1
+Fixed start-up crash when extracting skins.
+
 Build 0.35.0
 Added bow skins.
 Added arrow skin.
