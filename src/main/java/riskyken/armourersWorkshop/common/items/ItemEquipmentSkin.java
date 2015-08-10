@@ -6,16 +6,20 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.Cube;
@@ -25,6 +29,7 @@ import riskyken.armourersWorkshop.common.skin.cubes.CubeGlowing;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
@@ -142,5 +147,27 @@ public class ItemEquipmentSkin extends AbstractModItem {
         }
         
         return this.itemIcon;
+    }
+    
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
+            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+        Block block = world.getBlock(x, y, z);
+        
+        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        
+        if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
+            if (block == ModBlocks.skinnable) {
+                if (!world.isRemote) {
+                    TileEntity te = world.getTileEntity(x, y, z);
+                    if (te != null && te instanceof TileEntitySkinnable) {
+                        ((TileEntitySkinnable)te).setSkinPointer(skinPointer);
+                    }
+                } 
+                return true;
+            }
+        }
+
+        return false;
     }
 }

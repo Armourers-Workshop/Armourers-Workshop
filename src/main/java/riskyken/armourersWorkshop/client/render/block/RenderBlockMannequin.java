@@ -1,5 +1,12 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -16,9 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -28,12 +32,6 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {
@@ -56,7 +54,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (Loader.isModLoaded("moreplayermodels")) {
             targetBiped = model;
         } else {
-            targetBiped = renderPlayer.modelBipedMain;
+            targetBiped = model;
         }
     }
     

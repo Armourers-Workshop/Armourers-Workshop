@@ -112,6 +112,7 @@ skinType.armourers:feet.name=Feet
 skinType.armourers:sword.name=Sword
 skinType.armourers:bow.name=Bow
 skinType.armourers:arrow.name=Arrow
+skinType.armourers:block.name=Block
 
 # Skin Part Types
 skinPartType.armourers:head.base.name=Base
@@ -129,6 +130,7 @@ skinPartType.armourers:bow.frame1.name=Frame 1
 skinPartType.armourers:bow.frame2.name=Frame 2
 skinPartType.armourers:bow.frame3.name=Frame 3
 skinPartType.armourers:arrow.base.name=Base
+skinPartType.armourers:block.base.name=Base
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer

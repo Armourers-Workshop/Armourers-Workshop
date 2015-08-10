@@ -14,4 +14,5 @@ public class LibBlockNames {
     public static final String MANNEQUIN = "mannequin";
     public static final String DOLL = "doll";
     public static final String SKINNING_TABLE = "skinningTable";
+    public static final String SKINNABLE = "skinnable";
 }
