@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException.SkinSaveExceptionType;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -141,7 +142,7 @@ public final class ArmourerWorldHelper {
             blockData.setX((byte) ix);
             blockData.setY((byte) iy);
             blockData.setZ((byte) iz);
-            blockData.setColour(colour);
+            blockData.setColour(new CubeColour(colour));
             
             list.add(blockData);
             if (meta > 0) {
@@ -217,7 +218,7 @@ public final class ArmourerWorldHelper {
             world.setBlockMetadataWithNotify(targetX, targetY, targetZ, meta, 2);
             TileEntity te = world.getTileEntity(targetX, targetY, targetZ);
             if (te != null && te instanceof TileEntityColourable) {
-                ((TileEntityColourable)te).setColour(blockData.getCubeColour());
+                ((TileEntityColourable)te).setColour(new CubeColour(blockData.getCubeColour()));
             }
         }
     }
@@ -335,6 +336,7 @@ public final class ArmourerWorldHelper {
                             block == ModBlocks.colourableGlassGlowing
                             ) {
                             world.setBlockToAir(xTar, yTar, zTar);
+                            world.removeTileEntity(xTar, yTar, zTar);
                             blockCount++;
                         }
                     }
