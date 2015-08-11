@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
+import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -25,6 +26,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 /**
  * Helper class for converting back and forth from
  * in world blocks to skin classes.
@@ -345,5 +347,38 @@ public final class ArmourerWorldHelper {
             }
         }
         return blockCount;
+    }
+
+    public static ArrayList<BlockLocation> getListOfPaintableCubes(World world, int x, int y, int z, ISkinType skinType) {
+        ArrayList<BlockLocation> blList = new ArrayList<BlockLocation>();
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            ISkinPartType skinPart = skinType.getSkinParts().get(i);
+            getPaintableCubesForPart(world, x, y, z, skinPart, blList);
+        }
+        return blList;
+    }
+    
+    private static void getPaintableCubesForPart(World world, int x, int y, int z, ISkinPartType skinPart, ArrayList<BlockLocation> blList) {
+        IRectangle3D buildSpace = skinPart.getBuildingSpace();
+        IPoint3D offset = skinPart.getOffset();
+        
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    int xTar = x + ix + -offset.getX() + buildSpace.getX();
+                    int yTar = y + iy + -offset.getY();
+                    int zTar = z + iz + offset.getZ() + buildSpace.getZ();
+                    
+                    if (world.blockExists(xTar, yTar, zTar)) {
+                        Block block = world.getBlock(xTar, yTar, zTar);
+                        if (CubeFactory.INSTANCE.isBuildingBlock(block)) {
+                            if (block instanceof IPantableBlock) {
+                                blList.add(new BlockLocation(xTar, yTar, zTar));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
