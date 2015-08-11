@@ -26,6 +26,8 @@ public class ModClientFMLEventHandler {
     private static final String DOWNLOAD_URL = "http://minecraft.curseforge.com/mc-mods/229523-armourers-workshop/files";
     private boolean shownUpdateInfo = false;
     public static float renderTickTime;
+    public static int skinRendersThisTick = 0;
+    public static int skinRenderLastTick = 0;
     
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
@@ -76,6 +78,8 @@ public class ModClientFMLEventHandler {
     public void onRenderTickEvent(RenderTickEvent event) {
         if (event.phase == Phase.START) {
             renderTickTime = event.renderTickTime;
+            skinRenderLastTick = skinRendersThisTick;
+            skinRendersThisTick = 0;
         }
     }
 }

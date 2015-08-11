@@ -11,6 +11,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -39,7 +40,7 @@ public class EquipmentPartRenderer extends ModelBase {
     
     public void renderPart(SkinPart armourPart, float scale) {
         mc.mcProfiler.startSection(armourPart.getPartType().getPartName());
-        
+        ModClientFMLEventHandler.skinRendersThisTick++;
         GL11.glColor3f(1F, 1F, 1F);
         if (!armourPart.displayNormalCompiled) {
             if (armourPart.hasNormalBlocks) {
