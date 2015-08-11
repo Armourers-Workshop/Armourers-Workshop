@@ -27,7 +27,9 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             
             GL11.glScalef(-1, -1, 1);
             GL11.glRotatef(22.5F * rotation, 0, 1, 0);
+            GL11.glEnable(GL11.GL_CULL_FACE);
             EquipmentRenderHandler.INSTANCE.renderSkin(skinPointer);
+            GL11.glDisable(GL11.GL_CULL_FACE);
             ModRenderHelper.disableAlphaBlend();
             GL11.glPopMatrix();
         }

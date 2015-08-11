@@ -149,6 +149,10 @@ public class ClientProxy extends CommonProxy {
         return false;
     }
     
+    public static boolean useMultipassSkinRendering() {
+        return ConfigHandler.multipassSkinRendering;
+    }
+    
     private void spamSillyMessages() {
         if (Loader.isModLoaded("Tails")) {
             ModLogger.log("Tails detected! - Sand praising module active.");

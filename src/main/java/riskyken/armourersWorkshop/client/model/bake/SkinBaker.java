@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public final class SkinBaker {
     
@@ -50,7 +51,9 @@ public final class SkinBaker {
             if (block.getX() + dir.offsetX == checkBlock.getX()) {
                 if (block.getY() + dir.offsetY == checkBlock.getY()) {
                     if (block.getZ() + dir.offsetZ == checkBlock.getZ()) {
-                        block.getFaceFlags().set(i, true); 
+                        if (block.needsPostRender() == checkBlock.needsPostRender()) {
+                            block.getFaceFlags().set(i, true); 
+                        }
                     }
                 }
             }
@@ -59,8 +62,23 @@ public final class SkinBaker {
     }
     
     public static void buildPartDisplayListArray(SkinPart partData) {
-        ArrayList<ColouredVertexWithUV> normalVertexList = new ArrayList<ColouredVertexWithUV>();
-        ArrayList<ColouredVertexWithUV> glowingVertexList = new ArrayList<ColouredVertexWithUV>();
+        boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
+        
+        ArrayList<ColouredVertexWithUV>[] renderLists;
+        int[] pie;
+        
+        pie = new int[3];
+        
+        if (multipassSkinRendering) {
+            renderLists = (ArrayList<ColouredVertexWithUV>[]) new ArrayList[4];
+        } else {
+            renderLists = (ArrayList<ColouredVertexWithUV>[]) new ArrayList[2];
+        }
+        
+        for (int i = 0; i < renderLists.length; i++) {
+            renderLists[i] = new ArrayList<ColouredVertexWithUV>();
+        }
+        
         float scale = 0.0625F;
         
         for (int i = 0; i < partData.getArmourData().size(); i++) {
@@ -72,28 +90,36 @@ public final class SkinBaker {
                 a = (byte) 127;
             }
             
-            if (cube.isGlowing()) {
-                EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(glowingVertexList,
+            if (multipassSkinRendering) {
+                int listIndex = 0;
+                if (cube.isGlowing() && !cube.needsPostRender()) {
+                    listIndex = 1;
+                }
+                if (cube.needsPostRender() && !cube.isGlowing()) {
+                    listIndex = 2;
+                }
+                if (cube.isGlowing() && cube.needsPostRender()) {
+                    listIndex = 3;
+                }
+                EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[listIndex],
                         scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
                         cc.getRed(), cc.getGreen(), cc.getBlue(), a);
             } else {
-                EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(normalVertexList,
-                        scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
-                        cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+                if (cube.isGlowing()) {
+                    EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[1],
+                            scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
+                            cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+                } else {
+                    EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[0],
+                            scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
+                            cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+                }
             }
         }
         
         partData.getArmourData().clear();
         
-        if (normalVertexList.size() > 0) {
-            partData.normalVertexList = normalVertexList;
-            partData.hasNormalBlocks = true;
-        }
-        
-        if (glowingVertexList.size() > 0) {
-            partData.glowingVertexList = glowingVertexList;
-            partData.hasGlowingBlocks = true;
-        }
+        partData.setVertexLists(renderLists);
     }
     
     /*

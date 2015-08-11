@@ -2,12 +2,12 @@ package riskyken.armourersWorkshop.common.config;
 
 import java.io.File;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.config.Configuration;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class ConfigHandler {
 
@@ -31,6 +31,7 @@ public class ConfigHandler {
     public static int maxSkinRenderDistance = 40;
     public static int maxModelBakingThreads = 1;
     public static boolean mannequinsCallPlayerRenders = true;
+    public static boolean multipassSkinRendering = true;
     
     //server
     public static int serverModelCacheTime = 12000;
@@ -230,6 +231,10 @@ public class ConfigHandler {
         mannequinsCallPlayerRenders = config.getBoolean("mannequinsCallPlayerRenders", CATEGORY_CLIENT, true,
                 "Allows mannequins to call the player render events.\n"
                 + "Disable this if mannequins are using a lot of render time.");
+        
+        multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_CLIENT, true,
+                "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
+                + "Disabling this will improve skin rendering performance at the cost of visual quality.");
     }
     
     private static void loadCategoryServer() {
