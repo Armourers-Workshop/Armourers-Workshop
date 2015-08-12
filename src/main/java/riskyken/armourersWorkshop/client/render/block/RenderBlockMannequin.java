@@ -205,7 +205,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         //Render items.
         mc.mcProfiler.startSection("equippedItems");
-        if (te.getDistanceFrom(field_147501_a.field_147560_j, field_147501_a.field_147561_k, field_147501_a.field_147558_l) < 1024) {
+        if (te.getDistanceFrom(field_147501_a.field_147560_j, field_147501_a.field_147561_k, field_147501_a.field_147558_l) < ConfigHandler.mannequinMaxEquipmentRenderDistance) {
             renderEquippedItems(te, fakePlayer, model);
         }
         mc.mcProfiler.endSection();
