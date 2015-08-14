@@ -5,7 +5,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.model.armourer.ModelBlockArmourer;
+import riskyken.armourersWorkshop.client.model.block.ModelBlockArmourer;
 
 public class RenderItemBlockMiniArmourer implements IItemRenderer {
 

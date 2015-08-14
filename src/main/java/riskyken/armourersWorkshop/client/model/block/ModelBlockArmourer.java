@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.model.armourer;
+package riskyken.armourersWorkshop.client.model.block;
 
 import java.awt.Color;
 
