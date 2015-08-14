@@ -61,6 +61,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
+        
         isHalloween = HolidayHelper.halloween.isHolidayActive();
         hasRendered = false;
     }
@@ -68,6 +69,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
         mc.mcProfiler.startSection("armourersMannequin");
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
+        
+        model.compile(SCALE);
         
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_NORMALIZE);
@@ -188,17 +191,30 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.displayList != 0) {
             GL11.glCallList(te.displayList);
         }
+        
+        if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
+            GL11.glPushMatrix();
+            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleZ), 0, 0, 1);
+            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleY), 0, 1, 0);
+            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleX), 1, 0, 0);
+            GL11.glTranslated(-5.5F * SCALE, 0, 0);
+            GL11.glTranslated(0, -6.5F * SCALE, 0);
+            model.bipedEars.render(SCALE);
+            GL11.glTranslated(11F * SCALE, 0, 0);
+            model.bipedEars.render(SCALE);
+            GL11.glPopMatrix();
+        }
+        
         mc.mcProfiler.endSection();
         
         //Magic circle.
         if (te.getGameProfile() != null) {
-            
             if (te.getGameProfile().getName().equals("RiskyKen")) {
                 int offset = te.xCoord * te.yCoord * te.zCoord;
-                renderMagicCircle(249F / 255, 223F / 255, 140F / 255, partialTickTime, offset);
+                renderMagicCircle(249F / 255, 223F / 255, 140F / 255, partialTickTime, offset, te.getBipedRotations().isChild);
             } else if (te.getGameProfile().getName().equals("Nanoha")) {
                 int offset = te.xCoord * te.yCoord * te.zCoord;
-                renderMagicCircle(1F, 173F / 255, 1F, partialTickTime, offset);
+                renderMagicCircle(1F, 173F / 255, 1F, partialTickTime, offset, te.getBipedRotations().isChild);
             }
         }
 
@@ -252,9 +268,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
     }
     
-    private void renderMagicCircle(float r, float g, float b, float partialTickTime, int offset) {
+    private void renderMagicCircle(float r, float g, float b, float partialTickTime, int offset, boolean isChild) {
         mc.mcProfiler.startSection("magicCircle");
         GL11.glPushMatrix();
+        if (isChild) {
+            ModelHelper.enableChildModelScale(false, SCALE);
+        }
         GL11.glColor4f(r, g, b, 1F);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_CULL_FACE);
@@ -289,6 +308,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glColor4f(1F, 1F, 1F, 1F);
+        if (isChild) {
+            ModelHelper.disableChildModelScale();
+        }
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
     }
@@ -309,7 +331,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
             if (te.getBipedRotations().isChild) {
                 ModelHelper.disableChildModelScale();
-            }
+            };
         }
         if (te.getBipedRotations().isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
@@ -320,25 +342,15 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         targetBiped.bipedLeftArm.render(SCALE);
         targetBiped.bipedRightLeg.render(SCALE);
         targetBiped.bipedLeftLeg.render(SCALE);
-        if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
-            GL11.glPushMatrix();
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleZ), 0, 0, 1);
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleY), 0, 1, 0);
-            GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleX), 1, 0, 0);
-            GL11.glTranslated(-5.5F * SCALE, 0, 0);
-            GL11.glTranslated(0, -6.5F * SCALE, 0);
-            targetBiped.bipedEars.render(SCALE);
-            GL11.glTranslated(11F * SCALE, 0, 0);
-            targetBiped.bipedEars.render(SCALE);
-            GL11.glPopMatrix();
-        }
         if (te.getBipedRotations().isChild) {
             ModelHelper.disableChildModelScale();
         }
         if (hasRendered) {
             GL11.glEndList();
         }
-        hasRendered = true;
+        if (!hasRendered) {
+            hasRendered = true;
+        }
         return displayList;
     }
     
