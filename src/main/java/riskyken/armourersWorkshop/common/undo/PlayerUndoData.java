@@ -54,7 +54,15 @@ public class PlayerUndoData {
         markerCount++;
         undos.add(undoData);
         if (markers.size() > UndoManager.maxUndos) {
-            undos.remove(0);
+            if (markers.size() < 1) {
+                int undoMarker = markers.get(0);
+                markers.remove(0);
+                for (int i = 0; i < undoMarker; i++) {
+                    undos.remove(i);
+                }
+            } else {
+                ModLogger.log(Level.ERROR, "No undo markers. Something is wrong!");
+            }
         }
     }
 
