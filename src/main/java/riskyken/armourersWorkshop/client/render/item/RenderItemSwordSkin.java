@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -11,8 +9,12 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
@@ -118,11 +120,13 @@ public class RenderItemSwordSkin implements IItemRenderer {
             default:
                 break;
             }
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_CULL_FACE);
+            ModRenderHelper.enableAlphaBlend();
             Addons.onWeaponRender(type, EventState.PRE);
             ItemStackRenderHelper.renderItemAsArmourModel(stack, false);
             Addons.onWeaponRender(type, EventState.POST);
-            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glPopAttrib();
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {

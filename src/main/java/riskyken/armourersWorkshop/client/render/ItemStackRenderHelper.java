@@ -1,11 +1,10 @@
 
 package riskyken.armourersWorkshop.client.render;
 
+import net.minecraft.item.ItemStack;
+
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
@@ -14,6 +13,8 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Helps render item stacks.
@@ -47,8 +48,6 @@ public final class ItemStackRenderHelper {
         if (data == null) {
             return;
         }
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glEnable(GL11.GL_BLEND);
         
         if (skinType == SkinTypeRegistry.skinHead) {
             GL11.glTranslatef(0F, 0.2F, 0F);
@@ -70,8 +69,6 @@ public final class ItemStackRenderHelper {
         } else if (skinType == SkinTypeRegistry.skinBow) {
             targetModel.render(null, null, data, showSkinPaint);
         }
-        
-        GL11.glDisable(GL11.GL_BLEND);
     }
     
     public static void renderSkinWithoutHelper(SkinPointer skinPointer) {

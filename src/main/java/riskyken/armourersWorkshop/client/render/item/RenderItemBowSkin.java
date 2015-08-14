@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -13,12 +11,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -157,7 +159,10 @@ public class RenderItemBowSkin implements IItemRenderer {
             default:
                 break;
             }
+            
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_CULL_FACE);
+            ModRenderHelper.enableAlphaBlend();
             
             ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
             model.bowUse = useCount;
@@ -193,9 +198,8 @@ public class RenderItemBowSkin implements IItemRenderer {
                     }
                 }
             }
-
+            GL11.glPopAttrib();
             
-            GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
