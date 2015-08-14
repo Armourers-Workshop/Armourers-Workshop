@@ -166,16 +166,13 @@ public class RenderItemBowSkin implements IItemRenderer {
             ModRenderHelper.enableAlphaBlend();
             
             ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
-            model.bowUse = useCount;
+            model.frame = getAnimationFrame(useCount);
             int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
             Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
             model.render(player, skin, false);
             if (hasArrow) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
-                int tarPart = useCount / 10;
-                if (tarPart > 2) {
-                    tarPart = 2;
-                }
+                int tarPart = getAnimationFrame(useCount);
                 if (skin.getParts().get(tarPart).getMarkerBlocks().size() > 0) {
                     CubeMarkerData cmd = skin.getParts().get(tarPart).getMarkerBlocks().get(0);
                     ForgeDirection dir = ForgeDirection.getOrientation(cmd.meta - 1);
@@ -216,6 +213,16 @@ public class RenderItemBowSkin implements IItemRenderer {
                 renderNomalIcon(stack);
             }
         }
+    }
+    
+    private int getAnimationFrame(int useCount) {
+        if (useCount >= 18) {
+            return 2;
+        }
+        if (useCount > 13) {
+            return 1;
+        }
+        return 0;
     }
     
     private boolean canRenderModel(ItemStack stack) {
