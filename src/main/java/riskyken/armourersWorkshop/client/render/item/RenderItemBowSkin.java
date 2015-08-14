@@ -94,7 +94,8 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
 
             GL11.glPushMatrix();
-
+            
+            AbstractClientPlayer player = null;
             int useCount = 0;
             boolean hasArrow = false;
             boolean hasArrowSkin = false;
@@ -103,7 +104,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             if (data.length >= 2) {
                 if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
                     RenderBlocks renderBlocks = (RenderBlocks) data[0];
-                    AbstractClientPlayer player = (AbstractClientPlayer) data[1];
+                    player = (AbstractClientPlayer) data[1];
                     useCount = player.getItemInUseDuration();
                     hasArrow = player.inventory.hasItem(Items.arrow);
                     IEntityEquipment entityEquipment = EquipmentModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
@@ -168,7 +169,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             model.bowUse = useCount;
             int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
             Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
-            model.render(null, skin, false);
+            model.render(player, skin, false);
             if (hasArrow) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
                 int tarPart = useCount / 10;
