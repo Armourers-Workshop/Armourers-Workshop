@@ -6,10 +6,12 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
+import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import cpw.mods.fml.relauncher.Side;
@@ -48,10 +50,25 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         GL11.glRotatef(22.5F * rotation, 0, 1, 0);
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_CULL_FACE);
-        EquipmentRenderHandler.INSTANCE.renderSkin(skinPointer);
+        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+        if (skin == null) {
+            return;
+        }
+        if (skin.getCustomName().isEmpty()) {
+            Minecraft.getMinecraft().mcProfiler.startSection("unnamedSkin");
+        } else {
+            Minecraft.getMinecraft().mcProfiler.startSection(skin.getCustomName().replace(" ", ""));
+        }
+        
+        skin.onUsed();
+        for (int i = 0; i < skin.getParts().size(); i++) {
+            SkinPart skinPart = skin.getParts().get(i);
+            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F);
+        }
         GL11.glPopAttrib();
         ModRenderHelper.disableAlphaBlend();
         GL11.glPopMatrix();
+        Minecraft.getMinecraft().mcProfiler.endSection();
     }
     
     @Override
