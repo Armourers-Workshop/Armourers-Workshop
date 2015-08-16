@@ -20,6 +20,8 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EquipmentRenderHandler implements ISkinRenderHandler {
 
@@ -153,6 +155,11 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
 
     @Override
     public ModelBase getArmourerHandModel() {
+        return getHandModel();
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private ModelBase getHandModel() {
         return ModelHand.MODEL;
     }
 
