@@ -4,6 +4,10 @@ import java.util.LinkedHashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+
+import org.apache.logging.log4j.Level;
+
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.client.IArmourersClientManager;
 import riskyken.armourersWorkshop.api.common.IArmourersCommonManager;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -38,6 +42,10 @@ public final class ApiRegistrar {
                         SkinTypeRegistry.INSTANCE, EntitySkinHandler.INSTANCE);
             }
             if (classObject instanceof IArmourersClientManager) {
+                if (ArmourersWorkshop.isDedicated()) {
+                    ModLogger.log(Level.ERROR, String.format("Mod %s is registering a render manager on the server side."
+                            + " This is very bad!", modName));
+                }
                 ModLogger.log(String.format("Loading %s API addon for %s", "render manager", modName));
                 equipmentRenderManagers.put(modName, ((IArmourersClientManager)classObject)) ;
                 ((IArmourersClientManager)classObject).onLoad(EquipmentRenderHandler.INSTANCE);
