@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.Level;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.items.ItemArmourContainerItem;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -264,9 +264,6 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
             return true;
         }
         if (stack.getItem() instanceof ItemEquipmentSkin) {
-            return true;
-        }
-        if (stack.getItem() instanceof ItemArmourContainerItem) {
             return true;
         }
         return false;

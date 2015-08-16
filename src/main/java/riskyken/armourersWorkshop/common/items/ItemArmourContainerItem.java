@@ -1,16 +1,12 @@
 package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.skin.ISkinHolder;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemArmourContainerItem extends AbstractModItem implements ISkinHolder {
+public class ItemArmourContainerItem extends AbstractModItem {
 
     public ItemArmourContainerItem() {
         super(LibItemNames.ARMOUR_CONTAINER);
@@ -21,10 +17,5 @@ public class ItemArmourContainerItem extends AbstractModItem implements ISkinHol
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
         itemIcon = register.registerIcon(LibItemResources.ARMOUR_CONTAINER);
-    }
-
-    @Override
-    public ItemStack makeStackForEquipment(Skin armourItemData) {
-        return EquipmentNBTHelper.makeArmouerContainerStack(armourItemData);
     }
 }
