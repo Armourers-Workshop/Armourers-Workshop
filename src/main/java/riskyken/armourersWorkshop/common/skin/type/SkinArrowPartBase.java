@@ -13,7 +13,7 @@ public class SkinArrowPartBase extends AbstractSkinPartTypeBase {
 
     public SkinArrowPartBase(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-3, -3, 0, 7, 7, 13);
+        this.buildingSpace = new Rectangle3D(-5, -5, -2, 11, 11, 16);
         this.guideSpace = new Rectangle3D(0, 0, 0, 0, 0, 0);
         this.offset = new Point3D(0, 0, 0);
     }
