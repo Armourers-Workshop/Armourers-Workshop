@@ -170,7 +170,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
             Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
             model.render(player, skin, false);
-            if (hasArrow) {
+            if (hasArrow & useCount > 0) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
                 int tarPart = getAnimationFrame(useCount);
                 if (skin.getParts().get(tarPart).getMarkerBlocks().size() > 0) {
