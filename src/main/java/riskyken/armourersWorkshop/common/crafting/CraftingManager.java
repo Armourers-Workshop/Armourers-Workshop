@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.common.crafting;
 
 import java.lang.reflect.Method;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
@@ -14,6 +12,8 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
 import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public final class CraftingManager {
 
@@ -57,6 +57,7 @@ public final class CraftingManager {
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[2], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnable, 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
