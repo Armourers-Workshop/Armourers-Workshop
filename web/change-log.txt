@@ -1,5 +1,30 @@
+Build 0.36.0
+Added block skins.
+Added new premade block skins.
+Added multipass rendering for skins. (should fix most transparency issues)
+Added number of skins being rendered to the F3 debug text.
+Added mannequinMaxEquipmentRenderDistance config option.
+Added multipassSkinRendering config option.
+Added Aqua Tweaks support for skinnable blocks.
+Added Armourer can be shift clicked with the shade noise tool to quickly shade all blocks.
+Changed the way mannequin models are rendered. (should be a little fastr)
+Changed armour containers to be skinned in the skinning table.
+Changed skinned bow to only show arrows when the bow is in use.
+Changed arrow skins to be a little bigger.
+Fixed arrow entity skins being flipped.
+Fixed bow skin animation frames not being timed correctly.
+Fixed dedicated server crash when a mod tries to access the AW client API on the server.
+Fixed rare CME crash from skin data cache when cleaning up old skins
+Fixed transparency on bows and skins in the inventory.
+Fixed bow skins sometimes rendering in the wrong place.
+Fixed set and give skin commands mixing up the file name.
+Fixed major bug that was allowing skins and tile entities to have the same cube colour reference.
+Fixed the undo system so that it can undo more than one block face at a time.
+
+
 Build 0.35.1
 Fixed start-up crash when extracting skins.
+
 
 Build 0.35.0
 Added bow skins.
@@ -21,17 +46,20 @@ Changed skins are now unpacked from the jar instead of being downloaded.
 Changed renamed most of the items in the config.
 Changed the way old skirts work, they will now show up as leg skins.
 
+
 Build 0.34.2
 Fixed crash from missing Apache library.
 Fixed crash when loading corrupted skin.
 Fixed crash when using painting tools on the weapon hand model.
 Changed equipment wardrobe slot id's. (thing will be muddled up.)
 
+
 Build 0.34.1
 Fixed NPE crash when using tools with no NBT data.
 Fixed some typos in the config file.
 Fixed skins not getting downloaded because the directory was missing.
 Removed skin override system.
+
 
 Build 0.34.0
 Added a creative library block.
@@ -56,6 +84,7 @@ Fixed crash with older BuildCraft versions.
 Fixed rendering issues with Colored Lights mod.
 Fixed skin drop down list not working when TMI is installed.
 
+
 Build 0.33.0
 Added recipes in the guide book.
 Added hue tool.
@@ -65,6 +94,7 @@ Added ability for mannequins and dolls to be rotated with any BuildCraft compati
 Added more build space around the head and arms.
 Changed leg skins to also hold skirts.
 Updated Chinese localization.
+
 
 Build 0.32.0
 Added weapon overrides to the configuration file. (weapons that can be skinned can now be added/removed here)
