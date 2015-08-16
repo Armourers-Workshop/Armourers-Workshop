@@ -5,21 +5,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.relauncher.Side;
-import net.minecraft.entity.player.EntityPlayerMP;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * Holds a cache of equipment data on the server that will be sent to clients if
@@ -48,8 +49,10 @@ public final class SkinDataCache implements Runnable {
     }
     
     public void clearAll() {
-        skinDataCache.clear();
-        messageQueue.clear();
+        synchronized (skinDataCache) {
+            skinDataCache.clear();
+            messageQueue.clear();
+        }
     }
     
     
@@ -137,30 +140,31 @@ public final class SkinDataCache implements Runnable {
     }
     
     private void processMessage(QueueMessage queueMessage) {
-        
-        if (!skinDataCache.containsKey(queueMessage.equipmentId)) {
-            if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
-                Skin skin;
-                skin = loadEquipmentFromDisk(queueMessage.equipmentId);
-                if (skin != null) {
-                    addEquipmentDataToCache(skin, queueMessage.equipmentId);
-                    if (skin.hashCode() != queueMessage.equipmentId) {
-                        addEquipmentDataToCache(skin, skin.hashCode());
+        synchronized (skinDataCache) {
+            if (!skinDataCache.containsKey(queueMessage.equipmentId)) {
+                if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
+                    Skin skin;
+                    skin = loadEquipmentFromDisk(queueMessage.equipmentId);
+                    if (skin != null) {
+                        addEquipmentDataToCache(skin, queueMessage.equipmentId);
+                        if (skin.hashCode() != queueMessage.equipmentId) {
+                            addEquipmentDataToCache(skin, skin.hashCode());
+                        }
+                    } else {
+                        ModLogger.log(Level.ERROR, String.format("Failed to load skin id:%s from disk.", String.valueOf(queueMessage.equipmentId)));
                     }
-                } else {
-                    ModLogger.log(Level.ERROR, String.format("Failed to load skin id:%s from disk.", String.valueOf(queueMessage.equipmentId)));
                 }
             }
-        }
-        
-        if (skinDataCache.containsKey(queueMessage.equipmentId)) {
-            Skin skin = skinDataCache.get(queueMessage.equipmentId);
-            skin.requestId = queueMessage.equipmentId;
-            skin.onUsed();
-            PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), queueMessage.player);
-        } else {
-            ModLogger.log(Level.ERROR, "Equipment id:" + queueMessage.equipmentId +" was requested by "
-        + queueMessage.player.getCommandSenderName() + " but was not found.");
+            
+            if (skinDataCache.containsKey(queueMessage.equipmentId)) {
+                Skin skin = skinDataCache.get(queueMessage.equipmentId);
+                skin.requestId = queueMessage.equipmentId;
+                skin.onUsed();
+                PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), queueMessage.player);
+            } else {
+                ModLogger.log(Level.ERROR, "Equipment id:" + queueMessage.equipmentId +" was requested by "
+            + queueMessage.player.getCommandSenderName() + " but was not found.");
+            }
         }
     }
     
@@ -172,10 +176,12 @@ public final class SkinDataCache implements Runnable {
         if (equipmentData == null) {
             return;
         }
-        if (!skinDataCache.containsKey(equipmentId)) {
-            skinDataCache.put(equipmentId, equipmentData);
-            if (!haveEquipmentOnDisk(equipmentId)) {
-                saveEquipmentToDisk(equipmentData);
+        synchronized (skinDataCache) {
+            if (!skinDataCache.containsKey(equipmentId)) {
+                skinDataCache.put(equipmentId, equipmentData);
+                if (!haveEquipmentOnDisk(equipmentId)) {
+                    saveEquipmentToDisk(equipmentData);
+                }
             }
         }
     }
