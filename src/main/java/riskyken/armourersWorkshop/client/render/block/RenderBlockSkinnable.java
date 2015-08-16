@@ -44,7 +44,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         ModRenderHelper.enableAlphaBlend();
         int rotation = tileEntity.getBlockMetadata();
         
-        GL11.glTranslated(x + 0.5F, y, z + 0.5F);
+        GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef(22.5F * rotation, 0, 1, 0);

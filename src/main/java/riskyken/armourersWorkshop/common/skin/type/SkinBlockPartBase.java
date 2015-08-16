@@ -8,7 +8,7 @@ public class SkinBlockPartBase extends AbstractSkinPartTypeBase {
 
     public SkinBlockPartBase(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-8, 0, -8, 16, 16, 16);
+        this.buildingSpace = new Rectangle3D(-8, -8, -8, 16, 16, 16);
         this.guideSpace = new Rectangle3D(0, 0, 0, 0, 0, 0);
         this.offset = new Point3D(0, -1, 0);
     }

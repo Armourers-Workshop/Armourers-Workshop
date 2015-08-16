@@ -55,14 +55,10 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
                 GL11.glTranslatef(0F, 0F, -0.4F * scale);
             }
             if (skinType == SkinTypeRegistry.skinBlock) {
-                GL11.glTranslatef(0F, 0.4F * scale ,0F);
                 GL11.glScalef(0.9F, 0.9F, 0.9F);
             }
             switch (type) {
             case EQUIPPED:
-                if (skinType == SkinTypeRegistry.skinBlock) {
-                    GL11.glTranslatef(0F, -0.4F * scale ,0F);
-                }
                 GL11.glTranslatef(0.6F, -0.5F, -0.5F);
                 GL11.glRotatef(180, 0, 1, 0);
                 break;
@@ -70,9 +66,6 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
                 GL11.glTranslatef(0F, -0.3F, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
-                if (skinType == SkinTypeRegistry.skinBlock) {
-                    GL11.glTranslatef(0F, -0.4F * scale ,0F);
-                }
                 GL11.glTranslatef(0.5F, -0.7F, -0.5F);
                 GL11.glRotatef(90, 0, 1, 0);
                 break;
