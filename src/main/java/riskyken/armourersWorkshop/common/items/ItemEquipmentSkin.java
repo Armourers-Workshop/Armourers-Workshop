@@ -2,10 +2,6 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,6 +13,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.input.Keyboard;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
@@ -34,6 +33,8 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemEquipmentSkin extends AbstractModItem {
 
@@ -169,6 +170,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
                     world.setTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
                     TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
                     te.setSkinPointer(skinPointer);
+                    stack.stackSize--;
                 }
                 return true;
             }
