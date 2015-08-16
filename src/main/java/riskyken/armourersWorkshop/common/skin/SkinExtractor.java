@@ -26,8 +26,12 @@ public final class SkinExtractor {
     private static final String[] SKIN_FILES = {
         "Arbalest",
         "Arrow",
+        "Barrel",
+        "Chessboard",
         "Fez",
         "Fox Ears",
+        "Glass Chair",
+        "Glass Table",
         "Halo",
         "Lightsaber (Dual)",
         "Lightsaber",
