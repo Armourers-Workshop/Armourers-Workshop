@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.armourer.ModelBlockArmourer;
+import riskyken.armourersWorkshop.client.model.block.ModelBlockArmourer;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import cpw.mods.fml.relauncher.Side;

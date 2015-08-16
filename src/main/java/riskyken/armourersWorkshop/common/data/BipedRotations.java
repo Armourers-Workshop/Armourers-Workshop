@@ -22,6 +22,7 @@ public class BipedRotations {
     public BipedPart leftLeg;
     public BipedPart rightLeg;
     public boolean isChild;
+    public boolean hasCustomHead;
     
     public BipedRotations() {
         head = new BipedPart(TAG_HEAD);
@@ -90,12 +91,11 @@ public class BipedRotations {
         result = prime * result + ((chest == null) ? 0 : chest.hashCode());
         result = prime * result + ((head == null) ? 0 : head.hashCode());
         result = prime * result + (isChild ? 1231 : 1237);
+        result = prime * result + (hasCustomHead ? 1231 : 1237);
         result = prime * result + ((leftArm == null) ? 0 : leftArm.hashCode());
         result = prime * result + ((leftLeg == null) ? 0 : leftLeg.hashCode());
-        result = prime * result
-                + ((rightArm == null) ? 0 : rightArm.hashCode());
-        result = prime * result
-                + ((rightLeg == null) ? 0 : rightLeg.hashCode());
+        result = prime * result + ((rightArm == null) ? 0 : rightArm.hashCode());
+        result = prime * result + ((rightLeg == null) ? 0 : rightLeg.hashCode());
         return result;
     }
     
@@ -191,9 +191,7 @@ public class BipedRotations {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + getOuterType().hashCode();
-            result = prime * result
-                    + ((partName == null) ? 0 : partName.hashCode());
+            result = prime * result + ((partName == null) ? 0 : partName.hashCode());
             result = prime * result + Float.floatToIntBits(rotationX);
             result = prime * result + Float.floatToIntBits(rotationY);
             result = prime * result + Float.floatToIntBits(rotationZ);

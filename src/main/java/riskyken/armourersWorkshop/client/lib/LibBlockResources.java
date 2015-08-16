@@ -28,4 +28,7 @@ public final class LibBlockResources {
     public static final String SKINNING_TABLE_BOTTOM = PREFIX_RESOURCE + "skinningTableBottom";
     
     public static final String MARKER = PREFIX_RESOURCE + "marker";
+    
+    public static final String SKINNABLE = PREFIX_RESOURCE + "skinnable";
+    public static final String CUBE = PREFIX_RESOURCE + "cube";
 }

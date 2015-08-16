@@ -63,10 +63,11 @@ public class CommandArmourers extends CommandBase {
             if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
             } 
-            String skinName = args[2] = ".armour";
+            String skinName = args[2];
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
+            skinName += ".armour";
             Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName);
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
@@ -82,10 +83,11 @@ public class CommandArmourers extends CommandBase {
             if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
             } 
-            String skinName = args[2] = ".armour";
+            String skinName = args[2];
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
+            skinName += ".armour";
             Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName);
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);

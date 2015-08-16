@@ -19,7 +19,23 @@ public final class UndoManager {
     
     private static HashMap<String, PlayerUndoData> playerUndoData = new HashMap<String, PlayerUndoData>();
 
-    public static void playerPaintedBlock(EntityPlayer player, World world, int x, int y, int z, int oldColour, int side) {
+    public static void begin(EntityPlayer player) {
+        if (!playerUndoData.containsKey(player.getDisplayName())) {
+            playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
+        }
+        PlayerUndoData playerData = playerUndoData.get(player.getDisplayName());
+        playerData.begin();
+    }
+    
+    public static void end(EntityPlayer player) {
+        if (!playerUndoData.containsKey(player.getDisplayName())) {
+            playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
+        }
+        PlayerUndoData playerData = playerUndoData.get(player.getDisplayName());
+        playerData.end();
+    }
+    
+    public static void blockPainted(EntityPlayer player, World world, int x, int y, int z, int oldColour, int side) {
         UndoData undoData = new UndoData(x, y, z, world.provider.dimensionId, oldColour, side);
         if (!playerUndoData.containsKey(player.getDisplayName())) {
             playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
@@ -29,7 +45,7 @@ public final class UndoManager {
         playerData.addUndoData(undoData);
     }
     
-    public static void playerPressedUndo(EntityPlayer player) {
+    public static void undoPressed(EntityPlayer player) {
         String key = player.getCommandSenderName();
         if (!playerUndoData.containsKey(key)) {
             String outOfUndosText = StatCollector.translateToLocal("chat." + LibModInfo.ID.toLowerCase() + ":undo.outOfUndos");

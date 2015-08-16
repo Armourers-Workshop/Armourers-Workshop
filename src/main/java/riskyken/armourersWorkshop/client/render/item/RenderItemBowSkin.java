@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -13,12 +11,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -92,7 +94,8 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
 
             GL11.glPushMatrix();
-
+            
+            AbstractClientPlayer player = null;
             int useCount = 0;
             boolean hasArrow = false;
             boolean hasArrowSkin = false;
@@ -101,7 +104,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             if (data.length >= 2) {
                 if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
                     RenderBlocks renderBlocks = (RenderBlocks) data[0];
-                    AbstractClientPlayer player = (AbstractClientPlayer) data[1];
+                    player = (AbstractClientPlayer) data[1];
                     useCount = player.getItemInUseDuration();
                     hasArrow = player.inventory.hasItem(Items.arrow);
                     IEntityEquipment entityEquipment = EquipmentModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
@@ -157,19 +160,19 @@ public class RenderItemBowSkin implements IItemRenderer {
             default:
                 break;
             }
+            
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_CULL_FACE);
+            ModRenderHelper.enableAlphaBlend();
             
             ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
-            model.bowUse = useCount;
+            model.frame = getAnimationFrame(useCount);
             int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
             Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
-            model.render(null, skin, false);
+            model.render(player, skin, false);
             if (hasArrow) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
-                int tarPart = useCount / 10;
-                if (tarPart > 2) {
-                    tarPart = 2;
-                }
+                int tarPart = getAnimationFrame(useCount);
                 if (skin.getParts().get(tarPart).getMarkerBlocks().size() > 0) {
                     CubeMarkerData cmd = skin.getParts().get(tarPart).getMarkerBlocks().get(0);
                     ForgeDirection dir = ForgeDirection.getOrientation(cmd.meta - 1);
@@ -193,9 +196,8 @@ public class RenderItemBowSkin implements IItemRenderer {
                     }
                 }
             }
-
+            GL11.glPopAttrib();
             
-            GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
             
             if (type != ItemRenderType.ENTITY) {
@@ -211,6 +213,16 @@ public class RenderItemBowSkin implements IItemRenderer {
                 renderNomalIcon(stack);
             }
         }
+    }
+    
+    private int getAnimationFrame(int useCount) {
+        if (useCount >= 18) {
+            return 2;
+        }
+        if (useCount > 13) {
+            return 1;
+        }
+        return 0;
     }
     
     private boolean canRenderModel(ItemStack stack) {

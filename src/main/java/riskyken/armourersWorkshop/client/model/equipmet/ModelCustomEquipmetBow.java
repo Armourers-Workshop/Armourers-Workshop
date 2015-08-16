@@ -2,23 +2,24 @@ package riskyken.armourersWorkshop.client.model.equipmet;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
     
-    public int bowUse = 0;
+    public int frame = 0;
     
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
@@ -42,6 +43,7 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
+            this.isChild = player.isChild();
             this.heldItemRight = 0;
             if (player.getHeldItem() != null) {
                 this.heldItemRight = 1;
@@ -51,18 +53,16 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinBow);
         armourData.onUsed();
         
-        int tarPart = bowUse / 10;
-        
-        if (tarPart > parts.size() - 1) {
-            tarPart = parts.size() - 1;
+        if (frame > parts.size() - 1) {
+            frame = parts.size() - 1;
         }
         
-        if (tarPart < 0 | tarPart > parts.size() - 1) {
+        if (frame < 0 | frame > parts.size() - 1) {
             ModLogger.log("wow");
             return;
         }
         
-        SkinPart part = parts.get(tarPart);
+        SkinPart part = parts.get(frame);
             
         GL11.glPushMatrix();
         if (isChild) {
@@ -78,7 +78,7 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         
         
         GL11.glColor3f(1F, 1F, 1F);
-        bowUse = 1;
+        frame = 0;
     }
     
     private void renderRightArm(SkinPart part, float scale) {

@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +23,8 @@ import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import riskyken.plushieWrapper.common.world.BlockLocation;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBurnTool extends AbstractModItem implements IConfigurableTool {
 
@@ -45,6 +45,7 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool {
 
         if (block instanceof IPantableBlock) {
             if (!world.isRemote) {
+                UndoManager.begin(player);
                 if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
                     for (int i = 0; i < 6; i++) {
                         usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
@@ -52,6 +53,7 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool {
                 } else {
                     usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
                 }
+                UndoManager.end(player);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
             }
             return true;
@@ -64,7 +66,7 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool {
         IPantableBlock worldColourable = (IPantableBlock) block;
         int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
         int newColour = UtilColour.makeColourDarker(new Color(oldColour), intensity).getRGB();
-        UndoManager.playerPaintedBlock(player, world, bl.x, bl.y, bl.z, oldColour, side);
+        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, side);
         ((IPantableBlock) block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
     }
     

@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
@@ -31,6 +30,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public static ISkinType skinSword;
     public static ISkinType skinBow;
     public static ISkinType skinArrow;
+    public static ISkinType skinBlock;
     
     private LinkedHashMap<String, ISkinType> skinTypeMap;
     private HashMap<String, ISkinPartType> skinPartMap;
@@ -55,6 +55,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinSword = new SkinSword();
         skinBow = new SkinBow();
         skinArrow = new SkinArrow();
+        skinBlock = new SkinBlock();
         
         registerSkin(skinHead);
         registerSkin(skinChest);
@@ -64,6 +65,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinSword);
         registerSkin(skinBow);
         registerSkin(skinArrow);
+        registerSkin(skinBlock);
     }
     
     @Override
@@ -72,7 +74,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             ModLogger.log(Level.WARN, "A mod tried to register a null skin type.");
             return false;
         }
-        if (skinType.getRegistryName() == null | skinType.getRegistryName().trim().isEmpty()) {
+        if (skinType.getRegistryName() == null || skinType.getRegistryName().trim().isEmpty()) {
             ModLogger.log(Level.WARN, "A mod tried to register a skin type with an invalid registry name.");
             return false;
         }
@@ -80,7 +82,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             ModLogger.log(Level.WARN, "A mod tried to register a skin type with a registry name that is in use.");
             return false;
         }
-        if (skinType.getSkinParts() == null | skinType.getSkinParts().size() == 0) {
+        if (skinType.getSkinParts() == null || skinType.getSkinParts().size() == 0) {
             ModLogger.log(Level.WARN, "A mod tried to register a skin type no skin type parts.");
             return false;
         }

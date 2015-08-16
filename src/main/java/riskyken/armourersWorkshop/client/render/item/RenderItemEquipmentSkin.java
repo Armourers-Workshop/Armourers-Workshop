@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -9,9 +7,13 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
@@ -52,6 +54,9 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             if (skinType == SkinTypeRegistry.skinArrow) {
                 GL11.glTranslatef(0F, 0F, -0.4F * scale);
             }
+            if (skinType == SkinTypeRegistry.skinBlock) {
+                GL11.glScalef(0.9F, 0.9F, 0.9F);
+            }
             switch (type) {
             case EQUIPPED:
                 GL11.glTranslatef(0.6F, -0.5F, -0.5F);
@@ -67,10 +72,12 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             default:
                 break;
             }
-            mc.mcProfiler.startSection("armourers item skin");
+            mc.mcProfiler.startSection("armourersItemSkin");
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+            ModRenderHelper.enableAlphaBlend();
             GL11.glEnable(GL11.GL_CULL_FACE);
             ItemStackRenderHelper.renderItemAsArmourModel(stack, true);
-            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glPopAttrib();
             mc.mcProfiler.endSection();
             GL11.glPopMatrix();
         } else {

@@ -5,14 +5,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -24,8 +25,6 @@ import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
     
@@ -38,36 +37,41 @@ public class SkinPart implements ISkinPart {
     private ISkinPartType skinPart;
     
     @SideOnly(Side.CLIENT)
-    public ArrayList<ColouredVertexWithUV> normalVertexList;
-    @SideOnly(Side.CLIENT)
-    public ArrayList<ColouredVertexWithUV> glowingVertexList;
+    public ArrayList<ColouredVertexWithUV>[] vertexLists;
     
-    public boolean hasNormalBlocks;
-    public boolean hasGlowingBlocks;
+    @SideOnly(Side.CLIENT)
+    public boolean hasList[];
     
     @SideOnly(Side.CLIENT)
     public int[] totalCubesInPart;
-    @SideOnly(Side.CLIENT)
-    public boolean displayNormalCompiled;
-    @SideOnly(Side.CLIENT)
-    public boolean displayGlowingCompiled;
     
     @SideOnly(Side.CLIENT)
-    public int displayListNormal;
+    public boolean[] displayListCompiled;
+    
     @SideOnly(Side.CLIENT)
-    public int displayListGlowing;
+    public int[] displayList;
 
     @SideOnly(Side.CLIENT)
     public void cleanUpDisplayLists() {
-        if (this.displayNormalCompiled) {
-            if (hasNormalBlocks) {
-                GLAllocation.deleteDisplayLists(this.displayListNormal);
+        if(hasList != null) {
+            for (int i = 0; i < displayList.length; i++) {
+                if (hasList[i]) {
+                    if (displayListCompiled[i]) {
+                        GLAllocation.deleteDisplayLists(displayList[i]);
+                    }
+                }
             }
         }
-        if (this.displayGlowingCompiled) {
-            if (hasGlowingBlocks) {
-                GLAllocation.deleteDisplayLists(this.displayListGlowing);  
-            }
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void setVertexLists(ArrayList<ColouredVertexWithUV>[] vertexLists) {
+        hasList = new boolean[vertexLists.length];
+        displayListCompiled = new boolean[vertexLists.length];
+        displayList = new int[vertexLists.length];
+        this.vertexLists = vertexLists;
+        for (int i = 0; i < vertexLists.length; i++) {
+            hasList[i] = vertexLists[i].size() > 0;
         }
     }
     

@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.render.block;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -14,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -22,52 +24,53 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
+import riskyken.plushieWrapper.client.IRenderBuffer;
+import riskyken.plushieWrapper.client.RenderBridge;
 
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
+    private static final ResourceLocation circle = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanohaCircle.png");
+    private static final ResourceLocation circleBlur = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanohaCircleBlur.png");
+    
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
     private static boolean isHalloween;
-    private MannequinFakePlayer mannequinFakePlayer;
+    private final static float SCALE = 0.0625F;
+    
     private ModelMannequin model;
+    private boolean hasRendered;
+    private MannequinFakePlayer mannequinFakePlayer;
     private RenderPlayer renderPlayer;
     private final Minecraft mc;
-    private final static float SCALE = 0.0625F;
-    private final ModelBiped targetBiped;
+    
     
     public RenderBlockMannequin() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
-        isHalloween = HolidayHelper.halloween.isHolidayActive();
         
-        if (Loader.isModLoaded("moreplayermodels")) {
-            targetBiped = model;
-        } else {
-            targetBiped = renderPlayer.modelBipedMain;
-        }
+        isHalloween = HolidayHelper.halloween.isHolidayActive();
+        hasRendered = false;
     }
     
-    @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
+    public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
         mc.mcProfiler.startSection("armourersMannequin");
-        TileEntityMannequin te = (TileEntityMannequin) tileEntity;
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
-        double heightOffset = te.getHeightOffset();
-        //heightOffset = 12;
+        model.compile(SCALE);
         
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_NORMALIZE);
@@ -87,6 +90,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glTranslatef(0, SCALE * 24, 0);
         }
         
+        mc.mcProfiler.startSection("fakePlayer");
         if (mannequinFakePlayer == null) {
             mannequinFakePlayer = new MannequinFakePlayer(te.getWorldObj(), new GameProfile(null, "[Mannequin]"));
             mannequinFakePlayer.posX = x;
@@ -113,11 +117,17 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
         }
         
-        float f6 = 2.0F;
-        if (fakePlayer != null) {
-        	mc.mcProfiler.startSection("preEvents");
-        	if (ConfigHandler.mannequinsCallPlayerRenders) {
-                targetBiped.isChild = te.getBipedRotations().isChild;
+        if (te.getBipedRotations() != null) {
+            te.getBipedRotations().applyRotationsToBiped(model);
+            te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);
+            te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
+        }
+        mc.mcProfiler.endSection();
+        
+        if (ConfigHandler.mannequinsCallPlayerRenders) {
+            if (fakePlayer != null) {
+                mc.mcProfiler.startSection("preEvents");
+                model.isChild = te.getBipedRotations().isChild;
                 fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
                 fakePlayer.prevRotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
                 fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
@@ -126,20 +136,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 
                 fakePlayer.ticksExisted = Minecraft.getMinecraft().thePlayer.ticksExisted;
                 
-                if (te.getBipedRotations() != null) {
-                    te.getBipedRotations().applyRotationsToBiped(targetBiped);
-                    te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);
-                    te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
-                }
-                
                 //Pre render events
-                RenderPlayerEvent.Pre preEvent = new RenderPlayerEvent.Pre(fakePlayer, renderPlayer, tickTime);
-                RenderPlayerEvent.Specials.Pre preEventSpecials = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, tickTime);
+                RenderPlayerEvent.Pre preEvent = new RenderPlayerEvent.Pre(fakePlayer, renderPlayer, partialTickTime);
+                RenderPlayerEvent.Specials.Pre preEventSpecials = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, partialTickTime);
 
-                if (targetBiped.isChild) {
-                    GL11.glPushMatrix();
-                    GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-                    GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
+                if (model.isChild) {
+                    ModelHelper.enableChildModelScale(false, SCALE);
                 }
                 GL11.glDisable(GL11.GL_CULL_FACE);
                 
@@ -147,65 +149,108 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 MinecraftForge.EVENT_BUS.post(preEventSpecials);
                 
                 GL11.glEnable(GL11.GL_CULL_FACE);
-                if (targetBiped.isChild) {
-                    GL11.glPopMatrix();
+                if (model.isChild) {
+                    ModelHelper.disableChildModelScale();
                 }
-        	}
-            mc.mcProfiler.endSection();
+                mc.mcProfiler.endSection();
+            }
         }
         
         
-        ApiRegistrar.INSTANCE.onRenderMannequin(tileEntity, te.getGameProfile());
+        ApiRegistrar.INSTANCE.onRenderMannequin(te, te.getGameProfile());
         
-        targetBiped.bipedRightArm.setRotationPoint(-5.0F, 2.0F , 0.0F);
-        targetBiped.bipedLeftArm.setRotationPoint(5.0F, 2.0F , 0.0F);
-        targetBiped.bipedHead.setRotationPoint(0.0F, 0.0F, 0.0F);
-        targetBiped.bipedHeadwear.setRotationPoint(0.0F, 0.0F, 0.0F);
-        targetBiped.bipedRightLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);
-        targetBiped.bipedLeftLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
+        model.bipedRightArm.setRotationPoint(-5.0F, 2.0F , 0.0F);
+        model.bipedLeftArm.setRotationPoint(5.0F, 2.0F , 0.0F);
+        model.bipedHead.setRotationPoint(0.0F, 0.0F, 0.0F);
+        model.bipedHeadwear.setRotationPoint(0.0F, 0.0F, 0.0F);
+        model.bipedRightLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);
+        model.bipedLeftLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
         
-        te.getBipedRotations().applyRotationsToBiped(targetBiped);
+        te.getBipedRotations().applyRotationsToBiped(model);
         
         //Render model
-        
         mc.mcProfiler.startSection("textureBind");
         SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
         mc.mcProfiler.endSection();
         mc.mcProfiler.startSection("modelRender");
-        renderModel(te, targetBiped, fakePlayer);
+        te.getBipedRotations().hasCustomHead = hasCustomHead(te);
+        int rotationsHash = te.getBipedRotations().hashCode();
+        boolean needUpdate = false;
+        if (te.rotationsHash != rotationsHash) {
+            needUpdate = true;
+        }
+        if (needUpdate) {
+            if (te.displayList != 0) {
+                GLAllocation.deleteDisplayLists(te.displayList);
+            }
+            te.displayList = renderModel(te, model, fakePlayer);
+            if (te.displayList != 0) {
+                te.rotationsHash = rotationsHash;
+            }
+        }
+        if (te.displayList != 0) {
+            GL11.glCallList(te.displayList);
+        }
+        
+        if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
+            GL11.glPushMatrix();
+            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleZ), 0, 0, 1);
+            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleY), 0, 1, 0);
+            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleX), 1, 0, 0);
+            GL11.glTranslated(-5.5F * SCALE, 0, 0);
+            GL11.glTranslated(0, -6.5F * SCALE, 0);
+            model.bipedEars.render(SCALE);
+            GL11.glTranslated(11F * SCALE, 0, 0);
+            model.bipedEars.render(SCALE);
+            GL11.glPopMatrix();
+        }
+        
         mc.mcProfiler.endSection();
+        
+        //Magic circle.
+        if (te.getGameProfile() != null) {
+            if (te.getGameProfile().getName().equals("RiskyKen")) {
+                int offset = te.xCoord * te.yCoord * te.zCoord;
+                renderMagicCircle(249F / 255, 223F / 255, 140F / 255, partialTickTime, offset, te.getBipedRotations().isChild);
+            } else if (te.getGameProfile().getName().equals("Nanoha")) {
+                int offset = te.xCoord * te.yCoord * te.zCoord;
+                renderMagicCircle(1F, 173F / 255, 1F, partialTickTime, offset, te.getBipedRotations().isChild);
+            }
+        }
+
         
         //Render items.
         mc.mcProfiler.startSection("equippedItems");
-        renderEquippedItems(te, fakePlayer, targetBiped);
+        if (te.getDistanceFrom(field_147501_a.field_147560_j, field_147501_a.field_147561_k, field_147501_a.field_147558_l) < ConfigHandler.mannequinMaxEquipmentRenderDistance) {
+            renderEquippedItems(te, fakePlayer, model);
+        }
         mc.mcProfiler.endSection();
         
         //Post render events
-        if (fakePlayer != null) {
-        	mc.mcProfiler.startSection("postEvents");
-        	if (ConfigHandler.mannequinsCallPlayerRenders) {
-                RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, tickTime);
-                RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, tickTime);
-                if (targetBiped.isChild) {
-                    GL11.glPushMatrix();
-                    GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
-                    GL11.glTranslatef(0.0F, 16.0F * SCALE, 0.0F);
+        if (ConfigHandler.mannequinsCallPlayerRenders) {
+            if (fakePlayer != null) {
+                mc.mcProfiler.startSection("postEvents");
+                RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, partialTickTime);
+                RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, partialTickTime);
+                if (model.isChild) {
+                    ModelHelper.enableChildModelScale(false, SCALE);
                 }
                 GL11.glDisable(GL11.GL_CULL_FACE);
                 MinecraftForge.EVENT_BUS.post(postEvent);
                 MinecraftForge.EVENT_BUS.post(postEvenSpecialst);
                 GL11.glEnable(GL11.GL_CULL_FACE);
-                if (targetBiped.isChild) {
-                    GL11.glPopMatrix();
+                if (model.isChild) {
+                    ModelHelper.disableChildModelScale();
                 }
-        	}
-            mc.mcProfiler.endSection();
+                mc.mcProfiler.endSection();
+            }
         }
         
-        targetBiped.bipedLeftLeg.rotateAngleZ = 0F;
-        targetBiped.bipedRightLeg.rotateAngleZ = 0F;
-        targetBiped.bipedHead.rotateAngleZ = 0F;
-        targetBiped.bipedHeadwear.rotateAngleZ = 0F;
+        mc.mcProfiler.startSection("reset");
+        model.bipedLeftLeg.rotateAngleZ = 0F;
+        model.bipedRightLeg.rotateAngleZ = 0F;
+        model.bipedHead.rotateAngleZ = 0F;
+        model.bipedHeadwear.rotateAngleZ = 0F;
         
         renderPlayer.modelArmor.bipedLeftLeg.rotateAngleZ = 0F;
         renderPlayer.modelArmor.bipedRightLeg.rotateAngleZ = 0F;
@@ -216,14 +261,67 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer.modelArmorChestplate.bipedRightLeg.rotateAngleZ = 0F;
         renderPlayer.modelArmorChestplate.bipedHead.rotateAngleZ = 0F;
         renderPlayer.modelArmorChestplate.bipedHeadwear.rotateAngleZ = 0F;
+        mc.mcProfiler.endSection();
         
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
     }
     
-    private void renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
-        if (!hasCustomHead(te, fakePlayer)) {
+    private void renderMagicCircle(float r, float g, float b, float partialTickTime, int offset, boolean isChild) {
+        mc.mcProfiler.startSection("magicCircle");
+        GL11.glPushMatrix();
+        if (isChild) {
+            ModelHelper.enableChildModelScale(false, SCALE);
+        }
+        GL11.glColor4f(r, g, b, 1F);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glTranslatef(0F, 1.48F, 0F);
+        float circleScale = 2.0F;
+        GL11.glScalef(circleScale, circleScale, circleScale);
+        float rotation = (float)((double)(mc.theWorld.getTotalWorldTime() + offset) / 0.8F % 360) + partialTickTime;
+        GL11.glRotatef(rotation, 0, 1, 0);
+        ModRenderHelper.disableLighting();
+        ModRenderHelper.enableAlphaBlend();
+        bindTexture(circle);
+        IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
+        
+        renderBuffer.startDrawingQuads();
+        renderBuffer.addVertexWithUV(-1, 0, -1, 1, 0);
+        renderBuffer.addVertexWithUV(1, 0, -1, 0, 0);
+        renderBuffer.addVertexWithUV(1, 0, 1, 0, 1);
+        renderBuffer.addVertexWithUV(-1, 0, 1, 1, 1);
+        renderBuffer.draw();
+        GL11.glTranslatef(0F, -0.002F, 0F);
+        bindTexture(circleBlur);
+        renderBuffer.startDrawingQuads();
+        renderBuffer.addVertexWithUV(-1, 0, -1, 1, 0);
+        renderBuffer.addVertexWithUV(1, 0, -1, 0, 0);
+        renderBuffer.addVertexWithUV(1, 0, 1, 0, 1);
+        renderBuffer.addVertexWithUV(-1, 0, 1, 1, 1);
+        renderBuffer.draw();
+        
+        
+        ModRenderHelper.disableAlphaBlend();
+        ModRenderHelper.enableLighting();
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        if (isChild) {
+            ModelHelper.disableChildModelScale();
+        }
+        GL11.glPopMatrix();
+        mc.mcProfiler.endSection();
+    }
+    
+    private int renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
+        int displayList = 0;
+        if (hasRendered) {
+            displayList = GLAllocation.generateDisplayLists(1);
+            GL11.glNewList(displayList, GL11.GL_COMPILE);
+        }
+        if (!hasCustomHead(te)) {
             if (te.getBipedRotations().isChild) {
                 ModelHelper.enableChildModelScale(true, SCALE);
             }
@@ -233,7 +331,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
             if (te.getBipedRotations().isChild) {
                 ModelHelper.disableChildModelScale();
-            }
+            };
         }
         if (te.getBipedRotations().isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
@@ -244,21 +342,16 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         targetBiped.bipedLeftArm.render(SCALE);
         targetBiped.bipedRightLeg.render(SCALE);
         targetBiped.bipedLeftLeg.render(SCALE);
-        if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
-        	GL11.glPushMatrix();
-        	GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleZ), 0, 0, 1);
-        	GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleY), 0, 1, 0);
-        	GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleX), 1, 0, 0);
-        	GL11.glTranslated(-5.5F * SCALE, 0, 0);
-        	GL11.glTranslated(0, -6.5F * SCALE, 0);
-        	targetBiped.bipedEars.render(SCALE);
-        	GL11.glTranslated(11F * SCALE, 0, 0);
-        	targetBiped.bipedEars.render(SCALE);
-        	GL11.glPopMatrix();
-        }
         if (te.getBipedRotations().isChild) {
             ModelHelper.disableChildModelScale();
         }
+        if (hasRendered) {
+            GL11.glEndList();
+        }
+        if (!hasRendered) {
+            hasRendered = true;
+        }
+        return displayList;
     }
     
     private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
@@ -285,7 +378,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         return inventory.getStackInSlot(slot.ordinal());
     }
     
-    private boolean hasCustomHead(IInventory inventory, MannequinFakePlayer fakePlayer) {
+    private boolean hasCustomHead(IInventory inventory) {
         ItemStack stack = getStackInMannequinSlot(inventory, MannequinSlotType.HEAD);
         if (stack != null) {
             if (stack.getItem() instanceof ItemBlock) {
@@ -302,6 +395,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         
+        String[] slotName = {"head", "chest", "legs", "unused", "feet", "rightArm", "leftArm"};
+        
+        mc.mcProfiler.startSection(slotName[slot]);
         GL11.glPushMatrix();
         if (targetBiped.isChild) {
             ModelHelper.enableChildModelScale(slot == 0, SCALE);
@@ -330,5 +426,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             ModelHelper.disableChildModelScale();
         }
         GL11.glPopMatrix();
+        mc.mcProfiler.endSection();
+    }
+    
+    @Override
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
+        renderTileEntityAt((TileEntityMannequin)tileEntity, x, y, z, partialTickTime);
     }
 }

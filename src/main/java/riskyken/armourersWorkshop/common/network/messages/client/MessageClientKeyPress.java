@@ -39,7 +39,7 @@ public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageC
             FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.CUSTOM_ARMOUR_INVENTORY, player.worldObj, 0, 0, 0);
             break;
         case 1:
-            UndoManager.playerPressedUndo(player);
+            UndoManager.undoPressed(player);
             break;
         default:
             break;

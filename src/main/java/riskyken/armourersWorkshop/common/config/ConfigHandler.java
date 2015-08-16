@@ -31,6 +31,8 @@ public class ConfigHandler {
     public static int maxSkinRenderDistance = 40;
     public static int maxModelBakingThreads = 1;
     public static boolean mannequinsCallPlayerRenders = true;
+    public static boolean multipassSkinRendering = true;
+    public static int mannequinMaxEquipmentRenderDistance = 1024;
     
     //server
     public static int serverModelCacheTime = 12000;
@@ -230,6 +232,13 @@ public class ConfigHandler {
         mannequinsCallPlayerRenders = config.getBoolean("mannequinsCallPlayerRenders", CATEGORY_CLIENT, true,
                 "Allows mannequins to call the player render events.\n"
                 + "Disable this if mannequins are using a lot of render time.");
+        
+        multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_CLIENT, true,
+                "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
+                + "Disabling this will improve skin rendering performance at the cost of visual quality.");
+        
+        mannequinMaxEquipmentRenderDistance = config.getInt("mannequinMaxEquipmentRenderDistance", CATEGORY_CLIENT, 1024, 1, 4096,
+                "The max distance squared that equipment will be rendered on mannequins.");
     }
     
     private static void loadCategoryServer() {

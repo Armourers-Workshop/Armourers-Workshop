@@ -1,10 +1,10 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.EventState;
+import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class AddonAquaTweaks extends AbstractAddon {
 
@@ -28,6 +28,11 @@ public class AddonAquaTweaks extends AbstractAddon {
         compound = new NBTTagCompound();
         compound.setString("modid", LibModInfo.ID);
         compound.setString("block", "block.miniArmourer");
+        FMLInterModComms.sendMessage(getModId(), "registerAquaConnectable", compound);
+        
+        compound = new NBTTagCompound();
+        compound.setString("modid", LibModInfo.ID);
+        compound.setString("block", "block.skinnable");
         FMLInterModComms.sendMessage(getModId(), "registerAquaConnectable", compound);
     }
 
