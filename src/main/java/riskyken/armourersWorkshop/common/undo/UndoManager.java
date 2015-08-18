@@ -20,28 +20,28 @@ public final class UndoManager {
     private static HashMap<String, PlayerUndoData> playerUndoData = new HashMap<String, PlayerUndoData>();
 
     public static void begin(EntityPlayer player) {
-        if (!playerUndoData.containsKey(player.getDisplayName())) {
+        if (!playerUndoData.containsKey(player.getCommandSenderName())) {
             playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
         }
-        PlayerUndoData playerData = playerUndoData.get(player.getDisplayName());
+        PlayerUndoData playerData = playerUndoData.get(player.getCommandSenderName());
         playerData.begin();
     }
     
     public static void end(EntityPlayer player) {
-        if (!playerUndoData.containsKey(player.getDisplayName())) {
+        if (!playerUndoData.containsKey(player.getCommandSenderName())) {
             playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
         }
-        PlayerUndoData playerData = playerUndoData.get(player.getDisplayName());
+        PlayerUndoData playerData = playerUndoData.get(player.getCommandSenderName());
         playerData.end();
     }
     
     public static void blockPainted(EntityPlayer player, World world, int x, int y, int z, int oldColour, int side) {
         UndoData undoData = new UndoData(x, y, z, world.provider.dimensionId, oldColour, side);
-        if (!playerUndoData.containsKey(player.getDisplayName())) {
+        if (!playerUndoData.containsKey(player.getCommandSenderName())) {
             playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
         }
         
-        PlayerUndoData playerData = playerUndoData.get(player.getDisplayName());
+        PlayerUndoData playerData = playerUndoData.get(player.getCommandSenderName());
         playerData.addUndoData(undoData);
     }
     
