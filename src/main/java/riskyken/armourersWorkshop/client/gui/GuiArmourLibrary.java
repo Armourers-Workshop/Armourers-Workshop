@@ -22,6 +22,7 @@ import net.minecraft.util.Util;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
+import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
@@ -53,9 +54,9 @@ public class GuiArmourLibrary extends GuiContainer {
     private static int scrollAmount = 0;
     
     private TileEntityArmourLibrary armourLibrary;
-    private GuiButtonExt fileSwitchlocal;
-    private GuiButtonExt fileSwitchRemotePublic;
-    private GuiButtonExt fileSwitchRemotePrivate;
+    private GuiIconButton fileSwitchlocal;
+    private GuiIconButton fileSwitchRemotePublic;
+    private GuiIconButton fileSwitchRemotePrivate;
     private FileSwitchType fileSwitchType;
     private GuiList fileList;
     private GuiButtonExt loadSaveButton;
@@ -93,10 +94,12 @@ public class GuiArmourLibrary extends GuiContainer {
         
         buttonList.clear();
         
-        fileSwitchlocal = new GuiButtonExt(-1, PADDING, TITLE_HEIGHT + PADDING, 50, 30, "L");
-        fileSwitchRemotePublic = new GuiButtonExt(-1, PADDING + 51 + PADDING, TITLE_HEIGHT + PADDING, 50, 30, "R");
-        fileSwitchRemotePrivate = new GuiButtonExt(-1, PADDING + 102 + PADDING * 2, TITLE_HEIGHT + PADDING, 50, 30, "S");
-        fileSwitchRemotePublic.enabled = false;
+        fileSwitchlocal = new GuiIconButton(-1, PADDING, TITLE_HEIGHT + PADDING, 50, 30, "L", texture);
+        fileSwitchRemotePublic = new GuiIconButton(-1, PADDING + 51 + PADDING, TITLE_HEIGHT + PADDING, 50, 30, "R", texture);
+        fileSwitchRemotePrivate = new GuiIconButton(-1, PADDING + 102 + PADDING * 2, TITLE_HEIGHT + PADDING, 50, 30, "S", texture);
+        fileSwitchlocal.setIconLocation(0, 0, 50, 30);
+        fileSwitchRemotePublic.setIconLocation(0, 31, 50, 30);
+        fileSwitchRemotePrivate.setIconLocation(0, 62, 50, 30);
         buttonList.add(fileSwitchlocal);
         buttonList.add(fileSwitchRemotePublic);
         buttonList.add(fileSwitchRemotePrivate);
@@ -146,6 +149,21 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void actionPerformed(GuiButton button) {
         String filename = filenameTextbox.getText().trim();
+        
+        if (button == fileSwitchlocal | button == fileSwitchRemotePublic | button == fileSwitchRemotePrivate) {
+            fileSwitchlocal.setPressed(false);
+            fileSwitchRemotePublic.setPressed(false);
+            fileSwitchRemotePrivate.setPressed(false);
+            if (button == fileSwitchlocal) {
+                fileSwitchlocal.setPressed(true);
+            }
+            if (button == fileSwitchRemotePublic) {
+                fileSwitchRemotePublic.setPressed(true);
+            }
+            if (button == fileSwitchRemotePrivate) {
+                fileSwitchRemotePrivate.setPressed(true);
+            }
+        }
         
         if (button.id == 4) {
             openEquipmentFolder();
