@@ -91,7 +91,7 @@ public class ContainerArmourLibrary extends Container {
             if (!sentList) {
                 if (player instanceof EntityPlayerMP) {
                     sentList = true;
-                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames(true)), (EntityPlayerMP) player);
+                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames((EntityPlayerMP) player)), (EntityPlayerMP) player);
                 }
             }
         }

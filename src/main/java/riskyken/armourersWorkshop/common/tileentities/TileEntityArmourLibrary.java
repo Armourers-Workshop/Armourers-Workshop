@@ -1,9 +1,14 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -11,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
@@ -21,14 +28,19 @@ import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityArmourLibrary extends AbstractTileEntityInventory implements ISidedInventory {
     
-    public ArrayList<String> serverFileNames = null;
-    public ArrayList<String> clientFileNames = null;
+    public static ArrayList<LibraryFile> clientFileNames = null;
+    public static ArrayList<LibraryFile> publicServerFileNames = null;
+    public static ArrayList<LibraryFile> privateServerFileNames = null;
     
     public TileEntityArmourLibrary() {
         this.items = new ItemStack[2];
@@ -201,9 +213,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         this.setInventorySlotContents(1, inputItem);
     }
     
-    public static ArrayList<String> getFileNames(boolean addSkinTypes) {
-        ArrayList<String> files = new ArrayList<String>();
-        
+    public static ArrayList<LibraryFile> getFileNames(EntityPlayer player) {
         File directory = SkinIOUtils.getSkinLibraryDirectory();
         if (!directory.exists()) {
             return null;
@@ -218,24 +228,38 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
             return null;
         }
         
+        ArrayList<LibraryFile> fileList = new ArrayList<LibraryFile>();
         for (int i = 0; i < templateFiles.length; i++) {
             if (templateFiles[i].getName().endsWith(".armour")) {
                 String cleanName = FilenameUtils.removeExtension(templateFiles[i].getName());
-                if (addSkinTypes) {
-                    String skinTypeName = SkinIOUtils.getSkinTypeNameFromFile(templateFiles[i]);
-                    files.add(cleanName + "\n" + skinTypeName);
+                int skinId = 0;
+                ISkinType skinType = SkinIOUtils.getSkinTypeNameFromFile(templateFiles[i]);
+                boolean readOnly = true;
+                if (!ArmourersWorkshop.isDedicated()) {
+                    readOnly = false;
+                }
+                if (skinType != null) {
+                    fileList.add(new LibraryFile(cleanName, skinId, skinType, readOnly));
                 } else {
-                    files.add(cleanName);
+                    ModLogger.log(Level.WARN, "Skin type for file " + cleanName + " was null.");
                 }
             }
         }
-        Collections.sort(files);
-        return files;
+        
+        Collections.sort(fileList);
+        
+        return fileList;
     }
     
-    public void setArmourList(ArrayList<String> fileNames) {
-        this.serverFileNames = fileNames;
-        this.clientFileNames = getFileNames(true);
+    public void setSkinFileList(ArrayList<LibraryFile> fileNames) {
+        this.publicServerFileNames = fileNames;
+        setLocalFileList();
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private static void setLocalFileList() {
+        EntityClientPlayerMP localPlayer = Minecraft.getMinecraft().thePlayer;
+        clientFileNames = getFileNames(localPlayer);
     }
 
     @Override
@@ -272,5 +296,46 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
     @Override
     public boolean canExtractItem(int slot, ItemStack stack, int side) {
         return true;
+    }
+    
+    public static class LibraryFile implements Comparable<LibraryFile> {
+        public final String fileName;
+        public final int skinId;
+        public final ISkinType skinType;
+        public final boolean readOnly;
+        
+        public LibraryFile(String fileName, int skinId, ISkinType skinType, boolean readOnly) {
+            this.fileName = fileName;
+            this.skinId = skinId;
+            this.skinType = skinType;
+            this.readOnly = readOnly;
+        }
+        
+        public void writeToByteBuf(ByteBuf buf) {
+            ByteBufUtils.writeUTF8String(buf, fileName);
+            buf.writeInt(skinId);
+            ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());
+            buf.writeBoolean(readOnly);
+        }
+        
+        public static LibraryFile readFromByteBuf(ByteBuf buf) {
+            String fileName = ByteBufUtils.readUTF8String(buf);
+            int skinId = buf.readInt();
+            String regName = ByteBufUtils.readUTF8String(buf);
+            ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+            boolean readOnly = buf.readBoolean();
+            return new LibraryFile(fileName, skinId, skinType, readOnly);
+        }
+
+        @Override
+        public int compareTo(LibraryFile o) {
+            return fileName.compareTo(o.fileName);
+        }
+    }
+    
+    public enum LibraryFileType {
+        LOCAL,
+        REMOTE_PUBLIC,
+        REMOTE_PRIVATE;
     }
 }

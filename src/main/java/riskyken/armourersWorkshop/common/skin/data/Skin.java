@@ -174,7 +174,7 @@ public class Skin implements ISkin {
         }
     }
     
-    public static String readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
+    public static ISkinType readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
         int fileVersion = stream.readInt();
         if (fileVersion > FILE_VERSION) {
             throw new NewerFileVersionException();
@@ -185,23 +185,20 @@ public class Skin implements ISkin {
         if (!(fileVersion < 4)) {
             tags = stream.readUTF(); 
         }
-        String skinTypeName;
+        
+        
+        ISkinType skinType;
         
         if (fileVersion < 5) {
-            ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
-            if (skinType != null) {
-                skinTypeName = skinType.getRegistryName();
-            } else {
-                skinTypeName = ""; 
-            }
+            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
         } else {
             String regName = stream.readUTF();
             if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
                 regName = SkinTypeRegistry.skinLegs.getRegistryName();
             }
-            skinTypeName = regName;
+            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
         }
-        return skinTypeName;
+        return skinType;
     }
     
     @Override

@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -113,14 +114,13 @@ public final class SkinIOUtils {
         return skin;
     }
     
-    public static String getSkinTypeNameFromFile(File file) {
+    public static ISkinType getSkinTypeNameFromFile(File file) {
         DataInputStream stream = null;
-        Skin skin = null;
-        String skinTypeName = "";
+        ISkinType skinType = null;
         
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-            skinTypeName = Skin.readSkinTypeNameFromStream(stream);
+            skinType = Skin.readSkinTypeNameFromStream(stream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -131,7 +131,7 @@ public final class SkinIOUtils {
             IOUtils.closeQuietly(stream);
         }
     
-        return skinTypeName;
+        return skinType;
     }
     
     public static void makeDatabaseDirectory() {
