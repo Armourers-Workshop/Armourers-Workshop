@@ -100,8 +100,9 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
      * Save armour data from an items NBT data into a file on the disk.
      * @param filename The name of the file to save to.
      * @param player The player that pressed the save button.
+     * @param publicFiles If true save to the public file list or false for the players private files.
      */
-    public void saveArmour(String fileName, EntityPlayerMP player) {
+    public void saveArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
@@ -128,7 +129,13 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
             return;
         }
         
-        if (!SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin)) {
+        boolean saved = false;
+        if (publicFiles) {
+            saved = SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin);
+        } else {
+            saved = SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin, player);
+        }
+        if (!saved) {
             return;
         }
         
@@ -140,8 +147,9 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
      * Loads an armour file from the disk and adds it to an items NBT data.
      * @param filename The name of the file to load.
      * @param player The player that pressed the load button.
+     * @param publicFiles If true load from the public file list or false for the players private files.
      */
-    public void loadArmour(String fileName, EntityPlayerMP player) {
+    public void loadArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
@@ -162,7 +170,13 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         }
         
         
-        Skin armourItemData = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
+        Skin armourItemData = null;
+        if (publicFiles) {
+            armourItemData = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
+        } else {
+            armourItemData = SkinIOUtils.loadSkinFromFileName(fileName + ".armour", player);
+        }
+        
         if (armourItemData == null) {
             return;
         }
@@ -213,10 +227,15 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         this.setInventorySlotContents(1, inputItem);
     }
     
-    public static ArrayList<LibraryFile> getFileNames(EntityPlayer player) {
+    public static ArrayList<LibraryFile> getFileNames(EntityPlayer player, boolean publicFiles) {
+        ArrayList<LibraryFile> fileList = new ArrayList<LibraryFile>();
         File directory = SkinIOUtils.getSkinLibraryDirectory();
+        if (!publicFiles) {
+            directory = new File(directory, "private");
+            directory = new File(directory, player.getUniqueID().toString());
+        }
         if (!directory.exists()) {
-            return null;
+            return fileList;
         }
         
         File[] templateFiles;
@@ -225,10 +244,9 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         } catch (Exception e) {
             ModLogger.log(Level.ERROR, "Armour file list load failed.");
             e.printStackTrace();
-            return null;
+            return fileList;
         }
         
-        ArrayList<LibraryFile> fileList = new ArrayList<LibraryFile>();
         for (int i = 0; i < templateFiles.length; i++) {
             if (templateFiles[i].getName().endsWith(".armour")) {
                 String cleanName = FilenameUtils.removeExtension(templateFiles[i].getName());
@@ -240,8 +258,6 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
                 }
                 if (skinType != null) {
                     fileList.add(new LibraryFile(cleanName, skinId, skinType, readOnly));
-                } else {
-                    ModLogger.log(Level.WARN, "Skin type for file " + cleanName + " was null.");
                 }
             }
         }
@@ -251,15 +267,16 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         return fileList;
     }
     
-    public void setSkinFileList(ArrayList<LibraryFile> fileNames) {
-        this.publicServerFileNames = fileNames;
+    public void setSkinFileList(ArrayList<LibraryFile> publicFiles, ArrayList<LibraryFile> privateFiles) {
+        publicServerFileNames = publicFiles;
+        privateServerFileNames = privateFiles;
         setLocalFileList();
     }
     
     @SideOnly(Side.CLIENT)
     private static void setLocalFileList() {
         EntityClientPlayerMP localPlayer = Minecraft.getMinecraft().thePlayer;
-        clientFileNames = getFileNames(localPlayer);
+        clientFileNames = getFileNames(localPlayer, true);
     }
 
     @Override

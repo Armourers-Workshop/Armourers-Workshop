@@ -90,8 +90,9 @@ public class ContainerArmourLibrary extends Container {
         for (Object player : crafters) {
             if (!sentList) {
                 if (player instanceof EntityPlayerMP) {
+                    EntityPlayerMP playerMp = (EntityPlayerMP) player;
                     sentList = true;
-                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames((EntityPlayerMP) player)), (EntityPlayerMP) player);
+                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames(playerMp, true), tileEntity.getFileNames(playerMp, false)), playerMp);
                 }
             }
         }

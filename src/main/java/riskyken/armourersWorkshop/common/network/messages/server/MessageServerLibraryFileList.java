@@ -16,28 +16,39 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageServerLibraryFileList implements IMessage, IMessageHandler<MessageServerLibraryFileList, IMessage> {
 
-    ArrayList<LibraryFile> fileList;
+    ArrayList<LibraryFile> publicFileList;
+    ArrayList<LibraryFile> privateFileList;
     
     public MessageServerLibraryFileList() {}
     
-    public MessageServerLibraryFileList(ArrayList<LibraryFile> fileList) {
-        this.fileList = fileList;
+    public MessageServerLibraryFileList(ArrayList<LibraryFile> publicList, ArrayList<LibraryFile> privateList) {
+        this.publicFileList = publicList;
+        this.privateFileList = privateList;
     }
     
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(fileList.size());
-        for (int i = 0; i < fileList.size(); i++) {
-            fileList.get(i).writeToByteBuf(buf);
+        buf.writeInt(publicFileList.size());
+        for (int i = 0; i < publicFileList.size(); i++) {
+            publicFileList.get(i).writeToByteBuf(buf);
+        }
+        buf.writeInt(privateFileList.size());
+        for (int i = 0; i < privateFileList.size(); i++) {
+            privateFileList.get(i).writeToByteBuf(buf);
         }
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
         int size = buf.readInt();
-        fileList = new ArrayList<LibraryFile>();
+        publicFileList = new ArrayList<LibraryFile>();
         for (int i = 0; i < size; i++) {
-            fileList.add(LibraryFile.readFromByteBuf(buf));
+            publicFileList.add(LibraryFile.readFromByteBuf(buf));
+        }
+        size = buf.readInt();
+        privateFileList = new ArrayList<LibraryFile>();
+        for (int i = 0; i < size; i++) {
+            privateFileList.add(LibraryFile.readFromByteBuf(buf));
         }
     }
     
@@ -48,7 +59,7 @@ public class MessageServerLibraryFileList implements IMessage, IMessageHandler<M
         
         if (container != null & container instanceof ContainerArmourLibrary) {
             TileEntityArmourLibrary te = ((ContainerArmourLibrary)container).getTileEntity();
-            te.setSkinFileList(message.fileList);
+            te.setSkinFileList(message.publicFileList, message.privateFileList);
         }
         return null;
     }

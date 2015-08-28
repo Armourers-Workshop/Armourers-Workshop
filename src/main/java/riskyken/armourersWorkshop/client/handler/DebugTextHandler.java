@@ -39,12 +39,14 @@ public class DebugTextHandler {
             dataLine += "rq:" + ClientModelCache.INSTANCE.getRequestQueueSize();
             event.left.add(dataLine);
             dataLine = "sr:" + ModClientFMLEventHandler.skinRenderLastTick;
-            for (int i = 0; i < playerList.size(); i++) {
-                GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);
-                if (player.name.equals(localPlayer.getCommandSenderName())) {
-                    dataLine = "ping:" + player.responseTime;
-                    break;
-                }
+            if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
+                for (int i = 0; i < playerList.size(); i++) {
+                    GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);
+                    if (player.name.equals(localPlayer.getCommandSenderName())) {
+                        dataLine += " - ping:" + player.responseTime;
+                        break;
+                    }
+                } 
             }
             
             event.left.add(dataLine);

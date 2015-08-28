@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
@@ -121,7 +122,7 @@ public class GuiArmourLibrary extends GuiContainer {
         fileSwitchRemotePublic.setIconLocation(0, 31, 50, 30);
         fileSwitchRemotePrivate.setIconLocation(0, 62, 50, 30);
         
-        if (!mc.isSingleplayer()) {
+        if (mc.isSingleplayer()) {
             fileSwitchRemotePublic.enabled = false;
             fileSwitchRemotePrivate.enabled = false;
             fileSwitchRemotePublic.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
@@ -208,6 +209,9 @@ public class GuiArmourLibrary extends GuiContainer {
             switch (button.id) {
             case BUTTON_ID_LOAD_SAVE:
                 boolean loading = true;
+                boolean clientLoad = false;
+                boolean publicList = true;
+                
                 if (!armourLibrary.isCreativeLibrary()) {
                     Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
                     ItemStack stack = slot.getStack();
@@ -216,23 +220,31 @@ public class GuiArmourLibrary extends GuiContainer {
                     }
                 }
                 
+                if (fileSwitchType == LibraryFileType.LOCAL && ArmourersWorkshop.isDedicated()) {
+                    clientLoad = true;
+                }
+                
+                if (fileSwitchType == LibraryFileType.REMOTE_PRIVATE) {
+                    publicList = false;
+                }
+                
                 if (loading) {
-                    if (fileSwitchType == LibraryFileType.LOCAL) {
+                    if (clientLoad) {
                         Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + ".armour");
                         if (itemData != null) {
                             SkinUploadHelper.uploadSkinToServer(itemData);
                         }
                     } else {
-                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_LOAD);
+                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_LOAD, publicList);
                         PacketHandler.networkWrapper.sendToServer(message);
                     }
                     filenameTextbox.setText("");
                 } else {
-                    if (fileSwitchType == LibraryFileType.LOCAL) {
-                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.CLIENT_SAVE);
+                    if (clientLoad) {
+                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.CLIENT_SAVE, false);
                         PacketHandler.networkWrapper.sendToServer(message);
                     } else {
-                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_SAVE);
+                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_SAVE, publicList);
                         PacketHandler.networkWrapper.sendToServer(message);
                     }
                     
