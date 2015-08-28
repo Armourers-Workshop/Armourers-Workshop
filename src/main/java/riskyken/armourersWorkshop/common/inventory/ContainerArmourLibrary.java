@@ -6,7 +6,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.items.ItemArmourContainerItem;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -20,20 +19,20 @@ public class ContainerArmourLibrary extends Container {
     public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary tileEntity) {
         this.tileEntity = tileEntity;
 
-        if (!tileEntity.isCreativeLibrary()) {
-            addSlotToContainer(new SlotEquipmentSkinTemplate(tileEntity, 0, 226, 101));
-        }
-        addSlotToContainer(new SlotOutput(tileEntity, 1, 226, 137));
-
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 48 + 18 * x, 232));
+            addSlotToContainer(new Slot(invPlayer, x, 6 + 18 * x, 232));
         }
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 48 + 18 * x, 174 + y * 18));
+                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 6 + 18 * x, 174 + y * 18));
             }
         }
+        
+        if (!tileEntity.isCreativeLibrary()) {
+            addSlotToContainer(new SlotEquipmentSkinTemplate(tileEntity, 0, 226, 101));
+        }
+        addSlotToContainer(new SlotOutput(tileEntity, 1, 226, 137));
     }
     
     @Override
@@ -42,23 +41,21 @@ public class ContainerArmourLibrary extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
-
-            if (slotID < 2) {
-                if (!this.mergeItemStack(stack, 11, 38, false)) {
-                    if (!this.mergeItemStack(stack, 2, 11, false)) {
-                        return null;
-                    }
-                }
-            } else {
+            if (slotID < 36) {
                 if ((
                         stack.getItem() instanceof ItemEquipmentSkinTemplate & stack.getItemDamage() == 0) |
-                        stack.getItem() instanceof ItemEquipmentSkin |
-                        stack.getItem() instanceof ItemArmourContainerItem) {
-                    if (!this.mergeItemStack(stack, 0, 1, false)) {
+                        stack.getItem() instanceof ItemEquipmentSkin) {
+                    if (!this.mergeItemStack(stack, 36, 37, false)) {
                         return null;
                     }
                 } else {
                     return null;
+                }
+            } else {
+                if (!this.mergeItemStack(stack, 9, 36, false)) {
+                    if (!this.mergeItemStack(stack, 0, 9, false)) {
+                        return null;
+                    }
                 }
             }
 
@@ -93,8 +90,9 @@ public class ContainerArmourLibrary extends Container {
         for (Object player : crafters) {
             if (!sentList) {
                 if (player instanceof EntityPlayerMP) {
+                    EntityPlayerMP playerMp = (EntityPlayerMP) player;
                     sentList = true;
-                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames(true)), (EntityPlayerMP) player);
+                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames(playerMp, true), tileEntity.getFileNames(playerMp, false)), playerMp);
                 }
             }
         }

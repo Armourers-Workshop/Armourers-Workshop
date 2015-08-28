@@ -5,16 +5,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.logging.log4j.Level;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
@@ -25,6 +25,8 @@ import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
     
@@ -32,6 +34,7 @@ public class SkinPart implements ISkinPart {
     private static final String TAG_CUBE_LIST = "cubeList";
     private static final String TAG_ID = "id";
     
+    private Rectangle3D partBounds;
     private ArrayList<ICube> armourData;
     private ArrayList<CubeMarkerData> markerBlocks;
     private ISkinPartType skinPart;
@@ -79,16 +82,16 @@ public class SkinPart implements ISkinPart {
         this.armourData = armourData;
         this.skinPart = skinPart;
         this.markerBlocks = markerBlocks;
+        setupPartBounds();
     }
     
-    public SkinPart(ISkinPartType skinPart) {
-        this.armourData = new ArrayList<ICube>();
-        this.skinPart = skinPart;
-        this.markerBlocks = new ArrayList<CubeMarkerData>();
-    }
-
     public SkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         readFromStream(stream, version);
+        setupPartBounds();
+    }
+    
+    private void setupPartBounds() {
+        
     }
 
     @Override
@@ -127,6 +130,15 @@ public class SkinPart implements ISkinPart {
         return null;
     }
     
+    
+    //TODO Remove from mini armourer.
+    public SkinPart(ISkinPartType skinPart) {
+        this.armourData = new ArrayList<ICube>();
+        this.skinPart = skinPart;
+        this.markerBlocks = new ArrayList<CubeMarkerData>();
+    }
+    
+    //TODO Remove from mini armourer.
     public void writeToCompound(NBTTagCompound compound) {
         compound.setString(TAG_PART_NAME, skinPart.getRegistryName());
         NBTTagList cubeList = new NBTTagList();
@@ -139,6 +151,7 @@ public class SkinPart implements ISkinPart {
         compound.setTag(TAG_CUBE_LIST, cubeList);
     }
     
+    //TODO Remove from mini armourer.
     public void readFromCompound(NBTTagCompound compound) throws InvalidCubeTypeException {
         String partName = compound.getString(TAG_PART_NAME);
         skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(partName);

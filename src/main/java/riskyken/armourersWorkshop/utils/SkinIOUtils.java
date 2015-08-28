@@ -11,12 +11,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -29,10 +31,17 @@ public final class SkinIOUtils {
         return saveSkinToFile(file, skin);
     }
     
+    public static boolean saveSkinFromFileName(String fileName, Skin skin, EntityPlayerMP player) {
+        File file = new File(getSkinLibraryDirectory(), "private");
+        file = new File(file, player.getUniqueID().toString());
+        file = new File(file, fileName);
+        return saveSkinToFile(file, skin);
+    }
+    
     public static boolean saveSkinToFile(File file, Skin skin) {
         File dir = file.getParentFile();
         if (!dir.exists()) {
-            dir.mkdir();
+            dir.mkdirs();
         }
         DataOutputStream stream = null;
         
@@ -53,6 +62,13 @@ public final class SkinIOUtils {
         }
         
         return true;
+    }
+    
+    public static Skin loadSkinFromFileName(String fileName, EntityPlayerMP player) {
+        File file = new File(getSkinLibraryDirectory(), "private");
+        file = new File(file, player.getUniqueID().toString());
+        file = new File(file, fileName);
+        return loadSkinFromFile(file);
     }
     
     public static Skin loadSkinFromFileName(String fileName) {
@@ -113,14 +129,13 @@ public final class SkinIOUtils {
         return skin;
     }
     
-    public static String getSkinTypeNameFromFile(File file) {
+    public static ISkinType getSkinTypeNameFromFile(File file) {
         DataInputStream stream = null;
-        Skin skin = null;
-        String skinTypeName = "";
+        ISkinType skinType = null;
         
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-            skinTypeName = Skin.readSkinTypeNameFromStream(stream);
+            skinType = Skin.readSkinTypeNameFromStream(stream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -131,7 +146,7 @@ public final class SkinIOUtils {
             IOUtils.closeQuietly(stream);
         }
     
-        return skinTypeName;
+        return skinType;
     }
     
     public static void makeDatabaseDirectory() {

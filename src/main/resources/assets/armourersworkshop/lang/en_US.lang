@@ -150,7 +150,10 @@ inventory.armourersworkshop:armourLibrary.label.files=Files:
 inventory.armourersworkshop:armourLibrary.save=Save
 inventory.armourersworkshop:armourLibrary.load=Load
 inventory.armourersworkshop:armourLibrary.openFolder=Open Folder...
-inventory.armourersworkshop:armourLibrary.showClientFiles=Show Local Files?
+inventory.armourersworkshop:armourLibrary.rollover.localFiles=View files on this computer.
+inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=View public files on the server.
+inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=View private files on the server.
+inventory.armourersworkshop:armourLibrary.rollover.notOnServer=You must be connected to a server to use this feature.
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
