@@ -49,4 +49,10 @@ public class Rectangle3D implements IRectangle3D {
     public int getDepth() {
         return this.depth;
     }
+
+    @Override
+    public String toString() {
+        return "Rectangle3D [x=" + x + ", y=" + y + ", z=" + z + ", width="
+                + width + ", height=" + height + ", depth=" + depth + "]";
+    }
 }

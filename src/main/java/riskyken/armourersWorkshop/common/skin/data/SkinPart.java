@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.logging.log4j.Level;
 
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
@@ -91,7 +92,58 @@ public class SkinPart implements ISkinPart {
     }
     
     private void setupPartBounds() {
+        int minX = 127;
+        int maxX = -127;
         
+        int minY = 127;
+        int maxY = -127;
+        
+        int minZ = 127;
+        int maxZ = -127;
+        
+        for (int i = 0; i < armourData.size(); i++) {
+            ICube c = armourData.get(i);
+            int x = c.getX();
+            int y = c.getY();
+            int z = c.getZ();
+            
+            if (x < minX) {
+                minX = x;
+            }
+            if (x > maxX) {
+                maxX = x;
+            }
+            
+            if (y < minY) {
+                minY = y;
+            }
+            if (y > maxY) {
+                maxY = y;
+            }
+            
+            if (z < minZ) {
+                minZ = z;
+            }
+            if (z > maxZ) {
+                maxZ = z;
+            }
+        }
+        
+        IRectangle3D rec = skinPart.getBuildingSpace();
+        
+        int xSize = maxX - minX;
+        int ySize = maxY - minY;
+        int zSize = maxZ - minZ;
+        
+        int xOffset = rec.getX() + rec.getWidth() + minX;
+        int yOffset = rec.getY() - minY + rec.getHeight() - ySize - 1;
+        int zOffset = rec.getZ() - minZ + rec.getDepth() - zSize - 1;
+        
+        partBounds = new Rectangle3D(xOffset, yOffset, zOffset, xSize + 1, ySize + 1, zSize + 1);
+    }
+    
+    public Rectangle3D getPartBounds() {
+        return partBounds;
     }
 
     @Override

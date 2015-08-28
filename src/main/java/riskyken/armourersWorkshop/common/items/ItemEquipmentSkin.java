@@ -164,7 +164,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
             Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
             if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
                 if (!world.isRemote) {
-                    int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
+                    int l = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
                     world.setBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, ModBlocks.skinnable);
                     world.setBlockMetadataWithNotify(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, l, 2);
                     world.setTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));

@@ -187,11 +187,13 @@ public final class SkinDataCache implements Runnable {
     }
     
     public Skin getEquipmentData(int equipmentId) {
-        if (!skinDataCache.containsKey(equipmentId)) {
-            if (haveEquipmentOnDisk(equipmentId)) {
-                Skin equipmentData;
-                equipmentData = loadEquipmentFromDisk(equipmentId);
-                addEquipmentDataToCache(equipmentData, equipmentId);
+        synchronized (skinDataCache) {
+            if (!skinDataCache.containsKey(equipmentId)) {
+                if (haveEquipmentOnDisk(equipmentId)) {
+                    Skin equipmentData;
+                    equipmentData = loadEquipmentFromDisk(equipmentId);
+                    addEquipmentDataToCache(equipmentData, equipmentId);
+                }
             }
         }
         if (skinDataCache.containsKey(equipmentId)) {

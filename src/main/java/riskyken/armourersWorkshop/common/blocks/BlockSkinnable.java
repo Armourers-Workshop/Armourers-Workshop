@@ -9,8 +9,10 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ModItems;
@@ -19,7 +21,6 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -35,6 +36,23 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+        setBlockBoundsBasedOnState(world, x, y, z);
+        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+    }
+    
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntitySkinnable) {
+            TileEntitySkinnable tes = (TileEntitySkinnable) te;
+            tes.setBoundsOnBlock(this);
+            return;
+        }
+        setBlockBounds(0, 0, 0, 1, 1, 1);
     }
     
     @SideOnly(Side.CLIENT)
@@ -85,7 +103,6 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
     
     private void dropSkin(World world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
-        ModLogger.log(world);
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
@@ -93,7 +110,7 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
             UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
         }
     }
-
+    
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinnable();
