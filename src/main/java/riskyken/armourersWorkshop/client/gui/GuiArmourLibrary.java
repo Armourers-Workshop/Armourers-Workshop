@@ -67,7 +67,8 @@ public class GuiArmourLibrary extends GuiContainer {
     private LibraryFileType fileSwitchType;
     private GuiList fileList;
     private GuiButtonExt loadSaveButton;
-    private GuiButtonExt openFolderButton;
+    private GuiIconButton openFolderButton;
+    private GuiIconButton deleteButton;
     private GuiScrollbar scrollbar;
     private GuiLabeledTextField filenameTextbox;
     private GuiLabeledTextField searchTextbox;
@@ -143,10 +144,13 @@ public class GuiArmourLibrary extends GuiContainer {
         buttonList.add(loadSaveButton);
         
         
-        openFolderButton = new GuiButtonExt(4, PADDING, guiTop + 80, 20, 20, "O");
+        openFolderButton = new GuiIconButton(this, 4, PADDING, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.openLibraryFolder"), texture);
+        openFolderButton.setIconLocation(0, 93, 24, 24);
         buttonList.add(openFolderButton);
         
-        buttonList.add(new GuiButtonExt(-1, PADDING * 2 + 20, guiTop + 80, 20, 20, "D"));
+        deleteButton = new GuiIconButton(this, -1, PADDING * 2 + 20, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
+        deleteButton.setIconLocation(0, 118, 24, 24);
+        buttonList.add(deleteButton);
         
         int listWidth = this.width - INVENTORY_WIDTH - 10 - PADDING * 3;
         int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
