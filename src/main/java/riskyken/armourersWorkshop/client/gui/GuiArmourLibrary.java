@@ -57,6 +57,8 @@ public class GuiArmourLibrary extends GuiContainer {
     private static final int INVENTORY_WIDTH = 162;
     
     private static int scrollAmount = 0;
+    private static ISkinType lastSkinType;
+    private static String lastSearchText = "";
     
     private TileEntityArmourLibrary armourLibrary;
     private GuiIconButton fileSwitchlocal;
@@ -157,6 +159,7 @@ public class GuiArmourLibrary extends GuiContainer {
         searchTextbox = new GuiLabeledTextField(fontRendererObj, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
         searchTextbox.setMaxStringLength(24);
         searchTextbox.setEmptyLabel("Type to search...");
+        searchTextbox.setText(lastSearchText);
 
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 12);
         
@@ -168,11 +171,16 @@ public class GuiArmourLibrary extends GuiContainer {
         ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         dropDownList.addListItem("*");
         dropDownList.setListSelectedIndex(0);
+        int addCount = 0;
         for (int i = 0; i < skinTypes.size(); i++) {
             ISkinType skinType = skinTypes.get(i);
             if (!skinType.isHidden()) {
                 dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType),
                         skinType.getRegistryName(), true);
+                addCount++;
+                if (skinType == lastSkinType) {
+                    dropDownList.setListSelectedIndex(addCount);
+                }
             }
         }
         buttonList.add(dropDownList);
@@ -309,6 +317,8 @@ public class GuiArmourLibrary extends GuiContainer {
         
         String typeFilter = dropDownList.getListSelectedItem().tag;
         ISkinType skinTypeFilter = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(typeFilter);
+        lastSkinType = skinTypeFilter;
+        lastSearchText = searchTextbox.getText();
         
         fileList.clearList();
         if (files!= null) {
