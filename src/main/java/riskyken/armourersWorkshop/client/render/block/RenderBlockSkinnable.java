@@ -46,10 +46,12 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         mc.entityRenderer.enableLightmap(event.partialTicks);
         RenderHelper.enableStandardItemLighting();
         ModRenderHelper.enableAlphaBlend();
+        Minecraft.getMinecraft().mcProfiler.startSection("skinnableBlock");
         for (int i = 0; i < renderList.size(); i++) {
             RenderLast rl = renderList.get(i);
             renderTileEntityAt((TileEntitySkinnable)rl.tileEntity, rl.x, rl.y, rl.z, event.partialTicks);
         }
+        Minecraft.getMinecraft().mcProfiler.endSection();
         RenderHelper.disableStandardItemLighting();
         renderList.clear();
         ModRenderHelper.disableAlphaBlend();
@@ -58,12 +60,12 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     }
     
     public void renderTileEntityAt(TileEntitySkinnable tileEntity, double x, double y, double z, float partialTickTime) {
-        Minecraft.getMinecraft().mcProfiler.startSection("skinnableBlock");
         ModRenderHelper.setLightingForBlock(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         SkinPointer skinPointer = tileEntity.getSkinPointer();
         if (skinPointer != null) {
-            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId())) {
-                renderSkin(tileEntity, x, y, z, skinPointer);
+            Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+            if (skin != null) {
+                renderSkin(tileEntity, x, y, z, skin);
             } else {
                 ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
                 GL11.glPushMatrix();
@@ -72,27 +74,19 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
                 GL11.glPopMatrix();
             }
         }
-        Minecraft.getMinecraft().mcProfiler.endSection();
     }
     
-    private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, SkinPointer skinPointer) {
+    private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, Skin skin) {
         GL11.glPushMatrix();
         int rotation = tileEntity.getBlockMetadata();
-        
         GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
-        
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef((90F * rotation), 0, 1, 0);
-        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
-        if (skin == null) {
-            return;
-        }
         if (skin.getCustomName().isEmpty()) {
             Minecraft.getMinecraft().mcProfiler.startSection("unnamedSkin");
         } else {
             Minecraft.getMinecraft().mcProfiler.startSection(skin.getCustomName().replace(" ", ""));
         }
-        
         skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);

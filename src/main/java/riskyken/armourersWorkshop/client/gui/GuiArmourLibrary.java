@@ -229,6 +229,7 @@ public class GuiArmourLibrary extends GuiContainer {
                 }
                 
                 if (fileSwitchType == LibraryFileType.LOCAL && ArmourersWorkshop.isDedicated()) {
+                    //Is playing on a server.
                     clientLoad = true;
                 }
                 
