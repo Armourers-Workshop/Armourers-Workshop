@@ -36,6 +36,9 @@ public final class SkinDataCache implements Runnable {
     /** Cache of skins that are in memory. */
     private HashMap<Integer, Skin> skinDataCache = new HashMap<Integer, Skin>();
     
+    /** A list of skin that need to be loaded. */
+    private ArrayList<Integer> skinLoadQueue = new ArrayList<Integer>();
+    
     private ArrayList<QueueMessage> messageQueue = new ArrayList<QueueMessage>();
     
     private volatile Thread serverSkinThread = null;
@@ -84,6 +87,7 @@ public final class SkinDataCache implements Runnable {
             } catch (InterruptedException e) {
             }
             processMessageQueue();
+            loadSkinQueue();
         }
         ModLogger.log("Stopped server skin thread.");
     }
@@ -104,6 +108,21 @@ public final class SkinDataCache implements Runnable {
             }
         } else {
             processNextMessage();
+        }
+    }
+    
+    private void loadSkinQueue() {
+        if (skinLoadQueue.size() > 0) {
+            int skinId = skinLoadQueue.get(0);
+            synchronized (skinDataCache) {
+                if (haveEquipmentOnDisk(skinId)) {
+                    Skin skin = loadEquipmentFromDisk(skinId);
+                    addEquipmentDataToCache(skin, skinId);
+                }
+            }
+            synchronized (skinLoadQueue) {
+                skinLoadQueue.remove(0);
+            }
         }
     }
     
@@ -200,6 +219,32 @@ public final class SkinDataCache implements Runnable {
             Skin skin = skinDataCache.get(equipmentId);
             skin.onUsed();
             return skin;
+        }
+        return null;
+    }
+    
+    /**
+     * Returns a skin if it is in the cache. If not the skin will be loaded by another thread.
+     * @param skinId
+     * @return 
+     */
+    public Skin softGetSkin(int skinId) {
+        if (skinDataCache.containsKey(skinId)) {
+            Skin skin = skinDataCache.get(skinId);
+            skin.onUsed();
+            return skin;
+        }
+        synchronized (skinLoadQueue) {
+            boolean inQueue = false;
+            for (int i = 0; i < skinLoadQueue.size(); i++) {
+                if (skinLoadQueue.get(i) == skinId) {
+                    inQueue = true;
+                    break;
+                }
+            }
+            if (!inQueue) {
+                skinLoadQueue.add(skinId);
+            }
         }
         return null;
     }

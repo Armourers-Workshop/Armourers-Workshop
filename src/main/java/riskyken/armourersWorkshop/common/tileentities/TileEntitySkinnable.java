@@ -128,7 +128,7 @@ public class TileEntitySkinnable extends TileEntity {
     }
 
     private Skin getSkinServer(ISkinPointer skinPointer) {
-        return SkinDataCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
+        return SkinDataCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
     }
 
     @Override
