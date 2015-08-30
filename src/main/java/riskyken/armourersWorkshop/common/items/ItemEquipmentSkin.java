@@ -7,6 +7,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
@@ -163,19 +164,34 @@ public class ItemEquipmentSkin extends AbstractModItem {
             ForgeDirection dir = ForgeDirection.getOrientation(side);
             Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
             if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
-                if (!world.isRemote) {
-                    int l = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                    world.setBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, ModBlocks.skinnable);
-                    world.setBlockMetadataWithNotify(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, l, 2);
-                    world.setTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
-                    TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-                    te.setSkinPointer(skinPointer);
-                    stack.stackSize--;
-                }
+                placeSkinAtLocation(world, player, side, stack, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, skinPointer);
                 return true;
             }
         }
 
         return false;
+    }
+    
+    private boolean placeSkinAtLocation(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
+        if (!player.canPlayerEdit(x, y, z, side, stack)) {
+            return false;
+        }
+        if (stack.stackSize == 0) {
+            return false;
+        }
+        if (y == 255) {
+            return false;
+        }
+        if (!world.canPlaceEntityOnSide(Blocks.stone, x, y, z, false, side, null, stack)) {
+            return false;
+        }
+        int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        world.setBlock(x, y, z, ModBlocks.skinnable, rotation, 2);
+        world.setTileEntity(x, y, z, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
+        TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x, y, z);
+        te.setSkinPointer(skinPointer);
+        stack.stackSize--;
+        world.playSoundEffect((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, "dig.stone", 1, 1);
+        return true;
     }
 }
