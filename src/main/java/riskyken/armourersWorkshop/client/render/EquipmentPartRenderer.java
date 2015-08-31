@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
+import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -43,17 +44,18 @@ public class EquipmentPartRenderer extends ModelBase {
         mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         GL11.glColor3f(1F, 1F, 1F);
+        ClientSkinPartData cspd = skinPart.getClientSkinPartData();
         
-        for (int i = 0; i < skinPart.displayListCompiled.length; i++) {
-            if (!skinPart.displayListCompiled[i]) {
-                if (skinPart.hasList[i]) {
-                    skinPart.displayList[i] = GLAllocation.generateDisplayLists(1);
-                    GL11.glNewList(skinPart.displayList[i], GL11.GL_COMPILE);
-                    renderVertexList(skinPart.vertexLists[i], scale);
-                    skinPart.vertexLists[i].clear();
+        for (int i = 0; i < cspd.displayListCompiled.length; i++) {
+            if (!cspd.displayListCompiled[i]) {
+                if (cspd.hasList[i]) {
+                    cspd.displayList[i] = GLAllocation.generateDisplayLists(1);
+                    GL11.glNewList(cspd.displayList[i], GL11.GL_COMPILE);
+                    renderVertexList(cspd.vertexLists[i], scale);
+                    cspd.vertexLists[i].clear();
                     GL11.glEndList();
                 }
-                skinPart.displayListCompiled[i] = true;
+                cspd.displayListCompiled[i] = true;
             }
         }
         
@@ -63,18 +65,18 @@ public class EquipmentPartRenderer extends ModelBase {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
         }
         
-        for (int i = 0; i < skinPart.displayList.length; i++) {
+        for (int i = 0; i < cspd.displayList.length; i++) {
             boolean glowing = false;
             if (i % 2 == 1) {
                 glowing = true;
             }
-            if (skinPart.hasList[i]) {
-                if (skinPart.displayListCompiled[i]) {
+            if (cspd.hasList[i]) {
+                if (cspd.displayListCompiled[i]) {
                     if (glowing) {
                         GL11.glDisable(GL11.GL_LIGHTING);
                         ModRenderHelper.disableLighting();
                     }
-                    GL11.glCallList(skinPart.displayList[i]);
+                    GL11.glCallList(cspd.displayList[i]);
                     if (glowing) {
                         ModRenderHelper.enableLighting();
                         GL11.glEnable(GL11.GL_LIGHTING);

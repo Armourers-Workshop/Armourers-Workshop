@@ -26,11 +26,11 @@ public final class SkinBaker {
     
     public static void cullFacesOnEquipmentPart(SkinPart partData) {
         ArrayList<ICube> blocks = partData.getArmourData();
-        partData.totalCubesInPart = new int[CubeFactory.INSTANCE.getTotalCubes()];
+        partData.getClientSkinPartData().totalCubesInPart = new int[CubeFactory.INSTANCE.getTotalCubes()];
         for (int i = 0; i < blocks.size(); i++) {
             ICube blockData = blocks.get(i);
             int cubeId = CubeFactory.INSTANCE.getIdForCubeClass(blockData.getClass());
-            partData.totalCubesInPart[cubeId] += 1;
+            partData.getClientSkinPartData().totalCubesInPart[cubeId] += 1;
             setBlockFaceFlags(blocks, blockData);
         }
     }
@@ -119,7 +119,7 @@ public final class SkinBaker {
         
         partData.getArmourData().clear();
         
-        partData.setVertexLists(renderLists);
+        partData.getClientSkinPartData().setVertexLists(renderLists);
     }
     
     /*

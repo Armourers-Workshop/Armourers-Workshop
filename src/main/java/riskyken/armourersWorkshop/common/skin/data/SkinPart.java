@@ -5,20 +5,20 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.minecraft.client.renderer.GLAllocation;
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
+import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
@@ -26,8 +26,6 @@ import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
     
@@ -39,45 +37,8 @@ public class SkinPart implements ISkinPart {
     private ArrayList<ICube> armourData;
     private ArrayList<CubeMarkerData> markerBlocks;
     private ISkinPartType skinPart;
-    
     @SideOnly(Side.CLIENT)
-    public ArrayList<ColouredVertexWithUV>[] vertexLists;
-    
-    @SideOnly(Side.CLIENT)
-    public boolean hasList[];
-    
-    @SideOnly(Side.CLIENT)
-    public int[] totalCubesInPart;
-    
-    @SideOnly(Side.CLIENT)
-    public boolean[] displayListCompiled;
-    
-    @SideOnly(Side.CLIENT)
-    public int[] displayList;
-
-    @SideOnly(Side.CLIENT)
-    public void cleanUpDisplayLists() {
-        if(hasList != null) {
-            for (int i = 0; i < displayList.length; i++) {
-                if (hasList[i]) {
-                    if (displayListCompiled[i]) {
-                        GLAllocation.deleteDisplayLists(displayList[i]);
-                    }
-                }
-            }
-        }
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public void setVertexLists(ArrayList<ColouredVertexWithUV>[] vertexLists) {
-        hasList = new boolean[vertexLists.length];
-        displayListCompiled = new boolean[vertexLists.length];
-        displayList = new int[vertexLists.length];
-        this.vertexLists = vertexLists;
-        for (int i = 0; i < vertexLists.length; i++) {
-            hasList[i] = vertexLists[i].size() > 0;
-        }
-    }
+    private ClientSkinPartData clientSkinPartData;
     
     public SkinPart(ArrayList armourData, ISkinPartType skinPart, ArrayList<CubeMarkerData> markerBlocks) {
         this.armourData = armourData;
@@ -89,6 +50,16 @@ public class SkinPart implements ISkinPart {
     public SkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         readFromStream(stream, version);
         setupPartBounds();
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void setClientSkinPartData(ClientSkinPartData clientSkinPartData) {
+        this.clientSkinPartData = clientSkinPartData;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public ClientSkinPartData getClientSkinPartData() {
+        return clientSkinPartData;
     }
     
     private void setupPartBounds() {

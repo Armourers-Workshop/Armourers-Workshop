@@ -12,6 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
+import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -107,6 +108,7 @@ public final class ModelBakery {
             
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
+                partData.setClientSkinPartData(new ClientSkinPartData());
                 SkinBaker.cullFacesOnEquipmentPart(partData);
                 SkinBaker.buildPartDisplayListArray(partData);
             }

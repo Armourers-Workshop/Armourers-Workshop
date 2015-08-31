@@ -7,10 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import net.minecraft.client.renderer.texture.TextureUtil;
-
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -19,8 +20,6 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class Skin implements ISkin {
     
@@ -84,7 +83,7 @@ public class Skin implements ISkin {
     @SideOnly(Side.CLIENT)
     public void cleanUpDisplayLists() {
         for (int i = 0; i < parts.size(); i++) {
-            parts.get(i).cleanUpDisplayLists();
+            parts.get(i).getClientSkinPartData().cleanUpDisplayLists();
         }
         if (hasPaintData()) {
             TextureUtil.deleteTexture(paintTextureId);
@@ -248,7 +247,7 @@ public class Skin implements ISkin {
         int totalOfCube = 0;
         int cubeId = CubeFactory.INSTANCE.getIdForCubeClass(cubeClass);
         for (int i = 0; i < parts.size(); i++) {
-            totalOfCube += parts.get(i).totalCubesInPart[cubeId];
+            totalOfCube += parts.get(i).getClientSkinPartData().totalCubesInPart[cubeId];
         }
         return totalOfCube;
     }
