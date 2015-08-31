@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.BitSet;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinCubeData {
     private byte[] cubeId;
@@ -169,8 +169,8 @@ public class SkinCubeData {
     public String toString() {
         return "SkinCubeData [cubeId=" + Arrays.toString(cubeId) + ", cubeLocX=" + Arrays.toString(cubeLocX)
                 + ", cubeLocY=" + Arrays.toString(cubeLocY) + ", cubeLocZ=" + Arrays.toString(cubeLocZ)
-                + ", cubeColourR=" + Arrays.toString(cubeColourR) + ", cubeColourG=" + Arrays.toString(cubeColourG)
-                + ", cubeColourB=" + Arrays.toString(cubeColourB) + ", cubePaintType=" + Arrays.toString(cubePaintType)
+                + ", cubeColourR=" + Arrays.deepToString(cubeColourR) + ", cubeColourG=" + Arrays.deepToString(cubeColourG)
+                + ", cubeColourB=" + Arrays.deepToString(cubeColourB) + ", cubePaintType=" + Arrays.toString(cubePaintType)
                 + "]";
     }
 }

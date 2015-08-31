@@ -10,7 +10,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -81,11 +80,13 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         this.skinType = skinType;
         this.skinParts.clear();
         if (this.skinType != null) {
+            /*
             ArrayList<ISkinPartType> skinPartTypes = this.skinType.getSkinParts();
             for (int i = 0; i <skinPartTypes.size(); i++) {
                 SkinPart skinPart = new SkinPart(skinPartTypes.get(i));
                 skinParts.add(skinPart);
             }
+            */
         }
         if (update) {
             this.markDirty();
@@ -112,6 +113,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
         if (skinType != null) {
             setSkinType(skinType, false);
+            /*
             for (int i = 0; i < skinParts.size(); i++) {
                 SkinPart skinPart = skinParts.get(i);
                 String partName = skinPart.getPartType().getRegistryName();
@@ -126,6 +128,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
                     }
                 }
             }
+            */
         }
     }
     
@@ -134,12 +137,14 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         super.writeToNBT(compound);
         if (skinType != null) {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
+            /*
             for (int i = 0; i < skinParts.size(); i++) {
                 NBTTagCompound partCompound = new NBTTagCompound();
                 SkinPart skinPart = skinParts.get(i);
                 skinPart.writeToCompound(partCompound);
                 compound.setTag(skinPart.getPartType().getRegistryName(), partCompound);
             }
+            */
         }
     }
     

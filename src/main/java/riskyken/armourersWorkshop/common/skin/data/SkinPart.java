@@ -5,12 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -21,6 +19,8 @@ import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
     
@@ -152,19 +152,6 @@ public class SkinPart implements ISkinPart {
         return null;
     }
     
-    
-    //TODO Remove from mini armourer.
-    public SkinPart(ISkinPartType skinPart) {
-    }
-    
-    //TODO Remove from mini armourer.
-    public void writeToCompound(NBTTagCompound compound) {
-    }
-    
-    //TODO Remove from mini armourer.
-    public void readFromCompound(NBTTagCompound compound) throws InvalidCubeTypeException {
-    }
-    
     public void writeToStream(DataOutputStream stream) throws IOException {
         stream.writeUTF(skinPart.getRegistryName());
         cubeData.writeToStream(stream);
@@ -204,7 +191,7 @@ public class SkinPart implements ISkinPart {
 
     @Override
     public String toString() {
-        return "SkinPart [partBounds=" + partBounds + ", cubeData=" + cubeData + ", markerBlocks=" + markerBlocks
+        return "SkinPart [cubeData=" + cubeData + ", markerBlocks=" + markerBlocks
                 + ", skinPart=" + skinPart + "]";
     }
 }
