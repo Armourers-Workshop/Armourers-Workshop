@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 
@@ -33,7 +32,7 @@ public final class CubeFactory {
         return -1;
     }
     
-    public ICube getCubeInstanceFormId(byte id) throws InvalidCubeTypeException {
+    public ICube getCubeInstanceFormId(byte id) {
         Class<? extends ICube> cube = getCubeFormId(id);
         if (cube != null) {
             try {
@@ -46,7 +45,7 @@ public final class CubeFactory {
                 e.printStackTrace();
             }
         }
-        throw new InvalidCubeTypeException();
+        return null;
     }
     
     public Class<? extends ICube> getCubeFormId(byte id) {

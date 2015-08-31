@@ -9,7 +9,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
-import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -17,14 +16,12 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException.SkinSaveExceptionType;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 /**
@@ -113,7 +110,8 @@ public final class ArmourerWorldHelper {
         }
         
         if (armourBlockData.size() > 0) {
-            armourData.add(new SkinPart(armourBlockData, skinPart, markerBlocks));
+            //TODO fix this
+            //armourData.add(new SkinPart(armourBlockData, skinPart, markerBlocks));
         }
     }
     
@@ -139,14 +137,14 @@ public final class ArmourerWorldHelper {
             if (block == ModBlocks.colourableGlassGlowing) {
                 blockType = 3;
             }
-            ICube blockData = CubeFactory.INSTANCE.getCubeInstanceFormId(blockType);
-            
+            //ICube blockData = CubeFactory.INSTANCE.getCubeInstanceFormId(blockType);
+            /*
             blockData.setX((byte) ix);
             blockData.setY((byte) iy);
             blockData.setZ((byte) iz);
             blockData.setColour(new CubeColour(colour));
-            
-            list.add(blockData);
+            */
+            //list.add(blockData);
             if (meta > 0) {
                 markerBlocks.add(new CubeMarkerData((byte)ix, (byte)iy, (byte)iz, (byte)meta));
             }
@@ -174,9 +172,10 @@ public final class ArmourerWorldHelper {
         ISkinPartType skinPart = partData.getPartType();
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
-        
-        for (int i = 0; i < partData.getArmourData().size(); i++) {
-            ICube blockData = partData.getArmourData().get(i);
+        /*
+        for (int i = 0; i < partData.getCubeData().getCubeCount(); i++) {
+            //TODO Fix this
+            ICube blockData = partData.getCubeData().getCube(i);
             int meta = 0;
             for (int j = 0; j < partData.getMarkerBlocks().size(); j++) {
                 CubeMarkerData cmd = partData.getMarkerBlocks().get(j);
@@ -192,11 +191,12 @@ public final class ArmourerWorldHelper {
             
             loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction, meta);
         }
+        */
     }
     
     private static void loadSkinBlockIntoWorld(World world, int x, int y, int z, int xOrigin, int yOrigin, int zOrigin,
             ICube blockData, ForgeDirection direction, int meta) {
-        
+        /*
         int shiftX = -blockData.getX() - 1;
         int shiftY = blockData.getY() + 1;
         int shiftZ = blockData.getZ();
@@ -222,7 +222,9 @@ public final class ArmourerWorldHelper {
             if (te != null && te instanceof TileEntityColourable) {
                 ((TileEntityColourable)te).setColour(new CubeColour(blockData.getCubeColour()));
             }
+            
         }
+        */
     }
     
     public static void createBoundingBoxes(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinType skinType) {
@@ -353,12 +355,12 @@ public final class ArmourerWorldHelper {
         ArrayList<BlockLocation> blList = new ArrayList<BlockLocation>();
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            getPaintableCubesForPart(world, x, y, z, skinPart, blList);
+            getBuildingCubesForPart(world, x, y, z, skinPart, blList);
         }
         return blList;
     }
     
-    private static void getPaintableCubesForPart(World world, int x, int y, int z, ISkinPartType skinPart, ArrayList<BlockLocation> blList) {
+    private static void getBuildingCubesForPart(World world, int x, int y, int z, ISkinPartType skinPart, ArrayList<BlockLocation> blList) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
         
@@ -372,9 +374,7 @@ public final class ArmourerWorldHelper {
                     if (world.blockExists(xTar, yTar, zTar)) {
                         Block block = world.getBlock(xTar, yTar, zTar);
                         if (CubeFactory.INSTANCE.isBuildingBlock(block)) {
-                            if (block instanceof IPantableBlock) {
-                                blList.add(new BlockLocation(xTar, yTar, zTar));
-                            }
+                            blList.add(new BlockLocation(xTar, yTar, zTar));
                         }
                     }
                 }

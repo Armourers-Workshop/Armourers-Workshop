@@ -5,10 +5,47 @@ import java.io.IOException;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
+import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 
 public final class LegacyCubeHelper {
+    
+    //Used by file versions less than 10
+    public static void loadLegacyCubeData(SkinCubeData cubeData, int index, DataInputStream input, int version, SkinPart skinPart) throws IOException, InvalidCubeTypeException {
+        if (version < 3) {
+            loadlegacyCube(cubeData, index, input, version, skinPart.getPartType());
+        } else {
+            byte id = input.readByte();
+            byte x = input.readByte();
+            byte y = input.readByte();
+            byte z = input.readByte();
+            byte[] r = new byte[6];
+            byte[] g = new byte[6];
+            byte[] b = new byte[6];
+            if (version < 7) {
+                int colour = input.readInt();
+                for (int i = 0; i < 6; i++) {
+                    r[i] = (byte) (colour >> 16 & 0xff);
+                    g[i] = (byte) (colour >> 8 & 0xff);
+                    b[i] = (byte) (colour & 0xff);
+                }
+            } else {
+                for (int i = 0; i < 6; i++) {
+                    r[i] = input.readByte();
+                    g[i] = input.readByte();
+                    b[i] = input.readByte();
+                }
+            }
+            cubeData.setCubeId(index, id);
+            cubeData.setCubeLocation(index, x, y, z);
+            for (int i = 0; i < 6; i++) {
+                cubeData.setCubeColour(index, i, r[i], g[i], b[i]);
+            }
+        }
+    }
 
-    public static ICube loadlegacyCube(DataInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
+    //Used by file versions less than 3
+    public static void loadlegacyCube(SkinCubeData cubeData, int index, DataInputStream stream, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
         byte x;
         byte y;
         byte z;
@@ -37,14 +74,14 @@ public final class LegacyCubeHelper {
                 y -= 1;
             }
         }
-
-        ICube cube = CubeFactory.INSTANCE.getCubeInstanceFormId(blockType);
-        cube.setX(x);
-        cube.setY(y);
-        cube.setZ(z);
-        cube.setColour(colour);
         
-        return cube;
+        cubeData.setCubeId(index, blockType);
+        cubeData.setCubeLocation(index, x, y, z);
+        byte r = (byte) (colour >> 16 & 0xff);
+        byte g = (byte) (colour >> 8 & 0xff);
+        byte b = (byte) (colour & 0xff);
+        for (int i = 0; i < 6; i++) {
+            cubeData.setCubeColour(index, i, r, g, b);
+        }
     }
-
 }

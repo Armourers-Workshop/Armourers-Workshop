@@ -4,28 +4,20 @@ import java.awt.Color;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
-import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMiniArmourerCubeEdit;
-import riskyken.armourersWorkshop.common.skin.cubes.Cube;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -93,9 +85,11 @@ public class GuiMiniArmourerBuildingModel {
         cubes = null;
         ArrayList<SkinPart> skinParts = tileEntity.getSkinParts();
         for (int i = 0; i < skinParts.size(); i++) {
+            /*
             if (skinParts.get(i).getPartType() == currentSkinPartType) {
                 cubes = skinParts.get(i).getArmourData();
             }
+            */
         }
         
         float scale = 0.0625F;
@@ -114,7 +108,7 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glTranslated(0, 1 * scale, 0);
         
         GL11.glScalef(-1, -1, 1);
-        drawBuildingCubes(true);
+        //drawBuildingCubes(true);
         Color c = getColourAtPos(Mouse.getX(), Mouse.getY());
         hoverCubeId = getIdFromColour(c);
         
@@ -129,7 +123,7 @@ public class GuiMiniArmourerBuildingModel {
                 if (mouseLeftDownId != 0 & hoverCubeId == mouseLeftDownId) {
                     int cubeId = (int) Math.ceil((double)mouseLeftDownId / 6);
                     int cubeFace = cubeId * 6 - mouseLeftDownId;
-                    cubeClicked(cubeId, cubeFace, 0);
+                    //cubeClicked(cubeId, cubeFace, 0);
                     mouseLeftDownId = 0;
                 }
             }
@@ -151,7 +145,7 @@ public class GuiMiniArmourerBuildingModel {
                 if (mouseRightDownId != 0 & hoverCubeId == mouseRightDownId) {
                     int cubeId = (int) Math.ceil((double)mouseRightDownId / 6);
                     int cubeFace = cubeId * 6 - mouseRightDownId;
-                    cubeClicked(cubeId, cubeFace, 1);
+                    //cubeClicked(cubeId, cubeFace, 1);
                     mouseRightDownId = 0;
                 }
             }
@@ -179,6 +173,7 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glScalef(-1, -1, 1);
         
         //Are we hovering over a cube?
+        /*
         if (hoverCubeId != 0 && renderCubes != null) {
             int cubeId = (int) Math.ceil((double)hoverCubeId / 6);
             int cubeFace = cubeId * 6 - hoverCubeId;
@@ -200,10 +195,10 @@ public class GuiMiniArmourerBuildingModel {
                 GL11.glDisable(GL11.GL_BLEND);
             }
         }
-        
+        */
         //Gui.drawRect(0, 0, parent.width, parent.height, 0xFF000000);
         
-        drawBuildingCubes(false);
+        //drawBuildingCubes(false);
         GL11.glScalef(-1, -1, 1);
         
         RenderHelper.enableStandardItemLighting();
@@ -234,7 +229,7 @@ public class GuiMiniArmourerBuildingModel {
         */
         GL11.glPopMatrix();
     }
-    
+    /*
     private void cubeClicked(int cubeId, int cubeFace, int button) {
         if (renderCubes != null && cubeId - 1 < renderCubes.size() & cubeId - 1 >= 0) {
             ICube tarCube = renderCubes.get(cubeId - 1);
@@ -332,7 +327,7 @@ public class GuiMiniArmourerBuildingModel {
         }
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
-    
+    */
     private Color getColourFromId(int id) {
         int r = 0;
         int g = 0;

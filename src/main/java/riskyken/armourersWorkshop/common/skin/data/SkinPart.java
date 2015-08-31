@@ -10,8 +10,6 @@ import org.apache.logging.log4j.Level;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
@@ -20,10 +18,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
-import riskyken.armourersWorkshop.common.skin.cubes.ICube;
-import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -34,14 +29,14 @@ public class SkinPart implements ISkinPart {
     private static final String TAG_ID = "id";
     
     private Rectangle3D partBounds;
-    private ArrayList<ICube> armourData;
+    private SkinCubeData cubeData;
     private ArrayList<CubeMarkerData> markerBlocks;
     private ISkinPartType skinPart;
     @SideOnly(Side.CLIENT)
     private ClientSkinPartData clientSkinPartData;
     
-    public SkinPart(ArrayList armourData, ISkinPartType skinPart, ArrayList<CubeMarkerData> markerBlocks) {
-        this.armourData = armourData;
+    public SkinPart(SkinCubeData cubeData, ISkinPartType skinPart, ArrayList<CubeMarkerData> markerBlocks) {
+        this.cubeData = cubeData;
         this.skinPart = skinPart;
         this.markerBlocks = markerBlocks;
         setupPartBounds();
@@ -72,11 +67,11 @@ public class SkinPart implements ISkinPart {
         int minZ = 127;
         int maxZ = -127;
         
-        for (int i = 0; i < armourData.size(); i++) {
-            ICube c = armourData.get(i);
-            int x = c.getX();
-            int y = c.getY();
-            int z = c.getZ();
+        for (int i = 0; i < cubeData.getCubeCount(); i++) {
+            byte[] loc = cubeData.getCubeLocation(i);
+            int x = loc[0];
+            int y = loc[1];
+            int z = loc[2];
             
             if (x < minX) {
                 minX = x;
@@ -113,6 +108,14 @@ public class SkinPart implements ISkinPart {
         partBounds = new Rectangle3D(xOffset, yOffset, zOffset, xSize + 1, ySize + 1, zSize + 1);
     }
     
+    public SkinCubeData getCubeData() {
+        return cubeData;
+    }
+    
+    public void clearCubeData() {
+        cubeData = null;
+    }
+    
     public Rectangle3D getPartBounds() {
         return partBounds;
     }
@@ -120,10 +123,6 @@ public class SkinPart implements ISkinPart {
     @Override
     public ISkinPartType getPartType() {
         return this.skinPart;
-    }
-
-    public ArrayList<ICube> getArmourData() {
-        return armourData;
     }
     
     public ArrayList<CubeMarkerData> getMarkerBlocks() {
@@ -156,44 +155,19 @@ public class SkinPart implements ISkinPart {
     
     //TODO Remove from mini armourer.
     public SkinPart(ISkinPartType skinPart) {
-        this.armourData = new ArrayList<ICube>();
-        this.skinPart = skinPart;
-        this.markerBlocks = new ArrayList<CubeMarkerData>();
     }
     
     //TODO Remove from mini armourer.
     public void writeToCompound(NBTTagCompound compound) {
-        compound.setString(TAG_PART_NAME, skinPart.getRegistryName());
-        NBTTagList cubeList = new NBTTagList();
-        for (int i = 0; i < armourData.size(); i++) {
-            NBTTagCompound cubeCompound = new NBTTagCompound();
-            ICube cube = armourData.get(i);
-            cube.writeToCompound(cubeCompound);
-            cubeList.appendTag(cubeCompound);
-        }
-        compound.setTag(TAG_CUBE_LIST, cubeList);
     }
     
     //TODO Remove from mini armourer.
     public void readFromCompound(NBTTagCompound compound) throws InvalidCubeTypeException {
-        String partName = compound.getString(TAG_PART_NAME);
-        skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(partName);
-        NBTTagList cubeList = compound.getTagList(TAG_CUBE_LIST, NBT.TAG_COMPOUND);
-        for (int i = 0; i < cubeList.tagCount(); i++) {
-            NBTTagCompound cubeCompound = cubeList.getCompoundTagAt(i);
-            byte cubeId = cubeCompound.getByte(TAG_ID);
-            ICube cube = CubeFactory.INSTANCE.getCubeInstanceFormId(cubeId);
-            cube.readFromCompound(cubeCompound);
-            armourData.add(cube);
-        }
     }
     
     public void writeToStream(DataOutputStream stream) throws IOException {
         stream.writeUTF(skinPart.getRegistryName());
-        stream.writeInt(armourData.size());
-        for (int i = 0; i < armourData.size(); i++) {
-            armourData.get(i).writeToStream(stream);
-        }
+        cubeData.writeToStream(stream);
         stream.writeInt(markerBlocks.size());
         for (int i = 0; i < markerBlocks.size(); i++) {
             markerBlocks.get(i).writeToStream(stream);
@@ -217,19 +191,8 @@ public class SkinPart implements ISkinPart {
                 ModLogger.log(Level.ERROR,"Skin part was null - reg name: " + regName);
             }
         }
-        int size = stream.readInt();
-        armourData = new ArrayList<ICube>();
-        for (int i = 0; i < size; i++) {
-            ICube cube;
-            if (version < 3) {
-                cube = LegacyCubeHelper.loadlegacyCube(stream, version, skinPart);
-            } else {
-                byte id = stream.readByte();
-                cube = CubeFactory.INSTANCE.getCubeInstanceFormId(id);
-                cube.readFromStream(stream, version, skinPart);
-            }
-            armourData.add(cube);
-        }
+        cubeData = new SkinCubeData();
+        cubeData.readFromStream(stream, version, this);
         markerBlocks = new ArrayList<CubeMarkerData>();
         if (version > 8) {
             int markerCount = stream.readInt();
@@ -241,13 +204,7 @@ public class SkinPart implements ISkinPart {
 
     @Override
     public String toString() {
-        String result = "";
-        for (int i = 0; i < armourData.size(); i++) {
-            result += armourData.get(i).toString();
-        }
-        for (int i = 0; i < markerBlocks.size(); i++) {
-            result += markerBlocks.get(i).toString();
-        }
-        return "CustomArmourPartData [armourData=" + armourData + "" + result;
+        return "SkinPart [partBounds=" + partBounds + ", cubeData=" + cubeData + ", markerBlocks=" + markerBlocks
+                + ", skinPart=" + skinPart + "]";
     }
 }

@@ -6,11 +6,11 @@ import java.util.BitSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
@@ -25,35 +25,35 @@ public final class SkinBaker {
     }
     
     public static void cullFacesOnEquipmentPart(SkinPart partData) {
-        ArrayList<ICube> blocks = partData.getArmourData();
+        SkinCubeData cubeData = partData.getCubeData();
+        cubeData.setupFaceFlags();
         partData.getClientSkinPartData().totalCubesInPart = new int[CubeFactory.INSTANCE.getTotalCubes()];
-        for (int i = 0; i < blocks.size(); i++) {
-            ICube blockData = blocks.get(i);
-            int cubeId = CubeFactory.INSTANCE.getIdForCubeClass(blockData.getClass());
+        for (int i = 0; i < cubeData.getCubeCount(); i++) {
+            int cubeId = cubeData.getCubeId(i);
             partData.getClientSkinPartData().totalCubesInPart[cubeId] += 1;
-            setBlockFaceFlags(blocks, blockData);
+            setBlockFaceFlags(cubeData, i);
         }
     }
     
-    private static void setBlockFaceFlags(ArrayList<ICube> partBlocks, ICube block) {
-        block.setFaceFlags(new BitSet(6));
-        for (int j = 0; j < partBlocks.size(); j++) {
-            ICube checkBlock = partBlocks.get(j);
-            checkFaces(block, checkBlock);
+    private static void setBlockFaceFlags(SkinCubeData cubeData, int cubeIndex) {
+        cubeData.setFaceFlags(cubeIndex, new BitSet(6));
+        for (int j = 0; j < cubeData.getCubeCount(); j++) {
+            checkFaces(cubeData, cubeIndex, j);
         }
     }
     
-    private static void checkFaces(ICube block, ICube checkBlock) {
+    private static void checkFaces(SkinCubeData cubeData, int cubeIndex, int checkIndex) {
         ForgeDirection[] dirs = {ForgeDirection.UP, ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
-        //dirs = ForgeDirection.VALID_DIRECTIONS;
+        byte[] cubeLoc = cubeData.getCubeLocation(cubeIndex);
+        byte[] checkLoc = cubeData.getCubeLocation(checkIndex);
         for (int i = 0; i < dirs.length; i++) {
             ForgeDirection dir = dirs[i];
-            if (block.getX() + dir.offsetX == checkBlock.getX()) {
-                if (block.getY() + dir.offsetY == checkBlock.getY()) {
-                    if (block.getZ() + dir.offsetZ == checkBlock.getZ()) {
-                        if (block.needsPostRender() == checkBlock.needsPostRender()) {
-                            block.getFaceFlags().set(i, true); 
-                        }
+            if (cubeLoc[0] + dir.offsetX == checkLoc[0]) {
+                if (cubeLoc[1] + dir.offsetY == checkLoc[1]) {
+                    if (cubeLoc[2] + dir.offsetZ == checkLoc[2]) {
+                        //if (block.needsPostRender() == checkBlock.needsPostRender()) {
+                            cubeData.getFaceFlags(cubeIndex).set(i, true);
+                        //}
                     }
                 }
             }
@@ -81,10 +81,12 @@ public final class SkinBaker {
         
         float scale = 0.0625F;
         
-        for (int i = 0; i < partData.getArmourData().size(); i++) {
-            ICube cube = partData.getArmourData().get(i);
+        for (int i = 0; i < partData.getCubeData().getCubeCount(); i++) {
+            SkinCubeData cubeData = partData.getCubeData();
             
-            ICubeColour cc = cube.getCubeColour();
+            byte[] loc = cubeData.getCubeLocation(i);
+            ICube cube = partData.getCubeData().getCube(i);
+            
             byte a = (byte) 255;
             if (cube.needsPostRender()) {
                 a = (byte) 127;
@@ -102,22 +104,22 @@ public final class SkinBaker {
                     listIndex = 3;
                 }
                 EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[listIndex],
-                        scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
-                        cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+                        scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
+                        cubeData.getCubeColourR(i), cubeData.getCubeColourG(i), cubeData.getCubeColourB(i), a);
             } else {
                 if (cube.isGlowing()) {
                     EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[1],
-                            scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
-                            cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+                            scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
+                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i), cubeData.getCubeColourB(i), a);
                 } else {
                     EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[0],
-                            scale, cube.getFaceFlags(), cube.getX(), cube.getY(), cube.getZ(),
-                            cc.getRed(), cc.getGreen(), cc.getBlue(), a);
+                            scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
+                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i), cubeData.getCubeColourB(i), a);
                 }
             }
         }
         
-        partData.getArmourData().clear();
+        partData.clearCubeData();
         
         partData.getClientSkinPartData().setVertexLists(renderLists);
     }

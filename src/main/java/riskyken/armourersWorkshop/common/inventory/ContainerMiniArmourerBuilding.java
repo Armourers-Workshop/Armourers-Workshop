@@ -79,6 +79,7 @@ public class ContainerMiniArmourerBuilding extends Container {
     
     public void updateFromClientCubeEdit(ISkinPartType skinPartType, ICube cube, boolean remove) {
         ArrayList<SkinPart> skinParts = tileEntity.getSkinParts();
+        /*
         for (int i = 0; i < skinParts.size(); i++) {
             if (skinParts.get(i).getPartType() == skinPartType) {
                 ArrayList<ICube> cubeData = skinParts.get(i).getArmourData();
@@ -95,6 +96,7 @@ public class ContainerMiniArmourerBuilding extends Container {
                 break;
             }
         }
+        */
         //Send the cube update to all the players that have the GUI open.
         for (int i = 0; i < crafters.size(); i++) {
             ICrafting crafter = (ICrafting) crafters.get(i);

@@ -39,6 +39,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     }
     
     public void cubeUpdateFromServer(ISkinPartType skinPartType, ICube cube, boolean remove) {
+        /*
         for (int i = 0; i < skinParts.size(); i++) {
             if (skinParts.get(i).getPartType() == skinPartType) {
                 ArrayList<ICube> cubeData = skinParts.get(i).getArmourData();
@@ -55,6 +56,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
                 return;
             }
         }
+        */
     }
     
     public ISkinType getSkinType() {
