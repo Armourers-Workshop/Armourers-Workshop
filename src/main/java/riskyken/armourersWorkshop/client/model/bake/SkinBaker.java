@@ -51,9 +51,9 @@ public final class SkinBaker {
             if (cubeLoc[0] + dir.offsetX == checkLoc[0]) {
                 if (cubeLoc[1] + dir.offsetY == checkLoc[1]) {
                     if (cubeLoc[2] + dir.offsetZ == checkLoc[2]) {
-                        //if (block.needsPostRender() == checkBlock.needsPostRender()) {
+                        if (cubeData.getCube(checkIndex).needsPostRender() == cubeData.getCube(cubeIndex).needsPostRender()) {
                             cubeData.getFaceFlags(cubeIndex).set(i, true);
-                        //}
+                        }
                     }
                 }
             }
