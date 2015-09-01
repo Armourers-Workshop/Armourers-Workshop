@@ -4,9 +4,21 @@ import riskyken.armourersWorkshop.utils.BitwiseUtils;
 
 public enum PaintType {
     NONE(0),
-    SKIN(1),
-    HAIR(2),
-    //RAINBOW(3),
+    DYE_1(1),
+    DYE_2(2),
+    DYE_3(3),
+    DYE_4(4),
+    DYE_5(5),
+    DYE_6(6),
+    DYE_7(7),
+    DYE_8(8),
+    WATER(248),
+    LAVA(249),
+    SKY(250),
+    STAR_FIELD(251),
+    RAINBOW(252),
+    SKIN(253),
+    HAIR(254),
     NORMAL(255);
     
     private final int key;

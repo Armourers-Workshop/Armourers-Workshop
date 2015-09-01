@@ -141,6 +141,8 @@ public class SkinTexture {
                 case NORMAL:
                     bufferedSkinImage.setRGB(ix, iy, paintData[ix + (iy * TEXTURE_WIDTH)]);
                     break;
+                default:
+                    break;
                 }
             }
         }

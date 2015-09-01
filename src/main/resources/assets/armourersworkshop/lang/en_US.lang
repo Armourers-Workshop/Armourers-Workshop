@@ -51,6 +51,7 @@ item.armourersworkshop:wandOfStyle.name=Wand Of Style
 item.armourersworkshop:soap.name=Soap
 item.armourersworkshop:hueTool.name=Hue Tool
 item.armourersworkshop:blockMarker.name=Block Marker
+item.armourersworkshop:dyeBottle.name=Dye Bottle
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -67,6 +68,7 @@ item.armourersworkshop:armourContainer.flavour=Creative mode only item for map d
 item.armourersworkshop:soap.flavour=Use in the Skinner Table to clear an items skin.
 item.armourersworkshop:hueTool.flavour=Changes the colour of a block%nwithout affecting the shading.
 item.armourersworkshop:blockMarker.flavour=Creates a marker on an equipment cube.%nOnly use with skins that need marker blocks.
+item.armourersworkshop:dyeBottle.flavour=Unfinished do not use.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s
@@ -76,6 +78,7 @@ item.armourersworkshop:rollover.nopaint=&6No paint.
 item.armourersworkshop:rollover.settingsSaved=&6Settings Saved.
 item.armourersworkshop:rollover.noSettingsSaved=&cNo Settings Saved.
 item.armourersworkshop:rollover.user=&6User:&7 %s
+item.armourersworkshop:rollover.empty=&6Empty.
 
 item.armourersworkshop:rollover.hasSkin=&6Has Armouerer's Workshop Skin
 item.armourersworkshop:rollover.skinName=&6Name:&7 %s
