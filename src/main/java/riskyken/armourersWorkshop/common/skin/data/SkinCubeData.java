@@ -21,7 +21,7 @@ public class SkinCubeData {
     private byte[][] cubeColourR;
     private byte[][] cubeColourG;
     private byte[][] cubeColourB;
-    private byte[] cubePaintType;
+    private byte[][] cubePaintType;
     
     @SideOnly(Side.CLIENT)
     private BitSet[] faceFlags;
@@ -48,7 +48,7 @@ public class SkinCubeData {
         cubeColourR = new byte[count][6];
         cubeColourG = new byte[count][6];
         cubeColourB = new byte[count][6];
-        cubePaintType = new byte[count];
+        cubePaintType = new byte[count][6];
     }
     
     public int getCubeCount() {
@@ -120,12 +120,12 @@ public class SkinCubeData {
         return new byte[] {cubeLocX[index], cubeLocY[index], cubeLocZ[index]};
     }
     
-    public void setCubePaintType(int index, byte paintType) {
-        cubePaintType[index] = paintType;
+    public void setCubePaintType(int index, int side, byte paintType) {
+        cubePaintType[index][side] = paintType;
     }
     
-    public byte getCubePaintType(int index) {
-        return cubePaintType[index];
+    public byte getCubePaintType(int index, int side) {
+        return cubePaintType[index][side];
     }
     
     public void writeToStream(DataOutputStream stream) throws IOException {
@@ -139,8 +139,8 @@ public class SkinCubeData {
                 stream.writeByte(cubeColourR[i][side]);
                 stream.writeByte(cubeColourG[i][side]);
                 stream.writeByte(cubeColourB[i][side]);
+                stream.writeByte(cubePaintType[i][side]);
             }
-            stream.writeByte(cubePaintType[i]);
         }
     }
     
@@ -159,8 +159,8 @@ public class SkinCubeData {
                     cubeColourR[i][side] = stream.readByte();
                     cubeColourG[i][side] = stream.readByte();
                     cubeColourB[i][side] = stream.readByte();
+                    cubePaintType[i][side] = stream.readByte();
                 }
-                cubePaintType[i] = stream.readByte();
             }
         }
     }
@@ -170,7 +170,7 @@ public class SkinCubeData {
         return "SkinCubeData [cubeId=" + Arrays.toString(cubeId) + ", cubeLocX=" + Arrays.toString(cubeLocX)
                 + ", cubeLocY=" + Arrays.toString(cubeLocY) + ", cubeLocZ=" + Arrays.toString(cubeLocZ)
                 + ", cubeColourR=" + Arrays.deepToString(cubeColourR) + ", cubeColourG=" + Arrays.deepToString(cubeColourG)
-                + ", cubeColourB=" + Arrays.deepToString(cubeColourB) + ", cubePaintType=" + Arrays.toString(cubePaintType)
+                + ", cubeColourB=" + Arrays.deepToString(cubeColourB) + ", cubePaintType=" + Arrays.deepToString(cubePaintType)
                 + "]";
     }
 }
