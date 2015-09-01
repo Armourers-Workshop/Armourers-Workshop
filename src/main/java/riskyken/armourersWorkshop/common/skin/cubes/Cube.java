@@ -1,12 +1,15 @@
 package riskyken.armourersWorkshop.common.skin.cubes;
 
-import org.apache.logging.log4j.Level;
-
-import riskyken.armourersWorkshop.utils.ModLogger;
+import net.minecraft.block.Block;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 
 public class Cube implements ICube {
     
-    protected byte id = -1;
+    protected final byte id;
+    
+    public Cube() {
+        id = CubeRegistry.INSTANCE.getTotalCubes();
+    }
     
     @Override
     public boolean isGlowing() {
@@ -19,15 +22,12 @@ public class Cube implements ICube {
     }
     
     @Override
-    public void setId(byte id) {
-        if (this.id != -1) {
-            ModLogger.log(Level.WARN, "Resetting cube id.");
-        }
-        this.id = id;
+    public byte getId() {
+        return id;
     }
     
     @Override
-    public byte getId() {
-        return id;
+    public Block getMinecraftBlock() {
+        return ModBlocks.colourable;
     }
 }

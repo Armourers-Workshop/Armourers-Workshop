@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.BitSet;
 
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
-import riskyken.armourersWorkshop.common.skin.cubes.ICube;
-import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
 
 public class SkinCubeData {
     private byte[] cubeId;
@@ -40,7 +40,7 @@ public class SkinCubeData {
         faceFlags = new BitSet[getCubeCount()];
     }
     
-    private void setCubeCount(int count) {
+    public void setCubeCount(int count) {
         cubeId = new byte[count];
         cubeLocX = new byte[count];
         cubeLocY = new byte[count];
@@ -64,7 +64,7 @@ public class SkinCubeData {
     }
     
     public ICube getCube(int index) {
-        return CubeFactory.INSTANCE.getCubeInstanceFormId(cubeId[index]);
+        return CubeRegistry.INSTANCE.getCubeFormId(cubeId[index]);
     }
     
     public void setCubeColour(int index, int side, byte r, byte g, byte b) {

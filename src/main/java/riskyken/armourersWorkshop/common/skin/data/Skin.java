@@ -17,7 +17,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
@@ -236,16 +236,16 @@ public class Skin implements ISkin {
     
     public int getTotalCubes() {
         int totalCubes = 0;
-        for (int i = 0; i < CubeFactory.INSTANCE.getTotalCubes(); i++) {
-            Class<? extends ICube> cubeClass = CubeFactory.INSTANCE.getCubeFormId((byte) i);
-            totalCubes += getTotalOfCubeType(cubeClass);
+        for (int i = 0; i < CubeRegistry.INSTANCE.getTotalCubes(); i++) {
+            ICube cube = CubeRegistry.INSTANCE.getCubeFormId((byte) i);
+            totalCubes += getTotalOfCubeType(cube);
         }
         return totalCubes;
     }
     
-    public int getTotalOfCubeType(Class<? extends ICube> cubeClass) {
+    public int getTotalOfCubeType(ICube cube) {
         int totalOfCube = 0;
-        int cubeId = CubeFactory.INSTANCE.getIdForCubeClass(cubeClass);
+        int cubeId = cube.getId();
         for (int i = 0; i < parts.size(); i++) {
             totalOfCube += parts.get(i).getClientSkinPartData().totalCubesInPart[cubeId];
         }

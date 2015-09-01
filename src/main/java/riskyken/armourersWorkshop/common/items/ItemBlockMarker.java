@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeFactory;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
 import riskyken.plushieWrapper.common.item.ItemStackPointer;
 import riskyken.plushieWrapper.common.world.BlockLocation;
@@ -29,7 +29,7 @@ public class ItemBlockMarker extends AbstractModItemNew {
     public boolean onItemUse(ItemStackPointer stack, EntityPlayerPointer player, WorldPointer world,
             BlockLocation blockLocation, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(blockLocation);
-        if (CubeFactory.INSTANCE.isBuildingBlock(block)) {
+        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
             if (!world.isRemote()) {
                 int meta = world.getBlockMetadata(blockLocation);
                 int newMeta = side + 1;
