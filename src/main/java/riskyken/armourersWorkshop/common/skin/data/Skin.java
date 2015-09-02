@@ -292,7 +292,7 @@ public class Skin implements ISkin {
 
     @Override
     public String toString() {
-        String returnString = "CustomArmourItemData [authorName=" + authorName
+        String returnString = "Skin [authorName=" + authorName
                 + ", customName=" + customName + ", type=" + equipmentSkinType.getName().toUpperCase();
         if (this.paintData != null) {
             returnString += ", paintData=" + Arrays.hashCode(paintData);

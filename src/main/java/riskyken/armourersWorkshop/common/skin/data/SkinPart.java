@@ -186,7 +186,6 @@ public class SkinPart implements ISkinPart {
 
     @Override
     public String toString() {
-        return "SkinPart [cubeData=" + cubeData + ", markerBlocks=" + markerBlocks
-                + ", skinPart=" + skinPart + "]";
+        return "SkinPart [cubeData=" + cubeData + ", markerBlocks=" + markerBlocks + ", skinPart=" + skinPart.getRegistryName() + "]";
     }
 }
