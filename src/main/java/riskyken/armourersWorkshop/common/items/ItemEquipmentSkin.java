@@ -43,6 +43,20 @@ public class ItemEquipmentSkin extends AbstractModItem {
         return EquipmentNBTHelper.getSkinTypeFromStack(stack);
     }
     
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinPointer.skinId)) {
+                Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
+                if (!skin.getCustomName().trim().isEmpty()) {
+                    return skin.getCustomName();
+                }
+            }
+        }
+        return super.getItemStackDisplayName(stack);
+    }
+    
     public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, boolean showAdvancedItemTooltips) {
         String cRed = EnumChatFormatting.RED.toString();
         
@@ -62,19 +76,18 @@ public class ItemEquipmentSkin extends AbstractModItem {
             
             if (ClientModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 Skin data = ClientModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
-                if (!data.getCustomName().trim().isEmpty()) {
+                if (stack.getItem() != ModItems.equipmentSkin & !data.getCustomName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinName", data.getCustomName()));
                 }
                 if (!data.getAuthorName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinAuthor", data.getAuthorName()));
                 }
-                
+                if (skinData.skinType != null) {
+                    String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
+                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
+                }
                 if (ConfigHandler.showSkinTooltipDebugInfo) {
                     if (GuiScreen.isShiftKeyDown()) {
-                        if (skinData.skinType != null) {
-                            String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
-                            tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
-                        }
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.skinId));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubes", data.getTotalOfCubeType(CubeRegistry.INSTANCE.getCubeFormId((byte) 0))));
