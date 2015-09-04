@@ -105,7 +105,7 @@ public class ModelEquipmentBox extends ModelBox {
         int size = this.quadList.length;
         for (int i = 0; i < size; ++i) {
             if (faceFlags != null) {
-                if (!faceFlags.get(i)) {
+                if (faceFlags.get(i)) {
                     this.quadList[i].draw(renderBuffer, scale, x, y, z, r[i], g[i], b[i], a);
                 }
             } else {
@@ -118,7 +118,7 @@ public class ModelEquipmentBox extends ModelBox {
         int size = this.quadList.length;
         for (int i = 0; i < size; ++i) {
             if (faceFlags != null) {
-                if (!faceFlags.get(i)) {
+                if (faceFlags.get(i)) {
                     this.quadList[i].buildDisplayListArray(vertexList, scale, x, y, z, r[i], g[i], b[i], a);
                 }
             } else {

@@ -1,11 +1,12 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
 import java.util.ArrayList;
-import java.util.BitSet;
+import java.util.HashSet;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
@@ -24,41 +25,119 @@ public final class SkinBaker {
         return true;
     }
     
-    public static void cullFacesOnEquipmentPart(SkinPart partData) {
-        SkinCubeData cubeData = partData.getCubeData();
+    public static void cullFacesOnEquipmentPart(SkinPart skinPart) {
+        SkinCubeData cubeData = skinPart.getCubeData();
         cubeData.setupFaceFlags();
-        partData.getClientSkinPartData().totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
+        skinPart.getClientSkinPartData().totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
+        
+        Rectangle3D pb = skinPart.getPartBounds();
+        int[][][] cubeArray = new int[pb.getWidth()][pb.getHeight()][pb.getDepth()];
+        
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             int cubeId = cubeData.getCubeId(i);
-            partData.getClientSkinPartData().totalCubesInPart[cubeId] += 1;
-            setBlockFaceFlags(cubeData, i);
+            byte[] cubeLoc = cubeData.getCubeLocation(i);
+            skinPart.getClientSkinPartData().totalCubesInPart[cubeId] += 1;
+            int x = (int)cubeLoc[0] - pb.getX();
+            int y = (int)cubeLoc[1] - pb.getY();
+            int z = (int)cubeLoc[2] - pb.getZ();
+            cubeArray[x][y][z] = i + 1;
         }
-    }
-    
-    private static void setBlockFaceFlags(SkinCubeData cubeData, int cubeIndex) {
-        cubeData.setFaceFlags(cubeIndex, new BitSet(6));
-        for (int j = 0; j < cubeData.getCubeCount(); j++) {
-            checkFaces(cubeData, cubeIndex, j);
-        }
-    }
-    
-    private static void checkFaces(SkinCubeData cubeData, int cubeIndex, int checkIndex) {
-        ForgeDirection[] dirs = {ForgeDirection.UP, ForgeDirection.DOWN, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST };
-        byte[] cubeLoc = cubeData.getCubeLocation(cubeIndex);
-        byte[] checkLoc = cubeData.getCubeLocation(checkIndex);
-        for (int i = 0; i < dirs.length; i++) {
-            ForgeDirection dir = dirs[i];
-            if (cubeLoc[0] + dir.offsetX == checkLoc[0]) {
-                if (cubeLoc[1] + dir.offsetY == checkLoc[1]) {
-                    if (cubeLoc[2] + dir.offsetZ == checkLoc[2]) {
-                        if (cubeData.getCube(checkIndex).needsPostRender() == cubeData.getCube(cubeIndex).needsPostRender()) {
-                            cubeData.getFaceFlags(cubeIndex).set(i, true);
-                        }
+        
+        ArrayList<CubeLocation> openList = new ArrayList<CubeLocation>();
+        HashSet<Integer> closedSet = new HashSet<Integer>();
+        CubeLocation startCube = new CubeLocation(-1, -1, -1);
+        openList.add(startCube);
+        closedSet.add(startCube.hashCode());
+        
+        while (openList.size() > 0) {
+            CubeLocation cl = openList.get(openList.size() - 1);
+            openList.remove(openList.size() - 1);
+            ArrayList<CubeLocation> foundLocations = checkCubesAroundLocation(cubeData, cl, pb, cubeArray);
+            for (int i = 0; i < foundLocations.size(); i++) {
+                CubeLocation foundLocation = foundLocations.get(i);
+                if (!closedSet.contains(foundLocation.hashCode())) {
+                    closedSet.add(foundLocation.hashCode());
+                    if (isCubeInSearchArea(foundLocation, pb)) {
+                        openList.add(foundLocation);
                     }
                 }
             }
         }
-
+    }
+    
+    private static ArrayList<CubeLocation> checkCubesAroundLocation(SkinCubeData cubeData, CubeLocation cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
+        ArrayList<CubeLocation> openList = new ArrayList<SkinBaker.CubeLocation>();
+        ForgeDirection[] dirs = {ForgeDirection.DOWN, ForgeDirection.UP,
+                ForgeDirection.SOUTH, ForgeDirection.NORTH,
+                ForgeDirection.WEST, ForgeDirection.EAST };
+        
+        int index = getIndexForLocation(cubeLocation, partBounds, cubeArray);
+        
+        boolean isGlass = false;
+        if (index > 0) {
+            ICube cube = cubeData.getCube(index - 1);
+            isGlass = cube.needsPostRender();
+        }
+        
+        for (int i = 0; i < dirs.length; i++) {
+            ForgeDirection dir = dirs[i];
+            int x = cubeLocation.x + dir.offsetX;
+            int y = cubeLocation.y + dir.offsetY;
+            int z = cubeLocation.z + dir.offsetZ;
+            int tarIndex = getIndexForLocation(x, y, z, partBounds, cubeArray);
+            
+            
+            //Add new cubes to the open list.
+            if (tarIndex < 1) {
+                openList.add(new CubeLocation(x, y, z));
+            } else {
+                if (cubeData.getCube(tarIndex - 1).needsPostRender()) {
+                    openList.add(new CubeLocation(x, y, z));
+                }
+            }
+            
+            //Update the face flags if there is a block at this location.
+            if (tarIndex > 0) {
+                flagCubeFace(x, y, z, i, partBounds, cubeArray, cubeData, isGlass);
+            }
+        }
+        return openList;
+    }
+    
+    private static int getIndexForLocation(CubeLocation cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
+        return getIndexForLocation(cubeLocation.x, cubeLocation.y, cubeLocation.z, partBounds, cubeArray);
+    }
+    
+    private static int getIndexForLocation(int x, int y, int z, Rectangle3D partBounds, int[][][] cubeArray) {
+        if (x >= 0 & x < partBounds.getWidth()) {
+            if (y >= 0 & y < partBounds.getHeight()) {
+                if (z >= 0 & z < partBounds.getDepth()) {
+                    return cubeArray[x][y][z];
+                }
+            }
+        }
+        return 0;
+    }
+    
+    private static void flagCubeFace(int x, int y, int z, int face, Rectangle3D partBounds, int[][][] cubeArray, SkinCubeData cubeData, boolean isGlass) {
+        int checkIndex = getIndexForLocation(x, y, z, partBounds, cubeArray);
+        if (!isGlass) {
+            cubeData.getFaceFlags(checkIndex - 1).set(face, true);
+        } else {
+            ICube cube = cubeData.getCube(checkIndex - 1);
+            cubeData.getFaceFlags(checkIndex - 1).set(face, cube.needsPostRender() != isGlass);
+        }
+    }
+    
+    private static boolean isCubeInSearchArea(CubeLocation cubeLocation, Rectangle3D partBounds) {
+        if (cubeLocation.x > -2 & cubeLocation.x < partBounds.getWidth() + 1) {
+            if (cubeLocation.y > -2 & cubeLocation.y < partBounds.getHeight() + 1) {
+                if (cubeLocation.z > -2 & cubeLocation.z < partBounds.getDepth() + 1) {
+                    return true;
+                }   
+            }
+        }
+        return false;
     }
     
     public static void buildPartDisplayListArray(SkinPart partData) {
@@ -120,34 +199,47 @@ public final class SkinBaker {
         }
         
         partData.clearCubeData();
-        
         partData.getClientSkinPartData().setVertexLists(renderLists);
     }
     
-    /*
-    private static void checkBlockFaceIntersectsBodyPart(EnumBodyPart bodyPart, ICube block) {
-        ForgeDirection[] dirs = { ForgeDirection.EAST, ForgeDirection.WEST,  ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH };
-        for (int i = 0; i < dirs.length; i++) {
-            ForgeDirection dir = dirs[i];
-            if (cordsIntersectsBodyPart(bodyPart, (block.getX() + dir.offsetX), -(block.getY() + dir.offsetY + 1), (block.getZ() + dir.offsetZ))) {
-                block.getFaceFlags().set(i, true);
-            }
-        }
-    }
-    
-    private static boolean cordsIntersectsBodyPart(EnumBodyPart bodyPart, int x, int y, int z) {
-        int xCen = x + bodyPart.xOrigin;
-        int yCen = y + 1 + bodyPart.yOrigin;
-        int zCen = z + bodyPart.zOrigin;
+    private static class CubeLocation {
+        public final int x;
+        public final int y;
+        public final int z;
         
-        if (bodyPart.xSize > xCen & 0 <= xCen) {
-            if (bodyPart.zSize > zCen & 0 <= zCen) {
-                if (bodyPart.ySize > yCen & 0 <= yCen) {
-                    return true;
-                }
-            }
+        public CubeLocation(int x, int y, int z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
-        return false;
+
+        @Override
+        public int hashCode() {
+            return toString().hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            CubeLocation other = (CubeLocation) obj;
+            if (x != other.x)
+                return false;
+            if (y != other.y)
+                return false;
+            if (z != other.z)
+                return false;
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "CubeLocation [x=" + x + ", y=" + y + ", z=" + z + "]";
+        }
+        
     }
-    */
 }

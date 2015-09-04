@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -8,16 +10,16 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.plushieWrapper.common.world.BlockLocation;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntitySkinnable extends TileEntity {
 
@@ -61,13 +63,19 @@ public class TileEntitySkinnable extends TileEntity {
             
             if (skin != null) {
                 float scale = 0.0625F;
-                Rectangle3D rec = skin.getParts().get(0).getPartBounds();
-                minX = rec.getX() * scale;
-                minY = rec.getY() * scale;
-                minZ = rec.getZ() * scale;
-                maxX = (rec.getX() + rec.getWidth()) * scale;
-                maxY = (rec.getY() + rec.getHeight()) * scale;
-                maxZ = (rec.getZ() + rec.getDepth()) * scale;
+                SkinPart skinPart = skin.getParts().get(0);
+                Rectangle3D rec = skinPart.getPartBounds();
+                IRectangle3D buildSpace = skinPart.getPartType().getBuildingSpace();
+                
+                int x = buildSpace.getX() + buildSpace.getWidth() + rec.getX();
+                int y = buildSpace.getY() + buildSpace.getHeight() - rec.getY() - rec.getHeight();
+                int z = buildSpace.getZ() + buildSpace.getDepth() - rec.getZ() - rec.getDepth();
+                minX = x * scale;
+                minY = y * scale;
+                minZ = z * scale;
+                maxX = (x + rec.getWidth()) * scale;
+                maxY = (y + rec.getHeight()) * scale;
+                maxZ = (z + rec.getDepth()) * scale;
                 rotateBlockBounds();
                 haveBlockBounds = true;
                 block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);

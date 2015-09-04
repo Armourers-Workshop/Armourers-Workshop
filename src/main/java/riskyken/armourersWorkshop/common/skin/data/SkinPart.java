@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Level;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
@@ -90,15 +89,13 @@ public class SkinPart implements ISkinPart {
             }
         }
         
-        IRectangle3D rec = skinPart.getBuildingSpace();
-        
         int xSize = maxX - minX;
         int ySize = maxY - minY;
         int zSize = maxZ - minZ;
         
-        int xOffset = rec.getX() + rec.getWidth() + minX;
-        int yOffset = rec.getY() - minY + rec.getHeight() - ySize - 1;
-        int zOffset = rec.getZ() - minZ + rec.getDepth() - zSize - 1;
+        int xOffset = minX;
+        int yOffset = minY;
+        int zOffset = minZ;
         
         partBounds = new Rectangle3D(xOffset, yOffset, zOffset, xSize + 1, ySize + 1, zSize + 1);
     }

@@ -38,6 +38,9 @@ public class SkinCubeData {
     
     public void setupFaceFlags() {
         faceFlags = new BitSet[getCubeCount()];
+        for (int i = 0; i < getCubeCount(); i++) {
+            faceFlags[i] = new BitSet(6);
+        }
     }
     
     public void setCubeCount(int count) {
