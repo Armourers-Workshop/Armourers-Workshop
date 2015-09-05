@@ -1,58 +1,57 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import riskyken.armourersWorkshop.utils.UtilColour;
-import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary.LibraryFile;
+import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 @SideOnly(Side.CLIENT)
 public class GuiFileListItem extends Gui implements IGuiListItem {
 
-    private final String displayText;
-    private final String tag;
-    private final boolean showSelected;
+    private final LibraryFile file;
     
-    public GuiFileListItem(String displayText, String tag) {
-        this(displayText, tag, false);
+    public GuiFileListItem(LibraryFile file) {
+        this.file = file;
     }
     
-    public GuiFileListItem(String displayText, String tag, boolean showSelected) {
-        this.displayText = displayText;
-        this.tag = tag;
-        this.showSelected = showSelected;
+    public LibraryFile getFile() {
+        return file;
     }
 
     @Override
-    public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected) {
+    public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected, int width) {
         int fontColour = UtilColour.getMinecraftColor(8, ColourFamily.MINECRAFT);
-        if (selected && showSelected) {
-            fontColour = UtilColour.getMinecraftColor(4, ColourFamily.MINECRAFT);
+        if (isHovering(fontRenderer, x, y, mouseX, mouseY, width)) {
+            Gui.drawRect(x, y, x + width - 3, y + 12, 0xFFCCCCCC);
+            fontColour = UtilColour.getMinecraftColor(15, ColourFamily.MINECRAFT);
         }
-        if (isHovering(fontRenderer, x, y, mouseX, mouseY)) {
-            fontColour = UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
+        if (selected) {
+            Gui.drawRect(x, y, x + width - 3, y + 12, 0xFFFFFF88);
+            fontColour = UtilColour.getMinecraftColor(15, ColourFamily.MINECRAFT);
         }
-        fontRenderer.drawString(displayText, x, y, fontColour);
-    }
-
-    @Override
-    public boolean mousePressed(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button) {
-        return isHovering(fontRenderer, x, y, mouseX, mouseY);
-    }
-
-    @Override
-    public void mouseReleased(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button) {
-        // TODO Auto-generated method stub
         
+
+        fontRenderer.drawString(file.fileName, x + 2, y + 2, fontColour);
+    }
+
+    @Override
+    public boolean mousePressed(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button, int width) {
+        return isHovering(fontRenderer, x, y, mouseX, mouseY, width);
+    }
+
+    @Override
+    public void mouseReleased(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button, int width) {
     }
     
-    private boolean isHovering(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY) {
-        return mouseX >= x & mouseY >= y & mouseX <= x + fontRenderer.getStringWidth(displayText) & mouseY <= y + 8;
+    private boolean isHovering(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int width) {
+        return mouseX >= x & mouseY >= y & mouseX <= x + width - 3 & mouseY <= y + 11;
     }
 
     @Override
     public String getDisplayName() {
-        return displayText;
+        return file.fileName;
     }
 }

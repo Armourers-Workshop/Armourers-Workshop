@@ -11,13 +11,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.DimensionManager;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.DimensionManager;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
@@ -85,7 +84,7 @@ public final class SkinIOUtils {
             skin = new Skin(stream);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
-            e.printStackTrace();
+            ModLogger.log(Level.WARN, file);
         } catch (IOException e) {
             ModLogger.log(Level.ERROR, "Skin file load failed.");
             e.printStackTrace();

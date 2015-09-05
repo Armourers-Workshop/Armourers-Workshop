@@ -5,6 +5,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.Level;
+import org.lwjgl.Sys;
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,11 +20,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-
-import org.apache.logging.log4j.Level;
-import org.lwjgl.Sys;
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -26,6 +28,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
+import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
@@ -41,9 +44,6 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary.Li
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary.LibraryFileType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
-import cpw.mods.fml.client.config.GuiButtonExt;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiArmourLibrary extends GuiContainer {
@@ -324,6 +324,15 @@ public class GuiArmourLibrary extends GuiContainer {
         ISkinType skinTypeFilter = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(typeFilter);
         lastSkinType = skinTypeFilter;
         lastSearchText = searchTextbox.getText();
+        IGuiListItem selectedItem =  fileList.getSelectedListEntry();
+        
+        if (selectedItem != null) {
+            deleteButton.enabled = !((GuiFileListItem)selectedItem).getFile().readOnly;
+        } else {
+            deleteButton.enabled = false;
+        }
+        
+        fileList.setSelectedIndex(-1);
         
         fileList.clearList();
         if (files!= null) {
@@ -332,10 +341,16 @@ public class GuiArmourLibrary extends GuiContainer {
                 if (skinTypeFilter == null | skinTypeFilter == file.skinType) {
                     if (!searchTextbox.getText().equals("")) {
                         if (file.fileName.toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
-                            fileList.addListItem(new GuiFileListItem(file.fileName, file.skinType.getRegistryName(), true));
+                            fileList.addListItem(new GuiFileListItem(file));
+                            if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile() == file) {
+                                fileList.setSelectedIndex(fileList.getSize() - 1);
+                            }
                         }
                     } else {
-                        fileList.addListItem(new GuiFileListItem(file.fileName, file.skinType.getRegistryName(), true));
+                        fileList.addListItem(new GuiFileListItem(file));
+                        if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile() == file) {
+                            fileList.setSelectedIndex(fileList.getSize() - 1);
+                        }
                     }
                 }
             }
@@ -373,7 +388,6 @@ public class GuiArmourLibrary extends GuiContainer {
             if (fileList.mouseClicked(mouseX, mouseY, button)) {
                 filenameTextbox.setText(fileList.getSelectedListEntry().getDisplayName());
             }
-            
         }
         scrollbar.mousePressed(mc, mouseX, mouseY);
     }

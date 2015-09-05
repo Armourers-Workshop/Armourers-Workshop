@@ -3,6 +3,11 @@ package riskyken.armourersWorkshop.client.gui.controls;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
@@ -10,13 +15,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import cpw.mods.fml.client.config.GuiUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiList extends Gui {
@@ -79,7 +78,7 @@ public class GuiList extends Gui {
         for (int i = 0; i < listItems.size(); i++) {
             int yLocation = y - scrollAmount + 2 + i * slotHeight;
             if (yLocation + 6 >= y & yLocation <= y + height + 1) {
-                listItems.get(i).drawListItem(fontRenderer, x + 2, yLocation, mouseX, mouseY, i == selectedIndex);
+                listItems.get(i).drawListItem(fontRenderer, x + 2, yLocation, mouseX, mouseY, i == selectedIndex, width);
             }
         }
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -90,7 +89,7 @@ public class GuiList extends Gui {
         for (int i = 0; i < listItems.size(); i++) {
             int yLocation = y - scrollAmount + 2 + i * slotHeight;
             if (mouseY >= y & mouseY <= y + height - 2) {
-                if (listItems.get(i).mousePressed(fontRenderer, x + 2, yLocation, mouseX, mouseY, button)) {
+                if (listItems.get(i).mousePressed(fontRenderer, x + 2, yLocation, mouseX, mouseY, button, width)) {
                     SoundHandler sh = mc.getSoundHandler();
                     sh.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
                     selectedIndex = i;
@@ -105,14 +104,16 @@ public class GuiList extends Gui {
     public void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         if (!this.visible) { return; }
         for (int i = 0; i < listItems.size(); i++) {
-            listItems.get(i).mouseReleased(fontRenderer, x, y, mouseX, mouseY, button);
+            listItems.get(i).mouseReleased(fontRenderer, x, y, mouseX, mouseY, button, width);
         }
     }
 
     public IGuiListItem getSelectedListEntry() {
-        return this.listItems.get(selectedIndex);
+        if (selectedIndex >= 0 && selectedIndex < listItems.size()) {
+            return this.listItems.get(selectedIndex);
+        }
+        return null;
     }
-    
     
     public IGuiListItem getListEntry(int index) {
         return this.listItems.get(index);

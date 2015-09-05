@@ -1,21 +1,22 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
@@ -32,9 +33,6 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityArmourLibrary extends AbstractTileEntityInventory implements ISidedInventory {
     
@@ -105,6 +103,12 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
     public void saveArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
+        if (fileName.contains("/") | fileName.contains("\\")) {
+            ModLogger.log(String.format("Player %s tried to save a file with invalid characters in the file name.",
+                    player.getCommandSenderName()));
+            ModLogger.log(String.format("The file name was: %s", fileName));
+            return;
+        }
         
         if (stackInput == null) {
             return;
@@ -152,7 +156,12 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
     public void loadArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        
+        if (fileName.contains("/") | fileName.contains("\\")) {
+            ModLogger.log(String.format("Player %s tried to load a file with invalid characters in the file name.",
+                    player.getCommandSenderName()));
+            ModLogger.log(String.format("The file name was: %s", fileName));
+            return;
+        }
         if (!isCreativeLibrary()) {
             if (stackInput == null) {
                 return;
@@ -255,7 +264,15 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
                 boolean readOnly = true;
                 if (!ArmourersWorkshop.isDedicated()) {
                     readOnly = false;
+                } else {
+                    if (isPlayerOp(player)) {
+                        readOnly = false;
+                    }
                 }
+                if (!publicFiles) {
+                    readOnly = false;
+                }
+  
                 if (skinType != null) {
                     fileList.add(new LibraryFile(cleanName, skinId, skinType, readOnly));
                 }
@@ -265,6 +282,13 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         Collections.sort(fileList);
         
         return fileList;
+    }
+    
+    private static boolean isPlayerOp(EntityPlayer player) {
+        if (player instanceof EntityPlayerMP) {
+            return ((EntityPlayerMP)player).mcServer.getConfigurationManager().func_152596_g(player.getGameProfile());
+        }
+        return false;
     }
     
     public void setSkinFileList(ArrayList<LibraryFile> publicFiles, ArrayList<LibraryFile> privateFiles) {
