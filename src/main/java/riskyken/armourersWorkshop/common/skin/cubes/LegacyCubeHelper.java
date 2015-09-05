@@ -62,7 +62,7 @@ public final class LegacyCubeHelper {
             String partName = skinPart.getRegistryName();
             if (partName.equals("armourers:sword.base")) {
                 y -= 1;
-            } else if (partName.equals("armourers:skirt.base")) {
+            } else if (partName.equals("armourers:legs.skirt")) {
                 y -= 1;
             } else if (partName.equals("armourers:legs.leftLeg")) {
                 y -= 1;
