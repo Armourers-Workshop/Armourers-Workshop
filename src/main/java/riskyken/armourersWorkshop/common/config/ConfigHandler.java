@@ -55,6 +55,7 @@ public class ConfigHandler {
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
     public static boolean showArmourerDebugRender;
+    public static boolean wireframeRender;
     
     
     //Register
@@ -190,6 +191,11 @@ public class ConfigHandler {
                 .get(CATEGORY_DEBUG, "showArmourerDebugRender", false,
                 "Shows extra debug renders on the armourer.")
                 .getBoolean(false);
+        
+        wireframeRender = config
+                .get(CATEGORY_DEBUG, "wireframeRender", false,
+                "Render models in a wireframe.")
+                .getBoolean(false);
     }
     
     private static void loadCategoryCompatibility() {
@@ -241,7 +247,7 @@ public class ConfigHandler {
         mannequinMaxEquipmentRenderDistance = config.getInt("mannequinMaxEquipmentRenderDistance", CATEGORY_CLIENT, 1024, 1, 4096,
                 "The max distance squared that equipment will be rendered on mannequins.");
         
-        blockSkinMaxRenderDistance = config.getInt("blockSkinMaxRenderDistance", CATEGORY_CLIENT, 2500, 1, 4096,
+        blockSkinMaxRenderDistance = config.getInt("blockSkinMaxRenderDistance", CATEGORY_CLIENT, 2500, 1, 65536,
                 "The max distance squared that block skins will be rendered.");
     }
     
