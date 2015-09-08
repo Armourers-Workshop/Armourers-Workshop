@@ -47,6 +47,13 @@ public class TileEntitySkinnable extends TileEntity {
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
+    
+    @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+        haveBlockBounds = false;
+        
+    }
 
     public void setBoundsOnBlock(Block block) {
         if (haveBlockBounds) {

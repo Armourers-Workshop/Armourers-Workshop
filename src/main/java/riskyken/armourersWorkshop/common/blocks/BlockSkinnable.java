@@ -2,6 +2,9 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -14,6 +17,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -22,9 +26,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilItems;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvider {
 
@@ -134,5 +135,19 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
     @Override
     public int getRenderType() {
         return -1;
+    }
+    
+    @Override
+    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+        if (world.isRemote) {
+            return false;
+        }
+        int rotation = world.getBlockMetadata(x, y, z);
+        rotation++;
+        if (rotation > 3) {
+            rotation = 0;
+        }
+        world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
+        return true;
     }
 }

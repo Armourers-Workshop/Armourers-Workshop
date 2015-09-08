@@ -1,5 +1,10 @@
 package riskyken.armourersWorkshop.client.handler;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -10,13 +15,7 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BlockHighlightRenderHandler {
@@ -41,15 +40,18 @@ public class BlockHighlightRenderHandler {
         
         Block block = world.getBlock(x, y, z);
         
-        if (block != ModBlocks.mannequin) {
-            return;
+        if (block == ModBlocks.mannequin) {
+            drawMannequinBlockBounds(world, x, y, z, player, block, event.partialTicks);
+            event.setCanceled(true);
         }
-        
+    }
+    
+    private void drawMannequinBlockBounds(World world, int x, int y, int z, EntityPlayer player, Block block, float partialTicks) {
         int meta = world.getBlockMetadata(x, y, z);
         
-        double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks;
-        double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks;
-        double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks;
+        double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+        double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+        double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
         
         double minX = x + block.getBlockBoundsMinX();
         double minY = y + block.getBlockBoundsMinY();
@@ -79,7 +81,5 @@ public class BlockHighlightRenderHandler {
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
-        
-        event.setCanceled(true);
     }
 }
