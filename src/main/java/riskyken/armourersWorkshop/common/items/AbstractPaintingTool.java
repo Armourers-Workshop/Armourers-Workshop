@@ -8,10 +8,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
 import riskyken.armourersWorkshop.client.particles.ParticleManager;
+import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 
-public abstract class AbstractPaintingTool extends AbstractModItem implements IPaintingTool {
+public abstract class AbstractPaintingTool extends AbstractModItem implements IPaintingTool, IBlockPainter {
 
     public AbstractPaintingTool(String name) {
         super(name);

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +18,7 @@ import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
@@ -25,10 +28,8 @@ import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import riskyken.plushieWrapper.common.world.BlockLocation;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurableTool {
+public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurableTool, IBlockPainter {
 
     public ItemShadeNoiseTool() {
         super(LibItemNames.SHADE_NOISE_TOOL);
@@ -64,8 +65,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
             if (!world.isRemote) {
                 TileEntity te = world.getTileEntity(x, y, z);
                 if (te != null && te instanceof TileEntityArmourerBrain) {
-                    int intensity = UtilItems.getIntensityFromStack(stack, 16);
-                    ((TileEntityArmourerBrain)te).addNoise(player, intensity);
+                    ((TileEntityArmourerBrain)te).toolUsedOnArmourer(this, world, stack, player);
                 }
             }
             return true;
@@ -74,8 +74,8 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
         return false;
     }
     
-    
-    private void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+    @Override
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
         IPantableBlock worldColourable = (IPantableBlock) block;
         int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);

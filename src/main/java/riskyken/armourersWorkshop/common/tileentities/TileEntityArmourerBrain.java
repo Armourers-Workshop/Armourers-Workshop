@@ -1,8 +1,14 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.Level;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -13,16 +19,15 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.apache.logging.log4j.Level;
-
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
@@ -35,13 +40,7 @@ import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.plushieWrapper.common.world.BlockLocation;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -214,21 +213,25 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         }
     }
     
-    public void addNoise(EntityPlayer player, int intensity) {
+    public void toolUsedOnArmourer(IBlockPainter tool, World world, ItemStack stack, EntityPlayer player) {
+        UndoManager.begin(player);
+        applyToolToBlocks(tool, world, stack, player);
+        UndoManager.end(player);
+    }
+    
+    private void applyToolToBlocks(IBlockPainter tool, World world, ItemStack stack, EntityPlayer player) {
         if (skinType != null) {
             ArrayList<BlockLocation> paintableCubes = ArmourerWorldHelper.getListOfPaintableCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
-            UndoManager.begin(player);
             for (int i = 0; i < paintableCubes.size(); i++) {
                 BlockLocation bl = paintableCubes.get(i);
                 IPantableBlock pBlock = (IPantableBlock) worldObj.getBlock(bl.x, bl.y, bl.z);
-                for (int side = 0; side < 6; side++) {
-                    int oldColour = pBlock.getColour(worldObj, bl.x, bl.y, bl.z, side);
-                    int newColour = UtilColour.addShadeNoise(new Color(oldColour), intensity).getRGB();
-                    UndoManager.blockPainted(player, worldObj, bl.x, bl.y, bl.z, oldColour, side);
-                    pBlock.setColour(worldObj, bl.x, bl.y, bl.z, newColour, side);
+                Block block = world.getBlock(bl.x, bl.y, bl.z);
+                if (block instanceof IPantableBlock) {
+                    for (int side = 0; side < 6; side++) {
+                        tool.usedOnBlockSide(stack, player, world, bl, block, side);
+                    }
                 }
             }
-            UndoManager.end(player);
         }
     }
     

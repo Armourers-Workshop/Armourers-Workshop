@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,10 +24,10 @@ import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurableTool {
     
@@ -60,16 +62,22 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
             return true;
         }
         
-        if (!getToolHasColour(stack)) {
-            return false;
-        }
-        
         if (block instanceof IPantableBlock) {
             if (!world.isRemote) {
                 UndoManager.begin(player);
                 paintArea(world, player, stack, x, y, z, side);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
                 UndoManager.end(player);
+            }
+            return true;
+        }
+        
+        if (block == ModBlocks.armourerBrain & player.isSneaking()) {
+            if (!world.isRemote) {
+                TileEntity te = world.getTileEntity(x, y, z);
+                if (te != null && te instanceof TileEntityArmourerBrain) {
+                    ((TileEntityArmourerBrain)te).toolUsedOnArmourer(this, world, stack, player);
+                }
             }
             return true;
         }
@@ -81,49 +89,54 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
         for (int i = -radius + 1; i < radius; i++ ) {
             for (int j = -radius + 1; j < radius; j++ ) {
+                BlockLocation bl = null;
                 switch (side) {
                     case 0:
-                        paintBlock(world, player, stack, x + j, y, z + i, side);
+                        bl = new BlockLocation(x + j, y, z + i);
                         break;
                     case 1:
-                        paintBlock(world, player, stack, x + j , y, z + i, side);
+                        bl = new BlockLocation(x + j , y, z + i);
                         break;
                     case 2:
-                        paintBlock(world, player, stack, x + i, y  + j, z, side);
+                        bl = new BlockLocation(x + i, y  + j, z);
                         break;
                     case 3:
-                        paintBlock(world, player, stack, x + i, y + j, z, side);
+                        bl = new BlockLocation(x + i, y + j, z);
                         break;
                     case 4:
-                        paintBlock(world, player, stack, x, y + i, z + j, side);
+                        bl = new BlockLocation(x, y + i, z + j);
                         break;
                     case 5:
-                        paintBlock(world, player, stack, x, y + i, z + j, side);
+                        bl = new BlockLocation(x, y + i, z + j);
                         break;
+                }
+                if (bl != null) {
+                    Block block = world.getBlock(bl.x, bl.y, bl.z);
+                    usedOnBlockSide(stack, player, world, bl, block, side);
                 }
             }
         }
     }
     
-    private void paintBlock(World world, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
-        Block block = world.getBlock(x, y, z);
+    @Override
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
                 if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
                     for (int i = 0; i < 6; i++) {
-                        int oldColour = worldColourable.getColour(world, x, y, z, i);
-                        UndoManager.blockPainted(player, world, x, y, z, oldColour, i);
-                        ((IPantableBlock)block).setColour(world, x, y, z, newColour, i);
+                        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, i);
+                        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, i);
+                        ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, i);
                     }
                 } else {
-                    int oldColour = worldColourable.getColour(world, x, y, z, side);
-                    UndoManager.blockPainted(player, world, x, y, z, oldColour, side);
-                    ((IPantableBlock)block).setColour(world, x, y, z, newColour, side);
+                    int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+                    UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, side);
+                    ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
                 }
             } else {
-                spawnPaintParticles(world, x, y, z, side, newColour);
+                spawnPaintParticles(world, bl.x, bl.y, bl.z, side, newColour);
             }
         }
     }

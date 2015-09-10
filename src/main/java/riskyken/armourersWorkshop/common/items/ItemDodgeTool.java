@@ -4,29 +4,33 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import riskyken.plushieWrapper.common.world.BlockLocation;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool {
+public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool, IBlockPainter {
 
     public ItemDodgeTool() {
         super(LibItemNames.DODGE_TOOL);
@@ -58,10 +62,22 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool 
             }
             return true;
         }
+        
+        if (block == ModBlocks.armourerBrain & player.isSneaking()) {
+            if (!world.isRemote) {
+                TileEntity te = world.getTileEntity(x, y, z);
+                if (te != null && te instanceof TileEntityArmourerBrain) {
+                    ((TileEntityArmourerBrain)te).toolUsedOnArmourer(this, world, stack, player);
+                }
+            }
+            return true;
+        }
+        
         return false;
     }
     
-    private void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+    @Override
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int intensity = (Integer) ToolOptions.INTENSITY.readFromNBT(stack.getTagCompound());
         IPantableBlock worldColourable = (IPantableBlock) block;
         int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
