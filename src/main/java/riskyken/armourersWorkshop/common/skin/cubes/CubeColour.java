@@ -1,10 +1,5 @@
 package riskyken.armourersWorkshop.common.skin.cubes;
 
-import io.netty.buffer.ByteBuf;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,10 +10,12 @@ public class CubeColour implements ICubeColour {
     private static final String TAG_RED = "r";
     private static final String TAG_GREEN = "g";
     private static final String TAG_BLUE = "b";
+    private static final String TAG_TYPE = "t";
     
     private byte[] r;
     private byte[] g;
     private byte[] b;
+    private byte[] t;
     
     public CubeColour() {
         initArray();
@@ -28,37 +25,32 @@ public class CubeColour implements ICubeColour {
         r = cubeColour.getRed().clone();
         g = cubeColour.getGreen().clone();
         b = cubeColour.getBlue().clone();
+        t = cubeColour.getPaintType().clone();
     }
     
     public CubeColour(int colour) {
         r = new byte[6];
         g = new byte[6];
         b = new byte[6];
+        t = new byte[6];
         for (int i = 0; i < 6; i++) {
+            t[i] = (byte) (colour >> 24 & 0xff);
             r[i] = (byte) (colour >> 16 & 0xff);
             g[i] = (byte) (colour >> 8 & 0xff);
             b[i] = (byte) (colour & 0xff);
         }
     }
     
-    public CubeColour(ByteBuf buf) {
-        initArray();
-        readFromBuf(buf);
-    }
-    
-    public CubeColour(DataInputStream stream, int version) throws IOException {
-        initArray();
-        readFromStream(stream, version);
-    }
-    
     private void initArray() {
         r = new byte[6];
         g = new byte[6];
         b = new byte[6];
+        t = new byte[6];
         for (int i = 0; i < 6; i++) {
             r[i] = (byte)255;
             g[i] = (byte)255;
             b[i] = (byte)255;
+            t[i] = (byte)255;
         }
     }
     
@@ -75,6 +67,11 @@ public class CubeColour implements ICubeColour {
     @Override
     public byte getBlue(int side) {
         return b[side];
+    }
+    
+    @Override
+    public byte getPaintType(int side) {
+        return t[side];
     }
 
     @Override
@@ -93,7 +90,13 @@ public class CubeColour implements ICubeColour {
     }
     
     @Override
+    public byte[] getPaintType() {
+        return t;
+    }
+    
+    @Override
     public void setColour(int colour, int side) {
+        t[side] = (byte) (colour >> 24 & 0xff);
         r[side] = (byte) (colour >> 16 & 0xff);
         g[side] = (byte) (colour >> 8 & 0xff);
         b[side] = (byte) (colour & 0xff);
@@ -103,6 +106,7 @@ public class CubeColour implements ICubeColour {
     @Override
     public void setColour(int colour) {
         for (int i = 0; i < 6; i++) {
+            t[i] = (byte) (colour >> 24 & 0xff);
             r[i] = (byte) (colour >> 16 & 0xff);
             g[i] = (byte) (colour >> 8 & 0xff);
             b[i] = (byte) (colour & 0xff);
@@ -123,20 +127,10 @@ public class CubeColour implements ICubeColour {
     public void setBlue(byte blue, int side) {
         b[side] = blue;
     }
-
+    
     @Override
-    public void setRed(byte[] red) {
-        r = red;
-    }
-
-    @Override
-    public void setGreen(byte[] green) {
-        g = green;
-    }
-
-    @Override
-    public void setBlue(byte[] blue) {
-        b = blue;
+    public void setPaintType(byte type, int side) {
+        t[side] = type;
     }
 
     @Override
@@ -145,6 +139,9 @@ public class CubeColour implements ICubeColour {
             r[i] = compound.getByte(TAG_RED + i);
             g[i] = compound.getByte(TAG_GREEN + i);
             b[i] = compound.getByte(TAG_BLUE + i);
+            if (compound.hasKey(TAG_TYPE + i)) {
+                t[i] = compound.getByte(TAG_TYPE + i);
+            }
         }
     }
 
@@ -154,49 +151,14 @@ public class CubeColour implements ICubeColour {
             compound.setByte(TAG_RED + i, r[i]);
             compound.setByte(TAG_GREEN + i, g[i]);
             compound.setByte(TAG_BLUE + i, b[i]);
-        }
-    }
-    
-    @Override
-    public void readFromBuf(ByteBuf buf) {
-        for (int i = 0; i < 6; i++) {
-            r[i] = buf.readByte();
-            g[i] = buf.readByte();
-            b[i] = buf.readByte();
-        }
-
-    }
-    
-    @Override
-    public void writeToBuf(ByteBuf buf) {
-        for (int i = 0; i < 6; i++) {
-            buf.writeByte(r[i]);
-            buf.writeByte(g[i]);
-            buf.writeByte(b[i]);
-        }
-    }
-    
-    @Override
-    public void readFromStream(DataInputStream stream, int version) throws IOException {
-        for (int i = 0; i < 6; i++) {
-            r[i] = stream.readByte();
-            g[i] = stream.readByte();
-            b[i] = stream.readByte();
-        }
-    }
-    
-    @Override
-    public void writeToStream(DataOutputStream stream) throws IOException {
-        for (int i = 0; i < 6; i++) {
-            stream.writeByte(r[i]);
-            stream.writeByte(g[i]);
-            stream.writeByte(b[i]);
+            compound.setByte(TAG_TYPE + i, t[i]);
         }
     }
 
     @Override
     public String toString() {
         return "CubeColour [r=" + Arrays.toString(r) + ", g="
-                + Arrays.toString(g) + ", b=" + Arrays.toString(b) + "]";
+                + Arrays.toString(g) + ", b=" + Arrays.toString(b) + ", t="
+                + Arrays.toString(t) + "]";
     }
 }

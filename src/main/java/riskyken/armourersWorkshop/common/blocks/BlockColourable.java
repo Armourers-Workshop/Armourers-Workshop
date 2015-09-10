@@ -43,18 +43,25 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     protected IIcon markerOverlay;
     
     @SideOnly(Side.CLIENT)
+    protected IIcon noTexture;
+    
+    @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
         markerOverlay = register.registerIcon(LibBlockResources.MARKER);
+        noTexture = register.registerIcon(LibBlockResources.NO_TEXTURE);
     }
     
     @Override
-    public IIcon getIcon(int side, int meta) {
+    public IIcon getIcon(int paintType, int meta) {
         if (meta > 0) {
             return markerOverlay;
         }
-        return super.getIcon(side, meta);
+        if (paintType == 0) {
+            return noTexture;
+        }
+        return super.getIcon(paintType, meta);
     }
     
     @Override

@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 
@@ -19,14 +18,7 @@ public class BlockColourableGlass extends BlockColourable {
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibBlockResources.COLOURABLE_GLASS);
         markerOverlay = register.registerIcon(LibBlockResources.MARKER);
-    }
-    
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        if (meta > 0) {
-            return markerOverlay;
-        }
-        return super.getIcon(side, meta);
+        noTexture = register.registerIcon(LibBlockResources.NO_TEXTURE);
     }
     
     @SideOnly(Side.CLIENT)
