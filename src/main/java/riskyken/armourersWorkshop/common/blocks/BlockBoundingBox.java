@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -37,6 +38,7 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
         super(Material.cloth);
         //setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setBlockUnbreakable();
+        setResistance(6000000.0F);
         setStepSound(soundTypeCloth);
         setBlockName(LibBlockNames.BOUNDING_BOX);
         setLightOpacity(0);
@@ -44,6 +46,11 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
     
     @Override
     public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
+    }
+    
+    @Override
+    public boolean canDropFromExplosion(Explosion explosion) {
+        return false;
     }
     
     @Override
