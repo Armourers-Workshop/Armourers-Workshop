@@ -150,7 +150,7 @@ public class GuiArmourLibrary extends GuiContainer {
         
         deleteButton = new GuiIconButton(this, -1, PADDING * 2 + 20, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
         deleteButton.setIconLocation(0, 118, 24, 24);
-        buttonList.add(deleteButton);
+        //buttonList.add(deleteButton);
         
         int listWidth = this.width - INVENTORY_WIDTH - 10 - PADDING * 3;
         int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
@@ -415,9 +415,8 @@ public class GuiArmourLibrary extends GuiContainer {
         
         ModRenderHelper.enableAlphaBlend();
         drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - PADDING, 0, 180, INVENTORY_WIDTH, INVENTORY_HEIGHT);
-        drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - 18 - PADDING * 2 - 4, 0, 162, 18, 18);
-        if (armourLibrary.isCreativeLibrary()) {
-            
+        if (!armourLibrary.isCreativeLibrary()) {
+            drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - 18 - PADDING * 2 - 4, 0, 162, 18, 18);
         }
         drawTexturedModalRect(PADDING + INVENTORY_WIDTH - 26, this.height - INVENTORY_HEIGHT - 26 - PADDING * 2, 18, 154, 26, 26);
         
