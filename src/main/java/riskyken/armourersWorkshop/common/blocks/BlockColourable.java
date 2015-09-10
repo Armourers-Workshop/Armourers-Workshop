@@ -40,7 +40,7 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon markerOverlay;
+    protected IIcon markerOverlay;
     
     @SideOnly(Side.CLIENT)
     @Override
