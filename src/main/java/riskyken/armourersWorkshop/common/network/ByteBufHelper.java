@@ -12,6 +12,7 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -27,6 +28,22 @@ public final class ByteBufHelper {
         long mostSigBits = buf.readLong();
         long leastSigBits = buf.readLong();
         return new UUID(mostSigBits, leastSigBits);
+    }
+    
+    public static void writeStringArrayToBuf(ByteBuf buf, String[] strings) {
+        buf.writeInt(strings.length);
+        for (int i = 0; i < strings.length; i++) {
+            ByteBufUtils.writeUTF8String(buf, strings[i]);
+        }
+    }
+    
+    public static String[] readStringArrayFromBuf(ByteBuf buf) {
+        int size = buf.readInt();
+        String[] strings = new String[size];
+        for (int i = 0; i < size; i++) {
+            strings[i] = ByteBufUtils.readUTF8String(buf);
+        }
+        return strings;
     }
     
     public static void writeSkinToByteBuf(ByteBuf buf, Skin skin) {

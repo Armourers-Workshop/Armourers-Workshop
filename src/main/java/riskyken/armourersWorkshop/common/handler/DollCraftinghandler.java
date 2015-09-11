@@ -14,9 +14,9 @@ import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class DollCraftinghandler {
+public class DollCraftingHandler {
 
-    public DollCraftinghandler() {
+    public DollCraftingHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     

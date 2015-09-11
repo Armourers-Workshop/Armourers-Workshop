@@ -10,7 +10,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
-import riskyken.armourersWorkshop.common.handler.DollCraftinghandler;
+import riskyken.armourersWorkshop.common.handler.DollCraftingHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,7 +31,7 @@ public final class CraftingManager {
             ModItemRecipes.init();
         }
         if (!ConfigHandler.disableDollRecipe) {
-            new DollCraftinghandler();
+            new DollCraftingHandler();
         }
     }
 
