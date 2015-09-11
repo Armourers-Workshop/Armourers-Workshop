@@ -1,16 +1,21 @@
 package riskyken.armourersWorkshop.proxies;
 
+import java.lang.reflect.Field;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
@@ -41,6 +46,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -49,6 +55,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
@@ -91,8 +98,8 @@ public class ClientProxy extends CommonProxy {
         Render arrowRender = new RenderSkinnedArrow();
         arrowRender.setRenderManager(RenderManager.instance);
         RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
-    }
-
+    } 
+    
     @Override
     public void init() {
         equipmentWardrobeHandler = new EquipmentWardrobeHandler();
@@ -106,6 +113,21 @@ public class ClientProxy extends CommonProxy {
     public void postInit() {
         Addons.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
+        if (HolidayHelper.valentins.isHolidayActive()) {
+            enableValentinsClouds();
+        }
+    }
+    
+    private void enableValentinsClouds() {
+        ModLogger.log("Love is in the air!");
+        try {
+            Object o = ReflectionHelper.getPrivateValue(RenderGlobal.class, null, "locationCloudsPng", "field_110925_j");
+            Field f = ReflectionHelper.findField(ResourceLocation.class, "resourceDomain", "field_110626_a");
+            f.setAccessible(true);
+            f.set(o, LibModInfo.ID.toLowerCase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     private void enableCrossModSupport() {
