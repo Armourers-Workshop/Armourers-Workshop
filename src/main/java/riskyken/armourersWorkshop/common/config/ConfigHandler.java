@@ -2,12 +2,12 @@ package riskyken.armourersWorkshop.common.config;
 
 import java.io.File;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.config.Configuration;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 public class ConfigHandler {
 
@@ -45,6 +45,7 @@ public class ConfigHandler {
     public static String[] disabledSkins = {};
     public static boolean allowClientsToDownloadSkins = false;
     public static boolean allowClientsToUploadSkins = true;
+    public static boolean enableHolidayEvents = true;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
@@ -137,6 +138,11 @@ public class ConfigHandler {
         allowEquipmentWardrobe = config
                 .get(CATEGORY_GENERAL, "allowEquipmentWardrobe", true,
                 "Allow the player to open the equipment wardrobe GUI.")
+                .getBoolean(true);
+        
+        enableHolidayEvents = config
+                .get(CATEGORY_GENERAL, "enableHolidayEvents", true,
+                "Setting to false will disable holiday events. What's wrong with you!")
                 .getBoolean(true);
     }
     
