@@ -1,5 +1,11 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import org.lwjgl.opengl.GL11;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GLAllocation;
@@ -18,9 +24,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -35,16 +38,10 @@ import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
 
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private static final ResourceLocation circle = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanohaCircle.png");
-    private static final ResourceLocation circleBlur = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanohaCircleBlur.png");
     
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
     private static boolean isHalloween;
@@ -293,15 +290,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderBuffer.addVertexWithUV(1, 0, 1, 0, 1);
         renderBuffer.addVertexWithUV(-1, 0, 1, 1, 1);
         renderBuffer.draw();
-        GL11.glTranslatef(0F, -0.002F, 0F);
-        bindTexture(circleBlur);
-        renderBuffer.startDrawingQuads();
-        renderBuffer.addVertexWithUV(-1, 0, -1, 1, 0);
-        renderBuffer.addVertexWithUV(1, 0, -1, 0, 0);
-        renderBuffer.addVertexWithUV(1, 0, 1, 0, 1);
-        renderBuffer.addVertexWithUV(-1, 0, 1, 1, 1);
-        renderBuffer.draw();
-        
         
         ModRenderHelper.disableAlphaBlend();
         ModRenderHelper.enableLighting();
