@@ -20,7 +20,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
@@ -30,6 +29,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
 import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -190,6 +190,22 @@ public class GuiArmourLibrary extends GuiContainer {
         buttonList.add(dropDownList);
     }
     
+    /**
+     * Returns true if the player is trying to load and item
+     * or false if they are trying to save.
+     * @return true = loading, false = saving
+     */
+    private boolean isLoading() {
+        if (!armourLibrary.isCreativeLibrary()) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
+            ItemStack stack = slot.getStack();
+            if (stack != null && !(stack.getItem() instanceof ItemEquipmentSkinTemplate)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     @Override
     protected void actionPerformed(GuiButton button) {
         String filename = filenameTextbox.getText().trim();
@@ -220,19 +236,10 @@ public class GuiArmourLibrary extends GuiContainer {
             MessageClientGuiLoadSaveArmour message;
             switch (button.id) {
             case BUTTON_ID_LOAD_SAVE:
-                boolean loading = true;
                 boolean clientLoad = false;
                 boolean publicList = true;
                 
-                if (!armourLibrary.isCreativeLibrary()) {
-                    Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
-                    ItemStack stack = slot.getStack();
-                    if (stack != null && !(stack.getItem() instanceof ItemEquipmentSkinTemplate)) {
-                        loading = false;
-                    }
-                }
-                
-                if (fileSwitchType == LibraryFileType.LOCAL && ArmourersWorkshop.isDedicated()) {
+                if (fileSwitchType == LibraryFileType.LOCAL && !mc.isIntegratedServerRunning()) {
                     //Is playing on a server.
                     clientLoad = true;
                 }
@@ -241,7 +248,7 @@ public class GuiArmourLibrary extends GuiContainer {
                     publicList = false;
                 }
                 
-                if (loading) {
+                if (isLoading()) {
                     if (clientLoad) {
                         Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + ".armour");
                         if (itemData != null) {
@@ -315,7 +322,18 @@ public class GuiArmourLibrary extends GuiContainer {
         
         if (fileSwitchType == LibraryFileType.LOCAL) {
             files = armourLibrary.clientFileNames;
+            if (!mc.isIntegratedServerRunning()) {
+                loadSaveButton.enabled = false;
+                if (isLoading()) {
+                    loadSaveButton.enabled = ConfigHandler.allowClientsToUploadSkins;
+                } else {
+                    loadSaveButton.enabled = ConfigHandler.allowClientsToDownloadSkins;
+                }
+            }
+        } else {
+            loadSaveButton.enabled = true;
         }
+        
         if (fileSwitchType == LibraryFileType.REMOTE_PRIVATE) {
             files = armourLibrary.privateServerFileNames;
         }
