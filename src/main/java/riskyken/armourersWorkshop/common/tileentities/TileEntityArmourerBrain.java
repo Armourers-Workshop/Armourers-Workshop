@@ -68,6 +68,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     public SkinTexture skinTexture;
     
     public TileEntityArmourerBrain() {
+        this.direction = ForgeDirection.NORTH;
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
         this.items = new ItemStack[2];
         this.showOverlay = true;
