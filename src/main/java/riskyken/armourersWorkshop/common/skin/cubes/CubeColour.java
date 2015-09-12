@@ -29,12 +29,12 @@ public class CubeColour implements ICubeColour {
     }
     
     public CubeColour(int colour) {
+        t = new byte[6];
         r = new byte[6];
         g = new byte[6];
         b = new byte[6];
-        t = new byte[6];
         for (int i = 0; i < 6; i++) {
-            t[i] = (byte) (colour >> 24 & 0xff);
+            t[i] = (byte) 255;
             r[i] = (byte) (colour >> 16 & 0xff);
             g[i] = (byte) (colour >> 8 & 0xff);
             b[i] = (byte) (colour & 0xff);
@@ -42,15 +42,15 @@ public class CubeColour implements ICubeColour {
     }
     
     private void initArray() {
+        t = new byte[6];
         r = new byte[6];
         g = new byte[6];
         b = new byte[6];
-        t = new byte[6];
         for (int i = 0; i < 6; i++) {
+            t[i] = (byte)255;
             r[i] = (byte)255;
             g[i] = (byte)255;
             b[i] = (byte)255;
-            t[i] = (byte)255;
         }
     }
     
@@ -96,7 +96,7 @@ public class CubeColour implements ICubeColour {
     
     @Override
     public void setColour(int colour, int side) {
-        t[side] = (byte) (colour >> 24 & 0xff);
+        t[side] = (byte) 255;
         r[side] = (byte) (colour >> 16 & 0xff);
         g[side] = (byte) (colour >> 8 & 0xff);
         b[side] = (byte) (colour & 0xff);
@@ -106,7 +106,7 @@ public class CubeColour implements ICubeColour {
     @Override
     public void setColour(int colour) {
         for (int i = 0; i < 6; i++) {
-            t[i] = (byte) (colour >> 24 & 0xff);
+            t[i] = (byte) 255;
             r[i] = (byte) (colour >> 16 & 0xff);
             g[i] = (byte) (colour >> 8 & 0xff);
             b[i] = (byte) (colour & 0xff);
@@ -141,6 +141,8 @@ public class CubeColour implements ICubeColour {
             b[i] = compound.getByte(TAG_BLUE + i);
             if (compound.hasKey(TAG_TYPE + i)) {
                 t[i] = compound.getByte(TAG_TYPE + i);
+            } else {
+                t[i] = (byte)255;
             }
         }
     }
