@@ -1,3 +1,29 @@
+Build 0.37.0
+Added a private library folder for player on a server.
+Added dye bottles. (not usable yet)
+Added back-end support for skin painting and dye systems.
+Added ability for most wrench tools to rotate skin blocks.
+Added ability for all tools to be shift clicked on the Armourer.
+Added support for Metallurgy swords.
+Added config syncing for allowClientsToDownloadSkins, allowClientsToUploadSkins, overrideSwordsActive and overrideBowsActive.
+Added blockSkinMaxRenderDistance config option.
+Added wireframeRender debug config option.
+Added enableHolidayEvents config option. (for the Scrooge's of the world)
+Added new holiday event!
+Changed how skins are stored in memory.
+Changed skin backer algorithm to remove "caves" from skin before rendering.
+Changed the library GUI layout. (not final)
+Changed collision & bounding boxes on block skins to match the skin size.
+Changed library to remembers type and search filters when the GUI is closed.
+Changed equipment skins templates item name will now be the skin name if one was set.
+Fixed transparency with skinnable blocks behind other skinnable blocks.
+Fixed crash cause by mods returning null as a players display name.
+Fixed crash if a player beyond tracking range shoots an arrow into tracking range of a player.
+Fixed block skins being placeable in invalid locations.
+Fixed block skins not playing a sound when placed.
+Fixed bounding box blocks being drop from explosions.
+Fixed old legacy skirts being 1 block too low.
+
 Build 0.36.0
 Added block skins.
 Added new premade block skins.
