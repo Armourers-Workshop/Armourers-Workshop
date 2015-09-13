@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.render.block;
+package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
@@ -70,6 +70,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         model.compile(SCALE);
         
         GL11.glPushMatrix();
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glEnable(GL11.GL_NORMALIZE);
         
         int rotaion = te.getRotation();
@@ -261,6 +262,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
         
         GL11.glDisable(GL11.GL_NORMALIZE);
+        GL11.glPopAttrib();
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
     }

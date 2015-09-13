@@ -7,4 +7,6 @@ public interface ISkinPointer {
     public int getSkinId();
     
     public ISkinType getSkinType();
+    
+    public ISkinDye getSkinDye();
 }

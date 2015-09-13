@@ -1,14 +1,13 @@
 package riskyken.armourersWorkshop.client.model.armourer;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelHand extends ModelBase {
@@ -34,6 +33,7 @@ public class ModelHand extends ModelBase {
     }
     
     public void render(float scale) {
+        
         GL11.glPushMatrix();
         GL11.glRotatef(-90, 1, 0, 0);
         GL11.glPushMatrix();
@@ -46,5 +46,6 @@ public class ModelHand extends ModelBase {
         ModRenderHelper.disableAlphaBlend();
         GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glPopMatrix();
+        
     }
 }

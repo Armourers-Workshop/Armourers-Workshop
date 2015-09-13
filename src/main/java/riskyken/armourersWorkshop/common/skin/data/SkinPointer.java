@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -15,20 +16,24 @@ public class SkinPointer implements ISkinPointer {
     public ISkinType skinType;
     public int skinId;
     public boolean lockSkin;
+    public SkinDye skinDye;
     
     public SkinPointer() {
+        this.skinDye = new SkinDye();
     }
     
     public SkinPointer(ISkinPointer skinPointer) {
         this.skinType = skinPointer.getSkinType();
         this.skinId = skinPointer.getSkinId();
         this.lockSkin = false;
+        this.skinDye = new SkinDye(skinPointer.getSkinDye());
     }
     
     public SkinPointer(ISkinType skinType, int skinId, boolean lockSkin) {
         this.skinType = skinType;
         this.skinId = skinId;
         this.lockSkin = lockSkin;
+        this.skinDye = new SkinDye();
     }
     
     @Override
@@ -41,11 +46,17 @@ public class SkinPointer implements ISkinPointer {
         return skinType;
     }
     
+    @Override
+    public ISkinDye getSkinDye() {
+        return skinDye;
+    }
+    
     public void readFromCompound(NBTTagCompound compound) {
         NBTTagCompound skinDataCompound = compound.getCompoundTag(TAG_SKIN_DATA);
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinDataCompound.getString(TAG_SKIN_TYPE));
         this.skinId = skinDataCompound.getInteger(TAG_SKIN_ID);
         this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
+        this.skinDye.readFromCompound(skinDataCompound);
     }
     
     public void writeToCompound(NBTTagCompound compound) {
@@ -53,6 +64,7 @@ public class SkinPointer implements ISkinPointer {
         skinDataCompound.setString(TAG_SKIN_TYPE, this.skinType.getRegistryName());
         skinDataCompound.setInteger(TAG_SKIN_ID, this.skinId);
         skinDataCompound.setBoolean(TAG_SKIN_LOCK, this.lockSkin);
+        skinDye.writeToCompound(skinDataCompound);
         compound.setTag(TAG_SKIN_DATA, skinDataCompound);
     }
 }

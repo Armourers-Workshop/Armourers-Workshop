@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.render.block;
+package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import java.awt.Color;
 
