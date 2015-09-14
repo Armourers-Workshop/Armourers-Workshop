@@ -34,7 +34,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     
     @Override
     public boolean hasEffect(ItemStack stack, int pass) {
-        PaintType paintType = PaintingHelper.getPaintTypeFromTool(stack);
+        PaintType paintType = PaintingHelper.getToolPaintType(stack);
         return paintType != PaintType.NORMAL;
     }
     
@@ -62,7 +62,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     @Override
     public int getColorFromItemStack(ItemStack stack, int pass) {
         if (pass == 0) {
-            return PaintingHelper.getToolColour(stack);
+            return PaintingHelper.getToolPaintColourRGB(stack);
         }
         return super.getColorFromItemStack(stack, pass);
     }
@@ -70,7 +70,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     @Override
     public IIcon getIcon(ItemStack stack, int pass) {
         if (pass == 0) {
-            if (PaintingHelper.getToolHasColour(stack)) {
+            if (PaintingHelper.getToolHasPaint(stack)) {
                 return paintIcon;
             } else {
                 return itemIcon;
@@ -81,16 +81,16 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
 
     @Override
     public boolean getToolHasColour(ItemStack stack) {
-        return PaintingHelper.getToolHasColour(stack);
+        return PaintingHelper.getToolHasPaint(stack);
     }
 
     @Override
     public int getToolColour(ItemStack stack) {
-        return PaintingHelper.getToolColour(stack);
+        return PaintingHelper.getToolPaintColourRGB(stack);
     }
 
     @Override
     public void setToolColour(ItemStack stack, int colour) {
-        PaintingHelper.setToolColour(stack, colour);
+        PaintingHelper.setToolPaintColour(stack, colour);
     }
 }

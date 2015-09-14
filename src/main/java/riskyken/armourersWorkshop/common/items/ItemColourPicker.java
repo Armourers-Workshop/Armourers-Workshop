@@ -164,17 +164,17 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     
     @Override
     public boolean getToolHasColour(ItemStack stack) {
-        return PaintingHelper.getToolHasColour(stack);
+        return PaintingHelper.getToolHasPaint(stack);
     }
 
     @Override
     public int getToolColour(ItemStack stack) {
-        return PaintingHelper.getToolColour(stack);
+        return PaintingHelper.getToolPaintColourRGB(stack);
     }
 
     @Override
     public void setToolColour(ItemStack stack, int colour) {
-        PaintingHelper.setToolColour(stack, colour);
+        PaintingHelper.setToolPaintColour(stack, colour);
     }
 
     @Override

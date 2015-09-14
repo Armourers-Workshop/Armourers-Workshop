@@ -21,8 +21,8 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     @SideOnly(Side.CLIENT)
     @Override
     public boolean hasEffect(ItemStack stack, int pass) {
-        PaintType paintType = PaintingHelper.getPaintTypeFromTool(stack);
-        if (paintType == PaintType.HAIR | paintType == PaintType.HAIR) {
+        PaintType paintType = PaintingHelper.getToolPaintType(stack);
+        if (paintType != PaintType.NORMAL) {
             return true;
         }
         return false;
@@ -57,11 +57,11 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
 
     @Override
     public int getToolColour(ItemStack stack) {
-        return PaintingHelper.getToolColour(stack);
+        return PaintingHelper.getToolPaintColourRGB(stack);
     }
 
     @Override
     public void setToolColour(ItemStack stack, int colour) {
-        PaintingHelper.setToolColour(stack, colour);
+        PaintingHelper.setToolPaintColour(stack, colour);
     }
 }

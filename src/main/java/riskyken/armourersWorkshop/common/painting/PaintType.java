@@ -27,6 +27,10 @@ public enum PaintType {
         this.key = key;
     }
     
+    public int getKey() {
+        return key;
+    }
+    
     public static PaintType getPaintTypeFormSKey(byte key) {
         int uKey = key & 0xFF;
         return getPaintTypeFromUKey(uKey);
