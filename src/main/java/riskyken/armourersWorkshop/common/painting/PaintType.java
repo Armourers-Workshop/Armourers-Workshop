@@ -46,9 +46,9 @@ public enum PaintType {
         case 0:
             return PaintType.NONE;
         case 1:
-            return PaintType.SKIN;
+            return PaintType.DYE_1;
         case 2:
-            return PaintType.HAIR;
+            return PaintType.DYE_2;
         case 255:
             return PaintType.NORMAL;
         }

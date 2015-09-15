@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
@@ -56,7 +57,9 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
                     int colour = ((IPantable)te).getColour(0);
+                    PaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
+                    setToolPaintType(stack, paintType);
                 }
             }
             return true;
@@ -98,10 +101,12 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int colour = getToolColour(stack);
+        PaintType paintType = getToolPaintType(stack);
         IPantableBlock worldColourable = (IPantableBlock) block;
         int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
         UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, side);
         ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, colour, side);
+        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
     }
     
     @Override

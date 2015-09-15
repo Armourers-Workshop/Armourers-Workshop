@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -108,6 +109,23 @@ public class BlockColourable extends AbstractModBlock implements ITileEntityProv
             return ((IPantable)te).getColour();
         }
         return new CubeColour();
+    }
+    
+    @Override
+    public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null & te instanceof IPantable) {
+            ((IPantable)te).setPaintType(paintType, side);
+        }
+    }
+    
+    @Override
+    public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null & te instanceof IPantable) {
+            return ((IPantable)te).getPaintType(side);
+        }
+        return PaintType.NORMAL;
     }
     
     @Override

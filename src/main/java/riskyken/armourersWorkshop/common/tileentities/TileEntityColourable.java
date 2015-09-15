@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 
 public class TileEntityColourable extends TileEntity implements IPantable {
@@ -81,6 +82,16 @@ public class TileEntityColourable extends TileEntity implements IPantable {
     public int getColour(int side) {
         Color saveColour = new Color(colour.getRed(side) & 0xFF, colour.getGreen(side) & 0xFF, colour.getBlue(side) & 0xFF);
         return saveColour.getRGB();
+    }
+    
+    @Override
+    public void setPaintType(PaintType paintType, int side) {
+        colour.setPaintType((byte)paintType.getKey(), side);
+    }
+    
+    @Override
+    public PaintType getPaintType(int side) {
+        return PaintType.getPaintTypeFormSKey(colour.getPaintType(side));
     }
     
     @Override

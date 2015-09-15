@@ -28,6 +28,7 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -195,6 +196,15 @@ public class BlockBoundingBox extends Block implements ITileEntityProvider, IPan
         }
         
         return 0x00FFFFFF;
+    }
+    
+    @Override
+    public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side) {
+    }
+    
+    @Override
+    public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side) {
+        return PaintType.NORMAL;
     }
 
     @Override

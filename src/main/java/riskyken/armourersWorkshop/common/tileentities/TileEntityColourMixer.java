@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
@@ -67,6 +68,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
             if (stackInput.getItem() instanceof IPaintingTool && stackInput.getItem() != ModItems.colourPicker) {
                 IPaintingTool paintingTool = (IPaintingTool) stackInput.getItem();
                 paintingTool.setToolColour(stackInput, colour);
+                paintingTool.setToolPaintType(stackInput, getPaintType(0));
             }
             if (stackInput.getItem() == ModItems.colourPicker) {
                 setColour(((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput), true);
@@ -168,5 +170,15 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public void setColour(ICubeColour colour) {
         //NO-OP
         //setColour(colour.g);
+    }
+    
+    @Override
+    public void setPaintType(PaintType paintType, int side) {
+        //NO-OP
+    }
+    
+    @Override
+    public PaintType getPaintType(int side) {
+        return PaintType.DYE_1;
     }
 }

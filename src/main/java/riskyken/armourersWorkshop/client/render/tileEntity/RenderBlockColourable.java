@@ -27,13 +27,13 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         for (int i = 0; i < 6; i++) {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
             int paintType = cubeColour.getPaintType(i) & 0xFF;
-            if (paintType == 1) {
+            if (paintType != 255) {
                 ModRenderHelper.disableLighting();
                 
                 GL11.glDisable(GL11.GL_LIGHTING);
                 bindTexture(MARKERS);
                 GL11.glColor3f(0.77F, 0.77F, 0.77F);
-                renderFaceWithMarker(x, y, z, dir, 0);
+                renderFaceWithMarker(x, y, z, dir, paintType);
                 GL11.glColor3f(1F, 1F, 1F);
                 ModRenderHelper.enableLighting();
             }
@@ -61,33 +61,33 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
             break;
         case NORTH:
             renderer.startDrawingQuads();
+            renderer.addVertexWithUV(x + 1F, y, z - offset, 0F, 1F);
+            renderer.addVertexWithUV(x, y, z - offset, 1F, 1F);
+            renderer.addVertexWithUV(x, y + 1F, z - offset, 1F, 0F);
+            renderer.addVertexWithUV(x + 1F, y + 1F, z - offset, 0F, 0F);
+            renderer.draw();
+        case SOUTH:
+            renderer.startDrawingQuads();
             renderer.addVertexWithUV(x, y, z + 1F + offset, 0F, 1F);
             renderer.addVertexWithUV(x + 1F, y, z + 1F + offset, 1F, 1F);
             renderer.addVertexWithUV(x + 1F, y + 1F, z + 1F + offset, 1F, 0F);
             renderer.addVertexWithUV(x, y + 1F, z + 1F + offset, 0F, 0F);
             renderer.draw();
-        case SOUTH:
-            renderer.startDrawingQuads();
-            renderer.addVertexWithUV(x + 1F, y, z - offset, 0F, 1F);
-            renderer.addVertexWithUV(x, y, z - offset, 1F, 1F);
-            renderer.addVertexWithUV(x, y + 1F, z - offset, 1F, 0F);
-            renderer.addVertexWithUV(x + 1F, y + 1F, z - offset, 0F, 0F);
-            renderer.draw();   
             break;
         case WEST:
-            renderer.startDrawingQuads();
-            renderer.addVertexWithUV(x + 1 + offset, y, z + 1F, 0F, 1F);
-            renderer.addVertexWithUV(x + 1 + offset, y, z, 1F, 1F);
-            renderer.addVertexWithUV(x + 1 + offset, y + 1F, z, 1F, 0F);
-            renderer.addVertexWithUV(x + 1 + offset, y + 1F, z + 1F, 0F, 0F);
-            renderer.draw();
-            break;
-        case EAST:
             renderer.startDrawingQuads();
             renderer.addVertexWithUV(x - offset, y, z , 0F, 1F);
             renderer.addVertexWithUV(x - offset, y, z + 1F, 1F, 1F);
             renderer.addVertexWithUV(x - offset, y + 1F, z + 1F, 1F, 0F);
             renderer.addVertexWithUV(x - offset, y + 1F, z, 0F, 0F);
+            renderer.draw();
+            break;
+        case EAST:
+            renderer.startDrawingQuads();
+            renderer.addVertexWithUV(x + 1 + offset, y, z + 1F, 0F, 1F);
+            renderer.addVertexWithUV(x + 1 + offset, y, z, 1F, 1F);
+            renderer.addVertexWithUV(x + 1 + offset, y + 1F, z, 1F, 0F);
+            renderer.addVertexWithUV(x + 1 + offset, y + 1F, z + 1F, 0F, 0F);
             renderer.draw();
             break;
         default:

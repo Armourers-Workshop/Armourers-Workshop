@@ -64,4 +64,14 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     public void setToolColour(ItemStack stack, int colour) {
         PaintingHelper.setToolPaintColour(stack, colour);
     }
+    
+    @Override
+    public void setToolPaintType(ItemStack stack, PaintType paintType) {
+        PaintingHelper.setToolPaint(stack, paintType);
+    }
+    
+    @Override
+    public PaintType getToolPaintType(ItemStack stack) {
+        return PaintingHelper.getToolPaintType(stack) ;
+    }
 }

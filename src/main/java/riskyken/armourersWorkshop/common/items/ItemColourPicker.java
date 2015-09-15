@@ -31,6 +31,7 @@ import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
@@ -180,5 +181,15 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     @Override
     public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
         //Only here to allow colour updates
+    }
+    
+    @Override
+    public void setToolPaintType(ItemStack stack, PaintType paintType) {
+        PaintingHelper.setToolPaint(stack, paintType);
+    }
+    
+    @Override
+    public PaintType getToolPaintType(ItemStack stack) {
+        return PaintingHelper.getToolPaintType(stack) ;
     }
 }
