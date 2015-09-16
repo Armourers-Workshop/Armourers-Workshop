@@ -74,6 +74,7 @@ item.armourersworkshop:dyeBottle.flavour=Unfinished do not use.
 item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s
 item.armourersworkshop:rollover.colour=&6Colour:&7 %s
 item.armourersworkshop:rollover.hex=&6Hex:&7 %s
+item.armourersworkshop:rollover.paintType=&6Paint Type:&7 %s
 item.armourersworkshop:rollover.nopaint=&6No paint.
 item.armourersworkshop:rollover.settingsSaved=&6Settings Saved.
 item.armourersworkshop:rollover.noSettingsSaved=&cNo Settings Saved.

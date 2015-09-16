@@ -42,15 +42,10 @@ public enum PaintType {
     }
     
     public static PaintType getPaintTypeFromUKey(int uKey) {
-        switch (uKey) {
-        case 0:
-            return PaintType.NONE;
-        case 1:
-            return PaintType.DYE_1;
-        case 2:
-            return PaintType.DYE_2;
-        case 255:
-            return PaintType.NORMAL;
+        for (int i = 0; i < values().length; i++) {
+            if (values()[i].key == uKey) {
+                return values()[i];
+            }
         }
         return PaintType.NORMAL;
     }

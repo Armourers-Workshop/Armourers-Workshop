@@ -179,6 +179,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     
     @Override
     public PaintType getPaintType(int side) {
-        return PaintType.DYE_1;
+        return PaintType.RAINBOW;
     }
 }

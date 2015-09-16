@@ -10,7 +10,7 @@ import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 public class BlockColourableGlass extends BlockColourable {
 
     public BlockColourableGlass(String name, boolean glowing) {
-        super(name, true);
+        super(name, glowing);
     }
     
     @SideOnly(Side.CLIENT)

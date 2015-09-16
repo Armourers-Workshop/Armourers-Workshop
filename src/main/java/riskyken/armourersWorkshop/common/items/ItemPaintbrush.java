@@ -121,11 +121,14 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(stack, player, list, p_77624_4_);
         Color c = new Color(getToolColour(stack));
+        PaintType paintType = getToolPaintType(stack);
         String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
         String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
         String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
+        String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.toString());
         list.add(colourText);
         list.add(hexText);
+        list.add(paintText);
     }
     
     @Override
