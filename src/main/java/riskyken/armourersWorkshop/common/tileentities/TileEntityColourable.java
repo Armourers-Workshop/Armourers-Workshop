@@ -87,6 +87,8 @@ public class TileEntityColourable extends TileEntity implements IPantable {
     @Override
     public void setPaintType(PaintType paintType, int side) {
         colour.setPaintType((byte)paintType.getKey(), side);
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override

@@ -153,6 +153,9 @@ public class SkinCubeData {
         for (int i = 0; i < getCubeCount(); i++) {
             if (version < 10) {
                 LegacyCubeHelper.loadLegacyCubeData(this, i, stream, version, skinPart);
+                for (int side = 0; side < 6; side++) {
+                    cubePaintType[i][side] = (byte)255;
+                }
             } else {
                 cubeId[i] = stream.readByte();
                 cubeLocX[i] = stream.readByte();

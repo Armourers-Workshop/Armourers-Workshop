@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
@@ -99,6 +100,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         Color toolColour = new Color(getToolColour(stack));
+        PaintType paintType = getToolPaintType(stack);
         float[] toolhsb;
         toolhsb = Color.RGBtoHSB(toolColour.getRed(), toolColour.getGreen(), toolColour.getBlue(), null);
         IPantableBlock worldColourable = (IPantableBlock) block;
@@ -111,6 +113,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         
         UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, side);
         ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
+        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
     }
     
     @Override
