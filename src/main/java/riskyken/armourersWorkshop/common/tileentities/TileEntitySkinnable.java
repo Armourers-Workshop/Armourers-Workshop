@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -140,7 +140,7 @@ public class TileEntitySkinnable extends TileEntity {
 
     @SideOnly(Side.CLIENT)
     private Skin getSkinClient(ISkinPointer skinPointer) {
-        return ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+        return ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
     }
 
     private Skin getSkinServer(ISkinPointer skinPointer) {

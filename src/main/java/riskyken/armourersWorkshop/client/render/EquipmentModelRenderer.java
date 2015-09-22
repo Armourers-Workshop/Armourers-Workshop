@@ -19,7 +19,6 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
@@ -31,6 +30,7 @@ import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourLegs;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomArmourSkirt;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetSword;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -113,7 +113,7 @@ public final class EquipmentModelRenderer {
     }
     
     public Skin getCustomArmourItemData(int equipmentId) {
-        return ClientModelCache.INSTANCE.getEquipmentItemData(equipmentId);
+        return ClientSkinCache.INSTANCE.getEquipmentItemData(equipmentId);
     }
     
     public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
@@ -138,7 +138,7 @@ public final class EquipmentModelRenderer {
             return false;
         }
         int skinId = equipmentData.getEquipmentId(SkinTypeRegistry.skinLegs);
-        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinId);
+        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinId);
         //TODO check for skirt data
         return true;
     }

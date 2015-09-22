@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -44,7 +44,7 @@ public final class ItemStackRenderHelper {
             return;
         }
         
-        Skin data = ClientModelCache.INSTANCE.getEquipmentItemData(skinId);
+        Skin data = ClientSkinCache.INSTANCE.getEquipmentItemData(skinId);
         if (data == null) {
             return;
         }
@@ -72,7 +72,7 @@ public final class ItemStackRenderHelper {
     }
     
     public static void renderSkinWithoutHelper(SkinPointer skinPointer) {
-        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
+        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
         if (skin == null) {
             return;
         }

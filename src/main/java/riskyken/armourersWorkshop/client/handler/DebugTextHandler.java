@@ -9,9 +9,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -36,7 +36,7 @@ public class DebugTextHandler {
             dataLine += "mc:" + ArmourersWorkshop.proxy.getPlayerModelCacheSize() + " - ";
             dataLine += "pd:" + EquipmentModelRenderer.INSTANCE.getSkinDataMapSize() + " - ";
             dataLine += "bq:" + ModelBakery.INSTANCE.getBakingQueueSize() + " - ";
-            dataLine += "rq:" + ClientModelCache.INSTANCE.getRequestQueueSize();
+            dataLine += "rq:" + ClientSkinCache.INSTANCE.getRequestQueueSize();
             event.left.add(dataLine);
             dataLine = "sr:" + ModClientFMLEventHandler.skinRenderLastTick;
             if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {

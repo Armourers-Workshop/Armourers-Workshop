@@ -15,10 +15,10 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -62,11 +62,11 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         ModRenderHelper.setLightingForBlock(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         SkinPointer skinPointer = tileEntity.getSkinPointer();
         if (skinPointer != null) {
-            Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+            Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
             if (skin != null) {
                 renderSkin(tileEntity, x, y, z, skin);
             } else {
-                ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
+                ClientSkinCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
                 GL11.glPushMatrix();
                 GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
                 loadingModel.render(tileEntity, partialTickTime, 0.0625F);

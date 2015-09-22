@@ -11,9 +11,9 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
@@ -88,10 +88,10 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     private boolean canRenderModel(ItemStack stack) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+            if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 return true;
             } else {
-                ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
+                ClientSkinCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
                 return false;
             }
         } else {

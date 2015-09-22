@@ -9,10 +9,10 @@ import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -33,13 +33,13 @@ public class RenderSkinnedArrow extends RenderArrow {
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
             if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow)) {
                 int skinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow);
-                if (ClientModelCache.INSTANCE.isEquipmentInCache(skinId)) {
+                if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinId)) {
                     ModRenderHelper.enableAlphaBlend();
                     renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinId);
                     ModRenderHelper.disableAlphaBlend();
                     return;
                 } else {
-                    ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinId);
+                    ClientSkinCache.INSTANCE.requestEquipmentDataFromServer(skinId);
                 }
             }
         }
@@ -48,7 +48,7 @@ public class RenderSkinnedArrow extends RenderArrow {
     }
     
     private void renderArrowSkin(EntityArrow entityArrow, double x, double y, double z, float partialTickTime, int skinId) {
-        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinId);
+        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinId);
         if (skin == null) {
             return;
         }

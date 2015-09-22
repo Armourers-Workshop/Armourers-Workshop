@@ -24,7 +24,6 @@ import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
 import riskyken.armourersWorkshop.client.handler.EquipmentWardrobeHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -41,6 +40,7 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -107,7 +107,7 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         equipmentWardrobeHandler = new EquipmentWardrobeHandler();
         //playerTextureHandler = new PlayerTextureHandler();
-        ClientModelCache.init();
+        ClientSkinCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
     }
@@ -208,7 +208,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public int getPlayerModelCacheSize() {
-        return ClientModelCache.INSTANCE.getCacheSize();
+        return ClientSkinCache.INSTANCE.getCacheSize();
     }
 
     @Override
@@ -226,7 +226,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void receivedCommandFromSever(CommandType command) {
-        ClientModelCache.INSTANCE.clearCache();
+        ClientSkinCache.INSTANCE.clearCache();
     }
     
     @Override

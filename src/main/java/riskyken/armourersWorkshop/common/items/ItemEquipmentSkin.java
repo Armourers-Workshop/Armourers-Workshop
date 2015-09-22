@@ -20,8 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -47,8 +47,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
     public String getItemStackDisplayName(ItemStack stack) {
         if (EquipmentNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinPointer.skinId)) {
-                Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
+            if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinPointer.skinId)) {
+                Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
                 if (!skin.getCustomName().trim().isEmpty()) {
                     return skin.getCustomName();
                 }
@@ -74,8 +74,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.hasSkin"));
             }
             
-            if (ClientModelCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
-                Skin data = ClientModelCache.INSTANCE.getEquipmentItemData(skinData.skinId);
+            if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+                Skin data = ClientSkinCache.INSTANCE.getEquipmentItemData(skinData.skinId);
                 if (stack.getItem() != ModItems.equipmentSkin & !data.getCustomName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinName", data.getCustomName()));
                 }

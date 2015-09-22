@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
@@ -42,7 +42,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
     private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
         if (equipmentData.haveEquipment(skinType)) {
             int id = equipmentData.getEquipmentId(skinType);
-            Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(id);
+            Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(id);
             
             if (renderer instanceof RenderZombie) {
                 RenderZombie rz = (RenderZombie) renderer;

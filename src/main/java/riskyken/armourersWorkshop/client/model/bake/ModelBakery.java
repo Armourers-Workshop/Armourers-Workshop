@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -83,7 +83,7 @@ public final class ModelBakery {
                 skin.paintTextureId = TextureUtil.glGenTextures();
                 TextureUtil.uploadTextureImage(skin.paintTextureId, skin.bufferedImage);
             }
-            ClientModelCache.INSTANCE.receivedModelFromBakery(skin);
+            ClientSkinCache.INSTANCE.receivedModelFromBakery(skin);
         }
         bakedModels.clear();
     }

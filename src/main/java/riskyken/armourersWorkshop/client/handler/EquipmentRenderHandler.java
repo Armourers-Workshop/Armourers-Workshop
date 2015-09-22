@@ -9,10 +9,10 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.ClientModelCache;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -104,7 +104,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null | skinPartType == null) {
             return false;
         }
-        Skin skin = ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
         if (skin == null) {
             return false;
         }
@@ -133,7 +133,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return false;
         }
-        return ClientModelCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId());
+        return ClientSkinCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId());
     }
     
     @Override
@@ -150,7 +150,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return;
         }
-        ClientModelCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
+        ClientSkinCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
     }
 
     @Override
@@ -168,7 +168,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return null;
         }
-        return ClientModelCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+        return ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
     }
     
     @Override
