@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
@@ -78,6 +79,7 @@ public final class EquipmentModelRenderer {
         
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
+        //Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
             ItemStack armourStack = player.getCurrentArmor(slot);
@@ -87,6 +89,7 @@ public final class EquipmentModelRenderer {
             }
         }
         
+        //No skinned armour found checking the equipment wardrobe.
         if (equipmentData == null) {
             return null;
         }
@@ -97,6 +100,37 @@ public final class EquipmentModelRenderer {
         
         int equipmentId = equipmentData.getEquipmentId(skinType);
         return getCustomArmourItemData(equipmentId);
+    }
+    
+    public ISkinDye getPlayerDyeData(Entity entity, ISkinType skinType) {
+        if (!(entity instanceof AbstractClientPlayer)) {
+            return null;
+        }
+        AbstractClientPlayer player = (AbstractClientPlayer) entity;
+        
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
+        
+        //Look for skinned armourer.
+        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
+            int slot = 3 - skinType.getVanillaArmourSlotId();
+            ItemStack armourStack = player.getCurrentArmor(slot);
+            if (EquipmentNBTHelper.stackHasSkinData(armourStack)) {
+                SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(armourStack);
+                return sp.getSkinDye();
+            }
+        }
+        
+        //No skinned armour found checking the equipment wardrobe.
+        if (equipmentData == null) {
+            return null;
+        }
+        
+        if (!equipmentData.haveEquipment(skinType)) {
+            return null;
+        }
+        
+        ISkinDye skinDye = equipmentData.getSkinDye(skinType);
+        return skinDye;
     }
     
     public IEntityEquipment getPlayerCustomEquipmentData(Entity entity) {

@@ -34,7 +34,7 @@ public class CustomTexturedQuad extends TexturedQuad {
         }
     }
 
-    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, int x, int y, int z, byte r, byte g, byte b, byte a) {
+    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, int x, int y, int z, byte r, byte g, byte b, byte a, byte paintType) {
         Vec3 vec3 = this.vertexPositions[1].vector3D.subtract(this.vertexPositions[0].vector3D);
         Vec3 vec31 = this.vertexPositions[1].vector3D.subtract(this.vertexPositions[2].vector3D);
         Vec3 vec32 = vec31.crossProduct(vec3).normalize();
@@ -44,7 +44,7 @@ public class CustomTexturedQuad extends TexturedQuad {
                     (double)((float)(positiontexturevertex.vector3D.xCoord + x) * scale), (double)((float)(positiontexturevertex.vector3D.yCoord + y) * scale), (double)((float)(positiontexturevertex.vector3D.zCoord + z) * scale),
                     positiontexturevertex.texturePositionX, positiontexturevertex.texturePositionY,
                     r, g, b, a,
-                    (float)vec32.xCoord, (float)vec32.yCoord, (float)vec32.zCoord);
+                    (float)vec32.xCoord, (float)vec32.yCoord, (float)vec32.zCoord, paintType);
             vertexList.add(cVer);
         }
     }

@@ -1,15 +1,16 @@
 package riskyken.armourersWorkshop.common.skin;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.HashMap;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class EntityEquipmentData implements IEntityEquipment {
     
@@ -17,7 +18,8 @@ public class EntityEquipmentData implements IEntityEquipment {
     private static final String TAG_SKIN_TYPE = "skinType";
     private static final String TAG_EQUIPMENT_ID = "equipmentId";
     
-    private HashMap<String, Integer> equipment = new HashMap<String, Integer>();
+    private HashMap<String, Integer> skinId = new HashMap<String, Integer>();
+    private HashMap<String, ISkinDye> skinDye = new HashMap<String, ISkinDye>();
     
     public EntityEquipmentData() {
     }
@@ -27,42 +29,50 @@ public class EntityEquipmentData implements IEntityEquipment {
     }
     
     @Override
-    public void addEquipment(ISkinType skinType, int equipmentId) {
+    public void addEquipment(ISkinType skinType, ISkinPointer skinPointer) {
         String key = skinType.getRegistryName();
-        if (this.equipment.containsKey(key)) {
-            this.equipment.remove(key);
+        skinId.remove(key);
+        skinDye.remove(key);
+        
+        skinId.put(key, skinPointer.getSkinId());
+        if (skinPointer.getSkinDye() != null) {
+            skinDye.put(key, skinPointer.getSkinDye());
         }
-        this.equipment.put(key, equipmentId);
     }
     
     @Override
     public void removeEquipment(ISkinType skinType) {
         String key = skinType.getRegistryName();
-        if (this.equipment.containsKey(key)) {
-            this.equipment.remove(key);
-        }
+        skinId.remove(key);
+        skinDye.remove(key);
     }
     
     @Override
     public boolean haveEquipment(ISkinType skinType) {
         String key = skinType.getRegistryName();
-        return this.equipment.containsKey(key);
+        return this.skinId.containsKey(key);
     }
     
     @Override
     public int getEquipmentId(ISkinType skinType) {
         String key = skinType.getRegistryName();
-        if (this.equipment.containsKey(key)) {
-            return this.equipment.get(key);
+        if (this.skinId.containsKey(key)) {
+            return this.skinId.get(key);
         }
         return 0;
     }
     
+    @Override
+    public ISkinDye getSkinDye(ISkinType skinType) {
+        String key = skinType.getRegistryName();
+        return skinDye.get(key);
+    }
+    
     public void saveNBTData(NBTTagCompound compound) {
         NBTTagList items = new NBTTagList();
-        for (int i = 0; i < equipment.size(); i++) {
-            String skinName = (String) equipment.keySet().toArray()[i];
-            int equipmentId = equipment.get(skinName);
+        for (int i = 0; i < skinId.size(); i++) {
+            String skinName = (String) skinId.keySet().toArray()[i];
+            int equipmentId = skinId.get(skinName);
             NBTTagCompound item = new NBTTagCompound();
             item.setString(TAG_SKIN_TYPE, skinName);
             item.setInteger(TAG_EQUIPMENT_ID, equipmentId);
@@ -73,20 +83,20 @@ public class EntityEquipmentData implements IEntityEquipment {
     
     public void loadNBTData(NBTTagCompound compound) {
         NBTTagList itemsList = compound.getTagList(TAG_SKIN_LIST, NBT.TAG_COMPOUND);
-        equipment.clear();
+        skinId.clear();
         for (int i = 0; i < itemsList.tagCount(); i++) {
             NBTTagCompound item = (NBTTagCompound)itemsList.getCompoundTagAt(i);
             String skinName = item.getString(TAG_SKIN_TYPE);
             int equipmentId = item.getInteger(TAG_EQUIPMENT_ID);
-            equipment.put(skinName, equipmentId);
+            skinId.put(skinName, equipmentId);
         }
     }
     
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(equipment.size());
-        for (int i = 0; i < equipment.size(); i++) {
-            String skinName = (String) equipment.keySet().toArray()[i];
-            int equipmentId = equipment.get(skinName);
+        buf.writeByte(skinId.size());
+        for (int i = 0; i < skinId.size(); i++) {
+            String skinName = (String) skinId.keySet().toArray()[i];
+            int equipmentId = skinId.get(skinName);
             ByteBufUtils.writeUTF8String(buf, skinName);
             buf.writeInt(equipmentId);
         }
@@ -94,15 +104,15 @@ public class EntityEquipmentData implements IEntityEquipment {
     
     public void fromBytes(ByteBuf buf) {
         int itemCount = buf.readByte();
-        equipment.clear();
+        skinId.clear();
         for (int i = 0; i < itemCount; i++) {
             String skinName = ByteBufUtils.readUTF8String(buf);
             int equipmentId = buf.readInt();
-            equipment.put(skinName, equipmentId);
+            skinId.put(skinName, equipmentId);
         }
     }
 
     public boolean hasCustomEquipment() {
-        return this.equipment.size() > 0;
+        return this.skinId.size() > 0;
     }
 }

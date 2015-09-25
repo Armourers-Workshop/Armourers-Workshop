@@ -89,7 +89,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F);
+            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye());
         }
         GL11.glPopMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();

@@ -24,10 +24,10 @@ public class CustomModelRenderer extends ModelRenderer {
         renderBuffer.draw();
     }
     
-    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, BitSet faceFlags, int x, int y, int z, byte[] r, byte[] g, byte[] b, byte a) {
+    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, BitSet faceFlags, int x, int y, int z, byte[] r, byte[] g, byte[] b, byte a, byte[] paintType) {
         int size = this.cubeList.size();
         for (int i = 0; i < size; ++i) {
-            ((ModelEquipmentBox)this.cubeList.get(i)).buildDisplayListArray(vertexList, scale, faceFlags, x, y, z , r, g , b, a);
+            ((ModelEquipmentBox)this.cubeList.get(i)).buildDisplayListArray(vertexList, scale, faceFlags, x, y, z , r, g , b, a, paintType);
         }
     }
     

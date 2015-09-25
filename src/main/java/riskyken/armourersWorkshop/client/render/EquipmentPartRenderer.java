@@ -3,14 +3,17 @@ package riskyken.armourersWorkshop.client.render;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
@@ -21,8 +24,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class EquipmentPartRenderer extends ModelBase {
@@ -42,7 +43,11 @@ public class EquipmentPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(SkinPart skinPart, float scale) {
+    public void renderPartFromStack(SkinPart skinPart, float scale, ItemStack stack) {
+        
+    }
+    
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye) {
         mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         GL11.glColor3f(1F, 1F, 1F);

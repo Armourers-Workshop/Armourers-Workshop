@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.skin.entity;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -17,7 +18,6 @@ import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
     
@@ -42,7 +42,7 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
             equipmentData.removeEquipment(skinType);
         } else {
             SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            equipmentData.addEquipment(skinData.skinType, skinData.skinId);
+            equipmentData.addEquipment(skinData.skinType, skinData);
         }
         sendEquipmentDataToPlayerToAllPlayersAround();
     }

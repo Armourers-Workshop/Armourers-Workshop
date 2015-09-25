@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.handler;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,8 +22,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class EquipmentRenderHandler implements ISkinRenderHandler {
 
@@ -112,7 +112,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             if (skinPart.getPartType() == skinPartType) {
-                EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F);
+                EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye());
                 return true;
             }
         }

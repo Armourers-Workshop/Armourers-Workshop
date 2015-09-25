@@ -9,6 +9,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
@@ -62,6 +63,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.mcProfiler.endSection();
             return;
         }
+        ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType);
         
         data.onUsed();
         int size = data.getParts().size();
@@ -81,7 +83,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 GL11.glEnable(GL11.GL_CULL_FACE);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glEnable(GL11.GL_BLEND);
-                EquipmentPartRenderer.INSTANCE.renderPart(partData, scale);
+                EquipmentPartRenderer.INSTANCE.renderPart(partData, scale, skinDye);
                 GL11.glDisable(GL11.GL_CULL_FACE);
                 GL11.glPopMatrix();
                 break;

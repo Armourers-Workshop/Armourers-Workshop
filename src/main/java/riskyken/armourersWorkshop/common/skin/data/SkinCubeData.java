@@ -131,6 +131,17 @@ public class SkinCubeData {
         return cubePaintType[index][side];
     }
     
+    public byte[] getCubePaintType(int index) {
+        return new byte[] {
+                cubePaintType[index][0],
+                cubePaintType[index][1],
+                cubePaintType[index][2],
+                cubePaintType[index][3],
+                cubePaintType[index][4],
+                cubePaintType[index][5],
+                        };
+    }
+    
     public void writeToStream(DataOutputStream stream) throws IOException {
         stream.writeInt(cubeId.length);
         for (int i = 0; i < getCubeCount(); i++) {

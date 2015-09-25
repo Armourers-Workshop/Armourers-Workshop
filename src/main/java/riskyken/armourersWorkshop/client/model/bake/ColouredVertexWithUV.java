@@ -8,6 +8,7 @@ public class ColouredVertexWithUV {
     private final double y;
     private final double z;
     
+    //TODO Move u v into it's own class.
     private final float u;
     private final float v;
     
@@ -20,7 +21,7 @@ public class ColouredVertexWithUV {
     private final float norY;
     private final float norZ;
     
-    public ColouredVertexWithUV(double x, double y, double z, float u, float v, byte r, byte g, byte b, byte a, float norX, float norY, float norZ) {
+    public ColouredVertexWithUV(double x, double y, double z, float u, float v, byte r, byte g, byte b, byte a, float norX, float norY, float norZ, byte paintType) {
         this.x = x;
         this.y = y;
         this.z = z;

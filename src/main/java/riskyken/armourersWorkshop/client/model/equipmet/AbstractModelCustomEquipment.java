@@ -93,6 +93,7 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
     }
     
     protected void renderPart(SkinPart armourPart, float scale) {
-        EquipmentPartRenderer.INSTANCE.renderPart(armourPart, scale);
+        //TODO Render dyes on player skin models.
+        EquipmentPartRenderer.INSTANCE.renderPart(armourPart, scale, null);
     }
 }

@@ -164,6 +164,7 @@ public final class SkinBaker {
             SkinCubeData cubeData = partData.getCubeData();
             
             byte[] loc = cubeData.getCubeLocation(i);
+            byte[] paintType = cubeData.getCubePaintType(i);
             ICube cube = partData.getCubeData().getCube(i);
             
             byte a = (byte) 255;
@@ -184,16 +185,19 @@ public final class SkinBaker {
                 }
                 EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[listIndex],
                         scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
-                        cubeData.getCubeColourR(i), cubeData.getCubeColourG(i), cubeData.getCubeColourB(i), a);
+                        cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
+                        cubeData.getCubeColourB(i), a, paintType);
             } else {
                 if (cube.isGlowing()) {
                     EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[1],
                             scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
-                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i), cubeData.getCubeColourB(i), a);
+                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
+                            cubeData.getCubeColourB(i), a, paintType);
                 } else {
                     EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[0],
                             scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
-                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i), cubeData.getCubeColourB(i), a);
+                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
+                            cubeData.getCubeColourB(i), a, paintType);
                 }
             }
         }

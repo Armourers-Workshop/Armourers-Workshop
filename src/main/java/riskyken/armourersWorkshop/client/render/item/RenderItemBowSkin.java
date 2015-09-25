@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -11,9 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
 import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
@@ -167,8 +166,8 @@ public class RenderItemBowSkin implements IItemRenderer {
             
             ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
             model.frame = getAnimationFrame(useCount);
-            int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-            Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(equipmentId);
+            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
             model.render(player, skin, false);
             if (hasArrow & useCount > 0) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
@@ -185,7 +184,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                             arrowSkin.onUsed();
                             for (int i = 0; i < arrowSkin.getParts().size(); i++) {
                                 SkinPart skinPart = arrowSkin.getParts().get(i);
-                                EquipmentPartRenderer.INSTANCE.renderPart(skinPart, scale);
+                                EquipmentPartRenderer.INSTANCE.renderPart(skinPart, scale, skinPointer.getSkinDye());
                             }
                         } else {
                             ModelArrow.MODEL.render(scale, false);

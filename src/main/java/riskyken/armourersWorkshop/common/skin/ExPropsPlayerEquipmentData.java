@@ -20,8 +20,8 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeUpdate;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -93,8 +93,8 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         }
     }
     
-    public void addCustomEquipment(ISkinType skinType, int equipmentId) {
-        equipmentData.addEquipment(skinType, equipmentId);
+    public void addCustomEquipment(ISkinType skinType, SkinPointer skinPointer) {
+        equipmentData.addEquipment(skinType, skinPointer);
         updateEquipmentDataToPlayersAround();
     }
     
@@ -202,7 +202,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     private void loadFromItemStack(ItemStack stack) {
         SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-        addCustomEquipment(skinPointer.skinType, skinPointer.skinId);
+        addCustomEquipment(skinPointer.skinType, skinPointer);
     }
     
     @Override

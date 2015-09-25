@@ -114,15 +114,15 @@ public class ModelEquipmentBox extends ModelBox {
         }
     }
 
-    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, BitSet faceFlags, int x, int y, int z, byte[] r, byte[] g, byte[] b, byte a) {
+    public void buildDisplayListArray(ArrayList<ColouredVertexWithUV> vertexList, float scale, BitSet faceFlags, int x, int y, int z, byte[] r, byte[] g, byte[] b, byte a, byte[] paintType) {
         int size = this.quadList.length;
         for (int i = 0; i < size; ++i) {
             if (faceFlags != null) {
                 if (faceFlags.get(i)) {
-                    this.quadList[i].buildDisplayListArray(vertexList, scale, x, y, z, r[i], g[i], b[i], a);
+                    this.quadList[i].buildDisplayListArray(vertexList, scale, x, y, z, r[i], g[i], b[i], a, paintType[i]);
                 }
             } else {
-                this.quadList[i].buildDisplayListArray(vertexList, scale, x, y, z, r[i], g[i], b[i], a);
+                this.quadList[i].buildDisplayListArray(vertexList, scale, x, y, z, r[i], g[i], b[i], a, paintType[i]);
             }
         }
     }

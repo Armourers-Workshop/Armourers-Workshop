@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -209,7 +208,7 @@ public class GuiMiniArmourerBuildingModel {
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart part = skin.getParts().get(i);
                 if (part.getPartType() == currentSkinPartType) {
-                    EquipmentPartRenderer.INSTANCE.renderPart(part, scale);
+                    //EquipmentPartRenderer.INSTANCE.renderPart(part, scale);
                 }
             }
             
