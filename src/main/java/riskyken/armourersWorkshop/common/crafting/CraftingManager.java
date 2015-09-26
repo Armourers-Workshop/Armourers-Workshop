@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.crafting;
 
 import java.lang.reflect.Method;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
@@ -9,11 +11,10 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinDye;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
 import riskyken.armourersWorkshop.common.handler.DollCraftingHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public final class CraftingManager {
 
@@ -21,7 +22,9 @@ public final class CraftingManager {
     
     public static void init() {
         GameRegistry.addRecipe(new RecipeSkinUpdate());
+        GameRegistry.addRecipe(new RecipeSkinDye());
         RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinUpdate.class, Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinDye.class, Category.SHAPELESS, "after:minecraft:shapeless");
         hideItemsInNEI();
         if (!ConfigHandler.disableSkinningRecipes) {
             ItemSkinningRecipes.init();

@@ -10,11 +10,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.ModClientFMLEventHandler;
+import riskyken.armourersWorkshop.client.model.SkinModel;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
@@ -43,26 +43,25 @@ public class EquipmentPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPartFromStack(SkinPart skinPart, float scale, ItemStack stack) {
-        
-    }
-    
     public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye) {
         mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         GL11.glColor3f(1F, 1F, 1F);
-        ClientSkinPartData cspd = skinPart.getClientSkinPartData();
         
-        for (int i = 0; i < cspd.displayListCompiled.length; i++) {
-            if (!cspd.displayListCompiled[i]) {
-                if (cspd.hasList[i]) {
-                    cspd.displayList[i] = GLAllocation.generateDisplayLists(1);
-                    GL11.glNewList(cspd.displayList[i], GL11.GL_COMPILE);
-                    renderVertexList(cspd.vertexLists[i], scale);
-                    cspd.vertexLists[i].clear();
+        ClientSkinPartData cspd = skinPart.getClientSkinPartData();
+        SkinModel skinModel = cspd.getModelForDye(skinDye);
+        
+        for (int i = 0; i < skinModel.displayListCompiled.length; i++) {
+            if (!skinModel.displayListCompiled[i]) {
+                if (skinModel.hasList[i]) {
+                    skinModel.displayList[i] = GLAllocation.generateDisplayLists(1);
+                    GL11.glNewList(skinModel.displayList[i], GL11.GL_COMPILE);
+                    renderVertexList(cspd.vertexLists[i], scale, skinDye);
+                    //TODO Do not clear this!
+                    //cspd.vertexLists[i].clear();
                     GL11.glEndList();
                 }
-                cspd.displayListCompiled[i] = true;
+                skinModel.displayListCompiled[i] = true;
             }
         }
         
@@ -72,13 +71,13 @@ public class EquipmentPartRenderer extends ModelBase {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
         }
         
-        for (int i = 0; i < cspd.displayList.length; i++) {
+        for (int i = 0; i < skinModel.displayList.length; i++) {
             boolean glowing = false;
             if (i % 2 == 1) {
                 glowing = true;
             }
-            if (cspd.hasList[i]) {
-                if (cspd.displayListCompiled[i]) {
+            if (skinModel.hasList[i]) {
+                if (skinModel.displayListCompiled[i]) {
                     if (glowing) {
                         GL11.glDisable(GL11.GL_LIGHTING);
                         ModRenderHelper.disableLighting();
@@ -86,7 +85,7 @@ public class EquipmentPartRenderer extends ModelBase {
                     if (ConfigHandler.wireframeRender) {
                         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
                     }
-                    GL11.glCallList(cspd.displayList[i]);
+                    GL11.glCallList(skinModel.displayList[i]);
                     if (ConfigHandler.wireframeRender) {
                         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                     }
@@ -106,15 +105,15 @@ public class EquipmentPartRenderer extends ModelBase {
         mc.mcProfiler.endSection();
     }
     
-    private void renderVertexList(ArrayList<ColouredVertexWithUV> vertexList, float scale) {
+    private void renderVertexList(ArrayList<ColouredVertexWithUV> vertexList, float scale, ISkinDye skinDye) {
         IRenderBuffer renderBuffer = new RenderBridge().INSTANCE;
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < vertexList.size(); i++) {
             ColouredVertexWithUV cVert = vertexList.get(i);
             if (ClientProxy.useSafeTextureRender()) {
-                cVert.renderVertexWithUV(renderBuffer);
+                cVert.renderVertexWithUV(renderBuffer, skinDye);
             } else {
-                cVert.renderVertex(renderBuffer);
+                cVert.renderVertex(renderBuffer, skinDye);
             }
         }
         renderBuffer.draw();

@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -20,17 +21,17 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false);
+        render(entity, armourData, false, null);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint);
+        render(entity, armourData, showSkinPaint, skinDye);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -61,11 +62,11 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("leftLeg")) {
-                renderLeftLeg(part, SCALE);
+                renderLeftLeg(part, SCALE, skinDye);
             } else if (part.getPartType().getPartName().equals("rightLeg")) {
-                renderRightLeg(part, SCALE);
+                renderRightLeg(part, SCALE, skinDye);
             } else if (part.getPartType().getPartName().equals("skirt")) {
-                renderSkirt(part, SCALE);
+                renderSkirt(part, SCALE, skinDye);
             }
             
             GL11.glPopMatrix();
@@ -74,7 +75,7 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftLeg(SkinPart part, float scale) {
+    private void renderLeftLeg(SkinPart part, float scale, ISkinDye skinDye) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -84,11 +85,11 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
-        renderPart(part, scale);
+        renderPart(part, scale, skinDye);
         GL11.glPopMatrix();
     }
     
-    private void renderRightLeg(SkinPart part, float scale) {
+    private void renderRightLeg(SkinPart part, float scale, ISkinDye skinDye) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -98,11 +99,11 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
-        renderPart(part, scale);
+        renderPart(part, scale, skinDye);
         GL11.glPopMatrix();
     }
     
-    private void renderSkirt(SkinPart part, float scale) {
+    private void renderSkirt(SkinPart part, float scale, ISkinDye skinDye) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
       
@@ -112,7 +113,7 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         
-        renderPart(part, scale);
+        renderPart(part, scale, skinDye);
         GL11.glPopMatrix();
     }
 }

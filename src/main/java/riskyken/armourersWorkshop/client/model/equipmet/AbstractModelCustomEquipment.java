@@ -6,6 +6,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -60,13 +61,13 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
             bipedHeadwear.rotateAngleZ = 0F;
             super.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, entity);
 
-            render(entity, npcEquipmentData, false);
+            render(entity, npcEquipmentData, false, null);
             npcEquipmentData = null;
         }
     }
     
     
-    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint);
+    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
@@ -92,8 +93,7 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
         }
     }
     
-    protected void renderPart(SkinPart armourPart, float scale) {
-        //TODO Render dyes on player skin models.
-        EquipmentPartRenderer.INSTANCE.renderPart(armourPart, scale, null);
+    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye) {
+        EquipmentPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye);
     }
 }

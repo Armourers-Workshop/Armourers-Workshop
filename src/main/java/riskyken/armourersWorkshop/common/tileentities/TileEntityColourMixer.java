@@ -23,8 +23,10 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
     private static final String TAG_COLOUR_FAMILY = "colourFamily";
+    private static final String TAG_PAINT_TYPE = "paintType";
     
     public int colour;
+    private PaintType paintType;
     private ColourFamily colourFamily;
     
     private boolean itemUpdate;
@@ -33,6 +35,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public TileEntityColourMixer() {
         items = new ItemStack[2];
         colour = 16777215;
+        paintType = PaintType.NORMAL;
         colourUpdate = false;
         colourFamily = ColourFamily.MINECRAFT_WOOL;
     }
@@ -91,13 +94,18 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         return LibBlockNames.COLOUR_MIXER;
     }
 
-    public void receiveColourUpdateMessage(int colour, boolean item) {
+    public void receiveColourUpdateMessage(int colour, boolean item, PaintType paintType) {
         setColour(colour, item);
+        setPaintType(paintType, 0);
     }
     
     public void setColour(int colour, boolean item){
-        if (worldObj.isRemote) { return; }
-        if (item) { itemUpdate = true; }
+        if (worldObj.isRemote) {
+            return;
+        }
+        if (item) {
+            itemUpdate = true;
+        }
         this.colour = colour;
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -108,6 +116,11 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         super.readFromNBT(compound);
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
         colourFamily = ColourFamily.values()[compound.getInteger(TAG_COLOUR_FAMILY)];
+        if (compound.hasKey(TAG_PAINT_TYPE)) {
+            paintType = PaintType.getPaintTypeFromUKey(compound.getInteger(TAG_PAINT_TYPE));
+        } else {
+            paintType = PaintType.NORMAL;
+        }
     }
 
     @Override
@@ -115,6 +128,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         super.writeToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
         compound.setInteger(TAG_COLOUR_FAMILY, colourFamily.ordinal());
+        compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
     }
 
     @Override
@@ -122,6 +136,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
+        compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
         compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
         if (itemUpdate) { itemUpdate = false; }
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 3, compound);
@@ -132,6 +147,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         NBTTagCompound compound = packet.func_148857_g();
         readBaseFromNBT(compound);
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
+        paintType = PaintType.getPaintTypeFromUKey(compound.getInteger(TAG_PAINT_TYPE));
         itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         colourUpdate = true;
@@ -174,11 +190,13 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     
     @Override
     public void setPaintType(PaintType paintType, int side) {
-        //NO-OP
+        this.paintType = paintType;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
     public PaintType getPaintType(int side) {
-        return PaintType.DYE_1;
+        return paintType;
     }
 }

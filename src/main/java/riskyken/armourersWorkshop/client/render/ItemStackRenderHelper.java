@@ -1,10 +1,11 @@
 
 package riskyken.armourersWorkshop.client.render;
 
-import net.minecraft.item.ItemStack;
-
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
@@ -13,8 +14,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Helps render item stacks.
@@ -51,23 +50,23 @@ public final class ItemStackRenderHelper {
         
         if (skinType == SkinTypeRegistry.skinHead) {
             GL11.glTranslatef(0F, 0.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint);
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
         } else if (skinType == SkinTypeRegistry.skinChest) {
             GL11.glTranslatef(0F, -0.35F, 0F);
-            targetModel.render(null, null, data, showSkinPaint);
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
         } else if (skinType == SkinTypeRegistry.skinLegs) {
             GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint);
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
         } else if (skinType == SkinTypeRegistry.skinSkirt) {
             GL11.glTranslatef(0F, -1.0F, 0F);
-            targetModel.render(null, null, data, showSkinPaint);
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
         } else if (skinType == SkinTypeRegistry.skinFeet) {
             GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint);
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
         } else if (skinType == SkinTypeRegistry.skinSword) {
-            targetModel.render(null, null, data, showSkinPaint);
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
         } else if (skinType == SkinTypeRegistry.skinBow) {
-            targetModel.render(null, null, data, showSkinPaint);
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
         }
     }
     

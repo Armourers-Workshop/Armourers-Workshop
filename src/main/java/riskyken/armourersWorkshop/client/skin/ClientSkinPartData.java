@@ -1,40 +1,54 @@
 package riskyken.armourersWorkshop.client.skin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.GLAllocation;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.client.model.SkinModel;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
+import riskyken.armourersWorkshop.common.skin.data.SkinDye;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class ClientSkinPartData {
 
+    /** Black dye that is used if no dye is applied. */
+    public static final SkinDye blankDye = new SkinDye();
     public ArrayList<ColouredVertexWithUV>[] vertexLists;
-    public boolean hasList[];
+    public HashMap<ISkinDye, SkinModel> dyeModels;
     public int[] totalCubesInPart;
-    public boolean[] displayListCompiled;
-    public int[] displayList;
-
+    
+    public ClientSkinPartData() {
+        dyeModels = new HashMap<ISkinDye, SkinModel>();
+    }
+    
+    public SkinModel getModelForDye(ISkinDye skinDye) {
+        if (skinDye == null) {
+            skinDye = blankDye;
+        }
+        SkinModel skinModel = dyeModels.get(skinDye);
+        if (skinModel == null) {
+            skinModel = new SkinModel(vertexLists);
+            dyeModels.put(skinDye, skinModel);
+            ModLogger.log("making model");
+        }
+        return skinModel;
+    }
+    
     public void cleanUpDisplayLists() {
-        if (hasList != null) {
-            for (int i = 0; i < displayList.length; i++) {
-                if (hasList[i]) {
-                    if (displayListCompiled[i]) {
-                        GLAllocation.deleteDisplayLists(displayList[i]);
-                    }
-                }
-            }
+        Set keys = dyeModels.keySet();
+        Iterator<ISkinDye> i = dyeModels.keySet().iterator();
+        while (i.hasNext()) {
+            ISkinDye skinDye = i.next();
+            dyeModels.get(skinDye).cleanUpDisplayLists();
         }
     }
 
     public void setVertexLists(ArrayList<ColouredVertexWithUV>[] vertexLists) {
-        hasList = new boolean[vertexLists.length];
-        displayListCompiled = new boolean[vertexLists.length];
-        displayList = new int[vertexLists.length];
         this.vertexLists = vertexLists;
-        for (int i = 0; i < vertexLists.length; i++) {
-            hasList[i] = vertexLists[i].size() > 0;
-        }
     }
 }

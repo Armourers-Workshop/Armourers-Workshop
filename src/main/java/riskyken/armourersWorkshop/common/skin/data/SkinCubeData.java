@@ -179,6 +179,11 @@ public class SkinCubeData {
                     cubePaintType[i][side] = stream.readByte();
                 }
             }
+            if (version < 11) {
+                for (int side = 0; side < 6; side++) {
+                    cubePaintType[i][side] = (byte)255;
+                }
+            }
         }
     }
 

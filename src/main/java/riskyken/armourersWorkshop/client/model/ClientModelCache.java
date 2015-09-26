@@ -2,11 +2,14 @@ package riskyken.armourersWorkshop.client.model;
 
 import java.util.HashMap;
 
+import riskyken.armourersWorkshop.common.skin.data.SkinDye;
+
 public class ClientModelCache {
     
     public static ClientModelCache INSTANCE;
     
     private final HashMap<MultiKey, SkinModel> modelMap;
+    private final SkinDye blankDye;
     
     public static void init() {
         INSTANCE = new ClientModelCache();
@@ -14,8 +17,13 @@ public class ClientModelCache {
     
     public ClientModelCache() {
         modelMap = new HashMap<MultiKey, SkinModel>();
+        blankDye = new SkinDye();
     }
-    
+    /*
+    public SkinModel getSkinModel(SkinPart skinPart, ISkinDye skinDye) {
+        
+    }
+    */
     public class MultiKey {
         
         private final Object key1;

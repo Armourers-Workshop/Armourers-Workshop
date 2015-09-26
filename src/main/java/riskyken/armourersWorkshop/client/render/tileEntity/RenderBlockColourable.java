@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +39,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
                 renderFaceWithMarker(x, y, z, dir, pt.ordinal());
                 GL11.glColor3f(1F, 1F, 1F);
                 ModRenderHelper.enableLighting();
+                RenderHelper.enableStandardItemLighting();
             }
         }
     }

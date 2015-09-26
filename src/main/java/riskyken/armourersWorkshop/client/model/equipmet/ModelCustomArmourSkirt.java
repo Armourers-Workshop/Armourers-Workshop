@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -20,17 +21,17 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false);
+        render(entity, armourData, false, null);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint);
+        render(entity, armourData, showSkinPaint, skinDye);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
         if (armourData == null) { return; }
         
         ArrayList<SkinPart> parts = armourData.getParts();
@@ -61,7 +62,7 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("base")) {
-                renderSkirt(part, SCALE);
+                renderSkirt(part, SCALE, skinDye);
             }
             
             GL11.glPopMatrix();
@@ -70,7 +71,7 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderSkirt(SkinPart part, float scale) {
+    private void renderSkirt(SkinPart part, float scale, ISkinDye skinDye) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
       
@@ -80,7 +81,7 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         
-        renderPart(part, scale);
+        renderPart(part, scale, skinDye);
         GL11.glPopMatrix();
     }
 }

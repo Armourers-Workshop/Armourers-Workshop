@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -11,9 +15,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.gui.controls.GuiColourSelector;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -25,10 +26,9 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiColourUpdate;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, IDropDownListCallback {
@@ -41,6 +41,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     private GuiTextField colourHex;
     private GuiColourSelector colourSelector;
     private GuiDropDownList colourFamilyList;
+    private GuiDropDownList paintTypeDropDown;
     
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
@@ -75,6 +76,16 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         colourFamilyList.setListSelectedIndex(cf.ordinal());
         colourSelector.setColourFamily(cf);
         buttonList.add(colourFamilyList);
+        
+        paintTypeDropDown = new GuiDropDownList(5, this.guiLeft, this.guiTop, 100, "", this);
+        for (int i = 0; i < PaintType.values().length; i++) {
+            PaintType paintType = PaintType.values()[i];
+            paintTypeDropDown.addListItem(paintType.toString());
+            if (paintType == tileEntityColourMixer.getPaintType(0)) {
+                paintTypeDropDown.setListSelectedIndex(i);
+            }
+        }
+        buttonList.add(paintTypeDropDown);
     }
     
     private void checkForColourUpdates() {
@@ -119,15 +130,22 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int which) {
         super.mouseMovedOrUp(mouseX, mouseY, which);
-        if (which != 0) { return; }
-        
+        if (which != 0) {
+            return;
+        }
         updateColour();
     }
     
     private void updateColour() {
         Color colourOld = new Color(tileEntityColourMixer.getColour(0));
-        if (this.colour.equals(colourOld)) { return; }
-        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiColourUpdate(this.colour.getRGB(), false));
+        PaintType paintType = PaintType.values()[paintTypeDropDown.getListSelectedIndex()];
+        if (this.colour.equals(colourOld)) {
+            if (paintType == tileEntityColourMixer.getPaintType(0))
+            return;
+        }
+        
+        MessageClientGuiColourUpdate message = new MessageClientGuiColourUpdate(this.colour.getRGB(), false, paintType);
+        PacketHandler.networkWrapper.sendToServer(message);
     }
     
     @Override
@@ -205,9 +223,14 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
 
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
-        ColourFamily cf = ColourFamily.values()[dropDownList.getListSelectedIndex()];
-        colourSelector.setColourFamily(cf);
-        MessageClientGuiButton message = new MessageClientGuiButton((byte) cf.ordinal());
-        PacketHandler.networkWrapper.sendToServer(message);
+        if (dropDownList == colourFamilyList) {
+            ColourFamily cf = ColourFamily.values()[dropDownList.getListSelectedIndex()];
+            colourSelector.setColourFamily(cf);
+            MessageClientGuiButton message = new MessageClientGuiButton((byte) cf.ordinal());
+            PacketHandler.networkWrapper.sendToServer(message);
+        }
+        if (dropDownList == paintTypeDropDown) {
+            updateColour();
+        }
     }
 }

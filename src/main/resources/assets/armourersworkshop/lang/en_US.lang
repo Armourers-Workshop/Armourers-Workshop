@@ -94,6 +94,7 @@ item.armourersworkshop:rollover.skinNumCubesGlass=&eGlass Cubes:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eGlowing Glass Cubes:&7 %s
 item.armourersworkshop:rollover.skinPaintData=&eHas Paint Data:&7 %s
 item.armourersworkshop:rollover.skinMarkerCount=&eMarker Count:&7 %d
+item.armourersworkshop:rollover.skinDyeCount=&eDye Count:&7 %d/8
 item.armourersworkshop:rollover.skindownloading=Downloading skin ID: %d
 item.armourersworkshop:rollover.skinOpenWardrobe=Press the &a%s&7 key to open the &aEquipment Wardrobe
 item.armourersworkshop:rollover.skinOldType=&cOld skin type, place in crafting grid to update.

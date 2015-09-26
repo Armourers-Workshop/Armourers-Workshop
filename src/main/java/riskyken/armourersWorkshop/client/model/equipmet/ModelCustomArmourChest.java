@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -20,17 +21,17 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false);
+        render(entity, armourData, false, null);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint);
+        render(entity, armourData, showSkinPaint, skinDye);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -70,11 +71,11 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
             
             
             if (part.getPartType().getPartName().equals("base")) {
-                renderChest(part, SCALE);
+                renderChest(part, SCALE, skinDye);
             } else if (part.getPartType().getPartName().equals("leftArm")) {
-                renderLeftArm(part, SCALE);
+                renderLeftArm(part, SCALE, skinDye);
             } else if (part.getPartType().getPartName().equals("rightArm")) {
-                renderRightArm(part, SCALE);
+                renderRightArm(part, SCALE, skinDye);
             }
             
             GL11.glPopMatrix();
@@ -84,17 +85,17 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderChest(SkinPart part, float scale) {
+    private void renderChest(SkinPart part, float scale, ISkinDye skinDye) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-        renderPart(part, scale);
+        renderPart(part, scale, skinDye);
         GL11.glPopMatrix();
     }
     
-    private void renderLeftArm(SkinPart part, float scale) {
+    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -108,12 +109,12 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale);
+        renderPart(part, scale, skinDye);
         
         GL11.glPopMatrix();
     }
     
-    private void renderRightArm(SkinPart part, float scale) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -126,7 +127,7 @@ public class ModelCustomArmourChest extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale);
+        renderPart(part, scale, skinDye);
         GL11.glPopMatrix();
     }
 }
