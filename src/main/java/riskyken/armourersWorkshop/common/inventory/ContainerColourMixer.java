@@ -7,6 +7,8 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotColourTool;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 

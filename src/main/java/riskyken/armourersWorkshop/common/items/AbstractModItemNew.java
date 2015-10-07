@@ -7,11 +7,11 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
 import riskyken.plushieWrapper.common.item.ItemStackPointer;
-import riskyken.plushieWrapper.common.item.ModItem;
+import riskyken.plushieWrapper.common.item.PlushieItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class AbstractModItemNew extends ModItem {
+public class AbstractModItemNew extends PlushieItem {
     
     public AbstractModItemNew(String name) {
         this(name, true);

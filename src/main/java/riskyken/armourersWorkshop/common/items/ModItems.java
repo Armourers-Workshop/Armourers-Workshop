@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.plushieWrapper.common.item.ModItem;
+import riskyken.plushieWrapper.common.item.PlushieItem;
 import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class ModItems {
@@ -20,13 +20,13 @@ public class ModItems {
     public static Item colourNoiseTool;
     public static Item shadeNoiseTool;
     public static Item mannequinTool;
-    public static ModItem guideBook;
+    public static PlushieItem guideBook;
     public static Item armourContainerItem;
     public static Item[] armourContainer;
-    public static ModItem wandOfStyle;
-    public static ModItem soap;
+    public static PlushieItem wandOfStyle;
+    public static PlushieItem soap;
     public static Item hueTool;
-    public static ModItem blockMarker;
+    public static PlushieItem blockMarker;
     public static Item dyeBottle;
     
     public ModItems() {

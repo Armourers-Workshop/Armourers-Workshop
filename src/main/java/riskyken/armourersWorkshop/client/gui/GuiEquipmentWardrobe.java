@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
-import riskyken.armourersWorkshop.common.inventory.SlotHidable;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientEquipmentWardrobeUpdate;

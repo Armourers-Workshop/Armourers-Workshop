@@ -307,12 +307,12 @@ public final class EquipmentModelRenderer {
     }
     
     public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped) {
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
+        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (skinPointer == null) {
             return false;
         }
-        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stack);
-        Skin data = getCustomArmourItemData(equipmentId);
-        return renderEquipmentPart(null, modelBiped, data);
+        Skin data = getCustomArmourItemData(skinPointer.getSkinId());
+        return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye());
     }
     
     public boolean renderEquipmentPartFromSkinPointer(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
@@ -320,7 +320,7 @@ public final class EquipmentModelRenderer {
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
-    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data) {
+    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye) {
         if (data == null) {
             return false;
         }
@@ -328,11 +328,11 @@ public final class EquipmentModelRenderer {
         if (model == null) {
             return false;
         }
-        ISkinDye dye = getPlayerDyeData(entity, data.getSkinType());
+        
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
-        model.render(entity, modelBiped, data, false, dye);
+        model.render(entity, modelBiped, data, false, skinDye);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);
         return true;

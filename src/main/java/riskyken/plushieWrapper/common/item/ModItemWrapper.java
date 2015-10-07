@@ -18,10 +18,10 @@ import riskyken.plushieWrapper.common.world.WorldPointer;
 
 public class ModItemWrapper extends Item {
 
-    private final ModItem item;
+    private final PlushieItem item;
     private ArrayList<IIcon> itemIcons;
     
-    public ModItemWrapper(ModItem item) {
+    public ModItemWrapper(PlushieItem item) {
         this.item = item;
         this.setUnlocalizedName(item.getName());
     }

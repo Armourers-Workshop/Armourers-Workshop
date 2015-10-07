@@ -12,4 +12,5 @@ public class LibGuiIds {
     public static final int MINI_ARMOURER_BUILDING = 8;
     public static final int ENTITY_SKIN_INVENTORY = 9;
     public static final int SKNNING_TABLE = 10;
+    public static final int DYE_TABLE = 11;
 }

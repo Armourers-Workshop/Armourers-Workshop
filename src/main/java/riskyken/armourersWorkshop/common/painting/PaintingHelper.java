@@ -105,7 +105,7 @@ public final class PaintingHelper {
         return PaintType.getPaintTypeFormSKey(rgbt[3]);
     }
     
-    private static byte[] getToolPaintData(ItemStack stack) {
+    public static byte[] getToolPaintData(ItemStack stack) {
         NBTTagCompound compound = stack.getTagCompound();
         if (compound != null && compound.hasKey(TAG_TOOL_PAINT)) {
             return compound.getByteArray(TAG_TOOL_PAINT);
@@ -113,7 +113,7 @@ public final class PaintingHelper {
         return getBlankPaintData();
     }
     
-    private static void setToolPaintData(ItemStack stack, byte[] paintData) {
+    public static void setToolPaintData(ItemStack stack, byte[] paintData) {
         NBTTagCompound compound = stack.getTagCompound();
         if (compound == null) {
             compound = new NBTTagCompound();

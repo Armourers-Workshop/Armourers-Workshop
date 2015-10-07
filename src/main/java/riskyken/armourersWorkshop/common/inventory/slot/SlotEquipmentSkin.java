@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.inventory;
+package riskyken.armourersWorkshop.common.inventory.slot;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

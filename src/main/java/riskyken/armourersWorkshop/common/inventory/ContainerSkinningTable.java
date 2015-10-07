@@ -7,6 +7,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.crafting.ItemSkinningRecipes;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotInput;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 
 public class ContainerSkinningTable extends Container {

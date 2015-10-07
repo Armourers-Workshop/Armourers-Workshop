@@ -1,14 +1,12 @@
 package riskyken.armourersWorkshop.client.render.entity;
 
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
-import net.minecraft.entity.EntityLivingBase;
-
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -52,7 +50,7 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
             int id = equipmentData.getEquipmentId(skinType);
             Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(id);
             GL11.glEnable(GL11.GL_NORMALIZE);
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
+            //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
             GL11.glDisable(GL11.GL_NORMALIZE);
         }
     }

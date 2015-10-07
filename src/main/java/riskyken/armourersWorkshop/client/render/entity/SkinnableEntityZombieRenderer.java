@@ -1,16 +1,14 @@
 package riskyken.armourersWorkshop.client.render.entity;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelZombieVillager;
 import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityLivingBase;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -56,7 +54,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
                 if (rz.modelBipedMain.isChild) {
                     GL11.glEnable(GL11.GL_NORMALIZE);
                 }
-                EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, rz.modelBipedMain, skin);
+                //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, rz.modelBipedMain, skin);
                 if (rz.modelBipedMain.isChild) {
                     GL11.glDisable(GL11.GL_NORMALIZE);
                 }
@@ -64,7 +62,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
                     GL11.glTranslated(0, 2.0F * scale, 0);
                 }
             } else {
-                EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
+                //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
             }
         }
     }

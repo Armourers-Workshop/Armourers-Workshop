@@ -1,70 +1,94 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
-import scala.actors.threadpool.Arrays;
 
 public class SkinDye implements ISkinDye {
     
     public static final int MAX_SKIN_DYES = 8;
     private static final String TAG_SKIN_DYE = "dyeData";
-    private static final String TAG_DYE_COUNT = "dyeCount";
-    private static final String TAG_DYE_ARRAY = "dyeArray";
+    private static final String TAG_DYE= "dye";
     
-    private ArrayList<byte[]> dyes;
+    private byte[][] dyes;
+    private boolean[] hasDye;
     
     public SkinDye() {
-        dyes = new ArrayList<byte[]>();
+        dyes = new byte[MAX_SKIN_DYES][4];
+        hasDye = new boolean[MAX_SKIN_DYES];
     }
     
     public SkinDye(ISkinDye skinDye) {
-        dyes = new ArrayList<byte[]>();
-        for (int i = 0; i < skinDye.getNumberOfDyes(); i++) {
-            dyes.add(skinDye.getDyeColour(i).clone());
+        this();
+        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+            if(skinDye.haveDyeInSlot(i)) {
+                addDye(i, skinDye.getDyeColour(i));
+            }
         }
-    }
-    
-    @Override
-    public int getNumberOfDyes() {
-        return dyes.size();
     }
 
     @Override
     public byte[] getDyeColour(int index) {
-        return dyes.get(index);
+        return dyes[index];
     }
     
     @Override
-    public void addDye(byte[] rgb) {
-        dyes.add(rgb);
+    public boolean haveDyeInSlot(int index) {
+        return hasDye[index];
     }
     
     @Override
-    public void addDye(int index, byte[] rgb) {
-        dyes.add(index, rgb);
+    public void addDye(byte[] rgbt) {
+        for (int i = 0; i < hasDye.length; i++) {
+            if (!hasDye[i]) {
+                dyes[i] = rgbt;
+                hasDye[i] = true;
+                break;
+            }
+        }
+    }
+    
+    @Override
+    public void addDye(int index, byte[] rgbt) {
+        dyes[index] = rgbt;
+        hasDye[index] = true;
     }
     
     @Override
     public void removeDye(int index) {
-        dyes.remove(index);
+        dyes[index] = new byte[] {(byte)0, (byte)0, (byte)0, (byte)255};
+        hasDye[index] = false;
     }
 
+    @Override
+    public int getNumberOfDyes() {
+        int count = 0;
+        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+            if (hasDye[i]) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
     public void writeToCompound(NBTTagCompound compound) {
         NBTTagCompound dyeCompound = new NBTTagCompound();
-        dyeCompound.setInteger(TAG_DYE_COUNT, dyes.size());
-        for (int i = 0; i < dyes.size(); i++) {
-            dyeCompound.setByteArray(TAG_DYE_ARRAY + i, dyes.get(i));
+        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+            if (hasDye[i]) {
+                dyeCompound.setByteArray(TAG_DYE + i, dyes[i]);
+            }
         }
         compound.setTag(TAG_SKIN_DYE, dyeCompound);
     }
 
     public void readFromCompound(NBTTagCompound compound) {
         NBTTagCompound dyeCompound = compound.getCompoundTag(TAG_SKIN_DYE);
-        int count = dyeCompound.getInteger(TAG_DYE_COUNT);
-        for (int i = 0; i < count; i++) {
-            dyes.add(dyeCompound.getByteArray(TAG_DYE_ARRAY + i));
+        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+            if (dyeCompound.hasKey(TAG_DYE + i, 7)) {
+                dyes[i] = dyeCompound.getByteArray(TAG_DYE + i);
+                hasDye[i] = true;
+            }
         }
     }
 
@@ -82,24 +106,18 @@ public class SkinDye implements ISkinDye {
         if (getClass() != obj.getClass())
             return false;
         SkinDye other = (SkinDye) obj;
-        if (dyes == null) {
-            if (other.dyes != null)
-                return false;
-        }
-        if (!this.toString().equals(other.toString())) {
+        if (!Arrays.deepEquals(dyes, other.dyes))
             return false;
-        }
+        if (!Arrays.equals(hasDye, other.hasDye))
+            return false;
         return true;
     }
 
     @Override
     public String toString() {
         String returnString = "SkinDye [dyes=";
-        if (dyes != null) {
-            for (int i = 0; i < dyes.size(); i++) {
-                returnString += Arrays.toString(dyes.get(i));
-            }
-        }
+        Arrays.deepToString(dyes);
+        Arrays.toString(hasDye);
         returnString += "]";
         return returnString;
     }

@@ -52,9 +52,9 @@ public class ColouredVertexWithUV {
         if (type != 0) {
             if (type >= 1 && type <=8) {
                 //Is a dye paint
-                if (skinDye != null && skinDye.getNumberOfDyes() >= type) {
+                if (skinDye != null && skinDye.haveDyeInSlot(type - 1)) {
                     byte[] dye = skinDye.getDyeColour(type - 1);
-                    if (dye.length == 3) {
+                    if (dye.length == 4) {
                         float[] skinHsb = new float[3];
                         float[] dyeHsb = new float[3];
                         

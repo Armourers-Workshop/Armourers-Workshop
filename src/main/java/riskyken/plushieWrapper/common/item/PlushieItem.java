@@ -11,7 +11,7 @@ import riskyken.plushieWrapper.common.world.WorldPointer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ModItem {
+public class PlushieItem {
     
     private int maxStackSize = 64; 
     private boolean hasSubtypes;
@@ -19,7 +19,7 @@ public class ModItem {
     private final String modId;
     private ModCreativeTab creativeTab;
     
-    public ModItem(String name, String modId) {
+    public PlushieItem(String name, String modId) {
         this.name = name;
         this.modId = modId;
     }

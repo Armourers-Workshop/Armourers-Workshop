@@ -9,6 +9,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
@@ -29,6 +30,7 @@ public class ModBlocks {
     public static Block doll;
     public static Block skinningTable;
     public static Block skinnable;
+    public static Block dyeTable;
     
     public ModBlocks() {
         armourerBrain = new BlockArmourerBrain();
@@ -44,6 +46,7 @@ public class ModBlocks {
         doll = new BlockDoll();
         skinningTable = new BlockSkinningTable();
         skinnable = new BlockSkinnable();
+        dyeTable = new BlockDyeTable();
     }
 
     public void registerTileEntities() {
@@ -56,6 +59,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityMannequin.class, LibBlockNames.MANNEQUIN);
         registerTileEntity(TileEntitySkinningTable.class, LibBlockNames.SKINNING_TABLE);
         registerTileEntity(TileEntitySkinnable.class, LibBlockNames.SKINNABLE);
+        registerTileEntity(TileEntityDyeTable.class, LibBlockNames.DYE_TABLE);
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
