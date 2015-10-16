@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.utils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -99,6 +100,11 @@ public class EquipmentNBTHelper {
         skinData.readFromCompound(stack.getTagCompound());
         
         return skinData.lockSkin;
+    }
+    
+    public static void addSkinDataToStack(ItemStack stack, ISkinType skinType, int skinId, ISkinDye skinDye, boolean lockSkin) {
+        SkinPointer skinData = new SkinPointer(skinType, skinId, skinDye, lockSkin);
+        addSkinDataToStack(stack, skinData);
     }
     
     public static void addSkinDataToStack(ItemStack stack, ISkinType skinType, int skinId, boolean lockSkin) {

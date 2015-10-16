@@ -27,6 +27,10 @@ public final class LibBlockResources {
     public static final String SKINNING_TABLE_TOP = PREFIX_RESOURCE + "skinningTableTop";
     public static final String SKINNING_TABLE_BOTTOM = PREFIX_RESOURCE + "skinningTableBottom";
     
+    public static final String DYE_TABLE_SIDE = PREFIX_RESOURCE + "dyeTableSide";
+    public static final String DYE_TABLE_TOP = PREFIX_RESOURCE + "dyeTableTop";
+    public static final String DYE_TABLE_BOTTOM = PREFIX_RESOURCE + "dyeTableBottom";
+    
     public static final String MARKER = PREFIX_RESOURCE + "marker";
     public static final String NO_TEXTURE = PREFIX_RESOURCE + "noTexture";
     

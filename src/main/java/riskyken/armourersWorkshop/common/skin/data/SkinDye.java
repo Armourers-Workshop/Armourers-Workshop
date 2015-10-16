@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.data;
 
 import java.util.Arrays;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 
@@ -70,6 +71,26 @@ public class SkinDye implements ISkinDye {
             }
         }
         return count;
+    }
+    
+    @Override
+    public void writeToBuf(ByteBuf buf) {
+        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+            buf.writeBoolean(hasDye[i]);
+            if (hasDye[i]) {
+                buf.writeBytes(dyes[i]);
+            }
+        }
+    }
+    
+    @Override
+    public void readFromBuf(ByteBuf buf) {
+        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+            hasDye[i] = buf.readBoolean();
+            if (hasDye[i]) {
+                buf.readBytes(dyes[i]);
+            }
+        }
     }
     
     public void writeToCompound(NBTTagCompound compound) {

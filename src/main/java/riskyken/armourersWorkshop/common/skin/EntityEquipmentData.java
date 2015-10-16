@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 
 public class EntityEquipmentData implements IEntityEquipment {
     
@@ -97,8 +98,10 @@ public class EntityEquipmentData implements IEntityEquipment {
         for (int i = 0; i < skinId.size(); i++) {
             String skinName = (String) skinId.keySet().toArray()[i];
             int equipmentId = skinId.get(skinName);
+            ISkinDye dye = skinDye.get(skinName);
             ByteBufUtils.writeUTF8String(buf, skinName);
             buf.writeInt(equipmentId);
+            dye.writeToBuf(buf);
         }
     }
     
@@ -109,6 +112,9 @@ public class EntityEquipmentData implements IEntityEquipment {
             String skinName = ByteBufUtils.readUTF8String(buf);
             int equipmentId = buf.readInt();
             skinId.put(skinName, equipmentId);
+            SkinDye dye = new SkinDye();
+            dye.readFromBuf(buf);
+            skinDye.put(skinName, dye);
         }
     }
 
