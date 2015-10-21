@@ -13,6 +13,7 @@ tile.armourersworkshop:mannequin.name=Mannequin
 tile.armourersworkshop:doll.name=Doll
 tile.armourersworkshop:skinningTable.name=Skinning Table
 tile.armourersworkshop:marker0.name=Marker 1
+tile.armourersworkshop:dyeTable.name=Dye Table
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
@@ -147,6 +148,7 @@ inventory.armourersworkshop:mannequin.name=Mannequin
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 inventory.armourersworkshop:entityEquipment.name=Entity Equipment
 inventory.armourersworkshop:skinningTable.name=Skinning Table
+inventory.armourersworkshop:dyeTable.name=Dye Table
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:

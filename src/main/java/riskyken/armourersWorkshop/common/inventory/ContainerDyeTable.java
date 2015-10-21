@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.inventory;
 
-import java.util.Arrays;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -15,7 +13,6 @@ import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class ContainerDyeTable extends Container {
 
@@ -50,10 +47,8 @@ public class ContainerDyeTable extends Container {
     public void skinAdded(ItemStack stack) {
         SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
-        ModLogger.log("added");
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
-                ModLogger.log("making dye bottle for " + i);
                 ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
                 PaintingHelper.setToolPaintColour(bottle, dye.getDyeColour(i));
                 tileEntity.setInventorySlotContents(i + 1, bottle);
@@ -75,16 +70,11 @@ public class ContainerDyeTable extends Container {
         SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
         
         ISkinDye skinDye = skinPointer.getSkinDye();
-        ModLogger.log("number of dyes before " + skinDye.getNumberOfDyes());
         
         byte[] rgbt = PaintingHelper.getToolPaintData(dyeStack);
         skinDye.addDye(slotId, rgbt);
         
         EquipmentNBTHelper.addSkinDataToStack(skinStack, skinPointer);
-        
-        ModLogger.log("adding dye " + Arrays.toString(rgbt));
-        ModLogger.log("number of dyes after " + skinDye.getNumberOfDyes());
-        
     }
     
     public void dyeRemoved(int slotId) {
@@ -92,7 +82,6 @@ public class ContainerDyeTable extends Container {
         if (skinStack == null) {
             return;
         }
-        ModLogger.log("removing dye");
         SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
         ISkinDye skinDye = skinPointer.getSkinDye();
         skinDye.removeDye(slotId);
@@ -105,7 +94,44 @@ public class ContainerDyeTable extends Container {
     }
     
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
+        Slot slot = getSlot(slotId);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack = slot.getStack();
+            ItemStack result = stack.copy();
+            
+            if (slotId > 35) {
+                //Moving from tile entity to player.
+                if (!this.mergeItemStack(stack, 9, 36, false)) {
+                    if (!this.mergeItemStack(stack, 0, 9, false)) {
+                        return null;
+                    }
+                }
+            } else {
+              //Moving from player to tile entity.
+                if (stack.getItem() == ModItems.equipmentSkin) {
+                    if (!this.mergeItemStack(stack, 36, 37, false)) {
+                        return null;
+                    }
+                } else if (stack.getItem() == ModItems.dyeBottle && getSlot(36).getHasStack()) {
+                    if (!this.mergeItemStack(stack, 37, 45, false)) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+            
+            if (stack.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            slot.onPickupFromSlot(player, stack);
+            
+            return result;
+        }
         return null;
     }
 }
