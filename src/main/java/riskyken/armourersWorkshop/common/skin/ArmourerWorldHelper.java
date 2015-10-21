@@ -209,6 +209,11 @@ public final class ArmourerWorldHelper {
         int targetY = y + yOrigin - shiftY;
         int targetZ = z + shiftZ + zOrigin;
         
+        if (world.getBlock(targetX, targetY, targetZ) == ModBlocks.boundingBox) {
+            world.setBlockToAir(targetX, targetY, targetZ);
+            world.removeTileEntity(targetX, targetY, targetZ);
+        }
+        
         if (world.isAirBlock(targetX, targetY, targetZ)) {
             Block targetBlock = blockData.getMinecraftBlock();
             world.setBlock(targetX, targetY, targetZ, targetBlock);

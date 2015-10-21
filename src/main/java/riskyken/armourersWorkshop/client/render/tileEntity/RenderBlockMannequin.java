@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -44,11 +43,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private static final ResourceLocation circle = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanohaCircle.png");
     
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
+    private static boolean isHalloweenSeason;
     private static boolean isHalloween;
     private final static float SCALE = 0.0625F;
     
     private ModelMannequin model;
-    private boolean hasRendered;
     private MannequinFakePlayer mannequinFakePlayer;
     private RenderPlayer renderPlayer;
     private final Minecraft mc;
@@ -59,8 +58,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
         
+        isHalloweenSeason = HolidayHelper.halloween_season.isHolidayActive();
         isHalloween = HolidayHelper.halloween.isHolidayActive();
-        hasRendered = false;
     }
     
     public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
@@ -172,23 +171,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
         mc.mcProfiler.startSection("modelRender");
         te.getBipedRotations().hasCustomHead = hasCustomHead(te);
-        int rotationsHash = te.getBipedRotations().hashCode();
-        boolean needUpdate = false;
-        if (te.rotationsHash != rotationsHash) {
-            needUpdate = true;
-        }
-        if (needUpdate) {
-            if (te.displayList != 0) {
-                GLAllocation.deleteDisplayLists(te.displayList);
-            }
-            te.displayList = renderModel(te, model, fakePlayer);
-            if (te.displayList != 0) {
-                te.rotationsHash = rotationsHash;
-            }
-        }
-        if (te.displayList != 0) {
-            GL11.glCallList(te.displayList);
-        }
+        renderModel(te, model, fakePlayer);
         
         if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
             GL11.glPushMatrix();
@@ -305,12 +288,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
     }
     
-    private int renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
-        int displayList = 0;
-        if (hasRendered) {
-            displayList = GLAllocation.generateDisplayLists(1);
-            GL11.glNewList(displayList, GL11.GL_COMPILE);
-        }
+    private void renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
         if (!hasCustomHead(te)) {
             if (te.getBipedRotations().isChild) {
                 ModelHelper.enableChildModelScale(true, SCALE);
@@ -335,13 +313,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.getBipedRotations().isChild) {
             ModelHelper.disableChildModelScale();
         }
-        if (hasRendered) {
-            GL11.glEndList();
-        }
-        if (!hasRendered) {
-            hasRendered = true;
-        }
-        return displayList;
     }
     
     private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
@@ -353,7 +324,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (renderEntity != null) {
-                if (i == 0 & isHalloween) {
+                if (i == 0 & isHalloweenSeason) {
                     renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i);
                 } else {
                     if (stack != null) {
@@ -375,7 +346,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 return true;
             }
         }
-        if (isHalloween) {
+        if (isHalloweenSeason) {
             return true;
         }
         return false;

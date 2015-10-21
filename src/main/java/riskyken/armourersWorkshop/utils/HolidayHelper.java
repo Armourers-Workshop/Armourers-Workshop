@@ -16,32 +16,39 @@ public final class HolidayHelper {
     private static ArrayList<Holiday> holidayList;
     
     //Spooky scary skeletons.
-    public static final Holiday halloween = new Holiday("halloween", 31, Calendar.OCTOBER, 24);
+    public static final Holiday halloween = new Holiday(31, Calendar.OCTOBER, 0, 24);
+    public static final Holiday halloween_season = new Holiday(24, Calendar.OCTOBER, 14, 0);
+    
     //Some guy was born or something.
-    public static final Holiday christmas = new Holiday("christmas", 25, Calendar.DECEMBER, 24);
+    public static final Holiday christmas = new Holiday(25, Calendar.DECEMBER, 0, 24);
+    public static final Holiday christmas_season = new Holiday(1, Calendar.DECEMBER, 31, 0);
+    
     //Forever alone.
-    public static final Holiday valentins = new Holiday("valentins", 14, Calendar.FEBRUARY, 24);
+    public static final Holiday valentins = new Holiday(14, Calendar.FEBRUARY, 1, 0);
+    
     //year++
-    public static final Holiday newYears = new Holiday("new_years", 1, Calendar.JANUARY, 24);
+    public static final Holiday newYears = new Holiday(1, Calendar.JANUARY, 1, 0);
+    
     //The best holiday!
-    public static final Holiday ponytailDay = new Holiday("ponytail_day", 7, Calendar.JULY, 24);
+    public static final Holiday ponytailDay = new Holiday(7, Calendar.JULY, 1, 0);
+    
     //It began small! At 10FPS that is.
-    public static final Holiday btm15Anniversary = new Holiday("better_than_minecon_anniversary", 4, Calendar.JULY, 48);
+    public static final Holiday btm15Anniversary = new Holiday(4, Calendar.JULY, 2, 0);
+    
     //Should be 12 but making it 24 so more people can see it.
-    public static final Holiday aprilFools = new Holiday("april_fools", 1, Calendar.APRIL, 24);
-    //Bday of some scrub that can't code.
-    public static final Holiday riskysbday = new Holiday("risky_kens_birthday", 6, Calendar.FEBRUARY, 24);
+    public static final Holiday aprilFools = new Holiday(1, Calendar.APRIL, 1, 0);
     
     static {
         holidayList = new ArrayList<HolidayHelper.Holiday>();
         holidayList.add(halloween);
+        holidayList.add(halloween_season);
         holidayList.add(christmas);
+        holidayList.add(christmas_season);
         holidayList.add(valentins);
         holidayList.add(newYears);
         holidayList.add(ponytailDay);
         holidayList.add(btm15Anniversary);
-        holidayList.add(btm15Anniversary);
-        holidayList.add(riskysbday);
+        holidayList.add(aprilFools);
     }
     
     public static ArrayList<Holiday> getActiveHolidays() {
@@ -74,7 +81,6 @@ public final class HolidayHelper {
     
     public static class Holiday {
         
-        private final String name;
         private final Calendar startDate;
         private final Calendar endDate;
         
@@ -85,15 +91,14 @@ public final class HolidayHelper {
          * @param month Month this holiday takes place on. Zero based 0 = Jan, 11 = Dec
          * @param lengthInHours Number of hours this holiday lasts.
          */
-        public Holiday(String name, int dayOfMonth, int month, int lengthInHours) {
-            this.name = name;
+        public Holiday(int dayOfMonth, int month, int lengthInDays, int lengthInHours) {
             startDate = Calendar.getInstance();
             startDate.set(Calendar.MINUTE, 0);
             startDate.set(Calendar.HOUR_OF_DAY, 0);
             startDate.set(Calendar.MONTH, month);
             startDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             endDate = (Calendar) startDate.clone();
-            endDate.set(Calendar.HOUR_OF_DAY, lengthInHours);
+            endDate.add(Calendar.HOUR_OF_DAY, (lengthInDays * 24) + lengthInHours);
         }
         
         public boolean isHolidayActive() {
@@ -109,7 +114,7 @@ public final class HolidayHelper {
 
         @Override
         public String toString() {
-            return "Holiday [name=" + name + ", startDate=" + startDate + ", endDate=" + endDate + "]";
+            return "Holiday [startDate=" + startDate + ", endDate=" + endDate + "]";
         }
     }
 }

@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraft.client.renderer.GLAllocation;
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,11 +17,6 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -38,11 +34,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private boolean isDoll;
     private int heightOffset;
     
-    @SideOnly(Side.CLIENT)
-    public int displayList;
-    @SideOnly(Side.CLIENT)
-    public int rotationsHash;
-    
     public TileEntityMannequin() {
         this(false);
     }
@@ -55,21 +46,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         bipedRotations.rightArm.rotationY = (float) Math.toRadians(1);
         this.items = new ItemStack[7];
         this.isDoll = isDoll;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private void cleanupDisplayList() {
-        if (displayList != 0) {
-            GLAllocation.deleteDisplayLists(displayList);
-        }
-    }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        if (worldObj.isRemote) {
-            cleanupDisplayList();
-        }
-        super.finalize();
     }
     
     @Override
