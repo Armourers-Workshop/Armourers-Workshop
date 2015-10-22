@@ -107,7 +107,7 @@ public final class PaintingHelper {
     
     public static byte[] getToolPaintData(ItemStack stack) {
         NBTTagCompound compound = stack.getTagCompound();
-        if (compound != null && compound.hasKey(TAG_TOOL_PAINT)) {
+        if (compound != null && compound.hasKey(TAG_TOOL_PAINT, 7)) {
             return compound.getByteArray(TAG_TOOL_PAINT);
         }
         return getBlankPaintData();
