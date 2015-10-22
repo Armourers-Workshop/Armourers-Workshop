@@ -60,7 +60,7 @@ public class ColouredVertexWithUV {
                         
                         Color.RGBtoHSB(r & 0xFF, g & 0xFF, b & 0xFF, skinHsb);
                         Color.RGBtoHSB(dye[0] & 0xFF, dye[1] & 0xFF, dye[2] & 0xFF, dyeHsb);
-                        Color c = Color.getHSBColor(dyeHsb[0], skinHsb[1], dyeHsb[2]);
+                        Color c = Color.getHSBColor(dyeHsb[0], (skinHsb[1] * 0.50F) + (dyeHsb[1] * 0.50F), (skinHsb[2] * 0.25F) + (dyeHsb[2] * 0.75F));
                         
                         r = (byte)c.getRed();
                         g = (byte)c.getGreen();
@@ -75,8 +75,32 @@ public class ColouredVertexWithUV {
     }
     
     public void renderVertexWithUV(IRenderBuffer renderBuffer, ISkinDye skinDye) {
-        renderBuffer.setNormal(norX, norY, norZ);
-        renderBuffer.setColourRGBA_B(r, g, b, a);
-        renderBuffer.addVertexWithUV(x, y, z, (double)u, (double)v);
+        byte r = this.r;
+        byte g = this.g;
+        byte b = this.b;
+        int type = t & 0xFF;
+        if (type != 0) {
+            if (type >= 1 && type <=8) {
+                //Is a dye paint
+                if (skinDye != null && skinDye.haveDyeInSlot(type - 1)) {
+                    byte[] dye = skinDye.getDyeColour(type - 1);
+                    if (dye.length == 4) {
+                        float[] skinHsb = new float[3];
+                        float[] dyeHsb = new float[3];
+                        
+                        Color.RGBtoHSB(r & 0xFF, g & 0xFF, b & 0xFF, skinHsb);
+                        Color.RGBtoHSB(dye[0] & 0xFF, dye[1] & 0xFF, dye[2] & 0xFF, dyeHsb);
+                        Color c = Color.getHSBColor(dyeHsb[0], (skinHsb[1] * 0.50F) + (dyeHsb[1] * 0.50F), (skinHsb[2] * 0.25F) + (dyeHsb[2] * 0.75F));
+                        
+                        r = (byte)c.getRed();
+                        g = (byte)c.getGreen();
+                        b = (byte)c.getBlue();
+                    }
+                }
+            }
+            renderBuffer.setNormal(norX, norY, norZ);
+            renderBuffer.setColourRGBA_B(r, g, b, a);
+            renderBuffer.addVertexWithUV(x, y, z, (double)u, (double)v);
+        }
     }
 }

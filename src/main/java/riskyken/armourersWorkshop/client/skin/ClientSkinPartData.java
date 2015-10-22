@@ -11,12 +11,11 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.model.SkinModel;
 import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class ClientSkinPartData {
 
-    /** Black dye that is used if no dye is applied. */
+    /** Blank dye that is used if no dye is applied. */
     public static final SkinDye blankDye = new SkinDye();
     public ArrayList<ColouredVertexWithUV>[] vertexLists;
     public HashMap<ISkinDye, SkinModel> dyeModels;
@@ -34,7 +33,6 @@ public class ClientSkinPartData {
         if (skinModel == null) {
             skinModel = new SkinModel(vertexLists);
             dyeModels.put(skinDye, skinModel);
-            ModLogger.log("making model");
         }
         return skinModel;
     }
