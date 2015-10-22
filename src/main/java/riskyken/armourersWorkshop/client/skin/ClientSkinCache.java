@@ -5,11 +5,6 @@ import java.util.HashSet;
 
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -17,6 +12,11 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class ClientSkinCache {
@@ -85,6 +85,32 @@ public class ClientSkinCache {
         synchronized (requestedEquipmentIds) {
             return requestedEquipmentIds.size();
         }
+    }
+    
+    public int getModelCount() {
+        int count = 0;
+        synchronized (equipmentDataMap) {
+            Object[] keySet = equipmentDataMap.keySet().toArray();
+            for (int i = 0; i < keySet.length; i++) {
+                int key = (Integer) keySet[i];
+                Skin skin = equipmentDataMap.get(key);
+                count += skin.getModelCount();
+            }
+        }
+        return count;
+    }
+    
+    public int getPartCount() {
+        int count = 0;
+        synchronized (equipmentDataMap) {
+            Object[] keySet = equipmentDataMap.keySet().toArray();
+            for (int i = 0; i < keySet.length; i++) {
+                int key = (Integer) keySet[i];
+                Skin skin = equipmentDataMap.get(key);
+                count += skin.getPartCount();
+            }
+        }
+        return count;
     }
     
     public void clearCache() {

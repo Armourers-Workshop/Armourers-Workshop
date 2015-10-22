@@ -45,6 +45,10 @@ public class ClientSkinPartData {
             dyeModels.get(skinDye).cleanUpDisplayLists();
         }
     }
+    
+    public int getModelCount() {
+        return dyeModels.size();
+    }
 
     public void setVertexLists(ArrayList<ColouredVertexWithUV>[] vertexLists) {
         this.vertexLists = vertexLists;

@@ -98,6 +98,20 @@ public class Skin implements ISkin {
         }
     }
     
+    @SideOnly(Side.CLIENT)
+    public int getModelCount() {
+        int count = 0;
+            for (int i = 0; i < parts.size(); i++) {
+                count += parts.get(i).getModelCount();
+            }
+        return count;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public int getPartCount() {
+        return parts.size();
+    }
+    
     public int lightHash() {
         if (lightHash == 0) {
             lightHash = this.hashCode();

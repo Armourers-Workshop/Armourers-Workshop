@@ -51,6 +51,11 @@ public class SkinPart implements ISkinPart {
         return clientSkinPartData;
     }
     
+    @SideOnly(Side.CLIENT)
+    public int getModelCount() {
+        return clientSkinPartData.getModelCount();
+    }
+    
     private void setupPartBounds() {
         int minX = 127;
         int maxX = -127;

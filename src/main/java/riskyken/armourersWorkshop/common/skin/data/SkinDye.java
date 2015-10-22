@@ -137,8 +137,8 @@ public class SkinDye implements ISkinDye {
     @Override
     public String toString() {
         String returnString = "SkinDye [dyes=";
-        Arrays.deepToString(dyes);
-        Arrays.toString(hasDye);
+        returnString += Arrays.deepToString(dyes);
+        returnString += Arrays.toString(hasDye);
         returnString += "]";
         return returnString;
     }
