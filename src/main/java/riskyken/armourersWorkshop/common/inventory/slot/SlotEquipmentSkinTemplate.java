@@ -8,25 +8,33 @@ import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 
 public class SlotEquipmentSkinTemplate extends Slot {
     
-    private boolean allowTemplates;
+    private final ISlotChanged callback;
     
-    public SlotEquipmentSkinTemplate(IInventory inventory, int slotIndex, int xPosition, int yPosition, boolean allowTemplates) {
+    public SlotEquipmentSkinTemplate(IInventory inventory, int slotIndex, int xPosition, int yPosition, ISlotChanged callback) {
         super(inventory, slotIndex, xPosition, yPosition);
-        this.allowTemplates = allowTemplates;
+        this.callback = callback;
     }
     
     public SlotEquipmentSkinTemplate(IInventory inventory, int slotIndex, int xPosition, int yPosition) {
-        this(inventory, slotIndex, xPosition, yPosition, true);
+        this(inventory, slotIndex, xPosition, yPosition, null);
     }
     
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if (allowTemplates & stack.getItem() instanceof ItemEquipmentSkinTemplate && stack.getItemDamage() == 0) {
+        if (stack.getItem() instanceof ItemEquipmentSkinTemplate && stack.getItemDamage() == 0) {
             return true;
         }
         if (stack.getItem() instanceof ItemEquipmentSkin) {
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public void onSlotChanged() {
+        if (callback != null) {
+            callback.onSlotChanged(getSlotIndex());
+        }
+        super.onSlotChanged();
     }
 }

@@ -275,6 +275,10 @@ public class GuiArmourLibrary extends GuiContainer {
         }
     }
     
+    public void setFileName(String text) {
+        filenameTextbox.setText(text);
+    }
+    
     private void openEquipmentFolder() {
         File armourDir = new File(System.getProperty("user.dir"));
         File file = new File(armourDir, LibModInfo.ID);
