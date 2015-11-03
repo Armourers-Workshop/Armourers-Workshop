@@ -21,7 +21,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class EquipmentRenderHandler implements ISkinRenderHandler {
 
@@ -48,7 +48,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        ISkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer == null) {
             return false;
         }
@@ -81,7 +81,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        ISkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer != null) {
             return renderSkin(skinPointer);
         }
@@ -121,10 +121,10 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     
     @Override
     public boolean isSkinInModelCache(ItemStack stack) {
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return false;
         }
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         return isSkinInModelCache(skinPointer);
     }
     
@@ -138,10 +138,10 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     
     @Override
     public void requestSkinModelFromSever(ItemStack stack) {
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return;
         }
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         requestSkinModelFromSever(skinPointer);
     }
 

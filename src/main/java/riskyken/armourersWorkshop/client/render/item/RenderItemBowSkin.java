@@ -26,7 +26,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RenderItemBowSkin implements IItemRenderer {
     
@@ -166,7 +166,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             
             ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
             model.frame = getAnimationFrame(useCount);
-            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
             model.render(player, skin, false, skinPointer.getSkinDye());
             if (hasArrow & useCount > 0) {
@@ -225,8 +225,8 @@ public class RenderItemBowSkin implements IItemRenderer {
     }
     
     private boolean canRenderModel(ItemStack stack) {
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
             if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 return true;
             } else {

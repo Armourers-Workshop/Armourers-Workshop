@@ -24,7 +24,7 @@ import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilItems;
 
 public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvider {
@@ -82,7 +82,7 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             if (skinPointer != null) {
                 ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
-                EquipmentNBTHelper.addSkinDataToStack(returnStack, skinPointer);
+                SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
                 return returnStack;
             }
         }
@@ -107,7 +107,7 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
-            EquipmentNBTHelper.addSkinDataToStack(skinStack, skinPointer);
+            SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
             UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
         }
     }

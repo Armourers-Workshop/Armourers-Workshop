@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerDyeTable extends Container {
 
@@ -45,7 +45,7 @@ public class ContainerDyeTable extends Container {
     }
     
     public void skinAdded(ItemStack stack) {
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
@@ -67,14 +67,14 @@ public class ContainerDyeTable extends Container {
         if (skinStack == null) {
             return;
         }
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
         
         ISkinDye skinDye = skinPointer.getSkinDye();
         
         byte[] rgbt = PaintingHelper.getToolPaintData(dyeStack);
         skinDye.addDye(slotId, rgbt);
         
-        EquipmentNBTHelper.addSkinDataToStack(skinStack, skinPointer);
+        SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
     }
     
     public void dyeRemoved(int slotId) {
@@ -82,10 +82,10 @@ public class ContainerDyeTable extends Container {
         if (skinStack == null) {
             return;
         }
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
         ISkinDye skinDye = skinPointer.getSkinDye();
         skinDye.removeDye(slotId);
-        EquipmentNBTHelper.addSkinDataToStack(skinStack, skinPointer);
+        SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
     }
     
     @Override

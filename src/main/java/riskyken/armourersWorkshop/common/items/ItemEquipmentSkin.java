@@ -30,7 +30,8 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinUtils;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ItemEquipmentSkin extends AbstractModItem {
@@ -40,18 +41,15 @@ public class ItemEquipmentSkin extends AbstractModItem {
     }
     
     public ISkinType getSkinType(ItemStack stack) {
-        return EquipmentNBTHelper.getSkinTypeFromStack(stack);
+        return SkinNBTHelper.getSkinTypeFromStack(stack);
     }
     
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinPointer.skinId)) {
-                Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
-                if (!skin.getCustomName().trim().isEmpty()) {
-                    return skin.getCustomName();
-                }
+        Skin skin = SkinUtils.getSkinDetectSide(stack, true, true);
+        if (skin != null) {
+            if (!skin.getCustomName().trim().isEmpty()) {
+                return skin.getCustomName();
             }
         }
         return super.getItemStackDisplayName(stack);
@@ -63,8 +61,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
         boolean isEquipmentSkin = stack.getItem() == ModItems.equipmentSkin;
         boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;
         
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
             
             if (!isEquipmentSkin & !skinData.lockSkin & !isEquipmentContainer) {
                 return;
@@ -116,7 +114,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
                 tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinOpenWardrobe", keyName));
             }
         } else {
-            if (EquipmentNBTHelper.stackHasLegacySkinData(stack)) {
+            if (SkinNBTHelper.stackHasLegacySkinData(stack)) {
                 tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinOldType"));
             } else {
                 if (isEquipmentSkin) {
@@ -152,8 +150,8 @@ public class ItemEquipmentSkin extends AbstractModItem {
             return this.loadingIcon;
         }
         
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
             if (skinData.skinType != null) {
                 if (skinData.skinType.getIcon() != null) {
                     return skinData.skinType.getIcon();
@@ -169,7 +167,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
             int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         
         if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
             ForgeDirection dir = ForgeDirection.getOrientation(side);

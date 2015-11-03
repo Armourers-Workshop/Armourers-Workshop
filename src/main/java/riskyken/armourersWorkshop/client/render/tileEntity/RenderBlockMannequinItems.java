@@ -24,7 +24,7 @@ import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilRender;
 
 @SideOnly(Side.CLIENT)
@@ -40,7 +40,7 @@ public class RenderBlockMannequinItems {
     public void renderHeadStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
         
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
             EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
             return;
         }
@@ -86,7 +86,7 @@ public class RenderBlockMannequinItems {
 
     public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
             EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
             return;
         }
@@ -127,7 +127,7 @@ public class RenderBlockMannequinItems {
     }
     public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
             EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
             return;
         }
@@ -164,7 +164,7 @@ public class RenderBlockMannequinItems {
     
     public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
             EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
             return;
         }
@@ -214,8 +214,8 @@ public class RenderBlockMannequinItems {
         GL11.glTranslatef(-2F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 10F * scale, 0F);
         
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(1 * scale, 0 * scale, 2 * scale);
@@ -263,8 +263,8 @@ public class RenderBlockMannequinItems {
         GL11.glTranslatef(1F * scale, 0F, 0F);
         GL11.glTranslatef(0F, 10F * scale, 0F);
         
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);

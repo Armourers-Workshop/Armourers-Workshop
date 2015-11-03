@@ -17,7 +17,7 @@ import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.EventState;
 
 public class RenderItemSwordSkin implements IItemRenderer {
@@ -144,8 +144,8 @@ public class RenderItemSwordSkin implements IItemRenderer {
     }
     
     private boolean canRenderModel(ItemStack stack) {
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
             if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
                 return true;
             } else {

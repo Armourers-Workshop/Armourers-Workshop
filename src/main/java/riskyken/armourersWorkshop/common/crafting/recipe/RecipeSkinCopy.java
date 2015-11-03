@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RecipeSkinCopy extends RecipeItemSkinning {
 
@@ -28,12 +28,12 @@ public class RecipeSkinCopy extends RecipeItemSkinning {
             if (stack != null) {
                 Item item = stack.getItem();
                 
-                if (item == ModItems.equipmentSkin && EquipmentNBTHelper.stackHasSkinData(stack)) {
+                if (item == ModItems.equipmentSkin && SkinNBTHelper.stackHasSkinData(stack)) {
                     if (skinStack != null) {
                         return null;
                     }
                     skinStack = stack;
-                } else if (item == ModItems.equipmentSkinTemplate & !EquipmentNBTHelper.stackHasSkinData(stack)) {
+                } else if (item == ModItems.equipmentSkinTemplate & !SkinNBTHelper.stackHasSkinData(stack)) {
                     if (blackStack != null) {
                         return null;
                     }
@@ -47,8 +47,8 @@ public class RecipeSkinCopy extends RecipeItemSkinning {
         
         if (skinStack != null && blackStack != null) {
             ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
-            EquipmentNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, false);
+            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, false);
             return returnStack;
         }
         return null;
@@ -59,7 +59,7 @@ public class RecipeSkinCopy extends RecipeItemSkinning {
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
             Item item = stack.getItem();
-            if (item == ModItems.equipmentSkinTemplate & !EquipmentNBTHelper.stackHasSkinData(stack)) {
+            if (item == ModItems.equipmentSkinTemplate & !SkinNBTHelper.stackHasSkinData(stack)) {
                 inventory.decrStackSize(slotId, 1);
             }
         }

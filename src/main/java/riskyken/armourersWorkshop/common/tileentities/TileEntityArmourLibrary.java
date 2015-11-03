@@ -30,7 +30,7 @@ import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
@@ -76,11 +76,11 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
             return;
         }
         
-        if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
+        if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
         
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stackInput);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
         
         Skin skin = SkinDataCache.INSTANCE.getEquipmentData(skinPointer.skinId);
         if (skin == null) {
@@ -122,11 +122,11 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
             return;
         }
         
-        if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
+        if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
         
-        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
+        int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
         
         Skin skin = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
         if (skin == null) {
@@ -192,7 +192,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         
         SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
         
-        ItemStack stackArmour = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
+        ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
         
         if (stackArmour == null) {
             return;
@@ -225,7 +225,7 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
             }
         }
         
-        ItemStack inputItem = EquipmentNBTHelper.makeEquipmentSkinStack(itemData);
+        ItemStack inputItem = SkinNBTHelper.makeEquipmentSkinStack(itemData);
         if (inputItem == null) {
             return;
         }

@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RecipeSkinBow extends RecipeItemSkinning {
     
@@ -35,7 +35,7 @@ public class RecipeSkinBow extends RecipeItemSkinning {
                     }
                     skinStack = stack;
                 } else if (EntityEquipmentDataManager.INSTANCE.isBowRenderItem(item) &
-                         !EquipmentNBTHelper.isSkinLockedOnStack(stack)) {
+                         !SkinNBTHelper.isSkinLockedOnStack(stack)) {
                     if (bowStack != null) {
                         return null;
                     }
@@ -50,8 +50,8 @@ public class RecipeSkinBow extends RecipeItemSkinning {
         if (skinStack != null && bowStack != null) {
             ItemStack returnStack = bowStack.copy();
             
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
-            EquipmentNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, true);
+            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, true);
             
             return returnStack;
         } else {

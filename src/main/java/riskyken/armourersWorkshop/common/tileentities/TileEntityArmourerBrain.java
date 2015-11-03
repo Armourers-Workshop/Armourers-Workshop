@@ -36,7 +36,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -175,11 +175,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
             return;
         }
         
-        if (!EquipmentNBTHelper.stackHasSkinData(stackInput)) {
+        if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
         
-        SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stackInput);
+        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stackInput);
 
         if (skinType == null) {
             return;
@@ -190,7 +190,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
             }
         }
         
-        int equipmentId = EquipmentNBTHelper.getSkinIdFromStack(stackInput);
+        int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
         Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
         setCustomName(equipmentData.getCustomName());
         

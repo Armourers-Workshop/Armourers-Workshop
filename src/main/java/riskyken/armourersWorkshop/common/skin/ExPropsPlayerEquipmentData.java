@@ -25,7 +25,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSk
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventory {
 
@@ -54,7 +54,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     public void setEquipmentStack(ItemStack stack) {
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer.skinType != null) {
             int slot = SkinTypeHelper.getSlotForSkinType(skinPointer.skinType);
             if (slot != -1) {
@@ -138,7 +138,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
             return;
         }
         
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return;
         }
         
@@ -201,7 +201,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     private void loadFromItemStack(ItemStack stack) {
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         addCustomEquipment(skinPointer.skinType, skinPointer);
     }
     

@@ -22,7 +22,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class GuiMiniArmourerBuildingModel {
 
@@ -68,7 +68,7 @@ public class GuiMiniArmourerBuildingModel {
     
     public void drawScreen(int mouseX, int mouseY) {
         if (stack != null) {
-            skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         }
         renderFakeCubes(mouseX, mouseY);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);

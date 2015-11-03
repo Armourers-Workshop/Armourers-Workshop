@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.common.items.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerEquipmentWardrobe extends Container {
     
@@ -64,7 +64,7 @@ public class ContainerEquipmentWardrobe extends Container {
                     }
                 }
             } else {
-                if (stack.getItem() instanceof ItemEquipmentSkin & EquipmentNBTHelper.stackHasSkinData(stack)) {
+                if (stack.getItem() instanceof ItemEquipmentSkin & SkinNBTHelper.stackHasSkinData(stack)) {
                     boolean slotted = false;
                     for (int i = 0; i < 7; i++) {
                         Slot targetSlot = getSlot(i);

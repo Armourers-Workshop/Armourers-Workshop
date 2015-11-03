@@ -8,7 +8,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
-public class EquipmentNBTHelper {
+public class SkinNBTHelper {
     
     private static final String TAG_OLD_SKIN_DATA = "armourData";
     private static final String TAG_OLD_SKIN_ID = "equpmentId";

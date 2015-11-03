@@ -6,7 +6,7 @@ import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,8 +22,8 @@ public class SlotEquipmentSkin extends SlotHidable {
     @Override
     public boolean isItemValid(ItemStack stack) {
         if (stack.getItem() instanceof ItemEquipmentSkin) {
-            if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-                SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+            if (SkinNBTHelper.stackHasSkinData(stack)) {
+                SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
                 if (this.skinType != null && this.skinType == skinData.skinType) {
                     return true;
                 }

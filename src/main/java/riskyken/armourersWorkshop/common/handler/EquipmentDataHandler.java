@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class EquipmentDataHandler implements ISkinDataHandler {
 
@@ -48,12 +48,12 @@ public class EquipmentDataHandler implements ISkinDataHandler {
 
     @Override
     public boolean stackHasSkinPointer(ItemStack stack) {
-        return EquipmentNBTHelper.stackHasSkinData(stack);
+        return SkinNBTHelper.stackHasSkinData(stack);
     }
 
     @Override
     public ISkinPointer getSkinPointerFromStack(ItemStack stack) {
-        return EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        return SkinNBTHelper.getSkinPointerFromStack(stack);
     }
 
     @Override
@@ -62,17 +62,17 @@ public class EquipmentDataHandler implements ISkinDataHandler {
             return;
         }
         SkinPointer sp = new SkinPointer(skinPointer);
-        EquipmentNBTHelper.addSkinDataToStack(stack, sp);
+        SkinNBTHelper.addSkinDataToStack(stack, sp);
     }
     
     @Override
     public boolean compoundHasSkinPointer(NBTTagCompound compound) {
-        return EquipmentNBTHelper.compoundHasSkinData(compound);
+        return SkinNBTHelper.compoundHasSkinData(compound);
     }
 
     @Override
     public ISkinPointer readSkinPointerFromCompound(NBTTagCompound compound) {
-        if (!EquipmentNBTHelper.compoundHasSkinData(compound)) {
+        if (!SkinNBTHelper.compoundHasSkinData(compound)) {
             return null;
         }
         SkinPointer sp = new SkinPointer();

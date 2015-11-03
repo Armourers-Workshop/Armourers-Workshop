@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class RecipeSkinClear extends RecipeItemSkinning {
@@ -29,7 +29,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
                 Item item = stack.getItem();
                 
                 
-                if (item != ModItems.equipmentSkin && EquipmentNBTHelper.stackHasSkinData(stack) && EquipmentNBTHelper.getSkinPointerFromStack(stack).lockSkin) {
+                if (item != ModItems.equipmentSkin && SkinNBTHelper.stackHasSkinData(stack) && SkinNBTHelper.getSkinPointerFromStack(stack).lockSkin) {
                     if (skinItemStack != null) {
                         return null;
                     }
@@ -47,7 +47,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
         
         if (skinItemStack != null && soapStack != null) {
             ItemStack returnStack = skinItemStack.copy();
-            EquipmentNBTHelper.removeSkinDataFromStack(returnStack, true);
+            SkinNBTHelper.removeSkinDataFromStack(returnStack, true);
             return returnStack;
         } else {
             return null;

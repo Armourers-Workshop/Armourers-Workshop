@@ -39,7 +39,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 /**
  * Helps render custom equipment on the player and other entities.
@@ -83,8 +83,8 @@ public final class EquipmentModelRenderer {
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
             ItemStack armourStack = player.getCurrentArmor(slot);
-            if (EquipmentNBTHelper.stackHasSkinData(armourStack)) {
-                SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(armourStack);
+            if (SkinNBTHelper.stackHasSkinData(armourStack)) {
+                SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
                 return getCustomArmourItemData(sp.skinId);
             }
         }
@@ -114,8 +114,8 @@ public final class EquipmentModelRenderer {
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
             ItemStack armourStack = player.getCurrentArmor(slot);
-            if (EquipmentNBTHelper.stackHasSkinData(armourStack)) {
-                SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(armourStack);
+            if (SkinNBTHelper.stackHasSkinData(armourStack)) {
+                SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
                 return sp.getSkinDye();
             }
         }
@@ -307,7 +307,7 @@ public final class EquipmentModelRenderer {
     }
     
     public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped) {
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer == null) {
             return false;
         }

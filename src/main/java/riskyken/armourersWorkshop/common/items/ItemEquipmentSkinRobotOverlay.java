@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import buildcraft.api.robots.IRobotOverlayItem;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -20,10 +20,10 @@ public class ItemEquipmentSkinRobotOverlay extends ItemEquipmentSkin implements 
     @Optional.Method(modid = "BuildCraft|Core")
     @Override
     public boolean isValidRobotOverlay(ItemStack stack) {
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return false;
         }
-        SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer.getSkinType() != SkinTypeRegistry.skinHead) {
             return false;
         }

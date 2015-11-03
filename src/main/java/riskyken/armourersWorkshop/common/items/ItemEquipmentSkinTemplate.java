@@ -14,7 +14,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -67,6 +67,6 @@ public class ItemEquipmentSkinTemplate extends AbstractModItem implements ISkinH
 
     @Override
     public ItemStack makeStackForEquipment(Skin armourItemData) {
-        return EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
+        return SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
     }
 }

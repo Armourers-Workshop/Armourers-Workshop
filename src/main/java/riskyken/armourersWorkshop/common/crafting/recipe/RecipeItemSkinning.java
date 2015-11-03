@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 
 public abstract class RecipeItemSkinning {
@@ -23,7 +23,7 @@ public abstract class RecipeItemSkinning {
     
     protected boolean isValidSkinForType(ItemStack stack) {
         return stack.getItem() == ModItems.equipmentSkin &&
-                EquipmentNBTHelper.stackHasSkinData(stack) &&
-                EquipmentNBTHelper.getSkinTypeFromStack(stack) == skinType;
+                SkinNBTHelper.stackHasSkinData(stack) &&
+                SkinNBTHelper.getSkinTypeFromStack(stack) == skinType;
     }
 }

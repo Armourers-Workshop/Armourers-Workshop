@@ -26,7 +26,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLi
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerArmourLibrary extends Container implements ISlotChanged {
 
@@ -108,7 +108,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             if (stack == null) {
                 libScreen.setFileName("");
             } else {
-                SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+                SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
                 if (skinPointer != null) {
                     if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId())) {
                         Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());

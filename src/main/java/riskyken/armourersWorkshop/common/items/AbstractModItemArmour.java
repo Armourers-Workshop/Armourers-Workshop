@@ -15,7 +15,7 @@ import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -88,11 +88,11 @@ public class AbstractModItemArmour extends ItemArmor {
     @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack stack, int armorSlot) {
         
-        if (!EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return null;
         }
         
-        SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
         
         AbstractModelCustomEquipment targetModel = null;
         EquipmentModelRenderer emr = EquipmentModelRenderer.INSTANCE;

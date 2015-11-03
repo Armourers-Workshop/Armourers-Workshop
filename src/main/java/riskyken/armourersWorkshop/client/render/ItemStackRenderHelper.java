@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 /**
  * Helps render item stacks.
@@ -26,8 +26,8 @@ import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
 public final class ItemStackRenderHelper {
 
     public static void renderItemAsArmourModel(ItemStack stack, boolean showSkinPaint) {
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             renderItemModelFromSkinPointer(skinPointer, showSkinPaint);
         }
     }

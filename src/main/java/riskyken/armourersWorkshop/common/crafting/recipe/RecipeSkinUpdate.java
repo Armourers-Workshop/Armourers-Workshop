@@ -9,7 +9,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.AbstractModItemArmour;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RecipeSkinUpdate implements IRecipe {
 
@@ -22,7 +22,7 @@ public class RecipeSkinUpdate implements IRecipe {
             if (stack != null) {
                 Item item = stack.getItem();
                 
-                if (EquipmentNBTHelper.stackHasLegacySkinData(stack)) {
+                if (SkinNBTHelper.stackHasLegacySkinData(stack)) {
                     if (oldSkinStack != null) {
                         return false;
                     }
@@ -46,7 +46,7 @@ public class RecipeSkinUpdate implements IRecipe {
             if (stack != null) {
                 Item item = stack.getItem();
                 
-                if (EquipmentNBTHelper.stackHasLegacySkinData(stack)) {
+                if (SkinNBTHelper.stackHasLegacySkinData(stack)) {
                     if (oldSkinStack != null) {
                         return null;
                     }
@@ -59,15 +59,15 @@ public class RecipeSkinUpdate implements IRecipe {
         }
         
         if  (oldSkinStack != null) {
-            int skinId = EquipmentNBTHelper.getLegacyIdFromStack(oldSkinStack);
+            int skinId = SkinNBTHelper.getLegacyIdFromStack(oldSkinStack);
             ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(oldSkinStack.getItemDamage());
             
             SkinPointer skinPointer = new SkinPointer(skinType, skinId, false);
             
             if (oldSkinStack.getItem() instanceof AbstractModItemArmour) {
-                return EquipmentNBTHelper.makeArmouerContainerStack(skinPointer);
+                return SkinNBTHelper.makeArmouerContainerStack(skinPointer);
             } else {
-                return EquipmentNBTHelper.makeEquipmentSkinStack(skinPointer);
+                return SkinNBTHelper.makeEquipmentSkinStack(skinPointer);
             }
         } else {
             return null;

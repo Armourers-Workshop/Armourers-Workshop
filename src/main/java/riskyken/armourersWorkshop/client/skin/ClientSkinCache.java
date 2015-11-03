@@ -126,12 +126,18 @@ public class ClientSkinCache {
     }
     
     public Skin getEquipmentItemData(int equipmentId) {
+        return getEquipmentItemData(equipmentId, true);
+    }
+    
+    public Skin getEquipmentItemData(int equipmentId, boolean requestSkin) {
         synchronized (equipmentDataMap) {
             if (equipmentDataMap.containsKey(equipmentId)) {
                 return equipmentDataMap.get(equipmentId);
             }
         }
-        requestEquipmentDataFromServer(equipmentId);
+        if (requestSkin) {
+            requestEquipmentDataFromServer(equipmentId);
+        }
         return null;
     }
     

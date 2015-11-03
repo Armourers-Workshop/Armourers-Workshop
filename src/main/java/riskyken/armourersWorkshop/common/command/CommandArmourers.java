@@ -15,7 +15,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerCl
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 public class CommandArmourers extends CommandBase {
@@ -73,7 +73,7 @@ public class CommandArmourers extends CommandBase {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
             SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
-            ItemStack skinStack = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
+            ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
             EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
             entityItem.delayBeforeCanPickup = 0;
             entityItem.func_145797_a(player.getCommandSenderName());
@@ -93,7 +93,7 @@ public class CommandArmourers extends CommandBase {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
             SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
-            ItemStack skinStack = EquipmentNBTHelper.makeEquipmentSkinStack(armourItemData);
+            ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
             ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {
             PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);

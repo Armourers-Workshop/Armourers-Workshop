@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RecipeSkinArmourContainer extends RecipeItemSkinning {
 
@@ -47,8 +47,8 @@ public class RecipeSkinArmourContainer extends RecipeItemSkinning {
         }
         
         if (skinStack != null && armourStack != null) {
-            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
-            ItemStack returnStack = EquipmentNBTHelper.makeArmouerContainerStack(skinPointer);
+            SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+            ItemStack returnStack = SkinNBTHelper.makeArmouerContainerStack(skinPointer);
             return returnStack;
         } else {
             return null;
@@ -56,7 +56,7 @@ public class RecipeSkinArmourContainer extends RecipeItemSkinning {
     }
     
     private boolean isValidArmourForSkin(ItemStack armourStack, ItemStack skinStack) {
-        SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
+        SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(skinStack);
         ISkinType skinType = sp.getSkinType();
         Item armourItem = armourStack.getItem();
         if (armourItem.isValidArmor(armourStack, skinType.getVanillaArmourSlotId(), null)) {

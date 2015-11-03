@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RecipeSkinArmour extends RecipeItemSkinning {
 
@@ -34,7 +34,7 @@ public class RecipeSkinArmour extends RecipeItemSkinning {
                     }
                     skinStack = stack;
                 } else if (isValidArmour(stack) &
-                         !EquipmentNBTHelper.isSkinLockedOnStack(stack)) {
+                         !SkinNBTHelper.isSkinLockedOnStack(stack)) {
                     if (armourStack != null) {
                         return null;
                     }
@@ -52,8 +52,8 @@ public class RecipeSkinArmour extends RecipeItemSkinning {
             }
             ItemStack returnStack = armourStack.copy();
             
-            SkinPointer skinData = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
-            EquipmentNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, skinData.getSkinDye(), true);
+            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, skinData.getSkinDye(), true);
             
             return returnStack;
         } else {
@@ -72,7 +72,7 @@ public class RecipeSkinArmour extends RecipeItemSkinning {
     }
     
     private boolean isValidArmourForSkin(ItemStack armourStack, ItemStack skinStack) {
-        SkinPointer sp = EquipmentNBTHelper.getSkinPointerFromStack(skinStack);
+        SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(skinStack);
         ISkinType skinType = sp.getSkinType();
         Item armourItem = armourStack.getItem();
         if (armourItem.isValidArmor(armourStack, skinType.getVanillaArmourSlotId(), null)) {

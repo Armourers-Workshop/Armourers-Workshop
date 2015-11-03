@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class RecipeSkinDye implements IRecipe {
@@ -44,7 +44,7 @@ public class RecipeSkinDye implements IRecipe {
                     if (skinStack != null) {
                         return null;
                     }
-                    SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(stack);
+                    SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
                     if (skinPointer != null) {
                         if (skinPointer.getSkinDye().getNumberOfDyes() < SkinDye.MAX_SKIN_DYES) {
                             skinStack = stack;
@@ -63,10 +63,10 @@ public class RecipeSkinDye implements IRecipe {
             byte[] dyeColour = PaintingHelper.getToolPaintColourArray(dyeStack);
             ModLogger.log("dye size: " + dyeColour.length);
             ModLogger.log(Arrays.toString(dyeColour));
-            SkinPointer skinPointer = EquipmentNBTHelper.getSkinPointerFromStack(returnStack);
+            SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(returnStack);
             ISkinDye dye = skinPointer.getSkinDye();
             dye.addDye(dyeColour);
-            EquipmentNBTHelper.addSkinDataToStack(returnStack, skinPointer);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
             return returnStack;
         }
         return null;

@@ -28,7 +28,7 @@ import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
 public final class EntityEquipmentDataManager {
@@ -96,16 +96,16 @@ public final class EntityEquipmentDataManager {
         if (stack != null) {
             if (isSwordRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword)) {
-                    EquipmentNBTHelper.addRenderIdToStack(stack, SkinTypeRegistry.skinSword, equipmentData.getEquipmentId(SkinTypeRegistry.skinSword));
+                    SkinNBTHelper.addRenderIdToStack(stack, SkinTypeRegistry.skinSword, equipmentData.getEquipmentId(SkinTypeRegistry.skinSword));
                 } else {
-                    EquipmentNBTHelper.removeRenderIdFromStack(stack);
+                    SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isBowRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow)) {
-                    EquipmentNBTHelper.addRenderIdToStack(stack, SkinTypeRegistry.skinBow, equipmentData.getEquipmentId(SkinTypeRegistry.skinBow));
+                    SkinNBTHelper.addRenderIdToStack(stack, SkinTypeRegistry.skinBow, equipmentData.getEquipmentId(SkinTypeRegistry.skinBow));
                 } else {
-                    EquipmentNBTHelper.removeRenderIdFromStack(stack);
+                    SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
         }

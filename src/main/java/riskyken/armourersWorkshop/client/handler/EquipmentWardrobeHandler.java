@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
 public final class EquipmentWardrobeHandler {
@@ -119,7 +119,7 @@ public final class EquipmentWardrobeHandler {
         int result = -1;
         //Hide the armour if it had been skinned.
         ItemStack stack = player.getCurrentArmor(event.slot);
-        if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
             result = -2;
         }
         

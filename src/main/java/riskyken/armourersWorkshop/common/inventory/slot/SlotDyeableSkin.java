@@ -5,7 +5,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.utils.EquipmentNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class SlotDyeableSkin extends Slot {
     
@@ -19,7 +19,7 @@ public class SlotDyeableSkin extends Slot {
     @Override
     public boolean isItemValid(ItemStack stack) {
         if (stack.getItem() == ModItems.equipmentSkin) {
-            if (EquipmentNBTHelper.stackHasSkinData(stack)) {
+            if (SkinNBTHelper.stackHasSkinData(stack)) {
                 return true;
             }
         }
