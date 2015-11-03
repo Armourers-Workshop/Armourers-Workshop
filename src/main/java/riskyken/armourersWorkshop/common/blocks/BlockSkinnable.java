@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,6 +26,7 @@ import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilItems;
 
@@ -84,6 +87,8 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
                 ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
                 SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
                 return returnStack;
+            } else {
+                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
             }
         }
         return null;
@@ -106,9 +111,13 @@ public class BlockSkinnable extends AbstractModBlock implements ITileEntityProvi
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
-            ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
-            SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
-            UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
+            if (skinPointer != null) {
+                ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
+                SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
+                UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
+            } else {
+                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
+            }
         }
     }
     
