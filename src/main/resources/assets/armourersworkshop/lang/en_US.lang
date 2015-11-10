@@ -106,6 +106,10 @@ item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
 
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=Full block mode
+tooloption.armourersworkshop:changeHue=Change Hue
+tooloption.armourersworkshop:changeSaturation=Change Saturation
+tooloption.armourersworkshop:changeBrightness=Change Brightness
+tooloption.armourersworkshop:changePaintType=Change Paint Type
 tooloption.armourersworkshop:intensity=Intensity
 tooloption.armourersworkshop:radius=Radius
 

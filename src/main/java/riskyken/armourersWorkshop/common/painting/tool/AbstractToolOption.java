@@ -9,7 +9,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 public abstract class AbstractToolOption {
 
-    private final String optionName;
+    protected final String optionName;
     
     public AbstractToolOption(String optionName) {
         this.optionName = optionName;

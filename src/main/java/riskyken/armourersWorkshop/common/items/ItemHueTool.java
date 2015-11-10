@@ -99,6 +99,11 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+        boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBT(stack.stackTagCompound);
+        boolean changeSaturation = (boolean) ToolOptions.CHANGE_SATURATION.readFromNBT(stack.stackTagCompound);
+        boolean changeBrightness = (boolean) ToolOptions.CHANGE_BRIGHTNESS.readFromNBT(stack.stackTagCompound);
+        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBT(stack.stackTagCompound);
+        
         Color toolColour = new Color(getToolColour(stack));
         PaintType paintType = getToolPaintType(stack);
         float[] toolhsb;
@@ -109,11 +114,25 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         Color blockColour = new Color(oldColour);
         blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
         
-        int newColour = Color.HSBtoRGB(toolhsb[0], blockhsb[1], blockhsb[2]);
+        float[] recolour = new float[] { blockhsb[0], blockhsb[1], blockhsb[2] };
+        if (changeHue) {
+            recolour[0] = toolhsb[0];
+        }
+        if (changeSaturation) {
+            recolour[1] = toolhsb[1];
+        }
+        if (changeBrightness) {
+            recolour[2] = toolhsb[2];
+        }
+        
+        int newColour = Color.HSBtoRGB(recolour[0], recolour[1], recolour[2]);
         
         UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, side);
-        //((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
-        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+        
+        ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
+        if (changePaintType) {
+            ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+        }
     }
     
     @Override
@@ -145,6 +164,10 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
 
     @Override
     public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+        toolOptionList.add(ToolOptions.CHANGE_HUE);
+        toolOptionList.add(ToolOptions.CHANGE_SATURATION);
+        toolOptionList.add(ToolOptions.CHANGE_BRIGHTNESS);
+        toolOptionList.add(ToolOptions.CHANGE_PAINT_TYPE);
         toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
     }
 }

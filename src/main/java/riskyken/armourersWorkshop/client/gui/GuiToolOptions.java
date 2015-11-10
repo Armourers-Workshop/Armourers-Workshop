@@ -28,7 +28,7 @@ public class GuiToolOptions extends GuiScreen {
     private static final int CONTROL_PADDING = 6;
     
     private final int guiWidth;
-    private final int guiHeight;
+    private int guiHeight;
     protected int guiLeft;
     protected int guiTop;
     protected ItemStack stack;
@@ -47,16 +47,25 @@ public class GuiToolOptions extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        guiLeft = width / 2 - guiWidth / 2;
-        guiTop = height / 2 - guiHeight / 2;
         buttonList.clear();
         
+        guiLeft = width / 2 - guiWidth / 2;
+        guiTop = height / 2 - guiHeight / 2;
+        
         int controlHeight = guiTop + MARGIN_TOP;
+        //TODO Change the GUI height to fit the controls.
+        /*
+        for (int i = 0; i < toolOptionsList.size(); i++) {
+            controlHeight += toolOptionsList.get(i).getDisplayHeight() + CONTROL_PADDING;
+        }
+        */
         for (int i = 0; i < toolOptionsList.size(); i++) {
             GuiButton control = toolOptionsList.get(i).getGuiControl(i, guiLeft + MARGIN_LEFT, controlHeight, stack.getTagCompound());
             buttonList.add(control);
             controlHeight += toolOptionsList.get(i).getDisplayHeight() + CONTROL_PADDING;
         }
+        
+        //guiHeight = controlHeight;
     }
     
     @Override

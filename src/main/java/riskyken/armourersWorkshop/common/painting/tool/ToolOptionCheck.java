@@ -6,14 +6,19 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 
-public class ToolOptionFullBlockMode extends AbstractToolOption {
+public class ToolOptionCheck extends AbstractToolOption {
 
-    private static final String TAG_FULL_BLOCK_MODE = "fullBlockMode";
+    private final boolean defaultCheck;
     
-    public ToolOptionFullBlockMode() {
-        super(TAG_FULL_BLOCK_MODE);
+    public ToolOptionCheck(String optionName) {
+        this(optionName, true);
     }
-
+    
+    public ToolOptionCheck(String optionName, boolean defaultCheck) {
+        super(optionName);
+        this.defaultCheck = defaultCheck;
+    }
+    
     @SideOnly(Side.CLIENT)
     @Override
     public int getDisplayWidth() {
@@ -25,18 +30,18 @@ public class ToolOptionFullBlockMode extends AbstractToolOption {
     public int getDisplayHeight() {
         return 9;
     }
-
+    
     @SideOnly(Side.CLIENT)
     @Override
     public GuiButton getGuiControl(int id, int x, int y, NBTTagCompound compound) {
         return new GuiCheckBox(id, x, y, getLocalisedLabel(), (Boolean) readFromNBT(compound));
     }
-
+    
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
-        boolean checked = true;
-        if (compound != null && compound.hasKey(TAG_FULL_BLOCK_MODE)) {
-            checked = compound.getBoolean(TAG_FULL_BLOCK_MODE);
+        boolean checked = defaultCheck;
+        if (compound != null && compound.hasKey(optionName)) {
+            checked = compound.getBoolean(optionName);
         }
         return checked;
     }
@@ -49,6 +54,6 @@ public class ToolOptionFullBlockMode extends AbstractToolOption {
 
     @Override
     public void writeToNBT(NBTTagCompound compound, Object value) {
-        compound.setBoolean(TAG_FULL_BLOCK_MODE, (Boolean) value);
+        compound.setBoolean(optionName, (Boolean) value);
     }
 }
