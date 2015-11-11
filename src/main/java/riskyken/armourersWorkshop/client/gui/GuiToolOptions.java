@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.config.GuiUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,7 @@ import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 public class GuiToolOptions extends GuiScreen {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/toolOptions.png");
-    private static final int MARGIN_TOP = 16;
+    private static final int MARGIN_TOP = 22;
     private static final int MARGIN_LEFT = 6;
     private static final int CONTROL_PADDING = 6;
     
@@ -50,29 +51,30 @@ public class GuiToolOptions extends GuiScreen {
         buttonList.clear();
         
         guiLeft = width / 2 - guiWidth / 2;
-        guiTop = height / 2 - guiHeight / 2;
         
-        int controlHeight = guiTop + MARGIN_TOP;
-        //TODO Change the GUI height to fit the controls.
-        /*
+        int controlHeight = MARGIN_TOP;
         for (int i = 0; i < toolOptionsList.size(); i++) {
             controlHeight += toolOptionsList.get(i).getDisplayHeight() + CONTROL_PADDING;
         }
-        */
+        guiHeight = controlHeight;
+        guiTop = height / 2 - guiHeight / 2;
+        
+        controlHeight = MARGIN_TOP;
         for (int i = 0; i < toolOptionsList.size(); i++) {
-            GuiButton control = toolOptionsList.get(i).getGuiControl(i, guiLeft + MARGIN_LEFT, controlHeight, stack.getTagCompound());
+            GuiButton control = toolOptionsList.get(i).getGuiControl(i, guiLeft + MARGIN_LEFT, controlHeight + guiTop, stack.getTagCompound());
             buttonList.add(control);
             controlHeight += toolOptionsList.get(i).getDisplayHeight() + CONTROL_PADDING;
         }
-        
-        //guiHeight = controlHeight;
     }
     
     @Override
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.guiWidth, this.guiHeight);
+        int textureWidth = 176;
+        int textureHeight = 62;
+        int borderSize = 4;
+        GuiUtils.drawContinuousTexturedBox(guiLeft, guiTop, 0, 0, guiWidth, guiHeight, textureWidth, textureHeight, borderSize, zLevel);
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
         renderGuiTitle(fontRendererObj, guiName);
     }
