@@ -77,6 +77,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
             renderer.addVertexWithUV(x, y + 1F, z - offset, xEnd, yStart);
             renderer.addVertexWithUV(x + 1F, y + 1F, z - offset, xStart, yStart);
             renderer.draw();
+            break;
         case SOUTH:
             renderer.startDrawingQuads();
             renderer.addVertexWithUV(x, y, z + 1F + offset, xStart, yEnd);

@@ -52,6 +52,7 @@ public class GuiToolOptions extends GuiScreen {
         
         guiLeft = width / 2 - guiWidth / 2;
         
+        //Work out how tall the GUI needs to be.
         int controlHeight = MARGIN_TOP;
         for (int i = 0; i < toolOptionsList.size(); i++) {
             controlHeight += toolOptionsList.get(i).getDisplayHeight() + CONTROL_PADDING;
@@ -59,6 +60,7 @@ public class GuiToolOptions extends GuiScreen {
         guiHeight = controlHeight;
         guiTop = height / 2 - guiHeight / 2;
         
+        //Place the controls on the GUI.
         controlHeight = MARGIN_TOP;
         for (int i = 0; i < toolOptionsList.size(); i++) {
             GuiButton control = toolOptionsList.get(i).getGuiControl(i, guiLeft + MARGIN_LEFT, controlHeight + guiTop, stack.getTagCompound());
