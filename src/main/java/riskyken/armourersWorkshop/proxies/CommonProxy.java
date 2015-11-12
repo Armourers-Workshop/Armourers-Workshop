@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.proxies;
 
-import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
@@ -33,10 +32,6 @@ public class CommonProxy {
     }
     
     public int getPlayerModelCacheSize() {
-        return 0;
-    }
-    
-    public int getRenderType(Block block) {
         return 0;
     }
     

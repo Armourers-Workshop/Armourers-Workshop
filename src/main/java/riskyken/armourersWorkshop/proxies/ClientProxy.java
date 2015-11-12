@@ -9,7 +9,6 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -42,7 +41,6 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
-import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -69,8 +67,7 @@ public class ClientProxy extends CommonProxy {
     
     private static boolean shadersModLoaded;
     private static boolean moreplayermodelsLoaded;
-    public static boolean coloredLightsLoaded;
-    public static int blockColourMixerRenderId;
+    private static boolean coloredLightsLoaded;
     public static int renderPass;
     
     @Override
@@ -83,25 +80,30 @@ public class ClientProxy extends CommonProxy {
     public void initRenderers() {
         EquipmentModelRenderer.init();
         EntitySkinRenderHandler.init();
-        ModelMannequin modelMannequin = new ModelMannequin();
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMiniArmourer.class, new RenderBlockMiniArmourer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
-        MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelMannequin));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelMannequin));
-        blockColourMixerRenderId = RenderingRegistry.getNextAvailableRenderId();
-        RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
-        RenderingRegistry.registerBlockHandler(new RenderBlockGlowing(RenderingRegistry.getNextAvailableRenderId()));
         new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
         Render arrowRender = new RenderSkinnedArrow();
         arrowRender.setRenderManager(RenderManager.instance);
         RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
-    } 
+        
+        //Register tile entity renderers.
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMiniArmourer.class, new RenderBlockMiniArmourer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
+        
+        //Register item renderers.
+        ModelMannequin modelMannequin = new ModelMannequin();
+        MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelMannequin));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelMannequin));
+        
+        //Register block renderers.
+        RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
+        RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
+    }
     
     @Override
     public void init() {
@@ -209,14 +211,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public int getPlayerModelCacheSize() {
         return ClientSkinCache.INSTANCE.getCacheSize();
-    }
-
-    @Override
-    public int getRenderType(Block block) {
-        if (block instanceof BlockColourMixer) {
-            return blockColourMixerRenderId;
-        }
-        return 0;
     }
 
     @Override

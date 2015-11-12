@@ -14,6 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -92,7 +93,7 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     
     @Override
     public int getRenderType() {
-        return ArmourersWorkshop.proxy.getRenderType(this);
+        return RenderBlockColourMixer.renderId;
     }
     
     @Override

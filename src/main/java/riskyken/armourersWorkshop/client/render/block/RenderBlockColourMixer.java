@@ -1,20 +1,26 @@
 package riskyken.armourersWorkshop.client.render.block;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockColourMixer implements ISimpleBlockRenderingHandler {
 
+    public static int renderId = 0;
+    
+    public RenderBlockColourMixer() {
+        renderId = RenderingRegistry.getNextAvailableRenderId();
+    }
+    
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
         ClientProxy.renderPass = 0;
@@ -91,6 +97,6 @@ public class RenderBlockColourMixer implements ISimpleBlockRenderingHandler {
 
     @Override
     public int getRenderId() {
-        return ClientProxy.blockColourMixerRenderId;
+        return renderId;
     }
 }

@@ -3,6 +3,9 @@ package riskyken.armourersWorkshop.client.render.block;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,12 +15,13 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
 
+@SideOnly(Side.CLIENT)
 public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
 
     public static int renderId = 0;
     
-    public RenderBlockGlowing(int renderId) {
-        this.renderId = renderId;
+    public RenderBlockGlowing() {
+        renderId = RenderingRegistry.getNextAvailableRenderId();
     }
     
     @Override
