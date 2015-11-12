@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
 
@@ -27,6 +28,20 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
         renderItem(block, metadata, renderer);
+        boolean glowing = block.getLightValue() > 0;
+        if (glowing) {
+            GL11.glPushMatrix();
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+            GL11.glScalef(1.1F, 1.1F, 1.1F);
+            GL11.glColor4f(1F, 1F, 1F, 0.6F);
+            GL11.glEnable(GL11.GL_BLEND);
+            ModRenderHelper.enableAlphaBlend();
+            GL11.glDisable(GL11.GL_LIGHTING);
+            renderItem(block, metadata, renderer);
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            GL11.glPopAttrib();
+            GL11.glPopMatrix();
+        }
     }
     
     private void renderItem(Block block, int metadata, RenderBlocks renderer) {
