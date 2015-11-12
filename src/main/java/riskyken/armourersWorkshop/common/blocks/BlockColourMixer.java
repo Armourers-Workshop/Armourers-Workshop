@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import java.util.List;
-
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -9,18 +7,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
@@ -35,15 +29,8 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
     
     @Override
     public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlockWithMetadata.class, "block." + name);
+        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
-    }
-    
-    @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i < 2; i++) {
-            list.add(new ItemStack(item, 1, i));
-        }
     }
     
     @Override
@@ -113,16 +100,9 @@ public class BlockColourMixer extends AbstractModBlock implements ITileEntityPro
         if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
             return false;
         }
-        if (world.getBlockMetadata(x, y, z) == 0) {
-            if (!world.isRemote) {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.COLOUR_MIXER, world, x, y, z);
-            }
-        } else {
-            if (!world.isRemote) {
-                player.addChatComponentMessage(new ChatComponentText("Not ready yet."));
-            }
+        if (!world.isRemote) {
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.COLOUR_MIXER, world, x, y, z);
         }
-
         return true;
     }
 
