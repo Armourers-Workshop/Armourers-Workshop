@@ -7,7 +7,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -33,15 +32,12 @@ import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 
-public class BlockBoundingBox extends Block implements ITileEntityProvider, IPantableBlock {
+public class BlockBoundingBox extends AbstractModBlockContainer implements IPantableBlock {
 
     protected BlockBoundingBox() {
-        super(Material.cloth);
-        //setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+        super(LibBlockNames.BOUNDING_BOX, Material.cloth, soundTypeCloth, false);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setStepSound(soundTypeCloth);
-        setBlockName(LibBlockNames.BOUNDING_BOX);
         setLightOpacity(0);
     }
     
