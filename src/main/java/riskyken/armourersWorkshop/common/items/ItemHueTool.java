@@ -99,10 +99,10 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
-        boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBT(stack.stackTagCompound);
-        boolean changeSaturation = (boolean) ToolOptions.CHANGE_SATURATION.readFromNBT(stack.stackTagCompound);
-        boolean changeBrightness = (boolean) ToolOptions.CHANGE_BRIGHTNESS.readFromNBT(stack.stackTagCompound);
-        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBT(stack.stackTagCompound);
+        boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBTBool(stack.stackTagCompound);
+        boolean changeSaturation = (boolean) ToolOptions.CHANGE_SATURATION.readFromNBTBool(stack.stackTagCompound);
+        boolean changeBrightness = (boolean) ToolOptions.CHANGE_BRIGHTNESS.readFromNBTBool(stack.stackTagCompound);
+        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBTBool(stack.stackTagCompound);
         
         Color toolColour = new Color(getToolColour(stack));
         PaintType paintType = getToolPaintType(stack);

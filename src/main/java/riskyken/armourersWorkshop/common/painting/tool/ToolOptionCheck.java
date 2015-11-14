@@ -37,6 +37,14 @@ public class ToolOptionCheck extends AbstractToolOption {
         return new GuiCheckBox(id, x, y, getLocalisedLabel(), (Boolean) readFromNBT(compound));
     }
     
+    public boolean readFromNBTBool(NBTTagCompound compound) {
+        boolean checked = defaultCheck;
+        if (compound != null && compound.hasKey(optionName)) {
+            checked = compound.getBoolean(optionName);
+        }
+        return checked;
+    }
+    
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
         boolean checked = defaultCheck;
