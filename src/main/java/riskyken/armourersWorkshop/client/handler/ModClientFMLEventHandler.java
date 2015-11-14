@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client;
+package riskyken.armourersWorkshop.client.handler;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
