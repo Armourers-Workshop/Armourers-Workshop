@@ -2,17 +2,16 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.awt.Color;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.utils.UtilColour;
-import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 @SideOnly(Side.CLIENT)
 public class GuiColourSelector extends GuiButtonExt {
@@ -50,7 +49,7 @@ public class GuiColourSelector extends GuiButtonExt {
             GL11.glColor4f(red, green, blue, 1.0F);
             int xPos = this.xPosition + 1 + this.colorWidth * i - curRow * colourHeight * rowLength;
             int yPos = this.yPosition + 1 + curRow * 10;
-            drawTexturedModalRect(xPos, yPos, 176, 0, this.colorWidth, this.colourHeight);
+            drawTexturedModalRect(xPos, yPos, 146, 52, this.colorWidth, this.colourHeight);
             if (mouseX >= xPos & mouseY >= yPos & mouseX <= xPos + this.colorWidth & mouseY <= yPos + this.colourHeight) {
                 this.selectedColour = new Color(UtilColour.getMinecraftColor(i, this.colourFamily));
             }

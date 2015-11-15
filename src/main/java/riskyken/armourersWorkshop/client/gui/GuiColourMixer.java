@@ -46,8 +46,8 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
         this.tileEntityColourMixer = tileEntityColourMixer;
-        this.xSize = 176;
-        this.ySize = 233;
+        this.xSize = 256;
+        this.ySize = 240;
     }
     
     @Override
@@ -77,7 +77,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         colourSelector.setColourFamily(cf);
         buttonList.add(colourFamilyList);
         
-        paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 170, this.guiTop + 30, 60, "", this);
+        paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 170, this.guiTop + 30, 78, "", this);
         for (int i = 0; i < PaintType.values().length; i++) {
             PaintType paintType = PaintType.values()[i];
             paintTypeDropDown.addListItem(paintType.toString());
@@ -175,7 +175,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntityColourMixer.getInventoryName());
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
         
         String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hue");
         String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.saturation");
