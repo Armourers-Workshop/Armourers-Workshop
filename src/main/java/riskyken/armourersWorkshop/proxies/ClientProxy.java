@@ -9,6 +9,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -41,6 +42,8 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
+import riskyken.armourersWorkshop.common.blocks.BlockColourable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -231,5 +234,16 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void receivedSkinFromLibrary(String fileName, Skin skin) {
         SkinIOUtils.saveSkinFromFileName(fileName, skin);
+    }
+    
+    @Override
+    public int getBlockRenderType(Block block) {
+        if (block instanceof BlockColourable) {
+            return RenderBlockGlowing.renderId;
+        }
+        if (block instanceof BlockColourMixer) {
+            return RenderBlockColourMixer.renderId;
+        }
+        return super.getBlockRenderType(block);
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
@@ -129,6 +130,6 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     
     @Override
     public int getRenderType() {
-        return RenderBlockGlowing.renderId;
+        return ArmourersWorkshop.proxy.getBlockRenderType(this);
     }
 }
