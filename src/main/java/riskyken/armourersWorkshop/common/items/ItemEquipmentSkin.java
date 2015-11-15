@@ -46,7 +46,7 @@ public class ItemEquipmentSkin extends AbstractModItem {
     
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Skin skin = SkinUtils.getSkinDetectSide(stack, true, true);
+        Skin skin = SkinUtils.getSkinDetectSide(stack, true, false);
         if (skin != null) {
             if (!skin.getCustomName().trim().isEmpty()) {
                 return skin.getCustomName();

@@ -190,14 +190,14 @@ public class SkinNBTHelper {
         return stack;
     }
     
-    public static void addRenderIdToStack(ItemStack stack, ISkinType skinType, int skinId) {
+    public static void addRenderIdToStack(ItemStack stack, ISkinType skinType, int skinId, ISkinDye skinDye) {
         if (stackHasSkinData(stack)) {
             SkinPointer skinData = getSkinPointerFromStack(stack);
             if (skinData.skinId != skinId & !skinData.lockSkin) {
-                addSkinDataToStack(stack, skinType, skinId, false);
+                addSkinDataToStack(stack, skinType, skinId, skinDye, false);
             }
         } else {
-            addSkinDataToStack(stack, skinType, skinId, false);
+            addSkinDataToStack(stack, skinType, skinId, skinDye, false);
         }
     }
     
