@@ -77,7 +77,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         colourSelector.setColourFamily(cf);
         buttonList.add(colourFamilyList);
         
-        paintTypeDropDown = new GuiDropDownList(5, this.guiLeft, this.guiTop, 100, "", this);
+        paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 170, this.guiTop + 30, 60, "", this);
         for (int i = 0; i < PaintType.values().length; i++) {
             PaintType paintType = PaintType.values()[i];
             paintTypeDropDown.addListItem(paintType.toString());
