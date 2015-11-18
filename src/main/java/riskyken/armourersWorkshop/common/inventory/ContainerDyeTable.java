@@ -9,6 +9,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeBottle;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeableSkin;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
@@ -45,12 +46,15 @@ public class ContainerDyeTable extends Container {
     }
     
     public void skinAdded(ItemStack stack) {
+        skinRemoved();
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
+                byte[] rgbt = dye.getDyeColour(i);
                 ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
-                PaintingHelper.setToolPaintColour(bottle, dye.getDyeColour(i));
+                PaintingHelper.setToolPaintColour(bottle, rgbt);
+                PaintingHelper.setToolPaint(bottle, PaintType.getPaintTypeFormSKey(rgbt[3]));
                 tileEntity.setInventorySlotContents(i + 1, bottle);
             }
         }
