@@ -29,6 +29,8 @@ public final class LibItemResources {
     //Painting tools
     public static final String PAINTBRUSH = PREFIX_RESOURCE + "paintbrush";
     public static final String PAINTBRUSH_TIP = PREFIX_RESOURCE + "paintbrush-tip";
+    public static final String PAINTBRUSH_FACE_MODE = PREFIX_RESOURCE + "paintbrushFaceMode";
+    public static final String PAINTBRUSH_FACE_MODE_TIP = PREFIX_RESOURCE + "paintbrushFaceMode-tip";
     public static final String PAINT_ROLLER = PREFIX_RESOURCE + "paintRoller";
     public static final String PAINT_ROLLER_TIP = PREFIX_RESOURCE + "paintRollerTip";
     public static final String COLOUR_PICKER = PREFIX_RESOURCE + "colour-picker";

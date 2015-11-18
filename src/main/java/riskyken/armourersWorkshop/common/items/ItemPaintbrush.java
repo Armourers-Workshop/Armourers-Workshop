@@ -39,12 +39,18 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
 
     @SideOnly(Side.CLIENT)
     private IIcon tipIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon faceModeIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon faceModeTipIcon;
     
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
         itemIcon = register.registerIcon(LibItemResources.PAINTBRUSH);
         tipIcon = register.registerIcon(LibItemResources.PAINTBRUSH_TIP);
+        faceModeIcon = register.registerIcon(LibItemResources.PAINTBRUSH_FACE_MODE);
+        faceModeTipIcon = register.registerIcon(LibItemResources.PAINTBRUSH_FACE_MODE_TIP);
     }
     
     @Override
@@ -133,10 +139,17 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     
     @Override
     public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 0) {
-            return itemIcon;
+        if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+            if (pass == 0) {
+                return itemIcon;
+            }
+            return tipIcon;
+        } else {
+            if (pass == 0) {
+                return faceModeIcon;
+            }
+            return faceModeTipIcon;
         }
-        return tipIcon;
     }
     
     @Override
