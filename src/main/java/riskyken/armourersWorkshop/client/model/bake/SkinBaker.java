@@ -144,9 +144,11 @@ public final class SkinBaker {
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
         ArrayList<ColouredVertexWithUV>[] renderLists;
-        int[] pie;
+        int[][] dyeColour;
+        int[] dyeUseCount;
         
-        pie = new int[3];
+        dyeColour = new int[3][8];
+        dyeUseCount = new int[8];
         
         if (multipassSkinRendering) {
             renderLists = (ArrayList<ColouredVertexWithUV>[]) new ArrayList[4];
@@ -170,6 +172,20 @@ public final class SkinBaker {
             byte a = (byte) 255;
             if (cube.needsPostRender()) {
                 a = (byte) 127;
+            }
+            
+            byte[] r = cubeData.getCubeColourR(i);
+            byte[] g = cubeData.getCubeColourG(i);
+            byte[] b = cubeData.getCubeColourB(i);
+            
+            for (int j = 0; j < 6; j++) {
+                int paint = paintType[j] & 0xFF;
+                if (paint >= 1 && paint <= 8 && cubeData.getFaceFlags(i).get(j)) {
+                    dyeUseCount[paint - 1]++;
+                    dyeColour[0][paint - 1] += r[j]  & 0xFF;
+                    dyeColour[1][paint - 1] += g[j]  & 0xFF;
+                    dyeColour[2][paint - 1] += b[j]  & 0xFF;
+                }
             }
             
             if (multipassSkinRendering) {
@@ -202,8 +218,19 @@ public final class SkinBaker {
             }
         }
         
+        int[] averageR = new int[8];
+        int[] averageG = new int[8];
+        int[] averageB = new int[8];
+        
+        for (int i = 0; i < 8; i++) {
+            averageR[i] = (int) ((double)dyeColour[0][i] / (double)dyeUseCount[i]);
+            averageG[i] = (int) ((double)dyeColour[1][i] / (double)dyeUseCount[i]);
+            averageB[i] = (int) ((double)dyeColour[2][i] / (double)dyeUseCount[i]);
+        }
+        
         partData.clearCubeData();
         partData.getClientSkinPartData().setVertexLists(renderLists);
+        partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG, averageB);
     }
     
     private static class CubeLocation {

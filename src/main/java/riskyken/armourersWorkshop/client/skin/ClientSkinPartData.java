@@ -21,6 +21,10 @@ public class ClientSkinPartData {
     public HashMap<ISkinDye, SkinModel> dyeModels;
     public int[] totalCubesInPart;
     
+    private int[] averageR = new int[8];
+    private int[] averageG = new int[8];
+    private int[] averageB = new int[8];
+    
     public ClientSkinPartData() {
         dyeModels = new HashMap<ISkinDye, SkinModel>();
     }
@@ -52,5 +56,15 @@ public class ClientSkinPartData {
 
     public void setVertexLists(ArrayList<ColouredVertexWithUV>[] vertexLists) {
         this.vertexLists = vertexLists;
+    }
+    
+    public void setAverageDyeValues(int[] r, int[] g, int[] b) {
+        this.averageR = r;
+        this.averageG = g;
+        this.averageB = b;
+    }
+    
+    public int[] getAverageDyeColour(int dyeNumber) {
+        return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
     }
 }

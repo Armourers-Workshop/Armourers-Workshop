@@ -56,7 +56,7 @@ public class EquipmentPartRenderer extends ModelBase {
                 if (skinModel.hasList[i]) {
                     skinModel.displayList[i] = GLAllocation.generateDisplayLists(1);
                     GL11.glNewList(skinModel.displayList[i], GL11.GL_COMPILE);
-                    renderVertexList(cspd.vertexLists[i], scale, skinDye);
+                    renderVertexList(cspd.vertexLists[i], scale, skinDye, cspd);
                     //TODO Do not clear this!
                     //cspd.vertexLists[i].clear();
                     GL11.glEndList();
@@ -105,15 +105,15 @@ public class EquipmentPartRenderer extends ModelBase {
         mc.mcProfiler.endSection();
     }
     
-    private void renderVertexList(ArrayList<ColouredVertexWithUV> vertexList, float scale, ISkinDye skinDye) {
+    private void renderVertexList(ArrayList<ColouredVertexWithUV> vertexList, float scale, ISkinDye skinDye, ClientSkinPartData cspd) {
         IRenderBuffer renderBuffer = new RenderBridge().INSTANCE;
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < vertexList.size(); i++) {
             ColouredVertexWithUV cVert = vertexList.get(i);
             if (ClientProxy.useSafeTextureRender()) {
-                cVert.renderVertexWithUV(renderBuffer, skinDye);
+                cVert.renderVertexWithUV(renderBuffer, skinDye, cspd);
             } else {
-                cVert.renderVertex(renderBuffer, skinDye);
+                cVert.renderVertex(renderBuffer, skinDye, cspd);
             }
         }
         renderBuffer.draw();
