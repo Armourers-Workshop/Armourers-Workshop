@@ -2,12 +2,12 @@ package riskyken.armourersWorkshop.common.skin.type;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinLegsPartSkirt extends AbstractSkinPartTypeBase {
 
@@ -16,7 +16,7 @@ public class SkinLegsPartSkirt extends AbstractSkinPartTypeBase {
         this.buildingSpace = new Rectangle3D(-10, -12, -10, 20, 15, 20);
         this.guideSpace = new Rectangle3D(-4, -12, -2, 8, 12, 4);
       //Offset -1 to match old skin system.
-        this.offset = new Point3D(0, -1, 16);
+        this.offset = new Point3D(0, -1, 20);
     }
 
     @Override

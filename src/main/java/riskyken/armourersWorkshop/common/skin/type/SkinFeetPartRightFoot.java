@@ -4,20 +4,20 @@ import java.awt.Point;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SkinFeetPartRightFoot extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured {
     
     public SkinFeetPartRightFoot(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-3, -13, -6, 7, 5, 10);
+        this.buildingSpace = new Rectangle3D(-3, -13, -8, 11, 5, 16);
         this.guideSpace = new Rectangle3D(-2, -12, -2, 4, 12, 4);
         this.offset = new Point3D(-6, 0, 0);
     }

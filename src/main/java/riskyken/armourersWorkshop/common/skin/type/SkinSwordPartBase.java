@@ -13,7 +13,7 @@ public class SkinSwordPartBase extends AbstractSkinPartTypeBase {
     
     public SkinSwordPartBase(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-10, -20, -18, 20, 62, 36);
+        this.buildingSpace = new Rectangle3D(-10, -20, -28, 20, 62, 56);
         this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);
         //Offset -1 to match old skin system.
         this.offset = new Point3D(0, -1, 0);
