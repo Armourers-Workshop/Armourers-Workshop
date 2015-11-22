@@ -12,6 +12,7 @@ tile.armourersworkshop:mannequin.name=Mannequin
 tile.armourersworkshop:doll.name=Doll
 tile.armourersworkshop:skinningTable.name=Skinning Table
 tile.armourersworkshop:dyeTable.name=Dye Table
+tile.armourersworkshop:skinnable.name=Skinnable Block
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
