@@ -35,8 +35,17 @@ public final class UndoManager {
         playerData.end();
     }
     
-    public static void blockPainted(EntityPlayer player, World world, int x, int y, int z, int oldColour, int side) {
-        UndoData undoData = new UndoData(x, y, z, world.provider.dimensionId, oldColour, side);
+    @Deprecated()
+    public static void blockPainted(EntityPlayer player, World world, int x, int y, int z, int oldColour, byte oldPaintType, int side) {
+        byte[] oldrgb = new byte[3];
+        oldrgb[0] = (byte) ((oldColour >> 16) & 0xFF);
+        oldrgb[1] = (byte) ((oldColour >> 8) & 0xFF);
+        oldrgb[2] = (byte) ((oldColour) & 0xFF);
+        blockPainted(player, world, x, y, z, oldrgb, oldPaintType, side);
+    }
+    
+    public static void blockPainted(EntityPlayer player, World world, int x, int y, int z, byte[] oldrgb, byte oldPaintType, int side) {
+        UndoData undoData = new UndoData(x, y, z, world.provider.dimensionId, oldrgb, oldPaintType, side);
         if (!playerUndoData.containsKey(player.getCommandSenderName())) {
             playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
         }

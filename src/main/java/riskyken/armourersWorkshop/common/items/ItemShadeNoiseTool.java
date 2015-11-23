@@ -79,8 +79,9 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
         IPantableBlock worldColourable = (IPantableBlock) block;
         int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
         int newColour = UtilColour.addShadeNoise(new Color(oldColour), intensity).getRGB();
-        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, side);
+        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
         ((IPantableBlock) block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
     }
     

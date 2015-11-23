@@ -81,8 +81,9 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
         int intensity = (Integer) ToolOptions.INTENSITY.readFromNBT(stack.getTagCompound());
         IPantableBlock worldColourable = (IPantableBlock) block;
         int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
         int newColour = UtilColour.makeColourDarker(new Color(oldColour), intensity).getRGB();
-        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, side);
+        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
         ((IPantableBlock) block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
     }
     
