@@ -56,11 +56,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public void setOwner(ItemStack stack) {
         if (stack.hasDisplayName()) {
-            if (gameProfile == null) {
-                setGameProfile(new GameProfile(null, stack.getDisplayName()));
-                stack.stackSize--;
-                updateProfileData();
-            }
+            setGameProfile(new GameProfile(null, stack.getDisplayName()));
+            stack.stackSize--;
+            updateProfileData();
         }
     }
     
