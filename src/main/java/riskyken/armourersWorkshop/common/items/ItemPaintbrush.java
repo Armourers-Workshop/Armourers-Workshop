@@ -132,9 +132,11 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
         String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
         String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
         String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.toString());
+        
         list.add(colourText);
         list.add(hexText);
         list.add(paintText);
+        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
     }
     
     @Override

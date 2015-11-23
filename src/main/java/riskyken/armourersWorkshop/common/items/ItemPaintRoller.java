@@ -164,6 +164,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
         list.add(colourText);
         list.add(hexText);
+        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
     }
     
     @Override

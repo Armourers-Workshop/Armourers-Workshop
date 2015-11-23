@@ -99,6 +99,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
         String rollover = TranslateUtils.translate("item.armourersworkshop:rollover.intensity", intensity);
         list.add(rollover);
+        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
     }
 
     @Override

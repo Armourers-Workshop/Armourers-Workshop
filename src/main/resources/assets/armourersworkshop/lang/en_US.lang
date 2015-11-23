@@ -79,6 +79,7 @@ item.armourersworkshop:rollover.settingsSaved=&6Settings Saved.
 item.armourersworkshop:rollover.noSettingsSaved=&cNo Settings Saved.
 item.armourersworkshop:rollover.user=&6User:&7 %s
 item.armourersworkshop:rollover.empty=&6Empty.
+item.armourersworkshop:rollover.openSettings=Sneak right click to open settings.
 
 item.armourersworkshop:rollover.hasSkin=&6Has Armouerer's Workshop Skin
 item.armourersworkshop:rollover.skinName=&6Name:&7 %s
