@@ -39,6 +39,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 /**
@@ -198,6 +199,9 @@ public final class EquipmentModelRenderer {
             playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));            
             
             addedRenderAttachment = true;
+            ModLogger.log("Added model render attachment to " + playerBiped.toString());
+            ModLogger.log("Using player renderer " + event.renderer.toString());
+            Thread.dumpStack();
         }
         
         if (player.getGameProfile() == null) {
