@@ -68,10 +68,13 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         if (block instanceof IPantableBlock) {
             if (!world.isRemote) {
                 UndoManager.begin(player);
-                paintArea(world, player, stack, x, y, z, side);
+            }
+            paintArea(world, player, stack, x, y, z, side);
+            if (!world.isRemote) {
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
                 UndoManager.end(player);
             }
+            
             return true;
         }
         
