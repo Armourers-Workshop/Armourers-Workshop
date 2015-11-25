@@ -83,7 +83,11 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                     usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
                 }
                 UndoManager.end(player);
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                    world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F); 
+                } else {
+                    world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 1.5F);
+                }
             } else {
                 spawnPaintParticles(world, x, y, z, side, newColour);
             }
