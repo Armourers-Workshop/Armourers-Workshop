@@ -2,26 +2,40 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
+@SideOnly(Side.CLIENT)
 public class RenderBlockColourable extends TileEntitySpecialRenderer {
     
     private static final ResourceLocation MARKERS = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/tileEntities/markers.png");
-    private IRenderBuffer renderer;
+    private final IRenderBuffer renderer;
+    private final Minecraft mc;
+    private static float markerAlpha = 0F;
+    private static long lastWorldTimeUpdate;
     
     public RenderBlockColourable() {
         renderer = RenderBridge.INSTANCE;
+        mc = Minecraft.getMinecraft();
     }
     
     public void renderTileEntityAt(TileEntityColourable tileEntity, double x, double y, double z, float partialTickTime) {
@@ -36,8 +50,32 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
                 bindTexture(MARKERS);
                 GL11.glColor3f(0.77F, 0.77F, 0.77F);
                 PaintType pt = PaintType.getPaintTypeFromUKey(paintType);
-                renderFaceWithMarker(x, y, z, dir, pt.ordinal());
-                GL11.glColor3f(1F, 1F, 1F);
+                
+                
+                
+                if (lastWorldTimeUpdate != tileEntity.getWorldObj().getTotalWorldTime()) {
+                    lastWorldTimeUpdate = tileEntity.getWorldObj().getTotalWorldTime();
+                    if (isPlayerHoldingPaintingTool()) {
+                        markerAlpha += 0.25F;
+                        if (markerAlpha > 1F) {
+                            markerAlpha = 1F;
+                        }
+                    } else {
+                        markerAlpha -= 0.25F;
+                        if (markerAlpha < 0F) {
+                            markerAlpha = 0F;
+                        }
+                    }
+                }
+                
+                if (markerAlpha > 0F) {
+                    ModRenderHelper.enableAlphaBlend();
+                    GL11.glColor4f(0.77F, 0.77F, 0.77F, markerAlpha);
+                    renderFaceWithMarker(x, y, z, dir, pt.ordinal());
+                    ModRenderHelper.disableAlphaBlend();
+                }
+                
+                GL11.glColor4f(1F, 1F, 1F, 1F);
                 ModRenderHelper.enableLighting();
                 RenderHelper.enableStandardItemLighting();
             }
@@ -105,6 +143,22 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         default:
             break;
         }
+    }
+    
+    private boolean isPlayerHoldingPaintingTool() {
+        EntityClientPlayerMP player = mc.thePlayer;
+        ItemStack stack = player.getCurrentEquippedItem();
+        if (stack != null) {
+            Item item = stack.getItem();
+            if (item instanceof IBlockPainter) {
+                return true;
+            } else if (item == ModItems.colourPicker) {
+                return true;
+            } else if (item == ModRegistry.getMinecraftItem(ModItems.blockMarker)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override
