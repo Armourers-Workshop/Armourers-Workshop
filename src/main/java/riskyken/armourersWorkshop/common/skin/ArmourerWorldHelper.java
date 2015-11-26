@@ -60,7 +60,6 @@ public final class ArmourerWorldHelper {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
-        
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType partType = skinType.getSkinParts().get(i);
             saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
@@ -68,8 +67,26 @@ public final class ArmourerWorldHelper {
         
         Skin skin = new Skin(authorName, customName, tags, skinType, paintData, parts);
         
+        //Check if there are any blocks in the build guides.
         if (skin.getParts().size() == 0 && !skin.hasPaintData()) {
             throw new SkinSaveException("Nothing to save.", SkinSaveExceptionType.NO_DATA);
+        }
+        
+        //Check if the skin has all needed parts.
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            ISkinPartType partType = skinType.getSkinParts().get(i);
+            if (partType.isPartRequired()) {
+                boolean havePart = false;
+                for (int j = 0; j < skin.getPartCount(); j++) {
+                    if (partType == skin.getParts().get(j).getPartType()) {
+                        havePart = true;
+                        break;
+                    }
+                }
+                if (!havePart) {
+                    throw new SkinSaveException("Skin is missing part " + partType.getPartName(), SkinSaveExceptionType.MISSING_PARTS);
+                }
+            }
         }
         
         return skin;

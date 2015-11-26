@@ -45,4 +45,9 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
     public int getMaximumMarkersNeeded() {
         return 0;
     }
+    
+    @Override
+    public boolean isPartRequired() {
+        return false;
+    }
 }

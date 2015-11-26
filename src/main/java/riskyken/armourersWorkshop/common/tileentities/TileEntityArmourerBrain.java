@@ -36,10 +36,10 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class TileEntityArmourerBrain extends AbstractTileEntityInventory implements IGameProfileCallback {
@@ -133,6 +133,9 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
                 player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
             case MARKER_ERROR:
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
+                break;
+            case MISSING_PARTS:
                 player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
             }

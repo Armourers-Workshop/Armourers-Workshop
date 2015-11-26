@@ -64,4 +64,10 @@ public interface ISkinPartType {
      * @return
      */
     public int getMaximumMarkersNeeded();
+    
+    /**
+     * If true this part must be present for the skin to be saved.
+     * @return
+     */
+    public boolean isPartRequired();
 }
