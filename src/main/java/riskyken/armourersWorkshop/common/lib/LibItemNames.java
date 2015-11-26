@@ -22,4 +22,5 @@ public class LibItemNames {
     public static final String HUE_TOOL = "hueTool";
     public static final String BLOCK_MARKER = "blockMarker";
     public static final String DYE_BOTTLE = "dyeBottle";
+    public static final String BLENDING_TOOL = "blendingTool";
 }

@@ -10,8 +10,10 @@ import riskyken.plushieWrapper.common.item.PlushieItem;
 import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class ModItems {
+    
     public static Item equipmentSkinTemplate;
     public static Item equipmentSkin;
+    
     public static Item paintbrush;
     public static Item paintRoller;
     public static Item colourPicker;
@@ -19,19 +21,25 @@ public class ModItems {
     public static Item dodgeTool;
     public static Item colourNoiseTool;
     public static Item shadeNoiseTool;
+    public static Item hueTool;
+    public static Item blendingTool;
+    public static PlushieItem blockMarker;
+    
     public static Item mannequinTool;
-    public static PlushieItem guideBook;
-    public static Item armourContainerItem;
-    public static Item[] armourContainer;
     public static PlushieItem wandOfStyle;
     public static PlushieItem soap;
-    public static Item hueTool;
-    public static PlushieItem blockMarker;
     public static Item dyeBottle;
+    public static PlushieItem guideBook;
+    
+    public static Item armourContainerItem;
+    public static Item[] armourContainer;
+    
     
     public ModItems() {
         equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
         setEquipmentSkinType();
+        
+        //Tools
         paintbrush = new ItemPaintbrush();
         paintRoller = new ItemPaintRoller();
         colourPicker = new ItemColourPicker();
@@ -39,19 +47,22 @@ public class ModItems {
         dodgeTool = new ItemDodgeTool();
         colourNoiseTool = new ItemColourNoiseTool();
         shadeNoiseTool = new ItemShadeNoiseTool();
+        hueTool = new ItemHueTool();
+        blockMarker = new ItemBlockMarker();
+        blendingTool = new ItemBlendingTool();
+        
         mannequinTool = new ItemMannequinTool();
+        wandOfStyle = new ItemWandOfStyle();
+        soap = new ItemSoap();
+        dyeBottle = new ItemDyeBottle();
         guideBook = new ItemGuideBook();
+        
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];
         armourContainer[0] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_HEAD, 0);
         armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, 1);
         armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, 2);
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, 3);
-        wandOfStyle = new ItemWandOfStyle();
-        soap = new ItemSoap();
-        hueTool = new ItemHueTool();
-        blockMarker = new ItemBlockMarker();
-        dyeBottle = new ItemDyeBottle();
         
         ModRegistry.registerItem(guideBook);
         ModRegistry.registerItem(wandOfStyle);

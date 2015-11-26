@@ -51,11 +51,12 @@ item.armourersworkshop:soap.name=Soap
 item.armourersworkshop:hueTool.name=Hue Tool
 item.armourersworkshop:blockMarker.name=Block Marker
 item.armourersworkshop:dyeBottle.name=Dye Bottle
+item.armourersworkshop:blendingTool.name=Blending Tool
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
 item.armourersworkshop:paintbrush.flavour=Paints a single block.
-item.armourersworkshop:paintRoller.flavour=Paints blocks in a 3*3*1 area.
+item.armourersworkshop:paintRoller.flavour=Paints blocks in a large area.
 item.armourersworkshop:colourPicker.flavour=Used to copy a blocks colour.
 item.armourersworkshop:burnTool.flavour=Makes a block darker.
 item.armourersworkshop:dodgeTool.flavour=Makes a block lighter.
@@ -74,6 +75,7 @@ item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s
 item.armourersworkshop:rollover.colour=&6Colour:&7 %s
 item.armourersworkshop:rollover.hex=&6Hex:&7 %s
 item.armourersworkshop:rollover.paintType=&6Paint Type:&7 %s
+item.armourersworkshop:rollover.radius=&6Radius:&7 %d*%d*%d
 item.armourersworkshop:rollover.nopaint=&6No paint.
 item.armourersworkshop:rollover.settingsSaved=&6Settings Saved.
 item.armourersworkshop:rollover.noSettingsSaved=&cNo Settings Saved.
