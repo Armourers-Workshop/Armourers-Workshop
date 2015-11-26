@@ -185,7 +185,7 @@ public final class EquipmentModelRenderer {
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
         targetPlayer = player;
-        if (!addedRenderAttachment & !ClientProxy.useSafeModelRender()) {
+        if (!addedRenderAttachment & ClientProxy.useAttachedModelRender()) {
             ModelBiped playerBiped = event.renderer.modelBipedMain;
             
             playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinHead, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
@@ -228,7 +228,7 @@ public final class EquipmentModelRenderer {
     
     @SubscribeEvent
     public void onRenderSpecialsPost(RenderPlayerEvent.Specials.Post event) {
-        if (!ClientProxy.useSafeModelRender()) {
+        if (ClientProxy.useAttachedModelRender()) {
             return;
         }
         EntityPlayer player = event.entityPlayer;

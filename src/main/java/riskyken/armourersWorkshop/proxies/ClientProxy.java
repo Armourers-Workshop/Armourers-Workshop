@@ -71,6 +71,7 @@ public class ClientProxy extends CommonProxy {
     private static boolean shadersModLoaded;
     private static boolean moreplayermodelsLoaded;
     private static boolean coloredLightsLoaded;
+    private static boolean smartMovingLoaded;
     public static int renderPass;
     
     @Override
@@ -154,16 +155,17 @@ public class ClientProxy extends CommonProxy {
             coloredLightsLoaded = true;
             ModLogger.log("Colored Lights support active");
         }
+        if (Loader.isModLoaded("SmartMoving")) {
+            smartMovingLoaded = true;
+            ModLogger.log("Smart Moving support active");
+        }
     }
     
-    public static boolean useSafeModelRender() {
-        if (moreplayermodelsLoaded) {
+    public static boolean useAttachedModelRender() {
+        if (smartMovingLoaded) {
             return true;
         }
-        if (ConfigHandler.skinSafeModelRenderOverride) {
-            return true;
-        }
-        return false;
+        return ConfigHandler.useAttachedModelRender;
     }
     
     public static boolean useSafeTextureRender() {

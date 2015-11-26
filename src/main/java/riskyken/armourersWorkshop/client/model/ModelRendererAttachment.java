@@ -40,7 +40,7 @@ public class ModelRendererAttachment extends ModelRenderer {
     
     @Override
     public void render(float scale) {
-        if (ClientProxy.useSafeModelRender()) {
+        if (!ClientProxy.useAttachedModelRender()) {
             return;
         }
         mc.mcProfiler.startSection("armourers player render");
