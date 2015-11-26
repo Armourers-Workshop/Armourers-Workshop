@@ -171,7 +171,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
         String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
         String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.toString());
-        String radiusText = TranslateUtils.translate("item.armourersworkshop:rollover.radius", radius + 1, radius + 1, 1);
+        String radiusText = TranslateUtils.translate("item.armourersworkshop:rollover.radius", radius * 2 - 1, radius * 2 - 1, 1);
         
         list.add(colourText);
         list.add(hexText);
