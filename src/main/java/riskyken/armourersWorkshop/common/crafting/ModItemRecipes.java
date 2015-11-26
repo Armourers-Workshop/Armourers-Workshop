@@ -16,7 +16,7 @@ public final class ModItemRecipes {
             " i ",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
+            'i', "ingotIron",
             's', "stickWood"});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.paintRoller, 1, 0), new Object[] {
@@ -24,7 +24,7 @@ public final class ModItemRecipes {
             " iw",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
+            'i', "ingotIron",
             's', "stickWood"});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.colourPicker, 1, 0), new Object[] {
@@ -32,7 +32,7 @@ public final class ModItemRecipes {
             "lwl",
             "ll ",
             'w', ModBlocks.colourable,
-            'g', Blocks.glass,
+            'g', "blockGlass",
             'l', Items.leather});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.burnTool, 1, 0), new Object[] {
@@ -40,7 +40,7 @@ public final class ModItemRecipes {
             " iw",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
+            'i', "ingotIron",
             'd', "dyeBlack",
             's', "stickWood"});
         
@@ -49,17 +49,37 @@ public final class ModItemRecipes {
             " iw",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
+            'i', "ingotIron",
             'd', "dyeWhite",
             's', "stickWood"});
+        
+        CraftingManager.addShapedRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.blockMarker), 1, 0), new Object[] {
+            " wc",
+            " ib",
+            "s  ",
+            'c', ModBlocks.colourable,
+            'i', "ingotIron",
+            'w', "dyeWhite",
+            'b', "dyeBlack",
+            's', "stickWood"});
+        
+        CraftingManager.addShapedRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.blockMarker), 1, 0), new Object[] {
+                " bc",
+                " iw",
+                "s  ",
+                'c', ModBlocks.colourable,
+                'i', "ingotIron",
+                'w', "dyeWhite",
+                'b', "dyeBlack",
+                's', "stickWood"});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.shadeNoiseTool, 1, 0), new Object[] {
             " wd",
             " iw",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
-            'd', Blocks.cobblestone,
+            'i', "ingotIron",
+            'd', "cobblestone",
             's', "stickWood"});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.hueTool, 1, 0), new Object[] {
@@ -67,7 +87,7 @@ public final class ModItemRecipes {
             " iw",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
+            'i', "ingotIron",
             'd', "dyeGray",
             's', "stickWood"});
         
@@ -76,7 +96,7 @@ public final class ModItemRecipes {
             " iw",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
+            'i', "ingotIron",
             'd', Blocks.mossy_cobblestone,
             's', "stickWood"});
         
@@ -85,7 +105,7 @@ public final class ModItemRecipes {
             " iw",
             "s  ",
             'w', ModBlocks.colourable,
-            'i', Items.iron_ingot,
+            'i', "ingotIron",
             'd', "plankWood",
             's', "stickWood"});
         
@@ -94,6 +114,13 @@ public final class ModItemRecipes {
             "cc",
             'c', ModBlocks.colourable});
         
+        CraftingManager.addShapedRecipe(new ItemStack(ModItems.dyeBottle, 1, 0), new Object[] {
+                "gcg",
+                "g g",
+                "ggg",
+                'c', ModBlocks.colourable,
+                'g', "paneGlass"});
+        
         CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.guideBook), 1, 0), new Object[] {
             new ItemStack(Items.book, 1),
             new ItemStack(ModBlocks.colourable, 1)});
@@ -101,6 +128,6 @@ public final class ModItemRecipes {
         CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.soap), 1, 0), new Object[] {
             new ItemStack(Items.water_bucket, 1),
             new ItemStack(Items.rotten_flesh, 1),
-            new ItemStack(Items.slime_ball, 1)});
+            "slimeball"});
     }
 }
