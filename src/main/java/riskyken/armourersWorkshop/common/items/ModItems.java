@@ -49,7 +49,7 @@ public class ModItems {
         shadeNoiseTool = new ItemShadeNoiseTool();
         hueTool = new ItemHueTool();
         blockMarker = new ItemBlockMarker();
-        blendingTool = new ItemBlendingTool();
+        //blendingTool = new ItemBlendingTool();
         
         mannequinTool = new ItemMannequinTool();
         wandOfStyle = new ItemWandOfStyle();

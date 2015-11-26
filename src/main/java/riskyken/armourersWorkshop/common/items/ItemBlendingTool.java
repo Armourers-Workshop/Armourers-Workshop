@@ -70,6 +70,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
 
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+        int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
         // TODO Auto-generated method stub
     }
     
@@ -81,7 +82,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
         
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.intensity", intensity));
-        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.radius", radius + 1 , radius + 1, 1));
+        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.radius", radius * 2 - 1 , radius * 2 - 1, 1));
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
     }
     
