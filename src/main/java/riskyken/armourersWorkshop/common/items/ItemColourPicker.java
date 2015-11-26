@@ -119,11 +119,15 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         super.addInformation(stack, player, list, p_77624_4_);
         if (getToolHasColour(stack)) {
             Color c = new Color(getToolColour(stack));
+            PaintType paintType = getToolPaintType(stack);
             String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
             String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
             String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
+            String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.toString());
+            
             list.add(colourText);
             list.add(hexText);
+            list.add(paintText);
         } else {
             String noPaint = TranslateUtils.translate("item.armourersworkshop:rollover.nopaint");
             list.add(noPaint);
