@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.painting;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
 
 public enum PaintType {
-    NONE(0),
+    NORMAL(255),
     DYE_1(1),
     DYE_2(2),
     DYE_3(3),
@@ -12,14 +12,14 @@ public enum PaintType {
     DYE_6(6),
     DYE_7(7),
     DYE_8(8),
+    NONE(0),
     //WATER(248),
     //LAVA(249),
     //SKY(250),
     //STAR_FIELD(251),
     //RAINBOW(252),
     SKIN(253),
-    HAIR(254),
-    NORMAL(255);
+    HAIR(254);
     
     private final int key;
     

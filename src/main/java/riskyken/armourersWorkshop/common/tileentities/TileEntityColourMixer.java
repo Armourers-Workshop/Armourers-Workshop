@@ -74,6 +74,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
                 paintingTool.setToolPaintType(stackInput, getPaintType(0));
             }
             if (stackInput.getItem() == ModItems.colourPicker) {
+                setPaintType(((ItemColourPicker)stackInput.getItem()).getToolPaintType(stackInput), 0);
                 setColour(((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput), true);
             }
             markDirty();

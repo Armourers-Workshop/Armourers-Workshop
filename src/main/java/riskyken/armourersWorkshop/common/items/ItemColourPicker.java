@@ -57,6 +57,16 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         tipIcon = register.registerIcon(LibItemResources.COLOUR_PICKER_TIP);
     }
     
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean hasEffect(ItemStack stack, int pass) {
+        PaintType paintType = PaintingHelper.getToolPaintType(stack);
+        if (paintType != PaintType.NORMAL) {
+            return true;
+        }
+        return false;
+    }
+    
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
             int side, float hitX, float hitY, float hitZ) {
@@ -67,7 +77,9 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
                     int colour = getToolColour(stack);
+                    PaintType paintType = getToolPaintType(stack);
                     ((IPantable)te).setColour(colour);
+                    ((IPantable)te).setPaintType(paintType, 0);
                 }
             }
             return true;
@@ -87,6 +99,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             } else {
                 if (!world.isRemote) {
                     setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
+                    setToolPaintType(stack, ((IPantableBlock)block).getPaintType(world, x, y, z, side));
                 }
             }
             if (!world.isRemote) {

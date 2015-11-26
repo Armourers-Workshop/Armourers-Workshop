@@ -78,13 +78,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         buttonList.add(colourFamilyList);
         
         paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 170, this.guiTop + 30, 78, "", this);
-        for (int i = 0; i < PaintType.values().length; i++) {
-            PaintType paintType = PaintType.values()[i];
-            paintTypeDropDown.addListItem(paintType.toString());
-            if (paintType == tileEntityColourMixer.getPaintType(0)) {
-                paintTypeDropDown.setListSelectedIndex(i);
-            }
-        }
+        updatePaintTypeDropDown();
         buttonList.add(paintTypeDropDown);
     }
     
@@ -92,6 +86,22 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         if (tileEntityColourMixer.getHasItemUpdateAndReset()) {
             this.colour = new Color(tileEntityColourMixer.getColour(0));
             updateSliders();
+            updatePaintTypeDropDown();
+        }
+    }
+    
+    private void updatePaintTypeDropDown() {
+        int paintCount = 0;
+        paintTypeDropDown.clearList();
+        for (int i = 0; i < PaintType.values().length; i++) {
+            PaintType paintType = PaintType.values()[i];
+            if (i < 10) {
+                paintTypeDropDown.addListItem(paintType.toString());
+                if (paintType == tileEntityColourMixer.getPaintType(0)) {
+                    paintTypeDropDown.setListSelectedIndex(paintCount);
+                }
+                paintCount++;
+            }
         }
     }
     

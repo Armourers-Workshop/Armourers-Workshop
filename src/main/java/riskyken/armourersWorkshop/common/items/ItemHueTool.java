@@ -56,7 +56,9 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
                     int colour = ((IPantable)te).getColour(0);
+                    PaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
+                    setToolPaintType(stack, paintType);
                 }
             }
             return true;
