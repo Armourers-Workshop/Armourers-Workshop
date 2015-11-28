@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.client.handler.EquipmentWardrobeHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
+import riskyken.armourersWorkshop.client.library.ClientLibraryManager;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
@@ -78,6 +79,11 @@ public class ClientProxy extends CommonProxy {
     public void preInit() {
         enableCrossModSupport();
         spamSillyMessages();
+    }
+    
+    @Override
+    public void initLibraryManager() {
+        libraryManager = new ClientLibraryManager();
     }
 
     @Override
