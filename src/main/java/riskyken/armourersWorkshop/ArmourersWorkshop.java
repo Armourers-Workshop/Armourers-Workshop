@@ -67,6 +67,7 @@ public class ArmourersWorkshop {
         
         SkinTypeRegistry.init();
         CubeRegistry.init();
+        proxy.initLibraryManager();
     }
 
     @Mod.EventHandler
@@ -93,6 +94,7 @@ public class ArmourersWorkshop {
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
         Addons.postInit();
+        proxy.libraryManager.reloadLibrary();
     }
     
     @Mod.EventHandler

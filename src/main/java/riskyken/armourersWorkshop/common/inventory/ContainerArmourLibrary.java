@@ -21,8 +21,6 @@ import riskyken.armourersWorkshop.common.inventory.slot.SlotEquipmentSkinTemplat
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
@@ -131,18 +129,13 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
         return tileEntity;
     }
     
-    public boolean sentList;
-    
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         for (Object player : crafters) {
-            if (!sentList) {
-                if (player instanceof EntityPlayerMP) {
-                    EntityPlayerMP playerMp = (EntityPlayerMP) player;
-                    sentList = true;
-                    PacketHandler.networkWrapper.sendTo(new MessageServerLibraryFileList(tileEntity.getFileNames(playerMp, true), tileEntity.getFileNames(playerMp, false)), playerMp);
-                }
+            if (player instanceof EntityPlayerMP) {
+                EntityPlayerMP playerMp = (EntityPlayerMP) player;
+                ArmourersWorkshop.proxy.libraryManager.syncLibraryWithPlayer(playerMp);
             }
         }
     }

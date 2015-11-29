@@ -20,6 +20,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
@@ -33,6 +34,9 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.library.ILibraryManager;
+import riskyken.armourersWorkshop.common.library.LibraryFile;
+import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.SkinUploadHelper;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
@@ -40,8 +44,6 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary.LibraryFile;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary.LibraryFileType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
@@ -131,14 +133,15 @@ public class GuiArmourLibrary extends GuiContainer {
             fileSwitchRemotePublic.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
             fileSwitchRemotePrivate.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
             fileSwitchlocal.setPressed(true);
+            fileSwitchType = LibraryFileType.LOCAL;
         } else {
             fileSwitchRemotePublic.setPressed(true);
+            fileSwitchType = LibraryFileType.SERVER_PUBLIC;
         }
         
         buttonList.add(fileSwitchlocal);
         buttonList.add(fileSwitchRemotePublic);
         buttonList.add(fileSwitchRemotePrivate);
-        fileSwitchType = LibraryFileType.REMOTE_PUBLIC;
         
         loadSaveButton = new GuiButtonExt(BUTTON_ID_LOAD_SAVE, PADDING * 2 + 18, this.height - INVENTORY_HEIGHT - PADDING * 2 - 2 - 20, 108, 20, "----LS--->");
         buttonList.add(loadSaveButton);
@@ -220,11 +223,11 @@ public class GuiArmourLibrary extends GuiContainer {
             }
             if (button == fileSwitchRemotePublic) {
                 fileSwitchRemotePublic.setPressed(true);
-                fileSwitchType = LibraryFileType.REMOTE_PUBLIC;
+                fileSwitchType = LibraryFileType.SERVER_PUBLIC;
             }
             if (button == fileSwitchRemotePrivate) {
                 fileSwitchRemotePrivate.setPressed(true);
-                fileSwitchType = LibraryFileType.REMOTE_PRIVATE;
+                fileSwitchType = LibraryFileType.SERVER_PRIVATE;
             }
         }
         
@@ -244,7 +247,7 @@ public class GuiArmourLibrary extends GuiContainer {
                     clientLoad = true;
                 }
                 
-                if (fileSwitchType == LibraryFileType.REMOTE_PRIVATE) {
+                if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
                     publicList = false;
                 }
                 
@@ -322,10 +325,12 @@ public class GuiArmourLibrary extends GuiContainer {
     public void drawScreen(int mouseX, int mouseY, float tickTime) {
         super.drawScreen(mouseX, mouseY, tickTime);
         
-        ArrayList<LibraryFile> files = armourLibrary.publicServerFileNames;
+        ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+        
+        ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
         
         if (fileSwitchType == LibraryFileType.LOCAL) {
-            files = armourLibrary.clientFileNames;
+            files = libraryManager.getClientPublicFileList().getFileList();
             if (!mc.isIntegratedServerRunning()) {
                 loadSaveButton.enabled = false;
                 if (isLoading()) {
@@ -338,8 +343,8 @@ public class GuiArmourLibrary extends GuiContainer {
             loadSaveButton.enabled = true;
         }
         
-        if (fileSwitchType == LibraryFileType.REMOTE_PRIVATE) {
-            files = armourLibrary.privateServerFileNames;
+        if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
+            files = libraryManager.getServerPrivateFileList(mc.thePlayer).getFileList();
         }
         
         String typeFilter = dropDownList.getListSelectedItem().tag;
@@ -349,7 +354,7 @@ public class GuiArmourLibrary extends GuiContainer {
         IGuiListItem selectedItem =  fileList.getSelectedListEntry();
         
         if (selectedItem != null) {
-            deleteButton.enabled = !((GuiFileListItem)selectedItem).getFile().readOnly;
+            //deleteButton.enabled = !((GuiFileListItem)selectedItem).getFile().readOnly;
         } else {
             deleteButton.enabled = false;
         }

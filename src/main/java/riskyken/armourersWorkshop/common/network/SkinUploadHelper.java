@@ -86,7 +86,6 @@ public final class SkinUploadHelper {
                 TileEntityArmourLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
                 te.loadArmour(skin, player);
             }
-            ((ContainerArmourLibrary)container).sentList = false;
         }
     }
 }

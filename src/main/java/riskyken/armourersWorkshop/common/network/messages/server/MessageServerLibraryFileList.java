@@ -1,66 +1,61 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.inventory.Container;
-import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary.LibraryFile;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.inventory.Container;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.library.LibraryFile;
+import riskyken.armourersWorkshop.common.library.LibraryFileType;
 
+/**
+ * Sent from the server to a client when they have the library GUI open
+ * and file list needs updated.
+ * 
+ * @author RiskyKen
+ *
+ */
 public class MessageServerLibraryFileList implements IMessage, IMessageHandler<MessageServerLibraryFileList, IMessage> {
 
-    ArrayList<LibraryFile> publicFileList;
-    ArrayList<LibraryFile> privateFileList;
+    ArrayList<LibraryFile> fileList;
+    LibraryFileType listType;
     
     public MessageServerLibraryFileList() {}
     
-    public MessageServerLibraryFileList(ArrayList<LibraryFile> publicList, ArrayList<LibraryFile> privateList) {
-        this.publicFileList = publicList;
-        this.privateFileList = privateList;
+    public MessageServerLibraryFileList(ArrayList<LibraryFile> fileList, LibraryFileType listType) {
+        this.fileList = fileList;
+        this.listType = listType;
     }
     
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(publicFileList.size());
-        for (int i = 0; i < publicFileList.size(); i++) {
-            publicFileList.get(i).writeToByteBuf(buf);
+        buf.writeInt(fileList.size());
+        for (int i = 0; i < fileList.size(); i++) {
+            fileList.get(i).writeToByteBuf(buf);
         }
-        buf.writeInt(privateFileList.size());
-        for (int i = 0; i < privateFileList.size(); i++) {
-            privateFileList.get(i).writeToByteBuf(buf);
-        }
+        buf.writeByte(listType.ordinal());
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
         int size = buf.readInt();
-        publicFileList = new ArrayList<LibraryFile>();
+        fileList = new ArrayList<LibraryFile>();
         for (int i = 0; i < size; i++) {
-            publicFileList.add(LibraryFile.readFromByteBuf(buf));
+            fileList.add(LibraryFile.readFromByteBuf(buf));
         }
-        size = buf.readInt();
-        privateFileList = new ArrayList<LibraryFile>();
-        for (int i = 0; i < size; i++) {
-            privateFileList.add(LibraryFile.readFromByteBuf(buf));
-        }
+        listType = LibraryFileType.values()[buf.readByte()];
     }
     
     @Override
     public IMessage onMessage(MessageServerLibraryFileList message, MessageContext ctx) {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         Container container = player.openContainer;
-        
-        if (container != null & container instanceof ContainerArmourLibrary) {
-            TileEntityArmourLibrary te = ((ContainerArmourLibrary)container).getTileEntity();
-            te.setSkinFileList(message.publicFileList, message.privateFileList);
-        }
+        ArmourersWorkshop.proxy.libraryManager.setFileList(message.fileList, message.listType);
         return null;
     }
 }
