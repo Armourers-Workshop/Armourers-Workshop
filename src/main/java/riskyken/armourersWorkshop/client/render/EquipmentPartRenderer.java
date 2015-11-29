@@ -110,11 +110,7 @@ public class EquipmentPartRenderer extends ModelBase {
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < vertexList.size(); i++) {
             ColouredVertexWithUV cVert = vertexList.get(i);
-            if (ClientProxy.useSafeTextureRender()) {
-                cVert.renderVertexWithUV(renderBuffer, skinDye, cspd);
-            } else {
-                cVert.renderVertex(renderBuffer, skinDye, cspd);
-            }
+            cVert.renderVertex(renderBuffer, skinDye, cspd, ClientProxy.useSafeTextureRender());
         }
         renderBuffer.draw();
     }
