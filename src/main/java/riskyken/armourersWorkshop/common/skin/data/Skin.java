@@ -107,7 +107,6 @@ public class Skin implements ISkin {
         return count;
     }
     
-    @SideOnly(Side.CLIENT)
     public int getPartCount() {
         return parts.size();
     }
