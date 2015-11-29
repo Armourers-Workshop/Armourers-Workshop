@@ -137,7 +137,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                         byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
                         UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, i);
                         ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, i);
-                        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+                        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, i);
                     }
                 } else {
                     int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
