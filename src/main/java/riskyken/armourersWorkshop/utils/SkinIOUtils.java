@@ -38,6 +38,7 @@ public final class SkinIOUtils {
     }
     
     public static boolean saveSkinToFile(File file, Skin skin) {
+        ModLogger.log("saving from name " + file.getName());
         File dir = file.getParentFile();
         if (!dir.exists()) {
             dir.mkdirs();

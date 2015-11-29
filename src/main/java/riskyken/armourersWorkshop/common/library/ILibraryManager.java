@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.library;
 
 import java.util.ArrayList;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public interface ILibraryManager {
@@ -12,15 +13,13 @@ public interface ILibraryManager {
     
     public LibraryFileList getServerPublicFileList();
     
-    public LibraryFileList getServerPrivateFileList(EntityPlayerMP player);
+    public LibraryFileList getServerPrivateFileList(EntityPlayer player);
     
     public void setFileList(ArrayList<LibraryFile> fileList, LibraryFileType listType);
     
-    public void markFileListDirty(LibraryFileType listType);
+    public void addFileToListType(LibraryFile file, LibraryFileType listType, EntityPlayer player);
     
-    public void addFileToListType(LibraryFile file, LibraryFileType listType);
+    public void removeFileFromListType(LibraryFile file, LibraryFileType listType, EntityPlayer player);
     
-    public void removeFileFromListType(LibraryFile file, LibraryFileType listType);
-
-    public void requestNewFileList(LibraryFileType listType);
+    public void syncLibraryWithPlayer(EntityPlayerMP player);
 }

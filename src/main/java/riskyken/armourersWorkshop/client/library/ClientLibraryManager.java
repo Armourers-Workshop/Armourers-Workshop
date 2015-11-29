@@ -8,6 +8,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
@@ -25,9 +26,9 @@ public class ClientLibraryManager implements ILibraryManager {
     private final LibraryFileList clientFiles;
     
     public ClientLibraryManager() {
-        serverPublicFiles = new LibraryFileList(LibraryFileType.SERVER_PUBLIC, this);
-        serverPrivateFiles = new LibraryFileList(LibraryFileType.SERVER_PRIVATE, this);
-        clientFiles = new LibraryFileList(LibraryFileType.LOCAL, this);
+        serverPublicFiles = new LibraryFileList(LibraryFileType.SERVER_PUBLIC);
+        serverPrivateFiles = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
+        clientFiles = new LibraryFileList(LibraryFileType.LOCAL);
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -59,7 +60,7 @@ public class ClientLibraryManager implements ILibraryManager {
     }
     
     @Override
-    public LibraryFileList getServerPrivateFileList(EntityPlayerMP player) {
+    public LibraryFileList getServerPrivateFileList(EntityPlayer player) {
         return serverPrivateFiles;
     }
 
@@ -79,32 +80,38 @@ public class ClientLibraryManager implements ILibraryManager {
     }
     
     @Override
-    public void markFileListDirty(LibraryFileType listType) {
+    public void addFileToListType(LibraryFile file, LibraryFileType listType, EntityPlayer player) {
         switch (listType) {
         case LOCAL:
-            clientFiles.markDirty();
+            clientFiles.addFileToList(file);
             break;
         case SERVER_PUBLIC:
-            serverPublicFiles.markDirty();
+            serverPublicFiles.addFileToList(file);
             break;
         case SERVER_PRIVATE:
-            serverPrivateFiles.markDirty();
+            serverPrivateFiles.addFileToList(file);
             break;
         }
     }
     
     @Override
-    public void addFileToListType(LibraryFile file, LibraryFileType listType) {
-        // TODO Auto-generated method stub
+    public void removeFileFromListType(LibraryFile file, LibraryFileType listType, EntityPlayer player) {
+        switch (listType) {
+        case LOCAL:
+            clientFiles.removeFileFromList(file);
+            break;
+        case SERVER_PUBLIC:
+            serverPublicFiles.removeFileFromList(file);
+            break;
+        case SERVER_PRIVATE:
+            serverPrivateFiles.removeFileFromList(file);
+            break;
+        }
     }
     
     @Override
-    public void removeFileFromListType(LibraryFile file, LibraryFileType listType) {
-        // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void requestNewFileList(LibraryFileType listType) {
-        // TODO Send message to server asking for new file list.
+    public void syncLibraryWithPlayer(EntityPlayerMP player) {
+        // TODO Check if this is ever called on the client.
+        // Maybe used on LAN servers?
     }
 }

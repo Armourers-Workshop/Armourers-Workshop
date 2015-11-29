@@ -7,38 +7,76 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
-
+/**
+ * 
+ * @author RiskyKen
+ *
+ */
 public class CommonLibraryManager implements ILibraryManager {
 
-    //Filename link
-    //Keep a list of types
     private final LibraryFileList serverPublicFiles;
     private final HashMap<UUID, LibraryFileList> serverPrivateFiles;
     
     public CommonLibraryManager() {
-        serverPublicFiles = new LibraryFileList(LibraryFileType.SERVER_PUBLIC, this);
+        serverPublicFiles = new LibraryFileList(LibraryFileType.SERVER_PUBLIC);
         serverPrivateFiles = new HashMap<UUID, LibraryFileList>();
     }
     
     @Override
     public void reloadLibrary() {
         long startTime = System.currentTimeMillis();
-        ModLogger.log("Loading library public skins");
+        ModLogger.log("Loading public library skins");
+        int publicFileCount = loadPublicFiles();
+        int endTime = (int) (System.currentTimeMillis() - startTime);
+        ModLogger.log(String.format("Finished loading %d public library skins in %d ms", publicFileCount, endTime));
+        
+        ModLogger.log("Loading private library skins");
+        startTime = System.currentTimeMillis();
+        int privateFileCount = loadPrivateFiles();
+        endTime = (int) (System.currentTimeMillis() - startTime);
+        ModLogger.log(String.format("Finished loading %d private library skins in %d ms", privateFileCount, endTime));
+    }
+    
+    private int loadPublicFiles() {
         File directory = SkinIOUtils.getSkinLibraryDirectory();
         ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory);
         setFileList(fileList, LibraryFileType.SERVER_PUBLIC);
-        
-        
-        int endTime = (int) (System.currentTimeMillis() - startTime);
-        ModLogger.log(String.format("Finished loading %d library skins in %d ms", serverPublicFiles.getFileCount(), endTime));
+        return fileList.size();
+    }
+    
+    private int loadPrivateFiles() {
+        int count = 0;
+        File directory = SkinIOUtils.getSkinLibraryDirectory();
+        directory = new File(directory, "private");
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        File files[] = directory.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isDirectory()) {
+                try {
+                    UUID playerId = UUID.fromString(file.getName());
+                    LibraryFileList fileList = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
+                    ArrayList<LibraryFile> privateFileList = LibraryHelper.getSkinFilesInDirectory(file);
+                    fileList.setFileList(privateFileList);
+                    serverPrivateFiles.put(playerId, fileList);
+                    count += fileList.getFileCount();
+                } catch(IllegalArgumentException e) {
+                }
+            }
+        }
+        return count;
     }
     
     @Override
     public LibraryFileList getClientPublicFileList() {
+        ModLogger.log(Level.WARN, "Tried to get client file list from the server library manager.");
         return null;
     }
     
@@ -48,9 +86,8 @@ public class CommonLibraryManager implements ILibraryManager {
     }
     
     @Override
-    public LibraryFileList getServerPrivateFileList(EntityPlayerMP player) {
-        //TODO Auto-generated method stub
-        return null;
+    public LibraryFileList getServerPrivateFileList(EntityPlayer player) {
+        return serverPrivateFiles.get(player.getUniqueID());
     }
     
     @Override
@@ -61,7 +98,6 @@ public class CommonLibraryManager implements ILibraryManager {
             break;
         case SERVER_PUBLIC:
             serverPublicFiles.setFileList(fileList);
-            serverPublicFiles.markDirty();
             break;
         case SERVER_PRIVATE:
             //serverPrivateFiles.setFileList(fileList);
@@ -70,26 +106,55 @@ public class CommonLibraryManager implements ILibraryManager {
     }
     
     @Override
-    public void markFileListDirty(LibraryFileType listType) {
-        //TODO Auto-generated method stub
+    public void addFileToListType(LibraryFile file, LibraryFileType listType, EntityPlayer player) {
+        switch (listType) {
+        case LOCAL:
+            ModLogger.log(Level.WARN, "Tried to add a file in the server library manager.");
+            break;
+        case SERVER_PUBLIC:
+            serverPublicFiles.addFileToList(file);
+            break;
+        case SERVER_PRIVATE:
+            LibraryFileList fileList = serverPrivateFiles.get(player.getUniqueID());
+            if (fileList != null) {
+                fileList.addFileToList(file);
+            } else {
+                fileList = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
+                fileList.addFileToList(file);
+                serverPrivateFiles.put(player.getUniqueID(), fileList);
+            }
+            break;
+        }
     }
     
     @Override
-    public void addFileToListType(LibraryFile file, LibraryFileType listType) {
-        // TODO Auto-generated method stub
-        
+    public void removeFileFromListType(LibraryFile file, LibraryFileType listType, EntityPlayer player) {
+        switch (listType) {
+        case LOCAL:
+            ModLogger.log(Level.WARN, "Tried to remove a file in the server library manager.");
+            break;
+        case SERVER_PUBLIC:
+            serverPublicFiles.removeFileFromList(file);
+            break;
+        case SERVER_PRIVATE:
+            LibraryFileList fileList = serverPrivateFiles.get(player.getUniqueID());
+            if (fileList != null) {
+                fileList.removeFileFromList(file);
+            } else {
+                fileList = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
+                fileList.removeFileFromList(file);
+                serverPrivateFiles.put(player.getUniqueID(), fileList);
+            }
+            break;
+        }
     }
     
     @Override
-    public void removeFileFromListType(LibraryFile file,
-            LibraryFileType listType) {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    @Override
-    public void requestNewFileList(LibraryFileType listType) {
-        // TODO Auto-generated method stub
-        
+    public void syncLibraryWithPlayer(EntityPlayerMP player) {
+        serverPublicFiles.syncFileListWithPlayer(player);
+        LibraryFileList privateList = serverPrivateFiles.get(player.getUniqueID());
+        if (privateList != null) {
+            privateList.syncFileListWithPlayer(player);
+        }
     }
 }
