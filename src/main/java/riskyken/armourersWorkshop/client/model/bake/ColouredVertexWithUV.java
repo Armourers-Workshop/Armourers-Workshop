@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
-import java.awt.Color;
-
 import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
@@ -73,7 +71,6 @@ public class ColouredVertexWithUV {
             } else {
                 renderBuffer.addVertex(x, y, z);
             }
-            
         }
     }
     
@@ -84,17 +81,26 @@ public class ColouredVertexWithUV {
      * @return
      */
     private byte[] dyeVertex(byte[] dyeColour, int[] modelAverageColour) {
-        float[] skinHsb = new float[3];
-        float[] dyeHsb = new float[3];
-        float[] averageHsb = new float[3];
-        
+        //float[] skinHsb = new float[3];
+        //float[] dyeHsb = new float[3];
+        //float[] averageHsb = new float[3];
+        /*
         Color.RGBtoHSB(r & 0xFF, g & 0xFF, b & 0xFF, skinHsb);
         Color.RGBtoHSB(dyeColour[0] & 0xFF, dyeColour[1] & 0xFF, dyeColour[2] & 0xFF, dyeHsb);
         Color.RGBtoHSB(modelAverageColour[0], modelAverageColour[1], modelAverageColour[2], averageHsb);
-        
-        //int average = ((r & 0xFF) + (g  & 0xFF) + (b & 0xFF)) / 3;
+        */
+        int average = ((r & 0xFF) + (g  & 0xFF) + (b & 0xFF)) / 3;
+        //int modelAverage = (modelAverageColour[0] + modelAverageColour[1] + modelAverageColour[2]) / 3;
         //int dyeAverage = ((dyeColour[0] & 0xFF) + (dyeColour[0]  & 0xFF) + (dyeColour[0] & 0xFF)) / 3;
         
+        int nR = (int) (average + (dyeColour[0] & 0xFF) - 128);
+        int nG = (int) (average + (dyeColour[1] & 0xFF) - 128);
+        int nB = (int) (average + (dyeColour[2] & 0xFF) - 128);
+        
+        nR = MathHelper.clamp_int(nR, 0, 255);
+        nG = MathHelper.clamp_int(nG, 0, 255);
+        nB = MathHelper.clamp_int(nB, 0, 255);
+        /*
         float saturationOffset = 0.5F - averageHsb[1];
         float brightnessOffset = 0.5F - averageHsb[2];
         float saturation = skinHsb[1] + saturationOffset - 0.5F + dyeHsb[1];
@@ -104,7 +110,7 @@ public class ColouredVertexWithUV {
         saturation = MathHelper.clamp_float(saturation, 0F, 1F);
         
         Color c = Color.getHSBColor(dyeHsb[0], saturation, brightness);
-        
-        return new byte [] {(byte)c.getRed(), (byte)c.getGreen(), (byte)c.getBlue()};
+        */
+        return new byte [] {(byte)nR, (byte)nG, (byte)nB};
     }
 }
