@@ -49,6 +49,11 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     @Override
+    public boolean canUpdate() {
+        return false;
+    }
+    
+    @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);

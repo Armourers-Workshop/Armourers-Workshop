@@ -78,6 +78,11 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         clearPaintData();
     }
     
+    @Override
+    public boolean canUpdate() {
+        return false;
+    }
+    
     public int[] getPaintData() {
         return paintData;
     }

@@ -31,6 +31,11 @@ public class TileEntityArmourLibrary extends AbstractTileEntityInventory impleme
         return LibBlockNames.ARMOUR_LIBRARY;
     }
     
+    @Override
+    public boolean canUpdate() {
+        return false;
+    }
+    
     public boolean isCreativeLibrary() {
         int meta = getBlockMetadata();
         if (meta == 1) {
