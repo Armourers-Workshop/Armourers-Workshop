@@ -10,6 +10,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
@@ -75,6 +76,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private GuiLabeledTextField filenameTextbox;
     private GuiLabeledTextField searchTextbox;
     private GuiDropDownList dropDownList;
+    private int neiBump = 18;
     
     public GuiArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
         super(new ContainerArmourLibrary(invPlayer, armourLibrary));
@@ -91,29 +93,34 @@ public class GuiArmourLibrary extends GuiContainer {
         
         int slotSize = 18;
         
+        if (!Loader.isModLoaded("NotEnoughItems")) {
+            neiBump = 0;
+        }
+        
         //Move player inventory slots.
         for (int x = 0; x < 9; x++) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
-            slot.yDisplayPosition = this.height + 1 - PADDING - slotSize;
+            slot.yDisplayPosition = this.height + 1 - PADDING - slotSize - neiBump;
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
-                slot.yDisplayPosition = this.height + 1 - INVENTORY_HEIGHT - PADDING + y * slotSize;
+                slot.yDisplayPosition = this.height + 1 - INVENTORY_HEIGHT - PADDING + y * slotSize - neiBump;
             }
         }
+        
         
         //Move library inventory slots.
         if (armourLibrary.isCreativeLibrary()) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
-            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize;
+            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
             slot.xDisplayPosition = PADDING + INVENTORY_WIDTH - slotSize - 3;
         } else {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
-            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize;
+            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
             slot.xDisplayPosition = PADDING + 1;
             slot = (Slot) inventorySlots.inventorySlots.get(37);
-            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize;
+            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
             slot.xDisplayPosition = PADDING + INVENTORY_WIDTH - slotSize - 3;
         }
         
@@ -143,7 +150,7 @@ public class GuiArmourLibrary extends GuiContainer {
         buttonList.add(fileSwitchRemotePublic);
         buttonList.add(fileSwitchRemotePrivate);
         
-        loadSaveButton = new GuiButtonExt(BUTTON_ID_LOAD_SAVE, PADDING * 2 + 18, this.height - INVENTORY_HEIGHT - PADDING * 2 - 2 - 20, 108, 20, "----LS--->");
+        loadSaveButton = new GuiButtonExt(BUTTON_ID_LOAD_SAVE, PADDING * 2 + 18, this.height - INVENTORY_HEIGHT - PADDING * 2 - 2 - 20 - neiBump, 108, 20, "----LS--->");
         buttonList.add(loadSaveButton);
         
         
@@ -326,8 +333,19 @@ public class GuiArmourLibrary extends GuiContainer {
         super.drawScreen(mouseX, mouseY, tickTime);
         
         ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
-        
         ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
+        
+        loadSaveButton.enabled = true;
+        
+        if (isLoading()) {
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "load");
+        } else {
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "save");
+        }
+        if (!((Slot) inventorySlots.inventorySlots.get(36)).getHasStack() & !armourLibrary.isCreativeLibrary()) {
+            loadSaveButton.displayString = "";
+            loadSaveButton.enabled = false;
+        }
         
         if (fileSwitchType == LibraryFileType.LOCAL) {
             files = libraryManager.getClientPublicFileList().getFileList();
@@ -441,11 +459,13 @@ public class GuiArmourLibrary extends GuiContainer {
         mc.renderEngine.bindTexture(texture);
         
         ModRenderHelper.enableAlphaBlend();
-        drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - PADDING, 0, 180, INVENTORY_WIDTH, INVENTORY_HEIGHT);
+        drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - PADDING - neiBump, 0, 180, INVENTORY_WIDTH, INVENTORY_HEIGHT);
+        //Input slot
         if (!armourLibrary.isCreativeLibrary()) {
-            drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - 18 - PADDING * 2 - 4, 0, 162, 18, 18);
+            drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - 18 - PADDING * 2 - 4 - neiBump, 0, 162, 18, 18);
         }
-        drawTexturedModalRect(PADDING + INVENTORY_WIDTH - 26, this.height - INVENTORY_HEIGHT - 26 - PADDING * 2, 18, 154, 26, 26);
+        //Output slot
+        drawTexturedModalRect(PADDING + INVENTORY_WIDTH - 26, this.height - INVENTORY_HEIGHT - 26 - PADDING * 2 - neiBump, 18, 154, 26, 26);
         
         ModRenderHelper.disableAlphaBlend();
         
