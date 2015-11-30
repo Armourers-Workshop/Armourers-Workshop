@@ -16,7 +16,6 @@ import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
-import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
@@ -32,6 +31,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
             setLightLevel(1.0F);
         }
         setHardness(1.0F);
+        setLightOpacity(0);
     }
     
     @Override
