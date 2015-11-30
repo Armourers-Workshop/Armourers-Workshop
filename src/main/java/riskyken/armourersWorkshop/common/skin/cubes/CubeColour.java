@@ -96,7 +96,7 @@ public class CubeColour implements ICubeColour {
     
     @Override
     public void setColour(int colour, int side) {
-        t[side] = (byte) 255;
+        //t[side] = (byte) 255;
         r[side] = (byte) (colour >> 16 & 0xff);
         g[side] = (byte) (colour >> 8 & 0xff);
         b[side] = (byte) (colour & 0xff);
@@ -106,7 +106,7 @@ public class CubeColour implements ICubeColour {
     @Override
     public void setColour(int colour) {
         for (int i = 0; i < 6; i++) {
-            t[i] = (byte) 255;
+            //t[i] = (byte) 255;
             r[i] = (byte) (colour >> 16 & 0xff);
             g[i] = (byte) (colour >> 8 & 0xff);
             b[i] = (byte) (colour & 0xff);
