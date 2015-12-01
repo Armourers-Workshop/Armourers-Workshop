@@ -1,3 +1,33 @@
+Build 0.38.0
+Added: Dye system.
+	Added dye paints. (use to set what parts can be dyed)
+		Normal - Works like normal paint.
+		Dye 1-8 - Used to set what parts dyes will effect.
+		None - Stops a face from being rendered. 
+	Added dye table. (use to dye skins with dye bottles)
+Added: New options to the hue tool.
+Added: Glow effect around glowing blocks when in the players inventory.
+Added: Icon for when the paint brush is not in full block mode. (uguu)
+Added: Arrow showing the front of the armourer. (yeah I will change it later)
+Added: Rollover text telling players how to open tool options.
+Change: Library will set the filename text box when putting a skin in the input slot.
+Change: Updated zh_CN language file. (dalesea)
+Change: Made most of the armourer bounds bigger.
+Change: Mannequins can now be renamed multiple times.
+Change: Most recipes use the ore dictionary now.
+Change: Full rewrite of library backend. (should work better with a large number of skins)
+Change: Equipment cubes no longer block light. (really helps when shading)
+Change: Library LS button name now show next action.
+Change: Upadated prepackaged skins to work with dyes.
+Fixed: Rare crash when trying to read paint data from a tool.
+Fixed: Crash when the server tries to access a skins display name.
+Fixed: Crash if a block skin with no skin data was broken by a player
+Fixed: MIP mapping issues on skins with older GPU's.
+Fixed: Mannequin items not being removed for other players in multiplayer.
+Fixed: Being able to save bow when frames were missing.
+Removed: Special colour mixer.
+Removed: skinSafeModelRenderOverride config option.
+
 Build 0.37.0
 Added a private library folder for player on a server.
 Added dye bottles. (not usable yet)
