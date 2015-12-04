@@ -88,10 +88,10 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     private boolean canRenderModel(ItemStack stack) {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinData.skinId)) {
+            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData.skinId)) {
                 return true;
             } else {
-                ClientSkinCache.INSTANCE.requestEquipmentDataFromServer(skinData.skinId);
+                ClientSkinCache.INSTANCE.requestSkinFromServer(skinData.skinId);
                 return false;
             }
         } else {

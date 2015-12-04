@@ -148,7 +148,7 @@ public final class EquipmentModelRenderer {
     }
     
     public Skin getCustomArmourItemData(int equipmentId) {
-        return ClientSkinCache.INSTANCE.getEquipmentItemData(equipmentId);
+        return ClientSkinCache.INSTANCE.getSkin(equipmentId);
     }
     
     public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
@@ -173,7 +173,7 @@ public final class EquipmentModelRenderer {
             return false;
         }
         int skinId = equipmentData.getEquipmentId(SkinTypeRegistry.skinLegs);
-        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinId);
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinId);
         //TODO check for skirt data
         return true;
     }

@@ -108,8 +108,8 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             } else {
                 SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
                 if (skinPointer != null) {
-                    if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinPointer.getSkinId())) {
-                        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+                    if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer.getSkinId())) {
+                        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
                         String skinName = skin.getCustomName();
                         if (StringUtils.isNoneBlank(skinName)) {
                             libScreen.setFileName(skinName);

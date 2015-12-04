@@ -43,7 +43,7 @@ public final class ItemStackRenderHelper {
             return;
         }
         
-        Skin data = ClientSkinCache.INSTANCE.getEquipmentItemData(skinId);
+        Skin data = ClientSkinCache.INSTANCE.getSkin(skinId);
         if (data == null) {
             return;
         }
@@ -71,7 +71,7 @@ public final class ItemStackRenderHelper {
     }
     
     public static void renderSkinWithoutHelper(SkinPointer skinPointer) {
-        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.skinId);
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.skinId);
         if (skin == null) {
             return;
         }

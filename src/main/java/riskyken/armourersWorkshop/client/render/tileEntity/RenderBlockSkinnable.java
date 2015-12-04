@@ -62,11 +62,11 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         ModRenderHelper.setLightingForBlock(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         SkinPointer skinPointer = tileEntity.getSkinPointer();
         if (skinPointer != null) {
-            Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinPointer.getSkinId());
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
             if (skin != null) {
                 renderSkin(tileEntity, x, y, z, skin);
             } else {
-                ClientSkinCache.INSTANCE.requestEquipmentDataFromServer(skinPointer.getSkinId());
+                ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer.getSkinId());
                 GL11.glPushMatrix();
                 GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
                 loadingModel.render(tileEntity, partialTickTime, 0.0625F);

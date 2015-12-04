@@ -48,7 +48,7 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
     private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
         if (equipmentData.haveEquipment(skinType)) {
             int id = equipmentData.getEquipmentId(skinType);
-            Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(id);
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(id);
             GL11.glEnable(GL11.GL_NORMALIZE);
             //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
             GL11.glDisable(GL11.GL_NORMALIZE);

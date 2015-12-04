@@ -33,13 +33,13 @@ public class RenderSkinnedArrow extends RenderArrow {
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
             if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow)) {
                 int skinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow);
-                if (ClientSkinCache.INSTANCE.isEquipmentInCache(skinId)) {
+                if (ClientSkinCache.INSTANCE.isSkinInCache(skinId)) {
                     ModRenderHelper.enableAlphaBlend();
                     renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinId);
                     ModRenderHelper.disableAlphaBlend();
                     return;
                 } else {
-                    ClientSkinCache.INSTANCE.requestEquipmentDataFromServer(skinId);
+                    ClientSkinCache.INSTANCE.requestSkinFromServer(skinId);
                 }
             }
         }
@@ -48,7 +48,7 @@ public class RenderSkinnedArrow extends RenderArrow {
     }
     
     private void renderArrowSkin(EntityArrow entityArrow, double x, double y, double z, float partialTickTime, int skinId) {
-        Skin skin = ClientSkinCache.INSTANCE.getEquipmentItemData(skinId);
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinId);
         if (skin == null) {
             return;
         }
