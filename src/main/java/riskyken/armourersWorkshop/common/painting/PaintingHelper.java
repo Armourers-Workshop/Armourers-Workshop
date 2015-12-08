@@ -122,6 +122,10 @@ public final class PaintingHelper {
         stack.setTagCompound(compound);
     }
     
+    public static void setPaintData(NBTTagCompound compound, byte[] paintData) {
+        compound.setByteArray(TAG_TOOL_PAINT, paintData);
+    }
+    
     public static byte[] getBlankRGBColour() {
         return new byte[] {(byte)255, (byte)255, (byte)255};
     }

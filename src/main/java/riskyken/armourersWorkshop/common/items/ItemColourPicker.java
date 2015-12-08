@@ -26,7 +26,6 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -92,7 +91,12 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                     if (te.getSkinPart() instanceof ISkinPartTypeTextured) {
                         int colour = getColourFromSkin(te, side);
                         NBTTagCompound compound = new NBTTagCompound();
-                        compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
+                        byte[] paintData = PaintingHelper.getToolPaintData(stack);
+                        Color c = new Color(colour);
+                        paintData[0] = (byte) c.getRed();
+                        paintData[1] = (byte) c.getGreen();
+                        paintData[2] = (byte) c.getBlue();
+                        PaintingHelper.setPaintData(compound, paintData);
                         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
                     }
                 }
