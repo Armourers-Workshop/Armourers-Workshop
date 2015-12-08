@@ -116,9 +116,9 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         @Override
         public int compareTo(RenderLast o) {
             EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-            double dist = getDistanceFrom(player.posX, player.posY, player.posZ);
-            double otherDist = o.getDistanceFrom(player.posX, player.posY, player.posZ);
-            return (int) ((otherDist - dist) * 16);
+            double dist = getDistanceFrom(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+            double otherDist = o.getDistanceFrom(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+            return (int) ((otherDist - dist) * 128);
         }
         
         public double getDistanceFrom(double x, double y, double z) {
