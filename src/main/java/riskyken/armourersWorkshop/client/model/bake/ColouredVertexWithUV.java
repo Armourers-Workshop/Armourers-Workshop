@@ -90,12 +90,12 @@ public class ColouredVertexWithUV {
         Color.RGBtoHSB(modelAverageColour[0], modelAverageColour[1], modelAverageColour[2], averageHsb);
         */
         int average = ((r & 0xFF) + (g  & 0xFF) + (b & 0xFF)) / 3;
-        //int modelAverage = (modelAverageColour[0] + modelAverageColour[1] + modelAverageColour[2]) / 3;
+        int modelAverage = (modelAverageColour[0] + modelAverageColour[1] + modelAverageColour[2]) / 3;
         //int dyeAverage = ((dyeColour[0] & 0xFF) + (dyeColour[0]  & 0xFF) + (dyeColour[0] & 0xFF)) / 3;
         
-        int nR = (int) (average + (dyeColour[0] & 0xFF) - 128);
-        int nG = (int) (average + (dyeColour[1] & 0xFF) - 128);
-        int nB = (int) (average + (dyeColour[2] & 0xFF) - 128);
+        int nR = (int) (average + (dyeColour[0] & 0xFF) - modelAverage);
+        int nG = (int) (average + (dyeColour[1] & 0xFF) - modelAverage);
+        int nB = (int) (average + (dyeColour[2] & 0xFF) - modelAverage);
         
         nR = MathHelper.clamp_int(nR, 0, 255);
         nG = MathHelper.clamp_int(nG, 0, 255);
