@@ -62,9 +62,9 @@ public class RenderItemMannequin implements IItemRenderer {
                     World world = player.worldObj;
                     float partialTickTime = ModClientFMLEventHandler.renderTickTime;
                     
-                    float pitchTime = (world.getTotalWorldTime() % 10F) + partialTickTime;
-                    float tiltTime = (world.getTotalWorldTime() % 8F) + partialTickTime;
-                    float limbTime = (world.getTotalWorldTime() % 6F) + partialTickTime;
+                    float pitchTime = (world.getTotalWorldTime() % 10L) + partialTickTime;
+                    float tiltTime = (world.getTotalWorldTime() % 8L) + partialTickTime;
+                    float limbTime = (world.getTotalWorldTime() % 6L) + partialTickTime;
                     
                     pitchTime  = (pitchTime / 5) - 1;
                     tiltTime = (tiltTime / 4) - 1;
