@@ -22,7 +22,7 @@ public class ContainerDyeTable extends Container {
     public ContainerDyeTable(InventoryPlayer invPlayer, TileEntityDyeTable tileEntity) {
         this.tileEntity = tileEntity;
         
-        int playerInvY = 131;
+        int playerInvY = 109;
         int hotBarY = playerInvY + 58;
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, hotBarY));
@@ -33,16 +33,16 @@ public class ContainerDyeTable extends Container {
             }
         }
         
-        addSlotToContainer(new SlotDyeableSkin(tileEntity, 0, 80, 59, this));
+        addSlotToContainer(new SlotDyeableSkin(tileEntity, 0, 26, 52, this));
         
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 1, 80, 24, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 2, 105, 34, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 3, 116, 59, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 4, 105, 84, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 5, 80, 94, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 6, 55, 84, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 7, 44, 59, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 8, 55, 34, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 1, 68, 41, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 2, 90, 41, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 3, 112, 41, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 4, 134, 41, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 5, 68, 63, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 6, 90, 63, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 7, 112, 63, this));
+        addSlotToContainer(new SlotDyeBottle(tileEntity, 8, 134, 63, this));
     }
     
     public void skinAdded(ItemStack stack) {

@@ -3,8 +3,10 @@ package riskyken.armourersWorkshop.common.inventory.slot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class SlotDyeBottle extends Slot {
     
@@ -37,5 +39,10 @@ public class SlotDyeBottle extends Slot {
             }
         }
         super.onSlotChanged();
+    }
+    
+    @Override
+    public IIcon getBackgroundIconIndex() {
+        return ClientProxy.dyeBottleSlotIcon;
     }
 }

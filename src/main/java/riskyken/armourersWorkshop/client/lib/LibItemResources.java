@@ -54,4 +54,5 @@ public final class LibItemResources {
     public static final String SLOT_SKIN_SWORD = PREFIX_RESOURCE + "slot/skinSword";
     public static final String SLOT_SKIN_BOW = PREFIX_RESOURCE + "slot/skinBow";
     public static final String SLOT_SKIN_ARROW = PREFIX_RESOURCE + "slot/skinArrow";
+    public static final String SLOT_DYE_BOTTLE = PREFIX_RESOURCE + "slot/dyeBottle";
 }

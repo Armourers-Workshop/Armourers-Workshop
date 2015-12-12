@@ -20,15 +20,12 @@ public class GuiDyeTable extends GuiContainer {
         super(new ContainerDyeTable(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.xSize = 176;
-        this.ySize = 232;
+        this.ySize = 190;
     }
     
     @Override
     public void initGui() {
-        this.xSize = 176;
-        this.ySize = 213;
         super.initGui();
-        
     }
 
     @Override
