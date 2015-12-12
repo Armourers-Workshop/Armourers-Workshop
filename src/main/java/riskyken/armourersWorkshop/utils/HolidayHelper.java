@@ -66,7 +66,7 @@ public final class HolidayHelper {
     }
     
     public static void giftPlayer(EntityPlayerMP player) {
-        if (christmas.isHolidayActive()) {
+        if (christmas_season.isHolidayActive()) {
             ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get(player);
             if (playerData.lastXmasYear < getYear()) {
                 ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);
