@@ -171,7 +171,6 @@ inventory.armourersworkshop:armourLibrary.rollover.notOnServer=You must be conne
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Open library folder on your computer.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Delete skin.
 
-
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:
@@ -190,6 +189,7 @@ inventory.armourersworkshop:colourMixer.label.saturation=Saturation
 inventory.armourersworkshop:colourMixer.label.brightness=Brightness
 inventory.armourersworkshop:colourMixer.label.hex=Hex
 inventory.armourersworkshop:colourMixer.label.presets=Presets
+inventory.armourersworkshop:colourMixer.label.paintType=Paint Type
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Skin Colour
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Hair Colour

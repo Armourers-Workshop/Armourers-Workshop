@@ -192,12 +192,14 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.brightness");
         String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hex");
         String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.presets");
+        String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.paintType");
         
         this.fontRendererObj.drawString(labelHue + ":", 5, 21, 4210752);
         this.fontRendererObj.drawString(labelSaturation + ":", 5, 41, 4210752);
         this.fontRendererObj.drawString(labelBrightness + ":", 5, 61, 4210752);
         this.fontRendererObj.drawString(labelHex + ":", 5, 81, 4210752);
         this.fontRendererObj.drawString(labelPresets + ":", 5, 101, 4210752);
+        this.fontRendererObj.drawString(labelPaintType + ":", 171, 21, 4210752);
     }
     
     @Override
