@@ -1,3 +1,15 @@
+Build 0.38.1
+Added: Paint type label to the colour mixer.
+Change: Use model average colour when calculating dye colour.
+Change: Updated Viking Helmet (Blood) skin to support dyes.
+Change: Max file name length to 30 from 24.
+Change: Dye table layout and added background icons for dye bottle slots
+Fixed: Christmas season event only triggering on the 25.
+Fixed: Colour picker not working on armourer blocks. (again)
+Fixed: Mannequin head wobble overflowing on older worlds.
+Fixed:Z Ordering of block skins being in the wrong order. (sort of)
+
+
 Build 0.38.0
 Added: Dye system.
 	Added dye paints. (use to set what parts can be dyed)
@@ -27,6 +39,7 @@ Fixed: Mannequin items not being removed for other players in multiplayer.
 Fixed: Being able to save bow when frames were missing.
 Removed: Special colour mixer.
 Removed: skinSafeModelRenderOverride config option.
+
 
 Build 0.37.0
 Added a private library folder for player on a server.

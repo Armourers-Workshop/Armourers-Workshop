@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -69,11 +70,18 @@ public class RenderBlockMannequinItems {
                     
                     Color c = new Color(targetItem.getColorFromItemStack(stack, i));
                     GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
+                    armourBiped.isChild = false;
+                    
                     if (armourBiped == renderPlayer.modelArmorChestplate) {
+                        setRotations(targetBiped.bipedHead, armourBiped.bipedHead);
                         armourBiped.bipedHead.showModel = true;
                         armourBiped.bipedHead.render(scale);
+                        resetRotations(targetBiped.bipedHead);
                     } else {
                         try {
+                            GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleZ), 0, 0, 1);
+                            GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleY), 0, 1, 0);
+                            GL11.glRotated(Math.toDegrees(targetBiped.bipedHead.rotateAngleX), 1, 0, 0);
                             armourBiped.render(null, 0, 0, 0, 0, 0, scale);
                         } catch (Exception e) {
                             //ModLogger.log(e);
@@ -102,8 +110,12 @@ public class RenderBlockMannequinItems {
                 
                 Color c = new Color(targetItem.getColorFromItemStack(stack, i));
                 GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
-                
+                armourBiped.isChild = false;
                 if (armourBiped == renderPlayer.modelArmorChestplate) {
+                    setRotations(targetBiped.bipedBody, armourBiped.bipedBody);
+                    setRotations(targetBiped.bipedLeftArm, armourBiped.bipedLeftArm);
+                    setRotations(targetBiped.bipedRightArm, armourBiped.bipedRightArm);
+                    
                     armourBiped.bipedBody.showModel = true;
                     armourBiped.bipedLeftArm.showModel = true;
                     armourBiped.bipedRightArm.showModel = true;
@@ -112,9 +124,16 @@ public class RenderBlockMannequinItems {
                     armourBiped.bipedLeftArm.render(scale);
                     armourBiped.bipedRightArm.render(scale);
                     
+                    resetRotations(targetBiped.bipedBody);
+                    resetRotations(targetBiped.bipedLeftArm);
+                    resetRotations(targetBiped.bipedRightArm);
+                    
+                    
                     armourBiped = ForgeHooksClient.getArmorModel(fakePlayer, stack, 1, renderPlayer.modelArmor);
+                    setRotations(targetBiped.bipedBody, armourBiped.bipedBody);
                     armourBiped.bipedBody.showModel = true;
                     armourBiped.bipedBody.render(scale);
+                    resetRotations(targetBiped.bipedBody);
                 } else {
                     try {
                         armourBiped.render(null, 0, 0, 0, 0, 0, scale);
@@ -143,14 +162,18 @@ public class RenderBlockMannequinItems {
                 
                 Color c = new Color(targetItem.getColorFromItemStack(stack, i));
                 GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
-                
+                armourBiped.isChild = false;
                 if (armourBiped == renderPlayer.modelArmor) {
+                    setRotations(targetBiped.bipedLeftLeg, armourBiped.bipedLeftLeg);
+                    setRotations(targetBiped.bipedRightLeg, armourBiped.bipedRightLeg);
                     armourBiped.bipedBody.showModel = true;
                     armourBiped.bipedLeftLeg.showModel = true;
                     armourBiped.bipedRightLeg.showModel = true;
                     armourBiped.bipedBody.render(scale);
                     armourBiped.bipedLeftLeg.render(scale);
                     armourBiped.bipedRightLeg.render(scale);
+                    resetRotations(armourBiped.bipedLeftLeg);
+                    resetRotations(armourBiped.bipedRightLeg);
                 } else {
                     try {
                         armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
@@ -180,12 +203,16 @@ public class RenderBlockMannequinItems {
                 
                 Color c = new Color(targetItem.getColorFromItemStack(stack, i));
                 GL11.glColor3f((float)c.getRed() / 255, (float)c.getGreen() / 255, (float)c.getBlue() / 255);
-                
+                armourBiped.isChild = false;
                 if (armourBiped == renderPlayer.modelArmorChestplate) {
+                    setRotations(targetBiped.bipedLeftLeg, armourBiped.bipedLeftLeg);
+                    setRotations(targetBiped.bipedRightLeg, armourBiped.bipedRightLeg);
                     armourBiped.bipedLeftLeg.showModel = true;
                     armourBiped.bipedRightLeg.showModel = true;
                     armourBiped.bipedLeftLeg.render(scale);
                     armourBiped.bipedRightLeg.render(scale);
+                    resetRotations(armourBiped.bipedLeftLeg);
+                    resetRotations(armourBiped.bipedRightLeg);
                 } else {
                     try {
                         armourBiped.render(fakePlayer, 0, 0, 0, 0, 0, scale);
@@ -297,5 +324,17 @@ public class RenderBlockMannequinItems {
     
     private void bindTexture(ResourceLocation resourceLocation) {
         UtilRender.bindTexture(resourceLocation);
+    }
+    
+    private void setRotations(ModelRenderer des, ModelRenderer src) {
+        des.rotateAngleX = src.rotateAngleX;
+        des.rotateAngleY = src.rotateAngleY;
+        des.rotateAngleZ = src.rotateAngleZ;
+    }
+    
+    private void resetRotations(ModelRenderer des) {
+        des.rotateAngleX = 0F;
+        des.rotateAngleY = 0F;
+        des.rotateAngleZ = 0F;
     }
 }
