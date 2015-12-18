@@ -43,20 +43,20 @@ public class EquipmentPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye) {
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour) {
         mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         GL11.glColor3f(1F, 1F, 1F);
         
         ClientSkinPartData cspd = skinPart.getClientSkinPartData();
-        SkinModel skinModel = cspd.getModelForDye(skinDye);
+        SkinModel skinModel = cspd.getModelForDye(skinDye, extraColour);
         
         for (int i = 0; i < skinModel.displayListCompiled.length; i++) {
             if (!skinModel.displayListCompiled[i]) {
                 if (skinModel.hasList[i]) {
                     skinModel.displayList[i] = GLAllocation.generateDisplayLists(1);
                     GL11.glNewList(skinModel.displayList[i], GL11.GL_COMPILE);
-                    renderVertexList(cspd.vertexLists[i], scale, skinDye, cspd);
+                    renderVertexList(cspd.vertexLists[i], scale, skinDye, extraColour, cspd);
                     //TODO Do not clear this!
                     //cspd.vertexLists[i].clear();
                     GL11.glEndList();
@@ -105,12 +105,12 @@ public class EquipmentPartRenderer extends ModelBase {
         mc.mcProfiler.endSection();
     }
     
-    private void renderVertexList(ArrayList<ColouredVertexWithUV> vertexList, float scale, ISkinDye skinDye, ClientSkinPartData cspd) {
+    private void renderVertexList(ArrayList<ColouredVertexWithUV> vertexList, float scale, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd) {
         IRenderBuffer renderBuffer = new RenderBridge().INSTANCE;
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < vertexList.size(); i++) {
             ColouredVertexWithUV cVert = vertexList.get(i);
-            cVert.renderVertex(renderBuffer, skinDye, cspd, ClientProxy.useSafeTextureRender());
+            cVert.renderVertex(renderBuffer, skinDye, extraColour, cspd, ClientProxy.useSafeTextureRender());
         }
         renderBuffer.draw();
     }

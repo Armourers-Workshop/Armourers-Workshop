@@ -21,17 +21,17 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false, null);
+        render(entity, armourData, false, null, null);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye);
+        render(entity, armourData, showSkinPaint, skinDye, extraColour);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
         if (armourData == null) { return; }
         
         ArrayList<SkinPart> parts = armourData.getParts();
@@ -62,7 +62,7 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("base")) {
-                renderSkirt(part, SCALE, skinDye);
+                renderSkirt(part, SCALE, skinDye, extraColour);
             }
             
             GL11.glPopMatrix();
@@ -71,17 +71,17 @@ public class ModelCustomArmourSkirt extends AbstractModelCustomEquipment {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderSkirt(SkinPart part, float scale, ISkinDye skinDye) {
+    private void renderSkirt(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-      
+        
         GL11.glTranslated(0, 12 * scale, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         
-        renderPart(part, scale, skinDye);
+        renderPart(part, scale, skinDye, extraColour);
         GL11.glPopMatrix();
     }
 }

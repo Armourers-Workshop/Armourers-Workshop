@@ -61,13 +61,13 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
             bipedHeadwear.rotateAngleZ = 0F;
             super.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, entity);
 
-            render(entity, npcEquipmentData, false, null);
+            render(entity, npcEquipmentData, false, null, null);
             npcEquipmentData = null;
         }
     }
     
     
-    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye);
+    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
@@ -93,7 +93,7 @@ public abstract class AbstractModelCustomEquipment extends ModelBiped implements
         }
     }
     
-    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye) {
-        EquipmentPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye);
+    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, byte[] extraColour) {
+        EquipmentPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColour);
     }
 }

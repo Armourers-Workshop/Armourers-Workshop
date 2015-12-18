@@ -73,7 +73,7 @@ public class RenderSkinnedArrow extends RenderArrow {
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             //TODO apply dyes to arrows.
-            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null);
+            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null);
         }
         GL11.glPopMatrix();
     }

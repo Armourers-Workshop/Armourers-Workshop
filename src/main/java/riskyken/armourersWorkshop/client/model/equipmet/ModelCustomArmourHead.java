@@ -19,17 +19,17 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false, null);
+        render(entity, armourData, false, null, null);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye);
+        render(entity, armourData, showSkinPaint, skinDye, extraColour);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
         if (armourData == null) { return; }
         
         
@@ -71,7 +71,7 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
                 GL11.glTranslated(0, 1 * SCALE, 0);
             }
 
-            renderHead(armourData.getParts().get(0), SCALE, skinDye);
+            renderHead(armourData.getParts().get(0), SCALE, skinDye, extraColour);
             
             GL11.glPopMatrix();
         }
@@ -79,10 +79,10 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderHead(SkinPart part, float scale, ISkinDye skinDye) {
+    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColours) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-        renderPart(part, scale, skinDye);
+        renderPart(part, scale, skinDye, extraColours);
         GL11.glPopMatrix();
     }
 }

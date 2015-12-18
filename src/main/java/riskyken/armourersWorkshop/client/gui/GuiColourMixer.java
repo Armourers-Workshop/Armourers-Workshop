@@ -95,7 +95,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         paintTypeDropDown.clearList();
         for (int i = 0; i < PaintType.values().length; i++) {
             PaintType paintType = PaintType.values()[i];
-            if (i < 10) {
+            if (i < 12) {
                 paintTypeDropDown.addListItem(paintType.toString());
                 if (paintType == tileEntityColourMixer.getPaintType(0)) {
                     paintTypeDropDown.setListSelectedIndex(paintCount);

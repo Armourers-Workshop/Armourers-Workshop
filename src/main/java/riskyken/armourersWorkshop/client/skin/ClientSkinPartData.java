@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.skin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -18,35 +19,36 @@ public class ClientSkinPartData {
     /** Blank dye that is used if no dye is applied. */
     public static final SkinDye blankDye = new SkinDye();
     public ArrayList<ColouredVertexWithUV>[] vertexLists;
-    public HashMap<ISkinDye, SkinModel> dyeModels;
+    public HashMap<ModelKey, SkinModel> dyeModels;
     public int[] totalCubesInPart;
     
-    private int[] averageR = new int[8];
-    private int[] averageG = new int[8];
-    private int[] averageB = new int[8];
+    private int[] averageR = new int[10];
+    private int[] averageG = new int[10];
+    private int[] averageB = new int[10];
     
     public ClientSkinPartData() {
-        dyeModels = new HashMap<ISkinDye, SkinModel>();
+        dyeModels = new HashMap<ModelKey, SkinModel>();
     }
     
-    public SkinModel getModelForDye(ISkinDye skinDye) {
+    public SkinModel getModelForDye(ISkinDye skinDye, byte[] extraColours) {
         if (skinDye == null) {
             skinDye = blankDye;
         }
-        SkinModel skinModel = dyeModels.get(skinDye);
+        ModelKey modelKey = new ModelKey(skinDye, extraColours);
+        SkinModel skinModel = dyeModels.get(modelKey);
         if (skinModel == null) {
             skinModel = new SkinModel(vertexLists);
-            dyeModels.put(skinDye, skinModel);
+            dyeModels.put(modelKey, skinModel);
         }
         return skinModel;
     }
     
     public void cleanUpDisplayLists() {
         Set keys = dyeModels.keySet();
-        Iterator<ISkinDye> i = dyeModels.keySet().iterator();
+        Iterator<ModelKey> i = dyeModels.keySet().iterator();
         while (i.hasNext()) {
-            ISkinDye skinDye = i.next();
-            dyeModels.get(skinDye).cleanUpDisplayLists();
+            ModelKey modelKey = i.next();
+            dyeModels.get(modelKey).cleanUpDisplayLists();
         }
     }
     
@@ -66,5 +68,45 @@ public class ClientSkinPartData {
     
     public int[] getAverageDyeColour(int dyeNumber) {
         return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
+    }
+    
+    private class ModelKey {
+        
+        private ISkinDye skinDye;
+        byte[] extraColours;
+        
+        public ModelKey(ISkinDye skinDye, byte[] extraColours) {
+            this.skinDye = skinDye;
+            this.extraColours = extraColours;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + Arrays.hashCode(extraColours);
+            result = prime * result
+                    + ((skinDye == null) ? 0 : skinDye.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ModelKey other = (ModelKey) obj;
+            if (!Arrays.equals(extraColours, other.extraColours))
+                return false;
+            if (skinDye == null) {
+                if (other.skinDye != null)
+                    return false;
+            } else if (!skinDye.equals(other.skinDye))
+                return false;
+            return true;
+        }
     }
 }

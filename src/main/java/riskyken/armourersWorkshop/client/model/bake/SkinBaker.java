@@ -147,8 +147,8 @@ public final class SkinBaker {
         int[][] dyeColour;
         int[] dyeUseCount;
         
-        dyeColour = new int[3][8];
-        dyeUseCount = new int[8];
+        dyeColour = new int[3][10];
+        dyeUseCount = new int[10];
         
         if (multipassSkinRendering) {
             renderLists = (ArrayList<ColouredVertexWithUV>[]) new ArrayList[4];
@@ -186,6 +186,18 @@ public final class SkinBaker {
                     dyeColour[1][paint - 1] += g[j]  & 0xFF;
                     dyeColour[2][paint - 1] += b[j]  & 0xFF;
                 }
+                if (paint == 253) {
+                    dyeUseCount[8]++;
+                    dyeColour[0][8] += r[j]  & 0xFF;
+                    dyeColour[1][8] += g[j]  & 0xFF;
+                    dyeColour[2][8] += b[j]  & 0xFF;
+                }
+                if (paint == 254) {
+                    dyeUseCount[9]++;
+                    dyeColour[0][9] += r[j]  & 0xFF;
+                    dyeColour[1][9] += g[j]  & 0xFF;
+                    dyeColour[2][9] += b[j]  & 0xFF;
+                }
             }
             
             if (multipassSkinRendering) {
@@ -218,11 +230,11 @@ public final class SkinBaker {
             }
         }
         
-        int[] averageR = new int[8];
-        int[] averageG = new int[8];
-        int[] averageB = new int[8];
+        int[] averageR = new int[10];
+        int[] averageG = new int[10];
+        int[] averageB = new int[10];
         
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10; i++) {
             averageR[i] = (int) ((double)dyeColour[0][i] / (double)dyeUseCount[i]);
             averageG[i] = (int) ((double)dyeColour[1][i] / (double)dyeUseCount[i]);
             averageB[i] = (int) ((double)dyeColour[2][i] / (double)dyeUseCount[i]);

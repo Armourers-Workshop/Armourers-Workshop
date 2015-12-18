@@ -45,24 +45,49 @@ public class ColouredVertexWithUV {
         this.norZ = norZ;
     }
     
-    public void renderVertex(IRenderBuffer renderBuffer, ISkinDye skinDye, ClientSkinPartData cspd, boolean useTexture) {
+    public void renderVertex(IRenderBuffer renderBuffer, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd, boolean useTexture) {
         byte r = this.r;
         byte g = this.g;
         byte b = this.b;
         int type = t & 0xFF;
         if (type != 0) {
+            //Dye
             if (type >= 1 && type <=8) {
                 //Is a dye paint
                 if (skinDye != null && skinDye.haveDyeInSlot(type - 1)) {
                     byte[] dye = skinDye.getDyeColour(type - 1);
                     if (dye.length == 4) {
+                        int dyeType = dye[3] & 0xFF;
                         int[] averageRGB = cspd.getAverageDyeColour(type - 1);
-                        byte[] dyedColour = dyeVertex(dye, averageRGB);
+                        byte[] dyedColour = null;
+                        if (dyeType == 253 & extraColour != null) {
+                            dyedColour = dyeVertex(new byte[] {extraColour[0], extraColour[1], extraColour[2]}, averageRGB);
+                        } else if (dyeType == 254 & extraColour != null) {
+                            dyedColour = dyeVertex(new byte[] {extraColour[3], extraColour[4], extraColour[5]}, averageRGB);
+                        } else {
+                            dyedColour = dyeVertex(dye, averageRGB);
+                        }
                         r = dyedColour[0];
                         g = dyedColour[1];
                         b = dyedColour[2];
                     }
                 }
+            }
+            //Skin
+            if (type == 253 & extraColour != null) {
+                int[] averageRGB = cspd.getAverageDyeColour(8);
+                byte[] dyedColour = dyeVertex(new byte[] {extraColour[0], extraColour[1], extraColour[2]}, averageRGB);
+                r = dyedColour[0];
+                g = dyedColour[1];
+                b = dyedColour[2];
+            }
+            //Hair
+            if (type == 254 & extraColour != null) {
+                int[] averageRGB = cspd.getAverageDyeColour(9);
+                byte[] dyedColour = dyeVertex(new byte[] {extraColour[3], extraColour[4], extraColour[5]}, averageRGB);
+                r = dyedColour[0];
+                g = dyedColour[1];
+                b = dyedColour[2];
             }
             renderBuffer.setNormal(norX, norY, norZ);
             renderBuffer.setColourRGBA_B(r, g, b, a);

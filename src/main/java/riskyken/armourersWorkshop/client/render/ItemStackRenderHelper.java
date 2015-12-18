@@ -50,23 +50,23 @@ public final class ItemStackRenderHelper {
         
         if (skinType == SkinTypeRegistry.skinHead) {
             GL11.glTranslatef(0F, 0.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
         } else if (skinType == SkinTypeRegistry.skinChest) {
             GL11.glTranslatef(0F, -0.35F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
         } else if (skinType == SkinTypeRegistry.skinLegs) {
             GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
         } else if (skinType == SkinTypeRegistry.skinSkirt) {
             GL11.glTranslatef(0F, -1.0F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
         } else if (skinType == SkinTypeRegistry.skinFeet) {
             GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
         } else if (skinType == SkinTypeRegistry.skinSword) {
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
         } else if (skinType == SkinTypeRegistry.skinBow) {
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye());
+            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
         }
     }
     
@@ -78,7 +78,7 @@ public final class ItemStackRenderHelper {
         skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye());
+            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null);
         }
     }
 }

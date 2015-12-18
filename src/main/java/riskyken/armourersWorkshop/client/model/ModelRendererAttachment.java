@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.model;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -16,11 +18,19 @@ import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
+/**
+ * A ModelRenderer that is attached to each ModelRenderer on the
+ * players ModelBiped as a sub part.
+ * @author RiskyKen
+ *
+ */
 @SideOnly(Side.CLIENT)
 public class ModelRendererAttachment extends ModelRenderer {
 
@@ -65,14 +75,21 @@ public class ModelRendererAttachment extends ModelRenderer {
         }
         ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType);
         
+        EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
+        byte[] extraColours = null;
+        if (ewd != null) {
+            Color skinColour = new Color(ewd.skinColour);
+            Color hairColour = new Color(ewd.hairColour);
+            extraColours = new byte[] {
+                    (byte)skinColour.getRed(), (byte)skinColour.getGreen(), (byte)skinColour.getBlue(),
+                    (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
+        }
+        
         data.onUsed();
         int size = data.getParts().size();
-        //ModLogger.log("start");
         for (int i = 0; i < size; i++) {
             SkinPart partData = data.getParts().get(i);
-            //ModLogger.log(partData.getPartType());
             if (partData.getPartType() == skinPart) {
-                
                 GL11.glPushMatrix();
                 if (skinType == SkinTypeRegistry.skinLegs && skinPart.getRegistryName().equals("armourers:legs.skirt")) {
                     GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
@@ -83,12 +100,11 @@ public class ModelRendererAttachment extends ModelRenderer {
                 GL11.glEnable(GL11.GL_CULL_FACE);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glEnable(GL11.GL_BLEND);
-                EquipmentPartRenderer.INSTANCE.renderPart(partData, scale, skinDye);
+                EquipmentPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours);
                 GL11.glDisable(GL11.GL_CULL_FACE);
                 GL11.glPopMatrix();
                 break;
             }
-            
         }
         
         if (ClientProxy.useSafeTextureRender()) {

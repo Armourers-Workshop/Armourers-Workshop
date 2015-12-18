@@ -24,17 +24,17 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false, null);
+        render(entity, armourData, false, null, null);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye);
+        render(entity, armourData, showSkinPaint, skinDye, extraColour);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
         if (armourData == null) { return; }
         
         ArrayList<SkinPart> parts = armourData.getParts();
@@ -72,7 +72,7 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         }
 
         ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
-        renderRightArm(part, SCALE, skinDye);
+        renderRightArm(part, SCALE, skinDye, extraColour);
         
         GL11.glPopMatrix();
         
@@ -81,7 +81,7 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         frame = 0;
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -95,7 +95,7 @@ public class ModelCustomEquipmetBow extends AbstractModelCustomEquipment {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye);
+        renderPart(part, scale, skinDye, extraColour);
         GL11.glPopMatrix();
     }
 }

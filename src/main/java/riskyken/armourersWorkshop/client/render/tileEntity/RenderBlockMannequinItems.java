@@ -33,6 +33,7 @@ public class RenderBlockMannequinItems {
     
     private RenderPlayer renderPlayer;
     private float scale = 0.0625F;
+    byte[] extraColours = new byte[] {(byte)165, (byte)121, (byte)99, (byte)41, (byte)28, (byte)12};
     
     public RenderBlockMannequinItems() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
@@ -42,7 +43,7 @@ public class RenderBlockMannequinItems {
         Item targetItem = stack.getItem();
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         
@@ -95,7 +96,7 @@ public class RenderBlockMannequinItems {
     public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -147,7 +148,7 @@ public class RenderBlockMannequinItems {
     public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -188,7 +189,7 @@ public class RenderBlockMannequinItems {
     public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped);
+            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -246,7 +247,7 @@ public class RenderBlockMannequinItems {
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(1 * scale, 0 * scale, 2 * scale);
-                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null);
+                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
                 return;
             }
         }
@@ -295,7 +296,7 @@ public class RenderBlockMannequinItems {
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);
-                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null);
+                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
                 return;
             }
         }
