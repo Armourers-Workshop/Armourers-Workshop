@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.inventory;
 
-import org.apache.commons.lang3.StringUtils;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,6 +11,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
@@ -111,7 +110,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
                     if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer.getSkinId())) {
                         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
                         String skinName = skin.getCustomName();
-                        if (StringUtils.isNoneBlank(skinName)) {
+                        if (StringUtils.isNullOrEmpty(skinName)) {
                             libScreen.setFileName(skinName);
                         }
                     }
