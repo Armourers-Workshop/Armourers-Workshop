@@ -23,13 +23,13 @@ public class MessageServerEntitySkinData implements IMessage, IMessageHandler<Me
     @Override
     public void fromBytes(ByteBuf buf) {
         this.entityId = buf.readInt();
-        this.equipmentData = new EntityEquipmentData(buf);
+        this.equipmentData = EntityEquipmentData.readFromByteBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.entityId);
-        this.equipmentData.toBytes(buf);
+        EntityEquipmentData.writeToByteBuf(this.equipmentData, buf);
     }
     
     @Override

@@ -219,7 +219,7 @@ chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but yo
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache> <player> [skinName]
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setSkinColumnCount> <player> [skinName | value]
 commands.armourers.fileNotFound=The file %1$s was not found.
 
 # Creative tab

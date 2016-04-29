@@ -38,8 +38,8 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
     }
     
     private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
-        if (equipmentData.haveEquipment(skinType)) {
-            int id = equipmentData.getEquipmentId(skinType);
+        if (equipmentData.haveEquipment(skinType, 0)) {
+            int id = equipmentData.getEquipmentId(skinType, 0);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(id);
             
             if (renderer instanceof RenderZombie) {

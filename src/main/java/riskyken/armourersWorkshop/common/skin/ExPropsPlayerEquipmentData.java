@@ -5,44 +5,63 @@ import java.util.BitSet;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.items.ItemColourPicker;
-import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
+import riskyken.armourersWorkshop.common.inventory.WardrobeInventory;
+import riskyken.armourersWorkshop.common.inventory.WardrobeInventoryContainer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventory {
+public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
 
+    public static final int MAX_SLOTS_PER_SKIN_TYPE = 5;
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
-    private static final String TAG_ITEMS = "items";
-    private static final String TAG_SLOT = "slot";
     private static final String TAG_LAST_XMAS_YEAR = "lastXmasYear";
+    private final ISkinType[] validSkins = {
+            SkinTypeRegistry.skinHead,
+            SkinTypeRegistry.skinChest,
+            SkinTypeRegistry.skinLegs,
+            SkinTypeRegistry.skinFeet,
+            SkinTypeRegistry.skinSword,
+            SkinTypeRegistry.skinBow,
+            SkinTypeRegistry.skinArrow
+            };
     
-    public ItemStack[] customArmourInventory = new ItemStack[9];
-    private EntityEquipmentData equipmentData = new EntityEquipmentData();
+    private final WardrobeInventoryContainer wardrobeInventoryContainer;
+    private final EntityEquipmentData equipmentData;
     private final EntityPlayer player;
-    private boolean inventoryChanged;
     private EquipmentWardrobeData equipmentWardrobeData = new EquipmentWardrobeData(); 
     public int lastXmasYear;
+    private boolean allowNetworkUpdates;
     
     public ExPropsPlayerEquipmentData(EntityPlayer player) {
+        allowNetworkUpdates = true;
         this.player = player;
+        //An array of all the skins that can be placed in the players wardrobe.
+
+        wardrobeInventoryContainer = new WardrobeInventoryContainer(this, validSkins);
+        equipmentData = new EntityEquipmentData(1);
+    }
+    
+    public WardrobeInventoryContainer getWardrobeInventoryContainer() {
+        return wardrobeInventoryContainer;
+    }
+    
+    public EntityPlayer getPlayer() {
+        return player;
     }
     
     public static final void register(EntityPlayer player) {
@@ -53,24 +72,22 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         return (ExPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
+    @Deprecated
     public void setEquipmentStack(ItemStack stack) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer.skinType != null) {
-            int slot = SkinTypeHelper.getSlotForSkinType(skinPointer.skinType);
-            if (slot != -1) {
-                setInventorySlotContents(slot, stack);
+            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.skinType);
+            if (wi != null) {
+                wi.setInventorySlotContents(0, stack);
             }
         }
     }
     
-    public ItemStack[] getAllEquipmentStacks() {
-        return customArmourInventory;
-    }
-    
+    @Deprecated
     public ItemStack getEquipmentStack(ISkinType skinType) {
-        int slot = SkinTypeHelper.getSlotForSkinType(skinType);
-        if (slot != -1) {
-            return getStackInSlot(slot);
+        WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
+        if (wi != null) {
+            return wi.getStackInSlot(0);
         }
         return null;
     }
@@ -79,58 +96,51 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinList.size() - 1; i++) {
             ISkinType skinType = skinList.get(i);
-            int slot = SkinTypeHelper.getSlotForSkinType(skinType);
-            if (slot != -1) {
-                setInventorySlotContents(slot, null);
+            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
+            if (wi != null) {
+                for (int j = 0; j < wi.getSizeInventory(); j++) {
+                    wi.setInventorySlotContents(j, null);
+                }
             }
         }
     }
     
+    @Deprecated
     public void clearEquipmentStack(ISkinType skinType) {
-        int slot = SkinTypeHelper.getSlotForSkinType(skinType);
-        if (slot != -1) {
-            setInventorySlotContents(slot, null);
+        WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
+        if (wi != null) {
+            wi.setInventorySlotContents(0, null);
         }
     }
     
-    public void addCustomEquipment(ISkinType skinType, SkinPointer skinPointer) {
-        equipmentData.addEquipment(skinType, skinPointer);
+    public void addCustomEquipment(ISkinType skinType, byte slotId, SkinPointer skinPointer) {
+        equipmentData.addEquipment(skinType, slotId, skinPointer);
         updateEquipmentDataToPlayersAround();
     }
     
-    public void removeCustomEquipment(ISkinType skinType) {
-        equipmentData.removeEquipment(skinType);
+    public void removeCustomEquipment(ISkinType skinType, byte slotId) {
+        equipmentData.removeEquipment(skinType, slotId);
         updateEquipmentDataToPlayersAround();
     }
     
     private void updateEquipmentDataToPlayersAround() {
+        if (!allowNetworkUpdates) {
+            return;
+        }
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), p);
-    }
-    
-    public void colourSlotUpdate(byte slot) {
-        ItemStack stackInput = this.getStackInSlot(slot);
-        ItemStack stackOutput = this.getStackInSlot(slot + 1);
-        
-        if (stackInput != null && stackInput.getItem() == ModItems.colourPicker && stackOutput == null) {
-            this.equipmentWardrobeData.skinColour = ((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput);
-            
-            setInventorySlotContents(slot + 1, stackInput);
-            setInventorySlotContents(slot, null);
-            sendSkinData();
-        }
     }
     
     public EntityEquipmentData getEquipmentData() {
         return equipmentData;
     }
     
-    public void armourSlotUpdate(byte slot) {
-        ItemStack stack = this.getStackInSlot(slot);
+    public void armourSlotUpdate(WardrobeInventory inventory, byte slot) {
+        ItemStack stack = inventory.getStackInSlot(slot);
         
         if (stack == null) {
-            removeArmourFromSlot(slot);
+            removeArmourFromSlot(inventory, slot);
             return;
         } 
         
@@ -142,13 +152,18 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
             return;
         }
         
-        loadFromItemStack(stack);
+        loadFromItemStack(stack, slot);
     }
     
-    private void removeArmourFromSlot(byte slotId) {
-        ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
-        if (slotId != -1) {
-            removeCustomEquipment(skinType);
+    private void removeArmourFromSlot(WardrobeInventory inventory, byte slotId) {
+        removeCustomEquipment(inventory.getSkinType(), slotId);
+    }
+    
+    public void setSkinColumnCount(int count) {
+        if (count > 0 & count < 6) {
+            ModLogger.log("Setting slot count to " + count);
+            equipmentWardrobeData.slotsUnlocked = count;
+            sendNakedData((EntityPlayerMP) this.player);
         }
     }
     
@@ -157,9 +172,11 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         sendNakedData(targetPlayer);
     }
     
-    public void setSkinInfo(EquipmentWardrobeData equipmentWardrobeData) {
+    public void setSkinInfo(EquipmentWardrobeData equipmentWardrobeData, boolean sendUpdate) {
         this.equipmentWardrobeData = equipmentWardrobeData;
-        sendSkinData();
+        if (sendUpdate) {
+            sendSkinData();
+        }
     }
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer) {
@@ -178,21 +195,35 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerEquipmentWardrobeUpdate(playerPointer, this.equipmentWardrobeData), p);
     }
     
+    public EquipmentWardrobeData getEquipmentWardrobeData() {
+        return equipmentWardrobeData;
+    }
+    
     public BitSet getArmourOverride() {
         return equipmentWardrobeData.armourOverride;
     }
     
     @Override
     public void saveNBTData(NBTTagCompound compound) {
-        writeItemsToNBT(compound);
+        wardrobeInventoryContainer.writeToNBT(compound);
         equipmentWardrobeData.saveNBTData(compound);
         compound.setInteger(TAG_LAST_XMAS_YEAR, this.lastXmasYear);
     }
     
     @Override
     public void loadNBTData(NBTTagCompound compound) {
-        readItemsFromNBT(compound);
+        wardrobeInventoryContainer.readFromNBT(compound);
         equipmentWardrobeData.loadNBTData(compound);
+        allowNetworkUpdates = false;
+        for (int i = 0; i < validSkins.length; i++) {
+            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(validSkins[i]);
+            if (wi != null) {
+                for (int j = 0; j < wi.getSizeInventory(); j++) {
+                    armourSlotUpdate(wi, (byte)j);
+                }
+            }
+        }
+        allowNetworkUpdates = true;
         if (compound.hasKey(TAG_LAST_XMAS_YEAR)) {
             this.lastXmasYear = compound.getInteger(TAG_LAST_XMAS_YEAR);
         } else {
@@ -200,9 +231,9 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         }
     }
     
-    private void loadFromItemStack(ItemStack stack) {
+    private void loadFromItemStack(ItemStack stack, byte slotId) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-        addCustomEquipment(skinPointer.skinType, skinPointer);
+        addCustomEquipment(skinPointer.skinType, slotId, skinPointer);
     }
     
     @Override
@@ -210,131 +241,10 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
 
     @Override
-    public int getSizeInventory() {
-        return customArmourInventory.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return customArmourInventory[slot];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int count) {
-        ItemStack itemstack = getStackInSlot(slot);
-        
-        if (itemstack != null) {
-            if (itemstack.stackSize <= count){
-                setInventorySlotContents(slot, null);
-            }else{
-                itemstack = itemstack.splitStack(count);
-                markDirty();
-            }
-        }
-        return itemstack;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
-        ItemStack item = getStackInSlot(slot);
-        setInventorySlotContents(slot, null);
-        return item;
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        customArmourInventory[slot] = stack;
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-            stack.stackSize = getInventoryStackLimit();
-        }
+    public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {
         if (!player.worldObj.isRemote) {
-            if (slot < 7) {
-                armourSlotUpdate((byte)slot);
-            }
-        }
-
-        colourSlotUpdate((byte)7);
-        
-        markDirty();
-    }
-
-    @Override
-    public String getInventoryName() {
-        return "pasta";
-    }
-
-    @Override
-    public boolean hasCustomInventoryName() {
-        return false;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
-    public void markDirty() {
-        this.inventoryChanged = true;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return this.player.isDead ? false : player.getDistanceSqToEntity(this.player) <= 64.0D;
-    }
-
-    @Override
-    public void openInventory() {}
-
-    @Override
-    public void closeInventory() {}
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return true;
-    }
-    
-    public void writeItemsToNBT(NBTTagCompound compound) {
-        NBTTagList items = new NBTTagList();
-        for (int i = 0; i < getSizeInventory(); i++) {
-            ItemStack stack = getStackInSlot(i);
-            if (stack != null) {
-                NBTTagCompound item = new NBTTagCompound();
-                item.setByte(TAG_SLOT, (byte)i);
-                stack.writeToNBT(item);
-                items.appendTag(item);
-            }
-        }
-        compound.setTag(TAG_ITEMS, items);
-    }
-    
-    public void readItemsFromNBT(NBTTagCompound compound) {
-        NBTTagList items = compound.getTagList(TAG_ITEMS, NBT.TAG_COMPOUND);
-        for (int i = 0; i < items.tagCount(); i++) {
-            NBTTagCompound item = (NBTTagCompound)items.getCompoundTagAt(i);
-            int slot = item.getByte(TAG_SLOT);
-            
-            if (slot >= 0 && slot < getSizeInventory()) {
-                setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
-            }
-        }
-    }
-    
-    public void dropItems() {
-        World world = player.worldObj;
-        double x = player.posX;
-        double y = player.posY;
-        double z = player.posZ;
-        for (int i = 0; i < this.getSizeInventory(); i++) {
-            ItemStack stack = this.getStackInSlot(i);
-            if (stack != null) {
-                float f = 0.7F;
-                double xV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-                double yV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-                double zV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-                EntityItem entityitem = new EntityItem(world, (double)x + xV, (double)y + yV, (double)z + zV, stack);
-                world.spawnEntityInWorld(entityitem);
-                setInventorySlotContents(i, null);
+            if (inventory instanceof WardrobeInventory) {
+                armourSlotUpdate((WardrobeInventory) inventory, (byte)slotId);
             }
         }
     }

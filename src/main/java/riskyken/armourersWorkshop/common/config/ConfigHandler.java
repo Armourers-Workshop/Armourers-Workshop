@@ -46,6 +46,7 @@ public class ConfigHandler {
     public static boolean allowClientsToDownloadSkins = false;
     public static boolean allowClientsToUploadSkins = true;
     public static boolean enableHolidayEvents = true;
+    public static int startingWardrobeSlots = 3;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
@@ -144,6 +145,10 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "enableHolidayEvents", true,
                 "Setting to false will disable holiday events. What's wrong with you!")
                 .getBoolean(true);
+        
+        startingWardrobeSlots = config
+                .getInt("startingWardrobeSlots", CATEGORY_GENERAL, 3, 1, 5,
+                "Number of slot columns the player starts with for skins.");
     }
     
     private static void loadCategoryRecipe() {

@@ -29,13 +29,13 @@ public class MessageServerSkinInfoUpdate implements IMessage, IMessageHandler<Me
     @Override
     public void fromBytes(ByteBuf buf) {
         this.playerPointer = new PlayerPointer(buf);
-        this.equipmentData = new EntityEquipmentData(buf);
+        this.equipmentData = EntityEquipmentData.readFromByteBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         this.playerPointer.writeToByteBuffer(buf);
-        this.equipmentData.toBytes(buf);
+        EntityEquipmentData.writeToByteBuf(equipmentData, buf);
     }
     
     @Override

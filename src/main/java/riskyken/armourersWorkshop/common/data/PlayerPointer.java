@@ -1,15 +1,13 @@
 package riskyken.armourersWorkshop.common.data;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.UUID;
-
-import net.minecraft.entity.player.EntityPlayer;
-import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 
 public class PlayerPointer {
     
@@ -52,6 +50,11 @@ public class PlayerPointer {
             ByteBufUtils.writeUTF8String(buf, this.name);
         }
     }
+    
+    @Override
+    public String toString() {
+        return "PlayerPointer [uuid=" + uuid + ", name=" + name + "]";
+    }
 
     @Override
     public int hashCode() {
@@ -71,16 +74,19 @@ public class PlayerPointer {
         if (getClass() != obj.getClass())
             return false;
         PlayerPointer other = (PlayerPointer) obj;
-        if (name == null) {
-            if (other.name != null)
+        if (USE_UUID_TO_SYNC) {
+            if (uuid == null) {
+                if (other.uuid != null)
+                    return false;
+            } else if (!uuid.equals(other.uuid))
                 return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (uuid == null) {
-            if (other.uuid != null)
+        } else {
+            if (name == null) {
+                if (other.name != null)
+                    return false;
+            } else if (!name.equals(other.name))
                 return false;
-        } else if (!uuid.equals(other.uuid))
-            return false;
+        }
         return true;
     }
 }

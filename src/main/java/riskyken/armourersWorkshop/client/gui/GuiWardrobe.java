@@ -31,18 +31,17 @@ import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
-public class GuiEquipmentWardrobe extends GuiContainer {
+public class GuiWardrobe extends GuiContainer {
 
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/customArmourInventory.png");
 
     private static int activeTab = 0;
     private static final int TAB_MAIN = 0;
-    private static final int TAB_SKIN = 1;
+    private static final int TAB_OVERRIDE = 1;
+    private static final int TAB_SKIN = 2;
     
     Color skinColour;
     Color hairColour;
-    Color pantsColour;
-    Color pantStripeColour;
     BitSet armourOverride;
     boolean headOverlay;
     boolean limitLimbs;
@@ -60,7 +59,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
     private float mouseX;
     private float mouseY;
 
-    public GuiEquipmentWardrobe(InventoryPlayer inventory, ExPropsPlayerEquipmentData customEquipmentData) {
+    public GuiWardrobe(InventoryPlayer inventory, ExPropsPlayerEquipmentData customEquipmentData) {
         super(new ContainerEquipmentWardrobe(inventory, customEquipmentData));
         
         this.customEquipmentData = customEquipmentData;
@@ -95,15 +94,15 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         autoButton = new GuiButtonExt(0, this.guiLeft + 27, this.guiTop + 116, 80, 18, GuiHelper.getLocalizedControlName(guiName, "autoColour"));
         
         armourOverrideCheck = new GuiCheckBox[4];
-        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 110, this.guiTop + 17, "Head armour render?", !armourOverride.get(0));
-        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 110, this.guiTop + 37, "Chest armour render?", !armourOverride.get(1));
-        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 110, this.guiTop + 75, "Leg armour render?", !armourOverride.get(2));
-        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 110, this.guiTop + 94, "Foot armour render?", !armourOverride.get(3));
+        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 88, this.guiTop + 17, "Head armour render?", !armourOverride.get(0));
+        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 88, this.guiTop + 37, "Chest armour render?", !armourOverride.get(1));
+        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 88, this.guiTop + 75, "Leg armour render?", !armourOverride.get(2));
+        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 88, this.guiTop + 94, "Foot armour render?", !armourOverride.get(3));
         
         overlayOverrideCheck = new GuiCheckBox[1];
-        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 110, this.guiTop + 26, "Head overlay render?", !headOverlay);
+        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 88, this.guiTop + 26, "Head overlay render?", !headOverlay);
         
-        limitLimbsCheck = new GuiCheckBox(7, this.guiLeft + 110, this.guiTop + 56, "Limit limb movement?", limitLimbs);
+        limitLimbsCheck = new GuiCheckBox(7, this.guiLeft + 88, this.guiTop + 56, "Limit limb movement?", limitLimbs);
         
         buttonList.add(overlayOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[0]);
@@ -134,7 +133,13 @@ public class GuiEquipmentWardrobe extends GuiContainer {
             }
             
             tabYPos += 21;
+            if (mouseX >= tabXPos & mouseX <= tabXPos + tabImageWidth) {
+                if (mouseY >= tabYPos & mouseY <= tabYPos + tabImageHeight) {
+                    setActiveTab(TAB_OVERRIDE);
+                }
+            }
             
+            tabYPos += 21;
             if (mouseX >= tabXPos & mouseX <= tabXPos + tabImageWidth) {
                 if (mouseY >= tabYPos & mouseY <= tabYPos + tabImageHeight) {
                     setActiveTab(TAB_SKIN);
@@ -147,20 +152,24 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         this.activeTab = tabNumber;
         for (int i = 0; i < 6; i++) {
             GuiButton button = (GuiButton) buttonList.get(i);
-            button.visible = tabNumber == TAB_MAIN;
+            button.visible = tabNumber == TAB_OVERRIDE;
         }
         for (int i = 6; i < 7; i++) {
             GuiButton button = (GuiButton) buttonList.get(i);
             button.visible = tabNumber == TAB_SKIN;
         }
 
-        for (int i = 0; i < 7; i++) {
-            SlotHidable slot = (SlotHidable) inventorySlots.inventorySlots.get(i);
-            slot.setVisible(tabNumber == TAB_MAIN);
+        for (int i = 0; i < inventorySlots.inventorySlots.size(); i++) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(i);
+            if (slot instanceof SlotHidable) {
+                ((SlotHidable)slot).setVisible(tabNumber == TAB_MAIN);
+            }
+            //SlotHidable slot = (SlotHidable) inventorySlots.inventorySlots.get(i);
+            //slot.setVisible(tabNumber == TAB_MAIN);
         }
         for (int i = 7; i < 9; i++) {
             SlotHidable slot = (SlotHidable) inventorySlots.inventorySlots.get(i);
-            slot.setVisible(tabNumber == TAB_SKIN);
+            //slot.setVisible(tabNumber == TAB_SKIN);
         }
     }
 
@@ -243,7 +252,7 @@ public class GuiEquipmentWardrobe extends GuiContainer {
         
         int sloImageSize = 18;
         if (this.activeTab == TAB_MAIN) {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < inventorySlots.inventorySlots.size(); i++) {
                 Slot slot = (Slot) inventorySlots.inventorySlots.get(i);
                 this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition - 1,
                         this.guiTop + slot.yDisplayPosition - 1,
@@ -253,6 +262,10 @@ public class GuiEquipmentWardrobe extends GuiContainer {
             //this.drawTexturedModalRect(this.guiLeft + 87, this.guiTop + 74, 0, 192, sloImageSize, 37);
             //this.drawTexturedModalRect(this.guiLeft + 68, this.guiTop + 112, 0, 173, sloImageSize, sloImageSize);
             //this.drawTexturedModalRect(this.guiLeft + 27, this.guiTop + 112, 238, 238, sloImageSize, sloImageSize);
+        }
+        
+        if (this.activeTab == TAB_OVERRIDE) {
+            
         }
         
         if (this.activeTab == TAB_SKIN) {

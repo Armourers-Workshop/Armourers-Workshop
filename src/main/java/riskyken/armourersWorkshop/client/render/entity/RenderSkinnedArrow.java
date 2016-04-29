@@ -31,8 +31,8 @@ public class RenderSkinnedArrow extends RenderArrow {
         if (entityArrow.shootingEntity != null && entityArrow.shootingEntity instanceof EntityClientPlayerMP) {
             EntityClientPlayerMP player = (EntityClientPlayerMP) entityArrow.shootingEntity;
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
-            if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow)) {
-                int skinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow);
+            if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
+                int skinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow, 0);
                 if (ClientSkinCache.INSTANCE.isSkinInCache(skinId)) {
                     ModRenderHelper.enableAlphaBlend();
                     renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinId);

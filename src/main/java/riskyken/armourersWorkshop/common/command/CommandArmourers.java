@@ -15,8 +15,8 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerCl
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class CommandArmourers extends CommandBase {
 
@@ -32,7 +32,7 @@ public class CommandArmourers extends CommandBase {
     
     @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
-        String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache"};
+        String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache", "setSkinColumnCount"};
         
         switch (currentCommand.length) {
         case 1:
@@ -97,6 +97,19 @@ public class CommandArmourers extends CommandBase {
             ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {
             PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);
+        } else if (command.equals("setSkinColumnCount")) {
+            if (args.length < 3) {
+                
+                throw new WrongUsageException("commands.armourers.usage", (Object)args);
+                
+            }
+            int count = 3;
+            try {
+                count = Integer.parseInt(args[2]);
+            } catch (Exception e) {
+                throw new WrongUsageException("commands.armourers.usage", (Object)args);
+            }
+            ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(count);
         } else {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }

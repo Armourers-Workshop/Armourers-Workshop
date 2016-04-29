@@ -68,12 +68,6 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.mcProfiler.endSection();
             return;
         }
-        Skin data = modelRenderer.getPlayerCustomArmour(player, skinType);
-        if (data == null) {
-            mc.mcProfiler.endSection();
-            return;
-        }
-        ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType);
         
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
         byte[] extraColours = null;
@@ -85,25 +79,33 @@ public class ModelRendererAttachment extends ModelRenderer {
                     (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
         }
         
-        data.onUsed();
-        int size = data.getParts().size();
-        for (int i = 0; i < size; i++) {
-            SkinPart partData = data.getParts().get(i);
-            if (partData.getPartType() == skinPart) {
-                GL11.glPushMatrix();
-                if (skinType == SkinTypeRegistry.skinLegs && skinPart.getRegistryName().equals("armourers:legs.skirt")) {
-                    GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
-                    GL11.glTranslatef(-2 * scale, 0, 0);
-                    if (player.isSneaking()) {
+        for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
+            Skin data = modelRenderer.getPlayerCustomArmour(player, skinType, skinIndex);
+            if (data == null) {
+                mc.mcProfiler.endSection();
+                return;
+            }
+            ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType, skinIndex);
+            data.onUsed();
+            int size = data.getParts().size();
+            for (int i = 0; i < size; i++) {
+                SkinPart partData = data.getParts().get(i);
+                if (partData.getPartType() == skinPart) {
+                    GL11.glPushMatrix();
+                    if (skinType == SkinTypeRegistry.skinLegs && skinPart.getRegistryName().equals("armourers:legs.skirt")) {
+                        GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
+                        GL11.glTranslatef(-2 * scale, 0, 0);
+                        if (player.isSneaking()) {
+                        }
                     }
+                    GL11.glEnable(GL11.GL_CULL_FACE);
+                    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                    GL11.glEnable(GL11.GL_BLEND);
+                    EquipmentPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours);
+                    GL11.glDisable(GL11.GL_CULL_FACE);
+                    GL11.glPopMatrix();
+                    break;
                 }
-                GL11.glEnable(GL11.GL_CULL_FACE);
-                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glEnable(GL11.GL_BLEND);
-                EquipmentPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours);
-                GL11.glDisable(GL11.GL_CULL_FACE);
-                GL11.glPopMatrix();
-                break;
             }
         }
         

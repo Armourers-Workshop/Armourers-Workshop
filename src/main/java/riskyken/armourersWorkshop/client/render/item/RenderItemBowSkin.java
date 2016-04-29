@@ -107,9 +107,9 @@ public class RenderItemBowSkin implements IItemRenderer {
                     useCount = player.getItemInUseDuration();
                     hasArrow = player.inventory.hasItem(Items.arrow);
                     IEntityEquipment entityEquipment = EquipmentModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
-                    if (entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow)) {
+                    if (entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
                         hasArrowSkin = true;
-                        arrowSkinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow);
+                        arrowSkinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow, 0);
                     }
                     if (!hasArrow) {
                         if (player.capabilities.isCreativeMode) {

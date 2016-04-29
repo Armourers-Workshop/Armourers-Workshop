@@ -19,19 +19,28 @@ public class EntityEquipmentData implements IEntityEquipment {
     private static final String TAG_SKIN_TYPE = "skinType";
     private static final String TAG_EQUIPMENT_ID = "equipmentId";
     
+    private int slotCount = 1;
     private HashMap<String, Integer> skinId = new HashMap<String, Integer>();
     private HashMap<String, ISkinDye> skinDye = new HashMap<String, ISkinDye>();
     
-    public EntityEquipmentData() {
+    public static EntityEquipmentData readFromByteBuf(ByteBuf buf) {
+        int slotCount = buf.readByte();
+        EntityEquipmentData eed = new EntityEquipmentData(slotCount);
+        eed.fromBytes(buf);
+        return eed;
     }
     
-    public EntityEquipmentData(ByteBuf buf) {
-        fromBytes(buf);
+    public static void writeToByteBuf(EntityEquipmentData eed,ByteBuf buf) {
+        eed.toBytes(buf);
+    }
+    
+    public EntityEquipmentData(int slotCount) {
+        this.slotCount = slotCount;
     }
     
     @Override
-    public void addEquipment(ISkinType skinType, ISkinPointer skinPointer) {
-        String key = skinType.getRegistryName();
+    public void addEquipment(ISkinType skinType, int slotIndex, ISkinPointer skinPointer) {
+        String key = skinType.getRegistryName() + ":" + slotIndex;
         skinId.remove(key);
         skinDye.remove(key);
         
@@ -42,21 +51,21 @@ public class EntityEquipmentData implements IEntityEquipment {
     }
     
     @Override
-    public void removeEquipment(ISkinType skinType) {
-        String key = skinType.getRegistryName();
+    public void removeEquipment(ISkinType skinType, int slotIndex) {
+        String key = skinType.getRegistryName() + ":" + slotIndex;
         skinId.remove(key);
         skinDye.remove(key);
     }
     
     @Override
-    public boolean haveEquipment(ISkinType skinType) {
-        String key = skinType.getRegistryName();
+    public boolean haveEquipment(ISkinType skinType, int slotIndex) {
+        String key = skinType.getRegistryName() + ":" + slotIndex;
         return this.skinId.containsKey(key);
     }
     
     @Override
-    public int getEquipmentId(ISkinType skinType) {
-        String key = skinType.getRegistryName();
+    public int getEquipmentId(ISkinType skinType, int slotIndex) {
+        String key = skinType.getRegistryName() + ":" + slotIndex;
         if (this.skinId.containsKey(key)) {
             return this.skinId.get(key);
         }
@@ -64,9 +73,14 @@ public class EntityEquipmentData implements IEntityEquipment {
     }
     
     @Override
-    public ISkinDye getSkinDye(ISkinType skinType) {
-        String key = skinType.getRegistryName();
+    public ISkinDye getSkinDye(ISkinType skinType, int slotIndex) {
+        String key = skinType.getRegistryName() + ":" + slotIndex;
         return skinDye.get(key);
+    }
+    
+    @Override
+    public int getNumberOfSlots() {
+        return slotCount;
     }
     
     public void saveNBTData(NBTTagCompound compound) {
@@ -93,7 +107,8 @@ public class EntityEquipmentData implements IEntityEquipment {
         }
     }
     
-    public void toBytes(ByteBuf buf) {
+    private void toBytes(ByteBuf buf) {
+        buf.writeByte(slotCount);
         buf.writeByte(skinId.size());
         for (int i = 0; i < skinId.size(); i++) {
             String skinName = (String) skinId.keySet().toArray()[i];
@@ -105,7 +120,7 @@ public class EntityEquipmentData implements IEntityEquipment {
         }
     }
     
-    public void fromBytes(ByteBuf buf) {
+    private void fromBytes(ByteBuf buf) {
         int itemCount = buf.readByte();
         skinId.clear();
         for (int i = 0; i < itemCount; i++) {

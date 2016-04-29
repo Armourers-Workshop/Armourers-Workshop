@@ -4,8 +4,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 
 /**
  * Sent from the client to the server when a player
@@ -38,7 +38,7 @@ public class MessageClientEquipmentWardrobeUpdate implements IMessage, IMessageH
     @Override
     public IMessage onMessage(MessageClientEquipmentWardrobeUpdate message, MessageContext ctx) {
         ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(ctx.getServerHandler().playerEntity);
-        customEquipmentData.setSkinInfo(message.equipmentWardrobeData);
+        customEquipmentData.setSkinInfo(message.equipmentWardrobeData, true);
         return null;
     }
 }

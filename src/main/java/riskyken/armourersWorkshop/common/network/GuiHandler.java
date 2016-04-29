@@ -14,7 +14,7 @@ import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
 import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
-import riskyken.armourersWorkshop.client.gui.GuiEquipmentWardrobe;
+import riskyken.armourersWorkshop.client.gui.GuiWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourer;
@@ -150,7 +150,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
                 ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
-                return new GuiEquipmentWardrobe(player.inventory, customEquipmentData);
+                return new GuiWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getCurrentEquippedItem().getItem() instanceof IConfigurableTool) {
                     return new GuiToolOptions(player.getCurrentEquippedItem());

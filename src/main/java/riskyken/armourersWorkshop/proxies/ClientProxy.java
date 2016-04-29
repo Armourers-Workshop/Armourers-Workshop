@@ -250,7 +250,12 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void receivedCommandFromSever(CommandType command) {
-        ClientSkinCache.INSTANCE.clearCache();
+        switch (command) {
+        case CLEAR_MODEL_CACHE:
+            ClientSkinCache.INSTANCE.clearCache();
+            break;
+        }
+        
     }
     
     @Override

@@ -28,7 +28,7 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     
     public ExPropsEntityEquipmentData(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;
-        this.equipmentData = new EntityEquipmentData();
+        this.equipmentData = new EntityEquipmentData(1);
         this.skinInventory = new InventoryEntitySkin(this, skinnableEntity.getValidSkinTypes());
     }
     
@@ -39,10 +39,10 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
         }
         if (stack == null) {
             ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
-            equipmentData.removeEquipment(skinType);
+            equipmentData.removeEquipment(skinType, 0);
         } else {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            equipmentData.addEquipment(skinData.skinType, skinData);
+            equipmentData.addEquipment(skinData.skinType, 0, skinData);
         }
         sendEquipmentDataToPlayerToAllPlayersAround();
     }

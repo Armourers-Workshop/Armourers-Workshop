@@ -95,21 +95,21 @@ public final class EntityEquipmentDataManager {
         ItemStack stack = inventory.getCurrentItem();
         if (stack != null) {
             if (isSwordRenderItem(stack.getItem())) {
-                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword)) {
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 0)) {
                     SkinNBTHelper.addRenderIdToStack(
                             stack, SkinTypeRegistry.skinSword,
-                            equipmentData.getEquipmentId(SkinTypeRegistry.skinSword),
-                            equipmentData.getSkinDye(SkinTypeRegistry.skinSword));
+                            equipmentData.getEquipmentId(SkinTypeRegistry.skinSword, 0),
+                            equipmentData.getSkinDye(SkinTypeRegistry.skinSword, 0));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isBowRenderItem(stack.getItem())) {
-                if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow)) {
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
                     SkinNBTHelper.addRenderIdToStack(
                             stack, SkinTypeRegistry.skinBow,
-                            equipmentData.getEquipmentId(SkinTypeRegistry.skinBow),
-                            equipmentData.getSkinDye(SkinTypeRegistry.skinBow));
+                            equipmentData.getEquipmentId(SkinTypeRegistry.skinBow, 0),
+                            equipmentData.getSkinDye(SkinTypeRegistry.skinBow, 0));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
@@ -178,7 +178,7 @@ public final class EntityEquipmentDataManager {
 
             ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
             if (dropSkins) {
-                playerData.dropItems();
+                playerData.getWardrobeInventoryContainer().dropItems((EntityPlayer) event.entity);
             }
         }
     }

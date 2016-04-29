@@ -13,12 +13,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
@@ -63,10 +61,10 @@ public class PlayerTextureHandler {
             textureInfo.updateHairColour(ewd.hairColour);
             textureInfo.updateSkinColour(ewd.skinColour);
             Skin[] skins = new Skin[4];
-            skins[0] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead);
-            skins[1] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest);
-            skins[2] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs);
-            skins[3] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet);
+            //skins[0] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead);
+            //skins[1] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest);
+            //skins[2] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs);
+            //skins[3] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet);
             textureInfo.updateSkins(skins);
             ResourceLocation replacmentTexture = textureInfo.preRender();
             player.func_152121_a(Type.SKIN, replacmentTexture);

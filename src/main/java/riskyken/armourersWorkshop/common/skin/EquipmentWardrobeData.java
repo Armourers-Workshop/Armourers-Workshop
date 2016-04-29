@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 
 public class EquipmentWardrobeData {
     
@@ -16,6 +17,7 @@ public class EquipmentWardrobeData {
     private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
     private static final String TAG_HEAD_OVERLAY = "headOverlay";
     private static final String TAG_LIMIT_LIMBS = "limitLimbs";
+    private static final String TAG_SLOTS_UNLOCKED = "slotsUnlocked";
     
     /** Colour of the players skin */
     public int skinColour;
@@ -27,6 +29,8 @@ public class EquipmentWardrobeData {
     public boolean headOverlay;
     /** Should limb movement be limited when the player has a skin on? */
     public boolean limitLimbs;
+    /** Number of slots the player has unlocked in the wardrobe */
+    public int slotsUnlocked;
     
     public EquipmentWardrobeData() {
         skinColour = Color.decode("#F9DFD2").getRGB();
@@ -34,6 +38,7 @@ public class EquipmentWardrobeData {
         armourOverride = new BitSet(4);
         headOverlay = false;
         limitLimbs = true;
+        slotsUnlocked = ConfigHandler.startingWardrobeSlots;
     }
     
     public void saveNBTData(NBTTagCompound compound) {
@@ -44,6 +49,7 @@ public class EquipmentWardrobeData {
         }
         compound.setBoolean(TAG_HEAD_OVERLAY, this.headOverlay);
         compound.setBoolean(TAG_LIMIT_LIMBS, this.limitLimbs);
+        compound.setInteger(TAG_SLOTS_UNLOCKED, slotsUnlocked);
     }
     
     public void loadNBTData(NBTTagCompound compound) {
@@ -62,6 +68,9 @@ public class EquipmentWardrobeData {
         if (compound.hasKey(TAG_LIMIT_LIMBS)) {
             this.limitLimbs = compound.getBoolean(TAG_LIMIT_LIMBS);
         }
+        if (compound.hasKey(TAG_SLOTS_UNLOCKED)) {
+            this.slotsUnlocked = compound.getInteger(TAG_SLOTS_UNLOCKED);
+        }
     }
     
     public void fromBytes(ByteBuf buf) {
@@ -73,6 +82,7 @@ public class EquipmentWardrobeData {
         }
         this.headOverlay = buf.readBoolean();
         this.limitLimbs = buf.readBoolean();
+        this.slotsUnlocked = buf.readInt();
     }
 
     public void toBytes(ByteBuf buf) {
@@ -83,6 +93,7 @@ public class EquipmentWardrobeData {
         }
         buf.writeBoolean(this.headOverlay);
         buf.writeBoolean(this.limitLimbs);
+        buf.writeInt(this.slotsUnlocked);
     }
     
     public int autoColourHair(AbstractClientPlayer player) {
