@@ -6,7 +6,10 @@ import java.util.HashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
@@ -162,12 +165,30 @@ public final class SkinBaker {
         
         float scale = 0.0625F;
         
+        SkinCubeData cubeData = partData.getCubeData();
+        ISkinPartType partType = partData.getPartType();
+        IRectangle3D gs = partType.getGuideSpace();
+        IRectangle3D bs = partType.getBuildingSpace();
+        IPoint3D offset = partType.getOffset();
+        
+        partData.isClippingGuide = false;
+        
         for (int i = 0; i < partData.getCubeData().getCubeCount(); i++) {
-            SkinCubeData cubeData = partData.getCubeData();
-            
             byte[] loc = cubeData.getCubeLocation(i);
             byte[] paintType = cubeData.getCubePaintType(i);
             ICube cube = partData.getCubeData().getCube(i);
+            
+            if (loc[0] >= gs.getX() & loc [0] < gs.getX() + gs.getWidth()) {
+                int y = -loc[1] - 1;
+                if (y >= gs.getY()) {
+                    if (y < gs.getHeight()) {
+                        if (loc[2] >= gs.getZ() & loc [2] < gs.getZ() + gs.getDepth()) {
+                            partData.isClippingGuide = true;
+                        }
+                    }
+                }
+            }
+            
             
             byte a = (byte) 255;
             if (cube.needsPostRender()) {
@@ -240,7 +261,6 @@ public final class SkinBaker {
             averageB[i] = (int) ((double)dyeColour[2][i] / (double)dyeUseCount[i]);
         }
         
-        partData.clearCubeData();
         partData.getClientSkinPartData().setVertexLists(renderLists);
         partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG, averageB);
     }

@@ -28,4 +28,9 @@ public class Point3D implements IPoint3D {
     public int getZ() {
         return this.z;
     }
+
+    @Override
+    public String toString() {
+        return "Point3D [x=" + x + ", y=" + y + ", z=" + z + "]";
+    }
 }
