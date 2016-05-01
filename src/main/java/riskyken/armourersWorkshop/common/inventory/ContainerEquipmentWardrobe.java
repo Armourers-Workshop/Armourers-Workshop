@@ -59,7 +59,7 @@ public class ContainerEquipmentWardrobe extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return !player.isDead & player == customEquipmentData.getPlayer();
+        return !player.isDead & customEquipmentData.getPlayer().equals(player);
     }
     
     @Override

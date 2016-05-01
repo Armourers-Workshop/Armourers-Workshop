@@ -255,7 +255,6 @@ public class ClientProxy extends CommonProxy {
             ClientSkinCache.INSTANCE.clearCache();
             break;
         }
-        
     }
     
     @Override
