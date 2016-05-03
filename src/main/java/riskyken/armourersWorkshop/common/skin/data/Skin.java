@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,10 +10,10 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
@@ -35,9 +34,26 @@ public class Skin implements ISkin {
     private int lightHash = 0;
     
     @SideOnly(Side.CLIENT)
-    public BufferedImage bufferedImage;
+    public SkinModelTexture skinModelTexture;
+    
+    
     @SideOnly(Side.CLIENT)
     public int paintTextureId;
+    
+    private int[] averageR = new int[10];
+    private int[] averageG = new int[10];
+    private int[] averageB = new int[10];
+    
+    public void setAverageDyeValues(int[] r, int[] g, int[] b) {
+        this.averageR = r;
+        this.averageG = g;
+        this.averageB = b;
+    }
+    
+    public int[] getAverageDyeColour(int dyeNumber) {
+        return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
+    }
+    
     
     /** Number of ticks from when this skin was last used. */
     private int ticksFromLastAccess = 0;
@@ -86,8 +102,7 @@ public class Skin implements ISkin {
             parts.get(i).getClientSkinPartData().cleanUpDisplayLists();
         }
         if (hasPaintData()) {
-            TextureUtil.deleteTexture(paintTextureId);
-            bufferedImage = null;
+            skinModelTexture.deleteGlTexture();
         }
     }
     

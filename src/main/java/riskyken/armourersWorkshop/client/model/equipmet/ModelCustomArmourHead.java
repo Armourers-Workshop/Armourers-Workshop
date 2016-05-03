@@ -5,9 +5,12 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.client.skin.ClientSkinPaintCache;
+import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -29,9 +32,10 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
-        if (armourData == null) { return; }
-        
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
+        if (skin == null) {
+            return;
+        }
         
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -44,17 +48,21 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinHead);
-        armourData.onUsed();
+        skin.onUsed();
+        RenderHelper.enableGUIStandardItemLighting();
         
-        if (armourData.hasPaintData() & showSkinPaint) {
-            armourData.blindPaintTexture();
+        if (skin.hasPaintData() & showSkinPaint) {
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, skinDye, extraColour);
+            st.bindTexture();
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
             bipedHead.render(SCALE);
-            GL11.glEnable(GL11.GL_CULL_FACE);
+            GL11.glPopAttrib();
         }
         
-        if (armourData.getParts().size() > 0) {
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, armourData.getParts().get(0).getPartType());
+        if (skin.getParts().size() > 0) {
+            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, skin.getParts().get(0).getPartType());
             GL11.glPushMatrix();
             if (isChild) {
                 float f6 = 2.0F;
@@ -71,7 +79,7 @@ public class ModelCustomArmourHead extends AbstractModelCustomEquipment {
                 GL11.glTranslated(0, 1 * SCALE, 0);
             }
 
-            renderHead(armourData.getParts().get(0), SCALE, skinDye, extraColour);
+            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColour);
             
             GL11.glPopMatrix();
         }

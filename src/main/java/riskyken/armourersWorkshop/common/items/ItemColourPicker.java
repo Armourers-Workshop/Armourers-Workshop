@@ -14,7 +14,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -28,8 +27,6 @@ import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
@@ -85,27 +82,11 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         }
         
         if (block instanceof IPantableBlock) {
-            if (block == ModBlocks.boundingBox) {
-                if (world.isRemote) {
-                    TileEntityBoundingBox te = (TileEntityBoundingBox) world.getTileEntity(x, y, z);
-                    if (te.getSkinPart() instanceof ISkinPartTypeTextured) {
-                        int colour = getColourFromSkin(te, side);
-                        NBTTagCompound compound = new NBTTagCompound();
-                        byte[] paintData = PaintingHelper.getToolPaintData(stack);
-                        Color c = new Color(colour);
-                        paintData[0] = (byte) c.getRed();
-                        paintData[1] = (byte) c.getGreen();
-                        paintData[2] = (byte) c.getBlue();
-                        PaintingHelper.setPaintData(compound, paintData);
-                        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
-                    }
-                }
-            } else {
-                if (!world.isRemote) {
-                    setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
-                    setToolPaintType(stack, ((IPantableBlock)block).getPaintType(world, x, y, z, side));
-                }
+            if (!world.isRemote) {
+                setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
+                setToolPaintType(stack, ((IPantableBlock)block).getPaintType(world, x, y, z, side));
             }
+            
             if (!world.isRemote) {
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
             }

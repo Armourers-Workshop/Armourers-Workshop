@@ -1,7 +1,10 @@
 package riskyken.armourersWorkshop.common.blocks;
 
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.List;
+
+import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -25,12 +28,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
+import riskyken.armourersWorkshop.utils.BitwiseUtils;
 
 public class BlockBoundingBox extends AbstractModBlockContainer implements IPantableBlock {
 
@@ -62,9 +68,14 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        if (world.isRemote) {
+            return true;
+        }
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity != null && tileEntity instanceof TileEntityBoundingBox) {
             if (((TileEntityBoundingBox)tileEntity).isParentValid()) {
+                tileEntity.markDirty();
+                world.markBlockForUpdate(x, y, z);
                 return false;
             } else {
                 world.setBlockToAir(x, y, z);
@@ -140,7 +151,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return false;
         }
-        /*
+        
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
@@ -148,12 +159,15 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                 if (parent != null) {
                     ISkinType skinType = parent.getSkinType();
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
-                    parent.updatePaintData(texturePoint.x, texturePoint.y, colour);
+                    int oldColour = parent.getPaintData(texturePoint.x, texturePoint.y);
+                    int paintType = BitwiseUtils.getUByteFromInt(oldColour, 0);
+                    int newColour = BitwiseUtils.setUByteToInt(colour, 0, paintType);
+                    parent.updatePaintData(texturePoint.x, texturePoint.y, newColour);
                     return true;
                 }
             }
         }
-        */
+        
         return false;
     }
 
@@ -170,23 +184,19 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
             if (parent != null) {
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
-                    //int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                    /*
-                    ModLogger.log(BitwiseUtils.getUByteFromInt(colour, 3));
-                    if (colour >>> 24 == 0) {
+                    int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
+                    int paintType = BitwiseUtils.getUByteFromInt(colour, 0);
+                    if (paintType != 0) {
+                        return colour;
+                    } else {
                         GameProfile gameProfile = parent.getGameProfile();
-                        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
-                        colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
-                    }
-                    
-                    GameProfile gameProfile = parent.getGameProfile();
-                    if (gameProfile != null) {
-                        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
-                        if (playerSkin != null) {
-                            return playerSkin.getRGB(texturePoint.x, texturePoint.y);
+                        if (gameProfile != null) {
+                            BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
+                            if (playerSkin != null) {
+                                return playerSkin.getRGB(texturePoint.x, texturePoint.y);
+                            }
                         }
                     }
-                    */
                 }
             }
         }
@@ -196,10 +206,46 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side) {
+        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+            return;
+        }
+        
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntityBoundingBox) {
+            TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
+            if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
+                if (parent != null) {
+                    ISkinType skinType = parent.getSkinType();
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    
+                    int oldColour = parent.getPaintData(texturePoint.x, texturePoint.y);
+                    
+                    int newColour = PaintType.setPaintTypeOnColour(paintType, oldColour);
+                    parent.updatePaintData(texturePoint.x, texturePoint.y, newColour);
+                }
+            }
+        }
     }
     
     @Override
     public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side) {
+        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+            return PaintType.NORMAL;
+        }
+        
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntityBoundingBox) {
+            TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
+            if (parent != null) {
+                if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
+                    return PaintType.getPaintTypeFromColour(colour);
+                }
+            }
+        }
         return PaintType.NORMAL;
     }
 

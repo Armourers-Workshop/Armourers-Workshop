@@ -12,11 +12,14 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
+import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
@@ -60,12 +63,25 @@ public class PlayerTextureHandler {
             textureInfo.updateTexture(player.getLocationSkin());
             textureInfo.updateHairColour(ewd.hairColour);
             textureInfo.updateSkinColour(ewd.skinColour);
-            Skin[] skins = new Skin[4];
-            //skins[0] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead);
-            //skins[1] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest);
-            //skins[2] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs);
-            //skins[3] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet);
+            Skin[] skins = new Skin[4 * 5];
+            
+            for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
+                skins[0 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
+                skins[1 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
+                skins[2 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
+                skins[3 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
+            }
+            ISkinDye[] dyes = new ISkinDye[4 * 5];
+            for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
+                dyes[0 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
+                dyes[1 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
+                dyes[2 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
+                dyes[3 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
+            }
+            
             textureInfo.updateSkins(skins);
+            textureInfo.updateDyes(dyes);
+            
             ResourceLocation replacmentTexture = textureInfo.preRender();
             player.func_152121_a(Type.SKIN, replacmentTexture);
         }

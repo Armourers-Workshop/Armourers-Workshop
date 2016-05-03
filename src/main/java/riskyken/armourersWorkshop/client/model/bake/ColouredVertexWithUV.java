@@ -61,11 +61,11 @@ public class ColouredVertexWithUV {
                         int[] averageRGB = cspd.getAverageDyeColour(type - 1);
                         byte[] dyedColour = null;
                         if (dyeType == 253 & extraColour != null) {
-                            dyedColour = dyeVertex(new byte[] {extraColour[0], extraColour[1], extraColour[2]}, averageRGB);
+                            dyedColour = dyeColour(r, g, b, new byte[] {extraColour[0], extraColour[1], extraColour[2]}, averageRGB);
                         } else if (dyeType == 254 & extraColour != null) {
-                            dyedColour = dyeVertex(new byte[] {extraColour[3], extraColour[4], extraColour[5]}, averageRGB);
+                            dyedColour = dyeColour(r, g, b, new byte[] {extraColour[3], extraColour[4], extraColour[5]}, averageRGB);
                         } else {
-                            dyedColour = dyeVertex(dye, averageRGB);
+                            dyedColour = dyeColour(r, g, b, dye, averageRGB);
                         }
                         r = dyedColour[0];
                         g = dyedColour[1];
@@ -76,7 +76,7 @@ public class ColouredVertexWithUV {
             //Skin
             if (type == 253 & extraColour != null) {
                 int[] averageRGB = cspd.getAverageDyeColour(8);
-                byte[] dyedColour = dyeVertex(new byte[] {extraColour[0], extraColour[1], extraColour[2]}, averageRGB);
+                byte[] dyedColour = dyeColour(r, g, b, new byte[] {extraColour[0], extraColour[1], extraColour[2]}, averageRGB);
                 r = dyedColour[0];
                 g = dyedColour[1];
                 b = dyedColour[2];
@@ -84,7 +84,7 @@ public class ColouredVertexWithUV {
             //Hair
             if (type == 254 & extraColour != null) {
                 int[] averageRGB = cspd.getAverageDyeColour(9);
-                byte[] dyedColour = dyeVertex(new byte[] {extraColour[3], extraColour[4], extraColour[5]}, averageRGB);
+                byte[] dyedColour = dyeColour(r, g, b, new byte[] {extraColour[3], extraColour[4], extraColour[5]}, averageRGB);
                 r = dyedColour[0];
                 g = dyedColour[1];
                 b = dyedColour[2];
@@ -105,18 +105,9 @@ public class ColouredVertexWithUV {
      * @param modelAverageColour RGB int array.
      * @return
      */
-    private byte[] dyeVertex(byte[] dyeColour, int[] modelAverageColour) {
-        //float[] skinHsb = new float[3];
-        //float[] dyeHsb = new float[3];
-        //float[] averageHsb = new float[3];
-        /*
-        Color.RGBtoHSB(r & 0xFF, g & 0xFF, b & 0xFF, skinHsb);
-        Color.RGBtoHSB(dyeColour[0] & 0xFF, dyeColour[1] & 0xFF, dyeColour[2] & 0xFF, dyeHsb);
-        Color.RGBtoHSB(modelAverageColour[0], modelAverageColour[1], modelAverageColour[2], averageHsb);
-        */
+    public static byte[] dyeColour(byte r, byte g, byte b, byte[] dyeColour, int[] modelAverageColour) {
         int average = ((r & 0xFF) + (g  & 0xFF) + (b & 0xFF)) / 3;
         int modelAverage = (modelAverageColour[0] + modelAverageColour[1] + modelAverageColour[2]) / 3;
-        //int dyeAverage = ((dyeColour[0] & 0xFF) + (dyeColour[0]  & 0xFF) + (dyeColour[0] & 0xFF)) / 3;
         
         int nR = (int) (average + (dyeColour[0] & 0xFF) - modelAverage);
         int nG = (int) (average + (dyeColour[1] & 0xFF) - modelAverage);
@@ -125,17 +116,6 @@ public class ColouredVertexWithUV {
         nR = MathHelper.clamp_int(nR, 0, 255);
         nG = MathHelper.clamp_int(nG, 0, 255);
         nB = MathHelper.clamp_int(nB, 0, 255);
-        /*
-        float saturationOffset = 0.5F - averageHsb[1];
-        float brightnessOffset = 0.5F - averageHsb[2];
-        float saturation = skinHsb[1] + saturationOffset - 0.5F + dyeHsb[1];
-        float brightness = skinHsb[2] + brightnessOffset - 0.5F + dyeHsb[2];
-        
-        brightness = MathHelper.clamp_float(brightness, 0F, 1F);
-        saturation = MathHelper.clamp_float(saturation, 0F, 1F);
-        
-        Color c = Color.getHSBColor(dyeHsb[0], saturation, brightness);
-        */
         return new byte [] {(byte)nR, (byte)nG, (byte)nB};
     }
 }

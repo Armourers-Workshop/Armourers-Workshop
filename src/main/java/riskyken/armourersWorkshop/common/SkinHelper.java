@@ -116,10 +116,12 @@ public final class SkinHelper {
     
     public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile, MinecraftProfileTexture.Type type) {
         ResourceLocation skin = AbstractClientPlayer.locationStevePng;
-        Minecraft mc = Minecraft.getMinecraft();
-        Map<?, ?> map = mc.func_152342_ad().func_152788_a(gameProfile);
-        if (map.containsKey(type)) {
-            skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(type), type);
+        if (gameProfile != null) {
+            Minecraft mc = Minecraft.getMinecraft();
+            Map<?, ?> map = mc.func_152342_ad().func_152788_a(gameProfile);
+            if (map.containsKey(type)) {
+                skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(type), type);
+            }
         }
         return skin;
     }

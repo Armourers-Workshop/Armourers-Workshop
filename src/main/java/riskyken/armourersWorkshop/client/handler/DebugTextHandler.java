@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.ClientSkinPaintCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
@@ -39,7 +40,8 @@ public class DebugTextHandler {
             event.left.add(dataLine);
             dataLine = "bq:" + ModelBakery.INSTANCE.getBakingQueueSize() + " ";
             dataLine += "rq:" + ClientSkinCache.INSTANCE.getRequestQueueSize() + " ";
-            dataLine += "sr:" + ModClientFMLEventHandler.skinRenderLastTick;
+            dataLine += "sr:" + ModClientFMLEventHandler.skinRenderLastTick + " ";
+            dataLine += "tc:" + ClientSkinPaintCache.INSTANCE.size() + " ";
             if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
                 for (int i = 0; i < playerList.size(); i++) {
                     GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);

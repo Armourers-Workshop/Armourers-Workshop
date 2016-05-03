@@ -81,18 +81,20 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef((90F * rotation), 0, 1, 0);
+        /*
         if (skin.getCustomName().isEmpty()) {
             Minecraft.getMinecraft().mcProfiler.startSection("unnamedSkin");
         } else {
             Minecraft.getMinecraft().mcProfiler.startSection(skin.getCustomName().replace(" ", ""));
         }
+        */
         skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null);
         }
         GL11.glPopMatrix();
-        Minecraft.getMinecraft().mcProfiler.endSection();
+        //Minecraft.getMinecraft().mcProfiler.endSection();
     }
     
     @Override

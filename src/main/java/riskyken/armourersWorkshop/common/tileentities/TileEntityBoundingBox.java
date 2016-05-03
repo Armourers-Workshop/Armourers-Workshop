@@ -1,11 +1,17 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import java.awt.Point;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
+import riskyken.armourersWorkshop.common.painting.PaintType;
+import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class TileEntityBoundingBox extends TileEntity {
@@ -121,5 +127,24 @@ public class TileEntityBoundingBox extends TileEntity {
     
     public byte getGuideZ() {
         return this.guideZ;
+    }
+    
+    public boolean isPaintableSide(int side) {
+        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        if (worldObj.getBlock(xCoord + sideBlock.offsetX, yCoord + sideBlock.offsetY, zCoord + sideBlock.offsetZ) == getBlockType()) {
+            return false;
+        }
+        return true;
+    }
+    
+    public PaintType getPaintType(int side) {
+        if (isParentValid() && skinPart instanceof ISkinPartTypeTextured) {
+            Point texPoint = SkinTextureHelper.getTextureLocationFromWorldBlock(this, side);
+            int colour = getParent().getPaintData(texPoint.x, texPoint.y);
+            return PaintType.getPaintTypeFromColour(colour);
+        } else {
+            //ModLogger.log("x" + parentX);
+            return PaintType.DYE_1;
+        }
     }
 }

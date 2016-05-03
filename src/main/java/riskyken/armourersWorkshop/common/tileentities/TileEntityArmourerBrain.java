@@ -75,7 +75,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         this.showGuides = true;
         this.showHelper = true;
         this.customName = "";
-        clearPaintData();
+        clearPaintData(false);
     }
     
     @Override
@@ -206,7 +206,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         if (equipmentData.hasPaintData()) {
             this.paintData = equipmentData.getPaintData();
         } else {
-            clearPaintData();
+            clearPaintData(true);
         }
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -215,10 +215,14 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
         this.setInventorySlotContents(1, stackInput);
     }
     
-    private void clearPaintData() {
+    private void clearPaintData(boolean update) {
         this.paintData = new int[SkinTexture.TEXTURE_SIZE];
         for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
             this.paintData[i] = 0x00FFFFFF;
+        }
+        if (update) {
+            this.markDirty();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);   
         }
     }
     
@@ -259,6 +263,7 @@ public class TileEntityArmourerBrain extends AbstractTileEntityInventory impleme
     public void clearArmourCubes() {
         if (skinType != null) {
             ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
+            clearPaintData(true);
         }
     }
     

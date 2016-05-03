@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,17 +24,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
 
@@ -165,9 +172,28 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         te.getBipedRotations().applyRotationsToBiped(model);
         
+        
+        if (te.skinTexture == null) {
+            te.skinTexture = new EntityTextureInfo();
+        }
+        te.skinTexture.updateTexture(SkinHelper.getSkinResourceLocation(te.getGameProfile(), MinecraftProfileTexture.Type.SKIN));
+        if (te.getGameProfile() == null) {
+            te.skinTexture.updateHairColour(0xFFFFFFFF);
+            te.skinTexture.updateSkinColour(0xFF99684D);
+        } else {
+            te.skinTexture.updateHairColour(0xFFF9DF8C);
+            te.skinTexture.updateSkinColour(0xFFF9DFD2);
+        }
+        
+        te.skinTexture.updateSkins(getSkins(te));
+        te.skinTexture.updateDyes(getDyes(te));
+        ResourceLocation rs = te.skinTexture.preRender();
+        
+        
         //Render model
         mc.mcProfiler.startSection("textureBind");
-        SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
+        bindTexture(rs);
+        //SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
         mc.mcProfiler.endSection();
         mc.mcProfiler.startSection("modelRender");
         te.getBipedRotations().hasCustomHead = hasCustomHead(te);
@@ -304,12 +330,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.getBipedRotations().isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
         }
-        
+
         targetBiped.bipedBody.render(SCALE);
         targetBiped.bipedRightArm.render(SCALE);
         targetBiped.bipedLeftArm.render(SCALE);
         targetBiped.bipedRightLeg.render(SCALE);
         targetBiped.bipedLeftLeg.render(SCALE);
+        
         if (te.getBipedRotations().isChild) {
             ModelHelper.disableChildModelScale();
         }
@@ -388,6 +415,40 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
+    }
+    
+    private Skin[] getSkins(TileEntityMannequin te) {
+        Skin[] skins = new Skin[4];
+        skins[0] = getSkinForSlot(te, MannequinSlotType.HEAD);
+        skins[1] = getSkinForSlot(te, MannequinSlotType.CHEST);
+        skins[2] = getSkinForSlot(te, MannequinSlotType.LEGS);
+        skins[3] = getSkinForSlot(te, MannequinSlotType.FEET);
+        return skins;
+    }
+    
+    private ISkinDye[] getDyes(TileEntityMannequin te) {
+        ISkinDye[] skins = new ISkinDye[4];
+        skins[0] = getDyeForSlot(te, MannequinSlotType.HEAD);
+        skins[1] = getDyeForSlot(te, MannequinSlotType.CHEST);
+        skins[2] = getDyeForSlot(te, MannequinSlotType.LEGS);
+        skins[3] = getDyeForSlot(te, MannequinSlotType.FEET);
+        return skins;
+    }
+    
+    private Skin getSkinForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
+        SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
+        if (sp != null) {
+            return ClientSkinCache.INSTANCE.getSkin(sp.getSkinId(), false);
+        }
+        return null;
+    }
+    
+    private ISkinDye getDyeForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
+        SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
+        if (sp != null) {
+            return sp.getSkinDye();
+        }
+        return null;
     }
     
     @Override

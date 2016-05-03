@@ -32,6 +32,12 @@ public class SkinTextureHelper {
         int shiftX = 0;
         int shiftY = 0;
         
+        if (skinPart.isTextureMirrored()) {
+            if (blockFace == ForgeDirection.EAST | blockFace == ForgeDirection.WEST) {
+                blockFace = blockFace.getOpposite();
+            }
+        }
+        
         switch (blockFace) {
         case EAST:
             textureY += textureModelSize.getZ();
@@ -42,6 +48,9 @@ public class SkinTextureHelper {
             textureX += textureModelSize.getZ();
             textureY += textureModelSize.getZ();
             shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            if (skinPart.isTextureMirrored()) {
+                shiftX = (byte) (blockX);
+            }
             shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case WEST:
@@ -54,12 +63,15 @@ public class SkinTextureHelper {
             textureX += textureModelSize.getZ() + textureModelSize.getX() + textureModelSize.getZ();
             textureY += textureModelSize.getZ();
             shiftX = blockX;
+            if (skinPart.isTextureMirrored()) {
+                shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            }
             shiftY = (byte) (-blockY + textureModelSize.getY() - 1);
             break;
         case DOWN:
             textureX += textureModelSize.getZ() + textureModelSize.getX();
             shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
-            shiftY = (byte) (-blockZ + textureModelSize.getX() - 1);
+            shiftY = (byte) (-blockZ + textureModelSize.getZ() - 1);
             break;
         case UP:
             textureX += textureModelSize.getZ();

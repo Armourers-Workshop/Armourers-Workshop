@@ -9,9 +9,13 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.BitwiseUtils;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class EntityTextureInfo {
@@ -24,8 +28,12 @@ public class EntityTextureInfo {
     private int lastEntityTextureHash;
     /** The last skin hashs the entity had when the replacement texture was made. */
     private int[] lastSkinHashs;
+    /** The last dye hashs the entity had when the replacement texture was made. */
+    private int[] lastDyeHashs;
     /** Skins that the entity has equipped. */
     private Skin[] skins;
+    /** Dyes that the entity has on it's skins. */
+    private ISkinDye[] dyes;
     /** The entities normal texture. */
     private ResourceLocation normalTexture;
     /** The entities replacement texture. */
@@ -43,11 +51,15 @@ public class EntityTextureInfo {
     
     public EntityTextureInfo() {
         lastEntityTextureHash = -1;
-        lastSkinHashs = new int[4];
+        lastSkinHashs = new int[4 * 5];
+        lastDyeHashs = new int[4 * 5];
         normalTexture = null;
         replacementTexture = null;
         for (int i = 0; i < lastSkinHashs.length; i++) {
             lastSkinHashs[i] = -1;
+        }
+        for (int i = 0; i < lastDyeHashs.length; i++) {
+            lastDyeHashs[i] = -1;
         }
         lastEntitySkinColour = -1;
         lastEntityHairColour = -1;
@@ -81,7 +93,7 @@ public class EntityTextureInfo {
     
     public void updateSkins(Skin[] skins) {
         this.skins = skins;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < skins.length; i++) {
             if (skins[i] != null) {
                 if (skins[i].lightHash() != lastSkinHashs[i]) {
                     lastSkinHashs[i] = skins[i].lightHash();
@@ -96,10 +108,27 @@ public class EntityTextureInfo {
         }
     }
     
+    public void updateDyes(ISkinDye[] dyes) {
+        this.dyes = dyes;
+        for (int i = 0; i < skins.length; i++) {
+            if (dyes[i] != null) {
+                if (dyes[i].hashCode() != lastDyeHashs[i]) {
+                    lastDyeHashs[i] = dyes[i].hashCode();
+                    needsUpdate = true;
+                }
+            } else {
+                if (lastDyeHashs[i] != -1) {
+                    lastDyeHashs[i] = -1;
+                    needsUpdate = true;
+                }
+            }
+        }
+    }
+    
     public void checkTexture() {
         if (needsUpdate) {
             buildTexture();
-            ModLogger.log("texture build needed");
+            //ModLogger.log("texture build needed");
             needsUpdate = false;
         }
     }
@@ -128,13 +157,40 @@ public class EntityTextureInfo {
             if (skins[i] != null && skins[i].hasPaintData()) {
                 for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
                     for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
+                        
                         int paintColour = skins[i].getPaintData()[ix + (iy * TEXTURE_WIDTH)];
-                        if (paintColour >>> 24 == 255) {
-                            bufferedEntitySkinnedImage.setRGB(ix, iy, skins[i].getPaintData()[ix + (iy * TEXTURE_WIDTH)]);
-                        } else if (paintColour >>> 24 == 254) {
-                            bufferedEntitySkinnedImage.setRGB(ix, iy, lastEntitySkinColour);
-                        } else if (paintColour >>> 24 == 253) {
+                        PaintType paintType = PaintType.getPaintTypeFromColour(paintColour);
+                        
+                        if (paintType == PaintType.NORMAL) {
+                            bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
+                        }
+                        if (paintType == PaintType.HAIR) {
                             bufferedEntitySkinnedImage.setRGB(ix, iy, lastEntityHairColour);
+                        }
+                        if (paintType == PaintType.SKIN) {
+                            bufferedEntitySkinnedImage.setRGB(ix, iy, lastEntitySkinColour);
+                        }
+                        if (paintType.getKey() >= 1 && paintType.getKey() <= 8) {
+                            int dyeNumber = paintType.getKey() - 1;
+                            if (dyes != null && dyes[i] != null && dyes[i].haveDyeInSlot(dyeNumber)) {
+                                byte[] dye = dyes[i].getDyeColour(dyeNumber);
+                                
+                                byte r = (byte) (paintColour >>> 16 & 0xFF);
+                                byte g = (byte) (paintColour >>> 8 & 0xFF);
+                                byte b = (byte) (paintColour & 0xFF);
+                                
+                                int[] average = {127, 127, 127};
+                                
+                                if (skins[i] != null) {
+                                    average = skins[i].getAverageDyeColour(dyeNumber);
+                                }
+                                dye = ColouredVertexWithUV.dyeColour(r, g, b, dye, average);
+                                
+                                int colour = (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
+                                bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
+                            } else {
+                                bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
+                            }
                         }
                     }
                 }

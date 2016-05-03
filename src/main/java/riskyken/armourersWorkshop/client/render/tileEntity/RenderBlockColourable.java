@@ -14,11 +14,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.PaintType;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
@@ -38,7 +40,8 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderTileEntityAt(TileEntityColourable tileEntity, double x, double y, double z, float partialTickTime) {
+    @Override
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
         if (lastWorldTimeUpdate != tileEntity.getWorldObj().getTotalWorldTime()) {
             lastWorldTimeUpdate = tileEntity.getWorldObj().getTotalWorldTime();
             if (isPlayerHoldingPaintingTool()) {
@@ -53,7 +56,14 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
                 }
             }
         }
-        
+        if (tileEntity instanceof TileEntityColourable) {
+            renderTileEntityAt((TileEntityColourable)tileEntity, x, y, z, partialTickTime);
+        } else if (tileEntity instanceof TileEntityBoundingBox) {
+            renderTileEntityAt((TileEntityBoundingBox)tileEntity, x, y, z, partialTickTime);
+        }
+    }
+    
+    public void renderTileEntityAt(TileEntityColourable tileEntity, double x, double y, double z, float partialTickTime) {
         ICubeColour cubeColour = tileEntity.getColour();
         //ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -69,6 +79,34 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
                     GL11.glColor3f(0.77F, 0.77F, 0.77F);
                     PaintType pt = PaintType.getPaintTypeFromUKey(paintType);
                     renderFaceWithMarker(x, y, z, dir, pt.ordinal());
+                }
+            }
+        }
+        renderer.draw();
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        ModRenderHelper.disableAlphaBlend();
+        ModRenderHelper.enableLighting();
+        RenderHelper.enableStandardItemLighting();
+    }
+    
+    public void renderTileEntityAt(TileEntityBoundingBox tileEntity, double x, double y, double z, float partialTickTime) {
+        if (!(tileEntity.getSkinPart() instanceof ISkinPartTypeTextured)) {
+            return;
+        }
+        GL11.glDisable(GL11.GL_LIGHTING);
+        ModRenderHelper.enableAlphaBlend();
+        renderer.startDrawingQuads();
+        renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
+        if (markerAlpha > 0F) {
+            for (int i = 0; i < 6; i++) {
+                if (tileEntity.isPaintableSide(i)) {
+                    ForgeDirection dir = ForgeDirection.getOrientation(i);
+                    PaintType paintType = tileEntity.getPaintType(i);
+                    if (paintType != PaintType.NONE) {
+                        bindTexture(MARKERS);
+                        GL11.glColor3f(0.77F, 0.77F, 0.77F);
+                        renderFaceWithMarker(x, y, z, dir, paintType.ordinal());
+                    }
                 }
             }
         }
@@ -156,10 +194,5 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
             }
         }
         return false;
-    }
-    
-    @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
-        renderTileEntityAt((TileEntityColourable)tileEntity, x, y, z, partialTickTime);
     }
 }

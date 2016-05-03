@@ -143,15 +143,10 @@ public final class SkinBaker {
         return false;
     }
     
-    public static void buildPartDisplayListArray(SkinPart partData) {
+    public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount) {
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
         ArrayList<ColouredVertexWithUV>[] renderLists;
-        int[][] dyeColour;
-        int[] dyeUseCount;
-        
-        dyeColour = new int[3][10];
-        dyeUseCount = new int[10];
         
         if (multipassSkinRendering) {
             renderLists = (ArrayList<ColouredVertexWithUV>[]) new ArrayList[4];
@@ -251,18 +246,7 @@ public final class SkinBaker {
             }
         }
         
-        int[] averageR = new int[10];
-        int[] averageG = new int[10];
-        int[] averageB = new int[10];
-        
-        for (int i = 0; i < 10; i++) {
-            averageR[i] = (int) ((double)dyeColour[0][i] / (double)dyeUseCount[i]);
-            averageG[i] = (int) ((double)dyeColour[1][i] / (double)dyeUseCount[i]);
-            averageB[i] = (int) ((double)dyeColour[2][i] / (double)dyeUseCount[i]);
-        }
-        
         partData.getClientSkinPartData().setVertexLists(renderLists);
-        partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG, averageB);
     }
     
     private static class CubeLocation {

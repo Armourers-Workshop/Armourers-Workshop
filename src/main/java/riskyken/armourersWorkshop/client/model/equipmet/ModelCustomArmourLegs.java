@@ -7,9 +7,12 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.client.skin.ClientSkinPaintCache;
+import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -44,10 +47,21 @@ public class ModelCustomArmourLegs extends AbstractModelCustomEquipment {
                 this.heldItemRight = 1;
             }
         }
-
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinLegs);
         armourData.onUsed();
+        RenderHelper.enableGUIStandardItemLighting();
+        
+        if (armourData.hasPaintData() & showSkinPaint) {
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColour);
+            st.bindTexture();
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            bipedLeftLeg.render(SCALE);
+            bipedRightLeg.render(SCALE);
+            GL11.glPopAttrib();
+        }
         
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);

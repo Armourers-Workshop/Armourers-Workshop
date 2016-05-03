@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
@@ -33,6 +36,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private int rotation;
     private boolean isDoll;
     private int heightOffset;
+    @SideOnly(Side.CLIENT)
+    public EntityTextureInfo skinTexture;
     
     public TileEntityMannequin() {
         this(false);
