@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
@@ -221,9 +221,8 @@ public class EntityTextureInfo {
         return normalTexture;
     }
     
-    private class SkinTextureObject implements ITextureObject {
+    private class SkinTextureObject extends AbstractTexture {
         
-        private int textureId;
         private final BufferedImage texture;
         
         public SkinTextureObject(BufferedImage texture) {
@@ -232,13 +231,8 @@ public class EntityTextureInfo {
         
         @Override
         public void loadTexture(IResourceManager resourceManager) throws IOException {
-            textureId = TextureUtil.glGenTextures();
-            TextureUtil.uploadTextureImage(textureId, texture);
-        }
-
-        @Override
-        public int getGlTextureId() {
-            return this.textureId;
+            getGlTextureId();
+            TextureUtil.uploadTextureImage(glTextureId, texture);
         }
     }
 }
