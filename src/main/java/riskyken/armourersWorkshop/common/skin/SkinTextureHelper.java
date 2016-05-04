@@ -71,11 +71,17 @@ public class SkinTextureHelper {
         case DOWN:
             textureX += textureModelSize.getZ() + textureModelSize.getX();
             shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            if (skinPart.isTextureMirrored()) {
+                shiftX = blockX;
+            }
             shiftY = (byte) (-blockZ + textureModelSize.getZ() - 1);
             break;
         case UP:
             textureX += textureModelSize.getZ();
             shiftX = (byte) (-blockX + textureModelSize.getX() - 1);
+            if (skinPart.isTextureMirrored()) {
+                shiftX = blockX;
+            }
             shiftY = (byte) (-blockZ + textureModelSize.getZ() - 1);
             break;
         default:
