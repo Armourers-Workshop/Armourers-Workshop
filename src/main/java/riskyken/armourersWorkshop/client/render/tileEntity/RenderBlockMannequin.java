@@ -197,7 +197,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
         mc.mcProfiler.startSection("modelRender");
         te.getBipedRotations().hasCustomHead = hasCustomHead(te);
-        renderModel(te, model, fakePlayer);
+        
+        if (!(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
+            renderModel(te, model, fakePlayer);
+        }
         
         if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
             GL11.glPushMatrix();
@@ -387,9 +390,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         mc.mcProfiler.startSection(slotName[slot]);
         GL11.glPushMatrix();
-        if (targetBiped.isChild) {
+        
+        boolean isChild = targetBiped.isChild;
+        
+        if (isChild) {
             ModelHelper.enableChildModelScale(slot == 0, SCALE);
         }
+        targetBiped.isChild = false;
         switch (slot) {
         case 0:
             renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm);
@@ -410,7 +417,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm);
             break;
         }
-        if (targetBiped.isChild) {
+        targetBiped.isChild = isChild;
+        if (isChild) {
             ModelHelper.disableChildModelScale();
         }
         GL11.glPopMatrix();
