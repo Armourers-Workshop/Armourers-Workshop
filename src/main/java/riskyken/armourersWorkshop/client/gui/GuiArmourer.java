@@ -2,6 +2,11 @@ package riskyken.armourersWorkshop.client.gui;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -9,9 +14,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -27,9 +29,6 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
-import cpw.mods.fml.client.config.GuiButtonExt;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
@@ -157,9 +156,14 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         String itemNameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.itemName");
         String usernameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.username");
         String cloneLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.clone");
+        String versionLabel = "Alpha: " + LibModInfo.VERSION;
         
         this.fontRendererObj.drawString(itemNameLabel, 64, 48, 4210752);
         this.fontRendererObj.drawString(usernameLabel, 64, 78, 4210752);
+        
+        
+        int versionWidth = fontRendererObj.getStringWidth(versionLabel);
+        this.fontRendererObj.drawString(versionLabel, this.xSize - versionWidth - 4, this.ySize - 96, 4210752);
         //this.fontRendererObj.drawString(cloneLabel, 177, 36, 4210752);
     }
     
