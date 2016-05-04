@@ -10,6 +10,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -26,7 +27,7 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
     private volatile Thread textureGenThread;
     
     public ClientSkinPaintCache() {
-        textureMap = new ExpiringHashMap<ColouredModelKey, SkinModelTexture>(1000 * 10, this);
+        textureMap = new ExpiringHashMap<ColouredModelKey, SkinModelTexture>(1000 * ConfigHandler.clientTextureCacheTime, this);
         requestSet = new HashSet<TextureGenInfo>();
         requestList = new ArrayList<TextureGenInfo>();
         textureGenThread = new Thread(this, "Texture Gen Thread");

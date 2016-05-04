@@ -28,6 +28,7 @@ public class ConfigHandler {
     
     //client
     public static int clientModelCacheTime = 12000;
+    public static int clientTextureCacheTime = 600000;
     public static int maxSkinRenderDistance = 40;
     public static int maxModelBakingThreads = 1;
     public static boolean mannequinsCallPlayerRenders = true;
@@ -245,6 +246,11 @@ public class ConfigHandler {
                 "How long in ticks the client will keep skins in it's cache.\n" + 
                 "Default 12000 ticks is 10 minutes.")
                 .getInt(12000);
+        
+        clientTextureCacheTime = config
+                .getInt("clientTextureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,
+                "How long in seconds the client will keep textures in it's cache.\n" + 
+                "Default 600 ticks is 10 minutes.");
         
         mannequinsCallPlayerRenders = config.getBoolean("mannequinsCallPlayerRenders", CATEGORY_CLIENT, true,
                 "Allows mannequins to call the player render events.\n"
