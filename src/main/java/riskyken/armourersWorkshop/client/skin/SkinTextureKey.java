@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 
-public class ColouredModelKey {
+public class SkinTextureKey {
     
     private final int skinId;
     private final ISkinDye skinDye;
     private final byte[] extraColours;
     
-    public ColouredModelKey(int skinId, ISkinDye skinDye, byte[] extraColours) {
+    public SkinTextureKey(int skinId, ISkinDye skinDye, byte[] extraColours) {
         this.skinId = skinId;
         this.skinDye = skinDye;
         this.extraColours = extraColours;
@@ -42,7 +42,7 @@ public class ColouredModelKey {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ColouredModelKey other = (ColouredModelKey) obj;
+        SkinTextureKey other = (SkinTextureKey) obj;
         if (!Arrays.equals(extraColours, other.extraColours))
             return false;
         if (skinDye == null) {
