@@ -108,10 +108,10 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
     private boolean renderFaces(IBlockAccess world, int x, int y, int z, ICubeColour colour, Block block, RenderBlocks renderer) {
         boolean rendered = false;
         int meta = world.getBlockMetadata(x, y, z);
-        int iconIndex = 0;
         
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         renderBuffer.setBrightness(0xF000F0);
+        double faceOffset = 0.02;
         
         if (renderer.renderAllFaces || block.shouldSideBeRendered(world, x, y - 1, z, 0)) {
             int pt = colour.getPaintType(0) & 0xFF;
@@ -119,7 +119,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceYNeg(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 1) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceYNeg(block, x, y - 0.01F, z, block.getIcon(0, meta));
+                renderer.renderFaceYNeg(block, x, y - faceOffset, z, block.getIcon(0, meta));
             }
             rendered = true;
         }
@@ -129,7 +129,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceYPos(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 2) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceYPos(block, x, y + 0.01F, z, block.getIcon(1, meta));
+                renderer.renderFaceYPos(block, x, y + faceOffset, z, block.getIcon(1, meta));
             }
             rendered = true;
         }
@@ -139,7 +139,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceZNeg(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 3) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceZNeg(block, x, y, z - 0.01F, block.getIcon(2, meta));
+                renderer.renderFaceZNeg(block, x, y, z - faceOffset, block.getIcon(2, meta));
             }
             rendered = true;
         }
@@ -149,7 +149,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceZPos(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 4) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceZPos(block, x, y, z + 0.01F, block.getIcon(3, meta));
+                renderer.renderFaceZPos(block, x, y, z + faceOffset, block.getIcon(3, meta));
             }
             rendered = true;
         }
@@ -159,7 +159,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceXNeg(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 5) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceXNeg(block, x - 0.01F, y, z, block.getIcon(4, meta));
+                renderer.renderFaceXNeg(block, x - faceOffset, y, z, block.getIcon(4, meta));
             }
             rendered = true;
         }
@@ -169,7 +169,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceXPos(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 6) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceXPos(block, x + 0.01F, y, z, block.getIcon(5, meta));
+                renderer.renderFaceXPos(block, x + faceOffset, y, z, block.getIcon(5, meta));
             }
             rendered = true;
         }
@@ -179,9 +179,9 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
     private boolean renderFacesWithLighting(IBlockAccess world, int x, int y, int z, ICubeColour colour, Block block, RenderBlocks renderer) {
         boolean rendered = false;
         int meta = world.getBlockMetadata(x, y, z);
-        int iconIndex = 0;
         
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
+        double faceOffset = 0.02;
         
         float yNegLight = 0.5F;
         float yPosLight = 1.0F;
@@ -219,7 +219,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceYNeg(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 1) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceYNeg(block, x, y - 0.01F, z, block.getIcon(0, meta));
+                renderer.renderFaceYNeg(block, x, y - faceOffset, z, block.getIcon(0, meta));
             }
             rendered = true;
         }
@@ -230,7 +230,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceYPos(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 2) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceYPos(block, x, y + 0.01F, z, block.getIcon(1, meta));
+                renderer.renderFaceYPos(block, x, y + faceOffset, z, block.getIcon(1, meta));
             }
             rendered = true;
         }
@@ -241,7 +241,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceZNeg(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 3) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceZNeg(block, x, y, z - 0.01F, block.getIcon(2, meta));
+                renderer.renderFaceZNeg(block, x, y, z - faceOffset, block.getIcon(2, meta));
             }
             rendered = true;
         }
@@ -252,7 +252,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceZPos(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 4) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceZPos(block, x, y, z + 0.01F, block.getIcon(3, meta));
+                renderer.renderFaceZPos(block, x, y, z + faceOffset, block.getIcon(3, meta));
             }
             rendered = true;
         }
@@ -263,7 +263,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceXNeg(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 5) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceXNeg(block, x - 0.01F, y, z, block.getIcon(4, meta));
+                renderer.renderFaceXNeg(block, x - faceOffset, y, z, block.getIcon(4, meta));
             }
             rendered = true;
         }
@@ -274,7 +274,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             renderer.renderFaceXPos(block, x, y, z, block.getIcon(pt, 0));
             if (meta == 6) {
                 renderBuffer.setColorOpaque_B((byte)255, (byte)255, (byte)255);
-                renderer.renderFaceXPos(block, x + 0.01F, y, z, block.getIcon(5, meta));
+                renderer.renderFaceXPos(block, x + faceOffset, y, z, block.getIcon(5, meta));
             }
             rendered = true;
         }
