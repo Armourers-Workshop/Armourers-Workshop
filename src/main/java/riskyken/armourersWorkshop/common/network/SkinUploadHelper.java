@@ -11,7 +11,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 /**
@@ -83,7 +83,7 @@ public final class SkinUploadHelper {
             }
             
             if (container != null && container instanceof ContainerArmourLibrary) {
-                TileEntityArmourLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
+                TileEntitySkinLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
                 te.loadArmour(skin, player);
             }
         }

@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -39,7 +39,7 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         Container container = player.openContainer;
 
         if (container != null && container instanceof ContainerArmourer) {
-            TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
+            TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
             
             if (message.buttonId == 14) {
                 armourerBrain.loadArmourItem(player);

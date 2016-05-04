@@ -10,7 +10,7 @@ import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -227,18 +227,18 @@ public final class SkinBaker {
                 if (cube.isGlowing() && cube.needsPostRender()) {
                     listIndex = 3;
                 }
-                EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[listIndex],
+                SkinPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[listIndex],
                         scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
                         cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
                         cubeData.getCubeColourB(i), a, paintType);
             } else {
                 if (cube.isGlowing()) {
-                    EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[1],
+                    SkinPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[1],
                             scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
                             cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
                             cubeData.getCubeColourB(i), a, paintType);
                 } else {
-                    EquipmentPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[0],
+                    SkinPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[0],
                             scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
                             cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
                             cubeData.getCubeColourB(i), a, paintType);

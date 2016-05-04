@@ -8,7 +8,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.inventory.slot.SlotEquipmentSkin;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotSkin;
 
 public class ContainerEntityEquipment extends Container {
 
@@ -16,7 +16,7 @@ public class ContainerEntityEquipment extends Container {
         
         ArrayList<ISkinType> skinTypes = skinInventory.getSkinTypes();
         for (int i = 0; i < skinTypes.size(); i++) {
-            addSlotToContainer(new SlotEquipmentSkin(skinTypes.get(i), skinInventory, i, 8 + i * 18, 21));
+            addSlotToContainer(new SlotSkin(skinTypes.get(i), skinInventory, i, 8 + i * 18, 21));
         }
         
         int hotBarY = 124;

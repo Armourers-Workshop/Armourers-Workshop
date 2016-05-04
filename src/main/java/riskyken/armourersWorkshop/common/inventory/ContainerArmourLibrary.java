@@ -16,20 +16,20 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.inventory.slot.ISlotChanged;
-import riskyken.armourersWorkshop.common.inventory.slot.SlotEquipmentSkinTemplate;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
+import riskyken.armourersWorkshop.common.items.ItemSkin;
+import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerArmourLibrary extends Container implements ISlotChanged {
 
-    private TileEntityArmourLibrary tileEntity;
+    private TileEntitySkinLibrary tileEntity;
     
-    public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary tileEntity) {
+    public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary tileEntity) {
         this.tileEntity = tileEntity;
 
         for (int x = 0; x < 9; x++) {
@@ -43,7 +43,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
         }
         
         if (!tileEntity.isCreativeLibrary()) {
-            addSlotToContainer(new SlotEquipmentSkinTemplate(tileEntity, 0, 226, 101, this));
+            addSlotToContainer(new SlotSkinTemplate(tileEntity, 0, 226, 101, this));
         }
         addSlotToContainer(new SlotOutput(tileEntity, 1, 226, 137));
     }
@@ -56,8 +56,8 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             ItemStack result = stack.copy();
             if (slotID < 36) {
                 if ((
-                        stack.getItem() instanceof ItemEquipmentSkinTemplate & stack.getItemDamage() == 0) |
-                        stack.getItem() instanceof ItemEquipmentSkin) {
+                        stack.getItem() instanceof ItemSkinTemplate & stack.getItemDamage() == 0) |
+                        stack.getItem() instanceof ItemSkin) {
                     if (!this.mergeItemStack(stack, 36, 37, false)) {
                         return null;
                     }
@@ -124,7 +124,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
         return tileEntity.isUseableByPlayer(player);
     }
     
-    public TileEntityArmourLibrary getTileEntity() {
+    public TileEntitySkinLibrary getTileEntity() {
         return tileEntity;
     }
     

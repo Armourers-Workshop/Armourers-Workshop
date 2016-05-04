@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -20,10 +20,10 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 @SideOnly(Side.CLIENT)
 public class RenderSkinnedArrow extends RenderArrow {
     
-    private final EquipmentModelRenderer equipmentModelRenderer;
+    private final SkinModelRenderer equipmentModelRenderer;
     
     public RenderSkinnedArrow() {
-        this.equipmentModelRenderer = EquipmentModelRenderer.INSTANCE;
+        this.equipmentModelRenderer = SkinModelRenderer.INSTANCE;
     }
     
     @Override
@@ -73,7 +73,7 @@ public class RenderSkinnedArrow extends RenderArrow {
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             //TODO apply dyes to arrows.
-            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null);
         }
         GL11.glPopMatrix();
     }

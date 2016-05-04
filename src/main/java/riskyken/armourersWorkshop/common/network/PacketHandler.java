@@ -6,7 +6,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientEquipmentWardrobeUpdate;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiColourUpdate;
@@ -22,7 +22,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRe
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkinData;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeUpdate;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
@@ -48,8 +48,8 @@ public class PacketHandler {
         registerMessage(MessageClientGuiLoadSaveArmour.class, MessageClientGuiLoadSaveArmour.class, Side.SERVER);
         registerMessage(MessageClientKeyPress.class, MessageClientKeyPress.class, Side.SERVER);
         registerMessage(MessageClientGuiToolOptionUpdate.class, MessageClientGuiToolOptionUpdate.class, Side.SERVER);
-        registerMessage(MessageClientEquipmentWardrobeUpdate.class, MessageClientEquipmentWardrobeUpdate.class, Side.SERVER);
-        registerMessage(MessageServerEquipmentWardrobeUpdate.class, MessageServerEquipmentWardrobeUpdate.class, Side.CLIENT);
+        registerMessage(MessageClientSkinWardrobeUpdate.class, MessageClientSkinWardrobeUpdate.class, Side.SERVER);
+        registerMessage(MessageServerSkinWardrobeUpdate.class, MessageServerSkinWardrobeUpdate.class, Side.CLIENT);
         registerMessage(MessageClientRequestSkinData.class, MessageClientRequestSkinData.class, Side.SERVER);
         registerMessage(MessageServerSkinDataSend.class, MessageServerSkinDataSend.class, Side.CLIENT);
         registerMessage(MessageClientGuiSetArmourerCustomName.class, MessageClientGuiSetArmourerCustomName.class, Side.SERVER);

@@ -5,21 +5,21 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.inventory.slot.SlotEquipmentSkinTemplate;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
 import riskyken.armourersWorkshop.common.items.ItemArmourContainerItem;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.items.ItemSkin;
+import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 public class ContainerArmourer extends Container {
     
-    private TileEntityArmourerBrain armourerBrain;
+    private TileEntityArmourer armourerBrain;
 
-    public ContainerArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
+    public ContainerArmourer(InventoryPlayer invPlayer, TileEntityArmourer armourerBrain) {
         this.armourerBrain = armourerBrain;
 
-        addSlotToContainer(new SlotEquipmentSkinTemplate(armourerBrain, 0, 64, 21));
+        addSlotToContainer(new SlotSkinTemplate(armourerBrain, 0, 64, 21));
         addSlotToContainer(new SlotOutput(armourerBrain, 1, 147, 21));
 
         for (int x = 0; x < 9; x++) {
@@ -48,8 +48,8 @@ public class ContainerArmourer extends Container {
                 }
             } else {
                 if ((
-                        stack.getItem() instanceof ItemEquipmentSkinTemplate & stack.getItemDamage() == 0) |
-                        stack.getItem() instanceof ItemEquipmentSkin |
+                        stack.getItem() instanceof ItemSkinTemplate & stack.getItemDamage() == 0) |
+                        stack.getItem() instanceof ItemSkin |
                         stack.getItem() instanceof ItemArmourContainerItem) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) {
                         return null;
@@ -78,7 +78,7 @@ public class ContainerArmourer extends Container {
         return armourerBrain.isUseableByPlayer(player);
     }
 
-    public TileEntityArmourerBrain getTileEntity() {
+    public TileEntityArmourer getTileEntity() {
         return armourerBrain;
     }
 }

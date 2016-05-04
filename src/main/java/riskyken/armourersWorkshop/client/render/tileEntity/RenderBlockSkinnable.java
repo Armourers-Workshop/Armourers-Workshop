@@ -16,7 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
-import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -91,7 +91,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null);
         }
         GL11.glPopMatrix();
         //Minecraft.getMinecraft().mcProfiler.endSection();

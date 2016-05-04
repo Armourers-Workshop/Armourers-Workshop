@@ -33,7 +33,7 @@ import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkinTemplate;
+import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
@@ -44,7 +44,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
@@ -63,7 +63,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private static ISkinType lastSkinType;
     private static String lastSearchText = "";
     
-    private TileEntityArmourLibrary armourLibrary;
+    private TileEntitySkinLibrary armourLibrary;
     private GuiIconButton fileSwitchlocal;
     private GuiIconButton fileSwitchRemotePublic;
     private GuiIconButton fileSwitchRemotePrivate;
@@ -78,7 +78,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private GuiDropDownList dropDownList;
     private int neiBump = 18;
     
-    public GuiArmourLibrary(InventoryPlayer invPlayer, TileEntityArmourLibrary armourLibrary) {
+    public GuiArmourLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary armourLibrary) {
         super(new ContainerArmourLibrary(invPlayer, armourLibrary));
         this.armourLibrary = armourLibrary;
     }
@@ -209,7 +209,7 @@ public class GuiArmourLibrary extends GuiContainer {
         if (!armourLibrary.isCreativeLibrary()) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
             ItemStack stack = slot.getStack();
-            if (stack != null && !(stack.getItem() instanceof ItemEquipmentSkinTemplate)) {
+            if (stack != null && !(stack.getItem() instanceof ItemSkinTemplate)) {
                 return false;
             }
         }

@@ -10,8 +10,8 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.model.equipmet.AbstractModelCustomEquipment;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
+import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -94,8 +94,8 @@ public class AbstractModItemArmour extends ItemArmor {
         
         SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
         
-        AbstractModelCustomEquipment targetModel = null;
-        EquipmentModelRenderer emr = EquipmentModelRenderer.INSTANCE;
+        AbstractModelSkin targetModel = null;
+        SkinModelRenderer emr = SkinModelRenderer.INSTANCE;
         Skin data = emr.getCustomArmourItemData(skinData.skinId);
         if (data == null) {
             return null;

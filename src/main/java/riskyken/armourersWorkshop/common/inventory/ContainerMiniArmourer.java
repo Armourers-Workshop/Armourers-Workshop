@@ -5,7 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.inventory.slot.SlotEquipmentSkinTemplate;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 
@@ -16,7 +16,7 @@ public class ContainerMiniArmourer extends Container {
     public ContainerMiniArmourer(InventoryPlayer invPlayer, TileEntityMiniArmourer tileEntity) {
         this.tileEntity = tileEntity;
         
-        addSlotToContainer(new SlotEquipmentSkinTemplate(tileEntity, 0, 37, 58));
+        addSlotToContainer(new SlotSkinTemplate(tileEntity, 0, 37, 58));
         addSlotToContainer(new SlotOutput(tileEntity, 1, 119, 58));
         
         int hotBarY = 152;

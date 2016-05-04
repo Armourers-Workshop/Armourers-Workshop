@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -41,7 +41,7 @@ public class MessageClientLoadArmour implements IMessage, IMessageHandler<Messag
         Container container = player.openContainer;
 
         if (container != null && container instanceof ContainerArmourer) {
-            TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
+            TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
             
             armourerBrain.saveArmourItem(player, message.name, message.tags);
             

@@ -10,7 +10,7 @@ import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 
 public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler<MessageClientGuiLoadSaveArmour, IMessage> {
     
@@ -79,7 +79,7 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
         Container container = player.openContainer;
         
         if (container != null && container instanceof ContainerArmourLibrary) {
-            TileEntityArmourLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
+            TileEntitySkinLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
             
             
             switch (message.packetType) {

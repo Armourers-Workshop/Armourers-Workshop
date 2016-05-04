@@ -4,8 +4,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -33,9 +33,9 @@ public class ModBlocks {
     public static Block dyeTable;
     
     public ModBlocks() {
-        armourerBrain = new BlockArmourerBrain();
+        armourerBrain = new BlockArmourer();
         miniArmourer = new BlockMiniArmourer();
-        armourLibrary = new BlockArmourLibrary();
+        armourLibrary = new BlockSkinLibrary();
         boundingBox = new BlockBoundingBox();
         colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
         colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
@@ -50,9 +50,9 @@ public class ModBlocks {
     }
 
     public void registerTileEntities() {
-        registerTileEntity(TileEntityArmourerBrain.class, LibBlockNames.ARMOURER_BRAIN);
+        registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER_BRAIN);
         registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
-        registerTileEntity(TileEntityArmourLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
+        registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);
         registerTileEntity(TileEntityBoundingBox.class, LibBlockNames.BOUNDING_BOX);

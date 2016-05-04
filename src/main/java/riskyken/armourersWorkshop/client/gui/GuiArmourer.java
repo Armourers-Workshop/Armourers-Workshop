@@ -26,7 +26,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,7 +36,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
 
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourer.png");
     
-    private TileEntityArmourerBrain armourerBrain;
+    private TileEntityArmourer armourerBrain;
     private GuiCheckBox checkShowGuides;
     private GuiCheckBox checkShowOverlay;
     private GuiCheckBox checkShowHelper;
@@ -44,7 +44,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
     
-    public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourerBrain armourerBrain) {
+    public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourer armourerBrain) {
         super(new ContainerArmourer(invPlayer, armourerBrain));
         this.armourerBrain = armourerBrain;
         this.xSize = 256;

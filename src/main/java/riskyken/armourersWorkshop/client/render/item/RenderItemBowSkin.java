@@ -15,9 +15,9 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
-import riskyken.armourersWorkshop.client.model.equipmet.ModelCustomEquipmetBow;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
@@ -106,7 +106,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                     player = (AbstractClientPlayer) data[1];
                     useCount = player.getItemInUseDuration();
                     hasArrow = player.inventory.hasItem(Items.arrow);
-                    IEntityEquipment entityEquipment = EquipmentModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
+                    IEntityEquipment entityEquipment = SkinModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
                     if (entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
                         hasArrowSkin = true;
                         arrowSkinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow, 0);
@@ -164,7 +164,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
             ModRenderHelper.enableAlphaBlend();
             
-            ModelCustomEquipmetBow model = EquipmentModelRenderer.INSTANCE.customBow;
+            ModelSkinBow model = SkinModelRenderer.INSTANCE.customBow;
             model.frame = getAnimationFrame(useCount);
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
@@ -184,7 +184,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                             arrowSkin.onUsed();
                             for (int i = 0; i < arrowSkin.getParts().size(); i++) {
                                 SkinPart skinPart = arrowSkin.getParts().get(i);
-                                EquipmentPartRenderer.INSTANCE.renderPart(skinPart, scale, skinPointer.getSkinDye(), null);
+                                SkinPartRenderer.INSTANCE.renderPart(skinPart, scale, skinPointer.getSkinDye(), null);
                             }
                         } else {
                             ModelArrow.MODEL.render(scale, false);

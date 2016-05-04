@@ -14,7 +14,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -66,17 +66,17 @@ public class PlayerTextureHandler {
             Skin[] skins = new Skin[4 * 5];
             
             for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
-                skins[0 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
-                skins[1 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
-                skins[2 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
-                skins[3 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
+                skins[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
+                skins[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
+                skins[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
+                skins[3 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
             }
             ISkinDye[] dyes = new ISkinDye[4 * 5];
             for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
-                dyes[0 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
-                dyes[1 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
-                dyes[2 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
-                dyes[3 + skinIndex * 4] = EquipmentModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
+                dyes[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
+                dyes[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
+                dyes[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
+                dyes[3 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
             }
             
             textureInfo.updateSkins(skins);

@@ -21,7 +21,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -43,7 +43,7 @@ public class RenderBlockMannequinItems {
         Item targetItem = stack.getItem();
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         
@@ -96,7 +96,7 @@ public class RenderBlockMannequinItems {
     public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -148,7 +148,7 @@ public class RenderBlockMannequinItems {
     public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -189,7 +189,7 @@ public class RenderBlockMannequinItems {
     public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -247,7 +247,7 @@ public class RenderBlockMannequinItems {
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(1 * scale, 0 * scale, 2 * scale);
-                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
                 return;
             }
         }
@@ -296,7 +296,7 @@ public class RenderBlockMannequinItems {
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);
-                EquipmentModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
                 return;
             }
         }

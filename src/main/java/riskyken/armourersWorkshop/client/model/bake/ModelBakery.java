@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.model.bake;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -30,7 +31,7 @@ public final class ModelBakery {
     private final Object bakeLock = new Object();
     
     /** Number of model baking threads currently running. */
-    private int runningOvens = 0;
+    private AtomicInteger runningOvens = new AtomicInteger(0);
     
     /** List of models that still need to be baked. */
     private final ArrayList<Skin> unbakedModels = new ArrayList<Skin>();
@@ -63,7 +64,7 @@ public final class ModelBakery {
     }
     
     private void loadOvens() {
-        if (runningOvens >= ConfigHandler.maxModelBakingThreads & ConfigHandler.maxModelBakingThreads > 0) {
+        if (runningOvens.get() >= ConfigHandler.maxModelBakingThreads & ConfigHandler.maxModelBakingThreads > 0) {
             return;
         }
         if (unbakedModels.size() == 0) {
@@ -71,7 +72,7 @@ public final class ModelBakery {
         }
         Skin skin = unbakedModels.get(0);
         unbakedModels.remove(0);
-        runningOvens++;
+        runningOvens.incrementAndGet();
         Thread t = new Thread(new BakingOven(skin), LibModInfo.NAME + " model bake thread.");
         t.setPriority(Thread.MIN_PRIORITY);
         t.start();
@@ -179,7 +180,7 @@ public final class ModelBakery {
             
             synchronized (bakeLock) {
                 bakedModels.add(skin);
-                runningOvens--;
+                runningOvens.decrementAndGet();
             }
         }
     }

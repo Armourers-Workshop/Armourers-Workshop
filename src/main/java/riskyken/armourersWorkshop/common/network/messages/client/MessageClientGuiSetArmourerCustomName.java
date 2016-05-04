@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -38,7 +38,7 @@ public class MessageClientGuiSetArmourerCustomName implements IMessage, IMessage
         Container container = player.openContainer;
         
         if (container != null && container instanceof ContainerArmourer) {
-            TileEntityArmourerBrain te = ((ContainerArmourer)container).getTileEntity();
+            TileEntityArmourer te = ((ContainerArmourer)container).getTileEntity();
             te.setCustomName(message.customName);
         }
         return null;

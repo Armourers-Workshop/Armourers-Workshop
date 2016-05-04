@@ -15,8 +15,8 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
-import riskyken.armourersWorkshop.client.render.EquipmentPartRenderer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -54,7 +54,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             return;
         }
         mc.mcProfiler.startSection("armourers player render");
-        EquipmentModelRenderer modelRenderer = EquipmentModelRenderer.INSTANCE;
+        SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;
         if (player == null) {
             mc.mcProfiler.endSection();
@@ -101,7 +101,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    EquipmentPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours);
+                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours);
                     GL11.glDisable(GL11.GL_CULL_FACE);
                     GL11.glPopMatrix();
                     break;

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
-import riskyken.armourersWorkshop.common.items.ItemEquipmentSkin;
+import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class SlotMannequin extends Slot {
@@ -31,7 +31,7 @@ public class SlotMannequin extends Slot {
             if (item instanceof ItemArmor && ((ItemArmor)item).armorType == 0) {
                 return true;
             }
-            if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
+            if (item instanceof ItemSkin &&((ItemSkin)item)
                     .getSkinType(stack) == SkinTypeRegistry.skinHead) {
                 return true;
             }
@@ -40,7 +40,7 @@ public class SlotMannequin extends Slot {
             if (item instanceof ItemArmor && ((ItemArmor)item).armorType == 1) {
                 return true;
             }
-            if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
+            if (item instanceof ItemSkin &&((ItemSkin)item)
                     .getSkinType(stack) == SkinTypeRegistry.skinChest) {
                 return true;
             }
@@ -49,13 +49,13 @@ public class SlotMannequin extends Slot {
             if (item instanceof ItemArmor && ((ItemArmor)item).armorType == 2) {
                 return true;
             }
-            if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
+            if (item instanceof ItemSkin &&((ItemSkin)item)
                     .getSkinType(stack) == SkinTypeRegistry.skinLegs) {
                 return true;
             }
             break;
         case SKIRT:
-            if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
+            if (item instanceof ItemSkin &&((ItemSkin)item)
                     .getSkinType(stack) == SkinTypeRegistry.skinSkirt) {
                 return true;
             }
@@ -64,7 +64,7 @@ public class SlotMannequin extends Slot {
             if (item instanceof ItemArmor && ((ItemArmor)item).armorType == 3) {
                 return true;
             }
-            if (item instanceof ItemEquipmentSkin &&((ItemEquipmentSkin)item)
+            if (item instanceof ItemSkin &&((ItemSkin)item)
                     .getSkinType(stack) == SkinTypeRegistry.skinFeet) {
                 return true;
             }

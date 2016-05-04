@@ -4,6 +4,14 @@ import org.apache.logging.log4j.Level;
 
 import net.minecraft.item.Item;
 import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemBurnTool;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourNoiseTool;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourPicker;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemDodgeTool;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemHueTool;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemPaintRoller;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemPaintbrush;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemShadeNoiseTool;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.plushieWrapper.common.item.PlushieItem;
@@ -36,7 +44,7 @@ public class ModItems {
     
     
     public ModItems() {
-        equipmentSkinTemplate = new ItemEquipmentSkinTemplate();
+        equipmentSkinTemplate = new ItemSkinTemplate();
         setEquipmentSkinType();
         
         //Tools
@@ -75,11 +83,11 @@ public class ModItems {
         
         if (AddonBuildCraft.isSkinCompatibleVersion()) {
             try {
-                Class<?> c = Class.forName("riskyken.armourersWorkshop.common.items.ItemEquipmentSkinRobotOverlay");
+                Class<?> c = Class.forName("riskyken.armourersWorkshop.common.items.ItemSkinRobotOverlay");
                 Object classObject = c.newInstance();
                 
-                if (classObject instanceof ItemEquipmentSkin) {
-                    equipmentSkin = (ItemEquipmentSkin)classObject;
+                if (classObject instanceof ItemSkin) {
+                    equipmentSkin = (ItemSkin)classObject;
                 } else {
                     skinTypeSet = false;
                 }
@@ -94,7 +102,7 @@ public class ModItems {
         }
         
         if (!skinTypeSet) {
-            equipmentSkin = new ItemEquipmentSkin();
+            equipmentSkin = new ItemSkin();
         }
     }
 }

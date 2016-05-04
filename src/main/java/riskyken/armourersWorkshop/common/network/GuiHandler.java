@@ -14,7 +14,7 @@ import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
 import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
-import riskyken.armourersWorkshop.client.gui.GuiWardrobe;
+import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourer;
@@ -26,7 +26,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.inventory.ContainerEntityEquipment;
-import riskyken.armourersWorkshop.common.inventory.ContainerEquipmentWardrobe;
+import riskyken.armourersWorkshop.common.inventory.ContainerSkinWardrobe;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
@@ -36,8 +36,8 @@ import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourLibrary;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -67,18 +67,18 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.ARMOURER:
-                if (te instanceof TileEntityArmourerBrain) {
-                    return new ContainerArmourer(player.inventory, (TileEntityArmourerBrain)te);
+                if (te instanceof TileEntityArmourer) {
+                    return new ContainerArmourer(player.inventory, (TileEntityArmourer)te);
                 }
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
-                if (te instanceof TileEntityArmourLibrary) {
-                    return new ContainerArmourLibrary(player.inventory, (TileEntityArmourLibrary)te);
+                if (te instanceof TileEntitySkinLibrary) {
+                    return new ContainerArmourLibrary(player.inventory, (TileEntitySkinLibrary)te);
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
                 ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
-                return new ContainerEquipmentWardrobe(player.inventory, customEquipmentData);
+                return new ContainerSkinWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.MANNEQUIN:
                 if (te instanceof TileEntityMannequin) {
                     return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
@@ -134,8 +134,8 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.ARMOURER:
-                if (te instanceof TileEntityArmourerBrain) {
-                    return new GuiArmourer(player.inventory, (TileEntityArmourerBrain)te);
+                if (te instanceof TileEntityArmourer) {
+                    return new GuiArmourer(player.inventory, (TileEntityArmourer)te);
                 }
                 break;
             case LibGuiIds.GUIDE_BOOK:
@@ -144,13 +144,13 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
-                if (te instanceof TileEntityArmourLibrary) {
-                    return new GuiArmourLibrary(player.inventory, (TileEntityArmourLibrary)te);
+                if (te instanceof TileEntitySkinLibrary) {
+                    return new GuiArmourLibrary(player.inventory, (TileEntitySkinLibrary)te);
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
                 ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
-                return new GuiWardrobe(player.inventory, customEquipmentData);
+                return new GuiSkinWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getCurrentEquippedItem().getItem() instanceof IConfigurableTool) {
                     return new GuiToolOptions(player.getCurrentEquippedItem());

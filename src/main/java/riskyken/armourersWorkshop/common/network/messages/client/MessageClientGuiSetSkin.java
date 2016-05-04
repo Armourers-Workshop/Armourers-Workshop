@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 import com.mojang.authlib.GameProfile;
 
@@ -43,7 +43,7 @@ public class MessageClientGuiSetSkin implements IMessage, IMessageHandler<Messag
         if (container == null) { return null; }
         
         if (container != null && container instanceof ContainerArmourer) {
-            TileEntityArmourerBrain armourerBrain = ((ContainerArmourer) container).getTileEntity();
+            TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
             GameProfile gameProfile = new GameProfile(null, message.username);
             armourerBrain.setGameProfile(gameProfile);
         }

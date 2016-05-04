@@ -7,7 +7,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -49,7 +49,7 @@ public class MessageClientGuiSetArmourerSkinType implements IMessage, IMessageHa
         Container container = player.openContainer;
         
         if (container != null && container instanceof ContainerArmourer) {
-            TileEntityArmourerBrain te = ((ContainerArmourer)container).getTileEntity();
+            TileEntityArmourer te = ((ContainerArmourer)container).getTileEntity();
             te.setSkinType(message.skinType);
         }
         

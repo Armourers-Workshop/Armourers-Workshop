@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.equipmet.IEquipmentModel;
+import riskyken.armourersWorkshop.client.model.skin.IEquipmentModel;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -37,7 +37,7 @@ public final class ItemStackRenderHelper {
         int skinId = skinPointer.getSkinId();
         ISkinType skinType = skinPointer.getSkinType();
         
-        IEquipmentModel targetModel = EquipmentModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
+        IEquipmentModel targetModel = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
         if (targetModel == null) {
             renderSkinWithoutHelper(skinPointer);
             return;
@@ -78,7 +78,7 @@ public final class ItemStackRenderHelper {
         skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            EquipmentPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null);
         }
     }
 }

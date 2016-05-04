@@ -32,7 +32,7 @@ import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.library.ClientLibraryManager;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
-import riskyken.armourersWorkshop.client.render.EquipmentModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.client.render.entity.EntitySkinRenderHandler;
@@ -61,7 +61,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerCl
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -101,7 +101,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initRenderers() {
-        EquipmentModelRenderer.init();
+        SkinModelRenderer.init();
         EntitySkinRenderHandler.init();
         new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
@@ -110,7 +110,7 @@ public class ClientProxy extends CommonProxy {
         RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
         
         //Register tile entity renderers.
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourerBrain.class, new RenderBlockArmourer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourer.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMiniArmourer.class, new RenderBlockMiniArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
@@ -225,7 +225,7 @@ public class ClientProxy extends CommonProxy {
     }
     
     public static void playerLeftTrackingRange(PlayerPointer playerPointer) {
-        EquipmentModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
+        SkinModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
         equipmentWardrobeHandler.removeEquipmentWardrobeData(playerPointer);
     }
 
@@ -237,7 +237,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
-        EquipmentModelRenderer.INSTANCE.addEquipmentData(playerPointer, equipmentData);
+        SkinModelRenderer.INSTANCE.addEquipmentData(playerPointer, equipmentData);
     }
 
     @Override

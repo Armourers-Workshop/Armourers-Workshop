@@ -14,12 +14,12 @@ import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     
-    public void renderTileEntityAt(TileEntityArmourerBrain te, double x, double y, double z, float tickTime) {
+    public void renderTileEntityAt(TileEntityArmourer te, double x, double y, double z, float tickTime) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.mcProfiler.startSection("armourersArmourer");
         float scale = 0.0625F;
@@ -88,6 +88,6 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
-        renderTileEntityAt((TileEntityArmourerBrain)tileEntity, x, y, z, tickTime);
+        renderTileEntityAt((TileEntityArmourer)tileEntity, x, y, z, tickTime);
     }
 }

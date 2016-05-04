@@ -34,7 +34,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourerBrain;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
 
@@ -154,7 +154,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
         
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityBoundingBox) {
-            TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
+            TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                 if (parent != null) {
                     ISkinType skinType = parent.getSkinType();
@@ -180,7 +180,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
         
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityBoundingBox) {
-            TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
+            TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
@@ -213,7 +213,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
         
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityBoundingBox) {
-            TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
+            TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                 if (parent != null) {
                     ISkinType skinType = parent.getSkinType();
@@ -237,7 +237,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
         
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityBoundingBox) {
-            TileEntityArmourerBrain parent = ((TileEntityBoundingBox)te).getParent();
+            TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);

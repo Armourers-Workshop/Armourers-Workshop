@@ -85,17 +85,17 @@ public class TileEntityBoundingBox extends TileEntity {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    public TileEntityArmourerBrain getParent() {
+    public TileEntityArmourer getParent() {
         TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
-        if (te != null && te instanceof TileEntityArmourerBrain) {
-            return (TileEntityArmourerBrain)te;
+        if (te != null && te instanceof TileEntityArmourer) {
+            return (TileEntityArmourer)te;
         }
         return null;
     }
     
     public boolean isParentValid() {
         TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
-        if (te != null && te instanceof TileEntityArmourerBrain) {
+        if (te != null && te instanceof TileEntityArmourer) {
             return true;
         }
         return false;

@@ -18,7 +18,7 @@ import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
 import riskyken.armourersWorkshop.common.inventory.WardrobeInventory;
 import riskyken.armourersWorkshop.common.inventory.WardrobeInventoryContainer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEquipmentWardrobeUpdate;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -186,13 +186,13 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendTo(new MessageServerEquipmentWardrobeUpdate(playerPointer, this.equipmentWardrobeData), targetPlayer);
+        PacketHandler.networkWrapper.sendTo(new MessageServerSkinWardrobeUpdate(playerPointer, this.equipmentWardrobeData), targetPlayer);
     }
     
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerEquipmentWardrobeUpdate(playerPointer, this.equipmentWardrobeData), p);
+        PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinWardrobeUpdate(playerPointer, this.equipmentWardrobeData), p);
     }
     
     public EquipmentWardrobeData getEquipmentWardrobeData() {
