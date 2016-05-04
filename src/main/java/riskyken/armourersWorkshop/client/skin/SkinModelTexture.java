@@ -25,7 +25,7 @@ public class SkinModelTexture extends AbstractTexture {
         this.texture = new BufferedImage(SkinTexture.TEXTURE_WIDTH, SkinTexture.TEXTURE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
     }
     
-    public void createTextureForColours(Skin skin, ColouredModelKey cmk) {
+    public void createTextureForColours(Skin skin, SkinTextureKey cmk) {
         for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
             for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
                 int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];

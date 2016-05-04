@@ -21,13 +21,13 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
     
     public static ClientSkinPaintCache INSTANCE = new ClientSkinPaintCache();
     
-    private final ExpiringHashMap<ColouredModelKey, SkinModelTexture> textureMap;
+    private final ExpiringHashMap<SkinTextureKey, SkinModelTexture> textureMap;
     private final HashSet<TextureGenInfo> requestSet;
     private final ArrayList<TextureGenInfo> requestList;
     private volatile Thread textureGenThread;
     
     public ClientSkinPaintCache() {
-        textureMap = new ExpiringHashMap<ColouredModelKey, SkinModelTexture>(1000 * ConfigHandler.clientTextureCacheTime, this);
+        textureMap = new ExpiringHashMap<SkinTextureKey, SkinModelTexture>(1000 * ConfigHandler.clientTextureCacheTime, this);
         requestSet = new HashSet<TextureGenInfo>();
         requestList = new ArrayList<TextureGenInfo>();
         textureGenThread = new Thread(this, "Texture Gen Thread");
@@ -36,11 +36,11 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
     }
     
     public SkinModelTexture getTextureForSkin(Skin skin, ISkinDye skinDye, byte[] extraColours) {
-        ColouredModelKey cmk = new ColouredModelKey(skin.lightHash(), skinDye, extraColours);
+        SkinTextureKey cmk = new SkinTextureKey(skin.lightHash(), skinDye, extraColours);
         return getTextureForSkin(skin, cmk);
     }
     
-    public SkinModelTexture getTextureForSkin(Skin skin, ColouredModelKey cmk) {
+    public SkinModelTexture getTextureForSkin(Skin skin, SkinTextureKey cmk) {
         SkinModelTexture st = textureMap.get(cmk);
         if (st != null) {
             return st;
@@ -118,9 +118,9 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
     
     protected class TextureGenInfo {
         public Skin skin;
-        public ColouredModelKey cmk;
+        public SkinTextureKey cmk;
         
-        public TextureGenInfo(Skin skin, ColouredModelKey cmk) {
+        public TextureGenInfo(Skin skin, SkinTextureKey cmk) {
             this.skin = skin;
             this.cmk = cmk;
         }
