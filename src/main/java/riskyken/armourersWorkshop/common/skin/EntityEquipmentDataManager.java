@@ -1,20 +1,18 @@
 package riskyken.armourersWorkshop.common.skin;
 
-import java.util.HashSet;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
@@ -23,6 +21,7 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -35,9 +34,6 @@ public final class EntityEquipmentDataManager {
     
     public static EntityEquipmentDataManager INSTANCE;
     
-    private final HashSet<String> swordSkinItems;
-    private final HashSet<String> bowSkinItems;
-    
     public static void init() {
         INSTANCE = new EntityEquipmentDataManager();
     }
@@ -45,34 +41,28 @@ public final class EntityEquipmentDataManager {
     public EntityEquipmentDataManager() {
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
-        swordSkinItems = new HashSet<String>();
-        bowSkinItems = new HashSet<String>();
-    }
-    
-    public void addSwordRenderClass(String className) {
-        swordSkinItems.add(className);
-    }
-    
-    public void addBowRenderClass(String className) {
-        bowSkinItems.add(className);
     }
     
     public boolean isSwordRenderItem(Item item) {
-        if (swordSkinItems.contains(item.getClass().getName())) {
-            return true;
-        }
-        if (item instanceof ItemSword) {
-            return true;
+        UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
+        if (ui != null) {
+            for (int i = 0; i < Addons.overrideSwordsActive.length; i++) {
+                if (Addons.overrideSwordsActive[i].equals(ui.toString())) {
+                    return true;
+                }
+            }
         }
         return false;
     }
     
     public boolean isBowRenderItem(Item item) {
-        if (bowSkinItems.contains(item.getClass().getName())) {
-            return true;
-        }
-        if (item instanceof ItemBow) {
-            return true;
+        UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
+        if (ui != null) {
+            for (int i = 0; i < Addons.overrideBowsActive.length; i++) {
+                if (Addons.overrideBowsActive[i].equals(ui.toString())) {
+                    return true;
+                }
+            }
         }
         return false;
     }

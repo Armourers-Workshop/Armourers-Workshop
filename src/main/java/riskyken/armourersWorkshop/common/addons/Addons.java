@@ -210,7 +210,6 @@ public final class Addons {
     }
     
     public static void preInit() {
-        loadAddon(AddonTConstruct.class, "TConstruct");
         loadAddon(AddonBattlegear2.class, "battlegear2");
         loadAddon(AddonBuildCraft.class, "BuildCraft|Core");
         loadAddon(AddonAquaTweaks.class, "AquaTweaks");
