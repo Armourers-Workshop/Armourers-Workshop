@@ -123,6 +123,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
             ModRenderHelper.enableAlphaBlend();
             Addons.onWeaponRender(type, EventState.PRE);
+            SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             ItemStackRenderHelper.renderItemAsArmourModel(stack, false);
             Addons.onWeaponRender(type, EventState.POST);
             GL11.glPopAttrib();
@@ -145,10 +146,10 @@ public class RenderItemSwordSkin implements IItemRenderer {
     private boolean canRenderModel(ItemStack stack) {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData.skinId)) {
+            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
                 return true;
             } else {
-                ClientSkinCache.INSTANCE.requestSkinFromServer(skinData.skinId);
+                ClientSkinCache.INSTANCE.requestSkinFromServer(skinData);
                 return false;
             }
         } else {

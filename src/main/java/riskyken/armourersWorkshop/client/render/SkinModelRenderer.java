@@ -25,12 +25,12 @@ import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
 import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
 import riskyken.armourersWorkshop.client.model.skin.IEquipmentModel;
+import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinChest;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinFeet;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinHead;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinLegs;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSkirt;
-import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSword;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -87,7 +87,7 @@ public final class SkinModelRenderer {
             ItemStack armourStack = player.getCurrentArmor(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
-                return getCustomArmourItemData(sp.skinId);
+                return getCustomArmourItemData(sp);
             }
         }
         
@@ -100,8 +100,8 @@ public final class SkinModelRenderer {
             return null;
         }
         
-        int equipmentId = equipmentData.getEquipmentId(skinType, slotIndex);
-        return getCustomArmourItemData(equipmentId);
+        ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, slotIndex);
+        return getCustomArmourItemData(skinPointer);
     }
     
     public ISkinDye getPlayerDyeData(Entity entity, ISkinType skinType, int slotIndex) {
@@ -159,8 +159,8 @@ public final class SkinModelRenderer {
         return playerEquipmentMap.size();
     }
     
-    public Skin getCustomArmourItemData(int equipmentId) {
-        return ClientSkinCache.INSTANCE.getSkin(equipmentId);
+    public Skin getCustomArmourItemData(ISkinPointer skinPointer) {
+        return ClientSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
     public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
@@ -185,8 +185,8 @@ public final class SkinModelRenderer {
             if (!equipmentData.haveEquipment(SkinTypeRegistry.skinLegs, i)) {
                 return false;
             }
-            int skinId = equipmentData.getEquipmentId(SkinTypeRegistry.skinLegs, i);
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinId);
+            ISkinPointer skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinLegs, i);
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         }
 
         //TODO check for skirt data
@@ -342,12 +342,12 @@ public final class SkinModelRenderer {
         if (skinPointer == null) {
             return false;
         }
-        Skin data = getCustomArmourItemData(skinPointer.getSkinId());
+        Skin data = getCustomArmourItemData(skinPointer);
         return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye(), extraColours);
     }
     
     public boolean renderEquipmentPartFromSkinPointer(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
-        Skin data = getCustomArmourItemData(skinPointer.getSkinId());
+        Skin data = getCustomArmourItemData(skinPointer);
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     

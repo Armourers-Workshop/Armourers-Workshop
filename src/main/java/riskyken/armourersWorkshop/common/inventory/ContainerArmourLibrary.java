@@ -16,8 +16,8 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.inventory.slot.ISlotChanged;
-import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -107,8 +107,8 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             } else {
                 SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
                 if (skinPointer != null) {
-                    if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer.getSkinId())) {
-                        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
+                    if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
+                        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
                         String skinName = skin.getCustomName();
                         if (!StringUtils.isNullOrEmpty(skinName)) {
                             libScreen.setFileName(skinName);

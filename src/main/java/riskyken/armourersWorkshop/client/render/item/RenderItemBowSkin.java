@@ -14,11 +14,12 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
@@ -97,8 +98,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             AbstractClientPlayer player = null;
             int useCount = 0;
             boolean hasArrow = false;
-            boolean hasArrowSkin = false;
-            int arrowSkinId = 0;
+            ISkinPointer skinPointerArrow = null;
             
             if (data.length >= 2) {
                 if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
@@ -108,8 +108,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                     hasArrow = player.inventory.hasItem(Items.arrow);
                     IEntityEquipment entityEquipment = SkinModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
                     if (entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
-                        hasArrowSkin = true;
-                        arrowSkinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow, 0);
+                        skinPointerArrow = entityEquipment.getSkinPointer(SkinTypeRegistry.skinArrow, 0);
                     }
                     if (!hasArrow) {
                         if (player.capabilities.isCreativeMode) {
@@ -167,7 +166,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             ModelSkinBow model = SkinModelRenderer.INSTANCE.customBow;
             model.frame = getAnimationFrame(useCount);
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             model.render(player, skin, false, skinPointer.getSkinDye(), null);
             if (hasArrow & useCount > 0) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
@@ -178,8 +177,8 @@ public class RenderItemBowSkin implements IItemRenderer {
                     GL11.glTranslatef((-dir.offsetX + cmd.x) * scale, (-dir.offsetY + cmd.y) * scale, (dir.offsetZ + cmd.z) * scale);
                     //Shift the arrow a little to stop z fighting.
                     GL11.glTranslatef(-0.01F * scale, 0.01F * scale, -0.01F * scale);
-                    if (hasArrowSkin && ClientSkinCache.INSTANCE.isSkinInCache(arrowSkinId)) {
-                        Skin arrowSkin = ClientSkinCache.INSTANCE.getSkin(arrowSkinId);
+                    if (skinPointerArrow != null && ClientSkinCache.INSTANCE.isSkinInCache(skinPointerArrow)) {
+                        Skin arrowSkin = ClientSkinCache.INSTANCE.getSkin(skinPointerArrow);
                         if (arrowSkin != null) {
                             arrowSkin.onUsed();
                             for (int i = 0; i < arrowSkin.getParts().size(); i++) {
@@ -190,7 +189,9 @@ public class RenderItemBowSkin implements IItemRenderer {
                             ModelArrow.MODEL.render(scale, false);
                         }
                     } else {
-                        ClientSkinCache.INSTANCE.requestSkinFromServer(arrowSkinId);
+                        if (skinPointerArrow != null) {
+                            ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointerArrow);
+                        }
                         ModelArrow.MODEL.render(scale, false);
                     }
                 }
@@ -227,7 +228,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     private boolean canRenderModel(ItemStack stack) {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData.skinId)) {
+            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
                 return true;
             } else {
                 ClientSkinCache.INSTANCE.requestSkinFromServer(skinData.skinId);

@@ -2,6 +2,9 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,9 +19,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class AbstractModItemArmour extends ItemArmor {
 
@@ -96,7 +96,7 @@ public class AbstractModItemArmour extends ItemArmor {
         
         AbstractModelSkin targetModel = null;
         SkinModelRenderer emr = SkinModelRenderer.INSTANCE;
-        Skin data = emr.getCustomArmourItemData(skinData.skinId);
+        Skin data = emr.getCustomArmourItemData(skinData);
         if (data == null) {
             return null;
         }

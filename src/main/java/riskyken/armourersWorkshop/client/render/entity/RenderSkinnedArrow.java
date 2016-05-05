@@ -9,9 +9,10 @@ import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -32,14 +33,14 @@ public class RenderSkinnedArrow extends RenderArrow {
             EntityClientPlayerMP player = (EntityClientPlayerMP) entityArrow.shootingEntity;
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
             if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
-                int skinId = entityEquipment.getEquipmentId(SkinTypeRegistry.skinArrow, 0);
-                if (ClientSkinCache.INSTANCE.isSkinInCache(skinId)) {
+                ISkinPointer skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinArrow, 0);
+                if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
                     ModRenderHelper.enableAlphaBlend();
-                    renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinId);
+                    renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinPointer);
                     ModRenderHelper.disableAlphaBlend();
                     return;
                 } else {
-                    ClientSkinCache.INSTANCE.requestSkinFromServer(skinId);
+                    ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
                 }
             }
         }
@@ -47,8 +48,8 @@ public class RenderSkinnedArrow extends RenderArrow {
         super.doRender(entityArrow, x, y, z, yaw, partialTickTime);
     }
     
-    private void renderArrowSkin(EntityArrow entityArrow, double x, double y, double z, float partialTickTime, int skinId) {
-        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinId);
+    private void renderArrowSkin(EntityArrow entityArrow, double x, double y, double z, float partialTickTime, ISkinPointer skinPointer) {
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
         }

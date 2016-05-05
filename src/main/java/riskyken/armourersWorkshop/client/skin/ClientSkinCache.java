@@ -12,6 +12,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
@@ -43,10 +44,13 @@ public class ClientSkinCache {
     public void requestSkinFromServer(String fileName) {
         synchronized (requestedSkinNames) {
             if (!requestedSkinNames.contains(fileName)) {
-                //
                 requestedSkinNames.add(fileName);
             }
         }
+    }
+    
+    public void requestSkinFromServer(ISkinPointer skinPointer) {
+        requestSkinFromServer(skinPointer.getSkinId());
     }
     
     public void requestSkinFromServer(int skinID) {
@@ -63,10 +67,16 @@ public class ClientSkinCache {
             return skinNameMap.containsKey(fileName);
         }
     }
-    
+    /*
     public boolean isSkinInCache(int skinID) {
         synchronized (skinIDMap) {
             return skinIDMap.containsKey(skinID); 
+        }
+    }
+    */
+    public boolean isSkinInCache(ISkinPointer skinPointer) {
+        synchronized (skinIDMap) {
+            return skinIDMap.containsKey(skinPointer.getSkinId()); 
         }
     }
     
@@ -144,6 +154,22 @@ public class ClientSkinCache {
         }
     }
     
+    public Skin getSkin(ISkinPointer skinPointer) {
+        return getSkin(skinPointer, true);
+    }
+    
+    public Skin getSkin(ISkinPointer skinPointer, boolean requestSkin) {
+        synchronized (skinIDMap) {
+            if (skinIDMap.containsKey(skinPointer.getSkinId())) {
+                return skinIDMap.get(skinPointer.getSkinId());
+            }
+        }
+        if (requestSkin) {
+            requestSkinFromServer(skinPointer.getSkinId());
+        }
+        return null;
+    }
+    /*
     public Skin getSkin(int skinID) {
         return getSkin(skinID, true);
     }
@@ -159,7 +185,7 @@ public class ClientSkinCache {
         }
         return null;
     }
-    
+    */
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {

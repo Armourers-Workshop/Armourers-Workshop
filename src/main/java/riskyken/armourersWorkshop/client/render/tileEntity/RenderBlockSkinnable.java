@@ -16,8 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
-import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -62,7 +62,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         ModRenderHelper.setLightingForBlock(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         SkinPointer skinPointer = tileEntity.getSkinPointer();
         if (skinPointer != null) {
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
                 renderSkin(tileEntity, x, y, z, skin);
             } else {

@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -7,9 +9,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -88,10 +87,10 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
     private boolean canRenderModel(ItemStack stack) {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData.skinId)) {
+            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
                 return true;
             } else {
-                ClientSkinCache.INSTANCE.requestSkinFromServer(skinData.skinId);
+                ClientSkinCache.INSTANCE.requestSkinFromServer(skinData);
                 return false;
             }
         } else {

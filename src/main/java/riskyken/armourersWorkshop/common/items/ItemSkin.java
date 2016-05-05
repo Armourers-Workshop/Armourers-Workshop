@@ -72,8 +72,8 @@ public class ItemSkin extends AbstractModItem {
                 tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.hasSkin"));
             }
             
-            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData.skinId)) {
-                Skin data = ClientSkinCache.INSTANCE.getSkin(skinData.skinId);
+            if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
+                Skin data = ClientSkinCache.INSTANCE.getSkin(skinData);
                 if (stack.getItem() != ModItems.equipmentSkin & !data.getCustomName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinName", data.getCustomName()));
                 }

@@ -446,7 +446,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private Skin getSkinForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
         SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
         if (sp != null) {
-            return ClientSkinCache.INSTANCE.getSkin(sp.getSkinId(), false);
+            return ClientSkinCache.INSTANCE.getSkin(sp, false);
         }
         return null;
     }

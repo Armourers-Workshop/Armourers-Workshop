@@ -104,7 +104,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null | skinPartType == null) {
             return false;
         }
-        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return false;
         }
@@ -133,7 +133,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return false;
         }
-        return ClientSkinCache.INSTANCE.isSkinInCache(skinPointer.getSkinId());
+        return ClientSkinCache.INSTANCE.isSkinInCache(skinPointer);
     }
     
     @Override
@@ -168,7 +168,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return null;
         }
-        return ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
+        return ClientSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
     @Override

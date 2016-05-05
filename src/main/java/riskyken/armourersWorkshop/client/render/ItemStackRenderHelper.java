@@ -34,7 +34,7 @@ public final class ItemStackRenderHelper {
     
     
     public static void renderItemModelFromSkinPointer(SkinPointer skinPointer, boolean showSkinPaint) {
-        int skinId = skinPointer.getSkinId();
+
         ISkinType skinType = skinPointer.getSkinType();
         
         IEquipmentModel targetModel = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
@@ -43,7 +43,7 @@ public final class ItemStackRenderHelper {
             return;
         }
         
-        Skin data = ClientSkinCache.INSTANCE.getSkin(skinId);
+        Skin data = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (data == null) {
             return;
         }
@@ -71,7 +71,7 @@ public final class ItemStackRenderHelper {
     }
     
     public static void renderSkinWithoutHelper(SkinPointer skinPointer) {
-        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.skinId);
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
         }

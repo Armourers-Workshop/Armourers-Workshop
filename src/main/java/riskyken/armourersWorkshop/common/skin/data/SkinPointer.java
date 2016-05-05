@@ -29,6 +29,20 @@ public class SkinPointer implements ISkinPointer {
         this.skinDye = new SkinDye(skinPointer.getSkinDye());
     }
     
+    public SkinPointer(ISkinType skinType, int skinId) {
+        this.skinType = skinType;
+        this.skinId = skinId;
+        this.lockSkin = false;
+        this.skinDye = new SkinDye();
+    }
+    
+    public SkinPointer(ISkinType skinType, int skinId, SkinDye skinDye) {
+        this.skinType = skinType;
+        this.skinId = skinId;
+        this.lockSkin = false;
+        this.skinDye = skinDye;
+    }
+    
     public SkinPointer(ISkinType skinType, int skinId, boolean lockSkin) {
         this.skinType = skinType;
         this.skinId = skinId;

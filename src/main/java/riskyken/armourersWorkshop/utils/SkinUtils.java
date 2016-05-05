@@ -50,6 +50,6 @@ public final class SkinUtils {
     
     @SideOnly(Side.CLIENT)
     private static Skin getSkinOnClient(SkinPointer skinPointer, boolean requestSkin) {
-        return ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId(), requestSkin);
+        return ClientSkinCache.INSTANCE.getSkin(skinPointer, requestSkin);
     }
 }

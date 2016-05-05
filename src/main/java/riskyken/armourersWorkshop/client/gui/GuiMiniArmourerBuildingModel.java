@@ -204,7 +204,7 @@ public class GuiMiniArmourerBuildingModel {
         mc.renderEngine.bindTexture(mc.thePlayer.getLocationSkin());
         
         if (skinPointer != null) {
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart part = skin.getParts().get(i);
                 if (part.getPartType() == currentSkinPartType) {

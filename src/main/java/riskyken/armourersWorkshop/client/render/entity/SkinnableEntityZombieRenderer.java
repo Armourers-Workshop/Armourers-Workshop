@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -39,8 +40,8 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
     
     private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
         if (equipmentData.haveEquipment(skinType, 0)) {
-            int id = equipmentData.getEquipmentId(skinType, 0);
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(id);
+            ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             
             if (renderer instanceof RenderZombie) {
                 RenderZombie rz = (RenderZombie) renderer;

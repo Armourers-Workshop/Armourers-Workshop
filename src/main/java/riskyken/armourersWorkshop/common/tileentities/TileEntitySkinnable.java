@@ -140,7 +140,7 @@ public class TileEntitySkinnable extends TileEntity {
 
     @SideOnly(Side.CLIENT)
     private Skin getSkinClient(ISkinPointer skinPointer) {
-        return ClientSkinCache.INSTANCE.getSkin(skinPointer.getSkinId());
+        return ClientSkinCache.INSTANCE.getSkin(skinPointer);
     }
 
     private Skin getSkinServer(ISkinPointer skinPointer) {
