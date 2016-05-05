@@ -12,7 +12,6 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
-import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 
@@ -77,7 +76,7 @@ public class ContainerMiniArmourerBuilding extends Container {
         return tileEntity.getSkinParts();
     }
     
-    public void updateFromClientCubeEdit(ISkinPartType skinPartType, ICube cube, boolean remove) {
+    public void updateFromClientCubeEdit(ISkinPartType skinPartType, riskyken.armourersWorkshop.common.data.MiniCube cube, boolean remove) {
         ArrayList<SkinPart> skinParts = tileEntity.getSkinParts();
         /*
         for (int i = 0; i < skinParts.size(); i++) {

@@ -8,20 +8,20 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.common.data.MiniCube;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
-import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class MessageClientGuiMiniArmourerCubeEdit implements IMessage, IMessageHandler<MessageClientGuiMiniArmourerCubeEdit, IMessage> {
     
     private ISkinPartType skinPartType;
-    private ICube cube;
+    private riskyken.armourersWorkshop.common.data.MiniCube cube;
     private boolean remove;
     
     public MessageClientGuiMiniArmourerCubeEdit() {
     }
     
-    public MessageClientGuiMiniArmourerCubeEdit(ISkinPartType skinPartType, ICube cube, boolean remove) {
+    public MessageClientGuiMiniArmourerCubeEdit(ISkinPartType skinPartType, MiniCube cube, boolean remove) {
         this.skinPartType = skinPartType;
         this.cube = cube;
         this.remove = remove;
@@ -32,21 +32,14 @@ public class MessageClientGuiMiniArmourerCubeEdit implements IMessage, IMessageH
         String partName = ByteBufUtils.readUTF8String(buf);
         this.skinPartType = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(partName);
         byte cubeId = buf.readByte();
-        /*
-        try {
-            this.cube = CubeFactory.INSTANCE.getCubeInstanceFormId(cubeId);
-            this.cube.readFromBuf(buf);
-        } catch (InvalidCubeTypeException e) {
-            e.printStackTrace();
-        }
-        */
+        this.cube = new MiniCube(buf);
         this.remove = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, skinPartType.getRegistryName());
-        //this.cube.writeToBuf(buf);
+        this.cube.writeToBuf(buf);
         buf.writeBoolean(this.remove);
     }
     

@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.skin.cubes;
 
+import java.awt.Color;
 import java.util.Arrays;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -100,6 +101,11 @@ public class CubeColour implements ICubeColour {
         r[side] = (byte) (colour >> 16 & 0xff);
         g[side] = (byte) (colour >> 8 & 0xff);
         b[side] = (byte) (colour & 0xff);
+    }
+    
+    public int getColour(int side) {
+        Color c = new Color(r[side] & 0xFF, g[side] & 0xFF, b[side] & 0xFF);
+        return c.getRGB();
     }
     
     @Deprecated

@@ -10,19 +10,19 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
-import riskyken.armourersWorkshop.common.skin.cubes.ICube;
+import riskyken.armourersWorkshop.common.data.MiniCube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class MessageServerMiniArmourerCubeEdit implements IMessage, IMessageHandler<MessageServerMiniArmourerCubeEdit, IMessage> {
 
     private ISkinPartType skinPartType;
-    private ICube cube;
+    private riskyken.armourersWorkshop.common.data.MiniCube cube;
     private boolean remove;
 
     public MessageServerMiniArmourerCubeEdit() {
     }
     
-    public MessageServerMiniArmourerCubeEdit(ISkinPartType skinPartType, ICube cube, boolean remove) {
+    public MessageServerMiniArmourerCubeEdit(ISkinPartType skinPartType, MiniCube cube, boolean remove) {
         this.skinPartType = skinPartType;
         this.cube = cube;
         this.remove = remove;

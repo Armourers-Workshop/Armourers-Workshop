@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -10,12 +12,10 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.data.MiniCube;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
 
@@ -37,7 +37,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         setSkinType(SkinTypeRegistry.skinHead, false);
     }
     
-    public void cubeUpdateFromServer(ISkinPartType skinPartType, ICube cube, boolean remove) {
+    public void cubeUpdateFromServer(ISkinPartType skinPartType, MiniCube cube, boolean remove) {
         /*
         for (int i = 0; i < skinParts.size(); i++) {
             if (skinParts.get(i).getPartType() == skinPartType) {
