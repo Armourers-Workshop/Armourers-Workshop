@@ -193,8 +193,10 @@ public class SkinNBTHelper {
     public static void addRenderIdToStack(ItemStack stack, ISkinType skinType, int skinId, ISkinDye skinDye) {
         if (stackHasSkinData(stack)) {
             SkinPointer skinData = getSkinPointerFromStack(stack);
-            if (skinData.skinId != skinId & !skinData.lockSkin) {
-                addSkinDataToStack(stack, skinType, skinId, skinDye, false);
+            if (!skinData.lockSkin) {
+                if (skinData.skinId != skinId | !skinData.skinDye.equals(skinDye)) {
+                    addSkinDataToStack(stack, skinType, skinId, skinDye, false);
+                }
             }
         } else {
             addSkinDataToStack(stack, skinType, skinId, skinDye, false);
