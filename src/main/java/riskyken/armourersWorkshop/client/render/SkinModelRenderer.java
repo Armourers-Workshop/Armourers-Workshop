@@ -6,7 +6,6 @@ import java.util.HashSet;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -227,13 +226,12 @@ public final class SkinModelRenderer {
         PlayerPointer playerPointer = new PlayerPointer(player);
         
         if (playerHasSkirtOn(playerPointer)) {
-            if (!Loader.isModLoaded("SmartMoving")) {
-                EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-                if (ewd != null && ewd.limitLimbs) {
-                    if (player.limbSwingAmount > 0.25F) {
-                        player.limbSwingAmount = 0.25F;
-                    } 
-                }
+            EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+            if (ewd != null && ewd.limitLimbs) {
+                if (player.limbSwingAmount > 0.25F) {
+                    player.limbSwingAmount = 0.25F;
+                    player.prevLimbSwingAmount = 0.25F;
+                } 
             }
         }
     }
