@@ -184,13 +184,19 @@ public final class SkinModelRenderer {
         for (int i = 0; i < equipmentData.getNumberOfSlots(); i++) {
             if (!equipmentData.haveEquipment(SkinTypeRegistry.skinLegs, i)) {
                 return false;
+            } else {
+                ISkinPointer skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinLegs, i);
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+                if (skin != null) {
+                    for (int j = 0; j < skin.getPartCount(); j++) {
+                        if (skin.getParts().get(j).getPartType().getPartName().equals("skirt")) {
+                            return true;
+                        }
+                    }
+                }
             }
-            ISkinPointer skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinLegs, i);
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         }
-
-        //TODO check for skirt data
-        return true;
+        return false;
     }
     
     ItemStack equippedStack = null;
