@@ -12,7 +12,6 @@ tile.armourersworkshop:colourMixer1.name=特殊调色器
 tile.armourersworkshop:mannequin.name=模特
 tile.armourersworkshop:doll.name=娃娃模特
 tile.armourersworkshop:skinningTable.name=镶嵌工作台
-<<<<<<< HEAD
 tile.armourersworkshop:marker0.name=标记
 
 # Block flavour text
@@ -20,7 +19,6 @@ tile.armourersworkshop:armourerBrain.flavour=让你来设计皮肤外观.
 tile.armourersworkshop:miniArmourer.flavour=未完成的.
 tile.armourersworkshop:armourLibrary0.flavour=使用模板进行读取和保存时装.
 tile.armourersworkshop:armourLibrary1.flavour=可以不使用模板就可以读取和保存.%n创造模式下.
-=======
 tile.armourersworkshop:dyeTable.name=配色工作台
 tile.armourersworkshop:marker0.name=标记
 
@@ -29,23 +27,19 @@ tile.armourersworkshop:armourerBrain.flavour=用来设计时装.%n手拿工具�
 tile.armourersworkshop:miniArmourer.flavour=空手潜行右键可打开（未完成的）.
 tile.armourersworkshop:armourLibrary0.flavour=使用模板进行读取和保存时装.
 tile.armourersworkshop:armourLibrary1.flavour=可以不使用模板就可以读取和保存.%n只有创造模式才能得到.
->>>>>>> refs/remotes/origin/pr/114
 tile.armourersworkshop:colourable.flavour=自定义时装的基础构成块.%n(可染色)
 tile.armourersworkshop:colourableGlowing.flavour=发光的基础构成块!%n(可染色)
 tile.armourersworkshop:colourableGlass.flavour=半透明的基础构成块.%n(可染色)
 tile.armourersworkshop:colourableGlassGlowing.flavour=发光的半透明基础构成块!%n(可染色)
-<<<<<<< HEAD
 tile.armourersworkshop:colourMixer0.flavour=可以调色的方块.%n潜行加右键可以快速取色.
 tile.armourersworkshop:colourMixer1.flavour=创造特别的图案在装备上.%n潜行加右击来快速取色.
 tile.armourersworkshop:mannequin.flavour=在模特上展示你的成果!%n右击改变名字来给模特换皮肤.
 tile.armourersworkshop:doll.flavour=迷你模特!
 tile.armourersworkshop:skinningTable.flavour=给装备上镶嵌和移除时装.
-=======
 tile.armourersworkshop:colourMixer.flavour=用来调色.%n潜行加右键可以快速取色.
 tile.armourersworkshop:mannequin.flavour=在模特上展示你的作品!%n使用命名牌可以反复给模特重命名.%n（暂时只支持正版id）.
 tile.armourersworkshop:doll.flavour=迷你模特!
 tile.armourersworkshop:skinningTable.flavour=给装备上镶嵌或移除时装.%n（移除的时装消失）
->>>>>>> refs/remotes/origin/pr/114
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=空白模板
@@ -67,16 +61,13 @@ item.armourersworkshop:armourContainerLegs.name=时装容器(腿部)
 item.armourersworkshop:armourContainerFeet.name=时装容器(鞋子)
 item.armourersworkshop:wandOfStyle.name=风格棒
 item.armourersworkshop:soap.name=肥皂
-<<<<<<< HEAD
 item.armourersworkshop:hueTool.name=色相工具
 item.armourersworkshop:blockMarker.name=标记工具
 item.armourersworkshop:dyeBottle.name=染料瓶
-=======
 item.armourersworkshop:hueTool.name=多功能工具
 item.armourersworkshop:blockMarker.name=标记工具
 item.armourersworkshop:dyeBottle.name=染料瓶
 item.armourersworkshop:blendingTool.name=混合工具
->>>>>>> refs/remotes/origin/pr/114
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=RiskyKen（mod作者）的礼物
@@ -89,19 +80,16 @@ item.armourersworkshop:colourNoiseTool.flavour=给一个方块随机上色（前
 item.armourersworkshop:shadeNoiseTool.flavour=给一个方块随机阴影.
 item.armourersworkshop:mannequinTool.flavour=保存和加载模型.%n右击确定设置.%n潜行右击可保存设置.
 item.armourersworkshop:guideBook.flavour=时装工坊的使用向导.
-<<<<<<< HEAD
 item.armourersworkshop:armourContainer.flavour=创造模式才能使用的物品.%n允许将时装穿到NPC身上.
 item.armourersworkshop:soap.flavour=通过镶嵌工作台来清除物品镶嵌的时装!
 item.armourersworkshop:hueTool.flavour=改变方块色相%n不影响明度.
 item.armourersworkshop:blockMarker.flavour=在弓的时装制作时添加一个箭尾位置的标记.%n弓的每个动作上只能也必须有一个标记才算制作成功.
 item.armourersworkshop:dyeBottle.flavour=暂时没用（未完成）.
-=======
 item.armourersworkshop:armourContainer.flavour=镶嵌后可装备到装备栏（npc也可用）.%n创造模式才能使用的物品.
 item.armourersworkshop:soap.flavour=通过镶嵌工作台来清除物品镶嵌的时装!
 item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱和度 亮度以及染色类型)%n不影响阴影.
 item.armourersworkshop:blockMarker.flavour=在弓的时装制作时添加一个箭尾位置的标记.%n注：弓的每个阶段上只能也必须有一个标记才算制作成功.
 item.armourersworkshop:dyeBottle.flavour=用来给时装改变配色.
->>>>>>> refs/remotes/origin/pr/114
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6强度:&7 %s
@@ -114,10 +102,7 @@ item.armourersworkshop:rollover.settingsSaved=&6设置已保存.
 item.armourersworkshop:rollover.noSettingsSaved=&c未保存.
 item.armourersworkshop:rollover.user=&6使用者:&7 %s
 item.armourersworkshop:rollover.empty=&6空的.
-<<<<<<< HEAD
-=======
 item.armourersworkshop:rollover.openSettings=潜行加右键来打开设置.
->>>>>>> refs/remotes/origin/pr/114
 
 item.armourersworkshop:rollover.hasSkin=&6镶嵌了时装
 item.armourersworkshop:rollover.skinName=&6名字:&7 %s
@@ -132,10 +117,7 @@ item.armourersworkshop:rollover.skinNumCubesGlass=&e玻璃造型方块:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&e发光玻璃方块:&7 %s
 item.armourersworkshop:rollover.skinPaintData=&e油漆数据:&7 %s
 item.armourersworkshop:rollover.skinMarkerCount=&e标记数量:&7 %d
-<<<<<<< HEAD
-=======
 item.armourersworkshop:rollover.skinDyeCount=&e可染色数量:&7 %d/8
->>>>>>> refs/remotes/origin/pr/114
 item.armourersworkshop:rollover.skindownloading=时装ID: %d下载中...
 item.armourersworkshop:rollover.skinOpenWardrobe=按 &a%s&7 键来打开 &a时装栏
 item.armourersworkshop:rollover.skinOldType=&c旧版本时装类型, 放在工坊方块中更新.
@@ -146,13 +128,10 @@ item.armourersworkshop:rollover.skinIdError3=&c调试 - 旧 ID: %s 新 ID: %s
 
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=涂整个方块
-<<<<<<< HEAD
-=======
 tooloption.armourersworkshop:changeHue=改变色相
 tooloption.armourersworkshop:changeSaturation=改变饱和度
 tooloption.armourersworkshop:changeBrightness=改变亮度
 tooloption.armourersworkshop:changePaintType=改变染色数据类型
->>>>>>> refs/remotes/origin/pr/114
 tooloption.armourersworkshop:intensity=强度
 tooloption.armourersworkshop:radius=半径
 
@@ -195,10 +174,7 @@ inventory.armourersworkshop:mannequin.name=模特
 inventory.armourersworkshop:miniArmourer.name=迷你工坊 - (未完成)
 inventory.armourersworkshop:entityEquipment.name=实体设备
 inventory.armourersworkshop:skinningTable.name=镶嵌工作台
-<<<<<<< HEAD
-=======
 inventory.armourersworkshop:dyeTable.name=配色工作台
->>>>>>> refs/remotes/origin/pr/114
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=搜索:
@@ -215,21 +191,14 @@ inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=查看服�
 inventory.armourersworkshop:armourLibrary.rollover.notOnServer=你必须连接到一个服务器来使用此功能.
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=打开你电脑上的资源文件夹.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=删除时装.
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/pr/114
 
 inventory.armourersworkshop:armourerBrain.label.itemName=物品名:
 inventory.armourersworkshop:armourerBrain.label.username=用户名:
 inventory.armourersworkshop:armourerBrain.label.clone=克隆:
-<<<<<<< HEAD
 inventory.armourersworkshop:armourerBrain.showGuide=显示可建设范围?
 inventory.armourersworkshop:armourerBrain.showOverlay=显示头部覆盖层?
-=======
 inventory.armourersworkshop:armourerBrain.showGuide=显示可建设范围
 inventory.armourersworkshop:armourerBrain.showOverlay=显示双层皮肤
->>>>>>> refs/remotes/origin/pr/114
 inventory.armourersworkshop:armourerBrain.showHelper=显示辅助模型?
 inventory.armourersworkshop:armourerBrain.save=保存
 inventory.armourersworkshop:armourerBrain.load=加载
@@ -281,11 +250,8 @@ itemGroup.armourersworkshop=时装制造工坊
 
 # Keybindings
 keys.armourersworkshop:category=时装制造工坊
-<<<<<<< HEAD
 keys.armourersworkshop.equipmentWardrobe=时装栏
-=======
 keys.armourersworkshop.equipmentWardrobe=我的时装栏
->>>>>>> refs/remotes/origin/pr/114
 keys.armourersworkshop.undo=撤销
 
 # Guide Book
