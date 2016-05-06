@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.render;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.lwjgl.opengl.GL11;
 
@@ -195,14 +196,16 @@ public final class SkinModelRenderer {
     
     ItemStack equippedStack = null;
     int equippedIndex  = -1;
+    HashSet<String> addedRenderSet = new HashSet<String>();
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
         targetPlayer = player;
-        if (!addedRenderAttachment & ClientProxy.useAttachedModelRender()) {
-            ModelBiped playerBiped = event.renderer.modelBipedMain;
-            
+        ModelBiped playerBiped = event.renderer.modelBipedMain;
+        
+        if (!addedRenderSet.contains(playerBiped.toString()) & ClientProxy.useAttachedModelRender()) {
+            addedRenderSet.add(playerBiped.toString());
             playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinHead, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
             playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.base")));
             playerBiped.bipedLeftArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.leftArm")));
