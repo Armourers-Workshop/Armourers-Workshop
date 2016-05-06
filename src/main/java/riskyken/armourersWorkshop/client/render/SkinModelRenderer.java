@@ -219,7 +219,6 @@ public final class SkinModelRenderer {
             addedRenderAttachment = true;
             ModLogger.log("Added model render attachment to " + playerBiped.toString());
             ModLogger.log("Using player renderer " + event.renderer.toString());
-            Thread.dumpStack();
         }
         
         if (player.getGameProfile() == null) {
