@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.model.skin;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
@@ -7,6 +9,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -59,9 +62,16 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
             bipedRightLeg.rotateAngleZ = 0F;
             bipedHead.rotateAngleZ = 0F;
             bipedHeadwear.rotateAngleZ = 0F;
+            
             super.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, entity);
-
+            
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            ModRenderHelper.enableAlphaBlend();
             render(entity, npcEquipmentData, false, null, null);
+            ModRenderHelper.disableAlphaBlend();
+            GL11.glPopAttrib();
+            
             npcEquipmentData = null;
         }
     }
