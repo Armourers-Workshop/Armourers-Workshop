@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -48,6 +50,51 @@ public class Skin implements ISkin {
         this.averageR = r;
         this.averageG = g;
         this.averageB = b;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public Rectangle3D getSkinBounds() {
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        
+        int width = 1;
+        int height = 1;
+        int depth = 1;
+        
+        for (int i = 0; i < getPartCount(); i++) {
+            if (!(getSkinType() == SkinTypeRegistry.skinBow && i > 0)) {
+                
+                SkinPart skinPart = getParts().get(i);
+                Rectangle3D bounds = skinPart.getPartBounds();
+                
+                width = Math.max(width, bounds.getWidth());
+                height = Math.max(height, bounds.getHeight());
+                depth = Math.max(depth, bounds.getDepth());
+                
+                x = bounds.getX();
+                y = bounds.getY();
+                z = bounds.getZ();
+                
+                if (hasPaintData()) {
+                    IRectangle3D skinRec = skinPart.getPartType().getGuideSpace();
+                    
+                    width = Math.max(width, skinRec.getWidth());
+                    height = Math.max(height, skinRec.getHeight());
+                    depth = Math.max(depth, skinRec.getDepth());
+                    
+                    x = Math.max(x, skinRec.getX());
+                    y = Math.max(y, skinRec.getY());
+                    z = Math.max(z, skinRec.getZ());
+                }
+
+            }
+        }
+        
+        if (hasPaintData()) {
+        }
+        
+        return new Rectangle3D(x, y, z, width, height, depth);
     }
     
     public int[] getAverageDyeColour(int dyeNumber) {

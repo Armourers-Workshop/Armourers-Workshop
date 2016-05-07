@@ -6,13 +6,14 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.skin.IEquipmentModel;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 /**
@@ -34,43 +35,74 @@ public final class ItemStackRenderHelper {
     
     
     public static void renderItemModelFromSkinPointer(SkinPointer skinPointer, boolean showSkinPaint) {
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+        if (skin == null) {
+            return;
+        }
+        
+        float blockScale = 16F;
+        
+        float mcScale = 1F / blockScale;
+        float scale =  1;
+        
+        float offsetX = 0;
+        float offsetY = 0;
+        float offsetZ = 0;
+        
+        float scaleX = 1;
+        float scaleY = 1;
+        float scaleZ = 1;
+        
+        int width = 1;
+        int height = 1;
+        int depth = 1;
+        
+        Rectangle3D sb = skin.getSkinBounds();
+        
+        width = Math.max(width, sb.getWidth());
+        height = Math.max(height, sb.getHeight());
+        depth = Math.max(depth, sb.getDepth());
+        
+        scaleX = Math.min(scaleX, 1F / width);
+        scaleY = Math.min(scaleY, 1F / height);
+        scaleZ = Math.min(scaleZ, 1F / depth);
+        
+        scale = Math.min(scale, scaleX);
+        scale = Math.min(scale, scaleY);
+        scale = Math.min(scale, scaleZ);
+        
+        offsetX = -sb.getX() - width / 2F;
+        offsetY = -sb.getY() - height / 2F;
+        offsetZ = -sb.getZ() - depth / 2F;
+        
+        GL11.glPushMatrix();
+        
+        GL11.glScalef(scale * blockScale, scale * blockScale, scale * blockScale);
+        GL11.glTranslatef(offsetX * mcScale, 0, 0);
+        GL11.glTranslatef(0, offsetY * mcScale, 0);
+        GL11.glTranslatef(0, 0, offsetZ * mcScale);
+        
+        renderSkinWithHelper(skin, skinPointer, showSkinPaint);
 
+        GL11.glPopMatrix();
+    }
+    
+    public static void renderSkinWithHelper(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint) {
         ISkinType skinType = skinPointer.getSkinType();
         
         IEquipmentModel targetModel = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
+        
+        
+        
         if (targetModel == null) {
             renderSkinWithoutHelper(skinPointer);
             return;
         }
         
-        Skin data = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-        if (data == null) {
-            return;
-        }
-        
-        if (skinType == SkinTypeRegistry.skinHead) {
-            GL11.glTranslatef(0F, 0.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
-        } else if (skinType == SkinTypeRegistry.skinChest) {
-            GL11.glTranslatef(0F, -0.35F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
-        } else if (skinType == SkinTypeRegistry.skinLegs) {
-            GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
-        } else if (skinType == SkinTypeRegistry.skinSkirt) {
-            GL11.glTranslatef(0F, -1.0F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
-        } else if (skinType == SkinTypeRegistry.skinFeet) {
-            GL11.glTranslatef(0F, -1.2F, 0F);
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
-        } else if (skinType == SkinTypeRegistry.skinSword) {
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
-        } else if (skinType == SkinTypeRegistry.skinBow) {
-            targetModel.render(null, null, data, showSkinPaint, skinPointer.getSkinDye(), null);
-        }
+        targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true);
     }
     
-    public static void renderSkinWithoutHelper(SkinPointer skinPointer) {
+    public static void renderSkinWithoutHelper(ISkinPointer skinPointer) {
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;

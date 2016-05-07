@@ -167,7 +167,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             model.frame = getAnimationFrame(useCount);
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-            model.render(player, skin, false, skinPointer.getSkinDye(), null);
+            model.render(player, skin, false, skinPointer.getSkinDye(), null, false);
             if (hasArrow & useCount > 0) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
                 int tarPart = getAnimationFrame(useCount);

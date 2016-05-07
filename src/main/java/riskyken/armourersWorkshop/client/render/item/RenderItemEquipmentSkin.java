@@ -9,12 +9,10 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
@@ -42,31 +40,23 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
         if (canRenderModel(stack)) {
             GL11.glPushMatrix();
             GL11.glScalef(-1F, -1F, 1F);
-            float scale = 1.2F;
-            GL11.glScalef(scale, scale, scale);
             GL11.glRotatef(180, 0, 1, 0);
             
-            ISkinType skinType = SkinNBTHelper.getSkinTypeFromStack(stack);
-            if (skinType == SkinTypeRegistry.skinSword) {
-                GL11.glScalef(0.7F, 0.7F, 0.7F);
-            }
-            if (skinType == SkinTypeRegistry.skinArrow) {
-                GL11.glTranslatef(0F, 0F, -0.4F * scale);
-            }
-            if (skinType == SkinTypeRegistry.skinBlock) {
-                GL11.glScalef(0.9F, 0.9F, 0.9F);
-            }
             switch (type) {
             case EQUIPPED:
                 GL11.glTranslatef(0.6F, -0.5F, -0.5F);
                 GL11.glRotatef(180, 0, 1, 0);
                 break;
             case ENTITY:
-                GL11.glTranslatef(0F, -0.3F, 0F);
+                GL11.glTranslatef(0F, -0.4F, 0F);
                 break;
             case EQUIPPED_FIRST_PERSON:
                 GL11.glTranslatef(0.5F, -0.7F, -0.5F);
                 GL11.glRotatef(90, 0, 1, 0);
+                break;
+            case INVENTORY:
+                //float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
+                //GL11.glRotatef(rotation, 0F, 1F, 0F);
                 break;
             default:
                 break;

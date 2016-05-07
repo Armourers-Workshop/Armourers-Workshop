@@ -22,17 +22,17 @@ public class ModelSkinHead extends AbstractModelSkin {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false, null, null);
+        render(entity, armourData, false, null, null, false);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye, extraColour);
+        render(entity, armourData, showSkinPaint, skinDye, extraColour, itemRender);
     }
     
     @Override
-    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         if (skin == null) {
             return;
         }

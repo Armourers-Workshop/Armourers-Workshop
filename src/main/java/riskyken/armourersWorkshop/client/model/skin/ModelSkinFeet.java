@@ -24,17 +24,17 @@ public class ModelSkinFeet extends AbstractModelSkin {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false, null, null);
+        render(entity, armourData, false, null, null, false);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye, extraColour);
+        render(entity, armourData, showSkinPaint, skinDye, extraColour, itemRender);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -55,12 +55,17 @@ public class ModelSkinFeet extends AbstractModelSkin {
         if (armourData.hasPaintData() & showSkinPaint) {
             SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColour);
             st.bindTexture();
+            GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
+            if (itemRender) {
+                GL11.glTranslated(0, -12 * SCALE, 0);
+            }
             bipedLeftLeg.render(SCALE);
             bipedRightLeg.render(SCALE);
             GL11.glPopAttrib();
+            GL11.glPopMatrix();
         }
         
         for (int i = 0; i < parts.size(); i++) {
@@ -76,9 +81,9 @@ public class ModelSkinFeet extends AbstractModelSkin {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("leftFoot")) {
-                renderLeftFoot(part, SCALE, skinDye, extraColour);
+                renderLeftFoot(part, SCALE, skinDye, extraColour, itemRender);
             } else if (part.getPartType().getPartName().equals("rightFoot")) {
-                renderRightFoot(part, SCALE, skinDye, extraColour);
+                renderRightFoot(part, SCALE, skinDye, extraColour, itemRender);
             }
             
             GL11.glPopMatrix();
@@ -87,13 +92,16 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
+    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        GL11.glTranslated(2 * scale, 12 * scale, 0);
+        if (!itemRender) {
+            GL11.glTranslated(0, 12 * scale, 0);
+        }
+        GL11.glTranslated(2 * scale, 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
@@ -103,13 +111,16 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glPopMatrix();
     }
     
-    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
+    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        GL11.glTranslated(-2 * scale, 12 * scale, 0);
+        if (!itemRender) {
+            GL11.glTranslated(0, 12 * scale, 0);
+        }
+        GL11.glTranslated(-2 * scale, 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);

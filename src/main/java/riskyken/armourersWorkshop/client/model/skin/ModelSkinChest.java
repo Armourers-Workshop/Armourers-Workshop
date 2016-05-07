@@ -24,17 +24,17 @@ public class ModelSkinChest extends AbstractModelSkin {
     @Override
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false, null, null);
+        render(entity, armourData, false, null, null, false);
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye, extraColour);
+        render(entity, armourData, showSkinPaint, skinDye, extraColour, itemRender);
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -78,11 +78,11 @@ public class ModelSkinChest extends AbstractModelSkin {
             
             
             if (part.getPartType().getPartName().equals("base")) {
-                renderChest(part, SCALE, skinDye, extraColour);
+                renderChest(part, SCALE, skinDye, extraColour, itemRender);
             } else if (part.getPartType().getPartName().equals("leftArm")) {
-                renderLeftArm(part, SCALE, skinDye, extraColour);
+                renderLeftArm(part, SCALE, skinDye, extraColour, itemRender);
             } else if (part.getPartType().getPartName().equals("rightArm")) {
-                renderRightArm(part, SCALE, skinDye, extraColour);
+                renderRightArm(part, SCALE, skinDye, extraColour, itemRender);
             }
             
             GL11.glPopMatrix();
@@ -92,7 +92,7 @@ public class ModelSkinChest extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderChest(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
+    private void renderChest(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
@@ -102,7 +102,7 @@ public class ModelSkinChest extends AbstractModelSkin {
         GL11.glPopMatrix();
     }
     
-    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
+    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -121,7 +121,7 @@ public class ModelSkinChest extends AbstractModelSkin {
         GL11.glPopMatrix();
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
