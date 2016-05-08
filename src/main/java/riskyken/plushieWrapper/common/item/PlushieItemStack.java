@@ -2,11 +2,11 @@ package riskyken.plushieWrapper.common.item;
 
 import net.minecraft.item.ItemStack;
 
-public class ItemStackPointer {
+public class PlushieItemStack {
 
     private final ItemStack stack;
     
-    public ItemStackPointer(ItemStack stack) {
+    public PlushieItemStack(ItemStack stack) {
         this.stack = stack;
     }
 

@@ -11,8 +11,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import riskyken.plushieWrapper.common.entity.EntityLivingBasePointer;
-import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
+import riskyken.plushieWrapper.common.entity.PlushieEntityLivingBase;
+import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 import riskyken.plushieWrapper.common.world.WorldPointer;
 
@@ -28,7 +28,7 @@ public class ModItemWrapper extends Item {
     
     @Override
     public int getColorFromItemStack(ItemStack stack, int pass) {
-        return item.getColorFromItemStack(new ItemStackPointer(stack), pass);
+        return item.getColorFromItemStack(new PlushieItemStack(stack), pass);
     }
     
     @Override
@@ -47,24 +47,24 @@ public class ModItemWrapper extends Item {
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
             int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        return item.onItemUse(new ItemStackPointer(stack), new EntityPlayerPointer(player),
+        return item.onItemUse(new PlushieItemStack(stack), new PlushieEntityPlayer(player),
                 new WorldPointer(world), new BlockLocation(x, y, z), side, hitX, hitY, hitZ);
     }
     
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        return item.onItemRightClick(new ItemStackPointer(stack), new WorldPointer(world), new EntityPlayerPointer(player)).getMinecraftStack();
+        return item.onItemRightClick(new PlushieItemStack(stack), new WorldPointer(world), new PlushieEntityPlayer(player)).getMinecraftStack();
     }
     
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips) {
-        item.addInformation(new ItemStackPointer(stack), new EntityPlayerPointer(player), list, advancedTooltips);
+        item.addInformation(new PlushieItemStack(stack), new PlushieEntityPlayer(player), list, advancedTooltips);
         super.addInformation(stack, player, list, advancedTooltips);
     }
     
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return getModdedUnlocalizedName(super.getUnlocalizedName(stack), new ItemStackPointer(stack));
+        return getModdedUnlocalizedName(super.getUnlocalizedName(stack), new PlushieItemStack(stack));
     }
     
     private String getModdedUnlocalizedName(String unlocalizedName) {
@@ -76,7 +76,7 @@ public class ModItemWrapper extends Item {
         }
     }
     
-    private String getModdedUnlocalizedName(String unlocalizedName, ItemStackPointer stack) {
+    private String getModdedUnlocalizedName(String unlocalizedName, PlushieItemStack stack) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
         if (hasSubtypes) {
             return "item." + item.getModId().toLowerCase() + ":" + name + "." + stack.getItemDamage();
@@ -87,8 +87,8 @@ public class ModItemWrapper extends Item {
     
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
-        return item.itemInteractionForEntity(new ItemStackPointer(stack), new EntityPlayerPointer(player),
-                new EntityLivingBasePointer(entity));
+        return item.itemInteractionForEntity(new PlushieItemStack(stack), new PlushieEntityPlayer(player),
+                new PlushieEntityLivingBase(entity));
     }
     
     @Override
@@ -121,7 +121,7 @@ public class ModItemWrapper extends Item {
     
     @Override
     public IIcon getIcon(ItemStack stack, int renderPass) {
-        int iconIndex = item.getIconIndex(new ItemStackPointer(stack), renderPass);
+        int iconIndex = item.getIconIndex(new PlushieItemStack(stack), renderPass);
         if (itemIcons.size() > iconIndex) {
             return itemIcons.get(iconIndex);
         }

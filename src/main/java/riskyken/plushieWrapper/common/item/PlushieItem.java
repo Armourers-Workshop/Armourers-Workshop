@@ -3,13 +3,13 @@ package riskyken.plushieWrapper.common.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
-import riskyken.plushieWrapper.common.entity.EntityLivingBasePointer;
-import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
-import riskyken.plushieWrapper.common.world.BlockLocation;
-import riskyken.plushieWrapper.common.world.WorldPointer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
+import riskyken.plushieWrapper.common.entity.PlushieEntityLivingBase;
+import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 
 public class PlushieItem {
     
@@ -37,7 +37,7 @@ public class PlushieItem {
     }
     
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStackPointer stack, EntityPlayerPointer player, List list, boolean advancedTooltips) {
+    public void addInformation(PlushieItemStack stack, PlushieEntityPlayer player, List list, boolean advancedTooltips) {
     }
     
     public String getModId() {
@@ -48,7 +48,7 @@ public class PlushieItem {
         this.maxStackSize = maxStackSize;
     }
     
-    public int getColorFromItemStack(ItemStackPointer stack, int pass) {
+    public int getColorFromItemStack(PlushieItemStack stack, int pass) {
         return 0xFFFFFFFF;
     }
     
@@ -56,12 +56,12 @@ public class PlushieItem {
         return false;
     }
     
-    public boolean onItemUse(ItemStackPointer stack, EntityPlayerPointer player, WorldPointer world,
-            BlockLocation blockLocation, int side, float hitX, float hitY, float hitZ) {
+    public boolean onItemUse(PlushieItemStack stack, PlushieEntityPlayer player, WorldPointer world,
+            BlockLocation loc, int side, float hitX, float hitY, float hitZ) {
         return false;
     }
     
-    public ItemStackPointer onItemRightClick(ItemStackPointer stack, WorldPointer world, EntityPlayerPointer player) {
+    public PlushieItemStack onItemRightClick(PlushieItemStack stack, WorldPointer world, PlushieEntityPlayer player) {
         return stack;
     }
     
@@ -70,13 +70,13 @@ public class PlushieItem {
     }
     
     @SideOnly(Side.CLIENT)
-    public int getIconIndex(ItemStackPointer stack, int pass) {
+    public int getIconIndex(PlushieItemStack stack, int pass) {
         return 0;
     }
 
-    public boolean itemInteractionForEntity(ItemStackPointer itemStackPointer,
-            EntityPlayerPointer entityPlayerPointer,
-            EntityLivingBasePointer entityLivingBasePointer) {
+    public boolean itemInteractionForEntity(PlushieItemStack itemStackPointer,
+            PlushieEntityPlayer entityPlayerPointer,
+            PlushieEntityLivingBase entityLivingBasePointer) {
         // TODO Auto-generated method stub
         return false;
     }

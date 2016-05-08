@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 import riskyken.plushieWrapper.common.world.WorldPointer;
 
-public class EntityPlayerPointer extends EntityLivingBasePointer {
+public class PlushieEntityPlayer extends PlushieEntityLivingBase {
 
-    public EntityPlayerPointer(EntityPlayer entityPlayer) {
+    public PlushieEntityPlayer(EntityPlayer entityPlayer) {
         super(entityPlayer);
     }
     

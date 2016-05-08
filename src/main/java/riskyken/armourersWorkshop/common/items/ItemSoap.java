@@ -11,8 +11,8 @@ import riskyken.armourersWorkshop.common.blocks.BlockBoundingBox;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
-import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
-import riskyken.plushieWrapper.common.item.ItemStackPointer;
+import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
+import riskyken.plushieWrapper.common.item.PlushieItemStack;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 import riskyken.plushieWrapper.common.world.WorldPointer;
 
@@ -29,12 +29,12 @@ public class ItemSoap extends AbstractModItemNew {
     }
     
     @Override
-    public int getColorFromItemStack(ItemStackPointer stack, int pass) {
+    public int getColorFromItemStack(PlushieItemStack stack, int pass) {
         return 0xFFFF7FD2;
     }
     
     @Override
-    public boolean onItemUse(ItemStackPointer stack, EntityPlayerPointer player, WorldPointer world,
+    public boolean onItemUse(PlushieItemStack stack, PlushieEntityPlayer player, WorldPointer world,
             BlockLocation bl, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(bl);
         if (block instanceof IPantableBlock) {

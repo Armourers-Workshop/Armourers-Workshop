@@ -2,11 +2,11 @@ package riskyken.plushieWrapper.common.entity;
 
 import net.minecraft.entity.Entity;
 
-public class EntityPointer {
+public class PlushieEntity {
     
     protected Entity entity;
     
-    public EntityPointer(Entity entity) {
+    public PlushieEntity(Entity entity) {
         this.entity = entity;
     }
     

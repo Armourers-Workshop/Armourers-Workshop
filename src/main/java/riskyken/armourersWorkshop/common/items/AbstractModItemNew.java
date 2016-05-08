@@ -5,8 +5,8 @@ import java.util.List;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.plushieWrapper.common.entity.EntityPlayerPointer;
-import riskyken.plushieWrapper.common.item.ItemStackPointer;
+import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
+import riskyken.plushieWrapper.common.item.PlushieItemStack;
 import riskyken.plushieWrapper.common.item.PlushieItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,7 +29,7 @@ public class AbstractModItemNew extends PlushieItem {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStackPointer stack, EntityPlayerPointer player,
+    public void addInformation(PlushieItemStack stack, PlushieEntityPlayer player,
             List list, boolean advancedTooltips) {
         String unlocalized;
         String localized;

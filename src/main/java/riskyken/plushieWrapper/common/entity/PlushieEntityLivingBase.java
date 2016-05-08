@@ -2,9 +2,9 @@ package riskyken.plushieWrapper.common.entity;
 
 import net.minecraft.entity.EntityLivingBase;
 
-public class EntityLivingBasePointer extends EntityPointer {
+public class PlushieEntityLivingBase extends PlushieEntity {
 
-    public EntityLivingBasePointer(EntityLivingBase entityLivingBase) {
+    public PlushieEntityLivingBase(EntityLivingBase entityLivingBase) {
         super(entityLivingBase);
     }
     

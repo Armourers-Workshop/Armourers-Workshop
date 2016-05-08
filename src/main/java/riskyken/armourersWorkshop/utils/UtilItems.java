@@ -5,11 +5,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
-import riskyken.plushieWrapper.common.item.ItemStackPointer;
+import riskyken.plushieWrapper.common.item.PlushieItemStack;
 
 public final class UtilItems {
 
-    public static int getIntensityFromStack(ItemStackPointer stack, int defaultValue) {
+    public static int getIntensityFromStack(PlushieItemStack stack, int defaultValue) {
         return getIntensityFromStack(stack.getMinecraftStack(), defaultValue);
     }
     
