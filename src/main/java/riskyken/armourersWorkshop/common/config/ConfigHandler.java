@@ -48,6 +48,7 @@ public class ConfigHandler {
     public static boolean allowClientsToUploadSkins = true;
     public static boolean enableHolidayEvents = true;
     public static int startingWardrobeSlots = 3;
+    public static boolean libraryShowsModelPreviews = true;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
@@ -150,6 +151,12 @@ public class ConfigHandler {
         startingWardrobeSlots = config
                 .getInt("startingWardrobeSlots", CATEGORY_GENERAL, 3, 1, 5,
                 "Number of slot columns the player starts with for skins.");
+        
+        libraryShowsModelPreviews = config
+                .getBoolean("libraryShowsModelPreviews", CATEGORY_GENERAL, true,
+                        "Shows model previews in the library.\n"
+                        + "Causes a lot of extra load on servers.\n"
+                        + "Best to turn off on high population servers");
     }
     
     private static void loadCategoryRecipe() {

@@ -21,12 +21,14 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private boolean allowClientsToUploadSkins;
     private String[] overrideSwordsActive;
     private String[] overrideBowsActive;
+    private boolean libraryShowsModelPreviews;
     
     public MessageServerSyncConfig() {
         this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
         this.allowClientsToUploadSkins = ConfigHandler.allowClientsToUploadSkins;
         this.overrideSwordsActive = Addons.overrideSwordsActive;
         this.overrideBowsActive = Addons.overrideBowsActive;
+        this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
     }
     
     @Override
@@ -35,6 +37,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         buf.writeBoolean(allowClientsToUploadSkins);
         ByteBufHelper.writeStringArrayToBuf(buf, overrideSwordsActive);
         ByteBufHelper.writeStringArrayToBuf(buf, overrideBowsActive);
+        buf.writeBoolean(libraryShowsModelPreviews);
     }
     
     
@@ -44,6 +47,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         allowClientsToUploadSkins = buf.readBoolean();
         overrideSwordsActive = ByteBufHelper.readStringArrayFromBuf(buf);
         overrideBowsActive = ByteBufHelper.readStringArrayFromBuf(buf);
+        libraryShowsModelPreviews = buf.readBoolean();
     }
 
     @Override
@@ -58,5 +62,6 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ConfigHandler.allowClientsToUploadSkins = message.allowClientsToUploadSkins;
         Addons.overrideSwordsActive = message.overrideSwordsActive;
         Addons.overrideBowsActive = message.overrideBowsActive;
+        ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
     }
 }
