@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -88,6 +89,22 @@ public class Skin implements ISkin {
                     z = Math.max(z, skinRec.getZ());
                 }
 
+            }
+        }
+        
+        if (getPartCount() == 0) {
+            for (int i = 0; i < getSkinType().getSkinParts().size(); i++) {
+                ISkinPartType part = getSkinType().getSkinParts().get(i);
+                
+                IRectangle3D skinRec = part.getGuideSpace();
+                
+                width = Math.max(width, skinRec.getWidth());
+                height = Math.max(height, skinRec.getHeight());
+                depth = Math.max(depth, skinRec.getDepth());
+                
+                x = Math.max(x, skinRec.getX());
+                y = Math.max(y, skinRec.getY());
+                z = Math.max(z, skinRec.getZ());
             }
         }
         
