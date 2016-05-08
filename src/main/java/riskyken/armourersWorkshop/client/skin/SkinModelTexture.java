@@ -43,21 +43,24 @@ public class SkinModelTexture extends AbstractTexture {
                         if (skinDye.haveDyeInSlot(dyeNumber)) {
                             byte[] dye = skinDye.getDyeColour(dyeNumber);
                             
+                            byte t = (byte) (paintColour >>> 24 & 0xFF);
                             byte r = (byte) (paintColour >>> 16 & 0xFF);
                             byte g = (byte) (paintColour >>> 8 & 0xFF);
                             byte b = (byte) (paintColour & 0xFF);
                             
-                            int[] average = {127, 127, 127};
-                            
-                            if (skin != null) {
-                                average = skin.getAverageDyeColour(dyeNumber);
+                            if ((dye[3] & 0xFF) != 0) {
+                                int[] average = {127, 127, 127};
+                                
+                                if (skin != null) {
+                                    average = skin.getAverageDyeColour(dyeNumber);
+                                }
+                                
+                                dye = ColouredVertexWithUV.dyeColour(r, g, b, dye, average);
+                                int colour = (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
+                                texture.setRGB(ix, iy, colour);
                             }
-                            
-                            dye = ColouredVertexWithUV.dyeColour(r, g, b, dye, average);
-                            int colour = (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
-                            texture.setRGB(ix, iy, colour);
                         } else {
-                            texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));  
+                            texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255)); 
                         }
                     }
                 } else {

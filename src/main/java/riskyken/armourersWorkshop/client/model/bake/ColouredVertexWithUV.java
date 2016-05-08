@@ -57,6 +57,9 @@ public class ColouredVertexWithUV {
                 if (skinDye != null && skinDye.haveDyeInSlot(type - 1)) {
                     byte[] dye = skinDye.getDyeColour(type - 1);
                     if (dye.length == 4) {
+                        if ((dye[3] & 0xFF) == 0) {
+                            return;
+                        }
                         int dyeType = dye[3] & 0xFF;
                         int[] averageRGB = cspd.getAverageDyeColour(type - 1);
                         byte[] dyedColour = null;

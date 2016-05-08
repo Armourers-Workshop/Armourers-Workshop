@@ -34,7 +34,7 @@ public final class ItemStackRenderHelper {
     }
     
     
-    public static void renderItemModelFromSkinPointer(SkinPointer skinPointer, boolean showSkinPaint) {
+    public static void renderItemModelFromSkinPointer(ISkinPointer skinPointer, boolean showSkinPaint) {
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
