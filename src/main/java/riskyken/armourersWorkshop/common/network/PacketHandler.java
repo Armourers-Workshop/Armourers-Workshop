@@ -6,7 +6,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiColourUpdate;
@@ -19,17 +18,20 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinId;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkinData;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibraryFileList;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinIdSend;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSyncConfig;
 
 public class PacketHandler {
@@ -63,6 +65,8 @@ public class PacketHandler {
         registerMessage(MessageServerMiniArmourerCubeEdit.class, MessageServerMiniArmourerCubeEdit.class, Side.CLIENT);
         registerMessage(MessageClientSkinPart.class, MessageClientSkinPart.class, Side.SERVER);
         registerMessage(MessageServerSyncConfig.class, MessageServerSyncConfig.class, Side.CLIENT);
+        registerMessage(MessageClientRequestSkinId.class, MessageClientRequestSkinId.class, Side.SERVER);
+        registerMessage(MessageServerSkinIdSend.class, MessageServerSkinIdSend.class, Side.CLIENT);
     }
     
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {

@@ -150,7 +150,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             return;
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {

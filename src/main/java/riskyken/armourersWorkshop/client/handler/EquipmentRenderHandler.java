@@ -150,7 +150,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skinPointer == null) {
             return;
         }
-        ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer.getSkinId());
+        ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
     }
 
     @Override

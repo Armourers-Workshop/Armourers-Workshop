@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,9 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
 import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
+import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
@@ -43,6 +46,7 @@ import riskyken.armourersWorkshop.common.network.SkinUploadHelper;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -410,6 +414,31 @@ public class GuiArmourLibrary extends GuiContainer {
                 ((GuiIconButton)button).drawRollover(mc, mouseX, mouseY);
             }
         }
+        
+        IGuiListItem item = fileList.getSelectedListEntry();
+        if (item != null) {
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getDisplayName(), true);
+            if (skin != null) {
+                SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
+                float x = 80;
+                float y = 90;
+                float scale = 30F;
+                GL11.glPushMatrix();
+                GL11.glTranslatef((float)x, (float)y, 50.0F);
+                GL11.glScalef((float)(-scale), (float)scale, (float)scale);
+                GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+                float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
+                GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
+                RenderHelper.enableStandardItemLighting();
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GL11.glEnable(GL11.GL_NORMALIZE);
+                GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                ModRenderHelper.enableAlphaBlend();
+                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true);
+                GL11.glPopMatrix();
+            }
+        }
     }
     
     @Override
@@ -449,6 +478,14 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void keyTyped(char key, int keyCode) {
         if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
+            if (keyCode == 200) {
+                //Up
+                fileList.setSelectedIndex(fileList.getSelectedIndex() - 1);
+            }
+            if (keyCode == 208) {
+                //Down
+                fileList.setSelectedIndex(fileList.getSelectedIndex() + 1);
+            }
             super.keyTyped(key, keyCode);
         }
     }

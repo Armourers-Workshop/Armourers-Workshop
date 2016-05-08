@@ -178,20 +178,24 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         }
         
         
-        Skin armourItemData = null;
+        Skin skin = null;
         if (publicFiles) {
-            armourItemData = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
+            skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
         } else {
-            armourItemData = SkinIOUtils.loadSkinFromFileName(fileName + ".armour", player);
+            skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour", player);
         }
         
-        if (armourItemData == null) {
+        if (skin == null) {
             return;
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+        if (publicFiles) {
+            SkinDataCache.INSTANCE.addEquipmentDataToCache(skin, fileName);
+        } else {
+            SkinDataCache.INSTANCE.addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  fileName);
+        }
         
-        ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
+        ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
         
         if (stackArmour == null) {
             return;
@@ -204,7 +208,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         this.setInventorySlotContents(1, stackArmour);
     }
     
-    public void loadArmour(Skin itemData, EntityPlayerMP player) {
+    public void loadArmour(Skin skin, EntityPlayerMP player) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
@@ -224,12 +228,12 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             }
         }
         
-        ItemStack inputItem = SkinNBTHelper.makeEquipmentSkinStack(itemData);
+        ItemStack inputItem = SkinNBTHelper.makeEquipmentSkinStack(skin);
         if (inputItem == null) {
             return;
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(itemData);
+        SkinDataCache.INSTANCE.addEquipmentDataToCache(skin, null);
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, inputItem);

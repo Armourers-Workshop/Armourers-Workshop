@@ -231,7 +231,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
                 return true;
             } else {
-                ClientSkinCache.INSTANCE.requestSkinFromServer(skinData.skinId);
+                ClientSkinCache.INSTANCE.requestSkinFromServer(skinData);
                 return false;
             }
         } else {

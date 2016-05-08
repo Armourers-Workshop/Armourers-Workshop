@@ -5,22 +5,23 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-
 import org.apache.logging.log4j.Level;
 
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinIdSend;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 /**
  * Holds a cache of equipment data on the server that will be sent to clients if
@@ -35,6 +36,8 @@ public final class SkinDataCache implements Runnable {
     
     /** Cache of skins that are in memory. */
     private HashMap<Integer, Skin> skinDataCache = new HashMap<Integer, Skin>();
+    
+    private HashMap<String, Integer> fileNameIdLinkMap = new HashMap<String, Integer>();
     
     /** A list of skin that need to be loaded. */
     private ArrayList<Integer> skinLoadQueue = new ArrayList<Integer>();
@@ -92,8 +95,15 @@ public final class SkinDataCache implements Runnable {
         ModLogger.log("Stopped server skin thread.");
     }
     
-    public void clientRequestEquipmentData(int equipmentId, EntityPlayerMP player) {
-        QueueMessage queueMessage = new QueueMessage(equipmentId, player);
+    public void clientRequestEquipmentData(int skinId, EntityPlayerMP player) {
+        QueueMessage queueMessage = new QueueMessage(skinId, player);
+        synchronized (messageQueue) {
+            messageQueue.add(queueMessage);
+        }
+    }
+    
+    public void clientRequestSkinId(String fileName, EntityPlayerMP player) {
+        QueueMessage queueMessage = new QueueMessage(fileName, player);
         synchronized (messageQueue) {
             messageQueue.add(queueMessage);
         }
@@ -152,43 +162,97 @@ public final class SkinDataCache implements Runnable {
     public Skin addSkinToCache(InputStream inputStream) {
         Skin skin = SkinIOUtils.loadSkinFromStream(inputStream);
         if (skin != null) {
-            addEquipmentDataToCache(skin);
+            addEquipmentDataToCache(skin, null);
             return skin;
         }
         return null;
     }
     
     private void processMessage(QueueMessage queueMessage) {
+        if (queueMessage.useId) {
+            sendSkinToClient(queueMessage.skinId, queueMessage.player);
+        } else {
+            sendSkinIdToClient(queueMessage.fileName, queueMessage.player);
+        }
+    }
+    
+    private void sendSkinToClient(int skinId, EntityPlayerMP player) {
         synchronized (skinDataCache) {
-            if (!skinDataCache.containsKey(queueMessage.equipmentId)) {
-                if (haveEquipmentOnDisk(queueMessage.equipmentId)) {
+            if (!skinDataCache.containsKey(skinId)) {
+                if (haveEquipmentOnDisk(skinId)) {
                     Skin skin;
-                    skin = loadEquipmentFromDisk(queueMessage.equipmentId);
+                    skin = loadEquipmentFromDisk(skinId);
                     if (skin != null) {
-                        addEquipmentDataToCache(skin, queueMessage.equipmentId);
-                        if (skin.hashCode() != queueMessage.equipmentId) {
+                        addEquipmentDataToCache(skin, skinId);
+                        if (skin.hashCode() != skinId) {
                             addEquipmentDataToCache(skin, skin.hashCode());
                         }
                     } else {
-                        ModLogger.log(Level.ERROR, String.format("Failed to load skin id:%s from disk.", String.valueOf(queueMessage.equipmentId)));
+                        ModLogger.log(Level.ERROR, String.format("Failed to load skin id:%s from disk.", String.valueOf(skinId)));
                     }
                 }
             }
             
-            if (skinDataCache.containsKey(queueMessage.equipmentId)) {
-                Skin skin = skinDataCache.get(queueMessage.equipmentId);
-                skin.requestId = queueMessage.equipmentId;
+            if (skinDataCache.containsKey(skinId)) {
+                Skin skin = skinDataCache.get(skinId);
+                skin.requestId = skinId;
                 skin.onUsed();
-                PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), queueMessage.player);
+                PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), player);
             } else {
-                ModLogger.log(Level.ERROR, "Equipment id:" + queueMessage.equipmentId +" was requested by "
-            + queueMessage.player.getCommandSenderName() + " but was not found.");
+                ModLogger.log(Level.ERROR, "Equipment id:" + skinId +" was requested by "
+            + player.getCommandSenderName() + " but was not found.");
             }
         }
     }
     
-    public void addEquipmentDataToCache(Skin equipmentData) {
-        addEquipmentDataToCache(equipmentData, equipmentData.lightHash());
+    private void sendSkinIdToClient(String fileName, EntityPlayerMP player) {
+        if (!fileNameIdLinkMap.containsKey(fileName)) {
+            boolean publicFiles = true;
+            
+            String basicFileName = fileName;
+            
+            if (fileName.contains("\\")) {
+                String[] splitName = fileName.split("\\");
+                basicFileName = splitName[splitName.length - 1];
+                publicFiles = false;
+            }
+            
+            Skin skin = null;
+            if (publicFiles) {
+                skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour");
+            } else {
+                skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour", player);
+            }
+            
+            if (skin != null) {
+                if (publicFiles) {
+                    addEquipmentDataToCache(skin, basicFileName);
+                } else {
+                    addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  basicFileName);
+                }
+            } else {
+                ModLogger.log(Level.ERROR, String.format("Player %s requested ID for file name %s but the file was not found.",
+                        player.getCommandSenderName(), fileName));
+            }
+        }
+        
+        if (fileNameIdLinkMap.containsKey(fileName)) {
+            MessageServerSkinIdSend message = new MessageServerSkinIdSend(fileName, fileNameIdLinkMap.get(fileName));
+            PacketHandler.networkWrapper.sendTo(message, player);
+        }
+    }
+    
+    public void addEquipmentDataToCache(Skin skin, String fileName) {
+        try {
+            skin.lightHash();
+        } catch (Exception e) {
+            ModLogger.log(Level.ERROR, String.format("Unable to create ID for file %s.", fileName));
+            return;
+        }
+        addEquipmentDataToCache(skin, skin.lightHash());
+        if (!StringUtils.isNullOrEmpty(fileName)) {
+            fileNameIdLinkMap.put(fileName, skin.lightHash());
+        }
     }
     
     private void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {
@@ -266,12 +330,23 @@ public final class SkinDataCache implements Runnable {
     
     private class QueueMessage {
         
-        public final int equipmentId;
+        public final int skinId;
+        public final String fileName;
         public final EntityPlayerMP player;
+        public final boolean useId;
         
-        public QueueMessage(int equipmentId, EntityPlayerMP player) {
-            this.equipmentId = equipmentId;
+        public QueueMessage(int skinId, EntityPlayerMP player) {
+            this.skinId = skinId;
+            this.fileName = null;
             this.player = player;
+            this.useId = true;
+        }
+        
+        public QueueMessage(String fileName, EntityPlayerMP player) {
+            this.skinId = -1;
+            this.fileName = fileName;
+            this.player = player;
+            this.useId = false;
         }
     }
 }

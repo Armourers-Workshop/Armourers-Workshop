@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinId;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -25,7 +26,7 @@ public class ClientSkinCache {
     public static ClientSkinCache INSTANCE;
     
     private final HashMap<Integer, Skin> skinIDMap;
-    private final HashMap<String, Skin> skinNameMap;
+    private final HashMap<String, Integer> skinNameMap;
     private final HashSet<Integer> requestedSkinIDs;
     private final HashSet<String> requestedSkinNames;
     
@@ -35,48 +36,91 @@ public class ClientSkinCache {
     
     protected ClientSkinCache() {
         skinIDMap = new HashMap<Integer, Skin>();
-        skinNameMap = new HashMap<String, Skin>();
+        skinNameMap = new HashMap<String, Integer>();
         requestedSkinIDs = new HashSet<Integer>();
         requestedSkinNames = new HashSet<String>();
         FMLCommonHandler.instance().bus().register(this);
-    }
-    
-    public void requestSkinFromServer(String fileName) {
-        synchronized (requestedSkinNames) {
-            if (!requestedSkinNames.contains(fileName)) {
-                requestedSkinNames.add(fileName);
-            }
-        }
     }
     
     public void requestSkinFromServer(ISkinPointer skinPointer) {
         requestSkinFromServer(skinPointer.getSkinId());
     }
     
-    public void requestSkinFromServer(int skinID) {
+    private void requestSkinFromServer(int skinId) {
         synchronized (requestedSkinIDs) {
-            if (!requestedSkinIDs.contains(skinID)) {
-                PacketHandler.networkWrapper.sendToServer(new MessageClientRequestSkinData(skinID));
-                requestedSkinIDs.add(skinID);
+            if (!requestedSkinIDs.contains(skinId)) {
+                PacketHandler.networkWrapper.sendToServer(new MessageClientRequestSkinData(skinId));
+                requestedSkinIDs.add(skinId);
             }
         }
     }
     
-    public boolean isSkinInCache(String fileName) {
+    public boolean isSkinInCache(ISkinPointer skinPointer) {
+        synchronized (skinIDMap) {
+            return skinIDMap.containsKey(skinPointer.getSkinId()); 
+        }
+    }
+    
+    public boolean isSkinInCache(int skinId) {
+        synchronized (skinIDMap) {
+            return skinIDMap.containsKey(skinId); 
+        }
+    }
+    
+    public Skin getSkin(String fileName, boolean requestSkin) {
+        if (haveIdForFileName(fileName)) {
+            int skinId = getIdForFileName(fileName);
+            if (isSkinInCache(skinId)) {
+                synchronized (skinIDMap) {
+                    return skinIDMap.get(skinId);
+                }
+            } else {
+                if (requestSkin) {
+                    requestSkinFromServer(skinId);
+                }
+            }
+        } else {
+            if (requestSkin) {
+                requestIdForFileName(fileName);
+            }
+        }
+        return null;
+    }
+    
+    private boolean haveIdForFileName(String fileName) {
         synchronized (skinNameMap) {
             return skinNameMap.containsKey(fileName);
         }
     }
-    /*
-    public boolean isSkinInCache(int skinID) {
-        synchronized (skinIDMap) {
-            return skinIDMap.containsKey(skinID); 
+    
+    private int getIdForFileName(String fileName) {
+        synchronized (skinNameMap) {
+            return skinNameMap.get(fileName);
         }
     }
-    */
-    public boolean isSkinInCache(ISkinPointer skinPointer) {
-        synchronized (skinIDMap) {
-            return skinIDMap.containsKey(skinPointer.getSkinId()); 
+    
+    private void requestIdForFileName(String fileName) {
+        synchronized (requestedSkinNames) {
+            if (!requestedSkinNames.contains(fileName)) {
+                requestedSkinNames.add(fileName);
+                MessageClientRequestSkinId message = new MessageClientRequestSkinId(fileName);
+                PacketHandler.networkWrapper.sendToServer(message);
+            }
+        }
+    }
+    
+    public void setIdForFileName(String fileName, int skinId) {
+        synchronized (requestedSkinNames) {
+            if (requestedSkinNames.contains(fileName)) {
+                requestedSkinNames.remove(fileName);
+            } else {
+                ModLogger.log(Level.WARN, String.format(
+                        "Got ID:%s for file name:%s but it was not requested.",
+                        String.valueOf(skinId), fileName));
+            }
+            synchronized (skinNameMap) {
+                skinNameMap.put(fileName, skinId) ;
+            }
         }
     }
     
@@ -165,27 +209,11 @@ public class ClientSkinCache {
             }
         }
         if (requestSkin) {
-            requestSkinFromServer(skinPointer.getSkinId());
+            requestSkinFromServer(skinPointer);
         }
         return null;
-    }
-    /*
-    public Skin getSkin(int skinID) {
-        return getSkin(skinID, true);
     }
     
-    public Skin getSkin(int skinID, boolean requestSkin) {
-        synchronized (skinIDMap) {
-            if (skinIDMap.containsKey(skinID)) {
-                return skinIDMap.get(skinID);
-            }
-        }
-        if (requestSkin) {
-            requestSkinFromServer(skinID);
-        }
-        return null;
-    }
-    */
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {

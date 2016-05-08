@@ -67,12 +67,11 @@ public class CommandArmourers extends CommandBase {
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
-            skinName += ".armour";
-            Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName);
+            Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName + ".armour");
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
-            SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+            SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData, skinName);
             ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
             EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
             entityItem.delayBeforeCanPickup = 0;
@@ -87,12 +86,11 @@ public class CommandArmourers extends CommandBase {
             for (int i = 3; i < args.length; i++) {
                 skinName += " " + args[i];
             }
-            skinName += ".armour";
-            Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName);
+            Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName + ".armour");
             if (armourItemData == null) {
                 throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
             }
-            SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData);
+            SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData, skinName);
             ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
             ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {

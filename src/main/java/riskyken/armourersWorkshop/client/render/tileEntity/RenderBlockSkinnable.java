@@ -66,7 +66,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             if (skin != null) {
                 renderSkin(tileEntity, x, y, z, skin);
             } else {
-                ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer.getSkinId());
+                ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
                 GL11.glPushMatrix();
                 GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
                 loadingModel.render(tileEntity, partialTickTime, 0.0625F);
