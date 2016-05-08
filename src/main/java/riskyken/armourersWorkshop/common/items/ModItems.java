@@ -38,6 +38,7 @@ public class ModItems {
     public static PlushieItem soap;
     public static Item dyeBottle;
     public static PlushieItem guideBook;
+    public static Item armourersHammer;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -64,6 +65,7 @@ public class ModItems {
         soap = new ItemSoap();
         dyeBottle = new ItemDyeBottle();
         guideBook = new ItemGuideBook();
+        armourersHammer = new ItemArmourersHammer();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];

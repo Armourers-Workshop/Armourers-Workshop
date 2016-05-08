@@ -52,6 +52,7 @@ item.armourersworkshop:hueTool.name=Hue Tool
 item.armourersworkshop:blockMarker.name=Block Marker
 item.armourersworkshop:dyeBottle.name=Dye Bottle
 item.armourersworkshop:blendingTool.name=Blending Tool
+item.armourersworkshop:armourersHammer.name=Armourers Hammer
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -69,6 +70,7 @@ item.armourersworkshop:soap.flavour=Use in the Skinner Table to clear an items s
 item.armourersworkshop:hueTool.flavour=Changes the colour of a block%nwithout affecting the shading.
 item.armourersworkshop:blockMarker.flavour=Creates a marker on an equipment cube.%nOnly use with skins that need marker blocks.
 item.armourersworkshop:dyeBottle.flavour=Used in the dye table to dye skins.
+item.armourersworkshop:armourersHammer.flavour=Used to rotate blocks.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s

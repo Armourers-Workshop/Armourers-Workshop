@@ -12,6 +12,7 @@ public final class LibItemResources {
     public static final String WAND_OF_STYLE = PREFIX_RESOURCE + "wandOfStyle";
     public static final String SOAP = PREFIX_RESOURCE + "soap";
     public static final String BLOCK_MARKER = PREFIX_RESOURCE + "blockMarker";
+    public static final String ARMOURERs_HAMMER = PREFIX_RESOURCE + "armourersHammer";
     
     public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "templateHead";
     public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "templateChest";
