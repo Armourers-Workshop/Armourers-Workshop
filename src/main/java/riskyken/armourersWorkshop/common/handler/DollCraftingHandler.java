@@ -1,56 +1,92 @@
 package riskyken.armourersWorkshop.common.handler;
 
-import java.util.List;
-
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.IWorldAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import riskyken.armourersWorkshop.common.blocks.BlockMannequin;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class DollCraftingHandler {
+public class DollCraftingHandler implements IWorldAccess {
 
     public DollCraftingHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
     @SubscribeEvent
-    public void onMinecartUpdateEvent(MinecartUpdateEvent event) {
-        World world = event.minecart.worldObj;
-        EntityMinecart minecart = event.minecart;
-        
-        List<Entity> entities;
-        
-        AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
-                minecart.posX - 0.5D, minecart.posY - 0.5D, minecart.posZ - 0.5D,
-                minecart.posX + 0.5D, minecart.posY + 0.5D, minecart.posZ + 0.5D);
-        entities = world.getEntitiesWithinAABB(EntityItem.class, bb);
-        
-        if (entities.size() == 0) {
-            return;
-        }
-        
-        for (int i = 0; i < entities.size(); i++) {
-            Entity entity = entities.get(i);
-            if (!(entity instanceof EntityItem)) {
-                return; 
+    public void onLoadWorld(WorldEvent.Load event) {
+        ModLogger.log(String.format("Adding world access to world %s", event.world.toString()));
+        event.world.addWorldAccess(this);
+    }
+
+    @Override
+    public void markBlockForUpdate(int x, int y, int z) {
+    }
+
+    @Override
+    public void markBlockForRenderUpdate(int x, int y, int z) {
+    }
+
+    @Override
+    public void markBlockRangeForRenderUpdate(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    }
+
+    @Override
+    public void playSound(String soundName, double x, double y, double z, float volume, float pitch) {
+    }
+
+    @Override
+    public void playSoundToNearExcept(EntityPlayer player, String soundName, double x, double y, double z, float volume, float pitch) {
+    }
+
+    @Override
+    public void spawnParticle(String particleType, double x, double y, double z, double velX, double velY, double velZ) {
+    }
+
+    @Override
+    public void onEntityCreate(Entity entity) {
+    }
+
+    @Override
+    public void onEntityDestroy(Entity entity) {
+        World world = entity.worldObj;
+        if (!world.isRemote) {
+            if (entity instanceof EntityFallingBlock) {
+                int x = MathHelper.floor_double(entity.posX);
+                int y = MathHelper.floor_double(entity.posY) - 1;
+                int z = MathHelper.floor_double(entity.posZ);
+                Block block = world.getBlock(x, y, z);
+                if (block == ModBlocks.mannequin) {
+                    ((BlockMannequin)block).convertToDoll(world, x, y, z);
+                }
             }
-            
-            EntityItem item = (EntityItem) entity;
-            ItemStack stack = item.getEntityItem();
-            if (stack.getItem() == Item.getItemFromBlock(ModBlocks.mannequin)) {
-                ItemStack dollStack = new ItemStack(ModBlocks.doll, stack.stackSize);
-                dollStack.setTagCompound(stack.getTagCompound());
-                EntityItem dollItem = new EntityItem(world, item.posX, item.posY, item.posZ, dollStack);
-                world.spawnEntityInWorld(dollItem);
-                item.setDead();
-            }
         }
+    }
+
+    @Override
+    public void playRecord(String recordName, int x, int y, int z) {
+    }
+
+    @Override
+    public void broadcastSound(int p_82746_1_, int p_82746_2_, int p_82746_3_, int p_82746_4_, int p_82746_5_) {
+    }
+
+    @Override
+    public void playAuxSFX(EntityPlayer p_72706_1_, int p_72706_2_, int p_72706_3_, int p_72706_4_, int p_72706_5_, int p_72706_6_) {
+    }
+
+    @Override
+    public void destroyBlockPartially(int p_147587_1_, int p_147587_2_, int p_147587_3_, int p_147587_4_, int p_147587_5_) {
+    }
+
+    @Override
+    public void onStaticEntitiesChanged() {
     }
 }

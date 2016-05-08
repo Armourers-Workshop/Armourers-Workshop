@@ -50,7 +50,8 @@ public class BlockMannequin extends AbstractModBlockContainer {
         GameRegistry.registerBlock(this, ItemBlockMannequin.class, "block." + name);
         return super.setBlockName(name);
     }
-
+    
+    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityMannequin) {
@@ -68,6 +69,54 @@ public class BlockMannequin extends AbstractModBlockContainer {
             }
         }
         world.setBlock(x, y + 1, z, this, 1, 2);
+    }
+    
+    public void convertToDoll(World world, int x, int y, int z) {
+        if (isTopOfMannequin(world, x, y, z)) {
+            Block block = world.getBlock(x, y - 1, z);
+            if (block == this) {
+                ((BlockMannequin)block).convertToDoll(world, x, y - 1, z);
+            }
+            return;
+        }
+        
+        if (world.getBlock(x, y + 1, z) == this) {
+            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
+            if (te != null) {
+                te.dropItems = false;
+                NBTTagCompound compound = new NBTTagCompound();
+                te.writeCommonToNBT(compound);
+                te.writeItemsToNBT(compound);
+                world.setBlockToAir(x, y + 1, z);
+                world.setBlock(x, y, z, ModBlocks.doll, 0, 3);
+                TileEntity newTe = world.getTileEntity(x, y, z);
+                if (newTe != null && newTe instanceof TileEntityMannequin) {
+                    ((TileEntityMannequin)newTe).readCommonFromNBT(compound);
+                    ((TileEntityMannequin)newTe).readItemsFromNBT(compound);
+                    ((TileEntityMannequin)newTe).setDoll(true);
+                }
+            }
+        }
+    }
+    
+    public TileEntityMannequin getMannequinTileEntity(World world, int x, int y, int z) {
+        int offset = 0;
+        if (isTopOfMannequin(world, x, y, z)) {
+            offset = -1;
+        }
+        TileEntity te = world.getTileEntity(x, y + offset, z);
+        if (te != null && te instanceof TileEntityMannequin) {
+            return (TileEntityMannequin) te;
+        }
+        return null;
+    }
+    
+    public boolean isTopOfMannequin(World world, int x, int y, int z) {
+        return isTopOfMannequin(world.getBlockMetadata(x, y, z));
+    }
+    
+    public boolean isTopOfMannequin(int meta) {
+        return meta == 1;
     }
     
     @Override

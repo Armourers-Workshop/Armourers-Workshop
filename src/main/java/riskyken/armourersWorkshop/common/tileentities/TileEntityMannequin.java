@@ -38,6 +38,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private int heightOffset;
     @SideOnly(Side.CLIENT)
     public EntityTextureInfo skinTexture;
+    public boolean dropItems = true;
     
     public TileEntityMannequin() {
         this(false);
@@ -76,9 +77,13 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         return isDoll;
     }
     
+    public void setDoll(boolean isDoll) {
+        this.isDoll = isDoll;
+    }
+    
     @Override
     public void invalidate() {
-        if (!worldObj.isRemote) {
+        if (!worldObj.isRemote & dropItems) {
             ItemStack stack = new ItemStack(ModBlocks.mannequin);
             if (isDoll) {
                 stack = new ItemStack(ModBlocks.doll);
