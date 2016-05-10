@@ -121,6 +121,14 @@ public final class ModItemRecipes {
                 'c', ModBlocks.colourable,
                 'g', "paneGlass"});
         
+        CraftingManager.addShapedRecipe(new ItemStack(ModItems.armourersHammer, 1, 0), new Object[] {
+                " iw",
+                " ii",
+                "s  ",
+                'w', ModBlocks.colourable,
+                'i', "ingotIron",
+                's', "stickWood"});
+        
         CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.guideBook), 1, 0), new Object[] {
             new ItemStack(Items.book, 1),
             new ItemStack(ModBlocks.colourable, 1)});

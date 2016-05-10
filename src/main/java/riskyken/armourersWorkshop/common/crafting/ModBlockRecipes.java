@@ -94,5 +94,9 @@ public final class ModBlockRecipes {
         
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlowing, 1, 0), new Object[] {
             new ItemStack(ModBlocks.colourableGlassGlowing, 1)});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlassGlowing, 1, 0), new Object[] {
+                new ItemStack(ModBlocks.colourableGlass, 1),
+                new ItemStack(Items.glowstone_dust, 1)});
     }
 }
