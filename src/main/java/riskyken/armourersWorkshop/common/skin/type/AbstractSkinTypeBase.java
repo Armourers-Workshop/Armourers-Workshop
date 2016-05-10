@@ -56,4 +56,9 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     public boolean isHidden() {
         return false;
     }
+    
+    @Override
+    public boolean enabled() {
+        return true;
+    }
 }

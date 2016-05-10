@@ -2,17 +2,19 @@ package riskyken.armourersWorkshop.client.gui;
 
 import java.util.ArrayList;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -28,9 +30,6 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-import cpw.mods.fml.client.config.GuiButtonExt;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListCallback {
@@ -65,7 +64,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
             if (skinType != SkinTypeRegistry.skinSkirt) {
                 String skinLocalizedName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
                 String skinRegistryName = skinType.getRegistryName();
-                dropDownSkins.addListItem(skinLocalizedName, skinRegistryName, true);
+                dropDownSkins.addListItem(skinLocalizedName, skinRegistryName, skinType.enabled());
                 if (skinType == tileEntity.getSkinType()) {
                     dropDownSkins.setListSelectedIndex(skinCount);
                     updatePartsDropDown(skinType);

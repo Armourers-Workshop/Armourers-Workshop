@@ -77,4 +77,10 @@ public interface ISkinType {
      * @return Is hidden?
      */
     public boolean isHidden();
+    
+    /**
+     * Is this skin enabled?
+     * @return Is enabled?
+     */
+    public boolean enabled();
 }

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.legs;
 
 import java.awt.Point;
 
@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
 public class SkinLegsPartRightLeg extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured {
     

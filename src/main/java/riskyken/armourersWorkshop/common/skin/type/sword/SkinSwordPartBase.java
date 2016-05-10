@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.sword;
 
 import org.lwjgl.opengl.GL11;
 
@@ -8,19 +8,21 @@ import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
-public class SkinBowPartBase extends AbstractSkinPartTypeBase {
+public class SkinSwordPartBase extends AbstractSkinPartTypeBase {
     
-    public SkinBowPartBase(ISkinType baseType) {
+    public SkinSwordPartBase(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-10, -20, -18, 20, 62, 36);
+        this.buildingSpace = new Rectangle3D(-10, -20, -28, 20, 62, 56);
         this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);
-        this.offset = new Point3D(-21, 0, 0);
+        //Offset -1 to match old skin system.
+        this.offset = new Point3D(0, -1, 0);
     }
-
+    
     @Override
     public String getPartName() {
-        return "frame1";
+        return "base";
     }
 
     @SideOnly(Side.CLIENT)
@@ -31,20 +33,5 @@ public class SkinBowPartBase extends AbstractSkinPartTypeBase {
         ModelHand.MODEL.render(scale);
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
-    }
-    
-    @Override
-    public int getMinimumMarkersNeeded() {
-        return 1;
-    }
-    
-    @Override
-    public int getMaximumMarkersNeeded() {
-        return 1;
-    }
-    
-    @Override
-    public boolean isPartRequired() {
-        return true;
     }
 }

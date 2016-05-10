@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.chest;
 
 import java.util.ArrayList;
 
@@ -7,16 +7,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
-public class SkinLegs extends AbstractSkinTypeBase {
-
+public class SkinChest extends AbstractSkinTypeBase {
+    
     private ArrayList<ISkinPartType> skinParts;
     
-    public SkinLegs() {
+    public SkinChest() {
         skinParts = new ArrayList<ISkinPartType>();
-        skinParts.add(new SkinLegsPartLeftLeg(this));
-        skinParts.add(new SkinLegsPartRightLeg(this));
-        skinParts.add(new SkinLegsPartSkirt(this));
+        skinParts.add(new SkinChestPartBase(this));
+        skinParts.add(new SkinChestPartLeftArm(this));
+        skinParts.add(new SkinChestPartRightArm(this));
     }
     
     @Override
@@ -26,23 +27,23 @@ public class SkinLegs extends AbstractSkinTypeBase {
 
     @Override
     public String getRegistryName() {
-        return "armourers:legs";
+        return "armourers:chest";
     }
     
     @Override
     public String getName() {
-        return "Legs";
+        return "Chest";
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcon(IIconRegister register) {
-        this.icon = register.registerIcon(LibItemResources.TEMPLATE_LEGS);
-        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_LEGS);
+        this.icon = register.registerIcon(LibItemResources.TEMPLATE_CHEST);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_CHEST);
     }
 
     @Override
     public int getVanillaArmourSlotId() {
-        return 2;
+        return 1;
     }
 }

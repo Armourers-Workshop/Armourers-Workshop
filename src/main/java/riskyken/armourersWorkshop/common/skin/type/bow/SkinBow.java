@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.bow;
 
 import java.util.ArrayList;
 
@@ -7,15 +7,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
-public class SkinFeet extends AbstractSkinTypeBase {
+public class SkinBow extends AbstractSkinTypeBase {
 
     private ArrayList<ISkinPartType> skinParts;
     
-    public SkinFeet() {
-        skinParts = new ArrayList<ISkinPartType>();
-        skinParts.add(new SkinFeetPartLeftFoot(this));
-        skinParts.add(new SkinFeetPartRightFoot(this));
+    public SkinBow() {
+        this.skinParts = new ArrayList<ISkinPartType>();
+        skinParts.add(new SkinBowPartBase(this));
+        skinParts.add(new SkinBowPartFrame1(this));
+        skinParts.add(new SkinBowPartFrame2(this));
     }
     
     @Override
@@ -25,23 +27,18 @@ public class SkinFeet extends AbstractSkinTypeBase {
 
     @Override
     public String getRegistryName() {
-        return "armourers:feet";
-    }
-    
-    @Override
-    public String getName() {
-        return "Feet";
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcon(IIconRegister register) {
-        this.icon = register.registerIcon(LibItemResources.TEMPLATE_FEET);
-        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_FEET);
+        return "armourers:bow";
     }
 
     @Override
-    public int getVanillaArmourSlotId() {
-        return 3;
+    public String getName() {
+        return "bow";
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcon(IIconRegister register) {
+        this.icon = register.registerIcon(LibItemResources.TEMPLATE_BOW);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_BOW);
     }
 }

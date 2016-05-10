@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.chest;
 
 import java.awt.Point;
 
@@ -11,20 +11,21 @@ import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
+import riskyken.armourersWorkshop.client.model.armourer.ModelChest;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
-public class SkinFeetPartLeftFoot extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured  {
+public class SkinChestPartRightArm extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured {
     
-    public SkinFeetPartLeftFoot(ISkinType baseType) {
+    public SkinChestPartRightArm(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-8, -13, -8, 11, 5, 16);
-        this.guideSpace = new Rectangle3D(-2, -12, -2, 4, 12, 4);
-        this.offset = new Point3D(6, 0, 0);
+        this.buildingSpace = new Rectangle3D(-3, -16, -14, 14, 32, 28);
+        this.guideSpace = new Rectangle3D(-1, -10, -2, 4, 12, 4);
+        this.offset = new Point3D(-10, 0, 0);
     }
     
     @Override
     public String getPartName() {
-        return "leftFoot";
+        return "rightArm";
     }
 
     @SideOnly(Side.CLIENT)
@@ -32,19 +33,19 @@ public class SkinFeetPartLeftFoot extends AbstractSkinPartTypeBase implements IS
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-        ModelLegs.MODEL.renderLeftLeft(scale);
+        ModelChest.MODEL.renderRightArm(scale);
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
     }
 
     @Override
     public Point getTextureLocation() {
-        return new Point(0, 16);
+        return new Point(40, 16);
     }
 
     @Override
     public boolean isTextureMirrored() {
-        return true;
+        return false;
     }
 
     @Override

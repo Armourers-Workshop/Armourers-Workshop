@@ -126,6 +126,8 @@ skinType.armourers:sword.name=Sword
 skinType.armourers:bow.name=Bow
 skinType.armourers:arrow.name=Arrow
 skinType.armourers:block.name=Block
+skinType.armourers:multiblock.name=Multiblock
+skinType.armourers:wings.name=Wings
 
 # Skin Part Types
 skinPartType.armourers:head.base.name=Base

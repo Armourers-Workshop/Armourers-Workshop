@@ -309,6 +309,15 @@ public class Skin implements ISkin {
         return parts;
     }
     
+    public SkinPart getSkinPartFromType(ISkinPartType skinPartType) {
+        for (int i = 0; i < parts.size(); i++) {
+            if (parts.get(i).getPartType() == skinPartType) {
+                return parts.get(i);
+            }
+        }
+        return null;
+    }
+    
     @Override
     public ArrayList<ISkinPart> getSubParts() {
         ArrayList<ISkinPart> partList = new ArrayList<ISkinPart>();

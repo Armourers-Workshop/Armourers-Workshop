@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -108,9 +109,15 @@ public final class ItemStackRenderHelper {
             return;
         }
         skin.onUsed();
+        float scale = 1F / 16F;
         for (int i = 0; i < skin.getParts().size(); i++) {
+            GL11.glPushMatrix();
             SkinPart skinPart = skin.getParts().get(i);
+            IPoint3D offset = skinPart.getPartType().getOffset();
+            GL11.glTranslated(offset.getX() * scale, (offset.getY() + 1) * scale, offset.getZ() * scale);
             SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null);
+            GL11.glPopMatrix();
         }
+        
     }
 }

@@ -1,8 +1,9 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.block;
 
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
 public class SkinBlockPartBase extends AbstractSkinPartTypeBase {
 

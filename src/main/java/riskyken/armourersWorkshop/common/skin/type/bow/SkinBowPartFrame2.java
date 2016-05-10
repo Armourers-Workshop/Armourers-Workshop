@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.bow;
 
 import org.lwjgl.opengl.GL11;
 
@@ -8,19 +8,20 @@ import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
-public class SkinBowPartFrame1 extends AbstractSkinPartTypeBase {
+public class SkinBowPartFrame2 extends AbstractSkinPartTypeBase {
     
-    public SkinBowPartFrame1(ISkinType baseType) {
+    public SkinBowPartFrame2(ISkinType baseType) {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-10, -20, -18, 20, 62, 36);
         this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);
-        this.offset = new Point3D(0, 0, 0);
+        this.offset = new Point3D(21, 0, 0);
     }
 
     @Override
     public String getPartName() {
-        return "frame2";
+        return "frame3";
     }
 
     @SideOnly(Side.CLIENT)

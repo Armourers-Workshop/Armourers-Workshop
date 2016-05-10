@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type;
+package riskyken.armourersWorkshop.common.skin.type.feet;
 
 import java.awt.Point;
 
@@ -12,19 +12,20 @@ import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
+import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
-public class SkinLegsPartLeftLeg extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured {
+public class SkinFeetPartLeftFoot extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured  {
     
-    public SkinLegsPartLeftLeg(ISkinType baseType) {
+    public SkinFeetPartLeftFoot(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-8, -8, -8, 11, 9, 16);
+        this.buildingSpace = new Rectangle3D(-8, -13, -8, 11, 5, 16);
         this.guideSpace = new Rectangle3D(-2, -12, -2, 4, 12, 4);
-        this.offset = new Point3D(6, -5, 0);
+        this.offset = new Point3D(6, 0, 0);
     }
     
     @Override
     public String getPartName() {
-        return "leftLeg";
+        return "leftFoot";
     }
 
     @SideOnly(Side.CLIENT)
@@ -36,7 +37,7 @@ public class SkinLegsPartLeftLeg extends AbstractSkinPartTypeBase implements ISk
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
     }
-    
+
     @Override
     public Point getTextureLocation() {
         return new Point(0, 16);
