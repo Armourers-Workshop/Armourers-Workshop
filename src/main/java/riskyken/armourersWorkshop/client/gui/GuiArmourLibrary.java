@@ -194,7 +194,7 @@ public class GuiArmourLibrary extends GuiContainer {
             ISkinType skinType = skinTypes.get(i);
             if (!skinType.isHidden()) {
                 dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType),
-                        skinType.getRegistryName(), skinType.enabled());
+                        skinType.getRegistryName(), true);
                 addCount++;
                 if (skinType == lastSkinType) {
                     dropDownList.setListSelectedIndex(addCount);

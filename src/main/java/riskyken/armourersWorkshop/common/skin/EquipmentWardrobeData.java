@@ -41,6 +41,15 @@ public class EquipmentWardrobeData {
         slotsUnlocked = ConfigHandler.startingWardrobeSlots;
     }
     
+    public EquipmentWardrobeData(EquipmentWardrobeData ewd) {
+        skinColour = ewd.skinColour;
+        hairColour = ewd.hairColour;
+        armourOverride = (BitSet) ewd.armourOverride.clone();
+        headOverlay = ewd.headOverlay;
+        limitLimbs = ewd.limitLimbs;
+        slotsUnlocked = ewd.slotsUnlocked;
+    }
+    
     public void saveNBTData(NBTTagCompound compound) {
         compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
         compound.setInteger(TAG_HAIR_COLOUR, this.hairColour);

@@ -197,7 +197,10 @@ inventory.armourersworkshop:colourMixer.label.paintType=Paint Type
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Skin Colour
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Hair Colour
-inventory.armourersworkshop:equipmentWardrobe.autoColour=Auto Colour
+inventory.armourersworkshop:equipmentWardrobe.selectSkin=Pick Skin Colour
+inventory.armourersworkshop:equipmentWardrobe.autoSkin=Auto
+inventory.armourersworkshop:equipmentWardrobe.selectHair=Pick Hair Colour
+inventory.armourersworkshop:equipmentWardrobe.autoHair=Auto
 inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Skin Override
 
 inventory.armourersworkshop:mannequin.label.headRotation=Head Rotation
