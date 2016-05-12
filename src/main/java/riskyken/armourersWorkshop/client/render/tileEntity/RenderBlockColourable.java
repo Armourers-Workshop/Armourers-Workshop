@@ -56,6 +56,10 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
                 }
             }
         }
+        if (!(markerAlpha > 0)) {
+            return;
+        }
+        
         if (tileEntity instanceof TileEntityColourable) {
             renderTileEntityAt((TileEntityColourable)tileEntity, x, y, z, partialTickTime);
         } else if (tileEntity instanceof TileEntityBoundingBox) {
