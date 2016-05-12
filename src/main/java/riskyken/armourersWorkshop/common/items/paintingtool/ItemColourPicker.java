@@ -83,10 +83,8 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         }
         
         if (block instanceof IPantableBlock) {
-            if (!world.isRemote) {
-                setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
-                setToolPaintType(stack, ((IPantableBlock)block).getPaintType(world, x, y, z, side));
-            }
+            setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
+            setToolPaintType(stack, ((IPantableBlock)block).getPaintType(world, x, y, z, side));
             
             if (!world.isRemote) {
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);

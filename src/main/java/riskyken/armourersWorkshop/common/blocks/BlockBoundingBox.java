@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -18,6 +19,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
@@ -32,7 +34,10 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintType;
+import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -189,13 +194,25 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                     if (paintType != 0) {
                         return colour;
                     } else {
-                        GameProfile gameProfile = parent.getGameProfile();
-                        if (gameProfile != null) {
-                            BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
-                            if (playerSkin != null) {
-                                return playerSkin.getRGB(texturePoint.x, texturePoint.y);
+                        if (te.getWorldObj().isRemote) {
+                            GameProfile gameProfile = parent.getGameProfile();
+                            if (gameProfile != null) {
+                                BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
+                                if (playerSkin != null) {
+                                    colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
+                                    NBTTagCompound compound = new NBTTagCompound();
+                                    byte[] paintData = new byte[4];
+                                    Color c = new Color(colour);
+                                    paintData[0] = (byte) c.getRed();
+                                    paintData[1] = (byte) c.getGreen();
+                                    paintData[2] = (byte) c.getBlue();
+                                    paintData[3] = (byte) PaintType.NORMAL.getKey();
+                                    PaintingHelper.setPaintData(compound, paintData);
+                                    PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
+                                }
                             }
                         }
+
                     }
                 }
             }
