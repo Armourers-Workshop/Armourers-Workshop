@@ -79,7 +79,7 @@ public class SkinTexture {
     }
     
     public void updateForResourceLocation(ResourceLocation resourceLocation) {
-        if (lastProfileHash == resourceLocation.hashCode() | bufferedPlayerImage == null) {
+        if (lastProfileHash == resourceLocation.hashCode() & bufferedPlayerImage != null) {
             return;
         }
         

@@ -25,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
@@ -36,7 +37,6 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -195,10 +195,26 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             te.skinTexture.updateSkinColour(0xFFF9DFD2);
         }
         
+        
         if (te.hasUpdated()) {
-            te.skinTexture.updateSkins(getSkins(te));
-            te.skinTexture.updateDyes(getDyes(te));
+            te.sp = getSkinPointers(te);
         }
+        
+        ISkinPointer[] sp = te.sp;
+        
+        
+        Skin[] skins = new Skin[sp.length];
+        ISkinDye[] dyes = new ISkinDye[sp.length];
+        
+        for (int i = 0; i < sp.length; i++) {
+            if (sp[i] != null) {
+                skins[i] = ClientSkinCache.INSTANCE.getSkin(sp[i]);
+                dyes[i] = sp[i].getSkinDye();
+            }
+        }
+        
+        te.skinTexture.updateSkins(skins);
+        te.skinTexture.updateDyes(dyes);
         
         ResourceLocation rs = te.skinTexture.preRender();
         mc.mcProfiler.endSection();
@@ -438,38 +454,17 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
     }
     
-    private Skin[] getSkins(TileEntityMannequin te) {
-        Skin[] skins = new Skin[4];
-        skins[0] = getSkinForSlot(te, MannequinSlotType.HEAD);
-        skins[1] = getSkinForSlot(te, MannequinSlotType.CHEST);
-        skins[2] = getSkinForSlot(te, MannequinSlotType.LEGS);
-        skins[3] = getSkinForSlot(te, MannequinSlotType.FEET);
-        return skins;
+    private ISkinPointer[] getSkinPointers(TileEntityMannequin te) {
+        ISkinPointer[] skinPointers = new ISkinPointer[4];
+        skinPointers[0] = getSkinPointerForSlot(te, MannequinSlotType.HEAD);
+        skinPointers[1] = getSkinPointerForSlot(te, MannequinSlotType.CHEST);
+        skinPointers[2] = getSkinPointerForSlot(te, MannequinSlotType.LEGS);
+        skinPointers[3] = getSkinPointerForSlot(te, MannequinSlotType.FEET);
+        return skinPointers;
     }
     
-    private ISkinDye[] getDyes(TileEntityMannequin te) {
-        ISkinDye[] skins = new ISkinDye[4];
-        skins[0] = getDyeForSlot(te, MannequinSlotType.HEAD);
-        skins[1] = getDyeForSlot(te, MannequinSlotType.CHEST);
-        skins[2] = getDyeForSlot(te, MannequinSlotType.LEGS);
-        skins[3] = getDyeForSlot(te, MannequinSlotType.FEET);
-        return skins;
-    }
-    
-    private Skin getSkinForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
-        SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
-        if (sp != null) {
-            return ClientSkinCache.INSTANCE.getSkin(sp, false);
-        }
-        return null;
-    }
-    
-    private ISkinDye getDyeForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
-        SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
-        if (sp != null) {
-            return sp.getSkinDye();
-        }
-        return null;
+    private ISkinPointer getSkinPointerForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
+        return SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
     }
     
     @Override

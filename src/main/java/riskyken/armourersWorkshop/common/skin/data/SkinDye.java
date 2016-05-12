@@ -115,7 +115,11 @@ public class SkinDye implements ISkinDye {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.deepHashCode(dyes);
+        result = prime * result + Arrays.hashCode(hasDye);
+        return result;
     }
 
     @Override

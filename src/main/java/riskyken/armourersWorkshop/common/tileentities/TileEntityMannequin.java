@@ -12,6 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -41,6 +42,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @SideOnly(Side.CLIENT)
     public boolean updated = true;
     public boolean dropItems = true;
+    @SideOnly(Side.CLIENT)
+    public ISkinPointer[] sp;
     
     public TileEntityMannequin() {
         this(false);
