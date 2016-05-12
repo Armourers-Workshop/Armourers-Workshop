@@ -38,6 +38,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private int heightOffset;
     @SideOnly(Side.CLIENT)
     public EntityTextureInfo skinTexture;
+    @SideOnly(Side.CLIENT)
+    public boolean updated = true;
     public boolean dropItems = true;
     
     public TileEntityMannequin() {
@@ -54,6 +56,14 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.isDoll = isDoll;
     }
     
+    public boolean hasUpdated() {
+        if (updated) {
+            updated = false;
+            return true;
+        }
+        return false;
+    }
+    
     @Override
     public boolean canUpdate() {
         return false;
@@ -62,6 +72,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
+        updated = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     

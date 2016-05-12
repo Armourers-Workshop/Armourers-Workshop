@@ -3,11 +3,11 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -32,7 +32,6 @@ import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -176,7 +175,18 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.skinTexture == null) {
             te.skinTexture = new EntityTextureInfo();
         }
-        te.skinTexture.updateTexture(SkinHelper.getSkinResourceLocation(te.getGameProfile(), MinecraftProfileTexture.Type.SKIN));
+        
+        mc.mcProfiler.startSection("textureBuild");
+        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+        if (te.getGameProfile() != null) {
+            rl = AbstractClientPlayer.getLocationSkin(te.getGameProfile().getName());
+            AbstractClientPlayer.getDownloadImageSkin(rl, te.getGameProfile().getName());
+        }
+        
+        
+        te.skinTexture.updateTexture(rl);
+        
+        
         if (te.getGameProfile() == null) {
             te.skinTexture.updateHairColour(0xFFFFFFFF);
             te.skinTexture.updateSkinColour(0xFF99684D);
@@ -185,10 +195,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             te.skinTexture.updateSkinColour(0xFFF9DFD2);
         }
         
-        te.skinTexture.updateSkins(getSkins(te));
-        te.skinTexture.updateDyes(getDyes(te));
-        ResourceLocation rs = te.skinTexture.preRender();
+        if (te.hasUpdated()) {
+            te.skinTexture.updateSkins(getSkins(te));
+            te.skinTexture.updateDyes(getDyes(te));
+        }
         
+        ResourceLocation rs = te.skinTexture.preRender();
+        mc.mcProfiler.endSection();
         
         //Render model
         mc.mcProfiler.startSection("textureBind");

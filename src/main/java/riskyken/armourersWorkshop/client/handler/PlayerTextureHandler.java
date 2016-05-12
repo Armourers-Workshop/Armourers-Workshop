@@ -8,14 +8,16 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
-import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -28,9 +30,11 @@ public class PlayerTextureHandler {
     public static PlayerTextureHandler INSTANCE;
     
     private HashMap<PlayerPointer, EntityTextureInfo> playerTextureMap = new HashMap<PlayerPointer, EntityTextureInfo>();
+    private final Profiler profiler;
     
     public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
+        profiler = Minecraft.getMinecraft().mcProfiler;
     }
     
     public EntityTextureInfo getPlayersNakedData(PlayerPointer playerPointer) {
@@ -57,7 +61,7 @@ public class PlayerTextureHandler {
         if (ewd == null) {
             return;
         }
-        
+        profiler.startSection("textureBuild");
         if (playerTextureMap.containsKey(playerPointer)) {
             EntityTextureInfo textureInfo = playerTextureMap.get(playerPointer);
             textureInfo.updateTexture(player.getLocationSkin());
@@ -85,10 +89,12 @@ public class PlayerTextureHandler {
             ResourceLocation replacmentTexture = textureInfo.preRender();
             player.func_152121_a(Type.SKIN, replacmentTexture);
         }
+        profiler.endSection();
     }
     
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRender(RenderPlayerEvent.Specials.Pre event) {
+    public void onRender(RenderPlayerEvent.Post event) {
+        
         if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
             return;
         }
@@ -105,6 +111,7 @@ public class PlayerTextureHandler {
             return;
         }
         
+        profiler.startSection("textureReset");
         if (playerTextureMap.containsKey(playerPointer)) {
             EntityTextureInfo textureInfo = playerTextureMap.get(playerPointer);
             ResourceLocation replacmentTexture = textureInfo.postRender();
@@ -112,5 +119,6 @@ public class PlayerTextureHandler {
         } else {
             playerTextureMap.put(playerPointer, new EntityTextureInfo());
         }
+        profiler.endSection();
     }
 }

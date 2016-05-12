@@ -11,7 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,6 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 /**
  * 
@@ -60,11 +58,17 @@ public class SkinTexture {
     }
     
     public void updateGameProfile(GameProfile gameProfile) {
+        //TODO Look at RealmsScreen code.
         ResourceLocation rl = AbstractClientPlayer.locationStevePng;
         if (gameProfile != null) {
-            rl = SkinHelper.getSkinResourceLocation(gameProfile, Type.SKIN);
+            rl = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
+            AbstractClientPlayer.getDownloadImageSkin(rl, gameProfile.getName());
         }
         updateForResourceLocation(rl);
+        
+        if (bufferedPlayerImage == null) {
+            updateForResourceLocation(AbstractClientPlayer.locationStevePng);
+        }
     }
     
     public void updatePaintData(int[] paintData) {
@@ -75,13 +79,12 @@ public class SkinTexture {
     }
     
     public void updateForResourceLocation(ResourceLocation resourceLocation) {
-        if (lastProfileHash == resourceLocation.hashCode()) {
+        if (lastProfileHash == resourceLocation.hashCode() | bufferedPlayerImage == null) {
             return;
         }
         
         BufferedImage bi = null;
         InputStream inputStream = null;
-        
         try {
             ITextureObject skintex = mc.getTextureManager().getTexture(resourceLocation);
             if (skintex instanceof ThreadDownloadImageData) {
@@ -117,7 +120,7 @@ public class SkinTexture {
         for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
             for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
                 if (bufferedPlayerImage == null) {
-                    ModLogger.log("null player image");
+                    //ModLogger.log("null player image");
                     break;
                 }
                 bufferedSkinImage.setRGB(ix, iy, bufferedPlayerImage.getRGB(ix, iy));

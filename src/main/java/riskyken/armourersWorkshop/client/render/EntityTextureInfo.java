@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -16,7 +17,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class EntityTextureInfo {
     
@@ -69,11 +69,17 @@ public class EntityTextureInfo {
     
     
     public void updateTexture(ResourceLocation resourceLocation) {
-        if (lastEntityTextureHash != resourceLocation.hashCode()) {
-            lastEntityTextureHash = resourceLocation.hashCode();
-            normalTexture = resourceLocation;
-            bufferedEntityImage = SkinHelper.getBufferedImageSkin(resourceLocation);
-            needsUpdate = true;
+        if (lastEntityTextureHash != resourceLocation.hashCode() | bufferedEntityImage == null) {
+            BufferedImage buff = SkinHelper.getBufferedImageSkin(resourceLocation);
+            if (buff != null) {
+                lastEntityTextureHash = resourceLocation.hashCode();
+                normalTexture = resourceLocation;
+                bufferedEntityImage = SkinHelper.getBufferedImageSkin(resourceLocation);
+                needsUpdate = true;
+            } else {
+                updateTexture(AbstractClientPlayer.locationStevePng);
+            }
+            
         }
     }
     
@@ -128,12 +134,12 @@ public class EntityTextureInfo {
     public void checkTexture() {
         if (needsUpdate) {
             buildTexture();
-            //ModLogger.log("texture build needed");
             needsUpdate = false;
         }
     }
     
     private void buildTexture() {
+        //ModLogger.log("building texture");
         //TODO check if the skins have a texture.
         applyPlayerToTexture();
         applySkinsToTexture();
@@ -144,7 +150,6 @@ public class EntityTextureInfo {
         for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
             for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
                 if (bufferedEntityImage == null) {
-                    ModLogger.log("null entity image");
                     break;
                 }
                 bufferedEntitySkinnedImage.setRGB(ix, iy, bufferedEntityImage.getRGB(ix, iy));

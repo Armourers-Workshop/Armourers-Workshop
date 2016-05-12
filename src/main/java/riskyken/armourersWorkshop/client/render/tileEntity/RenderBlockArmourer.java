@@ -5,12 +5,9 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
@@ -25,9 +22,6 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         float scale = 0.0625F;
         
         ISkinType skinType = te.getSkinType();
-        
-        ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
-        EntityTextureInfo skinInfo = null;
         
         mc.mcProfiler.startSection("textureBind");
         if (te.skinTexture == null) {
