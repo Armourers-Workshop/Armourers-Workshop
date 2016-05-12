@@ -72,8 +72,8 @@ public class RenderItemMannequin implements IItemRenderer {
                     
                     float lastDistance = player.distanceWalkedModified - player.prevDistanceWalkedModified;
                     
-                    headTilt += Math.sin(tiltTime * Math.PI) * 20F * lastDistance;
-                    headPitch += Math.sin(pitchTime * Math.PI) * 20F * lastDistance;
+                    headTilt += Math.sin(tiltTime * Math.PI) * 80F * lastDistance;
+                    headPitch += Math.sin(pitchTime * Math.PI) * 40F * lastDistance;
                     limbWobble += Math.sin(limbTime * Math.PI) * lastDistance / 10F;
                 }
             }
