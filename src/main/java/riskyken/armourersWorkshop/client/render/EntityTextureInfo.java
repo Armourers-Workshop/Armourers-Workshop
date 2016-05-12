@@ -143,7 +143,6 @@ public class EntityTextureInfo {
     }
     
     private void buildTexture() {
-        //ModLogger.log("building texture");
         //TODO check if the skins have a texture.
         applyPlayerToTexture();
         applySkinsToTexture();
@@ -205,6 +204,15 @@ public class EntityTextureInfo {
                 }
             }
         }
+    }
+    
+    @Override
+    protected void finalize() throws Throwable {
+        TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
+        if (replacementTexture != null) {
+            renderEngine.deleteTexture(replacementTexture);
+        }
+        super.finalize();
     }
     
     private void createReplacmentTexture() {
