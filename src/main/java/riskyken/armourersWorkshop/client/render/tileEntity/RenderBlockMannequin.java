@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render.tileEntity;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
@@ -185,15 +187,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         
         te.skinTexture.updateTexture(rl);
-        
-        
-        if (te.getGameProfile() == null) {
-            te.skinTexture.updateHairColour(0xFFFFFFFF);
-            te.skinTexture.updateSkinColour(0xFF99684D);
-        } else {
-            te.skinTexture.updateHairColour(0xFFF9DF8C);
-            te.skinTexture.updateSkinColour(0xFFF9DFD2);
-        }
+        te.skinTexture.updateSkinColour(te.getSkinColour());
+        te.skinTexture.updateHairColour(te.getHairColour());
         
         
         if (te.hasUpdated()) {
@@ -201,8 +196,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         ISkinPointer[] sp = te.sp;
-        
-        
         Skin[] skins = new Skin[sp.length];
         ISkinDye[] dyes = new ISkinDye[sp.length];
         
@@ -374,20 +367,32 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
     }
     
-    private void renderEquippedItems(IInventory inventory, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
+    private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         MannequinFakePlayer renderEntity = fakePlayer;
         if (renderEntity == null) {
             renderEntity = mannequinFakePlayer;
         }
-        for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
+        
+        Color skinColour = new Color(te.getSkinColour());
+        Color hairColour = new Color(te.getHairColour());
+        
+        byte[] extraColours = new byte[6];
+        extraColours[0] = (byte) skinColour.getRed();
+        extraColours[1] = (byte) skinColour.getGreen();
+        extraColours[2] = (byte) skinColour.getBlue();
+        extraColours[3] = (byte) hairColour.getRed();
+        extraColours[4] = (byte) hairColour.getGreen();
+        extraColours[5] = (byte) hairColour.getBlue();
+        
+        for (int i = 0; i < te.getSizeInventory(); i++) {
+            ItemStack stack = te.getStackInSlot(i);
             if (renderEntity != null) {
                 if (i == 0 & isHalloweenSeason) {
-                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i);
+                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i, extraColours);
                 } else {
                     if (stack != null) {
-                        renderEquippedItem(renderEntity, stack, targetBiped, i);
+                        renderEquippedItem(renderEntity, stack, targetBiped, i, extraColours);
                     }
                 }
             }
@@ -411,7 +416,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         return false;
     }
     
-    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot) {
+    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours) {
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         
@@ -428,22 +433,22 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         targetBiped.isChild = false;
         switch (slot) {
         case 0:
-            renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm);
+            renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
         case 1:
-            renderItems.renderChestStack(fakePlayer, stack, targetBiped, rm);
+            renderItems.renderChestStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
         case 2:
-            renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm);
+            renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
         case 4:
-            renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm);
+            renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
         case 5:
-            renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm);
+            renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
         case 6:
-            renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm);
+            renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
         }
         targetBiped.isChild = isChild;

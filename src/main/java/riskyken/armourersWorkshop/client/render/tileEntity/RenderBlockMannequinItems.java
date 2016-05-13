@@ -21,8 +21,8 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -33,13 +33,12 @@ public class RenderBlockMannequinItems {
     
     private RenderPlayer renderPlayer;
     private float scale = 0.0625F;
-    byte[] extraColours = new byte[] {(byte)165, (byte)121, (byte)99, (byte)41, (byte)28, (byte)12};
     
     public RenderBlockMannequinItems() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
     }
     
-    public void renderHeadStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+    public void renderHeadStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
         Item targetItem = stack.getItem();
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
@@ -93,7 +92,7 @@ public class RenderBlockMannequinItems {
         }
     }
 
-    public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+    public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
@@ -145,7 +144,7 @@ public class RenderBlockMannequinItems {
             }
         }
     }
-    public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+    public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
@@ -186,7 +185,7 @@ public class RenderBlockMannequinItems {
         }
     }
     
-    public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+    public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
@@ -225,7 +224,7 @@ public class RenderBlockMannequinItems {
         }
     }
     
-    public void renderRightArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+    public void renderRightArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
         Item targetItem = stack.getItem();
         float blockScale = 0.5F;
         float itemScale = 1 - (float)1 / 3;
@@ -274,7 +273,7 @@ public class RenderBlockMannequinItems {
         rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
     }
     
-    public void renderLeftArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm) {
+    public void renderLeftArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
         Item targetItem = stack.getItem();
         float blockScale = 0.5F;
         float itemScale = 1 - (float)1 / 3;

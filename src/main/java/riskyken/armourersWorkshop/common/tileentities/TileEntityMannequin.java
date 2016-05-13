@@ -28,6 +28,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private static final String TAG_ROTATION = "rotation";
     private static final String TAG_IS_DOLL = "isDoll";
     private static final String TAG_HEIGHT_OFFSET = "heightOffset";
+    private static final String TAG_SKIN_COLOUR = "skinColour";
+    private static final String TAG_HAIR_COLOUR = "hairColour";
     
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;
@@ -37,11 +39,20 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private int rotation;
     private boolean isDoll;
     private int heightOffset;
+    private int skinColour = 0xFF99684D;
+    private int hairColour = 0xFF291C15;
+    
+    /** Should the tile entity drop as an item when broken? */
+    private boolean dropItems = true;
+    
+     /** Keep track if the inventory has been updated so the render can update. */
+    @SideOnly(Side.CLIENT)
+    private boolean updated = true;
+    
+    /** Texture used when rendering this mannequin. */
     @SideOnly(Side.CLIENT)
     public EntityTextureInfo skinTexture;
-    @SideOnly(Side.CLIENT)
-    public boolean updated = true;
-    public boolean dropItems = true;
+    
     @SideOnly(Side.CLIENT)
     public ISkinPointer[] sp;
     
@@ -93,6 +104,30 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public void setDoll(boolean isDoll) {
         this.isDoll = isDoll;
+    }
+    
+    public void setDropItems(boolean dropItems) {
+        this.dropItems = dropItems;
+    }
+    
+    public int getSkinColour() {
+        return skinColour;
+    }
+    
+    public void setSkinColour(int skinColour) {
+        this.skinColour = skinColour;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public int getHairColour() {
+        return hairColour;
+    }
+    
+    public void setHairColour(int hairColour) {
+        this.hairColour = hairColour;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
@@ -181,6 +216,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         bipedRotations.loadNBTData(compound);
         this.isDoll = compound.getBoolean(TAG_IS_DOLL);
         this.rotation = compound.getInteger(TAG_ROTATION);
+        if (compound.hasKey(TAG_SKIN_COLOUR, 3)) {
+            this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
+        }
+        if (compound.hasKey(TAG_HAIR_COLOUR, 3)) {
+            this.hairColour = compound.getInteger(TAG_HAIR_COLOUR);
+        }
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
@@ -192,6 +233,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         bipedRotations.saveNBTData(compound);
         compound.setBoolean(TAG_IS_DOLL, this.isDoll);
         compound.setInteger(TAG_ROTATION, this.rotation);
+        compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
+        compound.setInteger(TAG_HAIR_COLOUR, this.hairColour);
         if (this.newProfile != null) {
             this.gameProfile = newProfile;
             this.newProfile = null;
@@ -226,6 +269,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
         readFromNBT(compound);
+        updated = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     

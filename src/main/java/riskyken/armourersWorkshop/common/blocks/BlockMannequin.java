@@ -83,7 +83,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
         if (world.getBlock(x, y + 1, z) == this) {
             TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
             if (te != null) {
-                te.dropItems = false;
+                te.setDropItems(false);
                 NBTTagCompound compound = new NBTTagCompound();
                 te.writeCommonToNBT(compound);
                 te.writeItemsToNBT(compound);
@@ -236,8 +236,13 @@ public class BlockMannequin extends AbstractModBlockContainer {
             return false;
         }
         if (!world.isRemote) {
-            if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
-                return false;
+            if (player.inventory.getCurrentItem() != null) {
+                if (player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+                    return false;
+                }
+                if (player.inventory.getCurrentItem().getItem() == ModItems.paintbrush) {
+                    return false;
+                }
             }
             int meta = world.getBlockMetadata(x, y, z);
             int yOffset = 0;

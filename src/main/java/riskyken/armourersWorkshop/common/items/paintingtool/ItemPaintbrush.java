@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.blocks.BlockMannequin;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -26,6 +27,7 @@ import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
@@ -102,6 +104,21 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                 }
             }
             ModLogger.log("armourer");
+            return true;
+        }
+        
+        if (block == ModBlocks.mannequin) {
+            if (!world.isRemote) {
+                TileEntity te = ((BlockMannequin)block).getMannequinTileEntity(world, x, y, z);
+                if (te != null && te instanceof TileEntityMannequin) {
+                    int newColour = getToolColour(stack);
+                    if (player.isSneaking()) {
+                        ((TileEntityMannequin)te).setHairColour(newColour);
+                    } else {
+                        ((TileEntityMannequin)te).setSkinColour(newColour);
+                    }
+                }
+            }
             return true;
         }
         
