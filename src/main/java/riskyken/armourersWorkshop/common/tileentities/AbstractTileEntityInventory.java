@@ -4,15 +4,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.Constants.NBT;
+import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public abstract class AbstractTileEntityInventory extends TileEntity implements IInventory {
 
     private static final String TAG_ITEMS = "items";
-    private static final String TAG_SLOT = "slot";
-    protected ItemStack[] items;
+    protected final ItemStack[] items;
+    
+    public AbstractTileEntityInventory(int inventorySize) {
+        this.items = new ItemStack[inventorySize];
+    }
     
     @Override
     public int getSizeInventory() {
@@ -108,32 +110,10 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
     }
     
     public void writeItemsToNBT(NBTTagCompound compound) {
-        NBTTagList items = new NBTTagList();
-        for (int i = 0; i < getSizeInventory(); i++) {
-            ItemStack stack = getStackInSlot(i);
-            if (stack != null) {
-                NBTTagCompound item = new NBTTagCompound();
-                item.setByte(TAG_SLOT, (byte)i);
-                stack.writeToNBT(item);
-                items.appendTag(item);
-            }
-        }
-        compound.setTag(TAG_ITEMS, items);
+        NBTHelper.writeStackArrayToNBT(compound, TAG_ITEMS, items);
     }
     
     public void readItemsFromNBT(NBTTagCompound compound) {
-        NBTTagList itemsList = compound.getTagList(TAG_ITEMS, NBT.TAG_COMPOUND);
-        for (int i = 0; i < getSizeInventory(); i++) {
-            items[i] = null;
-        }
-        for (int i = 0; i < itemsList.tagCount(); i++) {
-            NBTTagCompound item = (NBTTagCompound)itemsList.getCompoundTagAt(i);
-            int slot = item.getByte(TAG_SLOT);
-            
-            if (slot >= 0 && slot < getSizeInventory()) {
-                items[slot] = ItemStack.loadItemStackFromNBT(item);
-                //setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
-            }
-        }
+        NBTHelper.readStackArrayFromNBT(compound, TAG_ITEMS, items);
     }
 }

@@ -52,12 +52,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
     private static boolean isHalloweenSeason;
-    private static boolean isHalloween;
     private final static float SCALE = 0.0625F;
+    private static int textureBuilds = 0;
     
-    private ModelMannequin model;
+    private final ModelMannequin model;
     private MannequinFakePlayer mannequinFakePlayer;
-    private RenderPlayer renderPlayer;
+    private final RenderPlayer renderPlayer;
     private final Minecraft mc;
     
     
@@ -65,9 +65,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
-        
         isHalloweenSeason = HolidayHelper.halloween_season.isHolidayActive();
-        isHalloween = HolidayHelper.halloween.isHolidayActive();
     }
     
     public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
@@ -191,7 +189,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         te.skinTexture.updateHairColour(te.getHairColour());
         
         
-        if (te.hasUpdated()) {
+        if (te.haveSkinsUpdated()) {
             te.sp = getSkinPointers(te);
         }
         
@@ -208,6 +206,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         te.skinTexture.updateSkins(skins);
         te.skinTexture.updateDyes(dyes);
+        
+        if (te.skinTexture.getNeedsUpdate()) {
+            textureBuilds += 1;
+        }
         
         ResourceLocation rs = te.skinTexture.preRender();
         mc.mcProfiler.endSection();

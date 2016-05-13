@@ -22,8 +22,10 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class TileEntitySkinLibrary extends AbstractTileEntityInventory implements ISidedInventory {
     
+    private static final int INVENTORY_SIZE = 2;
+    
     public TileEntitySkinLibrary() {
-        this.items = new ItemStack[2];
+        super(INVENTORY_SIZE);
     }
     
     @Override

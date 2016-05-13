@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -20,6 +19,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
 
     private static final String TAG_TYPE = "type";
+    private static final int INVENTORY_SIZE = 2;
     
     @SideOnly(Side.CLIENT)
     public int red;
@@ -32,7 +32,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     private ArrayList<SkinPart> skinParts;
     
     public TileEntityMiniArmourer() {
-        this.items = new ItemStack[2];
+        super(INVENTORY_SIZE);
         this.skinParts = new ArrayList<SkinPart>();
         setSkinType(SkinTypeRegistry.skinHead, false);
     }

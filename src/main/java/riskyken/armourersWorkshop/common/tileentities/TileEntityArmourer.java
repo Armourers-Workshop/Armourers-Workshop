@@ -54,6 +54,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private static final String TAG_CUSTOM_NAME = "customeName";
     private static final String TAG_PAINT_DATA = "paintData";
     private static final int HEIGHT_OFFSET = 1;
+    private static final int INVENTORY_SIZE = 2;
     
     private ForgeDirection direction;
     private GameProfile gameProfile = null;
@@ -68,9 +69,9 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public SkinTexture skinTexture;
     
     public TileEntityArmourer() {
+        super(INVENTORY_SIZE);
         this.direction = ForgeDirection.NORTH;
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
-        this.items = new ItemStack[2];
         this.showOverlay = true;
         this.showGuides = true;
         this.showHelper = true;

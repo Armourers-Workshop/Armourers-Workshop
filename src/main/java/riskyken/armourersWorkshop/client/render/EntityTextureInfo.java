@@ -67,6 +67,9 @@ public class EntityTextureInfo {
         needsUpdate = true;
     }
     
+    public boolean getNeedsUpdate() {
+        return needsUpdate;
+    }
     
     public void updateTexture(ResourceLocation resourceLocation) {
         if (lastEntityTextureHash != resourceLocation.hashCode()) {

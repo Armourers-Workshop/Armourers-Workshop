@@ -24,6 +24,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
     private static final String TAG_COLOUR_FAMILY = "colourFamily";
     private static final String TAG_PAINT_TYPE = "paintType";
+    private static final int INVENTORY_SIZE = 2;
     
     public int colour;
     private PaintType paintType;
@@ -33,7 +34,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     private boolean colourUpdate;
     
     public TileEntityColourMixer() {
-        items = new ItemStack[2];
+        super(INVENTORY_SIZE);
         colour = 16777215;
         paintType = PaintType.NORMAL;
         colourUpdate = false;

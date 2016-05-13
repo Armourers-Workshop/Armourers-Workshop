@@ -1,13 +1,14 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 public class TileEntityDyeTable extends AbstractTileEntityInventory {
-
+    
+    private static final int INVENTORY_SIZE = 9;
+    
     public TileEntityDyeTable() {
-        items = new ItemStack[9];
+        super(INVENTORY_SIZE);
     }
     
     @Override

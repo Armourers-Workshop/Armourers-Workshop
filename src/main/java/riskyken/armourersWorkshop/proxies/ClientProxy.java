@@ -224,6 +224,7 @@ public class ClientProxy extends CommonProxy {
         }
     }
     
+    //TODO Remove this and use IWorldAccess
     public static void playerLeftTrackingRange(PlayerPointer playerPointer) {
         SkinModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
         equipmentWardrobeHandler.removeEquipmentWardrobeData(playerPointer);

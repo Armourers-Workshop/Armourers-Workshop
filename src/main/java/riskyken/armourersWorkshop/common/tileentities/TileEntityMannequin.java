@@ -30,6 +30,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private static final String TAG_HEIGHT_OFFSET = "heightOffset";
     private static final String TAG_SKIN_COLOUR = "skinColour";
     private static final String TAG_HAIR_COLOUR = "hairColour";
+    private static final int INVENTORY_SIZE = 7;
     
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;
@@ -37,17 +38,24 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     private BipedRotations bipedRotations;
     private int rotation;
+    
+    /** Is this mannequin a one block tall doll model? */
     private boolean isDoll;
+    
     private int heightOffset;
+    
+    /** Skin colour of this mannequin. */
     private int skinColour = 0xFF99684D;
+    
+    /** Hair colour of this mannequin. */
     private int hairColour = 0xFF291C15;
     
     /** Should the tile entity drop as an item when broken? */
     private boolean dropItems = true;
     
-     /** Keep track if the inventory has been updated so the render can update. */
+     /** Keeps track if the inventory skins have been updated so the render can update. */
     @SideOnly(Side.CLIENT)
-    private boolean updated = true;
+    private boolean skinsUpdated = true;
     
     /** Texture used when rendering this mannequin. */
     @SideOnly(Side.CLIENT)
@@ -61,18 +69,18 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     public TileEntityMannequin(boolean isDoll) {
+        super(INVENTORY_SIZE);
         bipedRotations = new BipedRotations();
         bipedRotations.leftArm.rotationZ = (float) Math.toRadians(-10);
         bipedRotations.rightArm.rotationZ = (float) Math.toRadians(10);
         bipedRotations.leftArm.rotationY = (float) Math.toRadians(-1);
         bipedRotations.rightArm.rotationY = (float) Math.toRadians(1);
-        this.items = new ItemStack[7];
         this.isDoll = isDoll;
     }
     
-    public boolean hasUpdated() {
-        if (updated) {
-            updated = false;
+    public boolean haveSkinsUpdated() {
+        if (skinsUpdated) {
+            skinsUpdated = false;
             return true;
         }
         return false;
@@ -86,7 +94,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
-        updated = true;
+        skinsUpdated = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
@@ -269,7 +277,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
         readFromNBT(compound);
-        updated = true;
+        skinsUpdated = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     

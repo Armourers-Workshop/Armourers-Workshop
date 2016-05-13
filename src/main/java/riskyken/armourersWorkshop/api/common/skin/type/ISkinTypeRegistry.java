@@ -29,6 +29,7 @@ public interface ISkinTypeRegistry {
     
     public ISkinType getSkinTypeLegs();
     
+    @Deprecated
     public ISkinType getSkinTypeSkirt();
     
     public ISkinType getSkinTypeFeet();
