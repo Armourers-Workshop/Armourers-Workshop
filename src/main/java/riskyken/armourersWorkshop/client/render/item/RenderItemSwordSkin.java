@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -123,8 +124,12 @@ public class RenderItemSwordSkin implements IItemRenderer {
             GL11.glEnable(GL11.GL_CULL_FACE);
             ModRenderHelper.enableAlphaBlend();
             Addons.onWeaponRender(type, EventState.PRE);
+            
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-            ItemStackRenderHelper.renderItemAsArmourModel(stack, false);
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+            if (skin != null) {
+                ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, false);
+            }
             Addons.onWeaponRender(type, EventState.POST);
             GL11.glPopAttrib();
             GL11.glPopMatrix();
