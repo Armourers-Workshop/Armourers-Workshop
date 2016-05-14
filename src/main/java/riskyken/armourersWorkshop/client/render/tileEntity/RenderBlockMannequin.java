@@ -24,8 +24,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
@@ -53,7 +51,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
     private static boolean isHalloweenSeason;
     private final static float SCALE = 0.0625F;
-    private static int textureBuilds = 0;
+    private static long lastTextureBuild = 0;
     
     private final ModelMannequin model;
     private MannequinFakePlayer mannequinFakePlayer;
@@ -127,38 +125,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         mc.mcProfiler.endSection();
         
-        if (ConfigHandler.mannequinsCallPlayerRenders) {
-            if (fakePlayer != null) {
-                mc.mcProfiler.startSection("preEvents");
-                model.isChild = te.getBipedRotations().isChild;
-                fakePlayer.rotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
-                fakePlayer.prevRotationPitch = (float) Math.toDegrees(te.getBipedRotations().head.rotationX);
-                fakePlayer.rotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
-                fakePlayer.prevRotationYawHead = (float) Math.toDegrees(te.getBipedRotations().head.rotationY);
-                fakePlayer.onUpdate();
-                
-                fakePlayer.ticksExisted = Minecraft.getMinecraft().thePlayer.ticksExisted;
-                
-                //Pre render events
-                RenderPlayerEvent.Pre preEvent = new RenderPlayerEvent.Pre(fakePlayer, renderPlayer, partialTickTime);
-                RenderPlayerEvent.Specials.Pre preEventSpecials = new RenderPlayerEvent.Specials.Pre(fakePlayer, renderPlayer, partialTickTime);
-
-                if (model.isChild) {
-                    ModelHelper.enableChildModelScale(false, SCALE);
-                }
-                GL11.glDisable(GL11.GL_CULL_FACE);
-                
-                MinecraftForge.EVENT_BUS.post(preEvent);
-                MinecraftForge.EVENT_BUS.post(preEventSpecials);
-                
-                GL11.glEnable(GL11.GL_CULL_FACE);
-                if (model.isChild) {
-                    ModelHelper.disableChildModelScale();
-                }
-                mc.mcProfiler.endSection();
-            }
-        }
-        
         
         ApiRegistrar.INSTANCE.onRenderMannequin(te, te.getGameProfile());
         
@@ -171,18 +137,20 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         te.getBipedRotations().applyRotationsToBiped(model);
         
-        
-        if (te.skinTexture == null) {
-            te.skinTexture = new EntityTextureInfo();
-        }
-        
-        mc.mcProfiler.startSection("textureBuild");
+        mc.mcProfiler.startSection("getTexture");
         ResourceLocation rl = AbstractClientPlayer.locationStevePng;
         if (te.getGameProfile() != null) {
             rl = AbstractClientPlayer.getLocationSkin(te.getGameProfile().getName());
             AbstractClientPlayer.getDownloadImageSkin(rl, te.getGameProfile().getName());
         }
+        mc.mcProfiler.endSection();
         
+        
+        mc.mcProfiler.startSection("textureBuild");
+        
+        if (te.skinTexture == null) {
+            te.skinTexture = new EntityTextureInfo();
+        }
         
         te.skinTexture.updateTexture(rl);
         te.skinTexture.updateSkinColour(te.getSkinColour());
@@ -208,15 +176,21 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         te.skinTexture.updateDyes(dyes);
         
         if (te.skinTexture.getNeedsUpdate()) {
-            textureBuilds += 1;
+            if (lastTextureBuild + 100L < System.currentTimeMillis()) {
+                lastTextureBuild = System.currentTimeMillis();
+                rl = te.skinTexture.preRender();
+            }
+        } else {
+            rl = te.skinTexture.preRender();
         }
         
-        ResourceLocation rs = te.skinTexture.preRender();
+        
         mc.mcProfiler.endSection();
+        
         
         //Render model
         mc.mcProfiler.startSection("textureBind");
-        bindTexture(rs);
+        bindTexture(rl);
         //SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
         mc.mcProfiler.endSection();
         mc.mcProfiler.startSection("modelRender");
@@ -260,25 +234,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         mc.mcProfiler.endSection();
         
-        //Post render events
-        if (ConfigHandler.mannequinsCallPlayerRenders) {
-            if (fakePlayer != null) {
-                mc.mcProfiler.startSection("postEvents");
-                RenderPlayerEvent.Post postEvent = new RenderPlayerEvent.Post(fakePlayer, renderPlayer, partialTickTime);
-                RenderPlayerEvent.Specials.Post postEvenSpecialst = new RenderPlayerEvent.Specials.Post(fakePlayer, renderPlayer, partialTickTime);
-                if (model.isChild) {
-                    ModelHelper.enableChildModelScale(false, SCALE);
-                }
-                GL11.glDisable(GL11.GL_CULL_FACE);
-                MinecraftForge.EVENT_BUS.post(postEvent);
-                MinecraftForge.EVENT_BUS.post(postEvenSpecialst);
-                GL11.glEnable(GL11.GL_CULL_FACE);
-                if (model.isChild) {
-                    ModelHelper.disableChildModelScale();
-                }
-                mc.mcProfiler.endSection();
-            }
-        }
         
         mc.mcProfiler.startSection("reset");
         model.bipedLeftLeg.rotateAngleZ = 0F;

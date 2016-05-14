@@ -31,7 +31,6 @@ public class ConfigHandler {
     public static int clientTextureCacheTime = 600000;
     public static int maxSkinRenderDistance = 40;
     public static int maxModelBakingThreads = 1;
-    public static boolean mannequinsCallPlayerRenders = true;
     public static boolean multipassSkinRendering = true;
     public static int mannequinMaxEquipmentRenderDistance = 1024;
     public static int blockSkinMaxRenderDistance = 2500;
@@ -258,10 +257,6 @@ public class ConfigHandler {
                 .getInt("clientTextureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,
                 "How long in seconds the client will keep textures in it's cache.\n" + 
                 "Default 600 ticks is 10 minutes.");
-        
-        mannequinsCallPlayerRenders = config.getBoolean("mannequinsCallPlayerRenders", CATEGORY_CLIENT, true,
-                "Allows mannequins to call the player render events.\n"
-                + "Disable this if mannequins are using a lot of render time.");
         
         multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_CLIENT, true,
                 "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
