@@ -15,6 +15,13 @@ public class SlotHidable extends Slot {
         this.xDisplayPositionNormal = xDisplayPosition;
         this.yDisplayPositionNormal = yDisplayPosition;
     }
+    
+    public void setDisplayPosition(int x, int y) {
+        this.xDisplayPositionNormal = x;
+        this.yDisplayPositionNormal = y;
+        this.xDisplayPosition = x;
+        this.yDisplayPosition = y;
+    }
 
     public boolean isVisible() {
         return this.visible;

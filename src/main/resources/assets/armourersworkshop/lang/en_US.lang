@@ -211,6 +211,12 @@ inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
+inventory.armourersworkshop:mannequin.tab.inventory=Inventory
+inventory.armourersworkshop:mannequin.tab.rotations=Rotations
+inventory.armourersworkshop:mannequin.tab.offset=Offset
+inventory.armourersworkshop:mannequin.tab.skinAndHair=Skin & Hair Colour
+inventory.armourersworkshop:mannequin.tab.name=Name
+inventory.armourersworkshop:mannequin.tab.extraRenders=Extra Renders
 
 inventory.armourersworkshop:miniArmourer.save=Save
 inventory.armourersworkshop:miniArmourer.load=Load

@@ -71,10 +71,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public TileEntityMannequin(boolean isDoll) {
         super(INVENTORY_SIZE);
         bipedRotations = new BipedRotations();
-        bipedRotations.leftArm.rotationZ = (float) Math.toRadians(-10);
-        bipedRotations.rightArm.rotationZ = (float) Math.toRadians(10);
-        bipedRotations.leftArm.rotationY = (float) Math.toRadians(-1);
-        bipedRotations.rightArm.rotationY = (float) Math.toRadians(1);
         this.isDoll = isDoll;
     }
     

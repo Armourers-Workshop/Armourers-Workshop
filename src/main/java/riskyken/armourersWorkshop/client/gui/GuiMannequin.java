@@ -2,28 +2,25 @@ package riskyken.armourersWorkshop.client.gui;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
+import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
+import riskyken.armourersWorkshop.client.gui.controls.GuiTabController;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiBipedRotations;
@@ -32,36 +29,24 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 @SideOnly(Side.CLIENT)
 public class GuiMannequin extends GuiContainer implements ISlider  {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequin.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinNew.png");
     private static ModelMannequin model = new ModelMannequin();
     
-    private TileEntityMannequin tileEntity;
-    private EntityPlayer player;
-    
-    private BipedRotations bipedRotations;
-    private BipedRotations lastBipedRotations;
+    private final TileEntityMannequin tileEntity;
+    private final EntityPlayer player;
+    private final String inventoryName;
     
     private boolean guiLoaded = false;
     
-    private GuiCustomSlider headXslider;
-    private GuiCustomSlider headYslider;
-    private GuiCustomSlider headZslider;
+    private GuiTabController tabController;
+    private int activeTab = -1;
     
-    private GuiCustomSlider leftArmXslider;
-    private GuiCustomSlider leftArmYslider;
-    private GuiCustomSlider leftArmZslider;
-    
-    private GuiCustomSlider rightArmXslider;
-    private GuiCustomSlider rightArmYslider;
-    private GuiCustomSlider rightArmZslider;
-    
-    private GuiCustomSlider leftLegXslider;
-    private GuiCustomSlider leftLegYslider;
-    private GuiCustomSlider leftLegZslider;
-    
-    private GuiCustomSlider rightLegXslider;
-    private GuiCustomSlider rightLegYslider;
-    private GuiCustomSlider rightLegZslider;
+    //Rotations
+    private BipedRotations bipedRotations;
+    private BipedRotations lastBipedRotations;
+    private GuiCustomSlider bipedXslider;
+    private GuiCustomSlider bipedYslider;
+    private GuiCustomSlider bipedZslider;
     
     private GuiCheckBox isChildCheck;
     
@@ -76,87 +61,89 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         tileEntity.getBipedRotations().saveNBTData(compound);
         this.bipedRotations.loadNBTData(compound);
         this.lastBipedRotations.loadNBTData(compound);
-        
-        this.xSize = 256;
-        this.ySize = 256;
+        this.inventoryName = tileEntity.getInventoryName();
     }
     
     @Override
     public void initGui() {
+        this.xSize = this.width;
+        this.ySize = this.height;
         super.initGui();
         buttonList.clear();
         guiLoaded = false;
         
-        leftArmXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 30, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
-        leftArmYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 90D, 0D, true, true, this);
-        leftArmZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
+        tabController = new GuiTabController(this);
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(0, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotations")).setIconLocation(16, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(32, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinAndHair")).setIconLocation(48, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.name")).setIconLocation(64, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(80, 52));
+        tabController.setActiveTabIndex(0);
         
-        rightArmXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 30, 100, 10, "X: ", "", -90D, 180D, 0D, true, true, this);
-        rightArmYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 40, 100, 10, "Y: ", "", -45D, 90D, 0D, true, true, this);
-        rightArmZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 50, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
-        
-        leftLegXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 75, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        leftLegYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 85, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        leftLegZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 95, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
-        
-        rightLegXslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 75, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        rightLegYslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 85, 100, 10, "Y: ", "", -45D, 45D, 0D, true, true, this);
-        rightLegZslider = new GuiCustomSlider(0, this.guiLeft + 147, this.guiTop + 95, 100, 10, "Z: ", "", -45D, 45D, 0D, true, true, this);
-        
-        headXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 120, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
-        headYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
-        headZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Z: ", "", -20D, 20D, 0D, true, true, this);
+        bipedXslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 120, 100, 10, "X: ", "", -90D, 90D, 0D, true, true, this);
+        bipedYslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 130, 100, 10, "Y: ", "", -90D, 90D, 0D, true, true, this);
+        bipedZslider = new GuiCustomSlider(0, this.guiLeft + 40, this.guiTop + 140, 100, 10, "Z: ", "", -20D, 20D, 0D, true, true, this);
         
         isChildCheck = new GuiCheckBox(3, this.guiLeft + 149, this.guiTop + 110, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.isChild"), false);
         
-        if (bipedRotations != null) {
-            isChildCheck.setIsChecked(bipedRotations.isChild);
-            
-            setSliderValue(headXslider, Math.toDegrees(-bipedRotations.head.rotationX));
-            setSliderValue(headYslider, Math.toDegrees(-bipedRotations.head.rotationY));
-            setSliderValue(headZslider, Math.toDegrees(-bipedRotations.head.rotationZ));
-            
-            setSliderValue(leftArmXslider, Math.toDegrees(-bipedRotations.leftArm.rotationX));
-            setSliderValue(leftArmYslider, Math.toDegrees(-bipedRotations.leftArm.rotationY));
-            setSliderValue(leftArmZslider, Math.toDegrees(-bipedRotations.leftArm.rotationZ));
-            
-            setSliderValue(rightArmXslider, Math.toDegrees(-bipedRotations.rightArm.rotationX));
-            setSliderValue(rightArmYslider, Math.toDegrees(bipedRotations.rightArm.rotationY));
-            setSliderValue(rightArmZslider, Math.toDegrees(bipedRotations.rightArm.rotationZ));
-            
-            setSliderValue(leftLegXslider, Math.toDegrees(-bipedRotations.leftLeg.rotationX));
-            setSliderValue(leftLegYslider, Math.toDegrees(-bipedRotations.leftLeg.rotationY));
-            setSliderValue(leftLegZslider, Math.toDegrees(-bipedRotations.leftLeg.rotationZ));
-            
-            setSliderValue(rightLegXslider, Math.toDegrees(-bipedRotations.rightLeg.rotationX));
-            setSliderValue(rightLegYslider, Math.toDegrees(bipedRotations.rightLeg.rotationY));
-            setSliderValue(rightLegZslider, Math.toDegrees(bipedRotations.rightLeg.rotationZ));
+        int slotSize = 18;
+        //Move player inventory slots.
+        for (int x = 0; x < 9; x++) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(7 + x);
+            if (slot instanceof SlotHidable) {
+                ((SlotHidable)slot).setDisplayPosition(
+                        (int) ((this.width / 2F) - (176F / 2F) + x * slotSize + 8),
+                        this.height + 1 - 1 - slotSize);
+            } else {
+                slot.yDisplayPosition = this.height + 1 - 1 - slotSize;
+                slot.xDisplayPosition = (int) ((this.width / 2F) - (176F / 2F) + x * slotSize + 8);
+            }
+        }
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                Slot slot = (Slot) inventorySlots.inventorySlots.get(7 + x + y * 9 + 9);
+                if (slot instanceof SlotHidable) {
+                    ((SlotHidable)slot).setDisplayPosition(
+                            (int) ((this.width / 2F) - (176F / 2F) + x * slotSize + 8),
+                            this.height + 1 - 72 - 5 + y * slotSize);
+                } else {
+                    slot.yDisplayPosition = this.height + 1 - 72 - 5 + y * slotSize;
+                    slot.xDisplayPosition = (int) ((this.width / 2F) - (176F / 2F) + x * slotSize + 8);
+                }
+            }
         }
         
-        buttonList.add(headXslider);
-        buttonList.add(headYslider);
-        buttonList.add(headZslider);
+        //Move mannequin inventory slots.
+        for (int i = 0; i < 7; i++) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(i);
+            if (slot instanceof SlotHidable) {
+                ((SlotHidable)slot).setDisplayPosition(50 + i * 18, 10);
+            } else {
+                slot.xDisplayPosition = 50 + i * 18;
+                slot.yDisplayPosition = 10;
+            }
+        }
         
-        buttonList.add(leftArmXslider);
-        buttonList.add(leftArmYslider);
-        buttonList.add(leftArmZslider);
+        if (bipedRotations != null) {
+            isChildCheck.setIsChecked(bipedRotations.isChild);
+            setSliderValue(bipedXslider, Math.toDegrees(-bipedRotations.head.rotationX));
+            setSliderValue(bipedYslider, Math.toDegrees(-bipedRotations.head.rotationY));
+            setSliderValue(bipedZslider, Math.toDegrees(-bipedRotations.head.rotationZ));
+        }
         
-        buttonList.add(rightArmXslider);
-        buttonList.add(rightArmYslider);
-        buttonList.add(rightArmZslider);
+        buttonList.add(tabController);
         
-        buttonList.add(leftLegXslider);
-        buttonList.add(leftLegYslider);
-        buttonList.add(leftLegZslider);
+        buttonList.add(bipedXslider);
+        buttonList.add(bipedYslider);
+        buttonList.add(bipedZslider);
         
-        buttonList.add(rightLegXslider);
-        buttonList.add(rightLegYslider);
-        buttonList.add(rightLegZslider);
+        //buttonList.add(isChildCheck);
         
-        buttonList.add(isChildCheck);
-        buttonList.add(new GuiButtonExt(1, this.guiLeft + 67, this.guiTop + 152, 50, 18, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "reset")));
-        buttonList.add(new GuiButtonExt(2, this.guiLeft + 119, this.guiTop + 152, 50, 18, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "random")));
+        //buttonList.add(new GuiButtonExt(1, this.guiLeft + 67, this.guiTop + 152, 50, 18, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "reset")));
+        //buttonList.add(new GuiButtonExt(2, this.guiLeft + 119, this.guiTop + 152, 50, 18, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "random")));
         
+        tabChanged();
         guiLoaded = true;
     }
     
@@ -165,38 +152,45 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         slider.precision = 2;
         slider.updateSlider();
     }
+    
+    private void tabChanged() {
+        this.activeTab = tabController.getActiveTabIndex();
+        
+        for (int i = 0; i < inventorySlots.inventorySlots.size(); i++) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(i);
+            if (slot instanceof SlotHidable) {
+                ((SlotHidable)slot).setVisible(activeTab == 0);
+            }
+        }
+        
+        bipedXslider.visible = activeTab == 1;
+        bipedYslider.visible = activeTab == 1;
+        bipedZslider.visible = activeTab == 1;
+    }
 
     @Override
     protected void actionPerformed(GuiButton button) {
+        if (button == tabController) {
+            tabChanged();
+        }
         if (button.id == 1) {
             guiLoaded = false;
-            setSliderValue(headXslider, 0F);
-            setSliderValue(headYslider, 0F);
-            setSliderValue(headZslider, 0F);
-            
-            setSliderValue(leftArmXslider, 0F);
-            setSliderValue(leftArmYslider, 1F);
-            setSliderValue(leftArmZslider, 10F);
-            
-            setSliderValue(rightArmXslider, 0F);
-            setSliderValue(rightArmYslider, 1F);
-            setSliderValue(rightArmZslider, 10F);
-            
-            setSliderValue(leftLegXslider, 0F);
-            setSliderValue(leftLegYslider, 0F);
-            setSliderValue(leftLegZslider, 0F);
-            
-            setSliderValue(rightLegXslider, 0F);
-            setSliderValue(rightLegYslider, 0F);
-            setSliderValue(rightLegZslider, 0F);
+            bipedRotations.resetRotations();
+            bipedXslider.setValue(0D);
+            bipedYslider.setValue(0D);
+            bipedZslider.setValue(0D);
+            bipedXslider.updateSlider();
+            bipedYslider.updateSlider();
+            bipedZslider.updateSlider();
             
             guiLoaded = true;
-
             checkAndSendRotationValues();
         }
         if (button.id == 2) {
             guiLoaded = false;
+            //TODO Fixed random
             Random rnd = new Random();
+            /*
             setSliderValue(leftArmXslider, rnd.nextFloat() * 270 - 90);
             setSliderValue(leftArmYslider, rnd.nextFloat() * 135 - 45);
             setSliderValue(leftArmZslider, rnd.nextFloat() * 90 - 45);
@@ -216,6 +210,7 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
             setSliderValue(headXslider, rnd.nextFloat() * 180 - 90);
             setSliderValue(headYslider, rnd.nextFloat() * 180 - 90);
             setSliderValue(headZslider, rnd.nextFloat() * 40 - 20);
+            */
             guiLoaded = true;
             checkAndSendRotationValues();
         }
@@ -226,14 +221,19 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
     }
     
     @Override
+    public void drawDefaultBackground() {
+    }
+    
+    @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         String append = null;
         if (tileEntity.getGameProfile() != null) {
             append = tileEntity.getGameProfile().getName();
         } 
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName(), append);
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName(), append, 0xFFFFFF);
+        //this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
         
+        /*
         String headRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.headRotation");
         String leftArmRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.leftArmRotation");
         String rightArmRotationLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.rightArmRotation");
@@ -245,28 +245,18 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
         this.fontRendererObj.drawString(leftLegRotationLabel, 40, 65, 4210752);
         this.fontRendererObj.drawString(rightLegRotationLabel, 147, 65, 4210752);
         this.fontRendererObj.drawString(headRotationLabel, 40, 110, 4210752);
+        */
     }
     
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        GL11.glColor4f(1, 1, 1, 1);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        mc.renderEngine.bindTexture(texture);
+        int invSizeX = 176;
+        int invSizeY = 98;
         
-        float scale = 40F;
-        GL11.glPushMatrix();
-        RenderHelper.enableStandardItemLighting();
-        
-        SkinHelper.bindPlayersNormalSkin(tileEntity.getGameProfile());
-        
-        GL11.glTranslatef(this.guiLeft + 212, this.guiTop + 170, 100);
-        GL11.glRotatef(180, 0, 1, 0);
-        GL11.glRotatef(10, 1, 0, 0);
-        GL11.glRotatef(-20, 0, 1, 0);
-        GL11.glScalef(-scale, scale, scale);
-        model.render(bipedRotations, true, 0.0625F);
-        
-        GL11.glPopMatrix();
+        if (activeTab == 0) {
+            drawTexturedModalRect(this.width / 2 - invSizeX / 2, height - invSizeY + 6, 0, 0, invSizeX, invSizeY);
+        }
     }
 
     @Override
@@ -278,26 +268,12 @@ public class GuiMannequin extends GuiContainer implements ISlider  {
     }
     
     private void checkAndSendRotationValues() {
-        bipedRotations.head.rotationX = (float) Math.toRadians(-headXslider.getValue());
-        bipedRotations.head.rotationY = (float) Math.toRadians(-headYslider.getValue());
-        bipedRotations.head.rotationZ = (float) Math.toRadians(-headZslider.getValue());
         
-        bipedRotations.leftArm.rotationX = (float) Math.toRadians(-leftArmXslider.getValue());
-        bipedRotations.leftArm.rotationY = (float) Math.toRadians(-leftArmYslider.getValue());
-        bipedRotations.leftArm.rotationZ = (float) Math.toRadians(-leftArmZslider.getValue());
-        
-        bipedRotations.rightArm.rotationX = (float) Math.toRadians(-rightArmXslider.getValue());
-        bipedRotations.rightArm.rotationY = (float) Math.toRadians(rightArmYslider.getValue());
-        bipedRotations.rightArm.rotationZ = (float) Math.toRadians(rightArmZslider.getValue());
-        
-        bipedRotations.leftLeg.rotationX = (float) Math.toRadians(-leftLegXslider.getValue());
-        bipedRotations.leftLeg.rotationY = (float) Math.toRadians(-leftLegYslider.getValue());
-        bipedRotations.leftLeg.rotationZ = (float) Math.toRadians(-leftLegZslider.getValue());
-        
-        bipedRotations.rightLeg.rotationX = (float) Math.toRadians(-rightLegXslider.getValue());
-        bipedRotations.rightLeg.rotationY = (float) Math.toRadians(rightLegYslider.getValue());
-        bipedRotations.rightLeg.rotationZ = (float) Math.toRadians(rightLegZslider.getValue());
-        
+        bipedRotations.head.setRotationsDegrees(
+                (float)-bipedXslider.getValue(),
+                (float)-bipedYslider.getValue(),
+                (float)-bipedZslider.getValue());
+        //tileEntity.setBipedRotations(bipedRotations);
         if (!this.bipedRotations.equals(this.lastBipedRotations)) {
             NBTTagCompound compound = new NBTTagCompound();
             this.bipedRotations.saveNBTData(compound);

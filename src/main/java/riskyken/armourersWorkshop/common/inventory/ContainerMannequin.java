@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
@@ -20,11 +21,11 @@ public class ContainerMannequin extends Container {
         }
         
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, 232));
+            addSlotToContainer(new SlotHidable(invPlayer, x, 8 + 18 * x, 232));
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, 174 + y * 18));
+                addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, 8 + 18 * x, 174 + y * 18));
             }
         }
     }

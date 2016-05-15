@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.common.inventory.slot;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
@@ -10,7 +9,7 @@ import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
-public class SlotMannequin extends Slot {
+public class SlotMannequin extends SlotHidable {
 
     private MannequinSlotType slotType;
     

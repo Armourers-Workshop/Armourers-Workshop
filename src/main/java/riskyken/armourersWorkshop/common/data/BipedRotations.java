@@ -24,6 +24,12 @@ public class BipedRotations {
     public boolean isChild;
     public boolean hasCustomHead;
     
+    //head - x: -90 - 90 y: -90 - 90 :z -20 - 20
+    //left arm - x: -90 - 180 y: -45 - 90 :z -45 - 45
+    //right arm - x: -90 - 180 y: -45 - 90 :z -45 - 45
+    //left leg - x: -90 - 90 y: -45 - 45 :z -45 - 45
+    //right leg - x: -90 - 90 y: -45 - 45 :z -45 - 45
+    
     public BipedRotations() {
         head = new BipedPart(TAG_HEAD);
         chest = new BipedPart(TAG_CHEST);
@@ -31,6 +37,16 @@ public class BipedRotations {
         rightArm = new BipedPart(TAG_RIGHT_ARM);
         leftLeg = new BipedPart(TAG_LEFT_LEG);
         rightLeg = new BipedPart(TAG_RIGHT_LEG);
+        resetRotations();
+    }
+    
+    public void resetRotations() {
+        head.setRotationsDegrees(0, 0, 0);
+        chest.setRotationsDegrees(0, 0, 0);
+        leftArm.setRotationsDegrees(0, -1, -10);
+        rightArm.setRotationsDegrees(0, 1, 10);
+        leftLeg.setRotationsDegrees(0, 0, 0);
+        rightLeg.setRotationsDegrees(0, 0, 0);
     }
     
     public void applyRotationsToBiped(ModelBiped modelBiped) {
@@ -162,7 +178,19 @@ public class BipedRotations {
             modelRenderer.rotateAngleY = this.rotationY;
             modelRenderer.rotateAngleZ = this.rotationZ;
         }
-            
+        
+        public void setRotations(float x, float y, float z) {
+            this.rotationX = x;
+            this.rotationY = y;
+            this.rotationZ = z;
+        }
+        
+        public void setRotationsDegrees(float x, float y, float z) {
+            this.rotationX = (float) Math.toRadians(x);
+            this.rotationY = (float) Math.toRadians(y);
+            this.rotationZ = (float) Math.toRadians(z);
+        }
+        
         public void loadNBTData(NBTTagCompound compound) {
             this.rotationX = compound.getFloat(TAG_ROTATION_X + this.partName);
             this.rotationY = compound.getFloat(TAG_ROTATION_Y + this.partName);
