@@ -34,6 +34,7 @@ import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -69,29 +70,36 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
         mc.mcProfiler.startSection("armourersMannequin");
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
-        
+        mc.mcProfiler.startSection("move");
         model.compile(SCALE);
         
         GL11.glPushMatrix();
-        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         GL11.glEnable(GL11.GL_NORMALIZE);
         
         int rotaion = te.getRotation();
         
-        GL11.glTranslated(x + 0.5D, y + 1.5D, z + 0.5D);
+        GL11.glTranslated(x + 0.5D + te.getOffsetX(), y + 1.0D + te.getOffsetY(), z + 0.5D + te.getOffsetZ());
+        BipedRotations rots = te.getBipedRotations();
+        GL11.glRotated(Math.toDegrees(rots.chest.rotationX), 1F, 0F, 0F);
+        GL11.glRotated(Math.toDegrees(rots.chest.rotationY), 0F, 1F, 0F);
+        GL11.glRotated(Math.toDegrees(rots.chest.rotationZ), 0F, 0F, 1F);
+        GL11.glTranslated(0, 0.5D, 0);
+        
         GL11.glScalef(SCALE * 15, SCALE * 15, SCALE * 15);
         GL11.glTranslated(0, SCALE * -1.6F, 0);
         
         GL11.glScalef(-1, -1, 1);
         GL11.glRotatef(rotaion * 22.5F, 0, 1, 0);
-        
+
         if (te.getIsDoll()) {
             float dollScale = 0.5F;
             GL11.glScalef(dollScale, dollScale, dollScale);
             GL11.glTranslatef(0, SCALE * 24, 0);
         }
         
-        mc.mcProfiler.startSection("fakePlayer");
+        mc.mcProfiler.endStartSection("fakePlayer");
         if (mannequinFakePlayer == null) {
             mannequinFakePlayer = new MannequinFakePlayer(te.getWorldObj(), new GameProfile(null, "[Mannequin]"));
             mannequinFakePlayer.posX = x;
@@ -123,7 +131,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);
             te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
         }
-        mc.mcProfiler.endSection();
         
         
         ApiRegistrar.INSTANCE.onRenderMannequin(te, te.getGameProfile());
@@ -135,18 +142,20 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         model.bipedRightLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);
         model.bipedLeftLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
         
-        te.getBipedRotations().applyRotationsToBiped(model);
+        rots.applyRotationsToBiped(model);
+        model.bipedBody.rotateAngleX = 0;
+        model.bipedBody.rotateAngleY = 0;
+        model.bipedBody.rotateAngleZ = 0;
         
-        mc.mcProfiler.startSection("getTexture");
+        mc.mcProfiler.endStartSection("getTexture");
         ResourceLocation rl = AbstractClientPlayer.locationStevePng;
         if (te.getGameProfile() != null) {
             rl = AbstractClientPlayer.getLocationSkin(te.getGameProfile().getName());
             AbstractClientPlayer.getDownloadImageSkin(rl, te.getGameProfile().getName());
         }
-        mc.mcProfiler.endSection();
         
         
-        mc.mcProfiler.startSection("textureBuild");
+        mc.mcProfiler.endStartSection("textureBuild");
         
         if (te.skinTexture == null) {
             te.skinTexture = new EntityTextureInfo();
@@ -185,15 +194,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         
-        mc.mcProfiler.endSection();
-        
-        
-        //Render model
-        mc.mcProfiler.startSection("textureBind");
+        mc.mcProfiler.endStartSection("textureBind");
         bindTexture(rl);
-        //SkinHelper.bindPlayersNormalSkin(te.getGameProfile());
-        mc.mcProfiler.endSection();
-        mc.mcProfiler.startSection("modelRender");
+        
+        
+        mc.mcProfiler.endStartSection("modelRender");
         te.getBipedRotations().hasCustomHead = hasCustomHead(te);
         
         if (!(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
@@ -213,29 +218,22 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glPopMatrix();
         }
         
-        mc.mcProfiler.endSection();
-        
         //Magic circle.
-        if (te.getGameProfile() != null) {
-            if (te.getGameProfile().getName().equals("RiskyKen")) {
+        if (te.isRenderExtras()) {
+            if (te.hasSpecialRender()) {
+                float[] colour = te.getSpecialRenderColour();
                 int offset = te.xCoord * te.yCoord * te.zCoord;
-                renderMagicCircle(249F / 255, 223F / 255, 140F / 255, partialTickTime, offset, te.getBipedRotations().isChild);
-            } else if (te.getGameProfile().getName().equals("Nanoha")) {
-                int offset = te.xCoord * te.yCoord * te.zCoord;
-                renderMagicCircle(1F, 173F / 255, 1F, partialTickTime, offset, te.getBipedRotations().isChild);
+                renderMagicCircle(colour[0], colour[1], colour[2], partialTickTime, offset, te.getBipedRotations().isChild);
             }
         }
-
         
         //Render items.
-        mc.mcProfiler.startSection("equippedItems");
+        mc.mcProfiler.endStartSection("equippedItems");
         if (te.getDistanceFrom(field_147501_a.field_147560_j, field_147501_a.field_147561_k, field_147501_a.field_147558_l) < ConfigHandler.mannequinMaxEquipmentRenderDistance) {
             renderEquippedItems(te, fakePlayer, model);
         }
-        mc.mcProfiler.endSection();
         
-        
-        mc.mcProfiler.startSection("reset");
+        mc.mcProfiler.endStartSection("reset");
         model.bipedLeftLeg.rotateAngleZ = 0F;
         model.bipedRightLeg.rotateAngleZ = 0F;
         model.bipedHead.rotateAngleZ = 0F;
@@ -250,11 +248,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer.modelArmorChestplate.bipedRightLeg.rotateAngleZ = 0F;
         renderPlayer.modelArmorChestplate.bipedHead.rotateAngleZ = 0F;
         renderPlayer.modelArmorChestplate.bipedHeadwear.rotateAngleZ = 0F;
-        mc.mcProfiler.endSection();
-        
-        GL11.glDisable(GL11.GL_NORMALIZE);
+        mc.mcProfiler.endStartSection("pop");
+        GL11.glPopAttrib();
         GL11.glPopAttrib();
         GL11.glPopMatrix();
+        mc.mcProfiler.endSection();
         mc.mcProfiler.endSection();
     }
     
@@ -398,16 +396,20 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         case 2:
             renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
-        case 4:
+        case 3:
             renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
-        case 5:
+        case 4:
             renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
-        case 6:
+        case 5:
             renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
             break;
+        case 6:
+            //renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            break;
         }
+        
         targetBiped.isChild = isChild;
         if (isChild) {
             ModelHelper.disableChildModelScale();

@@ -78,9 +78,12 @@ public class GuiTabController extends GuiButtonExt {
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * 27F) / 2F);
         for (int i = 0; i < tabs.size(); i++) {
-            if (tabs.get(i).isMouseOver(this.xPosition - 4, this.yPosition + i * 27  + yOffset, mouseX, mouseY)) {
-                activeTab = i;
-                return true;
+            GuiTab tab = tabs.get(i);
+            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * 27  + yOffset, mouseX, mouseY)) {
+                if (tab.enabled) {
+                    activeTab = i;
+                    return true;
+                }
             }
         }
         return false;

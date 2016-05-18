@@ -7,19 +7,23 @@ import net.minecraft.client.gui.Gui;
 @SideOnly(Side.CLIENT)
 public class GuiTab extends Gui {
     
-    private final String name;
-    
     private final int TAB_TEXTURE_WIDTH = 26;
     private final int TAB_TEXTURE_HEIGHT = 26;
     
     private final int ICON_TEXTURE_WIDTH = 16;
     private final int ICON_TEXTURE_HEIGHT = 16;
     
+    private final String name;
+    
+    public boolean enabled;
+    public boolean visible;
+    
     private int iconTextureX = 0;
     private int iconTextureY = 0;
     
     public GuiTab(String name) {
         this.name = name;
+        this.enabled = true;
     }
     
     public String getName() {
@@ -32,11 +36,24 @@ public class GuiTab extends Gui {
         if (isMouseOver(x, y, mouseX, mouseY)) {
             textureOffsetX += TAB_TEXTURE_WIDTH;
         }
+        if (!enabled) {
+            textureOffsetX = TAB_TEXTURE_WIDTH * 2;
+        }
         if (activeTab) {
             textureOffsetY = 0;
         }
         drawTexturedModalRect(x, y, textureOffsetX, textureOffsetY, TAB_TEXTURE_WIDTH, TAB_TEXTURE_HEIGHT);
         renderIcon(x, y);
+    }
+    
+    public GuiTab setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+    
+    public GuiTab setVisable(boolean visible) {
+        this.visible = visible;
+        return this;
     }
     
     public GuiTab setIconLocation(int x, int y) {

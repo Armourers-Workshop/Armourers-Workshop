@@ -295,7 +295,10 @@ public class RenderBlockMannequinItems {
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);
+                GL11.glScalef(-1, 1, 1);
+                GL11.glCullFace(GL11.GL_FRONT);
                 SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
+                GL11.glCullFace(GL11.GL_BACK);
                 return;
             }
         }

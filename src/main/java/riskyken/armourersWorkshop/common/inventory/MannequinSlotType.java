@@ -4,10 +4,10 @@ public enum MannequinSlotType {
     HEAD,
     CHEST,
     LEGS,
-    SKIRT,
     FEET,
     RIGHT_HAND,
-    LEFT_HAND;
+    LEFT_HAND,
+    WINGS;
 
     public static MannequinSlotType getOrdinal(int i) {
         return MannequinSlotType.values()[i];

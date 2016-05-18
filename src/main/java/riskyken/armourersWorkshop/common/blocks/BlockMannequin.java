@@ -10,7 +10,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.EntitySpellParticleFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,16 +36,19 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.HolidayHelper;
 
 public class BlockMannequin extends AbstractModBlockContainer {
 
     public static DamageSource victoriousDamage = new DamageSource("victorious");
     private static final String TAG_OWNER = "owner";
+    private final boolean isValentins;
     
     public BlockMannequin() {
         super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal, true);
         setLightOpacity(0);
         setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
+        isValentins = HolidayHelper.valentins.isHolidayActive();
     }
     
     @Override
@@ -69,6 +75,30 @@ public class BlockMannequin extends AbstractModBlockContainer {
             }
         }
         world.setBlock(x, y + 1, z, this, 1, 2);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+        if (isTopOfMannequin(world, x, y, z)) {
+            if (isValentins) {
+                if (random.nextFloat() * 100 > 75) {
+                    world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
+                }
+            }
+            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
+            if (te != null && te.isRenderExtras()) {
+                if (te.hasSpecialRender()) {
+                    for (int i = 0; i < 4; i++) {
+                        EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
+                        ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
+                        float[] colour = te.getSpecialRenderColour();
+                        entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
+                        Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
+                    }
+                }
+            }
+        }
     }
     
     public void convertToDoll(World world, int x, int y, int z) {

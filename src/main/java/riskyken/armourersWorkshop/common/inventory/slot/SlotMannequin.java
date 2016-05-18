@@ -53,12 +53,6 @@ public class SlotMannequin extends SlotHidable {
                 return true;
             }
             break;
-        case SKIRT:
-            if (item instanceof ItemSkin &&((ItemSkin)item)
-                    .getSkinType(stack) == SkinTypeRegistry.skinSkirt) {
-                return true;
-            }
-            break;
         case FEET:
             if (item instanceof ItemArmor && ((ItemArmor)item).armorType == 3) {
                 return true;
@@ -68,10 +62,17 @@ public class SlotMannequin extends SlotHidable {
                 return true;
             }
             break;
+            
         case LEFT_HAND:
             return true;
         case RIGHT_HAND:
             return true;
+        case WINGS:
+            if (item instanceof ItemSkin &&((ItemSkin)item)
+                    .getSkinType(stack) == SkinTypeRegistry.skinWings) {
+                return true;
+            }
+            break;
         }
         return false;
     }

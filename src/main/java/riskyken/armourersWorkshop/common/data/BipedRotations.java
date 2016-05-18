@@ -40,6 +40,25 @@ public class BipedRotations {
         resetRotations();
     }
     
+    public BipedPart getPartForIndex(int index) {
+        switch (index) {
+        case 0:
+            return head;
+        case 1:
+            return chest;
+        case 2:
+            return leftArm;
+        case 3:
+            return rightArm;
+        case 4:
+            return leftLeg;
+        case 5:
+            return rightLeg;
+        default:
+            return null;
+        }
+    }
+    
     public void resetRotations() {
         head.setRotationsDegrees(0, 0, 0);
         chest.setRotationsDegrees(0, 0, 0);

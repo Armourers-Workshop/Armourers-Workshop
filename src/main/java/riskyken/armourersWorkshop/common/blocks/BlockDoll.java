@@ -10,7 +10,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.EntitySpellParticleFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,15 +34,18 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.HolidayHelper;
 
 public class BlockDoll extends AbstractModBlockContainer {
 
     private static final String TAG_OWNER = "owner";
+    private final boolean isValentins;
     
     public BlockDoll() {
         super(LibBlockNames.DOLL, Material.rock, soundTypeMetal, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
         setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
+        isValentins = HolidayHelper.valentins.isHolidayActive();
     }
     
     @Override
@@ -63,6 +69,29 @@ public class BlockDoll extends AbstractModBlockContainer {
                 }
             }
             
+        }
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+        if (isValentins) {
+            if (random.nextFloat() * 100 > 80) {
+                world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
+            }
+        }
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity != null && tileEntity instanceof TileEntityMannequin) {
+            TileEntityMannequin te = (TileEntityMannequin) tileEntity;
+            if (te.isRenderExtras()) {
+                if (te.hasSpecialRender()) {
+                    EntityFX entityfx = new EntitySpellParticleFX(world,  x + random.nextFloat() * 1F, y, z + random.nextFloat() * 1F, 0, 0, 0);
+                    ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
+                    float[] colour = te.getSpecialRenderColour();
+                    entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
+                }
+            }
         }
     }
     
