@@ -1,3 +1,34 @@
+Build 0.39.0
+Added: Allowed for the players texture to be painted.
+Added: Allowed for multiple skins to be equipped at the same time.
+Added: Skin previews in the library GUI.
+Added: Armourers Hammer.
+Added: Large model preview to the dye table.
+Added: Config option to turn of library model previews.
+Added: Naming a mannequin null will stop it from rendering.
+Added: Config option for how long textures should be cached
+Added: Version info to armourer GUI.
+Added: Dress set and head bows to the premade skins.
+Added: Players can manually select their skin and hair colour.
+Change: Rewrite of the mannequin GUI.
+Change: Updated zh_CN language file.(EthanJJC)
+Change: Made the coloured cube TESR render faster
+Change: Made the mannequin head wobble more intense
+Change: The way dolls are crafted has been changed.
+Change: Scaled skin icons so they fit in item slots.
+Change: Skins in a mannequins left hand will be flipped.
+Fixed: Crash when using colour picker on the armourer models. (again)
+Fixed: Armourer sometimes not showing the players texture.
+Fixed: Armourer sometimes showing old players textures.
+Fixed: Mannequins not updating their texture when the players changes.
+Fixed: Skins sometimes not rendering when smart moving is installed.
+Fixed: Limit limb movement option not working when Smart Moving is installed.
+Fixed: Transparency not working for skins on custom NPCs.
+Fixed: Players not always being able to open the wardrobe GUI.
+Fixed: Colour picker not always giving the correct colour form Armourer parts.
+Fixed: Weapon dyes not getting updated when swapping skins in the wardrobe.
+Fixed: Some weapons not being skinnable, even after being added to the config file.
+
 Build 0.38.1
 Added: Paint type label to the colour mixer.
 Change: Use model average colour when calculating dye colour.
