@@ -209,6 +209,7 @@ inventory.armourersworkshop:mannequin.label.rightArmRotation=Right Arm Rotation
 inventory.armourersworkshop:mannequin.label.leftLegRotation=Left Leg Rotation
 inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
+inventory.armourersworkshop:mannequin.label.isExtraRenders=Extra Renders?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
 inventory.armourersworkshop:mannequin.tab.inventory=Inventory

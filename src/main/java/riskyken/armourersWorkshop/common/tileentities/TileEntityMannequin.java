@@ -12,6 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -88,10 +89,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.skinColour = skinColour;
         this.hairColour = hairColour;
         if (gameProfile == null) {
-            setGameProfile(new GameProfile(null, username));
+            setGameProfile(username);
         } else {
             if (!gameProfile.getName().equals(username)) {
-                setGameProfile(new GameProfile(null, username));
+                setGameProfile(username);
             }
         }
         this.renderExtras = renderExtras;
@@ -193,9 +194,17 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public void setOwner(ItemStack stack) {
         if (stack.hasDisplayName()) {
-            setGameProfile(new GameProfile(null, stack.getDisplayName()));
+            setGameProfile(stack.getDisplayName());
+            
             stack.stackSize--;
             updateProfileData();
+        }
+    }
+    
+    public void setGameProfile(String username) {
+        gameProfile = null;
+        if (!StringUtils.isNullOrEmpty(username)) {
+            setGameProfile(new GameProfile(null, username));
         }
     }
     
@@ -257,10 +266,13 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     public void setGameProfile(GameProfile gameProfile) {
+        this.newProfile = null;
         this.gameProfile = gameProfile;
         if (!worldObj.isRemote) {
             updateProfileData();
         }
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public int getHeightOffset() {
@@ -379,6 +391,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
+        gameProfile = null;
         readFromNBT(compound);
         skinsUpdated = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -400,6 +413,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void profileUpdated(GameProfile gameProfile) {
         newProfile = gameProfile;
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

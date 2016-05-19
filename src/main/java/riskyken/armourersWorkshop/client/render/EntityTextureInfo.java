@@ -74,17 +74,19 @@ public class EntityTextureInfo {
     public void updateTexture(ResourceLocation resourceLocation) {
         if (lastEntityTextureHash != resourceLocation.hashCode()) {
             BufferedImage buff = SkinHelper.getBufferedImageSkin(resourceLocation);
+            bufferedEntityImage = null;
             if (buff != null) {
                 lastEntityTextureHash = resourceLocation.hashCode();
                 normalTexture = resourceLocation;
-                bufferedEntityImage = SkinHelper.getBufferedImageSkin(resourceLocation);
+                bufferedEntityImage = buff;
                 needsUpdate = true;
             }
+            
         }
         
         if (bufferedEntityImage == null) {
             //Texture is most likely not downloaded yet.
-            bufferedEntityImage = SkinHelper.getBufferedImageSkin(AbstractClientPlayer.locationStevePng);
+            lastEntityTextureHash = AbstractClientPlayer.locationStevePng.hashCode();
             bufferedEntityImage = SkinHelper.getBufferedImageSkin(AbstractClientPlayer.locationStevePng);
             needsUpdate = true;
         }

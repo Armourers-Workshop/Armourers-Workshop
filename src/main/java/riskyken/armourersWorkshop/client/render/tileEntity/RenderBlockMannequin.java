@@ -1,7 +1,10 @@
 package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import java.awt.Color;
+import java.nio.FloatBuffer;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
@@ -26,6 +29,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
+import riskyken.armourersWorkshop.client.gui.GuiMannequin;
+import riskyken.armourersWorkshop.client.gui.GuiMannequinTabSkinHair;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
@@ -157,15 +162,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         mc.mcProfiler.endStartSection("textureBuild");
         
-        if (te.skinTexture == null) {
-            te.skinTexture = new EntityTextureInfo();
-        }
-        
-        te.skinTexture.updateTexture(rl);
-        te.skinTexture.updateSkinColour(te.getSkinColour());
-        te.skinTexture.updateHairColour(te.getHairColour());
-        
-        
         if (te.haveSkinsUpdated()) {
             te.sp = getSkinPointers(te);
         }
@@ -173,25 +169,39 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         ISkinPointer[] sp = te.sp;
         Skin[] skins = new Skin[sp.length];
         ISkinDye[] dyes = new ISkinDye[sp.length];
+        boolean hasPaintedSkin = false;
         
         for (int i = 0; i < sp.length; i++) {
             if (sp[i] != null) {
                 skins[i] = ClientSkinCache.INSTANCE.getSkin(sp[i]);
                 dyes[i] = sp[i].getSkinDye();
+                if (skins[i] != null && skins[i].hasPaintData()) {
+                    hasPaintedSkin = true;
+                }
             }
         }
         
-        te.skinTexture.updateSkins(skins);
-        te.skinTexture.updateDyes(dyes);
-        
-        if (te.skinTexture.getNeedsUpdate()) {
-            if (lastTextureBuild + 100L < System.currentTimeMillis()) {
-                lastTextureBuild = System.currentTimeMillis();
+        if (hasPaintedSkin) {
+            if (te.skinTexture == null) {
+                te.skinTexture = new EntityTextureInfo();
+            }
+            
+            te.skinTexture.updateTexture(rl);
+            te.skinTexture.updateSkinColour(te.getSkinColour());
+            te.skinTexture.updateHairColour(te.getHairColour());
+            te.skinTexture.updateSkins(skins);
+            te.skinTexture.updateDyes(dyes);
+            
+            if (te.skinTexture.getNeedsUpdate()) {
+                if (lastTextureBuild + 100L < System.currentTimeMillis()) {
+                    lastTextureBuild = System.currentTimeMillis();
+                    rl = te.skinTexture.preRender();
+                }
+            } else {
                 rl = te.skinTexture.preRender();
             }
-        } else {
-            rl = te.skinTexture.preRender();
         }
+
         
         
         mc.mcProfiler.endStartSection("textureBind");
@@ -200,6 +210,29 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         mc.mcProfiler.endStartSection("modelRender");
         te.getBipedRotations().hasCustomHead = hasCustomHead(te);
+        
+        boolean selectingColour = false;
+        GuiMannequinTabSkinHair tabSkinHair = null;
+        
+        if (mc.currentScreen instanceof GuiMannequin) {
+            GuiMannequin screen = (GuiMannequin) mc.currentScreen;
+            if (screen.tileEntity == te) {
+                tabSkinHair = screen.tabSkinAndHair;
+                if (tabSkinHair.selectingSkinColour | tabSkinHair.selectingHairColour) {
+                    selectingColour = true;
+                }
+            }
+
+        }
+        
+        if (selectingColour) {
+            GL11.glDisable(GL11.GL_LIGHTING);
+            if (!(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
+                renderModel(te, model, fakePlayer);
+            }
+            tabSkinHair.hoverColour = getColourAtPos(Mouse.getX(), Mouse.getY());
+            GL11.glEnable(GL11.GL_LIGHTING);
+        }
         
         if (!(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
             renderModel(te, model, fakePlayer);
@@ -320,6 +353,15 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.getBipedRotations().isChild) {
             ModelHelper.disableChildModelScale();
         }
+    }
+    
+    private Color getColourAtPos(int x, int y) {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
+        GL11.glReadPixels(x, y, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, buffer);
+        int r = Math.round(buffer.get() * 255);
+        int g = Math.round(buffer.get() * 255);
+        int b = Math.round(buffer.get() * 255);
+        return new Color(r,g,b);
     }
     
     private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
