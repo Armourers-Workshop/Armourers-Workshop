@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.handler;
 
 import java.util.HashMap;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -107,7 +108,7 @@ public final class EquipmentWardrobeHandler {
         }
     }
     
-    @SubscribeEvent
+    @SubscribeEvent(priority=EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.SetArmorModel event) {
         int slot = -event.slot + 3;
         if (slot > 3) {
