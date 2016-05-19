@@ -41,11 +41,11 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         skinColour = tileEntity.getSkinColour();
         hairColour = tileEntity.getHairColour();
         
-        selectSkinButton = new GuiButtonExt(0, width / 2 - 85, 25, 80, 14, "Select Skin");
-        selectHairButton = new GuiButtonExt(0, width / 2 - 85, 40, 80, 14, "Select Hair");
+        selectSkinButton = new GuiButtonExt(0, width / 2 - 90, 25, 80, 14, "Select Skin");
+        selectHairButton = new GuiButtonExt(0, width / 2 - 90, 40, 80, 14, "Select Hair");
         
-        autoSkinButton = new GuiButtonExt(0, width / 2, 25, 80, 14, "Auto Skin");
-        autoHairButton = new GuiButtonExt(0, width / 2, 40, 80, 14, "Auto Hair");
+        autoSkinButton = new GuiButtonExt(0, width / 2 + 10, 25, 80, 14, "Auto Skin");
+        autoHairButton = new GuiButtonExt(0, width / 2 + 10, 40, 80, 14, "Auto Hair");
         
         buttonList.add(selectSkinButton);
         buttonList.add(selectHairButton);
@@ -61,14 +61,14 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
         
         if (selectingSkinColour) {
-            drawColourBox(30, 20, hoverColour.getRGB());
+            drawColourBox(width / 2 - 7, 25, hoverColour.getRGB());
         } else {
-            drawColourBox(30, 20, skinColour);
+            drawColourBox(width / 2 - 7, 25, skinColour);
         }
         if (selectingHairColour) {
-            drawColourBox(30, 20, hoverColour.getRGB());
+            drawColourBox(width / 2 - 7, 40, hoverColour.getRGB());
         } else {
-            drawColourBox(30, 40, hairColour);
+            drawColourBox(width / 2 - 7, 40, hairColour);
         }
     }
     
