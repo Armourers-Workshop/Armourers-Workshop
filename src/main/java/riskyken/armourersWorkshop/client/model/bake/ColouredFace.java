@@ -5,44 +5,32 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 
-public class ColouredVertexWithUV {
+public class ColouredFace {
     
-    private final double x;
-    private final double y;
-    private final double z;
+    private final byte x;
+    private final byte y;
+    private final byte z;
     
-    // TODO Move u v into it's own class.
-    private final float u;
-    private final float v;
-    
-    // TODO remove all this junk, we don't need it 4 times for each face!
     private final byte r;
     private final byte g;
     private final byte b;
     private final byte a;
+    
     private final byte t;
+    private final byte face;
     
-    private final float norX;
-    private final float norY;
-    private final float norZ;
-    
-    public ColouredVertexWithUV(double x, double y, double z, float u, float v, byte r, byte g, byte b, byte a, float norX, float norY, float norZ, byte paintType) {
+    public ColouredFace(byte x, byte y, byte z, byte r, byte g, byte b, byte a, byte paintType, byte face) {
         this.x = x;
         this.y = y;
         this.z = z;
-        
-        this.u = u;
-        this.v = v;
         
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
-        this.t = paintType;
         
-        this.norX = norX;
-        this.norY = norY;
-        this.norZ = norZ;
+        this.t = paintType;
+        this.face = face;
     }
     
     public void renderVertex(IRenderBuffer renderBuffer, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd, boolean useTexture) {
@@ -92,13 +80,7 @@ public class ColouredVertexWithUV {
                 g = dyedColour[1];
                 b = dyedColour[2];
             }
-            renderBuffer.setNormal(norX, norY, norZ);
-            renderBuffer.setColourRGBA_B(r, g, b, a);
-            if (useTexture) {
-                renderBuffer.addVertexWithUV(x, y, z, (double)u, (double)v);
-            } else {
-                renderBuffer.addVertex(x, y, z);
-            }
+            FaceRenderer.renderFace(x, y, z, r, g, b, a, face, useTexture);
         }
     }
     

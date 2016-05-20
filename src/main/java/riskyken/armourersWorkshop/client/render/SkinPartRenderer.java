@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.client.render;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,12 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.ResourceLocation;
-import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.model.SkinModel;
-import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
-import riskyken.armourersWorkshop.client.model.bake.CustomModelRenderer;
+import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -30,16 +27,9 @@ public class SkinPartRenderer extends ModelBase {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
     public static final SkinPartRenderer INSTANCE = new SkinPartRenderer();
-    public final CustomModelRenderer main;
     private final Minecraft mc;
     
     public SkinPartRenderer() {
-        textureWidth = 4;
-        textureHeight = 4;
-        
-        main = new CustomModelRenderer(this, 0, 0);
-        main.addBox(0F, 0F, 0F, 1, 1, 1);
-        main.setRotationPoint(0, 0, 0);
         mc = Minecraft.getMinecraft();
     }
     
@@ -105,22 +95,13 @@ public class SkinPartRenderer extends ModelBase {
         mc.mcProfiler.endSection();
     }
     
-    private void renderVertexList(ArrayList<ColouredVertexWithUV> vertexList, float scale, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd) {
+    private void renderVertexList(ArrayList<ColouredFace> vertexList, float scale, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd) {
         IRenderBuffer renderBuffer = new RenderBridge().INSTANCE;
         renderBuffer.startDrawingQuads();
         for (int i = 0; i < vertexList.size(); i++) {
-            ColouredVertexWithUV cVert = vertexList.get(i);
+            ColouredFace cVert = vertexList.get(i);
             cVert.renderVertex(renderBuffer, skinDye, extraColour, cspd, ClientProxy.useSafeTextureRender());
         }
         renderBuffer.draw();
-    }
-
-    public void renderArmourBlock(int x, int y, int z, ICubeColour colour, float scale, BitSet faceFlags, boolean glass) {
-        byte a = (byte) 255;
-        if (glass) {
-            a = (byte) 127;
-        }
-        
-        main.render(scale, faceFlags, x, y, z, colour.getRed(), colour.getGreen(), colour.getBlue(), a);
     }
 }

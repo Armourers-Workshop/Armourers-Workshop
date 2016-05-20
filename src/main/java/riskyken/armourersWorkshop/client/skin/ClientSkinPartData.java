@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.model.SkinModel;
-import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
+import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 
 @SideOnly(Side.CLIENT)
@@ -18,7 +18,7 @@ public class ClientSkinPartData {
 
     /** Blank dye that is used if no dye is applied. */
     public static final SkinDye blankDye = new SkinDye();
-    public ArrayList<ColouredVertexWithUV>[] vertexLists;
+    public ArrayList<ColouredFace>[] vertexLists;
     public HashMap<ModelKey, SkinModel> dyeModels;
     public int[] totalCubesInPart;
     
@@ -56,7 +56,7 @@ public class ClientSkinPartData {
         return dyeModels.size();
     }
 
-    public void setVertexLists(ArrayList<ColouredVertexWithUV>[] vertexLists) {
+    public void setVertexLists(ArrayList<ColouredFace>[] vertexLists) {
         this.vertexLists = vertexLists;
     }
     

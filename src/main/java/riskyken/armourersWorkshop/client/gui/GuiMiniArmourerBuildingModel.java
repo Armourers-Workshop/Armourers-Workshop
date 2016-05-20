@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.model.bake.FaceRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
@@ -193,7 +194,7 @@ public class GuiMiniArmourerBuildingModel {
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
-                SkinPartRenderer.INSTANCE.renderArmourBlock(newCube.getX(), newCube.getY(), newCube.getZ(), newCube.getColour(), scale, null, true);
+                renderArmourBlock((byte)newCube.getX(), (byte)newCube.getY(), (byte)newCube.getZ(), newCube.getColour(), scale, true);
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
                 GL11.glDisable(GL11.GL_BLEND);
             }
@@ -234,6 +235,12 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glPopMatrix();
     }
     
+    private void renderArmourBlock(byte x, byte y, byte z, ICubeColour colour, float scale, boolean b) {
+        for (int i = 0; i < 6; i++) {
+            FaceRenderer.renderFace(x, y, z, colour.getRed(i), colour.getGreen(i), colour.getBlue(i), (byte)255, (byte)i, false);
+        }
+    }
+
     private void cubeClicked(int cubeId, int cubeFace, int button) {
         if (renderCubes != null && cubeId - 1 < renderCubes.size() & cubeId - 1 >= 0) {
             MiniCube tarCube = renderCubes.get(cubeId - 1);
@@ -338,7 +345,8 @@ public class GuiMiniArmourerBuildingModel {
                     colour = cube.getCubeColour();
                 }
                 
-                SkinPartRenderer.INSTANCE.renderArmourBlock(cube.getX(), cube.getY(), cube.getZ(), colour, scale, null, false);
+                renderArmourBlock((byte)cube.getX(), (byte)cube.getY(), (byte)cube.getZ(), colour, scale, false);
+                
                 if (cube.isGlowing() & !fake) {
                     ModRenderHelper.enableLighting();
                     GL11.glEnable(GL11.GL_LIGHTING);

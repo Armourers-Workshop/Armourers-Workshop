@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
-import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
+import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -197,7 +197,7 @@ public class EntityTextureInfo {
                                 if (skins[i] != null) {
                                     average = skins[i].getAverageDyeColour(dyeNumber);
                                 }
-                                dye = ColouredVertexWithUV.dyeColour(r, g, b, dye, average);
+                                dye = ColouredFace.dyeColour(r, g, b, dye, average);
                                 
                                 int colour = (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
                                 bufferedEntitySkinnedImage.setRGB(ix, iy, colour);

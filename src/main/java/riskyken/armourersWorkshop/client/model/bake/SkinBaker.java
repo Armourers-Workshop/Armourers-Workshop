@@ -10,7 +10,6 @@ import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -146,16 +145,16 @@ public final class SkinBaker {
     public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount) {
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
-        ArrayList<ColouredVertexWithUV>[] renderLists;
+        ArrayList<ColouredFace>[] renderLists;
         
         if (multipassSkinRendering) {
-            renderLists = (ArrayList<ColouredVertexWithUV>[]) new ArrayList[4];
+            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[4];
         } else {
-            renderLists = (ArrayList<ColouredVertexWithUV>[]) new ArrayList[2];
+            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[2];
         }
         
         for (int i = 0; i < renderLists.length; i++) {
-            renderLists[i] = new ArrayList<ColouredVertexWithUV>();
+            renderLists[i] = new ArrayList<ColouredFace>();
         }
         
         float scale = 0.0625F;
@@ -227,21 +226,29 @@ public final class SkinBaker {
                 if (cube.isGlowing() && cube.needsPostRender()) {
                     listIndex = 3;
                 }
-                SkinPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[listIndex],
-                        scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
-                        cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
-                        cubeData.getCubeColourB(i), a, paintType);
+                
+                for (int j = 0; j < 6; j++) {
+                    if (cubeData.getFaceFlags(i).get(j)) {
+                        ColouredFace ver = new ColouredFace(
+                                loc[0], loc[1], loc[2],
+                                r[j], g[j], b[j],
+                                a, paintType[j], (byte)j);
+                        renderLists[listIndex].add(ver);
+                    }
+                }
             } else {
+                int listIndex = 0;
                 if (cube.isGlowing()) {
-                    SkinPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[1],
-                            scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
-                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
-                            cubeData.getCubeColourB(i), a, paintType);
-                } else {
-                    SkinPartRenderer.INSTANCE.main.buildDisplayListArray(renderLists[0],
-                            scale, cubeData.getFaceFlags(i), loc[0], loc[1], loc[2],
-                            cubeData.getCubeColourR(i), cubeData.getCubeColourG(i),
-                            cubeData.getCubeColourB(i), a, paintType);
+                    listIndex = 1;
+                }
+                for (int j = 0; j < 6; j++) {
+                    if (cubeData.getFaceFlags(i).get(j)) {
+                        ColouredFace ver = new ColouredFace(
+                                loc[0], loc[1], loc[2],
+                                r[j], g[j], b[j],
+                                a, paintType[j], (byte)j);
+                        renderLists[listIndex].add(ver);
+                    }
                 }
             }
         }

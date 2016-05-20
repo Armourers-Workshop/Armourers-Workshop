@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
-import riskyken.armourersWorkshop.client.model.bake.ColouredVertexWithUV;
+import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
@@ -55,7 +55,7 @@ public class SkinModelTexture extends AbstractTexture {
                                     average = skin.getAverageDyeColour(dyeNumber);
                                 }
                                 
-                                dye = ColouredVertexWithUV.dyeColour(r, g, b, dye, average);
+                                dye = ColouredFace.dyeColour(r, g, b, dye, average);
                                 int colour = (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
                                 texture.setRGB(ix, iy, colour);
                             }
