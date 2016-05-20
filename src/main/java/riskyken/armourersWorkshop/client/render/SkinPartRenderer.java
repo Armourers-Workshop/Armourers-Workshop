@@ -34,12 +34,17 @@ public class SkinPartRenderer extends ModelBase {
     }
     
     public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour) {
+        renderPart(skinPart, scale, skinDye, extraColour, 0);
+    }
+    
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod) {
         mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         GL11.glColor3f(1F, 1F, 1F);
         
         ClientSkinPartData cspd = skinPart.getClientSkinPartData();
         SkinModel skinModel = cspd.getModelForDye(skinDye, extraColour);
+        boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
         for (int i = 0; i < skinModel.displayListCompiled.length; i++) {
             if (!skinModel.displayListCompiled[i]) {
@@ -61,27 +66,30 @@ public class SkinPartRenderer extends ModelBase {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
         }
         
+        
         for (int i = 0; i < skinModel.displayList.length; i++) {
-            boolean glowing = false;
-            if (i % 2 == 1) {
-                glowing = true;
-            }
-            if (skinModel.hasList[i]) {
-                if (skinModel.displayListCompiled[i]) {
-                    if (glowing) {
-                        GL11.glDisable(GL11.GL_LIGHTING);
-                        ModRenderHelper.disableLighting();
-                    }
-                    if (ConfigHandler.wireframeRender) {
-                        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-                    }
-                    GL11.glCallList(skinModel.displayList[i]);
-                    if (ConfigHandler.wireframeRender) {
-                        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-                    }
-                    if (glowing) {
-                        ModRenderHelper.enableLighting();
-                        GL11.glEnable(GL11.GL_LIGHTING);
+            if (i >= lod * 4 & i < (lod * 4) + 4) {
+                boolean glowing = false;
+                if (i % 2 == 1) {
+                    glowing = true;
+                }
+                if (skinModel.hasList[i]) {
+                    if (skinModel.displayListCompiled[i]) {
+                        if (glowing) {
+                            GL11.glDisable(GL11.GL_LIGHTING);
+                            ModRenderHelper.disableLighting();
+                        }
+                        if (ConfigHandler.wireframeRender) {
+                            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                        }
+                        GL11.glCallList(skinModel.displayList[i]);
+                        if (ConfigHandler.wireframeRender) {
+                            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+                        }
+                        if (glowing) {
+                            ModRenderHelper.enableLighting();
+                            GL11.glEnable(GL11.GL_LIGHTING);
+                        }
                     }
                 }
             }

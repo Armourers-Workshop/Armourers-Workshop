@@ -18,8 +18,9 @@ public class ColouredFace {
     
     private final byte t;
     private final byte face;
+    private final byte lodLevel;
     
-    public ColouredFace(byte x, byte y, byte z, byte r, byte g, byte b, byte a, byte paintType, byte face) {
+    public ColouredFace(byte x, byte y, byte z, byte r, byte g, byte b, byte a, byte paintType, byte face, byte lodLevel) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -31,6 +32,7 @@ public class ColouredFace {
         
         this.t = paintType;
         this.face = face;
+        this.lodLevel = lodLevel;
     }
     
     public void renderVertex(IRenderBuffer renderBuffer, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd, boolean useTexture) {
@@ -80,7 +82,7 @@ public class ColouredFace {
                 g = dyedColour[1];
                 b = dyedColour[2];
             }
-            FaceRenderer.renderFace(x, y, z, r, g, b, a, face, useTexture);
+            FaceRenderer.renderFace(x, y, z, r, g, b, a, face, useTexture, lodLevel);
         }
     }
     

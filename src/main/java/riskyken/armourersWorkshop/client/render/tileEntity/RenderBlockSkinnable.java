@@ -13,6 +13,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
@@ -89,9 +90,16 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         }
         
         skin.onUsed();
+        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+                tileEntity.xCoord + 0.5F,
+                tileEntity.yCoord + 0.5F,
+                tileEntity.zCoord + 0.5F);
+        
+        int lod = MathHelper.floor_double(distance / 20);
+        lod = MathHelper.clamp_int(lod, 0, 3);
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, lod);
         }
         GL11.glPopMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();

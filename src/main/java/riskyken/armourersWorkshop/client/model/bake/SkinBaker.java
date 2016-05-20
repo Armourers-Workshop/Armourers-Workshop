@@ -27,7 +27,7 @@ public final class SkinBaker {
         return true;
     }
     
-    public static void cullFacesOnEquipmentPart(SkinPart skinPart) {
+    public static int[][][] cullFacesOnEquipmentPart(SkinPart skinPart) {
         SkinCubeData cubeData = skinPart.getCubeData();
         cubeData.setupFaceFlags();
         skinPart.getClientSkinPartData().totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
@@ -65,6 +65,7 @@ public final class SkinBaker {
                 }
             }
         }
+        return cubeArray;
     }
     
     private static ArrayList<CubeLocation> checkCubesAroundLocation(SkinCubeData cubeData, CubeLocation cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
@@ -142,15 +143,17 @@ public final class SkinBaker {
         return false;
     }
     
-    public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount) {
+    public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount, int[][][] cubeArray) {
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
         ArrayList<ColouredFace>[] renderLists;
         
+        int lodLevels = 4;
+        
         if (multipassSkinRendering) {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[4];
+            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[4 * lodLevels];
         } else {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[2];
+            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[2 * lodLevels];
         }
         
         for (int i = 0; i < renderLists.length; i++) {
@@ -166,94 +169,178 @@ public final class SkinBaker {
         IPoint3D offset = partType.getOffset();
         
         partData.isClippingGuide = false;
+        Rectangle3D pb = partData.getPartBounds();
         
-        for (int i = 0; i < partData.getCubeData().getCubeCount(); i++) {
-            byte[] loc = cubeData.getCubeLocation(i);
-            byte[] paintType = cubeData.getCubePaintType(i);
-            ICube cube = partData.getCubeData().getCube(i);
-            
-            if (loc[0] >= gs.getX() & loc [0] < gs.getX() + gs.getWidth()) {
-                int y = -loc[1] - 1;
-                if (y >= gs.getY()) {
-                    if (y < gs.getHeight()) {
-                        if (loc[2] >= gs.getZ() & loc [2] < gs.getZ() + gs.getDepth()) {
-                            partData.isClippingGuide = true;
+        for (int ix = 0; ix < pb.getWidth(); ix++) {
+            for (int iy = 0; iy < pb.getHeight(); iy++) {
+                for (int iz = 0; iz < pb.getDepth(); iz++) {
+                    int i = getIndexForLocation(ix, iy, iz, pb, cubeArray) - 1;
+                    if (i != -1) {
+                        byte[] loc = cubeData.getCubeLocation(i);
+                        byte[] paintType = cubeData.getCubePaintType(i);
+                        ICube cube = partData.getCubeData().getCube(i);
+                        
+                        if (loc[0] >= gs.getX() & loc [0] < gs.getX() + gs.getWidth()) {
+                            int y = -loc[1] - 1;
+                            if (y >= gs.getY()) {
+                                if (y < gs.getHeight()) {
+                                    if (loc[2] >= gs.getZ() & loc [2] < gs.getZ() + gs.getDepth()) {
+                                        partData.isClippingGuide = true;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        
+                        byte a = (byte) 255;
+                        if (cube.needsPostRender()) {
+                            a = (byte) 127;
+                        }
+                        
+                        byte[] r = cubeData.getCubeColourR(i);
+                        byte[] g = cubeData.getCubeColourG(i);
+                        byte[] b = cubeData.getCubeColourB(i);
+                        
+                        for (int j = 0; j < 6; j++) {
+                            int paint = paintType[j] & 0xFF;
+                            if (paint >= 1 && paint <= 8 && cubeData.getFaceFlags(i).get(j)) {
+                                dyeUseCount[paint - 1]++;
+                                dyeColour[0][paint - 1] += r[j]  & 0xFF;
+                                dyeColour[1][paint - 1] += g[j]  & 0xFF;
+                                dyeColour[2][paint - 1] += b[j]  & 0xFF;
+                            }
+                            if (paint == 253) {
+                                dyeUseCount[8]++;
+                                dyeColour[0][8] += r[j]  & 0xFF;
+                                dyeColour[1][8] += g[j]  & 0xFF;
+                                dyeColour[2][8] += b[j]  & 0xFF;
+                            }
+                            if (paint == 254) {
+                                dyeUseCount[9]++;
+                                dyeColour[0][9] += r[j]  & 0xFF;
+                                dyeColour[1][9] += g[j]  & 0xFF;
+                                dyeColour[2][9] += b[j]  & 0xFF;
+                            }
+                        }
+                        
+                        int listIndex = 0;
+                        if (multipassSkinRendering) {
+                            if (cube.isGlowing() && !cube.needsPostRender()) {
+                                listIndex = 1;
+                            }
+                            if (cube.needsPostRender() && !cube.isGlowing()) {
+                                listIndex = 2;
+                            }
+                            if (cube.isGlowing() && cube.needsPostRender()) {
+                                listIndex = 3;
+                            }
+                        } else {
+                            if (cube.isGlowing()) {
+                                listIndex = 1;
+                            }
+                        }
+                        
+                        for (int j = 0; j < 6; j++) {
+                            if (cubeData.getFaceFlags(i).get(j)) {
+                                ColouredFace ver = new ColouredFace(
+                                        loc[0], loc[1], loc[2],
+                                        r[j], g[j], b[j],
+                                        a, paintType[j], (byte)j, (byte)(1));
+                                renderLists[listIndex].add(ver);
+                            }
+                        }
+                        
+
+                        
+                    }
+                    
+                    
+                    for (int lod = 1; lod < lodLevels; lod++) {
+                        int listIndex = 0;
+                        //TODO get listIndex
+                        int lodIndex = listIndex + lod * lodLevels;
+                        byte lodLevel = (byte) (lod + 1);
+                        if ((ix) % lodLevel == 0 & (iy) % lodLevel == 0 & (iz) % lodLevel == 0) {
+                            
+                            for (int j = 0; j < 6; j++) {
+                                boolean showFace = getAverageFaceFlags(ix, iy, iz, lodLevel, cubeArray, cubeData, pb, j);
+                                
+                                if (showFace) {
+                                    byte[] avegC = getAverageRGBAT(ix, iy, iz, lodLevel, cubeArray, cubeData, pb, j);
+                                    ColouredFace ver = new ColouredFace(
+                                            (byte)(ix + pb.getX()), (byte)(iy + pb.getY()), (byte)(iz + pb.getZ()),
+                                            avegC[0], avegC[1], avegC[2],
+                                            avegC[3], avegC[4], (byte)j, lodLevel);
+                                    renderLists[lodIndex].add(ver);
+                                }
+                            }
                         }
                     }
-                }
-            }
-            
-            
-            byte a = (byte) 255;
-            if (cube.needsPostRender()) {
-                a = (byte) 127;
-            }
-            
-            byte[] r = cubeData.getCubeColourR(i);
-            byte[] g = cubeData.getCubeColourG(i);
-            byte[] b = cubeData.getCubeColourB(i);
-            
-            for (int j = 0; j < 6; j++) {
-                int paint = paintType[j] & 0xFF;
-                if (paint >= 1 && paint <= 8 && cubeData.getFaceFlags(i).get(j)) {
-                    dyeUseCount[paint - 1]++;
-                    dyeColour[0][paint - 1] += r[j]  & 0xFF;
-                    dyeColour[1][paint - 1] += g[j]  & 0xFF;
-                    dyeColour[2][paint - 1] += b[j]  & 0xFF;
-                }
-                if (paint == 253) {
-                    dyeUseCount[8]++;
-                    dyeColour[0][8] += r[j]  & 0xFF;
-                    dyeColour[1][8] += g[j]  & 0xFF;
-                    dyeColour[2][8] += b[j]  & 0xFF;
-                }
-                if (paint == 254) {
-                    dyeUseCount[9]++;
-                    dyeColour[0][9] += r[j]  & 0xFF;
-                    dyeColour[1][9] += g[j]  & 0xFF;
-                    dyeColour[2][9] += b[j]  & 0xFF;
-                }
-            }
-            
-            if (multipassSkinRendering) {
-                int listIndex = 0;
-                if (cube.isGlowing() && !cube.needsPostRender()) {
-                    listIndex = 1;
-                }
-                if (cube.needsPostRender() && !cube.isGlowing()) {
-                    listIndex = 2;
-                }
-                if (cube.isGlowing() && cube.needsPostRender()) {
-                    listIndex = 3;
-                }
-                
-                for (int j = 0; j < 6; j++) {
-                    if (cubeData.getFaceFlags(i).get(j)) {
-                        ColouredFace ver = new ColouredFace(
-                                loc[0], loc[1], loc[2],
-                                r[j], g[j], b[j],
-                                a, paintType[j], (byte)j);
-                        renderLists[listIndex].add(ver);
-                    }
-                }
-            } else {
-                int listIndex = 0;
-                if (cube.isGlowing()) {
-                    listIndex = 1;
-                }
-                for (int j = 0; j < 6; j++) {
-                    if (cubeData.getFaceFlags(i).get(j)) {
-                        ColouredFace ver = new ColouredFace(
-                                loc[0], loc[1], loc[2],
-                                r[j], g[j], b[j],
-                                a, paintType[j], (byte)j);
-                        renderLists[listIndex].add(ver);
-                    }
+                    
                 }
             }
         }
         
+        
         partData.getClientSkinPartData().setVertexLists(renderLists);
+    }
+    
+    private static boolean getAverageFaceFlags(int x, int y, int z, byte lodLevel, int[][][] cubeArray, SkinCubeData cubeData, Rectangle3D partBounds, int face) {
+        for (int ix = 0; ix < lodLevel; ix++) {
+            for (int iy = 0; iy < lodLevel; iy++) {
+                for (int iz = 0; iz < lodLevel; iz++) {
+                    int index = getIndexForLocation(ix + x, iy + y, iz + z, partBounds, cubeArray) - 1;
+                    if (index != -1) {
+                        if (cubeData.getFaceFlags(index).get(face)) {
+                            return true;
+                        }
+                    }
+                    
+                }
+            }
+        }
+        return false;
+    }
+    
+    private static byte[] getAverageRGBAT(int x, int y, int z, byte lodLevel, int[][][] cubeArray, SkinCubeData cubeData, Rectangle3D partBounds, int face) {
+        int count = 0;
+        int r = 0;
+        int g = 0;
+        int b = 0;
+        int a = 0;
+        int type = 0;
+        for (int ix = 0; ix < lodLevel; ix++) {
+            for (int iy = 0; iy < lodLevel; iy++) {
+                for (int iz = 0; iz < lodLevel; iz++) {
+                    int index = getIndexForLocation(ix + x, iy + y, iz + z, partBounds, cubeArray) - 1;
+                    if (index != -1) {
+                        if (cubeData.getFaceFlags(index).get(face)) {
+                            count += 1;
+                            r += (cubeData.getCubeColourR(index)[face] & 0xFF);
+                            g += (cubeData.getCubeColourG(index)[face] & 0xFF);
+                            b += (cubeData.getCubeColourB(index)[face] & 0xFF);
+                            if (cubeData.getCube(index).needsPostRender()) {
+                                a += 127;
+                            } else {
+                                a += 255;
+                            }
+                            if (cubeData.getCubePaintType(index)[face] != 0) {
+                                type = 255;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        byte[] rgbat = new byte[5];
+        if (count != 0) {
+            rgbat[0] = (byte) (r / count);
+            rgbat[1] = (byte) (g / count);
+            rgbat[2] = (byte) (b / count);
+            rgbat[3] = (byte) (a / count);
+            rgbat[4] = (byte) type;
+        }
+        return rgbat;
     }
     
     private static class CubeLocation {

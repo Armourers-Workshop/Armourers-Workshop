@@ -120,8 +120,8 @@ public final class ModelBakery {
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
                 partData.setClientSkinPartData(new ClientSkinPartData());
-                SkinBaker.cullFacesOnEquipmentPart(partData);
-                SkinBaker.buildPartDisplayListArray(partData, dyeColour, dyeUseCount);
+                int[][][] cubeArray = SkinBaker.cullFacesOnEquipmentPart(partData);
+                SkinBaker.buildPartDisplayListArray(partData, dyeColour, dyeUseCount, cubeArray);
                 partData.clearCubeData();
             }
             

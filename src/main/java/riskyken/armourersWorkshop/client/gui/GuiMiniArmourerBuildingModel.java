@@ -237,7 +237,7 @@ public class GuiMiniArmourerBuildingModel {
     
     private void renderArmourBlock(byte x, byte y, byte z, ICubeColour colour, float scale, boolean b) {
         for (int i = 0; i < 6; i++) {
-            FaceRenderer.renderFace(x, y, z, colour.getRed(i), colour.getGreen(i), colour.getBlue(i), (byte)255, (byte)i, false);
+            FaceRenderer.renderFace(x, y, z, colour.getRed(i), colour.getGreen(i), colour.getBlue(i), (byte)255, (byte)i, false, (byte)1);
         }
     }
 
