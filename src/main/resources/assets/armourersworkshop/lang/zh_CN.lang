@@ -19,25 +19,12 @@ tile.armourersworkshop:armourerBrain.flavour=让你来设计皮肤外观.
 tile.armourersworkshop:miniArmourer.flavour=未完成的.
 tile.armourersworkshop:armourLibrary0.flavour=使用模板进行读取和保存时装.
 tile.armourersworkshop:armourLibrary1.flavour=可以不使用模板就可以读取和保存.%n创造模式下.
-tile.armourersworkshop:dyeTable.name=配色工作台
-tile.armourersworkshop:marker0.name=标记
-
-# Block flavour text
-tile.armourersworkshop:armourerBrain.flavour=用来设计时装.%n手拿工具潜行+右键可以对范围内方块整体编辑.
-tile.armourersworkshop:miniArmourer.flavour=空手潜行右键可打开（未完成的）.
-tile.armourersworkshop:armourLibrary0.flavour=使用模板进行读取和保存时装.
-tile.armourersworkshop:armourLibrary1.flavour=可以不使用模板就可以读取和保存.%n只有创造模式才能得到.
 tile.armourersworkshop:colourable.flavour=自定义时装的基础构成块.%n(可染色)
 tile.armourersworkshop:colourableGlowing.flavour=发光的基础构成块!%n(可染色)
 tile.armourersworkshop:colourableGlass.flavour=半透明的基础构成块.%n(可染色)
 tile.armourersworkshop:colourableGlassGlowing.flavour=发光的半透明基础构成块!%n(可染色)
-tile.armourersworkshop:colourMixer0.flavour=可以调色的方块.%n潜行加右键可以快速取色.
-tile.armourersworkshop:colourMixer1.flavour=创造特别的图案在装备上.%n潜行加右击来快速取色.
-tile.armourersworkshop:mannequin.flavour=在模特上展示你的成果!%n右击改变名字来给模特换皮肤.
-tile.armourersworkshop:doll.flavour=迷你模特!
-tile.armourersworkshop:skinningTable.flavour=给装备上镶嵌和移除时装.
-tile.armourersworkshop:colourMixer.flavour=用来调色.%n潜行加右键可以快速取色.
-tile.armourersworkshop:mannequin.flavour=在模特上展示你的作品!%n使用命名牌可以反复给模特重命名.%n（暂时只支持正版id）.
+tile.armourersworkshop:colourMixer.flavour=可以调色的方块.%n潜行加右键可以快速取色.
+tile.armourersworkshop:mannequin.flavour=在模特上预览你的成果!%n使用命名牌可以给模特换正版皮肤.
 tile.armourersworkshop:doll.flavour=迷你模特!
 tile.armourersworkshop:skinningTable.flavour=给装备上镶嵌或移除时装.%n（移除的时装消失）
 
@@ -61,13 +48,11 @@ item.armourersworkshop:armourContainerLegs.name=时装容器(腿部)
 item.armourersworkshop:armourContainerFeet.name=时装容器(鞋子)
 item.armourersworkshop:wandOfStyle.name=风格棒
 item.armourersworkshop:soap.name=肥皂
-item.armourersworkshop:hueTool.name=色相工具
-item.armourersworkshop:blockMarker.name=标记工具
-item.armourersworkshop:dyeBottle.name=染料瓶
 item.armourersworkshop:hueTool.name=多功能工具
 item.armourersworkshop:blockMarker.name=标记工具
 item.armourersworkshop:dyeBottle.name=染料瓶
 item.armourersworkshop:blendingTool.name=混合工具
+item.armourersworkshop:armourersHammer.name=方块旋转锤
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=RiskyKen（mod作者）的礼物
@@ -82,14 +67,10 @@ item.armourersworkshop:mannequinTool.flavour=保存和加载模型.%n右击确�
 item.armourersworkshop:guideBook.flavour=时装工坊的使用向导.
 item.armourersworkshop:armourContainer.flavour=创造模式才能使用的物品.%n允许将时装穿到NPC身上.
 item.armourersworkshop:soap.flavour=通过镶嵌工作台来清除物品镶嵌的时装!
-item.armourersworkshop:hueTool.flavour=改变方块色相%n不影响明度.
-item.armourersworkshop:blockMarker.flavour=在弓的时装制作时添加一个箭尾位置的标记.%n弓的每个动作上只能也必须有一个标记才算制作成功.
-item.armourersworkshop:dyeBottle.flavour=暂时没用（未完成）.
-item.armourersworkshop:armourContainer.flavour=镶嵌后可装备到装备栏（npc也可用）.%n创造模式才能使用的物品.
-item.armourersworkshop:soap.flavour=通过镶嵌工作台来清除物品镶嵌的时装!
 item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱和度 亮度以及染色类型)%n不影响阴影.
 item.armourersworkshop:blockMarker.flavour=在弓的时装制作时添加一个箭尾位置的标记.%n注：弓的每个阶段上只能也必须有一个标记才算制作成功.
 item.armourersworkshop:dyeBottle.flavour=用来给时装改变配色.
+item.armourersworkshop:armourersHammer.flavour=用来旋转时装方块。
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6强度:&7 %s
@@ -145,6 +126,8 @@ skinType.armourers:sword.name=武器
 skinType.armourers:bow.name=弓
 skinType.armourers:arrow.name=箭
 skinType.armourers:block.name=方块
+skinType.armourers:multiblock.name=Multiblock
+skinType.armourers:wings.name=翅膀
 
 # Skin Part Types
 skinPartType.armourers:head.base.name=脑袋
@@ -195,8 +178,6 @@ inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=删除时装.
 inventory.armourersworkshop:armourerBrain.label.itemName=物品名:
 inventory.armourersworkshop:armourerBrain.label.username=用户名:
 inventory.armourersworkshop:armourerBrain.label.clone=克隆:
-inventory.armourersworkshop:armourerBrain.showGuide=显示可建设范围?
-inventory.armourersworkshop:armourerBrain.showOverlay=显示头部覆盖层?
 inventory.armourersworkshop:armourerBrain.showGuide=显示可建设范围
 inventory.armourersworkshop:armourerBrain.showOverlay=显示双层皮肤
 inventory.armourersworkshop:armourerBrain.showHelper=显示辅助模型?
@@ -216,17 +197,27 @@ inventory.armourersworkshop:colourMixer.label.paintType=颜色类型
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=皮肤颜色
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=头发颜色
-inventory.armourersworkshop:equipmentWardrobe.autoColour=自动颜色
+inventory.armourersworkshop:equipmentWardrobe.selectSkin=挑选皮肤颜色
+inventory.armourersworkshop:equipmentWardrobe.autoSkin=自动
+inventory.armourersworkshop:equipmentWardrobe.selectHair=挑选头发颜色
+inventory.armourersworkshop:equipmentWardrobe.autoHair=自动
 inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=皮肤覆盖
 
-inventory.armourersworkshop:mannequin.label.headRotation=头部的转动
-inventory.armourersworkshop:mannequin.label.leftArmRotation=左手臂转动
-inventory.armourersworkshop:mannequin.label.rightArmRotation=右手臂转动
-inventory.armourersworkshop:mannequin.label.leftLegRotation=左腿转动
-inventory.armourersworkshop:mannequin.label.rightLegRotation=右腿转动
-inventory.armourersworkshop:mannequin.label.isChild=小孩子模型?
+inventory.armourersworkshop:mannequin.label.headRotation=转动头部
+inventory.armourersworkshop:mannequin.label.leftArmRotation=转动左臂
+inventory.armourersworkshop:mannequin.label.rightArmRotation=转动右臂
+inventory.armourersworkshop:mannequin.label.leftLegRotation=转动左腿
+inventory.armourersworkshop:mannequin.label.rightLegRotation=转动右腿
+inventory.armourersworkshop:mannequin.label.isChild=小孩子模型？
+inventory.armourersworkshop:mannequin.label.isExtraRenders=Duang？
 inventory.armourersworkshop:mannequin.random=随机
 inventory.armourersworkshop:mannequin.reset=重置
+inventory.armourersworkshop:mannequin.tab.inventory=物品栏
+inventory.armourersworkshop:mannequin.tab.rotations=旋转
+inventory.armourersworkshop:mannequin.tab.offset=位置调整
+inventory.armourersworkshop:mannequin.tab.skinAndHair=皮肤 & 头发 颜色
+inventory.armourersworkshop:mannequin.tab.name=名字
+inventory.armourersworkshop:mannequin.tab.extraRenders=其他
 
 inventory.armourersworkshop:miniArmourer.save=保存
 inventory.armourersworkshop:miniArmourer.load=读取
@@ -281,8 +272,9 @@ book.armourersworkshop:guideBook.paintingTools.paragraph4=随机阴影工具&n�
 
 # Chapter 6
 book.armourersworkshop:guideBook.equipmentWardrobe.name=设备的衣柜
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=WIP
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=未完成
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=未完成
 
 # Chapter 7
 book.armourersworkshop:guideBook.recipes.name=合成表
+
