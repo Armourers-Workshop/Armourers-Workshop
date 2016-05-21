@@ -82,6 +82,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         GL11.glEnable(GL11.GL_NORMALIZE);
+        ModRenderHelper.disableAlphaBlend();
         
         int rotaion = te.getRotation();
         
