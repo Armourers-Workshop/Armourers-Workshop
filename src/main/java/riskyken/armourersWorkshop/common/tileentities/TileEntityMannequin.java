@@ -68,7 +68,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
      /** Keeps track if the inventory skins have been updated so the render can update. */
     @SideOnly(Side.CLIENT)
-    private boolean skinsUpdated = true;
+    private boolean skinsUpdated;
     
     /** Texture used when rendering this mannequin. */
     @SideOnly(Side.CLIENT)
@@ -123,12 +123,18 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.isDoll = isDoll;
     }
     
+    @SideOnly(Side.CLIENT)
     public boolean haveSkinsUpdated() {
         if (skinsUpdated) {
             skinsUpdated = false;
             return true;
         }
         return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private void setSkinsUpdated(boolean skinsUpdated) {
+        this.skinsUpdated = skinsUpdated;
     }
     
     private static String[] specialPeople = {
@@ -188,7 +194,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
-        skinsUpdated = true;
+        if (worldObj.isRemote) {
+            setSkinsUpdated(true);
+        }
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
