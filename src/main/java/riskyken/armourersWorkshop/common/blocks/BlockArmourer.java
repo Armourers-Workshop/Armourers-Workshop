@@ -93,11 +93,6 @@ public class BlockArmourer extends AbstractModBlockContainer {
         }
         return sideIcon;
     }
-
-    @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
-        return null;
-    }
     
     @Override
     public TileEntity getTileEntityCommon(World world, int metadata) {
