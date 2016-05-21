@@ -79,7 +79,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     }
     
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+    public TileEntity getTileEntityCommon(World world, int metadata) {
         return new TileEntityColourable();
     }
     

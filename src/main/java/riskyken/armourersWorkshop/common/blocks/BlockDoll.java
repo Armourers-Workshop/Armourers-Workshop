@@ -27,6 +27,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.tileentities.TileEntityMannequinClient;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -185,8 +186,13 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+    public TileEntity getTileEntityCommon(World world, int metadata) {
         return new TileEntityMannequin(true);
+    }
+    
+    @Override
+    public TileEntity getTileEntityClient(World world, int metadata) {
+        return new TileEntityMannequinClient(true);
     }
     
     @Override

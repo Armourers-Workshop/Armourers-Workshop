@@ -2,6 +2,7 @@ Build 0.39.1
 Added: LOD to block skins.
 Change: The way skin faces are renderer. (should be faster)
 Change: The way skin faces are stored in memory. (around 1/4 memory use)
+Change: Updated zh_CN language file.(EthanJJC)
 Fixed: Dedicated server crash when updating mannequin slots.
 Fixed: Mannequins rendering strangely when holding a mobspawner.
 

@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,8 +11,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
-import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
@@ -66,17 +62,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     /** Should the tile entity drop as an item when broken? */
     private boolean dropItems = true;
     
-     /** Keeps track if the inventory skins have been updated so the render can update. */
-    @SideOnly(Side.CLIENT)
-    private boolean skinsUpdated;
-    
-    /** Texture used when rendering this mannequin. */
-    @SideOnly(Side.CLIENT)
-    public EntityTextureInfo skinTexture;
-    
-    @SideOnly(Side.CLIENT)
-    public ISkinPointer[] sp;
-    
     public TileEntityMannequin() {
         this(false);
     }
@@ -121,20 +106,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         super(INVENTORY_SIZE);
         bipedRotations = new BipedRotations();
         this.isDoll = isDoll;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public boolean haveSkinsUpdated() {
-        if (skinsUpdated) {
-            skinsUpdated = false;
-            return true;
-        }
-        return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private void setSkinsUpdated(boolean skinsUpdated) {
-        this.skinsUpdated = skinsUpdated;
     }
     
     private static String[] specialPeople = {
@@ -194,9 +165,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
-        if (worldObj.isRemote) {
-            setSkinsUpdated(true);
-        }
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
@@ -401,7 +369,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         NBTTagCompound compound = packet.func_148857_g();
         gameProfile = null;
         readFromNBT(compound);
-        skinsUpdated = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     

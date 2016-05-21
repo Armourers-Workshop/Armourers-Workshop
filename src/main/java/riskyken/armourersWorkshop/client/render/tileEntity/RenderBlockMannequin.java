@@ -37,6 +37,7 @@ import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.tileentities.TileEntityMannequinClient;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
@@ -72,7 +73,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         isHalloweenSeason = HolidayHelper.halloween_season.isHolidayActive();
     }
     
-    public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
+    public void renderTileEntityAt(TileEntityMannequinClient te, double x, double y, double z, float partialTickTime) {
         mc.mcProfiler.startSection("armourersMannequin");
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         mc.mcProfiler.startSection("move");
@@ -476,6 +477,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
-        renderTileEntityAt((TileEntityMannequin)tileEntity, x, y, z, partialTickTime);
+        renderTileEntityAt((TileEntityMannequinClient)tileEntity, x, y, z, partialTickTime);
     }
 }

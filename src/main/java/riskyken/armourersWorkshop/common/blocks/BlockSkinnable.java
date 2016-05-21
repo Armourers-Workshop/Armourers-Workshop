@@ -121,7 +121,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     }
     
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+    public TileEntity getTileEntityCommon(World world, int metadata) {
         return new TileEntitySkinnable();
     }
     

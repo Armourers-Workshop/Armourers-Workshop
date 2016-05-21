@@ -43,9 +43,9 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
     }
-
+    
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+    public TileEntity getTileEntityCommon(World world, int metadata) {
         return new TileEntityMiniArmourer();
     }
     

@@ -144,9 +144,9 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         return null;
     }
-
+    
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+    public TileEntity getTileEntityCommon(World world, int metadata) {
         return new TileEntityBoundingBox();
     }
     
