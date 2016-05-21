@@ -29,6 +29,8 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.plushieWrapper.client.IRenderBuffer;
+import riskyken.plushieWrapper.client.RenderBridge;
 
 public class GuiMiniArmourerBuildingModel {
 
@@ -178,7 +180,7 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glScalef(-1, -1, 1);
         
         //Are we hovering over a cube?
-        
+
         if (hoverCubeId != 0 && renderCubes != null) {
             int cubeId = (int) Math.ceil((double)hoverCubeId / 6);
             int cubeFace = cubeId * 6 - hoverCubeId;
@@ -194,7 +196,10 @@ public class GuiMiniArmourerBuildingModel {
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
+                IRenderBuffer buff = RenderBridge.INSTANCE;
+                buff.startDrawingQuads();
                 renderArmourBlock((byte)newCube.getX(), (byte)newCube.getY(), (byte)newCube.getZ(), newCube.getColour(), scale, true);
+                buff.draw();
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
                 GL11.glDisable(GL11.GL_BLEND);
             }
@@ -325,7 +330,8 @@ public class GuiMiniArmourerBuildingModel {
         int colourId = 1;
         
         renderCubes.addAll(cubes);
-        
+        IRenderBuffer buff = RenderBridge.INSTANCE;
+        buff.startDrawingQuads();
         for (int i = 0; i < renderCubes.size(); i++) {
             MiniCube cube = renderCubes.get(i);
             if (cube != null) {
@@ -354,6 +360,7 @@ public class GuiMiniArmourerBuildingModel {
             }
             colourId += 6;
         }
+        buff.draw();
         if (fake) {
             GL11.glEnable(GL11.GL_LIGHTING);
         }
