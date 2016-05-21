@@ -1,3 +1,11 @@
+Build 0.39.1
+Added: LOD to block skins.
+Change: The way skin faces are renderer. (should be faster)
+Change: The way skin faces are stored in memory. (around 1/4 memory use)
+Fixed: Dedicated server crash when updating mannequin slots.
+Fixed: Mannequins rendering strangely when holding a mobspawner.
+
+
 Build 0.39.0
 Added: Allowed for the players texture to be painted.
 Added: Allowed for multiple skins to be equipped at the same time.
@@ -28,6 +36,7 @@ Fixed: Players not always being able to open the wardrobe GUI.
 Fixed: Colour picker not always giving the correct colour form Armourer parts.
 Fixed: Weapon dyes not getting updated when swapping skins in the wardrobe.
 Fixed: Some weapons not being skinnable, even after being added to the config file.
+
 
 Build 0.38.1
 Added: Paint type label to the colour mixer.
