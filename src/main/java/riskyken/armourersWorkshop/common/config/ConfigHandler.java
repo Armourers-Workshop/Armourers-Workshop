@@ -34,6 +34,7 @@ public class ConfigHandler {
     public static boolean multipassSkinRendering = true;
     public static int mannequinMaxEquipmentRenderDistance = 1024;
     public static int blockSkinMaxRenderDistance = 2500;
+    public static double lodDistance = 32F;
     
     //server
     public static int serverModelCacheTime = 12000;
@@ -267,6 +268,9 @@ public class ConfigHandler {
         
         blockSkinMaxRenderDistance = config.getInt("blockSkinMaxRenderDistance", CATEGORY_CLIENT, 2500, 1, 65536,
                 "The max distance squared that block skins will be rendered.");
+        
+        lodDistance = config.getFloat("lodDistance", CATEGORY_CLIENT, 32F, 8, 128,
+                "Distance away that skins will have lod applied to them.");
     }
     
     private static void loadCategoryServer() {

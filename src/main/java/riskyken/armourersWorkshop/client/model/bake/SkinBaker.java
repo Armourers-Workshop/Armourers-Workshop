@@ -151,9 +151,9 @@ public final class SkinBaker {
         int lodLevels = 4;
         
         if (multipassSkinRendering) {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[4 * lodLevels];
+            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[4 + lodLevels];
         } else {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[2 * lodLevels];
+            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[2 + lodLevels];
         }
         
         for (int i = 0; i < renderLists.length; i++) {
@@ -255,11 +255,14 @@ public final class SkinBaker {
                     }
                     
                     
-                    for (int lod = 1; lod < lodLevels; lod++) {
-                        int listIndex = 0;
-                        //TODO get listIndex
-                        int lodIndex = listIndex + lod * lodLevels;
-                        byte lodLevel = (byte) (lod + 1);
+                    for (int lod = 1; lod < lodLevels + 1; lod++) {
+                        int listIndex = 1;
+                        if (multipassSkinRendering) {
+                            listIndex = 3;
+                        }
+                        //TODO get listIndex for glowing cubes
+                        int lodIndex = listIndex + lod;
+                        byte lodLevel = (byte)Math.pow(2, lod);
                         if ((ix) % lodLevel == 0 & (iy) % lodLevel == 0 & (iz) % lodLevel == 0) {
                             
                             for (int j = 0; j < 6; j++) {
@@ -308,7 +311,7 @@ public final class SkinBaker {
         int g = 0;
         int b = 0;
         int a = 0;
-        int type = 0;
+        int[] type = new int[256];
         for (int ix = 0; ix < lodLevel; ix++) {
             for (int iy = 0; iy < lodLevel; iy++) {
                 for (int iz = 0; iz < lodLevel; iz++) {
@@ -324,9 +327,7 @@ public final class SkinBaker {
                             } else {
                                 a += 255;
                             }
-                            if (cubeData.getCubePaintType(index)[face] != 0) {
-                                type = 255;
-                            }
+                            type[cubeData.getCubePaintType(index)[face] & 0xFF] += 1;
                         }
                     }
                 }
@@ -338,7 +339,15 @@ public final class SkinBaker {
             rgbat[1] = (byte) (g / count);
             rgbat[2] = (byte) (b / count);
             rgbat[3] = (byte) (a / count);
-            rgbat[4] = (byte) type;
+            int commonIndex = 0;
+            int mostCount = 0;
+            for (int i = 0; i < type.length; i++) {
+                if (type[i] > mostCount) {
+                    mostCount = type[i];
+                    commonIndex = i;
+                }
+            }
+            rgbat[4] = (byte) commonIndex;
         }
         return rgbat;
     }

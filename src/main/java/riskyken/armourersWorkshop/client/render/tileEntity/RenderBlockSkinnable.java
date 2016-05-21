@@ -13,7 +13,6 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
@@ -42,7 +41,6 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         mc.mcProfiler.startSection("renderListSort");
         Collections.sort(renderList);
         mc.mcProfiler.endSection();
-        GL11.glPushMatrix();
         mc.entityRenderer.enableLightmap(event.partialTicks);
         RenderHelper.enableStandardItemLighting();
         ModRenderHelper.enableAlphaBlend();
@@ -56,7 +54,6 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         renderList.clear();
         ModRenderHelper.disableAlphaBlend();
         mc.entityRenderer.disableLightmap(event.partialTicks);
-        GL11.glPopMatrix();
     }
     
     public void renderTileEntityAt(TileEntitySkinnable tileEntity, double x, double y, double z, float partialTickTime) {
@@ -77,32 +74,26 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     }
     
     private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, Skin skin) {
-        GL11.glPushMatrix();
         int rotation = tileEntity.getBlockMetadata();
         GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         GL11.glScalef(-1, -1, 1);
-        GL11.glRotatef((90F * rotation), 0, 1, 0);
-        
-        if (skin.getCustomName().isEmpty()) {
-            Minecraft.getMinecraft().mcProfiler.startSection("unnamedSkin");
-        } else {
-            Minecraft.getMinecraft().mcProfiler.startSection(skin.getCustomName().replace(" ", ""));
+        if (rotation != 0) {
+          GL11.glRotatef((90F * rotation), 0, 1, 0);
         }
-        
         skin.onUsed();
         double distance = Minecraft.getMinecraft().thePlayer.getDistance(
                 tileEntity.xCoord + 0.5F,
                 tileEntity.yCoord + 0.5F,
                 tileEntity.zCoord + 0.5F);
-        
-        int lod = MathHelper.floor_double(distance / 20);
-        lod = MathHelper.clamp_int(lod, 0, 3);
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, lod);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance);
         }
-        GL11.glPopMatrix();
-        Minecraft.getMinecraft().mcProfiler.endSection();
+        if (rotation != 0) {
+            GL11.glRotatef((90F * -rotation), 0, 1, 0);
+          }
+        GL11.glScalef(-1, -1, 1);
+        GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
     }
     
     @Override

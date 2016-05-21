@@ -9,6 +9,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
@@ -37,10 +38,16 @@ public class SkinPartRenderer extends ModelBase {
         renderPart(skinPart, scale, skinDye, extraColour, 0);
     }
     
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance) {
+        int lod = MathHelper.floor_double(distance / ConfigHandler.lodDistance);
+        lod = MathHelper.clamp_int(lod, 0, 4);
+        renderPart(skinPart, scale, skinDye, extraColour, lod);
+    }
+    
     public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod) {
-        mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
+        //mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
-        GL11.glColor3f(1F, 1F, 1F);
+        //GL11.glColor3f(1F, 1F, 1F);
         
         ClientSkinPartData cspd = skinPart.getClientSkinPartData();
         SkinModel skinModel = cspd.getModelForDye(skinDye, extraColour);
@@ -52,8 +59,6 @@ public class SkinPartRenderer extends ModelBase {
                     skinModel.displayList[i] = GLAllocation.generateDisplayLists(1);
                     GL11.glNewList(skinModel.displayList[i], GL11.GL_COMPILE);
                     renderVertexList(cspd.vertexLists[i], scale, skinDye, extraColour, cspd);
-                    //TODO Do not clear this!
-                    //cspd.vertexLists[i].clear();
                     GL11.glEndList();
                 }
                 skinModel.displayListCompiled[i] = true;
@@ -66,11 +71,24 @@ public class SkinPartRenderer extends ModelBase {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
         }
         
+        int startIndex = 0;;
+        int endIndex = 0;;
         
-        for (int i = 0; i < skinModel.displayList.length; i++) {
-            if (i >= lod * 4 & i < (lod * 4) + 4) {
+        if (multipassSkinRendering) {
+            endIndex = 3;
+        } else {
+            endIndex = 1;
+        }
+        if (lod != 0) {
+            startIndex = endIndex + lod;
+            endIndex = startIndex;
+        }
+        
+        int listCount = skinModel.displayList.length;
+        for (int i = startIndex; i <= endIndex; i++) {
+            if (i >= startIndex & i <= endIndex) {
                 boolean glowing = false;
-                if (i % 2 == 1) {
+                if (i % 2 == 1 & lod == 0) {
                     glowing = true;
                 }
                 if (skinModel.hasList[i]) {
@@ -99,8 +117,8 @@ public class SkinPartRenderer extends ModelBase {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
         
-        GL11.glColor3f(1F, 1F, 1F);
-        mc.mcProfiler.endSection();
+        //GL11.glColor3f(1F, 1F, 1F);
+        //mc.mcProfiler.endSection();
     }
     
     private void renderVertexList(ArrayList<ColouredFace> vertexList, float scale, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd) {
