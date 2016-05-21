@@ -87,9 +87,10 @@ public class BlockMannequin extends AbstractModBlockContainer {
                     world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
                 }
             }
-            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
-            if (te != null && te.isRenderExtras()) {
-                if (te.hasSpecialRender()) {
+            TileEntityMannequin tileEntity = getMannequinTileEntity(world, x, y, z);
+            if (tileEntity != null && tileEntity instanceof TileEntityMannequinClient) {
+                TileEntityMannequinClient te = (TileEntityMannequinClient)tileEntity;
+                if (te.isRenderExtras() && te.hasSpecialRender()) {
                     for (int i = 0; i < 4; i++) {
                         EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
                         ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);

@@ -82,8 +82,8 @@ public class BlockDoll extends AbstractModBlockContainer {
             }
         }
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity != null && tileEntity instanceof TileEntityMannequin) {
-            TileEntityMannequin te = (TileEntityMannequin) tileEntity;
+        if (tileEntity != null && tileEntity instanceof TileEntityMannequinClient) {
+            TileEntityMannequinClient te = (TileEntityMannequinClient) tileEntity;
             if (te.isRenderExtras()) {
                 if (te.hasSpecialRender()) {
                     EntityFX entityfx = new EntitySpellParticleFX(world,  x + random.nextFloat() * 1F, y, z + random.nextFloat() * 1F, 0, 0, 0);
