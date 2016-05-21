@@ -1,3 +1,8 @@
+Build 0.39.2
+Fixed NPE crash when placing a mannequin.
+Fixed mini armourers building cubes not rendering.
+
+
 Build 0.39.1
 Added: LOD to block skins.
 Change: The way skin faces are renderer. (should be faster)
