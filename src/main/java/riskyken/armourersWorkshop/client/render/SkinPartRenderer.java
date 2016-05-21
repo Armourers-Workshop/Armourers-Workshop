@@ -117,7 +117,7 @@ public class SkinPartRenderer extends ModelBase {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
         
-        //GL11.glColor3f(1F, 1F, 1F);
+        GL11.glColor3f(1F, 1F, 1F);
         //mc.mcProfiler.endSection();
     }
     
