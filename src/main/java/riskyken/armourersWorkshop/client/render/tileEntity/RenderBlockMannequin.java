@@ -166,44 +166,43 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (te.haveSkinsUpdated()) {
             te.sp = getSkinPointers(te);
         }
-        
-        ISkinPointer[] sp = te.sp;
-        Skin[] skins = new Skin[sp.length];
-        ISkinDye[] dyes = new ISkinDye[sp.length];
-        boolean hasPaintedSkin = false;
-        
-        for (int i = 0; i < sp.length; i++) {
-            if (sp[i] != null) {
-                skins[i] = ClientSkinCache.INSTANCE.getSkin(sp[i]);
-                dyes[i] = sp[i].getSkinDye();
-                if (skins[i] != null && skins[i].hasPaintData()) {
-                    hasPaintedSkin = true;
+        if (te.sp != null) {
+            ISkinPointer[] sp = te.sp;
+            Skin[] skins = new Skin[sp.length];
+            ISkinDye[] dyes = new ISkinDye[sp.length];
+            boolean hasPaintedSkin = false;
+            
+            for (int i = 0; i < sp.length; i++) {
+                if (sp[i] != null) {
+                    skins[i] = ClientSkinCache.INSTANCE.getSkin(sp[i]);
+                    dyes[i] = sp[i].getSkinDye();
+                    if (skins[i] != null && skins[i].hasPaintData()) {
+                        hasPaintedSkin = true;
+                    }
                 }
             }
-        }
-        
-        if (hasPaintedSkin) {
-            if (te.skinTexture == null) {
-                te.skinTexture = new EntityTextureInfo();
-            }
             
-            te.skinTexture.updateTexture(rl);
-            te.skinTexture.updateSkinColour(te.getSkinColour());
-            te.skinTexture.updateHairColour(te.getHairColour());
-            te.skinTexture.updateSkins(skins);
-            te.skinTexture.updateDyes(dyes);
-            
-            if (te.skinTexture.getNeedsUpdate()) {
-                if (lastTextureBuild + 100L < System.currentTimeMillis()) {
-                    lastTextureBuild = System.currentTimeMillis();
+            if (hasPaintedSkin) {
+                if (te.skinTexture == null) {
+                    te.skinTexture = new EntityTextureInfo();
+                }
+                
+                te.skinTexture.updateTexture(rl);
+                te.skinTexture.updateSkinColour(te.getSkinColour());
+                te.skinTexture.updateHairColour(te.getHairColour());
+                te.skinTexture.updateSkins(skins);
+                te.skinTexture.updateDyes(dyes);
+                
+                if (te.skinTexture.getNeedsUpdate()) {
+                    if (lastTextureBuild + 100L < System.currentTimeMillis()) {
+                        lastTextureBuild = System.currentTimeMillis();
+                        rl = te.skinTexture.preRender();
+                    }
+                } else {
                     rl = te.skinTexture.preRender();
                 }
-            } else {
-                rl = te.skinTexture.preRender();
             }
         }
-
-        
         
         mc.mcProfiler.endStartSection("textureBind");
         bindTexture(rl);
