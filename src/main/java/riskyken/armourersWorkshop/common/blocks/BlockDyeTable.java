@@ -61,8 +61,9 @@ public class BlockDyeTable extends AbstractModBlockContainer {
         }
         return blockIcon;
     }
+    
     @Override
-    public TileEntity getTileEntityCommon(World world, int metadata) {
+    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntityDyeTable();
     }
 }

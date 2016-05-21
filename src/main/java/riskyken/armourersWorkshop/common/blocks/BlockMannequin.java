@@ -30,7 +30,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.tileentities.TileEntityMannequinClient;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -319,20 +318,17 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
     
     @Override
-    public TileEntity getTileEntityCommon(World world, int metadata) {
-        if (metadata == 0) {
-            return new TileEntityMannequin();
-        }
+    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return null;
     }
     
-    @SideOnly(Side.CLIENT)
     @Override
-    public TileEntity getTileEntityClient(World world, int metadata) {
+    public TileEntity createTileEntity(World world, int metadata) {
         if (metadata == 0) {
-            return new TileEntityMannequinClient();
+            return new TileEntityMannequin(false);
+        } else {
+            return null;
         }
-        return null;
     }
     
     @Override

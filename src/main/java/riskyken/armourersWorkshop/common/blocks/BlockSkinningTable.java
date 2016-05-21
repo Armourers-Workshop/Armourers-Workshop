@@ -72,9 +72,9 @@ public class BlockSkinningTable extends AbstractModBlockContainer {
         }
         return true;
     }
-    
+
     @Override
-    public TileEntity getTileEntityCommon(World world, int metadata) {
+    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinningTable();
     }
 }

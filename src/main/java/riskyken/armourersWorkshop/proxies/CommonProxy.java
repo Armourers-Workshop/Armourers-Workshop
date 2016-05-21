@@ -1,9 +1,6 @@
 package riskyken.armourersWorkshop.proxies;
 
 import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import riskyken.armourersWorkshop.common.blocks.AbstractModBlockContainer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.library.CommonLibraryManager;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
@@ -65,9 +62,5 @@ public class CommonProxy {
     
     public int getBlockRenderType(Block block) {
         return 0;
-    }
-    
-    public TileEntity getTileEntityForSide(AbstractModBlockContainer block, World world, int metadata) {
-        return block.getTileEntityCommon(world, metadata);
     }
 }
