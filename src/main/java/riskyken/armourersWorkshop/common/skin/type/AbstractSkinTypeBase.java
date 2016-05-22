@@ -6,8 +6,6 @@ import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public abstract class AbstractSkinTypeBase implements ISkinType {
-
-    private int id = -1;
     
     @SideOnly(Side.CLIENT)
     protected IIcon icon;
@@ -40,16 +38,6 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     @Override
     public int getVanillaArmourSlotId() {
         return -1;
-    }
-    
-    @Override
-    public int getId() {
-        return this.id;
-    }
-    
-    @Override
-    public void setId(int id) {
-        this.id = id;
     }
     
     @Override

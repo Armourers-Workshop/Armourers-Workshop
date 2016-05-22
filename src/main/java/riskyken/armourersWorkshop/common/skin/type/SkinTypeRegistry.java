@@ -100,8 +100,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return false;
         }
         
-        skinType.setId(skinTypeMap.size());
-        ModLogger.log("Registering skin type - id:" + skinType.getId() + " name:" + skinType.getRegistryName());
+        ModLogger.log(String.format("Registering skin: %s", skinType.getRegistryName()));
         skinTypeMap.put(skinType.getRegistryName(), skinType);
         ArrayList<ISkinPartType> skinParts = skinType.getSkinParts();
         for (int i = 0; i < skinParts.size(); i++) {
@@ -157,10 +156,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         default:
             return null;
         }
-    }
-    
-    public int getLegacyIdForSkin(ISkinType skinType) {
-        return skinType.getId();
     }
     
     @Override

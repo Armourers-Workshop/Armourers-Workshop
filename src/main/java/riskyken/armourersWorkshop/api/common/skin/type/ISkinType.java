@@ -61,18 +61,6 @@ public interface ISkinType {
     public int getVanillaArmourSlotId();
     
     /**
-     * Should return id that was given in setId.
-     * @return id
-     */
-    public int getId();
-    
-    /**
-     * Id given to this skin when it is register.
-     * @param id
-     */
-    public void setId(int id);
-    
-    /**
      * Should this skin be hidden from the user?
      * @return Is hidden?
      */
