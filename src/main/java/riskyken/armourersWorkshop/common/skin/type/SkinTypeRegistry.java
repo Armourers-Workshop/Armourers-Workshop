@@ -24,7 +24,6 @@ import riskyken.armourersWorkshop.common.skin.type.feet.SkinFeet;
 import riskyken.armourersWorkshop.common.skin.type.head.SkinHead;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinLegs;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinSkirt;
-import riskyken.armourersWorkshop.common.skin.type.multiblock.SkinMultiblock;
 import riskyken.armourersWorkshop.common.skin.type.sword.SkinSword;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -42,7 +41,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public static ISkinType skinBow;
     public static ISkinType skinArrow;
     public static ISkinType skinBlock;
-    public static ISkinType skinMultiblock;
     public static ISkinType skinWings;
     
     private LinkedHashMap<String, ISkinType> skinTypeMap;
@@ -69,7 +67,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinBow = new SkinBow();
         skinArrow = new SkinArrow();
         skinBlock = new SkinBlock();
-        skinMultiblock = new SkinMultiblock();
         skinWings = new SkinWings();
         
         registerSkin(skinHead);
@@ -81,7 +78,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinBow);
         registerSkin(skinArrow);
         registerSkin(skinBlock);
-        //registerSkin(skinMultiblock);
         //registerSkin(skinWings);
     }
     
