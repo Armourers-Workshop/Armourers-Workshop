@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
@@ -20,18 +19,6 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 public class ModelSkinBow extends AbstractModelSkin {
     
     public int frame = 0;
-    
-    @Override
-    public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
-        setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
-        render(entity, armourData, false, null, null, false);
-    }
-    
-    @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
-        setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye, extraColour, itemRender);
-    }
     
     @Override
     public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {

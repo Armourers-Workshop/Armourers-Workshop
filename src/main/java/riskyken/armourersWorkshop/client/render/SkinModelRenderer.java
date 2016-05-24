@@ -82,7 +82,7 @@ public final class SkinModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         //Look for skinned armourer.
-        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
+        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
             ItemStack armourStack = player.getCurrentArmor(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
@@ -113,7 +113,7 @@ public final class SkinModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         //Look for skinned armourer.
-        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
+        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
             ItemStack armourStack = player.getCurrentArmor(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
