@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPaintCache;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
+import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -53,6 +54,9 @@ public class ModelSkinLegs extends AbstractModelSkin {
         RenderHelper.enableGUIStandardItemLighting();
         
         if (armourData.hasPaintData() & showSkinPaint) {
+            if (extraColour == null) {
+                extraColour = PaintingHelper.getLocalPlayerExtraColours();
+            }
             SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColour);
             st.bindTexture();
             GL11.glPushMatrix();

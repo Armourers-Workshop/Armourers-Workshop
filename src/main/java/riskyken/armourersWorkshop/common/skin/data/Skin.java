@@ -102,9 +102,9 @@ public class Skin implements ISkin {
                 height = Math.max(height, skinRec.getHeight());
                 depth = Math.max(depth, skinRec.getDepth());
                 
-                x = Math.max(x, skinRec.getX());
+                x = Math.min(x, skinRec.getX());
                 y = Math.max(y, skinRec.getY());
-                z = Math.max(z, skinRec.getZ());
+                z = Math.min(z, skinRec.getZ());
             }
         }
         

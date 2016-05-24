@@ -135,7 +135,7 @@ public final class PaintingHelper {
     }
     
     @SideOnly(Side.CLIENT)
-    public static int getLoadPlayersSkinColour() {
+    public static int getLocalPlayersSkinColour() {
         PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().thePlayer);
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd != null) {
@@ -152,5 +152,20 @@ public final class PaintingHelper {
             return ewd.hairColour;
         }
         return Color.decode("#804020").getRGB();
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public static byte[] getLocalPlayerExtraColours() {
+        int skin = getLocalPlayersSkinColour();
+        int hair = getLocalPlayersHairColour();
+        byte[] ec = new byte[6];
+        
+        ec[0] = (byte) (skin >>> 16 & 0xFF);
+        ec[1] = (byte) (skin >>> 8 & 0xFF);
+        ec[2] = (byte) (skin & 0xFF);
+        ec[3] = (byte) (hair >>> 16 & 0xFF);
+        ec[4] = (byte) (hair >>> 8 & 0xFF);
+        ec[5] = (byte) (hair & 0xFF);
+        return ec;
     }
 }

@@ -178,28 +178,18 @@ public class EntityTextureInfo {
                             bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                         }
                         if (paintType == PaintType.HAIR) {
-                            bufferedEntitySkinnedImage.setRGB(ix, iy, lastEntityHairColour);
+                            int colour = dyeColour(lastEntityHairColour, paintColour, 9, skins[i]);
+                            bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
                         }
                         if (paintType == PaintType.SKIN) {
-                            bufferedEntitySkinnedImage.setRGB(ix, iy, lastEntitySkinColour);
+                            int colour = dyeColour(lastEntitySkinColour, paintColour, 8, skins[i]);
+                            bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
                         }
                         if (paintType.getKey() >= 1 && paintType.getKey() <= 8) {
                             int dyeNumber = paintType.getKey() - 1;
                             if (dyes != null && dyes[i] != null && dyes[i].haveDyeInSlot(dyeNumber)) {
                                 byte[] dye = dyes[i].getDyeColour(dyeNumber);
-                                
-                                byte r = (byte) (paintColour >>> 16 & 0xFF);
-                                byte g = (byte) (paintColour >>> 8 & 0xFF);
-                                byte b = (byte) (paintColour & 0xFF);
-                                
-                                int[] average = {127, 127, 127};
-                                
-                                if (skins[i] != null) {
-                                    average = skins[i].getAverageDyeColour(dyeNumber);
-                                }
-                                dye = ColouredFace.dyeColour(r, g, b, dye, average);
-                                
-                                int colour = (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
+                                int colour = dyeColour(dye, paintColour, dyeNumber, skins[i]);
                                 bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
                             } else {
                                 bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
@@ -209,6 +199,29 @@ public class EntityTextureInfo {
                 }
             }
         }
+    }
+    
+    private int dyeColour(int dye, int colour, int dyeIndex, Skin skin) {
+        byte[] dyeArray = new byte[3];
+        dyeArray[0] = (byte) (dye >>> 16 & 0xFF);
+        dyeArray[1] = (byte) (dye >>> 8 & 0xFF);
+        dyeArray[2] = (byte) (dye & 0xFF);
+        return  dyeColour(dyeArray, colour, dyeIndex, skin);
+    }
+    
+    private int dyeColour(byte[] dye, int colour, int dyeIndex, Skin skin) {
+        byte r = (byte) (colour >>> 16 & 0xFF);
+        byte g = (byte) (colour >>> 8 & 0xFF);
+        byte b = (byte) (colour & 0xFF);
+        
+        int[] average = {127, 127, 127};
+        
+        if (skin != null) {
+            average = skin.getAverageDyeColour(dyeIndex);
+        }
+        dye = ColouredFace.dyeColour(r, g, b, dye, average);
+        
+        return (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
     }
     
     @Override

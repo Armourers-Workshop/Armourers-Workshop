@@ -36,6 +36,9 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
     }
     
     public SkinModelTexture getTextureForSkin(Skin skin, ISkinDye skinDye, byte[] extraColours) {
+        if (extraColours == null) {
+            extraColours = new byte[] {127, 127, 127, 127, 127, 127};
+        }
         SkinTextureKey cmk = new SkinTextureKey(skin.lightHash(), skinDye, extraColours);
         return getTextureForSkin(skin, cmk);
     }

@@ -34,29 +34,23 @@ public class SkinModelTexture extends AbstractTexture {
                     if (paintType == 255) {
                         texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                     }
-                    if (paintType == 254 | paintType == 253) {
-                        //texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
+                    if (paintType == 254) {
+                        byte[] hairColour = cmk.getExtraColours();
+                        int colour = dyeColour(new byte[] {hairColour[3], hairColour[4], hairColour[5]}, paintColour, 9, skin);
+                        texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(colour, 0, 255));
+                    }
+                    if (paintType == 253) {
+                        byte[] skinColour = cmk.getExtraColours();
+                        int colour = dyeColour(new byte[] {skinColour[0], skinColour[1], skinColour[2]}, paintColour, 8, skin);
+                        texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(colour, 0, 255));
                     }
                     if (paintType >= 1 & paintType <= 8) {
                         ISkinDye skinDye = cmk.getSkinDye();
                         int dyeNumber = paintType - 1;
                         if (skinDye.haveDyeInSlot(dyeNumber)) {
                             byte[] dye = skinDye.getDyeColour(dyeNumber);
-                            
-                            byte t = (byte) (paintColour >>> 24 & 0xFF);
-                            byte r = (byte) (paintColour >>> 16 & 0xFF);
-                            byte g = (byte) (paintColour >>> 8 & 0xFF);
-                            byte b = (byte) (paintColour & 0xFF);
-                            
                             if ((dye[3] & 0xFF) != 0) {
-                                int[] average = {127, 127, 127};
-                                
-                                if (skin != null) {
-                                    average = skin.getAverageDyeColour(dyeNumber);
-                                }
-                                
-                                dye = ColouredFace.dyeColour(r, g, b, dye, average);
-                                int colour = (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
+                                int colour = dyeColour(dye, paintColour, dyeNumber, skin);
                                 texture.setRGB(ix, iy, colour);
                             }
                         } else {
@@ -73,6 +67,29 @@ public class SkinModelTexture extends AbstractTexture {
                 }
             }
         }
+    }
+    
+    private int dyeColour(int dye, int colour, int dyeIndex, Skin skin) {
+        byte[] dyeArray = new byte[3];
+        dyeArray[0] = (byte) (dye >>> 16 & 0xFF);
+        dyeArray[1] = (byte) (dye >>> 8 & 0xFF);
+        dyeArray[2] = (byte) (dye & 0xFF);
+        return  dyeColour(dyeArray, colour, dyeIndex, skin);
+    }
+    
+    private int dyeColour(byte[] dye, int colour, int dyeIndex, Skin skin) {
+        byte r = (byte) (colour >>> 16 & 0xFF);
+        byte g = (byte) (colour >>> 8 & 0xFF);
+        byte b = (byte) (colour & 0xFF);
+        
+        int[] average = {127, 127, 127};
+        
+        if (skin != null) {
+            average = skin.getAverageDyeColour(dyeIndex);
+        }
+        dye = ColouredFace.dyeColour(r, g, b, dye, average);
+        
+        return (255 << 24) + ((dye[0] & 0xFF) << 16) + ((dye[1] & 0xFF) << 8) + (dye[2]  & 0xFF);
     }
     
     @Override
