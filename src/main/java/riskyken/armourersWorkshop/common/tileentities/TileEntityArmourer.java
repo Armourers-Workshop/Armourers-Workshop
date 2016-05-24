@@ -326,6 +326,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         removeBoundingBoxes();
         this.skinType = skinType;
+        clearPaintData(true);
         createBoundingBoxes(); 
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
