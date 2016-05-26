@@ -1,9 +1,8 @@
 Build 0.39.3
-Change: Cleaned up F3 debug text/
+Change: Cleaned up F3 debug text.
 Fixed: Not being able to shade skin and hair paint.
 Fixed: Clear paint data when switching armourer skin type
 Fixed: Skinned armour items rendering 5 times.
-
 
 
 Build 0.39.2
