@@ -70,21 +70,25 @@ public class TileEntitySkinnable extends TileEntity {
             if (skin != null) {
                 float scale = 0.0625F;
                 SkinPart skinPart = skin.getParts().get(0);
-                Rectangle3D rec = skinPart.getPartBounds();
+                Rectangle3D rec = skinPart.getBlockBounds(1, 0, 0);
+                //rec = skinPart.getPartBounds();
                 
-                int x = 8 + rec.getX();
-                int y = 8 - rec.getHeight() - rec.getY();
-                int z = 8 - rec.getDepth() - rec.getZ();
+                if (rec != null) {
+                    int x = 8 + rec.getX();
+                    int y = 8 - rec.getHeight() - rec.getY();
+                    int z = 8 - rec.getDepth() - rec.getZ();
+                    
+                    minX = x * scale;
+                    minY = y * scale;
+                    minZ = z * scale;
+                    maxX = (x + rec.getWidth()) * scale;
+                    maxY = (y + rec.getHeight()) * scale;
+                    maxZ = (z + rec.getDepth()) * scale;
+                    rotateBlockBounds();
+                    haveBlockBounds = true;
+                    block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+                }
                 
-                minX = x * scale;
-                minY = y * scale;
-                minZ = z * scale;
-                maxX = (x + rec.getWidth()) * scale;
-                maxY = (y + rec.getHeight()) * scale;
-                maxZ = (z + rec.getDepth()) * scale;
-                rotateBlockBounds();
-                haveBlockBounds = true;
-                block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
                 return;
             }
         }

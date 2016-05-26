@@ -15,7 +15,14 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
 public class BlockHighlightRenderHandler {
@@ -43,6 +50,13 @@ public class BlockHighlightRenderHandler {
         if (block == ModBlocks.mannequin) {
             drawMannequinBlockBounds(world, x, y, z, player, block, event.partialTicks);
             event.setCanceled(true);
+        }
+        
+        if (event.currentItem != null && event.currentItem.getItem() == ModItems.equipmentSkin) {
+            ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(event.currentItem);
+            if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
+                drawSkinnableBlockHelper(world, x, y, z, player, event.partialTicks, skinPointer);
+            }
         }
     }
     
@@ -81,5 +95,58 @@ public class BlockHighlightRenderHandler {
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
+    }
+    
+    private void drawSkinnableBlockHelper(World world, int x, int y, int z, EntityPlayer player, float partialTicks, ISkinPointer skinPointer) {
+        int meta = world.getBlockMetadata(x, y, z);
+        
+        Rectangle3D[][][] blockGrid;
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
+        if (skin != null) {
+            blockGrid = skin.getParts().get(0).getBlockGrid();
+        } else {
+            return;
+        }
+        
+        double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+        double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+        double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+        
+        float f1 = 0.002F;
+        float scale = 0.0625F;
+        
+        for (int ix = 0; ix < 3; ix++) {
+            for (int iy = 0; iy < 3; iy++) {
+                for (int iz = 0; iz < 3; iz++) {
+                    Rectangle3D rec = blockGrid[ix][iy][-iz + 2];
+                    if (rec != null) {
+                        double minX = (8 + rec.getX()) * scale;
+                        double minY = (8 - rec.getHeight() - rec.getY()) * scale;
+                        double minZ = (8 - rec.getDepth() - rec.getZ()) * scale;
+                        double maxX = (8 + rec.getX() + rec.getWidth()) * scale;
+                        double maxY = (8 - rec.getHeight() - rec.getY() + rec.getHeight()) * scale;
+                        double maxZ = (8 - rec.getDepth() - rec.getZ() + rec.getDepth()) * scale;
+                        
+                        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+                        aabb.offset(-xOff, -yOff, -zOff);
+                        aabb.offset(x, y, z);
+                        aabb.offset(ix - 1, 1D + iy, iz - 2);
+                        GL11.glEnable(GL11.GL_BLEND);
+                        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+                        GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.4F);
+                        if (!world.isAirBlock(x + ix - 1, y + 1 + iy, z + iz - 2)) {
+                            GL11.glColor4f(1.0F, 0.0F, 0.0F, 0.4F);
+                        }
+                        GL11.glLineWidth(2.0F);
+                        GL11.glDisable(GL11.GL_TEXTURE_2D);
+                        GL11.glDepthMask(false);
+                        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+                        GL11.glDepthMask(true);
+                        GL11.glEnable(GL11.GL_TEXTURE_2D);
+                        GL11.glDisable(GL11.GL_BLEND);
+                    }
+                }
+            }
+        }
     }
 }
