@@ -10,7 +10,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
@@ -55,10 +54,10 @@ public class TileEntitySkinnable extends TileEntity {
         
     }
 
-    public void setBoundsOnBlock(Block block) {
+    public void setBoundsOnBlock(Block block, int xOffset, int yOffset, int zOffset) {
         if (haveBlockBounds) {
-            block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
-            return;
+            //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+            //return;
         }
         if (hasSkin()) {
             Skin skin = null;
@@ -72,11 +71,11 @@ public class TileEntitySkinnable extends TileEntity {
                 float scale = 0.0625F;
                 SkinPart skinPart = skin.getParts().get(0);
                 Rectangle3D rec = skinPart.getPartBounds();
-                IRectangle3D buildSpace = skinPart.getPartType().getBuildingSpace();
                 
-                int x = buildSpace.getX() + buildSpace.getWidth() + rec.getX();
-                int y = buildSpace.getY() + buildSpace.getHeight() - rec.getY() - rec.getHeight();
-                int z = buildSpace.getZ() + buildSpace.getDepth() - rec.getZ() - rec.getDepth();
+                int x = 8 + rec.getX();
+                int y = 8 - rec.getHeight() - rec.getY();
+                int z = 8 - rec.getDepth() - rec.getZ();
+                
                 minX = x * scale;
                 minY = y * scale;
                 minZ = z * scale;
@@ -89,7 +88,11 @@ public class TileEntitySkinnable extends TileEntity {
                 return;
             }
         }
-        block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
+        if (haveBlockBounds) {
+            block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+        } else {
+            block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
+        }
     }
 
     private void rotateBlockBounds() {

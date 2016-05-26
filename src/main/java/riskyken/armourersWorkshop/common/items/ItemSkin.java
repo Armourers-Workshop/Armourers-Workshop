@@ -169,14 +169,17 @@ public class ItemSkin extends AbstractModItem {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         
         if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
-            ForgeDirection dir = ForgeDirection.getOrientation(side);
-            Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-            if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
-                placeSkinAtLocation(world, player, side, stack, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, skinPointer);
-                return true;
+            Skin skin = SkinUtils.getSkinDetectSide(skinPointer, false, true);
+            if (skin != null) {
+                skin.onUsed();
+                ForgeDirection dir = ForgeDirection.getOrientation(side);
+                Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+                if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
+                    placeSkinAtLocation(world, player, side, stack, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, skinPointer);
+                    return true;
+                }
             }
         }
-
         return false;
     }
     

@@ -175,6 +175,7 @@ public class SkinPart implements ISkinPart {
             
             if (skinPart == null) {
                 ModLogger.log(Level.ERROR,"Skin part was null - reg name: " + regName);
+                throw new InvalidCubeTypeException();
             }
         }
         cubeData = new SkinCubeData();
