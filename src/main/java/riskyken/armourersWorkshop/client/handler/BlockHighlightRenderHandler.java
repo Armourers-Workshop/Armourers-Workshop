@@ -10,11 +10,13 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
@@ -22,6 +24,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
@@ -118,14 +121,17 @@ public class BlockHighlightRenderHandler {
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
-                    Rectangle3D rec = blockGrid[ix][iy][-iz + 2];
-                    if (rec != null) {
-                        double minX = (8 + rec.getX()) * scale;
-                        double minY = (8 - rec.getHeight() - rec.getY()) * scale;
-                        double minZ = (8 - rec.getDepth() - rec.getZ()) * scale;
-                        double maxX = (8 + rec.getX() + rec.getWidth()) * scale;
-                        double maxY = (8 - rec.getHeight() - rec.getY() + rec.getHeight()) * scale;
-                        double maxZ = (8 - rec.getDepth() - rec.getZ() + rec.getDepth()) * scale;
+                    ForgeDirection dir = ForgeDirection.NORTH;
+                    int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+                    dir = TileEntitySkinnable.getDirectionFromMeta(rotation);
+                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, ix, iy, -iz + 2, dir);
+                    if (bounds != null) {
+                        double minX = bounds[0];
+                        double minY = bounds[1];
+                        double minZ = bounds[2];
+                        double maxX = bounds[3];
+                        double maxY = bounds[4];
+                        double maxZ = bounds[5];
                         
                         AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
                         aabb.offset(-xOff, -yOff, -zOff);

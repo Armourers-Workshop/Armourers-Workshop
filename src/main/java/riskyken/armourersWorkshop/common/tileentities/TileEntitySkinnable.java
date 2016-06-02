@@ -68,27 +68,18 @@ public class TileEntitySkinnable extends TileEntity {
             }
             
             if (skin != null) {
-                float scale = 0.0625F;
-                SkinPart skinPart = skin.getParts().get(0);
-                Rectangle3D rec = skinPart.getBlockBounds(1, 0, 0);
-                //rec = skinPart.getPartBounds();
-                
-                if (rec != null) {
-                    int x = 8 + rec.getX();
-                    int y = 8 - rec.getHeight() - rec.getY();
-                    int z = 8 - rec.getDepth() - rec.getZ();
-                    
-                    minX = x * scale;
-                    minY = y * scale;
-                    minZ = z * scale;
-                    maxX = (x + rec.getWidth()) * scale;
-                    maxY = (y + rec.getHeight()) * scale;
-                    maxZ = (z + rec.getDepth()) * scale;
-                    rotateBlockBounds();
+                ForgeDirection dir = getDirectionFromMeta(getBlockMetadata());
+                float[] bounds = getBlockBounds(skin, 1, 0, 0, dir);
+                if (bounds != null) {
+                    minX = bounds[0];
+                    minY = bounds[1];
+                    minZ = bounds[2];
+                    maxX = bounds[3];
+                    maxY = bounds[4];
+                    maxZ = bounds[5];
                     haveBlockBounds = true;
                     block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
                 }
-                
                 return;
             }
         }
@@ -98,16 +89,9 @@ public class TileEntitySkinnable extends TileEntity {
             block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
         }
     }
-
-    private void rotateBlockBounds() {
+    
+    public static ForgeDirection getDirectionFromMeta(int meta) {
         ForgeDirection dir = ForgeDirection.UNKNOWN;
-        int meta = getBlockMetadata() % 4;
-        
-        float oldMinX = minX;
-        float oldMinZ = minZ;
-        float oldMaxX = maxX;
-        float oldMaxZ = maxZ;
-        
         if (meta == 0) {
             dir = ForgeDirection.SOUTH;
         }
@@ -120,29 +104,61 @@ public class TileEntitySkinnable extends TileEntity {
         if (meta == 3) {
             dir = ForgeDirection.EAST;
         }
+        return dir;
+    }
+    
+    public static float[] getBlockBounds(Skin skin, int gridX, int gridY, int gridZ, ForgeDirection dir) {
+        float[] bounds = new float[6];
+        float scale = 0.0625F;
+        SkinPart skinPart = skin.getParts().get(0);
         
+        Rectangle3D rec = skinPart.getBlockBounds(gridX, gridY, gridZ);
+        if (rec != null) {
+            int x = 8 + rec.getX();
+            int y = 8 - rec.getHeight() - rec.getY();
+            int z = 8 - rec.getDepth() - rec.getZ();
+            bounds[0] = x * scale;
+            bounds[1] = y * scale;
+            bounds[2] = z * scale;
+            bounds[3] = (x + rec.getWidth()) * scale;
+            bounds[4] = (y + rec.getHeight()) * scale;
+            bounds[5] = (z + rec.getDepth()) * scale;
+            bounds = rotateBlockBounds(bounds, dir);
+        } else {
+            return null;
+        }
+        
+        return bounds;
+    }
+    
+    private static float[] rotateBlockBounds(float[] bounds, ForgeDirection dir) {
+        float[] rotatedBounds = new float[6];
+        for (int i = 0; i < bounds.length; i++) {
+            rotatedBounds[i] = bounds[i];
+        }
         switch (dir) {
         case SOUTH:
-            minZ = 1 - oldMaxZ;
-            maxZ = 1 - oldMinZ;
-            minX = 1 - oldMaxX;
-            maxX = 1 - oldMinX;
+            rotatedBounds[0] = 1 - bounds[3]; //oldMaxX - minX
+            rotatedBounds[2] = 1 - bounds[5]; //oldMaxZ - minZ
+            rotatedBounds[3] = 1 - bounds[0]; //oldMinX - maxX
+            rotatedBounds[5] = 1 - bounds[2]; //oldMinZ - maxZ
             break;
         case EAST:
-            maxX = 1 - oldMinZ;
-            minX = 1 - oldMaxZ;
-            maxZ = oldMaxX;
-            minZ = oldMinX;
+            rotatedBounds[0] = 1 - bounds[5]; //oldMaxZ - minX
+            rotatedBounds[2] = bounds[0];     //oldMinX - minZ
+            rotatedBounds[3] = 1 - bounds[2]; //oldMinZ - maxX
+            rotatedBounds[5] = bounds[3];     //oldMaxX - maxZ
             break;
         case WEST:
-            maxX = oldMaxZ;
-            minX = oldMinZ;
-            maxZ = 1 - oldMinX;
-            minZ = 1 - oldMaxX;
+            rotatedBounds[0] = bounds[2];     //oldMinZ - minX
+            rotatedBounds[2] = 1 - bounds[3]; //oldMaxX - minZ
+            rotatedBounds[3] = bounds[5];     //oldMaxZ - maxX
+            rotatedBounds[5] = 1 - bounds[0]; //oldMinX - maxZ
             break; 
         default:
             break;
         }
+        return rotatedBounds;
     }
 
     @SideOnly(Side.CLIENT)

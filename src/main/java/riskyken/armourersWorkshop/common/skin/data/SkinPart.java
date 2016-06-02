@@ -137,7 +137,7 @@ public class SkinPart implements ISkinPart {
         rec.setWidth(Math.max(rec.getWidth(), x));
         rec.setHeight(Math.max(rec.getHeight(), y));
         rec.setDepth(Math.max(rec.getDepth(), z));
-        blockGrid[loc.x][loc.y][loc.z] = rec;
+        //blockGrid[loc.x][loc.y][loc.z] = rec;
     }
     
     public SkinCubeData getCubeData() {
