@@ -82,8 +82,7 @@ public class ModelRendererAttachment extends ModelRenderer {
         for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
             Skin data = modelRenderer.getPlayerCustomArmour(player, skinType, skinIndex);
             if (data == null) {
-                mc.mcProfiler.endSection();
-                return;
+                continue;
             }
             ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType, skinIndex);
             data.onUsed();
