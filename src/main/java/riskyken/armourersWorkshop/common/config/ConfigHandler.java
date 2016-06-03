@@ -257,7 +257,7 @@ public class ConfigHandler {
         clientTextureCacheTime = config
                 .getInt("clientTextureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,
                 "How long in seconds the client will keep textures in it's cache.\n" + 
-                "Default 600 ticks is 10 minutes.");
+                "Default 600 seconds is 10 minutes.");
         
         multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_CLIENT, true,
                 "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
