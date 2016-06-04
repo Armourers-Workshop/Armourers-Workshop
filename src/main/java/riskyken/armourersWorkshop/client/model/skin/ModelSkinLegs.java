@@ -130,6 +130,9 @@ public class ModelSkinLegs extends AbstractModelSkin {
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
+        if (isRiding) {
+            GL11.glRotated(-70, 1F, 0F, 0F);
+        }
         
         renderPart(part, scale, skinDye, extraColour);
         GL11.glPopMatrix();

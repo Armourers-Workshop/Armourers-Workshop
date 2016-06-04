@@ -92,9 +92,14 @@ public class ModelRendererAttachment extends ModelRenderer {
                 if (partData.getPartType() == skinPart) {
                     GL11.glPushMatrix();
                     if (skinType == SkinTypeRegistry.skinLegs && skinPart.getRegistryName().equals("armourers:legs.skirt")) {
-                        GL11.glRotated(Math.toDegrees(-baseModel.bipedLeftLeg.rotateAngleX), 1F, 0F, 0F);
-                        GL11.glTranslatef(-2 * scale, 0, 0);
+                        GL11.glTranslatef(0, 12 * scale, 0);
                         if (player.isSneaking()) {
+                            GL11.glRotatef(-30, 1, 0, 0);
+                            GL11.glTranslatef(0, -1.25F * scale, -2F * scale);
+                            
+                        }
+                        if (player.isRiding()) {
+                            GL11.glRotated(-70, 1F, 0F, 0F);
                         }
                     }
                     GL11.glEnable(GL11.GL_CULL_FACE);
