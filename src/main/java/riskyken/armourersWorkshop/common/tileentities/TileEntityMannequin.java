@@ -141,7 +141,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             "eba64cb1-0d29-4434-8d5e-31004b00488c", //RiskyKen
             "b027a4f4-d480-426c-84a3-a9cb029f4b72", //Vic
             "4fda0709-ada7-48a6-b4bf-0bbce8c40dfa", //Nanoha
-            "5b6ab850-1b1a-45d0-9669-f84972f94d47", //EXTZ
             "b9e99f95-09fe-497a-8a77-1ccc839ab0f4"  //VermillionX
             };
   
@@ -149,7 +148,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             {249F / 255, 223F / 255, 140F / 255},
             {208F / 255, 212F / 255, 248F / 255},
             {1F, 173F / 255, 1F},
-            {41F / 255, 25F / 255, 0F},
             {45F / 255, 45F / 255, 45F / 255}
             };
     

@@ -65,6 +65,9 @@ public final class ArmourerWorldHelper {
             saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
         }
         
+        if (paintData != null) {
+            paintData = paintData.clone();
+        }
         Skin skin = new Skin(authorName, customName, tags, skinType, paintData, parts);
         
         //Check if there are any blocks in the build guides.

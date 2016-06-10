@@ -205,7 +205,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
         if (equipmentData.hasPaintData()) {
-            this.paintData = equipmentData.getPaintData();
+            this.paintData = equipmentData.getPaintData().clone();
         } else {
             clearPaintData(true);
         }
