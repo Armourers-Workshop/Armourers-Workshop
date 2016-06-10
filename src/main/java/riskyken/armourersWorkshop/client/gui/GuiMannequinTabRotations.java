@@ -142,10 +142,12 @@ public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
             Random rnd = new Random();
             for (int i = 0; i < bipedParts.length; i++) {
                 BipedPart part = bipedRotations.getPartForIndex(i);
-                part.rotationX = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
-                part.rotationY = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
-                part.rotationZ = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
-                bipedPartChange(activeBipedPart);
+                if (part != bipedRotations.chest) {
+                    part.rotationX = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
+                    part.rotationY = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
+                    part.rotationZ = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
+                    bipedPartChange(activeBipedPart);
+                }
             }
             
             guiLoaded = true;
