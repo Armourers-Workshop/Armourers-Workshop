@@ -20,7 +20,10 @@ import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientToolPaintBlock;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
@@ -51,16 +54,20 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
         if (block instanceof IPantableBlock) {
             if (!world.isRemote) {
                 UndoManager.begin(player);
-                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
-                    for (int i = 0; i < 6; i++) {
-                        usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
-                    }
-                } else {
-                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
+            }
+            
+            if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                for (int i = 0; i < 6; i++) {
+                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
                 }
+            } else {
+                usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
+            }
+            if (!world.isRemote) {
                 UndoManager.end(player);
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
             }
+            
             return true;
         }
         
@@ -81,11 +88,27 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int intensity = (Integer) ToolOptions.INTENSITY.readFromNBT(stack.getTagCompound());
         IPantableBlock worldColourable = (IPantableBlock) block;
-        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
-        int newColour = UtilColour.makeColourDarker(new Color(oldColour), intensity).getRGB();
-        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
-        ((IPantableBlock) block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
+        if (worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & world.isRemote) {
+            byte[] rgbt = new byte[4];
+            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+            PaintType oldPaintType = worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side);
+            Color c = UtilColour.makeColourDarker(new Color(oldColour), intensity);
+            rgbt[0] = (byte)c.getRed();
+            rgbt[1] = (byte)c.getGreen();
+            rgbt[2] = (byte)c.getBlue();
+            rgbt[3] = (byte)oldPaintType.getKey();
+            if (block == ModBlocks.boundingBox && oldPaintType == PaintType.NONE) {
+                rgbt[3] = (byte)PaintType.NORMAL.getKey();
+            }
+            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(bl.x, bl.y, bl.z, (byte)side, rgbt);
+            PacketHandler.networkWrapper.sendToServer(message);
+        } else if(!worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & !world.isRemote) {
+            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
+            int newColour = UtilColour.makeColourDarker(new Color(oldColour), intensity).getRGB();
+            UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
+            ((IPantableBlock) block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
+        }
     }
     
     @Override

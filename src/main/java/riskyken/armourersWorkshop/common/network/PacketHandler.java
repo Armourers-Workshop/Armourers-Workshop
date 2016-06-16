@@ -22,6 +22,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRe
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinId;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientToolPaintBlock;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkinData;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibraryFileList;
@@ -69,6 +70,7 @@ public class PacketHandler {
         registerMessage(MessageClientRequestSkinId.class, MessageClientRequestSkinId.class, Side.SERVER);
         registerMessage(MessageServerSkinIdSend.class, MessageServerSkinIdSend.class, Side.CLIENT);
         registerMessage(MessageClientGuiMannequinData.class, MessageClientGuiMannequinData.class, Side.SERVER);
+        registerMessage(MessageClientToolPaintBlock.class, MessageClientToolPaintBlock.class, Side.SERVER);
     }
     
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {

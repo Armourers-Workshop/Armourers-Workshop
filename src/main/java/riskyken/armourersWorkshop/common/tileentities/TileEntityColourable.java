@@ -74,6 +74,15 @@ public class TileEntityColourable extends TileEntity implements IPantable {
     }
     
     @Override
+    public void setColour(byte[] rgb, int side) {
+        this.colour.setRed(rgb[0], side);
+        this.colour.setGreen(rgb[1], side);
+        this.colour.setBlue(rgb[2], side);
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    @Override
     public void setColour(ICubeColour colour) {
         this.colour = colour;
     }

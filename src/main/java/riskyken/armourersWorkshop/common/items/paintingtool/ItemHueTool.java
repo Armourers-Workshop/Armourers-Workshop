@@ -21,6 +21,8 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientToolPaintBlock;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
@@ -65,24 +67,22 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         }
         
         if (block instanceof IPantableBlock) {
-            Color toolColour = new Color(getToolColour(stack));
-            float[] toolhsb;
-            toolhsb = Color.RGBtoHSB(toolColour.getRed(), toolColour.getGreen(), toolColour.getBlue(), null);
-            
             if (!world.isRemote) {
                 UndoManager.begin(player);
-                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
-                    for (int i = 0; i < 6; i++) {
-                        usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
-                    }
-                } else {
-                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
-                }
-                UndoManager.end(player);
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
-            } else {
-                //spawnPaintParticles(world, x, y, z, side, newColour);
             }
+            
+            if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                for (int i = 0; i < 6; i++) {
+                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
+                }
+            } else {
+                usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
+            }
+            if (!world.isRemote) {
+                UndoManager.end(player);
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
+            }
+            
             return true;
         }
         
@@ -111,30 +111,64 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         float[] toolhsb;
         toolhsb = Color.RGBtoHSB(toolColour.getRed(), toolColour.getGreen(), toolColour.getBlue(), null);
         IPantableBlock worldColourable = (IPantableBlock) block;
-        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
-        float[] blockhsb;
-        Color blockColour = new Color(oldColour);
-        blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
         
-        float[] recolour = new float[] { blockhsb[0], blockhsb[1], blockhsb[2] };
-        if (changeHue) {
-            recolour[0] = toolhsb[0];
-        }
-        if (changeSaturation) {
-            recolour[1] = toolhsb[1];
-        }
-        if (changeBrightness) {
-            recolour[2] = toolhsb[2];
-        }
         
-        int newColour = Color.HSBtoRGB(recolour[0], recolour[1], recolour[2]);
-        
-        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
-        
-        ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
-        if (changePaintType) {
-            ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+        if (worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & world.isRemote) {
+            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
+            float[] blockhsb;
+            Color blockColour = new Color(oldColour);
+            blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
+            
+            float[] recolour = new float[] { blockhsb[0], blockhsb[1], blockhsb[2] };
+            if (changeHue) {
+                recolour[0] = toolhsb[0];
+            }
+            if (changeSaturation) {
+                recolour[1] = toolhsb[1];
+            }
+            if (changeBrightness) {
+                recolour[2] = toolhsb[2];
+            }
+            
+            int newColour = Color.HSBtoRGB(recolour[0], recolour[1], recolour[2]);
+            Color c = new Color(newColour);
+            byte[] rgbt = new byte[4];
+            rgbt[0] = (byte)c.getRed();
+            rgbt[1] = (byte)c.getGreen();
+            rgbt[2] = (byte)c.getBlue();
+            rgbt[3] = oldPaintType;
+            if (changePaintType) {
+                rgbt[3] = (byte)paintType.getKey();
+            }
+            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(bl.x, bl.y, bl.z, (byte)side, rgbt);
+            PacketHandler.networkWrapper.sendToServer(message);
+        } else if(!worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & !world.isRemote) {
+            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
+            float[] blockhsb;
+            Color blockColour = new Color(oldColour);
+            blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
+            
+            float[] recolour = new float[] { blockhsb[0], blockhsb[1], blockhsb[2] };
+            if (changeHue) {
+                recolour[0] = toolhsb[0];
+            }
+            if (changeSaturation) {
+                recolour[1] = toolhsb[1];
+            }
+            if (changeBrightness) {
+                recolour[2] = toolhsb[2];
+            }
+            
+            int newColour = Color.HSBtoRGB(recolour[0], recolour[1], recolour[2]);
+            
+            UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
+            
+            ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
+            if (changePaintType) {
+                ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+            }
         }
     }
     

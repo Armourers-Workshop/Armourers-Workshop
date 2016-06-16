@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import java.awt.Color;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
@@ -174,11 +176,18 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         return new CubeColour(colour);
     }
     
+    @Deprecated
     @Override
     public void setColour(int colour) {
         setColour(colour, false);
     }
-
+    
+    @Override
+    public void setColour(byte[] rgb, int side) {
+        setColour(new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF).getRGB(), false);
+    }
+    
+    @Deprecated
     @Override
     public void setColour(int colour, int side) {
         setColour(colour, false);

@@ -1,12 +1,8 @@
 package riskyken.armourersWorkshop.common.items.paintingtool;
 
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,29 +10,25 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
-import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
-import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import riskyken.armourersWorkshop.utils.UtilColour;
-import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 public class ItemColourPicker extends AbstractModItem implements IPaintingTool, IConfigurableTool {
     
@@ -83,8 +75,24 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         }
         
         if (block instanceof IPantableBlock) {
-            setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
-            setToolPaintType(stack, ((IPantableBlock)block).getPaintType(world, x, y, z, side));
+            IPantableBlock paintable = (IPantableBlock) block;
+            PaintType paintType = paintable.getPaintType(world, x, y, z, side);
+            
+            if (paintable.isRemoteOnly(world, x, y, z, side) & world.isRemote) {
+                int colour = paintable.getColour(world, x, y, z, side);
+                NBTTagCompound compound = new NBTTagCompound();
+                byte[] paintData = new byte[4];
+                Color c = new Color(colour);
+                paintData[0] = (byte) c.getRed();
+                paintData[1] = (byte) c.getGreen();
+                paintData[2] = (byte) c.getBlue();
+                paintData[3] = (byte) paintType.getKey();
+                PaintingHelper.setPaintData(compound, paintData);
+                PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
+            } else if (!paintable.isRemoteOnly(world, x, y, z, side) & !world.isRemote) {
+                setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
+                setToolPaintType(stack, paintType);
+            }
             
             if (!world.isRemote) {
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
@@ -93,22 +101,6 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         }
         
         return false;
-    }
-    
-    private boolean skinPartHasTexture(ISkinPartType skinPart) {
-        return skinPart instanceof ISkinPartTypeTextured;
-    }
-    
-    private int getColourFromSkin(TileEntityBoundingBox te, int side) {
-        GameProfile gameProfile = te.getParent().getGameProfile();
-        Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock(te, side);
-        
-        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
-        int colour = UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
-        if (playerSkin != null) {
-            colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
-        }
-        return colour;
     }
     
     @Override
