@@ -1,8 +1,10 @@
 package riskyken.armourersWorkshop.client.render;
 
 import java.awt.Color;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.lwjgl.opengl.GL11;
 
@@ -46,6 +48,8 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 /**
  * Helps render custom equipment on the player and other entities.
  *
+ * TODO Clean up this class it's a mess >:|
+ *
  * @author RiskyKen
  *
  */
@@ -54,25 +58,27 @@ public final class SkinModelRenderer {
     
     public static SkinModelRenderer INSTANCE;
     
-    private HashMap<PlayerPointer, EntityEquipmentData> playerEquipmentMap = new HashMap<PlayerPointer, EntityEquipmentData>();
-    
-    public ModelSkinChest customChest = new ModelSkinChest();
-    public ModelSkinHead customHead = new ModelSkinHead();
-    public ModelSkinLegs customLegs = new ModelSkinLegs();
-    public ModelSkinSkirt customSkirt = new ModelSkinSkirt();
-    public ModelSkinFeet customFeet = new ModelSkinFeet();
-    public ModelSkinSword customSword = new ModelSkinSword();
-    public ModelSkinBow customBow = new ModelSkinBow();
-    
-    private boolean addedRenderAttachment = false;
-    public EntityPlayer targetPlayer = null;
-    
     public static void init() {
         INSTANCE = new SkinModelRenderer();
     }
     
-    public SkinModelRenderer() {
+    private final HashMap<PlayerPointer, EntityEquipmentData> playerEquipmentMap;
+    private final Set<ModelBiped> attachedBipedSet;
+    
+    public final ModelSkinChest customChest = new ModelSkinChest();
+    public final ModelSkinHead customHead = new ModelSkinHead();
+    public final ModelSkinLegs customLegs = new ModelSkinLegs();
+    public final ModelSkinSkirt customSkirt = new ModelSkinSkirt();
+    public final ModelSkinFeet customFeet = new ModelSkinFeet();
+    public final ModelSkinSword customSword = new ModelSkinSword();
+    public final ModelSkinBow customBow = new ModelSkinBow();
+    
+    public EntityPlayer targetPlayer = null;
+    
+    private SkinModelRenderer() {
         MinecraftForge.EVENT_BUS.register(this);
+        playerEquipmentMap = new HashMap<PlayerPointer, EntityEquipmentData>();
+        attachedBipedSet = Collections.newSetFromMap(new WeakHashMap<ModelBiped, Boolean>());
     }
     
     public Skin getPlayerCustomArmour(Entity entity, ISkinType skinType, int slotIndex) {
@@ -176,7 +182,7 @@ public final class SkinModelRenderer {
         }
     }
     
-    private boolean playerHasSkirtOn(PlayerPointer playerPointer) {
+    private boolean isPlayerWearingSkirt(PlayerPointer playerPointer) {
         if (!playerEquipmentMap.containsKey(playerPointer)) {
             return false;
         }
@@ -199,39 +205,24 @@ public final class SkinModelRenderer {
         return false;
     }
     
-    ItemStack equippedStack = null;
-    int equippedIndex  = -1;
-    HashSet<String> addedRenderSet = new HashSet<String>();
-    
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;
         targetPlayer = player;
-        ModelBiped playerBiped = event.renderer.modelBipedMain;
         
-        if (!addedRenderSet.contains(playerBiped.toString()) & ClientProxy.useAttachedModelRender()) {
-            addedRenderSet.add(playerBiped.toString());
-            playerBiped.bipedHead.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinHead, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
-            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.base")));
-            playerBiped.bipedLeftArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.leftArm")));
-            playerBiped.bipedRightArm.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.rightArm")));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.leftLeg")));
-            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.rightLeg")));
-            playerBiped.bipedBody.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.skirt")));
-            playerBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.leftFoot")));
-            playerBiped.bipedRightLeg.addChild(new ModelRendererAttachment(playerBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));            
-            
-            addedRenderAttachment = true;
-            ModLogger.log("Added model render attachment to " + playerBiped.toString());
-            ModLogger.log("Using player renderer " + event.renderer.toString());
+        if (ClientProxy.useAttachedModelRender()) {
+            attachModelsToBiped(event.renderer.modelBipedMain, event.renderer);
         }
+        
         
         if (player.getGameProfile() == null) {
             return;
         }
         PlayerPointer playerPointer = new PlayerPointer(player);
         
-        if (playerHasSkirtOn(playerPointer)) {
+        //Limit the players limbs if they have a skirt equipped.
+        //A proper lady should not swing her legs around!
+        if (isPlayerWearingSkirt(playerPointer)) {
             EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
             if (ewd != null && ewd.limitLimbs) {
                 if (player.limbSwingAmount > 0.25F) {
@@ -240,6 +231,24 @@ public final class SkinModelRenderer {
                 } 
             }
         }
+    }
+    
+    private void attachModelsToBiped(ModelBiped modelBiped, RenderPlayer renderPlayer) {
+        if (attachedBipedSet.contains(modelBiped)) {
+            return;
+        }
+        attachedBipedSet.add(modelBiped);
+        modelBiped.bipedHead.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinHead, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
+        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.base")));
+        modelBiped.bipedLeftArm.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.leftArm")));
+        modelBiped.bipedRightArm.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.rightArm")));
+        modelBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.leftLeg")));
+        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.rightLeg")));
+        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.skirt")));
+        modelBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.leftFoot")));
+        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));            
+        ModLogger.log(String.format("Added model render attachment to %s", modelBiped.toString()));
+        ModLogger.log(String.format("Using player renderer %s", renderPlayer.toString()));
     }
     
     @SubscribeEvent
