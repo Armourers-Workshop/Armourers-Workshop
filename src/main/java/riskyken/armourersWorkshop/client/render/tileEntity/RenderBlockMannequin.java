@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;
+import java.util.HashSet;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
@@ -58,12 +59,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private static boolean isHalloweenSeason;
     private final static float SCALE = 0.0625F;
     private static long lastTextureBuild = 0;
+    private static long lastSkinDownload = 0;
+    private static final HashSet<String> downloadedSkins = new HashSet<String>();;
     
     private final ModelMannequin model;
     private MannequinFakePlayer mannequinFakePlayer;
     private final RenderPlayer renderPlayer;
     private final Minecraft mc;
-    
     
     public RenderBlockMannequin() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
@@ -156,8 +158,18 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endStartSection("getTexture");
         ResourceLocation rl = AbstractClientPlayer.locationStevePng;
         if (te.getGameProfile() != null) {
-            rl = AbstractClientPlayer.getLocationSkin(te.getGameProfile().getName());
-            AbstractClientPlayer.getDownloadImageSkin(rl, te.getGameProfile().getName());
+            String name = te.getGameProfile().getName();
+            if (downloadedSkins.contains(name)) {
+                rl = AbstractClientPlayer.getLocationSkin(name);
+                AbstractClientPlayer.getDownloadImageSkin(rl, name);
+            } else {
+                if (lastSkinDownload + 100L < System.currentTimeMillis()) {
+                    lastSkinDownload = System.currentTimeMillis();
+                    rl = AbstractClientPlayer.getLocationSkin(name);
+                    AbstractClientPlayer.getDownloadImageSkin(rl, name);
+                    downloadedSkins.add(name);
+                }
+            }
         }
         
         
