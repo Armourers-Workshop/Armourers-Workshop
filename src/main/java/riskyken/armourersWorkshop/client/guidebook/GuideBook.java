@@ -1,11 +1,11 @@
 package riskyken.armourersWorkshop.client.guidebook;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.plushieWrapper.common.registry.ModRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuideBook extends BookBase {
@@ -43,6 +43,7 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourMixer));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.mannequin));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinningTable));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.dyeTable));
         
         //Items
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.paintbrush));
@@ -56,6 +57,9 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.wandOfStyle)));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.hueTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.guideBook)));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.mannequinTool));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.dyeBottle));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.armourersHammer));
         
         addChapter(chapterContents);
         addChapter(chapterIntroduction);
