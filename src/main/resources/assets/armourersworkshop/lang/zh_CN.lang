@@ -7,12 +7,10 @@ tile.armourersworkshop:colourable.name=造型方块
 tile.armourersworkshop:colourableGlowing.name=造型方块 (发光的)
 tile.armourersworkshop:colourableGlass.name=玻璃造型方块
 tile.armourersworkshop:colourableGlassGlowing.name=玻璃造型方块 (发光的)
-tile.armourersworkshop:colourMixer0.name=调色器
-tile.armourersworkshop:colourMixer1.name=特殊调色器
+tile.armourersworkshop:colourMixer.name=调色器
 tile.armourersworkshop:mannequin.name=模特
 tile.armourersworkshop:doll.name=娃娃模特
 tile.armourersworkshop:skinningTable.name=镶嵌工作台
-tile.armourersworkshop:marker0.name=标记
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=让你来设计皮肤外观.

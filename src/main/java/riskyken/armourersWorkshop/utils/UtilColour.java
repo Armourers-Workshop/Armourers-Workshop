@@ -3,6 +3,8 @@ package riskyken.armourersWorkshop.utils;
 import java.awt.Color;
 import java.util.Random;
 
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
+
 public class UtilColour {
 
     public static Color makeColourBighter(Color c, int amount) {
@@ -78,6 +80,12 @@ public class UtilColour {
         @Override
         public String toString() {
             return this.name;
+        }
+        
+        public String getLocalizedName() {
+            String unlocalizedText = "colourFamily." + LibModInfo.ID.toLowerCase() + ":";
+            unlocalizedText += this.name.toLowerCase() + ".name";
+            return TranslateUtils.translate(unlocalizedText);
         }
     }
     

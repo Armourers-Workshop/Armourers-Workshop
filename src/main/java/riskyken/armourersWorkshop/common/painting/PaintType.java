@@ -1,6 +1,8 @@
 package riskyken.armourersWorkshop.common.painting;
 
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public enum PaintType {
     NORMAL(255),
@@ -52,5 +54,11 @@ public enum PaintType {
     
     public static int setPaintTypeOnColour(PaintType paintType, int colour) {
         return BitwiseUtils.setUByteToInt(colour, 0, paintType.key);
+    }
+    
+    public String getLocalizedName() {
+        String unlocalizedText = "paintType." + LibModInfo.ID.toLowerCase() + ":";
+        unlocalizedText += this.name().toLowerCase() + ".name";
+        return TranslateUtils.translate(unlocalizedText);
     }
  }

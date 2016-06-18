@@ -116,6 +116,25 @@ tooloption.armourersworkshop:changePaintType=Change Paint Type
 tooloption.armourersworkshop:intensity=Intensity
 tooloption.armourersworkshop:radius=Radius
 
+# Paint Types
+paintType.armourersworkshop:normal.name=Normal
+paintType.armourersworkshop:dye_1.name=Dye 1
+paintType.armourersworkshop:dye_2.name=Dye 2
+paintType.armourersworkshop:dye_3.name=Dye 3
+paintType.armourersworkshop:dye_4.name=Dye 4
+paintType.armourersworkshop:dye_5.name=Dye 5
+paintType.armourersworkshop:dye_6.name=Dye 6
+paintType.armourersworkshop:dye_7.name=Dye 7
+paintType.armourersworkshop:dye_8.name=Dye 8
+paintType.armourersworkshop:none.name=None
+paintType.armourersworkshop:skin.name=Skin
+paintType.armourersworkshop:hair.name=Hair
+
+# Colour Families
+colourFamily.armourersworkshop:wool.name=Wool
+colourFamily.armourersworkshop:minecraft.name=Minecraft
+colourFamily.armourersworkshop:pastel.name=Pastel
+
 # Skin Types
 skinType.armourers:head.name=Head
 skinType.armourers:chest.name=Chest
@@ -154,6 +173,7 @@ inventory.armourersworkshop:armourLibrary0.name=Equipment Library
 inventory.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
+inventory.armourersworkshop:doll.name=Doll
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 inventory.armourersworkshop:entityEquipment.name=Entity Equipment
 inventory.armourersworkshop:skinningTable.name=Skinning Table
@@ -174,6 +194,8 @@ inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=View priva
 inventory.armourersworkshop:armourLibrary.rollover.notOnServer=You must be connected to a server to use this feature.
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Open library folder on your computer.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Delete skin.
+inventory.armourersworkshop:armourLibrary.label.enterFileName=Enter file name.
+inventory.armourersworkshop:armourLibrary.label.typeToSearch=Type to search...
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
@@ -212,6 +234,11 @@ inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Extra Renders?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
+inventory.armourersworkshop:mannequin.set=Set
+inventory.armourersworkshop:mannequin.selectSkin=Select Skin
+inventory.armourersworkshop:mannequin.selectHair=Select Hair
+inventory.armourersworkshop:mannequin.autoSkin=Auto Skin
+inventory.armourersworkshop:mannequin.autoHair=Auto Hair
 inventory.armourersworkshop:mannequin.tab.inventory=Inventory
 inventory.armourersworkshop:mannequin.tab.rotations=Rotations
 inventory.armourersworkshop:mannequin.tab.offset=Offset
@@ -228,6 +255,9 @@ chat.armourersworkshop:undo.outOfUndos=No more undos
 chat.armourersworkshop:undo.undoing=Undoing
 chat.armourersworkshop:inventoryFull=Your inventory is full
 chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but you had nowhere to put it!
+chat.armourersworkshop:updateAvailable=Armourer's Workshop update %s is available.
+chat.armourersworkshop:updateDownload=[Download]
+chat.armourersworkshop:updateDownloadRollover=Click to goto the download page
 
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.

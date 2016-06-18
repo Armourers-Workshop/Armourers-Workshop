@@ -172,11 +172,11 @@ public class GuiArmourLibrary extends GuiContainer {
         
         filenameTextbox = new GuiLabeledTextField(fontRendererObj, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
         filenameTextbox.setMaxStringLength(30);
-        filenameTextbox.setEmptyLabel("Enter file name.");
+        filenameTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.enterFileName"));
         
         searchTextbox = new GuiLabeledTextField(fontRendererObj, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
         searchTextbox.setMaxStringLength(30);
-        searchTextbox.setEmptyLabel("Type to search...");
+        searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
 
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 12);

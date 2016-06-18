@@ -36,6 +36,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
         itemIcon = register.registerIcon(LibItemResources.DYE_BOTTLE);
         paintIcon = register.registerIcon(LibItemResources.DYE_BOTTLE_PAINT);
     }
+    
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
             int side, float hitX, float hitY, float hitZ) {
@@ -56,6 +57,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
         
         return false;
     }
+    
     @Override
     public boolean hasEffect(ItemStack stack, int pass) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
@@ -76,7 +78,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
             String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
             String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
             String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
-            String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.toString());
+            String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.getLocalizedName());
             
             list.add(colourText);
             list.add(hexText);

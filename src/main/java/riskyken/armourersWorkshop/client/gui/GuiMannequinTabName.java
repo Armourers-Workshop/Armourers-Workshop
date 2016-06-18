@@ -27,7 +27,7 @@ public class GuiMannequinTabName extends GuiTabPanel {
         if (tileEntity.getGameProfile() != null) {
             nameTextbox.setText(tileEntity.getGameProfile().getName());
         }
-        setNameButton = new GuiButtonExt(0, width / 2 + 28, 25, 50, 14, "Set");
+        setNameButton = new GuiButtonExt(0, width / 2 + 28, 25, 50, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "set"));
         
         buttonList.add(setNameButton);
     }

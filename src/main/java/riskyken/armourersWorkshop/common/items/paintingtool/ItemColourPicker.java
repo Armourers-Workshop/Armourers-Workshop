@@ -112,7 +112,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
             String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
             String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
-            String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.toString());
+            String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.getLocalizedName());
             
             list.add(colourText);
             list.add(hexText);
