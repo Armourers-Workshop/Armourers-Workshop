@@ -21,6 +21,11 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 public class CommandArmourers extends CommandBase {
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+    
+    @Override
     public String getCommandName() {
         return "armourers";
     }
