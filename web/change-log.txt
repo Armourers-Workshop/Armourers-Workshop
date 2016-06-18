@@ -1,3 +1,19 @@
+Build 0.39.4
+Added: Missing localization text from the lang file.
+Added: Missing item recipes to the guide book.
+Fixed: Severe bug that allowed mutable skins to reference the same paint data.
+Fixed: All skins not rendering when using the attached model render.
+Fixed: Soap not clearing paint type on bounding boxes.
+Fixed: Some tools not working correctly on the large armourer models.
+Fixed: Limited how fast mannequin textures can be downloaded.
+Fixed: Armourers command not working in command blocks.
+Change: Tilted skirt if the player is mounted.
+Change: Random rotations no longer turns the mannequin body.
+Change: How model bipeds are tracked for model attachments.
+Change: Allowed dye bottles to be shift clicked onto the colour mixer.
+Change: Paint roller painting armourer models will no longer effect equipment cubes.
+
+
 Build 0.39.3
 Change: Cleaned up F3 debug text.
 Fixed: Not being able to shade skin and hair paint.
