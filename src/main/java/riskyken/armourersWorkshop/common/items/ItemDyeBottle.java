@@ -5,13 +5,18 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
+import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
@@ -31,7 +36,26 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
         itemIcon = register.registerIcon(LibItemResources.DYE_BOTTLE);
         paintIcon = register.registerIcon(LibItemResources.DYE_BOTTLE_PAINT);
     }
-    
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
+            int side, float hitX, float hitY, float hitZ) {
+        Block block = world.getBlock(x, y, z);
+        
+        if (player.isSneaking() & block == ModBlocks.colourMixer) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof IPantable) {
+                if (!world.isRemote) {
+                    int colour = ((IPantable)te).getColour(0);
+                    PaintType paintType = ((IPantable)te).getPaintType(0);
+                    setToolColour(stack, colour);
+                    setToolPaintType(stack, paintType);
+                }
+            }
+            return true;
+        }
+        
+        return false;
+    }
     @Override
     public boolean hasEffect(ItemStack stack, int pass) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
