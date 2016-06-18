@@ -144,8 +144,13 @@ public class GuiMannequin extends GuiContainer {
         String append = null;
         if (tileEntity.getGameProfile() != null) {
             append = tileEntity.getGameProfile().getName();
-        } 
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName(), append, 4210752);
+        }
+        if (tileEntity.getIsDoll()) {
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, "doll", append, 4210752);
+        } else {
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName(), append, 4210752);
+        }
+        
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {

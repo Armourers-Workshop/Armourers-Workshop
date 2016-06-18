@@ -41,11 +41,15 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         skinColour = tileEntity.getSkinColour();
         hairColour = tileEntity.getHairColour();
         
-        selectSkinButton = new GuiButtonExt(0, width / 2 - 90, 25, 80, 14, "Select Skin");
-        selectHairButton = new GuiButtonExt(0, width / 2 - 90, 40, 80, 14, "Select Hair");
+        selectSkinButton = new GuiButtonExt(0, width / 2 - 90, 25, 80, 14, 
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "selectSkin"));
+        selectHairButton = new GuiButtonExt(0, width / 2 - 90, 40, 80, 14, 
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "selectHair"));
         
-        autoSkinButton = new GuiButtonExt(0, width / 2 + 10, 25, 80, 14, "Auto Skin");
-        autoHairButton = new GuiButtonExt(0, width / 2 + 10, 40, 80, 14, "Auto Hair");
+        autoSkinButton = new GuiButtonExt(0, width / 2 + 10, 25, 80, 14,
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "autoSkin"));
+        autoHairButton = new GuiButtonExt(0, width / 2 + 10, 40, 80, 14,
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "autoHair"));
         
         buttonList.add(selectSkinButton);
         buttonList.add(selectHairButton);

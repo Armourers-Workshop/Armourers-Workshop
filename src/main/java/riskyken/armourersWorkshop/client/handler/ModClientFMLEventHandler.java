@@ -20,6 +20,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ModClientFMLEventHandler {
     
@@ -40,13 +41,12 @@ public class ModClientFMLEventHandler {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         
         if (!shownUpdateInfo && UpdateCheck.updateFound) {
-            //http://minecraft.curseforge.com/mc-mods/229523-armourers-workshop/files
             shownUpdateInfo = true;
-            ChatComponentText updateMessage = new ChatComponentText(LibModInfo.NAME + " update " + UpdateCheck.remoteModVersion + " is available. ");
-            ChatComponentText updateURL = new ChatComponentText("[Download]");
+            ChatComponentText updateMessage = new ChatComponentText(TranslateUtils.translate("chat.armourersworkshop:updateAvailable", UpdateCheck.remoteModVersion) + " ");
+            ChatComponentText updateURL = new ChatComponentText(TranslateUtils.translate("chat.armourersworkshop:updateDownload"));
             updateURL.getChatStyle().setUnderlined(true);
             updateURL.getChatStyle().setColor(EnumChatFormatting.BLUE);
-            updateURL.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Click to goto the download page")));
+            updateURL.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(TranslateUtils.translate("chat.armourersworkshop:updateDownloadRollover"))));
             updateURL.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, DOWNLOAD_URL));
             updateMessage.appendSibling(updateURL);
             player.addChatMessage(updateMessage);
