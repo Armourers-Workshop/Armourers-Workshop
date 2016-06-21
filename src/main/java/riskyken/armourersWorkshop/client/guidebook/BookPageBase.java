@@ -1,19 +1,18 @@
 package riskyken.armourersWorkshop.client.guidebook;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class BookPageBase implements IBookPage {
@@ -42,8 +41,8 @@ public abstract class BookPageBase implements IBookPage {
         int stringWidth = fontRenderer.getStringWidth(text) / 2;
         
         int xCenter = 104 / 2 - fontRenderer.getStringWidth(text) / 2;
-        fontRenderer.drawString(text, contentWidth - stringWidth,
-                y, UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT));
+        fontRenderer.drawSplitString(text, contentWidth - stringWidth,
+                y, PAGE_TEXTURE_WIDTH, UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT));
     }
     
     protected void drawPageTitleAndNumber(FontRenderer fontRenderer, int pageNumber) {

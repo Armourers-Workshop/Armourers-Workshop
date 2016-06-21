@@ -25,13 +25,15 @@ public class GuideBook extends BookBase {
     }
     
     private void registerChapters() {
-        chapterContents = new BookChapter(this, "contents", 1);
+        chapterContents = new BookChapter(this, "contents", 0);
         chapterIntroduction = new BookChapter(this, "introduction", 2);
         chapterArmourer = new BookChapter(this, "armourer", 2);
         chapterEquipmentTemplates = new BookChapter(this, "equipmentTemplates", 1);
         chapterPaintingTools = new BookChapter(this, "paintingTools", 4);
         chapterEquipmentWardrobe = new  BookChapter(this, "equipmentWardrobe", 2);
         chapterRecipes = new  BookChapter(this, "recipes", 0);
+        
+        chapterContents.addPage(new BookPageContents(this));
         
         //Blocks
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourerBrain));
@@ -54,7 +56,7 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourNoiseTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourPicker));
         chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.soap)));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.wandOfStyle)));
+        //chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.wandOfStyle)));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.hueTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.guideBook)));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.mannequinTool));
