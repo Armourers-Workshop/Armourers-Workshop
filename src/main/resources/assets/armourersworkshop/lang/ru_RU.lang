@@ -1,309 +1,309 @@
 # Block names
-tile.armourersworkshop:armourerBrain.name=Оружейник
-tile.armourersworkshop:miniArmourer.name=Мини-Оружейник - (В Разработке)
-tile.armourersworkshop:armourLibrary0.name=Библиотека Снаряжений
-tile.armourersworkshop:armourLibrary1.name=Оборудованная Библиотека - (Творческий Режим)
-tile.armourersworkshop:colourable.name=Куб Снаряжений
-tile.armourersworkshop:colourableGlowing.name=Куб Снаряжений (Светящийся)
-tile.armourersworkshop:colourableGlass.name=Стеклянный Куб Снаряжений
-tile.armourersworkshop:colourableGlassGlowing.name=Стеклянный Куб Снаряжений (Светящийся)
-tile.armourersworkshop:colourMixer.name=Миксер Цветов
-tile.armourersworkshop:mannequin.name=Манекен
-tile.armourersworkshop:doll.name=Кукла
-tile.armourersworkshop:skinningTable.name=Стол Скинов
-tile.armourersworkshop:dyeTable.name=Красящий Стол
-tile.armourersworkshop:skinnable.name=Скин-Блок
+tile.armourersworkshop:armourerBrain.name=РћСЂСѓР¶РµР№РЅРёРє
+tile.armourersworkshop:miniArmourer.name=РњРёРЅРё-РћСЂСѓР¶РµР№РЅРёРє - (Р’ Р Р°Р·СЂР°Р±РѕС‚РєРµ)
+tile.armourersworkshop:armourLibrary0.name=Р‘РёР±Р»РёРѕС‚РµРєР° РЎРЅР°СЂСЏР¶РµРЅРёР№
+tile.armourersworkshop:armourLibrary1.name=РћР±РѕСЂСѓРґРѕРІР°РЅРЅР°СЏ Р‘РёР±Р»РёРѕС‚РµРєР° - (РўРІРѕСЂС‡РµСЃРєРёР№ Р РµР¶РёРј)
+tile.armourersworkshop:colourable.name=РљСѓР± РЎРЅР°СЂСЏР¶РµРЅРёР№
+tile.armourersworkshop:colourableGlowing.name=РљСѓР± РЎРЅР°СЂСЏР¶РµРЅРёР№ (РЎРІРµС‚СЏС‰РёР№СЃСЏ)
+tile.armourersworkshop:colourableGlass.name=РЎС‚РµРєР»СЏРЅРЅС‹Р№ РљСѓР± РЎРЅР°СЂСЏР¶РµРЅРёР№
+tile.armourersworkshop:colourableGlassGlowing.name=РЎС‚РµРєР»СЏРЅРЅС‹Р№ РљСѓР± РЎРЅР°СЂСЏР¶РµРЅРёР№ (РЎРІРµС‚СЏС‰РёР№СЃСЏ)
+tile.armourersworkshop:colourMixer.name=РњРёРєСЃРµСЂ Р¦РІРµС‚РѕРІ
+tile.armourersworkshop:mannequin.name=РњР°РЅРµРєРµРЅ
+tile.armourersworkshop:doll.name=РљСѓРєР»Р°
+tile.armourersworkshop:skinningTable.name=РЎС‚РѕР» РЎРєРёРЅРѕРІ
+tile.armourersworkshop:dyeTable.name=РљСЂР°СЃСЏС‰РёР№ РЎС‚РѕР»
+tile.armourersworkshop:skinnable.name=РЎРєРёРЅ-Р‘Р»РѕРє
 
 # Block flavour text
-tile.armourersworkshop:armourerBrain.flavour=Позволяет Создавать Оборудованные Скины.
-tile.armourersworkshop:miniArmourer.flavour=Незавершенно.
-tile.armourersworkshop:armourLibrary0.flavour=Сохранить и загрузить Шаблон Снаряжений с диска.
-tile.armourersworkshop:armourLibrary1.flavour=Сохранить и загрузить Шаблон Снаряжений с диска.%nТолько Творческий Режим.
-tile.armourersworkshop:colourable.flavour=Основной Строительный Блок для Пользовательских Снаряжений.%n(Можно Красить)
-tile.armourersworkshop:colourableGlowing.flavour=Куб Снаряжений Светится в Темноте!%n(Можно Красить)
-tile.armourersworkshop:colourableGlass.flavour=Прозрачный Куб Снаряжений.%n(Можно Красить)
-tile.armourersworkshop:colourableGlassGlowing.flavour=Прозрачный Куб Снаряжений Светится!%n(Можно Красить)
-tile.armourersworkshop:colourMixer.flavour=Смешивает Цвета,Чтобы Красить Ваши Снаряжения с.%nКрасться + Правый Клик Мыши с Инструментом,Чтобы Быстро Рисовать.
-tile.armourersworkshop:mannequin.flavour=Показывает Ваши Снаряжения С Жуткими Манекенами!%nПравый Клик Мыши с Именным Тегом для Установки Скина.
-tile.armourersworkshop:doll.flavour=Мини-Манекен!
-tile.armourersworkshop:skinningTable.flavour=Наносит и Удаляет Скины с Предметов.
+tile.armourersworkshop:armourerBrain.flavour=РџРѕР·РІРѕР»СЏРµС‚ РЎРѕР·РґР°РІР°С‚СЊ РћР±РѕСЂСѓРґРѕРІР°РЅРЅС‹Рµ РЎРєРёРЅС‹.
+tile.armourersworkshop:miniArmourer.flavour=РќРµР·Р°РІРµСЂС€РµРЅРЅРѕ.
+tile.armourersworkshop:armourLibrary0.flavour=РЎРѕС…СЂР°РЅРёС‚СЊ Рё Р·Р°РіСЂСѓР·РёС‚СЊ РЁР°Р±Р»РѕРЅ РЎРЅР°СЂСЏР¶РµРЅРёР№ СЃ РґРёСЃРєР°.
+tile.armourersworkshop:armourLibrary1.flavour=РЎРѕС…СЂР°РЅРёС‚СЊ Рё Р·Р°РіСЂСѓР·РёС‚СЊ РЁР°Р±Р»РѕРЅ РЎРЅР°СЂСЏР¶РµРЅРёР№ СЃ РґРёСЃРєР°.%nРўРѕР»СЊРєРѕ РўРІРѕСЂС‡РµСЃРєРёР№ Р РµР¶РёРј.
+tile.armourersworkshop:colourable.flavour=РћСЃРЅРѕРІРЅРѕР№ РЎС‚СЂРѕРёС‚РµР»СЊРЅС‹Р№ Р‘Р»РѕРє РґР»СЏ РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… РЎРЅР°СЂСЏР¶РµРЅРёР№.%n(РњРѕР¶РЅРѕ РљСЂР°СЃРёС‚СЊ)
+tile.armourersworkshop:colourableGlowing.flavour=РљСѓР± РЎРЅР°СЂСЏР¶РµРЅРёР№ РЎРІРµС‚РёС‚СЃСЏ РІ РўРµРјРЅРѕС‚Рµ!%n(РњРѕР¶РЅРѕ РљСЂР°СЃРёС‚СЊ)
+tile.armourersworkshop:colourableGlass.flavour=РџСЂРѕР·СЂР°С‡РЅС‹Р№ РљСѓР± РЎРЅР°СЂСЏР¶РµРЅРёР№.%n(РњРѕР¶РЅРѕ РљСЂР°СЃРёС‚СЊ)
+tile.armourersworkshop:colourableGlassGlowing.flavour=РџСЂРѕР·СЂР°С‡РЅС‹Р№ РљСѓР± РЎРЅР°СЂСЏР¶РµРЅРёР№ РЎРІРµС‚РёС‚СЃСЏ!%n(РњРѕР¶РЅРѕ РљСЂР°СЃРёС‚СЊ)
+tile.armourersworkshop:colourMixer.flavour=РЎРјРµС€РёРІР°РµС‚ Р¦РІРµС‚Р°,Р§С‚РѕР±С‹ РљСЂР°СЃРёС‚СЊ Р’Р°С€Рё РЎРЅР°СЂСЏР¶РµРЅРёСЏ СЃ.%nРљСЂР°СЃС‚СЊСЃСЏ + РџСЂР°РІС‹Р№ РљР»РёРє РњС‹С€Рё СЃ РРЅСЃС‚СЂСѓРјРµРЅС‚РѕРј,Р§С‚РѕР±С‹ Р‘С‹СЃС‚СЂРѕ Р РёСЃРѕРІР°С‚СЊ.
+tile.armourersworkshop:mannequin.flavour=РџРѕРєР°Р·С‹РІР°РµС‚ Р’Р°С€Рё РЎРЅР°СЂСЏР¶РµРЅРёСЏ РЎ Р–СѓС‚РєРёРјРё РњР°РЅРµРєРµРЅР°РјРё!%nРџСЂР°РІС‹Р№ РљР»РёРє РњС‹С€Рё СЃ РРјРµРЅРЅС‹Рј РўРµРіРѕРј РґР»СЏ РЈСЃС‚Р°РЅРѕРІРєРё РЎРєРёРЅР°.
+tile.armourersworkshop:doll.flavour=РњРёРЅРё-РњР°РЅРµРєРµРЅ!
+tile.armourersworkshop:skinningTable.flavour=РќР°РЅРѕСЃРёС‚ Рё РЈРґР°Р»СЏРµС‚ РЎРєРёРЅС‹ СЃ РџСЂРµРґРјРµС‚РѕРІ.
 
 # Item names
-item.armourersworkshop:equipmentSkinTemplate.0.name=Шаблон Снаряжения Скина
-item.armourersworkshop:equipmentSkinTemplate.1000.name=Мешков Подарков
-item.armourersworkshop:equipmentSkin.name=Снаряжение Скина
-item.armourersworkshop:paintbrush.name=Кисть
-item.armourersworkshop:paintRoller.name=Валик
-item.armourersworkshop:colourPicker.name=Инструмент "Пипетка"
-item.armourersworkshop:burnTool.name=Инструмент "Затемнитель"
-item.armourersworkshop:dodgeTool.name=Инструмент "Осветлитель"
-item.armourersworkshop:colourNoiseTool.name=Инструмент "Цветовой Шум"
-item.armourersworkshop:shadeNoiseTool.name=Инструмент "Теневой Шум"
-item.armourersworkshop:mannequinTool.name=Инструмент "Манекен"
-item.armourersworkshop:guideBook.name=Руководство
-item.armourersworkshop:armourContainer.name=Контейнер Доспехов
-item.armourersworkshop:armourContainerHead.name=Контейнер Шлема
-item.armourersworkshop:armourContainerChest.name=Контейнер Нагрудника
-item.armourersworkshop:armourContainerLegs.name=Контейнер Понож
-item.armourersworkshop:armourContainerFeet.name=Контейнер Ботинков
-item.armourersworkshop:wandOfStyle.name=Волшебная Палочка Стиля
-item.armourersworkshop:soap.name=Мыло
-item.armourersworkshop:hueTool.name=Инструмент "Тон"
-item.armourersworkshop:blockMarker.name=Блок-Маркер
-item.armourersworkshop:dyeBottle.name=Красящая Бутылка
-item.armourersworkshop:blendingTool.name=Инструмент "Смешиватель"
-item.armourersworkshop:armourersHammer.name=Оружейный Молоток
+item.armourersworkshop:equipmentSkinTemplate.0.name=РЁР°Р±Р»РѕРЅ РЎРЅР°СЂСЏР¶РµРЅРёСЏ РЎРєРёРЅР°
+item.armourersworkshop:equipmentSkinTemplate.1000.name=РњРµС€РєРѕРІ РџРѕРґР°СЂРєРѕРІ
+item.armourersworkshop:equipmentSkin.name=РЎРЅР°СЂСЏР¶РµРЅРёРµ РЎРєРёРЅР°
+item.armourersworkshop:paintbrush.name=РљРёСЃС‚СЊ
+item.armourersworkshop:paintRoller.name=Р’Р°Р»РёРє
+item.armourersworkshop:colourPicker.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РџРёРїРµС‚РєР°"
+item.armourersworkshop:burnTool.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "Р—Р°С‚РµРјРЅРёС‚РµР»СЊ"
+item.armourersworkshop:dodgeTool.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РћСЃРІРµС‚Р»РёС‚РµР»СЊ"
+item.armourersworkshop:colourNoiseTool.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "Р¦РІРµС‚РѕРІРѕР№ РЁСѓРј"
+item.armourersworkshop:shadeNoiseTool.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РўРµРЅРµРІРѕР№ РЁСѓРј"
+item.armourersworkshop:mannequinTool.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РњР°РЅРµРєРµРЅ"
+item.armourersworkshop:guideBook.name=Р СѓРєРѕРІРѕРґСЃС‚РІРѕ
+item.armourersworkshop:armourContainer.name=РљРѕРЅС‚РµР№РЅРµСЂ Р”РѕСЃРїРµС…РѕРІ
+item.armourersworkshop:armourContainerHead.name=РљРѕРЅС‚РµР№РЅРµСЂ РЁР»РµРјР°
+item.armourersworkshop:armourContainerChest.name=РљРѕРЅС‚РµР№РЅРµСЂ РќР°РіСЂСѓРґРЅРёРєР°
+item.armourersworkshop:armourContainerLegs.name=РљРѕРЅС‚РµР№РЅРµСЂ РџРѕРЅРѕР¶
+item.armourersworkshop:armourContainerFeet.name=РљРѕРЅС‚РµР№РЅРµСЂ Р‘РѕС‚РёРЅРєРѕРІ
+item.armourersworkshop:wandOfStyle.name=Р’РѕР»С€РµР±РЅР°СЏ РџР°Р»РѕС‡РєР° РЎС‚РёР»СЏ
+item.armourersworkshop:soap.name=РњС‹Р»Рѕ
+item.armourersworkshop:hueTool.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РўРѕРЅ"
+item.armourersworkshop:blockMarker.name=Р‘Р»РѕРє-РњР°СЂРєРµСЂ
+item.armourersworkshop:dyeBottle.name=РљСЂР°СЃСЏС‰Р°СЏ Р‘СѓС‚С‹Р»РєР°
+item.armourersworkshop:blendingTool.name=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РЎРјРµС€РёРІР°С‚РµР»СЊ"
+item.armourersworkshop:armourersHammer.name=РћСЂСѓР¶РµР№РЅС‹Р№ РњРѕР»РѕС‚РѕРє
 
 # Item flavour text
-item.armourersworkshop:equipmentSkinTemplate.1000.flavour=Подарок от RiskyKen
-item.armourersworkshop:paintbrush.flavour=Красит Один Блок.
-item.armourersworkshop:paintRoller.flavour=Красит Блоки на Большой Области.
-item.armourersworkshop:colourPicker.flavour=Используется для Копирования Цвета Блоков.
-item.armourersworkshop:burnTool.flavour=Делает Блок Темнее.
-item.armourersworkshop:dodgeTool.flavour=Делает Блоки Светлее.
-item.armourersworkshop:colourNoiseTool.flavour=Применяет Случайный Цветовой Шум на Блоке.
-item.armourersworkshop:shadeNoiseTool.flavour=Применяет Случайные Тени На Блоке.
-item.armourersworkshop:mannequinTool.flavour=Сохраняет и Загружает Повороты Манекена.%nПравый Клик Мыши,Чтобы Применить Настройки.%nКрасться + Правый Клик Мыши,Чтобы Сохранить Настройки.
-item.armourersworkshop:guideBook.flavour=Твой учебник по Armourer's Workshop.
-item.armourersworkshop:armourContainer.flavour=Предмет Только для Творческого Режима,для Разработчиков Карт.%nПозволяет Размещать Скины Брони на NPC's.%nИспользуется в Столе Скинов,Чтобы Применять Скины.
-item.armourersworkshop:soap.flavour=Используется в Столе Скинов для Очистки Вещей от Скинов.
-item.armourersworkshop:hueTool.flavour=Изменяет Цвет Блоков%nНе Затрагивает Тени.
-item.armourersworkshop:blockMarker.flavour=Создает Маркер на Кубе Снаряжения.%nИспользовать Только со Скинами,Которые Нуждаются в Маркер-Блоках.
-item.armourersworkshop:dyeBottle.flavour=Используется в Красящем Столе для Окраски Скина.
-item.armourersworkshop:armourersHammer.flavour=Используется для Вращения Блоков.
+item.armourersworkshop:equipmentSkinTemplate.1000.flavour=РџРѕРґР°СЂРѕРє РѕС‚ RiskyKen
+item.armourersworkshop:paintbrush.flavour=РљСЂР°СЃРёС‚ РћРґРёРЅ Р‘Р»РѕРє.
+item.armourersworkshop:paintRoller.flavour=РљСЂР°СЃРёС‚ Р‘Р»РѕРєРё РЅР° Р‘РѕР»СЊС€РѕР№ РћР±Р»Р°СЃС‚Рё.
+item.armourersworkshop:colourPicker.flavour=РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РљРѕРїРёСЂРѕРІР°РЅРёСЏ Р¦РІРµС‚Р° Р‘Р»РѕРєРѕРІ.
+item.armourersworkshop:burnTool.flavour=Р”РµР»Р°РµС‚ Р‘Р»РѕРє РўРµРјРЅРµРµ.
+item.armourersworkshop:dodgeTool.flavour=Р”РµР»Р°РµС‚ Р‘Р»РѕРєРё РЎРІРµС‚Р»РµРµ.
+item.armourersworkshop:colourNoiseTool.flavour=РџСЂРёРјРµРЅСЏРµС‚ РЎР»СѓС‡Р°Р№РЅС‹Р№ Р¦РІРµС‚РѕРІРѕР№ РЁСѓРј РЅР° Р‘Р»РѕРєРµ.
+item.armourersworkshop:shadeNoiseTool.flavour=РџСЂРёРјРµРЅСЏРµС‚ РЎР»СѓС‡Р°Р№РЅС‹Рµ РўРµРЅРё РќР° Р‘Р»РѕРєРµ.
+item.armourersworkshop:mannequinTool.flavour=РЎРѕС…СЂР°РЅСЏРµС‚ Рё Р—Р°РіСЂСѓР¶Р°РµС‚ РџРѕРІРѕСЂРѕС‚С‹ РњР°РЅРµРєРµРЅР°.%nРџСЂР°РІС‹Р№ РљР»РёРє РњС‹С€Рё,Р§С‚РѕР±С‹ РџСЂРёРјРµРЅРёС‚СЊ РќР°СЃС‚СЂРѕР№РєРё.%nРљСЂР°СЃС‚СЊСЃСЏ + РџСЂР°РІС‹Р№ РљР»РёРє РњС‹С€Рё,Р§С‚РѕР±С‹ РЎРѕС…СЂР°РЅРёС‚СЊ РќР°СЃС‚СЂРѕР№РєРё.
+item.armourersworkshop:guideBook.flavour=РўРІРѕР№ СѓС‡РµР±РЅРёРє РїРѕ Armourer's Workshop.
+item.armourersworkshop:armourContainer.flavour=РџСЂРµРґРјРµС‚ РўРѕР»СЊРєРѕ РґР»СЏ РўРІРѕСЂС‡РµСЃРєРѕРіРѕ Р РµР¶РёРјР°,РґР»СЏ Р Р°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ РљР°СЂС‚.%nРџРѕР·РІРѕР»СЏРµС‚ Р Р°Р·РјРµС‰Р°С‚СЊ РЎРєРёРЅС‹ Р‘СЂРѕРЅРё РЅР° NPC's.%nРСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РЎС‚РѕР»Рµ РЎРєРёРЅРѕРІ,Р§С‚РѕР±С‹ РџСЂРёРјРµРЅСЏС‚СЊ РЎРєРёРЅС‹.
+item.armourersworkshop:soap.flavour=РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РЎС‚РѕР»Рµ РЎРєРёРЅРѕРІ РґР»СЏ РћС‡РёСЃС‚РєРё Р’РµС‰РµР№ РѕС‚ РЎРєРёРЅРѕРІ.
+item.armourersworkshop:hueTool.flavour=РР·РјРµРЅСЏРµС‚ Р¦РІРµС‚ Р‘Р»РѕРєРѕРІ%nРќРµ Р—Р°С‚СЂР°РіРёРІР°РµС‚ РўРµРЅРё.
+item.armourersworkshop:blockMarker.flavour=РЎРѕР·РґР°РµС‚ РњР°СЂРєРµСЂ РЅР° РљСѓР±Рµ РЎРЅР°СЂСЏР¶РµРЅРёСЏ.%nРСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РўРѕР»СЊРєРѕ СЃРѕ РЎРєРёРЅР°РјРё,РљРѕС‚РѕСЂС‹Рµ РќСѓР¶РґР°СЋС‚СЃСЏ РІ РњР°СЂРєРµСЂ-Р‘Р»РѕРєР°С….
+item.armourersworkshop:dyeBottle.flavour=РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РљСЂР°СЃСЏС‰РµРј РЎС‚РѕР»Рµ РґР»СЏ РћРєСЂР°СЃРєРё РЎРєРёРЅР°.
+item.armourersworkshop:armourersHammer.flavour=РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ Р’СЂР°С‰РµРЅРёСЏ Р‘Р»РѕРєРѕРІ.
 
 # Rollover Text
-item.armourersworkshop:rollover.intensity=&6Интенсивность:&7 %s
-item.armourersworkshop:rollover.colour=&6Цвет:&7 %s
+item.armourersworkshop:rollover.intensity=&6РРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ:&7 %s
+item.armourersworkshop:rollover.colour=&6Р¦РІРµС‚:&7 %s
 item.armourersworkshop:rollover.hex=&6Hex:&7 %s
-item.armourersworkshop:rollover.paintType=&6Тип Краски:&7 %s
-item.armourersworkshop:rollover.radius=&6Радиус:&7 %d*%d*%d
-item.armourersworkshop:rollover.nopaint=&6Нет Краски.
-item.armourersworkshop:rollover.settingsSaved=&6Настройки Сохранены.
-item.armourersworkshop:rollover.noSettingsSaved=&cНастройки не Сохранены.
-item.armourersworkshop:rollover.user=&6Пользователь:&7 %s
-item.armourersworkshop:rollover.empty=&6Пусто.
-item.armourersworkshop:rollover.openSettings=Красться + Правый Клик Мыши,Чтобы Открыть Настройки.
+item.armourersworkshop:rollover.paintType=&6РўРёРї РљСЂР°СЃРєРё:&7 %s
+item.armourersworkshop:rollover.radius=&6Р Р°РґРёСѓСЃ:&7 %d*%d*%d
+item.armourersworkshop:rollover.nopaint=&6РќРµС‚ РљСЂР°СЃРєРё.
+item.armourersworkshop:rollover.settingsSaved=&6РќР°СЃС‚СЂРѕР№РєРё РЎРѕС…СЂР°РЅРµРЅС‹.
+item.armourersworkshop:rollover.noSettingsSaved=&cРќР°СЃС‚СЂРѕР№РєРё РЅРµ РЎРѕС…СЂР°РЅРµРЅС‹.
+item.armourersworkshop:rollover.user=&6РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ:&7 %s
+item.armourersworkshop:rollover.empty=&6РџСѓСЃС‚Рѕ.
+item.armourersworkshop:rollover.openSettings=РљСЂР°СЃС‚СЊСЃСЏ + РџСЂР°РІС‹Р№ РљР»РёРє РњС‹С€Рё,Р§С‚РѕР±С‹ РћС‚РєСЂС‹С‚СЊ РќР°СЃС‚СЂРѕР№РєРё.
 
-item.armourersworkshop:rollover.hasSkin=&6Armouerer's Workshop Скин
-item.armourersworkshop:rollover.skinName=&6Название:&7 %s
-item.armourersworkshop:rollover.skinAuthor=&6Автор:&7 %s
-item.armourersworkshop:rollover.skinType=&6Тип:&7 %s
-item.armourersworkshop:rollover.skinHoldShiftForInfo=Удерживайте &ashift&7 для Большей Информации.
-item.armourersworkshop:rollover.skinId=&eСкин Id:&7 %s
-item.armourersworkshop:rollover.skinTotalCubes=&eВсего Кубов:&7 %s
-item.armourersworkshop:rollover.skinNumCubes=&eКубы:&7 %s
-item.armourersworkshop:rollover.skinNumCubesGlowing=&eСветяшиеся Кубы:&7 %s
-item.armourersworkshop:rollover.skinNumCubesGlass=&eСтеклянные Кубы:&7 %s
-item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eСветящиеся Стеклянные Кубы:&7 %s
-item.armourersworkshop:rollover.skinPaintData=&eИмеются Сведения о Краске:&7 %s
-item.armourersworkshop:rollover.skinMarkerCount=&eКоличество Маркеров:&7 %d
-item.armourersworkshop:rollover.skinDyeCount=&eКоличество Красителей:&7 %d/8
-item.armourersworkshop:rollover.skindownloading=Загрузка Скина ID: %d
-item.armourersworkshop:rollover.skinOpenWardrobe=Нажмите &a%s&7 Ключ,Чтобы Открыть &aГардероб Снаряжения
-item.armourersworkshop:rollover.skinOldType=&cСтарый Тип Скина, Расположите в Крафтовой Сетке,Чтобы Обновить.
-item.armourersworkshop:rollover.skinInvalidItem=&cОшибка: Неверный Скин Снаряжения,Пожалуйста далите.
-item.armourersworkshop:rollover.skinIdError1=&cВнимание: Это Скин Использует Старый Формат Файла.
-item.armourersworkshop:rollover.skinIdError2=&cПожалуйста, сохраните и загрузите ее из библиотеки, чтобы исправить это.
-item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Старый ID: %s Новый ID: %s
+item.armourersworkshop:rollover.hasSkin=&6Armouerer's Workshop РЎРєРёРЅ
+item.armourersworkshop:rollover.skinName=&6РќР°Р·РІР°РЅРёРµ:&7 %s
+item.armourersworkshop:rollover.skinAuthor=&6РђРІС‚РѕСЂ:&7 %s
+item.armourersworkshop:rollover.skinType=&6РўРёРї:&7 %s
+item.armourersworkshop:rollover.skinHoldShiftForInfo=РЈРґРµСЂР¶РёРІР°Р№С‚Рµ &ashift&7 РґР»СЏ Р‘РѕР»СЊС€РµР№ РРЅС„РѕСЂРјР°С†РёРё.
+item.armourersworkshop:rollover.skinId=&eРЎРєРёРЅ Id:&7 %s
+item.armourersworkshop:rollover.skinTotalCubes=&eР’СЃРµРіРѕ РљСѓР±РѕРІ:&7 %s
+item.armourersworkshop:rollover.skinNumCubes=&eРљСѓР±С‹:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlowing=&eРЎРІРµС‚СЏС€РёРµСЃСЏ РљСѓР±С‹:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlass=&eРЎС‚РµРєР»СЏРЅРЅС‹Рµ РљСѓР±С‹:&7 %s
+item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eРЎРІРµС‚СЏС‰РёРµСЃСЏ РЎС‚РµРєР»СЏРЅРЅС‹Рµ РљСѓР±С‹:&7 %s
+item.armourersworkshop:rollover.skinPaintData=&eРРјРµСЋС‚СЃСЏ РЎРІРµРґРµРЅРёСЏ Рѕ РљСЂР°СЃРєРµ:&7 %s
+item.armourersworkshop:rollover.skinMarkerCount=&eРљРѕР»РёС‡РµСЃС‚РІРѕ РњР°СЂРєРµСЂРѕРІ:&7 %d
+item.armourersworkshop:rollover.skinDyeCount=&eРљРѕР»РёС‡РµСЃС‚РІРѕ РљСЂР°СЃРёС‚РµР»РµР№:&7 %d/8
+item.armourersworkshop:rollover.skindownloading=Р—Р°РіСЂСѓР·РєР° РЎРєРёРЅР° ID: %d
+item.armourersworkshop:rollover.skinOpenWardrobe=РќР°Р¶РјРёС‚Рµ &a%s&7 РљР»СЋС‡,Р§С‚РѕР±С‹ РћС‚РєСЂС‹С‚СЊ &aР“Р°СЂРґРµСЂРѕР± РЎРЅР°СЂСЏР¶РµРЅРёСЏ
+item.armourersworkshop:rollover.skinOldType=&cРЎС‚Р°СЂС‹Р№ РўРёРї РЎРєРёРЅР°, Р Р°СЃРїРѕР»РѕР¶РёС‚Рµ РІ РљСЂР°С„С‚РѕРІРѕР№ РЎРµС‚РєРµ,Р§С‚РѕР±С‹ РћР±РЅРѕРІРёС‚СЊ.
+item.armourersworkshop:rollover.skinInvalidItem=&cРћС€РёР±РєР°: РќРµРІРµСЂРЅС‹Р№ РЎРєРёРЅ РЎРЅР°СЂСЏР¶РµРЅРёСЏ,РџРѕР¶Р°Р»СѓР№СЃС‚Р° РґР°Р»РёС‚Рµ.
+item.armourersworkshop:rollover.skinIdError1=&cР’РЅРёРјР°РЅРёРµ: Р­С‚Рѕ РЎРєРёРЅ РСЃРїРѕР»СЊР·СѓРµС‚ РЎС‚Р°СЂС‹Р№ Р¤РѕСЂРјР°С‚ Р¤Р°Р№Р»Р°.
+item.armourersworkshop:rollover.skinIdError2=&cРџРѕР¶Р°Р»СѓР№СЃС‚Р°, СЃРѕС…СЂР°РЅРёС‚Рµ Рё Р·Р°РіСЂСѓР·РёС‚Рµ РµРµ РёР· Р±РёР±Р»РёРѕС‚РµРєРё, С‡С‚РѕР±С‹ РёСЃРїСЂР°РІРёС‚СЊ СЌС‚Рѕ.
+item.armourersworkshop:rollover.skinIdError3=&cDEBUG - РЎС‚Р°СЂС‹Р№ ID: %s РќРѕРІС‹Р№ ID: %s
 
 # Tool Options
-tooloption.armourersworkshop:fullBlockMode=Режим Полного Блока
-tooloption.armourersworkshop:changeHue=Изменить Тон
-tooloption.armourersworkshop:changeSaturation=Изменить Насыщенность
-tooloption.armourersworkshop:changeBrightness=Изменить Яркость
-tooloption.armourersworkshop:changePaintType=Изменить Тип Краски
-tooloption.armourersworkshop:intensity=Интенсивность
-tooloption.armourersworkshop:radius=Радиус
+tooloption.armourersworkshop:fullBlockMode=Р РµР¶РёРј РџРѕР»РЅРѕРіРѕ Р‘Р»РѕРєР°
+tooloption.armourersworkshop:changeHue=РР·РјРµРЅРёС‚СЊ РўРѕРЅ
+tooloption.armourersworkshop:changeSaturation=РР·РјРµРЅРёС‚СЊ РќР°СЃС‹С‰РµРЅРЅРѕСЃС‚СЊ
+tooloption.armourersworkshop:changeBrightness=РР·РјРµРЅРёС‚СЊ РЇСЂРєРѕСЃС‚СЊ
+tooloption.armourersworkshop:changePaintType=РР·РјРµРЅРёС‚СЊ РўРёРї РљСЂР°СЃРєРё
+tooloption.armourersworkshop:intensity=РРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ
+tooloption.armourersworkshop:radius=Р Р°РґРёСѓСЃ
 
 # Paint Types
-paintType.armourersworkshop:normal.name=Нормальный
-paintType.armourersworkshop:dye_1.name=Краситель 1
-paintType.armourersworkshop:dye_2.name=Краситель 2
-paintType.armourersworkshop:dye_3.name=Краситель 3
-paintType.armourersworkshop:dye_4.name=Краситель 4
-paintType.armourersworkshop:dye_5.name=Краситель 5
-paintType.armourersworkshop:dye_6.name=Краситель 6
-paintType.armourersworkshop:dye_7.name=Краситель 7
-paintType.armourersworkshop:dye_8.name=Краситель 8
-paintType.armourersworkshop:none.name=Нет
-paintType.armourersworkshop:skin.name=Кожа
-paintType.armourersworkshop:hair.name=Волосы
+paintType.armourersworkshop:normal.name=РќРѕСЂРјР°Р»СЊРЅС‹Р№
+paintType.armourersworkshop:dye_1.name=РљСЂР°СЃРёС‚РµР»СЊ 1
+paintType.armourersworkshop:dye_2.name=РљСЂР°СЃРёС‚РµР»СЊ 2
+paintType.armourersworkshop:dye_3.name=РљСЂР°СЃРёС‚РµР»СЊ 3
+paintType.armourersworkshop:dye_4.name=РљСЂР°СЃРёС‚РµР»СЊ 4
+paintType.armourersworkshop:dye_5.name=РљСЂР°СЃРёС‚РµР»СЊ 5
+paintType.armourersworkshop:dye_6.name=РљСЂР°СЃРёС‚РµР»СЊ 6
+paintType.armourersworkshop:dye_7.name=РљСЂР°СЃРёС‚РµР»СЊ 7
+paintType.armourersworkshop:dye_8.name=РљСЂР°СЃРёС‚РµР»СЊ 8
+paintType.armourersworkshop:none.name=РќРµС‚
+paintType.armourersworkshop:skin.name=РљРѕР¶Р°
+paintType.armourersworkshop:hair.name=Р’РѕР»РѕСЃС‹
 
 # Colour Families
-colourFamily.armourersworkshop:wool.name=Шерсть
+colourFamily.armourersworkshop:wool.name=РЁРµСЂСЃС‚СЊ
 colourFamily.armourersworkshop:minecraft.name=Minecraft
-colourFamily.armourersworkshop:pastel.name=Пастель
+colourFamily.armourersworkshop:pastel.name=РџР°СЃС‚РµР»СЊ
 
 # Skin Types
-skinType.armourers:head.name=Голова
-skinType.armourers:chest.name=Туловище
-skinType.armourers:legs.name=Ноги
-skinType.armourers:skirt.name=Юбка
-skinType.armourers:feet.name=Стопы
-skinType.armourers:sword.name=Меч
-skinType.armourers:bow.name=Лук
-skinType.armourers:arrow.name=Стрела
-skinType.armourers:block.name=Блок
-skinType.armourers:multiblock.name=МультиБлок
-skinType.armourers:wings.name=Крылья
+skinType.armourers:head.name=Р“РѕР»РѕРІР°
+skinType.armourers:chest.name=РўСѓР»РѕРІРёС‰Рµ
+skinType.armourers:legs.name=РќРѕРіРё
+skinType.armourers:skirt.name=Р®Р±РєР°
+skinType.armourers:feet.name=РЎС‚РѕРїС‹
+skinType.armourers:sword.name=РњРµС‡
+skinType.armourers:bow.name=Р›СѓРє
+skinType.armourers:arrow.name=РЎС‚СЂРµР»Р°
+skinType.armourers:block.name=Р‘Р»РѕРє
+skinType.armourers:multiblock.name=РњСѓР»СЊС‚РёР‘Р»РѕРє
+skinType.armourers:wings.name=РљСЂС‹Р»СЊСЏ
 
 # Skin Part Types
-skinPartType.armourers:head.base.name=База
-skinPartType.armourers:chest.base.name=Торс
-skinPartType.armourers:chest.leftArm.name=Левая Рука
-skinPartType.armourers:chest.rightArm.name=Правая Рука
-skinPartType.armourers:legs.leftLeg.name=Левая Нога
-skinPartType.armourers:legs.rightLeg.name=Правая Нога
-skinPartType.armourers:legs.skirt.name=Юбка
-skinPartType.armourers:skirt.base.name=База
-skinPartType.armourers:feet.leftFoot.name=Левая Стопа
-skinPartType.armourers:feet.rightFoot.name=Правая Стопа
-skinPartType.armourers:sword.base.name=База
-skinPartType.armourers:bow.frame1.name=Рама 1
-skinPartType.armourers:bow.frame2.name=Рама 2
-skinPartType.armourers:bow.frame3.name=Рама 3
-skinPartType.armourers:arrow.base.name=База
-skinPartType.armourers:block.base.name=База
+skinPartType.armourers:head.base.name=Р‘Р°Р·Р°
+skinPartType.armourers:chest.base.name=РўРѕСЂСЃ
+skinPartType.armourers:chest.leftArm.name=Р›РµРІР°СЏ Р СѓРєР°
+skinPartType.armourers:chest.rightArm.name=РџСЂР°РІР°СЏ Р СѓРєР°
+skinPartType.armourers:legs.leftLeg.name=Р›РµРІР°СЏ РќРѕРіР°
+skinPartType.armourers:legs.rightLeg.name=РџСЂР°РІР°СЏ РќРѕРіР°
+skinPartType.armourers:legs.skirt.name=Р®Р±РєР°
+skinPartType.armourers:skirt.base.name=Р‘Р°Р·Р°
+skinPartType.armourers:feet.leftFoot.name=Р›РµРІР°СЏ РЎС‚РѕРїР°
+skinPartType.armourers:feet.rightFoot.name=РџСЂР°РІР°СЏ РЎС‚РѕРїР°
+skinPartType.armourers:sword.base.name=Р‘Р°Р·Р°
+skinPartType.armourers:bow.frame1.name=Р Р°РјР° 1
+skinPartType.armourers:bow.frame2.name=Р Р°РјР° 2
+skinPartType.armourers:bow.frame3.name=Р Р°РјР° 3
+skinPartType.armourers:arrow.base.name=Р‘Р°Р·Р°
+skinPartType.armourers:block.base.name=Р‘Р°Р·Р°
 
 # Inventory names
-inventory.armourersworkshop:colourMixer.name=Миксер Цветов
-inventory.armourersworkshop:armourerBrain.name=ОРужейник
-inventory.armourersworkshop:armourLibrary0.name=Библиотека Снаряжений
-inventory.armourersworkshop:armourLibrary1.name=Библиотека Снаряжений - (Творческий Режим)
-inventory.armourersworkshop:equipmentWardrobe.name=Гардероб Снаряжения
-inventory.armourersworkshop:mannequin.name=Манекен
-inventory.armourersworkshop:doll.name=Кукла
-inventory.armourersworkshop:miniArmourer.name=Мини-Оружейник - (В Разработке)
-inventory.armourersworkshop:entityEquipment.name=Сущность Снаряжения
-inventory.armourersworkshop:skinningTable.name=Стол Скинов
-inventory.armourersworkshop:dyeTable.name=Красящий Стол
+inventory.armourersworkshop:colourMixer.name=РњРёРєСЃРµСЂ Р¦РІРµС‚РѕРІ
+inventory.armourersworkshop:armourerBrain.name=РћР СѓР¶РµР№РЅРёРє
+inventory.armourersworkshop:armourLibrary0.name=Р‘РёР±Р»РёРѕС‚РµРєР° РЎРЅР°СЂСЏР¶РµРЅРёР№
+inventory.armourersworkshop:armourLibrary1.name=Р‘РёР±Р»РёРѕС‚РµРєР° РЎРЅР°СЂСЏР¶РµРЅРёР№ - (РўРІРѕСЂС‡РµСЃРєРёР№ Р РµР¶РёРј)
+inventory.armourersworkshop:equipmentWardrobe.name=Р“Р°СЂРґРµСЂРѕР± РЎРЅР°СЂСЏР¶РµРЅРёСЏ
+inventory.armourersworkshop:mannequin.name=РњР°РЅРµРєРµРЅ
+inventory.armourersworkshop:doll.name=РљСѓРєР»Р°
+inventory.armourersworkshop:miniArmourer.name=РњРёРЅРё-РћСЂСѓР¶РµР№РЅРёРє - (Р’ Р Р°Р·СЂР°Р±РѕС‚РєРµ)
+inventory.armourersworkshop:entityEquipment.name=РЎСѓС‰РЅРѕСЃС‚СЊ РЎРЅР°СЂСЏР¶РµРЅРёСЏ
+inventory.armourersworkshop:skinningTable.name=РЎС‚РѕР» РЎРєРёРЅРѕРІ
+inventory.armourersworkshop:dyeTable.name=РљСЂР°СЃСЏС‰РёР№ РЎС‚РѕР»
 
 # Inventory controls
-inventory.armourersworkshop:armourLibrary.label.search=Поиск:
-inventory.armourersworkshop:armourLibrary.label.filename=Имя Файла:
-inventory.armourersworkshop:armourLibrary.label.files=Файлы:
-inventory.armourersworkshop:armourLibrary.error.noFileName=&7Вы должны ввести имя файла,чтобы сохранить скин.
-inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7Вы должны выбрать скин из списка,чтобы загрузить его.
-inventory.armourersworkshop:armourLibrary.save=Сохранить
-inventory.armourersworkshop:armourLibrary.load=Загрузить
-inventory.armourersworkshop:armourLibrary.openFolder=Откройте папку...
-inventory.armourersworkshop:armourLibrary.rollover.localFiles=Просмотр файлов на этом компьютере.
-inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=Просмотр публичных файлов на сервере.
-inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=Просмотр приватных файлов на сервере.
-inventory.armourersworkshop:armourLibrary.rollover.notOnServer=Вы должны быть подключены к серверу,чтобы использовать эту функцию.
-inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Откройте папку Библиотека на компьютере.
-inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Удалить скин.
-inventory.armourersworkshop:armourLibrary.rollover.refresh=Обновите библиотеку файлов.
-inventory.armourersworkshop:armourLibrary.label.enterFileName=Введите имя файла.
-inventory.armourersworkshop:armourLibrary.label.typeToSearch=Тип поиска...
+inventory.armourersworkshop:armourLibrary.label.search=РџРѕРёСЃРє:
+inventory.armourersworkshop:armourLibrary.label.filename=РРјСЏ Р¤Р°Р№Р»Р°:
+inventory.armourersworkshop:armourLibrary.label.files=Р¤Р°Р№Р»С‹:
+inventory.armourersworkshop:armourLibrary.error.noFileName=&7Р’С‹ РґРѕР»Р¶РЅС‹ РІРІРµСЃС‚Рё РёРјСЏ С„Р°Р№Р»Р°,С‡С‚РѕР±С‹ СЃРѕС…СЂР°РЅРёС‚СЊ СЃРєРёРЅ.
+inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7Р’С‹ РґРѕР»Р¶РЅС‹ РІС‹Р±СЂР°С‚СЊ СЃРєРёРЅ РёР· СЃРїРёСЃРєР°,С‡С‚РѕР±С‹ Р·Р°РіСЂСѓР·РёС‚СЊ РµРіРѕ.
+inventory.armourersworkshop:armourLibrary.save=РЎРѕС…СЂР°РЅРёС‚СЊ
+inventory.armourersworkshop:armourLibrary.load=Р—Р°РіСЂСѓР·РёС‚СЊ
+inventory.armourersworkshop:armourLibrary.openFolder=РћС‚РєСЂРѕР№С‚Рµ РїР°РїРєСѓ...
+inventory.armourersworkshop:armourLibrary.rollover.localFiles=РџСЂРѕСЃРјРѕС‚СЂ С„Р°Р№Р»РѕРІ РЅР° СЌС‚РѕРј РєРѕРјРїСЊСЋС‚РµСЂРµ.
+inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=РџСЂРѕСЃРјРѕС‚СЂ РїСѓР±Р»РёС‡РЅС‹С… С„Р°Р№Р»РѕРІ РЅР° СЃРµСЂРІРµСЂРµ.
+inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=РџСЂРѕСЃРјРѕС‚СЂ РїСЂРёРІР°С‚РЅС‹С… С„Р°Р№Р»РѕРІ РЅР° СЃРµСЂРІРµСЂРµ.
+inventory.armourersworkshop:armourLibrary.rollover.notOnServer=Р’С‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РїРѕРґРєР»СЋС‡РµРЅС‹ Рє СЃРµСЂРІРµСЂСѓ,С‡С‚РѕР±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЌС‚Сѓ С„СѓРЅРєС†РёСЋ.
+inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=РћС‚РєСЂРѕР№С‚Рµ РїР°РїРєСѓ Р‘РёР±Р»РёРѕС‚РµРєР° РЅР° РєРѕРјРїСЊСЋС‚РµСЂРµ.
+inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=РЈРґР°Р»РёС‚СЊ СЃРєРёРЅ.
+inventory.armourersworkshop:armourLibrary.rollover.refresh=РћР±РЅРѕРІРёС‚Рµ Р±РёР±Р»РёРѕС‚РµРєСѓ С„Р°Р№Р»РѕРІ.
+inventory.armourersworkshop:armourLibrary.label.enterFileName=Р’РІРµРґРёС‚Рµ РёРјСЏ С„Р°Р№Р»Р°.
+inventory.armourersworkshop:armourLibrary.label.typeToSearch=РўРёРї РїРѕРёСЃРєР°...
 
-inventory.armourersworkshop:armourerBrain.label.itemName=Название Предмета:
-inventory.armourersworkshop:armourerBrain.label.username=Имя Пользователя:
-inventory.armourersworkshop:armourerBrain.label.clone=Клонировать:
-inventory.armourersworkshop:armourerBrain.showGuide=Показать руководство?
-inventory.armourersworkshop:armourerBrain.showOverlay=Показать Вверхний слой головы?
-inventory.armourersworkshop:armourerBrain.showHelper=Показать вспомогательную модель?
-inventory.armourersworkshop:armourerBrain.save=Сохранить
-inventory.armourersworkshop:armourerBrain.load=Загрузить
-inventory.armourersworkshop:armourerBrain.set=Установить
-inventory.armourersworkshop:armourerBrain.clear=Очистить
-inventory.armourersworkshop:armourerBrain.westToEast=С запада на восток
-inventory.armourersworkshop:armourerBrain.eastToWest=С востока на запад
+inventory.armourersworkshop:armourerBrain.label.itemName=РќР°Р·РІР°РЅРёРµ РџСЂРµРґРјРµС‚Р°:
+inventory.armourersworkshop:armourerBrain.label.username=РРјСЏ РџРѕР»СЊР·РѕРІР°С‚РµР»СЏ:
+inventory.armourersworkshop:armourerBrain.label.clone=РљР»РѕРЅРёСЂРѕРІР°С‚СЊ:
+inventory.armourersworkshop:armourerBrain.showGuide=РџРѕРєР°Р·Р°С‚СЊ СЂСѓРєРѕРІРѕРґСЃС‚РІРѕ?
+inventory.armourersworkshop:armourerBrain.showOverlay=РџРѕРєР°Р·Р°С‚СЊ Р’РІРµСЂС…РЅРёР№ СЃР»РѕР№ РіРѕР»РѕРІС‹?
+inventory.armourersworkshop:armourerBrain.showHelper=РџРѕРєР°Р·Р°С‚СЊ РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅСѓСЋ РјРѕРґРµР»СЊ?
+inventory.armourersworkshop:armourerBrain.save=РЎРѕС…СЂР°РЅРёС‚СЊ
+inventory.armourersworkshop:armourerBrain.load=Р—Р°РіСЂСѓР·РёС‚СЊ
+inventory.armourersworkshop:armourerBrain.set=РЈСЃС‚Р°РЅРѕРІРёС‚СЊ
+inventory.armourersworkshop:armourerBrain.clear=РћС‡РёСЃС‚РёС‚СЊ
+inventory.armourersworkshop:armourerBrain.westToEast=РЎ Р·Р°РїР°РґР° РЅР° РІРѕСЃС‚РѕРє
+inventory.armourersworkshop:armourerBrain.eastToWest=РЎ РІРѕСЃС‚РѕРєР° РЅР° Р·Р°РїР°Рґ
 
-inventory.armourersworkshop:colourMixer.label.hue=Тон
-inventory.armourersworkshop:colourMixer.label.saturation=Насыщенность
-inventory.armourersworkshop:colourMixer.label.brightness=Яркость
+inventory.armourersworkshop:colourMixer.label.hue=РўРѕРЅ
+inventory.armourersworkshop:colourMixer.label.saturation=РќР°СЃС‹С‰РµРЅРЅРѕСЃС‚СЊ
+inventory.armourersworkshop:colourMixer.label.brightness=РЇСЂРєРѕСЃС‚СЊ
 inventory.armourersworkshop:colourMixer.label.hex=Hex
-inventory.armourersworkshop:colourMixer.label.presets=Предварительные Настройки
-inventory.armourersworkshop:colourMixer.label.paintType=Тип Краски
+inventory.armourersworkshop:colourMixer.label.presets=РџСЂРµРґРІР°СЂРёС‚РµР»СЊРЅС‹Рµ РќР°СЃС‚СЂРѕР№РєРё
+inventory.armourersworkshop:colourMixer.label.paintType=РўРёРї РљСЂР°СЃРєРё
 
-inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Цвет Кожи
-inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Цвет Волос
-inventory.armourersworkshop:equipmentWardrobe.selectSkin=Подобрать Цвет Кожи
-inventory.armourersworkshop:equipmentWardrobe.autoSkin=Авто
-inventory.armourersworkshop:equipmentWardrobe.selectHair=Подобрать Цвет Волос
-inventory.armourersworkshop:equipmentWardrobe.autoHair=Авто
-inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Переопределить Скин
+inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Р¦РІРµС‚ РљРѕР¶Рё
+inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Р¦РІРµС‚ Р’РѕР»РѕСЃ
+inventory.armourersworkshop:equipmentWardrobe.selectSkin=РџРѕРґРѕР±СЂР°С‚СЊ Р¦РІРµС‚ РљРѕР¶Рё
+inventory.armourersworkshop:equipmentWardrobe.autoSkin=РђРІС‚Рѕ
+inventory.armourersworkshop:equipmentWardrobe.selectHair=РџРѕРґРѕР±СЂР°С‚СЊ Р¦РІРµС‚ Р’РѕР»РѕСЃ
+inventory.armourersworkshop:equipmentWardrobe.autoHair=РђРІС‚Рѕ
+inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=РџРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ РЎРєРёРЅ
 
-inventory.armourersworkshop:mannequin.label.headRotation=Поворот Головы
-inventory.armourersworkshop:mannequin.label.leftArmRotation=Поворот Левой Руки
-inventory.armourersworkshop:mannequin.label.rightArmRotation=Поворт Правой Руки
-inventory.armourersworkshop:mannequin.label.leftLegRotation=Поворот Левой Ноги
-inventory.armourersworkshop:mannequin.label.rightLegRotation=Поворот Правой Ноги
-inventory.armourersworkshop:mannequin.label.isChild=Детская Модель?
-inventory.armourersworkshop:mannequin.label.isExtraRenders=Дополнительный Рендеринг?
-inventory.armourersworkshop:mannequin.random=Случайный
-inventory.armourersworkshop:mannequin.reset=Сбросить
-inventory.armourersworkshop:mannequin.set=Установить
-inventory.armourersworkshop:mannequin.selectSkin=Выбрать Скин
-inventory.armourersworkshop:mannequin.selectHair=Выбрать Волосы
-inventory.armourersworkshop:mannequin.autoSkin=Авто Скин
-inventory.armourersworkshop:mannequin.autoHair=Авто Волосы
-inventory.armourersworkshop:mannequin.tab.inventory=Инвентарь
-inventory.armourersworkshop:mannequin.tab.rotations=Повороты
+inventory.armourersworkshop:mannequin.label.headRotation=РџРѕРІРѕСЂРѕС‚ Р“РѕР»РѕРІС‹
+inventory.armourersworkshop:mannequin.label.leftArmRotation=РџРѕРІРѕСЂРѕС‚ Р›РµРІРѕР№ Р СѓРєРё
+inventory.armourersworkshop:mannequin.label.rightArmRotation=РџРѕРІРѕСЂС‚ РџСЂР°РІРѕР№ Р СѓРєРё
+inventory.armourersworkshop:mannequin.label.leftLegRotation=РџРѕРІРѕСЂРѕС‚ Р›РµРІРѕР№ РќРѕРіРё
+inventory.armourersworkshop:mannequin.label.rightLegRotation=РџРѕРІРѕСЂРѕС‚ РџСЂР°РІРѕР№ РќРѕРіРё
+inventory.armourersworkshop:mannequin.label.isChild=Р”РµС‚СЃРєР°СЏ РњРѕРґРµР»СЊ?
+inventory.armourersworkshop:mannequin.label.isExtraRenders=Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ Р РµРЅРґРµСЂРёРЅРі?
+inventory.armourersworkshop:mannequin.random=РЎР»СѓС‡Р°Р№РЅС‹Р№
+inventory.armourersworkshop:mannequin.reset=РЎР±СЂРѕСЃРёС‚СЊ
+inventory.armourersworkshop:mannequin.set=РЈСЃС‚Р°РЅРѕРІРёС‚СЊ
+inventory.armourersworkshop:mannequin.selectSkin=Р’С‹Р±СЂР°С‚СЊ РЎРєРёРЅ
+inventory.armourersworkshop:mannequin.selectHair=Р’С‹Р±СЂР°С‚СЊ Р’РѕР»РѕСЃС‹
+inventory.armourersworkshop:mannequin.autoSkin=РђРІС‚Рѕ РЎРєРёРЅ
+inventory.armourersworkshop:mannequin.autoHair=РђРІС‚Рѕ Р’РѕР»РѕСЃС‹
+inventory.armourersworkshop:mannequin.tab.inventory=РРЅРІРµРЅС‚Р°СЂСЊ
+inventory.armourersworkshop:mannequin.tab.rotations=РџРѕРІРѕСЂРѕС‚С‹
 inventory.armourersworkshop:mannequin.tab.offset=Offset
-inventory.armourersworkshop:mannequin.tab.skinAndHair=Цвет Скина и Волос
-inventory.armourersworkshop:mannequin.tab.name=Название
-inventory.armourersworkshop:mannequin.tab.extraRenders=Дополнительный Рендеринг
+inventory.armourersworkshop:mannequin.tab.skinAndHair=Р¦РІРµС‚ РЎРєРёРЅР° Рё Р’РѕР»РѕСЃ
+inventory.armourersworkshop:mannequin.tab.name=РќР°Р·РІР°РЅРёРµ
+inventory.armourersworkshop:mannequin.tab.extraRenders=Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ Р РµРЅРґРµСЂРёРЅРі
 
-inventory.armourersworkshop:miniArmourer.save=Сохранить
-inventory.armourersworkshop:miniArmourer.load=Загрузить
+inventory.armourersworkshop:miniArmourer.save=РЎРѕС…СЂР°РЅРёС‚СЊ
+inventory.armourersworkshop:miniArmourer.load=Р—Р°РіСЂСѓР·РёС‚СЊ
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=Sneak right click the mini armourer to access the building interface.
 
 # Chat Messages
-chat.armourersworkshop:undo.outOfUndos=Отменений Больше Нет
-chat.armourersworkshop:undo.undoing=ОТмена
-chat.armourersworkshop:inventoryFull=Твой Инвентарь Полон
-chat.armourersworkshop:inventoryGiftFail=Кто-то Пытался Сделать Тебе Подарок,Но Тебе Некуда Было Девать Его!
-chat.armourersworkshop:updateAvailable=Armourer's Workshop Обновление %s Доступно.
-chat.armourersworkshop:updateDownload=[Скачать]
-chat.armourersworkshop:updateDownloadRollover=Нажмите,Чтобы Перейти на Страницу Загрузки
+chat.armourersworkshop:undo.outOfUndos=РћС‚РјРµРЅРµРЅРёР№ Р‘РѕР»СЊС€Рµ РќРµС‚
+chat.armourersworkshop:undo.undoing=РћРўРјРµРЅР°
+chat.armourersworkshop:inventoryFull=РўРІРѕР№ РРЅРІРµРЅС‚Р°СЂСЊ РџРѕР»РѕРЅ
+chat.armourersworkshop:inventoryGiftFail=РљС‚Рѕ-С‚Рѕ РџС‹С‚Р°Р»СЃСЏ РЎРґРµР»Р°С‚СЊ РўРµР±Рµ РџРѕРґР°СЂРѕРє,РќРѕ РўРµР±Рµ РќРµРєСѓРґР° Р‘С‹Р»Рѕ Р”РµРІР°С‚СЊ Р•РіРѕ!
+chat.armourersworkshop:updateAvailable=Armourer's Workshop РћР±РЅРѕРІР»РµРЅРёРµ %s Р”РѕСЃС‚СѓРїРЅРѕ.
+chat.armourersworkshop:updateDownload=[РЎРєР°С‡Р°С‚СЊ]
+chat.armourersworkshop:updateDownloadRollover=РќР°Р¶РјРёС‚Рµ,Р§С‚РѕР±С‹ РџРµСЂРµР№С‚Рё РЅР° РЎС‚СЂР°РЅРёС†Сѓ Р—Р°РіСЂСѓР·РєРё
 
 # Death Messages
-death.attack.victorious=%1$s был зарезан Vic's crown.
+death.attack.victorious=%1$s Р±С‹Р» Р·Р°СЂРµР·Р°РЅ Vic's crown.
 
 # Commands
 commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setSkinColumnCount> <player> [skinName | value]
-commands.armourers.fileNotFound=Файл %1$s не Был Найден.
+commands.armourers.fileNotFound=Р¤Р°Р№Р» %1$s РЅРµ Р‘С‹Р» РќР°Р№РґРµРЅ.
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
 
 # Keybindings
 keys.armourersworkshop:category=Armourer's Workshop
-keys.armourersworkshop.equipmentWardrobe=Гардероб Снаряжения
-keys.armourersworkshop.undo=ОТменить
+keys.armourersworkshop.equipmentWardrobe=Р“Р°СЂРґРµСЂРѕР± РЎРЅР°СЂСЏР¶РµРЅРёСЏ
+keys.armourersworkshop.undo=РћРўРјРµРЅРёС‚СЊ
 
 # Guide Book
 # Chapter 1
-book.armourersworkshop:guideBook.contents.name=Содержание
+book.armourersworkshop:guideBook.contents.name=РЎРѕРґРµСЂР¶Р°РЅРёРµ
 
 # Chapter 2
-book.armourersworkshop:guideBook.introduction.name=Введение
-book.armourersworkshop:guideBook.introduction.paragraph1=Примечание: Эта книга ещё в разработке.&pДобро Пожаловать в Руководство Armourer's Workshop.&pЭта книга поможет вам начать работу с Armourer's Workshop.
-book.armourersworkshop:guideBook.introduction.paragraph2=Armourer's Workshop позволит Вам создавать свои скины снаряжения для брони и оружия,чтобы заменить их вид!
+book.armourersworkshop:guideBook.introduction.name=Р’РІРµРґРµРЅРёРµ
+book.armourersworkshop:guideBook.introduction.paragraph1=РџСЂРёРјРµС‡Р°РЅРёРµ: Р­С‚Р° РєРЅРёРіР° РµС‰С‘ РІ СЂР°Р·СЂР°Р±РѕС‚РєРµ.&pР”РѕР±СЂРѕ РџРѕР¶Р°Р»РѕРІР°С‚СЊ РІ Р СѓРєРѕРІРѕРґСЃС‚РІРѕ Armourer's Workshop.&pР­С‚Р° РєРЅРёРіР° РїРѕРјРѕР¶РµС‚ РІР°Рј РЅР°С‡Р°С‚СЊ СЂР°Р±РѕС‚Сѓ СЃ Armourer's Workshop.
+book.armourersworkshop:guideBook.introduction.paragraph2=Armourer's Workshop РїРѕР·РІРѕР»РёС‚ Р’Р°Рј СЃРѕР·РґР°РІР°С‚СЊ СЃРІРѕРё СЃРєРёРЅС‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ РґР»СЏ Р±СЂРѕРЅРё Рё РѕСЂСѓР¶РёСЏ,С‡С‚РѕР±С‹ Р·Р°РјРµРЅРёС‚СЊ РёС… РІРёРґ!
 
 # Chapter 3
-book.armourersworkshop:guideBook.armourer.name=Оружейник
-book.armourersworkshop:guideBook.armourer.paragraph1=Первое,с чего вы должны начать строить свою собственную броню в оружейнике.&pПосле размещения блока внизу щелкните по нему,чтобы открыть графический интерфейс.Внизу с левой стороне вы увидите все типы снаряжения,которые можно построить.
-book.armourersworkshop:guideBook.armourer.paragraph2=Выберите тип снаряжения,которое вы хотели бы построить,затем начните строительство вашего снаряжения,используя кубики снаряжения.&pПосле того,как вы закончили,разместите шаблон снаряжения внутри типа оруженика,выберите имя и нажмите сохранить.
+book.armourersworkshop:guideBook.armourer.name=РћСЂСѓР¶РµР№РЅРёРє
+book.armourersworkshop:guideBook.armourer.paragraph1=РџРµСЂРІРѕРµ,СЃ С‡РµРіРѕ РІС‹ РґРѕР»Р¶РЅС‹ РЅР°С‡Р°С‚СЊ СЃС‚СЂРѕРёС‚СЊ СЃРІРѕСЋ СЃРѕР±СЃС‚РІРµРЅРЅСѓСЋ Р±СЂРѕРЅСЋ РІ РѕСЂСѓР¶РµР№РЅРёРєРµ.&pРџРѕСЃР»Рµ СЂР°Р·РјРµС‰РµРЅРёСЏ Р±Р»РѕРєР° РІРЅРёР·Сѓ С‰РµР»РєРЅРёС‚Рµ РїРѕ РЅРµРјСѓ,С‡С‚РѕР±С‹ РѕС‚РєСЂС‹С‚СЊ РіСЂР°С„РёС‡РµСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ.Р’РЅРёР·Сѓ СЃ Р»РµРІРѕР№ СЃС‚РѕСЂРѕРЅРµ РІС‹ СѓРІРёРґРёС‚Рµ РІСЃРµ С‚РёРїС‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ,РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ РїРѕСЃС‚СЂРѕРёС‚СЊ.
+book.armourersworkshop:guideBook.armourer.paragraph2=Р’С‹Р±РµСЂРёС‚Рµ С‚РёРї СЃРЅР°СЂСЏР¶РµРЅРёСЏ,РєРѕС‚РѕСЂРѕРµ РІС‹ С…РѕС‚РµР»Рё Р±С‹ РїРѕСЃС‚СЂРѕРёС‚СЊ,Р·Р°С‚РµРј РЅР°С‡РЅРёС‚Рµ СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІРѕ РІР°С€РµРіРѕ СЃРЅР°СЂСЏР¶РµРЅРёСЏ,РёСЃРїРѕР»СЊР·СѓСЏ РєСѓР±РёРєРё СЃРЅР°СЂСЏР¶РµРЅРёСЏ.&pРџРѕСЃР»Рµ С‚РѕРіРѕ,РєР°Рє РІС‹ Р·Р°РєРѕРЅС‡РёР»Рё,СЂР°Р·РјРµСЃС‚РёС‚Рµ С€Р°Р±Р»РѕРЅ СЃРЅР°СЂСЏР¶РµРЅРёСЏ РІРЅСѓС‚СЂРё С‚РёРїР° РѕСЂСѓР¶РµРЅРёРєР°,РІС‹Р±РµСЂРёС‚Рµ РёРјСЏ Рё РЅР°Р¶РјРёС‚Рµ СЃРѕС…СЂР°РЅРёС‚СЊ.
 
 # Chapter 4
-book.armourersworkshop:guideBook.equipmentTemplates.name=Шаблоны Снаряжения
-book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=Шаблоны снаряжения,как и скины снаряжения сохраняются,просто поместив скины снаряжения в гардероб снаряжения и применить скин.
+book.armourersworkshop:guideBook.equipmentTemplates.name=РЁР°Р±Р»РѕРЅС‹ РЎРЅР°СЂСЏР¶РµРЅРёСЏ
+book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=РЁР°Р±Р»РѕРЅС‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ,РєР°Рє Рё СЃРєРёРЅС‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ,РїСЂРѕСЃС‚Рѕ РїРѕРјРµСЃС‚РёРІ СЃРєРёРЅС‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ РІ РіР°СЂРґРµСЂРѕР± СЃРЅР°СЂСЏР¶РµРЅРёСЏ Рё РїСЂРёРјРµРЅРёС‚СЊ СЃРєРёРЅ.
 
 # Chapter 5
-book.armourersworkshop:guideBook.paintingTools.name=Красящие Инструменты
-book.armourersworkshop:guideBook.paintingTools.paragraph1=Большое количество малярных инструментов было добавлено, чтобы помочь с вашей творческой деятельность!&pМиксер Цветов&nПозволяет смешивать любые цвета,которые Вам нравятся.&pКисть&nРаскрашивает один куб снаряжения.
-book.armourersworkshop:guideBook.paintingTools.paragraph2=Инструмент "Пипетка"&nПозволяет тебе выбрать цвет из куба снаряжения и установить его в миксер цветов.&pВалик&nРаскрашивает кубы снаряжения в зоне 3*3*1.
-book.armourersworkshop:guideBook.paintingTools.paragraph3=Инструмент "Затемнитель"&nДелает кубы снаряжения темнее.&pИнструмент "Осветлитель"&nДелает кубы снаряжения светлее.&pИнструмент "Цветовой Шум"&nПрименяет случайный цветовой шум на кубах снаряжения.
-book.armourersworkshop:guideBook.paintingTools.paragraph4=Инструмент "Теневой Шум"&nПрименяет случайную тень на кубах доспехов.&pНекоторые инструменты могут быть настроены зажатыми красться + правый клик мыши.
+book.armourersworkshop:guideBook.paintingTools.name=РљСЂР°СЃСЏС‰РёРµ РРЅСЃС‚СЂСѓРјРµРЅС‚С‹
+book.armourersworkshop:guideBook.paintingTools.paragraph1=Р‘РѕР»СЊС€РѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РјР°Р»СЏСЂРЅС‹С… РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ Р±С‹Р»Рѕ РґРѕР±Р°РІР»РµРЅРѕ, С‡С‚РѕР±С‹ РїРѕРјРѕС‡СЊ СЃ РІР°С€РµР№ С‚РІРѕСЂС‡РµСЃРєРѕР№ РґРµСЏС‚РµР»СЊРЅРѕСЃС‚СЊ!&pРњРёРєСЃРµСЂ Р¦РІРµС‚РѕРІ&nРџРѕР·РІРѕР»СЏРµС‚ СЃРјРµС€РёРІР°С‚СЊ Р»СЋР±С‹Рµ С†РІРµС‚Р°,РєРѕС‚РѕСЂС‹Рµ Р’Р°Рј РЅСЂР°РІСЏС‚СЃСЏ.&pРљРёСЃС‚СЊ&nР Р°СЃРєСЂР°С€РёРІР°РµС‚ РѕРґРёРЅ РєСѓР± СЃРЅР°СЂСЏР¶РµРЅРёСЏ.
+book.armourersworkshop:guideBook.paintingTools.paragraph2=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РџРёРїРµС‚РєР°"&nРџРѕР·РІРѕР»СЏРµС‚ С‚РµР±Рµ РІС‹Р±СЂР°С‚СЊ С†РІРµС‚ РёР· РєСѓР±Р° СЃРЅР°СЂСЏР¶РµРЅРёСЏ Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РµРіРѕ РІ РјРёРєСЃРµСЂ С†РІРµС‚РѕРІ.&pР’Р°Р»РёРє&nР Р°СЃРєСЂР°С€РёРІР°РµС‚ РєСѓР±С‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ РІ Р·РѕРЅРµ 3*3*1.
+book.armourersworkshop:guideBook.paintingTools.paragraph3=РРЅСЃС‚СЂСѓРјРµРЅС‚ "Р—Р°С‚РµРјРЅРёС‚РµР»СЊ"&nР”РµР»Р°РµС‚ РєСѓР±С‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ С‚РµРјРЅРµРµ.&pРРЅСЃС‚СЂСѓРјРµРЅС‚ "РћСЃРІРµС‚Р»РёС‚РµР»СЊ"&nР”РµР»Р°РµС‚ РєСѓР±С‹ СЃРЅР°СЂСЏР¶РµРЅРёСЏ СЃРІРµС‚Р»РµРµ.&pРРЅСЃС‚СЂСѓРјРµРЅС‚ "Р¦РІРµС‚РѕРІРѕР№ РЁСѓРј"&nРџСЂРёРјРµРЅСЏРµС‚ СЃР»СѓС‡Р°Р№РЅС‹Р№ С†РІРµС‚РѕРІРѕР№ С€СѓРј РЅР° РєСѓР±Р°С… СЃРЅР°СЂСЏР¶РµРЅРёСЏ.
+book.armourersworkshop:guideBook.paintingTools.paragraph4=РРЅСЃС‚СЂСѓРјРµРЅС‚ "РўРµРЅРµРІРѕР№ РЁСѓРј"&nРџСЂРёРјРµРЅСЏРµС‚ СЃР»СѓС‡Р°Р№РЅСѓСЋ С‚РµРЅСЊ РЅР° РєСѓР±Р°С… РґРѕСЃРїРµС…РѕРІ.&pРќРµРєРѕС‚РѕСЂС‹Рµ РёРЅСЃС‚СЂСѓРјРµРЅС‚С‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ РЅР°СЃС‚СЂРѕРµРЅС‹ Р·Р°Р¶Р°С‚С‹РјРё РєСЂР°СЃС‚СЊСЃСЏ + РїСЂР°РІС‹Р№ РєР»РёРє РјС‹С€Рё.
 
 # Chapter 6
-book.armourersworkshop:guideBook.equipmentWardrobe.name=Гардероб Снаряжения
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=В Разработке
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=В Разработке
+book.armourersworkshop:guideBook.equipmentWardrobe.name=Р“Р°СЂРґРµСЂРѕР± РЎРЅР°СЂСЏР¶РµРЅРёСЏ
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=Р’ Р Р°Р·СЂР°Р±РѕС‚РєРµ
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=Р’ Р Р°Р·СЂР°Р±РѕС‚РєРµ
 
 # Chapter 7
-book.armourersworkshop:guideBook.recipes.name=Рецепты
+book.armourersworkshop:guideBook.recipes.name=Р РµС†РµРїС‚С‹
