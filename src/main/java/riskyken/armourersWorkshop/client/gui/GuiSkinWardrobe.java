@@ -108,15 +108,15 @@ public class GuiSkinWardrobe extends GuiContainer {
         String guiName = "equipmentWardrobe";
         
         armourOverrideCheck = new GuiCheckBox[4];
-        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 88, this.guiTop + 17, "Head armour render?", !armourOverride.get(0));
-        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 88, this.guiTop + 37, "Chest armour render?", !armourOverride.get(1));
-        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 88, this.guiTop + 75, "Leg armour render?", !armourOverride.get(2));
-        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 88, this.guiTop + 94, "Foot armour render?", !armourOverride.get(3));
+        armourOverrideCheck[0] = new GuiCheckBox(2, this.guiLeft + 88, this.guiTop + 17, GuiHelper.getLocalizedControlName(guiName, "renderHeadArmour"), !armourOverride.get(0));
+        armourOverrideCheck[1] = new GuiCheckBox(3, this.guiLeft + 88, this.guiTop + 37, GuiHelper.getLocalizedControlName(guiName, "renderChestArmour"), !armourOverride.get(1));
+        armourOverrideCheck[2] = new GuiCheckBox(4, this.guiLeft + 88, this.guiTop + 75, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride.get(2));
+        armourOverrideCheck[3] = new GuiCheckBox(5, this.guiLeft + 88, this.guiTop + 94, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride.get(3));
         
         overlayOverrideCheck = new GuiCheckBox[1];
-        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 88, this.guiTop + 26, "Head overlay render?", !headOverlay);
+        overlayOverrideCheck[0] = new GuiCheckBox(6, this.guiLeft + 88, this.guiTop + 26, GuiHelper.getLocalizedControlName(guiName, "renderHeadOverlay"), !headOverlay);
         
-        limitLimbsCheck = new GuiCheckBox(7, this.guiLeft + 88, this.guiTop + 56, "Limit limb movement?", limitLimbs);
+        limitLimbsCheck = new GuiCheckBox(7, this.guiLeft + 88, this.guiTop + 56, GuiHelper.getLocalizedControlName(guiName, "limitLimbMovement"), limitLimbs);
         
         buttonList.add(overlayOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[0]);

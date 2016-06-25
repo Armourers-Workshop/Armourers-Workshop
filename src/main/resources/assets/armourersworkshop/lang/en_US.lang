@@ -225,6 +225,12 @@ inventory.armourersworkshop:equipmentWardrobe.autoSkin=Auto
 inventory.armourersworkshop:equipmentWardrobe.selectHair=Pick Hair Colour
 inventory.armourersworkshop:equipmentWardrobe.autoHair=Auto
 inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Skin Override
+inventory.armourersworkshop:equipmentWardrobe.renderHeadArmour=Render head armour?
+inventory.armourersworkshop:equipmentWardrobe.renderChestArmour=Render chest armour?
+inventory.armourersworkshop:equipmentWardrobe.renderLegArmour=Render leg armour?
+inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=Render foot armour?
+inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=Render head overlay?
+inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=Limit limb movement?
 
 inventory.armourersworkshop:mannequin.label.headRotation=Head Rotation
 inventory.armourersworkshop:mannequin.label.leftArmRotation=Left Arm Rotation
