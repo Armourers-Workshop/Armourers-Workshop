@@ -7,6 +7,7 @@ import java.util.HashSet;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import com.mojang.authlib.GameProfile;
 
@@ -83,7 +84,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-        GL11.glEnable(GL11.GL_NORMALIZE);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         ModRenderHelper.disableAlphaBlend();
         
         int rotaion = te.getRotation();
