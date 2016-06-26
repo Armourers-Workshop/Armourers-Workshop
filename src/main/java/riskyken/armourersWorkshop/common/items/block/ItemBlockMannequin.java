@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.items.block;
 
 import java.util.List;
 
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -10,8 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-
-import com.mojang.authlib.GameProfile;
 
 public class ItemBlockMannequin extends ModItemBlock {
     
@@ -42,7 +42,7 @@ public class ItemBlockMannequin extends ModItemBlock {
             NBTTagCompound compound = stack.getTagCompound();
             GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
-                gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
                 String user = TranslateUtils.translate("item.armourersworkshop:rollover.user", gameProfile.getName());
                 list.add(user);
             }

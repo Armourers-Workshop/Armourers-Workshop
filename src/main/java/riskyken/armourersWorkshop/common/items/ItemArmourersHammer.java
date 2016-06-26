@@ -1,18 +1,16 @@
 package riskyken.armourersWorkshop.common.items;
 
-import buildcraft.api.tools.IToolWrench;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import net.minecraftforge.fml.common.Optional;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 
 @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")
@@ -23,36 +21,30 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.ARMOURERs_HAMMER);
-    }
-    
-    @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        Block block = world.getBlock(x, y, z);
+    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
+            BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        Block block = world.getBlock(pos);
         if (block != null) {
             if (block instanceof BlockBed) {
-                rotateBed(world, x, y, z, (BlockBed) block, ForgeDirection.getOrientation(side));
-                player.swingItem();
+                rotateBed(world, pos, (BlockBed) block, ForgeDirection.getOrientation(side));
+                player.swingArm(hand);;
                 return !world.isRemote;
             }
             
             if (block instanceof BlockChest) {
-                return false;
+                return EnumActionResult.FAIL;
             }
             
-            ForgeDirection dir = ForgeDirection.getOrientation(side);
+            EnumFacing dir = EnumFacing.getOrientation(side);
             if (player.isSneaking()) {
                 dir = dir.getOpposite();
             }
             if (block.rotateBlock(world, x, y, z, dir)) {
-                player.swingItem();
+                player.swingArm(hand);;
                 return !world.isRemote;
             }
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
     
     private boolean rotateBed(World world, int x, int y, int z, BlockBed block, ForgeDirection axis) {

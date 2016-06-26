@@ -1,10 +1,9 @@
 package riskyken.armourersWorkshop.common.items.paintingtool;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
 import riskyken.armourersWorkshop.client.particles.ParticleManager;
@@ -21,7 +20,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean hasEffect(ItemStack stack, int pass) {
+    public boolean hasEffect(ItemStack stack) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
         if (paintType != PaintType.NORMAL) {
             return true;
@@ -36,19 +35,6 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
                     colour, ForgeDirection.getOrientation(side));
             ParticleManager.INSTANCE.spawnParticle(world, particle);
         }
-    }
-    
-    @Override
-    public int getColorFromItemStack(ItemStack stack, int pass) {
-        if (pass == 0) {
-            return super.getColorFromItemStack(stack, pass);
-        }
-        return getToolColour(stack);
-    }
-    
-    @Override
-    public boolean requiresMultipleRenderPasses() {
-        return true;
     }
     
     @Override

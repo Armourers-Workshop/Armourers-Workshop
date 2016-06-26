@@ -4,19 +4,14 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -28,22 +23,11 @@ import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurableTool {
     
     public ItemPaintRoller() {
         super(LibItemNames.PAINT_ROLLER);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon tipIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.PAINT_ROLLER);
-        tipIcon = register.registerIcon(LibItemResources.PAINT_ROLLER_TIP);
     }
     
     @Override
@@ -181,14 +165,6 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         list.add(paintText);
         list.add(radiusText);
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 0) {
-            return itemIcon;
-        }
-        return tipIcon;
     }
     
     @Override

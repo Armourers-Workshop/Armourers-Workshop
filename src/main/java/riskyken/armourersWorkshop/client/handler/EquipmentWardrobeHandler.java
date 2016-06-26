@@ -2,10 +2,6 @@ package riskyken.armourersWorkshop.client.handler;
 
 import java.util.HashMap;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -67,7 +67,7 @@ public final class EquipmentWardrobeHandler {
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
-        EntityPlayer player = event.entityPlayer;
+        EntityPlayer player = event.getEntityPlayer();
         if (player instanceof MannequinFakePlayer) {
             return;
         }
@@ -80,7 +80,7 @@ public final class EquipmentWardrobeHandler {
         
         //Hide the head overlay if the player has turned it off.
         PlayerPointer playerPointer = new PlayerPointer(player);
-        RenderPlayer renderer = event.renderer;
+        RenderPlayer renderer = event.getRenderer();
         if (equipmentWardrobeMap.containsKey(playerPointer)) {
             EquipmentWardrobeData ewd = equipmentWardrobeMap.get(playerPointer);
             renderer.modelBipedMain.bipedHeadwear.isHidden = ewd.headOverlay;
@@ -89,7 +89,7 @@ public final class EquipmentWardrobeHandler {
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
-        EntityPlayer player = event.entityPlayer;
+        EntityPlayer player = event.getEntityPlayer();
         if (player instanceof MannequinFakePlayer) {
             return;
         }
@@ -102,7 +102,7 @@ public final class EquipmentWardrobeHandler {
         
         //Restore the head overlay.
         PlayerPointer playerPointer = new PlayerPointer(player);
-        RenderPlayer renderer = event.renderer;
+        RenderPlayer renderer = event.getRenderer();
         if (equipmentWardrobeMap.containsKey(playerPointer)) {
             renderer.modelBipedMain.bipedHeadwear.isHidden = false;
         }
@@ -114,7 +114,7 @@ public final class EquipmentWardrobeHandler {
         if (slot > 3) {
             return;
         }
-        EntityPlayer player = event.entityPlayer;
+        EntityPlayer player = event.getEntityPlayer();
         if (player instanceof MannequinFakePlayer) {
             return;
         }

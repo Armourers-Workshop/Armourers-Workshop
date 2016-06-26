@@ -4,9 +4,9 @@ import org.apache.logging.log4j.Logger;
 
 import riskyken.plushieWrapper.common.lib.LibModInfo;
 import riskyken.plushieWrapper.proxies.CommonProxy;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = LibModInfo.MOD_ID, name = LibModInfo.MOD_NAME, version = LibModInfo.MOD_VERSION)
 public class PlushieWrapper {

@@ -10,9 +10,9 @@ import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
 import riskyken.armourersWorkshop.common.data.BipedRotations;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelMannequin extends ModelBiped {

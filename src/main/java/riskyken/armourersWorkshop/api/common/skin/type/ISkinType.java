@@ -2,11 +2,6 @@ package riskyken.armourersWorkshop.api.common.skin.type;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
-
 /**
  * 
  * @author RiskyKen
@@ -31,16 +26,6 @@ public interface ISkinType {
      * @return name
      */
     public String getName();
-    
-    
-    @SideOnly(Side.CLIENT)
-    public void registerIcon(IIconRegister register);
-    
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon();
-    
-    @SideOnly(Side.CLIENT)
-    public IIcon getEmptySlotIcon();
     
     /**
      * Should the show skin overlay check box be shown in the armourer and mini armourer.

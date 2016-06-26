@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.blocks;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -8,11 +9,11 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 public abstract class AbstractModBlockContainer extends BlockContainer {
 
     public AbstractModBlockContainer(String name) {
-        super(Material.iron);
+        super(Material.IRON);
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setHardness(3.0F);
-        setStepSound(soundTypeMetal);
-        setBlockName(name);
+        setSoundType(SoundType.METAL);
+        setUnlocalizedName(name);
     }
     
     public AbstractModBlockContainer(String name, Material material, SoundType soundType, boolean addCreativeTab) {
@@ -21,8 +22,8 @@ public abstract class AbstractModBlockContainer extends BlockContainer {
             setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         }
         setHardness(3.0F);
-        setStepSound(soundType);
-        setBlockName(name);
+        setSoundType(SoundType.METAL);
+        setUnlocalizedName(name);
     }
     
     @Override

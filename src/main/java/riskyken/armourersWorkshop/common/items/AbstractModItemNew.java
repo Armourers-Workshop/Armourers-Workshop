@@ -2,14 +2,14 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraft.util.StatCollector;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
-import riskyken.plushieWrapper.common.item.PlushieItemStack;
 import riskyken.plushieWrapper.common.item.PlushieItem;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.plushieWrapper.common.item.PlushieItemStack;
 
 public class AbstractModItemNew extends PlushieItem {
     
@@ -35,7 +35,7 @@ public class AbstractModItemNew extends PlushieItem {
         String localized;
 
         unlocalized = stack.getUnlocalizedName() + ".flavour";
-        localized = StatCollector.translateToLocal(unlocalized);
+        localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");

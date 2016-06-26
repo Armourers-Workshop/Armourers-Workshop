@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.common.config;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSyncConfig;
 
@@ -15,9 +15,9 @@ public final class ConfigSynchronizeHandler {
     
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
+        if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayerMP) {
             MessageServerSyncConfig message = new MessageServerSyncConfig();
-            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) event.entity);
+            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) event.getEntity());
         }
     }
     

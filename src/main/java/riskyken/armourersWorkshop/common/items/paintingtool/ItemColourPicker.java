@@ -4,20 +4,17 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -37,18 +34,8 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon tipIcon;
-    
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.COLOUR_PICKER);
-        tipIcon = register.registerIcon(LibItemResources.COLOUR_PICKER_TIP);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public boolean hasEffect(ItemStack stack, int pass) {
+    public boolean hasEffect(ItemStack stack) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
         if (paintType != PaintType.NORMAL) {
             return true;
@@ -121,39 +108,6 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             String noPaint = TranslateUtils.translate("item.armourersworkshop:rollover.nopaint");
             list.add(noPaint);
         }
-    }
-    
-    @Override
-    public boolean requiresMultipleRenderPasses() {
-        return true;
-    }
-    
-    @Override
-    public int getRenderPasses(int metadata) {
-        return 2;
-    }
-    
-    @Override
-    public int getColorFromItemStack(ItemStack stack, int pass) {
-        if (!getToolHasColour(stack)) {
-            return super.getColorFromItemStack(stack, pass);
-        }
-        
-        if (pass == 0) {
-            return super.getColorFromItemStack(stack, pass);
-        }
-        return getToolColour(stack);
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (!getToolHasColour(stack)) {
-            return itemIcon;
-        }
-        if (pass == 0) {
-            return itemIcon;
-        }
-        return tipIcon;
     }
     
     @Override

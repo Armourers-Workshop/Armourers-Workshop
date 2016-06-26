@@ -3,13 +3,13 @@ package riskyken.plushieWrapper.common.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
 import riskyken.plushieWrapper.common.entity.PlushieEntityLivingBase;
 import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
-import riskyken.plushieWrapper.common.world.BlockLocation;
-import riskyken.plushieWrapper.common.world.WorldPointer;
 
 public class PlushieItem {
     
@@ -56,12 +56,12 @@ public class PlushieItem {
         return false;
     }
     
-    public boolean onItemUse(PlushieItemStack stack, PlushieEntityPlayer player, WorldPointer world,
-            BlockLocation loc, int side, float hitX, float hitY, float hitZ) {
+    public boolean onItemUse(PlushieItemStack stack, PlushieEntityPlayer player, World world,
+            BlockPos loc, int side, float hitX, float hitY, float hitZ) {
         return false;
     }
     
-    public PlushieItemStack onItemRightClick(PlushieItemStack stack, WorldPointer world, PlushieEntityPlayer player) {
+    public PlushieItemStack onItemRightClick(PlushieItemStack stack, World world, PlushieEntityPlayer player) {
         return stack;
     }
     

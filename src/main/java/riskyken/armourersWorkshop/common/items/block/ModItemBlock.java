@@ -3,10 +3,10 @@ package riskyken.armourersWorkshop.common.items.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 
 public class ModItemBlock extends ItemBlock {
 
@@ -25,7 +25,7 @@ public class ModItemBlock extends ItemBlock {
         String localized;
 
         unlocalized = itemStack.getUnlocalizedName() + ".flavour";
-        localized = StatCollector.translateToLocal(unlocalized);
+        localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");

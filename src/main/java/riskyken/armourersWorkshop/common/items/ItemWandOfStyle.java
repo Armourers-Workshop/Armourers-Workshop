@@ -10,9 +10,9 @@ import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.plushieWrapper.common.entity.PlushieEntityLivingBase;
 import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
 import riskyken.plushieWrapper.common.item.PlushieItemStack;
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemWandOfStyle extends AbstractModItemNew {
 

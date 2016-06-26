@@ -4,19 +4,14 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.BlockMannequin;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -31,28 +26,11 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurableTool {
     
     public ItemPaintbrush() {
         super(LibItemNames.PAINTBRUSH);
-    }
-
-    @SideOnly(Side.CLIENT)
-    private IIcon tipIcon;
-    @SideOnly(Side.CLIENT)
-    private IIcon faceModeIcon;
-    @SideOnly(Side.CLIENT)
-    private IIcon faceModeTipIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.PAINTBRUSH);
-        tipIcon = register.registerIcon(LibItemResources.PAINTBRUSH_TIP);
-        faceModeIcon = register.registerIcon(LibItemResources.PAINTBRUSH_FACE_MODE);
-        faceModeTipIcon = register.registerIcon(LibItemResources.PAINTBRUSH_FACE_MODE_TIP);
     }
     
     @Override
@@ -159,21 +137,6 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
         list.add(hexText);
         list.add(paintText);
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
-            if (pass == 0) {
-                return itemIcon;
-            }
-            return tipIcon;
-        } else {
-            if (pass == 0) {
-                return faceModeIcon;
-            }
-            return faceModeTipIcon;
-        }
     }
     
     @Override

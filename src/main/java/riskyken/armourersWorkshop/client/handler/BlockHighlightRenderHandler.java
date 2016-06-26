@@ -2,19 +2,19 @@ package riskyken.armourersWorkshop.client.handler;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 
 @SideOnly(Side.CLIENT)
@@ -26,27 +26,24 @@ public class BlockHighlightRenderHandler {
     
     @SubscribeEvent
     public void onDrawBlockHighlightEvent(DrawBlockHighlightEvent event) {
-        EntityPlayer player = event.player;
-        World world = event.player.worldObj;
-        MovingObjectPosition target = event.target;
+        EntityPlayer player = event.getPlayer();
+        World world = player.worldObj;
+        RayTraceResult target = event.getTarget();
         
-        if (target != null && target.typeOfHit != MovingObjectType.BLOCK) {
+        if (target != null && target.typeOfHit != RayTraceResult.Type.BLOCK) {
             return;
         }
         
-        int x = target.blockX;
-        int y = target.blockY;
-        int z = target.blockZ;
-        
-        Block block = world.getBlock(x, y, z);
+        BlockPos pos = target.getBlockPos();
+        Block block = world.getBlockState(pos).getBlock();
         
         if (block == ModBlocks.mannequin) {
-            drawMannequinBlockBounds(world, x, y, z, player, block, event.partialTicks);
+            drawMannequinBlockBounds(world, pos, player, block, event.getPartialTicks());
             event.setCanceled(true);
         }
     }
     
-    private void drawMannequinBlockBounds(World world, int x, int y, int z, EntityPlayer player, Block block, float partialTicks) {
+    private void drawMannequinBlockBounds(World world, BlockPos pos, EntityPlayer player, Block block, float partialTicks) {
         int meta = world.getBlockMetadata(x, y, z);
         
         double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
@@ -77,7 +74,7 @@ public class BlockHighlightRenderHandler {
         GL11.glLineWidth(2.0F);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDepthMask(false);
-        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1), 0, 0, 0, 40);
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);

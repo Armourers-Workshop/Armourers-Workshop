@@ -31,7 +31,7 @@ public class ModItems {
     public static Item shadeNoiseTool;
     public static Item hueTool;
     public static Item blendingTool;
-    public static PlushieItem blockMarker;
+    public static Item blockMarker;
     
     public static Item mannequinTool;
     public static PlushieItem wandOfStyle;
@@ -77,7 +77,6 @@ public class ModItems {
         ModRegistry.registerItem(guideBook);
         ModRegistry.registerItem(wandOfStyle);
         ModRegistry.registerItem(soap);
-        ModRegistry.registerItem(blockMarker);
     }
     
     private void setEquipmentSkinType() {

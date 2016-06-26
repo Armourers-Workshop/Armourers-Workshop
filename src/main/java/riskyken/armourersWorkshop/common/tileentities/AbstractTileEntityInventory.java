@@ -40,11 +40,11 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
         }
         return itemstack;
     }
-
+    
     @Override
-    public ItemStack getStackInSlotOnClosing(int i) {
-        ItemStack item = getStackInSlot(i);
-        setInventorySlotContents(i, null);
+    public ItemStack removeStackFromSlot(int index) {
+        ItemStack item = getStackInSlot(index);
+        setInventorySlotContents(index, null);
         return item;
     }
 
@@ -58,10 +58,10 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
     }
     
     @Override
-    public void openInventory() {}
-
+    public void openInventory(EntityPlayer player) {}
+    
     @Override
-    public void closeInventory() {}
+    public void closeInventory(EntityPlayer player) {}
     
     @Override
     public boolean hasCustomInventoryName() {

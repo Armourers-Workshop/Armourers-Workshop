@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
@@ -33,7 +33,7 @@ public class BookPage extends BookPageBase {
     public void renderPage(FontRenderer fontRenderer, int mouseX, int mouseY, boolean turning, int pageNumber) {
         Minecraft mc = Minecraft.getMinecraft();
         RenderItem itemRender = new RenderItem();
-        ItemStack stack = new ItemStack(Blocks.stone);
+        ItemStack stack = new ItemStack(Blocks.STONE);
         
         mc.renderEngine.bindTexture(bookPageTexture);
         GL11.glColor4f(1, 1, 1, 1);

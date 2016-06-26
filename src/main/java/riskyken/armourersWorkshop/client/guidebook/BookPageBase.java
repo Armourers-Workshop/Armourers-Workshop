@@ -2,13 +2,13 @@ package riskyken.armourersWorkshop.client.guidebook;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -47,7 +47,7 @@ public abstract class BookPageBase implements IBookPage {
     
     protected void drawPageTitleAndNumber(FontRenderer fontRenderer, int pageNumber) {
         String chapterTitle = parentBook.getChapterFromPageNumber(pageNumber).getUnlocalizedName();
-        chapterTitle = StatCollector.translateToLocal(chapterTitle + ".name");
+        chapterTitle = I18n.format(chapterTitle + ".name");
         
         //Title
         renderStringCenter(fontRenderer, chapterTitle, PAGE_PADDING_TOP);

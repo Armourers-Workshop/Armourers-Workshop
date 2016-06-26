@@ -2,16 +2,15 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
@@ -36,7 +35,7 @@ public class AbstractModItemArmour extends ItemArmor {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
         String unlocalized = stack.getUnlocalizedName() + ".flavour";
-        String localized = StatCollector.translateToLocal(unlocalized);
+        String localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");

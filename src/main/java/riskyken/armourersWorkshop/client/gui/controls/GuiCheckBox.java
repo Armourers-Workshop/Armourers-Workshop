@@ -1,12 +1,12 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
 import net.minecraft.client.Minecraft;
-import cpw.mods.fml.client.config.GuiUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiCheckBox extends cpw.mods.fml.client.config.GuiCheckBox {
+public class GuiCheckBox extends net.minecraftforge.fml.client.config.GuiCheckBox {
 
     private int boxWidth;
     

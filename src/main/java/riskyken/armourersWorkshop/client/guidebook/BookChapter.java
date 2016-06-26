@@ -5,10 +5,10 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BookChapter implements IBookChapter {
@@ -33,11 +33,11 @@ public class BookChapter implements IBookChapter {
     }
     
     private String getLocalizedText(String unlocalizedText) {
-        return StatCollector.translateToLocal(unlocalizedText);
+        return I18n.format(unlocalizedText);
     }
 
     private ArrayList<IBookPage> createPagesForText(String text) {
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
         List<String> lines = fontRenderer.listFormattedStringToWidth(text, PAGE_WIDTH);
         ArrayList<IBookPage> pages = new ArrayList<IBookPage>();
         int linesPerPage = MathHelper.floor_double(PAGE_HEIGHT / fontRenderer.FONT_HEIGHT);

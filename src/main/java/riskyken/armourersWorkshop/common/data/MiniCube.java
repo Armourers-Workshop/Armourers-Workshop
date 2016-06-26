@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common.data;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;

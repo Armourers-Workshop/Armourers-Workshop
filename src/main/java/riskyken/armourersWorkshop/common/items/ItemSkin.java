@@ -4,22 +4,15 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -121,44 +114,6 @@ public class ItemSkin extends AbstractModItem {
                 }
             }
         }
-    }
-    
-    @Override
-    public int getRenderPasses(int metadata) {
-        return 2;
-    }
-    
-    @Override
-    public boolean requiresMultipleRenderPasses() {
-        return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon loadingIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        this.itemIcon = register.registerIcon(LibItemResources.TEMPLATE_BLANK);
-        this.loadingIcon = register.registerIcon(LibItemResources.TEMPLATE_LOADING);
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 1) {
-            return this.loadingIcon;
-        }
-        
-        if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (skinData.skinType != null) {
-                if (skinData.skinType.getIcon() != null) {
-                    return skinData.skinType.getIcon();
-                }
-            }
-        }
-        
-        return this.itemIcon;
     }
     
     @Override

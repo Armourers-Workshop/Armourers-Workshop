@@ -4,16 +4,16 @@ import java.util.HashMap;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -46,10 +46,10 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRender(RenderPlayerEvent.Pre event) {
-        if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
+        if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {
             return;
         }
-        AbstractClientPlayer player = (AbstractClientPlayer) event.entityPlayer;
+        AbstractClientPlayer player = (AbstractClientPlayer) event.getEntityPlayer();
         if (player instanceof MannequinFakePlayer) {
             return;
         }

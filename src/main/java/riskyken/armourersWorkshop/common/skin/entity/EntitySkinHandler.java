@@ -11,14 +11,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.api.common.skin.entity.IEntitySkinHandler;
-import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public final class EntitySkinHandler implements IEntitySkinHandler {
+public final class EntitySkinHandler {
     
     public static EntitySkinHandler INSTANCE;
     

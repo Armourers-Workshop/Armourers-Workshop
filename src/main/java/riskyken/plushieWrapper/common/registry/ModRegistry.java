@@ -5,7 +5,7 @@ import java.util.HashMap;
 import net.minecraft.item.Item;
 import riskyken.plushieWrapper.common.item.PlushieItem;
 import riskyken.plushieWrapper.common.item.ModItemWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModRegistry {
 

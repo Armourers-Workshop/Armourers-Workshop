@@ -6,8 +6,6 @@ import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,11 +14,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -56,7 +53,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private static final int HEIGHT_OFFSET = 1;
     private static final int INVENTORY_SIZE = 2;
     
-    private ForgeDirection direction;
+    private EnumFacing direction;
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;
     private ISkinType skinType;
@@ -70,7 +67,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     
     public TileEntityArmourer() {
         super(INVENTORY_SIZE);
-        this.direction = ForgeDirection.NORTH;
+        this.direction = EnumFacing.NORTH;
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
         this.showOverlay = true;
         this.showGuides = true;
@@ -91,7 +88,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void updatePaintData(int x, int y, int colour) {
         paintData[x + (y * SkinTexture.TEXTURE_WIDTH)] = colour;
         this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockForUpdate(getPos());
     }
     
     public int getPaintData(int x, int y) {
@@ -280,13 +277,13 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
     }
     
-    public void setDirection(ForgeDirection direction) {
+    public void setDirection(EnumFacing direction) {
         this.direction = direction;
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    public ForgeDirection getDirection() {
+    public EnumFacing getDirection() {
         return direction;
     }
     

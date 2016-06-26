@@ -2,8 +2,8 @@ package riskyken.armourersWorkshop.client.skin;
 
 import java.util.Arrays;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 
 @SideOnly(Side.CLIENT)
