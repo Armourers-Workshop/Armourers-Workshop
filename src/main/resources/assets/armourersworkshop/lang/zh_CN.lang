@@ -11,6 +11,8 @@ tile.armourersworkshop:colourMixer.name=调色器
 tile.armourersworkshop:mannequin.name=模特
 tile.armourersworkshop:doll.name=娃娃模特
 tile.armourersworkshop:skinningTable.name=镶嵌工作台
+tile.armourersworkshop:dyeTable.name=配色工作台
+tile.armourersworkshop:skinnable.name=Skinnable Block
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=让你来设计皮肤外观.
@@ -22,7 +24,7 @@ tile.armourersworkshop:colourableGlowing.flavour=发光的基础构成块!%n(可
 tile.armourersworkshop:colourableGlass.flavour=半透明的基础构成块.%n(可染色)
 tile.armourersworkshop:colourableGlassGlowing.flavour=发光的半透明基础构成块!%n(可染色)
 tile.armourersworkshop:colourMixer.flavour=可以调色的方块.%n潜行加右键可以快速取色.
-tile.armourersworkshop:mannequin.flavour=在模特上预览你的成果!%n使用命名牌可以给模特换正版皮肤.
+tile.armourersworkshop:mannequin.flavour=在模特上预览你的成果!“null”是自带透明的皮肤
 tile.armourersworkshop:doll.flavour=迷你模特!
 tile.armourersworkshop:skinningTable.flavour=给装备上镶嵌或移除时装.%n（移除的时装消失）
 
@@ -68,7 +70,7 @@ item.armourersworkshop:soap.flavour=通过镶嵌工作台来清除物品镶嵌�
 item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱和度 亮度以及染色类型)%n不影响阴影.
 item.armourersworkshop:blockMarker.flavour=在弓的时装制作时添加一个箭尾位置的标记.%n注：弓的每个阶段上只能也必须有一个标记才算制作成功.
 item.armourersworkshop:dyeBottle.flavour=用来给时装改变配色.
-item.armourersworkshop:armourersHammer.flavour=用来旋转时装方块。
+item.armourersworkshop:armourersHammer.flavour=用来旋转时装方块和模特。
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6强度:&7 %s
@@ -105,7 +107,7 @@ item.armourersworkshop:rollover.skinIdError1=&c警告:这时装使用旧文件�
 item.armourersworkshop:rollover.skinIdError2=&c请从资源库保存并重新加载它来解决这个问题。
 item.armourersworkshop:rollover.skinIdError3=&c调试 - 旧 ID: %s 新 ID: %s
 
-# Tool Options
+# Tool Options 工具选项
 tooloption.armourersworkshop:fullBlockMode=涂整个方块
 tooloption.armourersworkshop:changeHue=改变色相
 tooloption.armourersworkshop:changeSaturation=改变饱和度
@@ -114,7 +116,26 @@ tooloption.armourersworkshop:changePaintType=改变染色数据类型
 tooloption.armourersworkshop:intensity=强度
 tooloption.armourersworkshop:radius=半径
 
-# Skin Types
+# Paint Types 染料数据
+paintType.armourersworkshop:normal.name=普通
+paintType.armourersworkshop:dye_1.name=类型1
+paintType.armourersworkshop:dye_2.name=类型2
+paintType.armourersworkshop:dye_3.name=类型3
+paintType.armourersworkshop:dye_4.name=类型4
+paintType.armourersworkshop:dye_5.name=类型5
+paintType.armourersworkshop:dye_6.name=类型6
+paintType.armourersworkshop:dye_7.name=类型7
+paintType.armourersworkshop:dye_8.name=类型8
+paintType.armourersworkshop:none.name=空
+paintType.armourersworkshop:skin.name=皮肤
+paintType.armourersworkshop:hair.name=头发
+
+# Colour Families 颜色预设
+colourFamily.armourersworkshop:wool.name=羊毛
+colourFamily.armourersworkshop:minecraft.name=我的世界
+colourFamily.armourersworkshop:pastel.name=柔和
+
+# Skin Types 时装类型
 skinType.armourers:head.name=帽子
 skinType.armourers:chest.name=上衣
 skinType.armourers:legs.name=裤子
@@ -124,10 +145,10 @@ skinType.armourers:sword.name=武器
 skinType.armourers:bow.name=弓
 skinType.armourers:arrow.name=箭
 skinType.armourers:block.name=方块
-skinType.armourers:multiblock.name=Multiblock
+skinType.armourers:multiblock.name=多方块
 skinType.armourers:wings.name=翅膀
 
-# Skin Part Types
+# Skin Part Types 皮肤部位
 skinPartType.armourers:head.base.name=脑袋
 skinPartType.armourers:chest.base.name=胸部
 skinPartType.armourers:chest.leftArm.name=左臂
@@ -145,13 +166,14 @@ skinPartType.armourers:bow.frame2.name=框架2
 skinPartType.armourers:arrow.base.name=箭
 skinPartType.armourers:block.base.name=方块
 
-# Inventory names
-inventory.armourersworkshop:colourMixer.name=调色机
+# Inventory names 
+inventory.armourersworkshop:colourMixer.name=调色器
 inventory.armourersworkshop:armourerBrain.name=时装工坊
 inventory.armourersworkshop:armourLibrary0.name=资源库
 inventory.armourersworkshop:armourLibrary1.name=资源库 - (创造模式)
 inventory.armourersworkshop:equipmentWardrobe.name=时装栏
 inventory.armourersworkshop:mannequin.name=模特
+inventory.armourersworkshop:doll.name=娃娃模特
 inventory.armourersworkshop:miniArmourer.name=迷你工坊 - (未完成)
 inventory.armourersworkshop:entityEquipment.name=实体设备
 inventory.armourersworkshop:skinningTable.name=镶嵌工作台
@@ -172,6 +194,9 @@ inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=查看服�
 inventory.armourersworkshop:armourLibrary.rollover.notOnServer=你必须连接到一个服务器来使用此功能.
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=打开你电脑上的资源文件夹.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=删除时装.
+inventory.armourersworkshop:armourLibrary.rollover.refresh=刷新资源库文件.
+inventory.armourersworkshop:armourLibrary.label.enterFileName=输入文件名.
+inventory.armourersworkshop:armourLibrary.label.typeToSearch=输入搜索内容...
 
 inventory.armourersworkshop:armourerBrain.label.itemName=物品名:
 inventory.armourersworkshop:armourerBrain.label.username=用户名:
@@ -210,6 +235,11 @@ inventory.armourersworkshop:mannequin.label.isChild=小孩子模型？
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Duang？
 inventory.armourersworkshop:mannequin.random=随机
 inventory.armourersworkshop:mannequin.reset=重置
+inventory.armourersworkshop:mannequin.set=设置
+inventory.armourersworkshop:mannequin.selectSkin=选择皮肤颜色
+inventory.armourersworkshop:mannequin.selectHair=选择头发颜色
+inventory.armourersworkshop:mannequin.autoSkin=自动皮肤颜色
+inventory.armourersworkshop:mannequin.autoHair=自动头发颜色
 inventory.armourersworkshop:mannequin.tab.inventory=物品栏
 inventory.armourersworkshop:mannequin.tab.rotations=旋转
 inventory.armourersworkshop:mannequin.tab.offset=位置调整
@@ -226,21 +256,23 @@ chat.armourersworkshop:undo.outOfUndos=没有更多步撤销
 chat.armourersworkshop:undo.undoing=正在撤销
 chat.armourersworkshop:inventoryFull=你的包满了
 chat.armourersworkshop:inventoryGiftFail=有人试图给你一份礼物,但你没有地方放!
+chat.armourersworkshop:updateAvailable=时装工坊 %s 已经可以更新.
+chat.armourersworkshop:updateDownload=[下载]
+chat.armourersworkshop:updateDownloadRollover=点击打开下载页面
 
 # Death Messages
 death.attack.victorious=%1$s 被皇冠刺死了
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache> <player> [skinName] 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模特数据> <玩家名> [皮肤名]
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setSkinColumnCount> <player> [skinName | value] 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模特数据| 设置皮肤栏数> <玩家名> [时装名 | 数值]
 commands.armourers.fileNotFound=文件 %1$s 没有找到.
 
 # Creative tab
-itemGroup.armourersworkshop=时装制造工坊
+itemGroup.armourersworkshop=时装工坊
 
 # Keybindings
 keys.armourersworkshop:category=时装制造工坊
 keys.armourersworkshop.equipmentWardrobe=时装栏
-keys.armourersworkshop.equipmentWardrobe=我的时装栏
 keys.armourersworkshop.undo=撤销
 
 # Guide Book

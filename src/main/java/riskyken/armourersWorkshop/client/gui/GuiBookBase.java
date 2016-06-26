@@ -1,5 +1,10 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -8,10 +13,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-
 import riskyken.armourersWorkshop.client.gui.controls.GuiBookButton;
 import riskyken.armourersWorkshop.client.guidebook.BookPage;
 import riskyken.armourersWorkshop.client.guidebook.BookPageBase;
@@ -20,8 +21,6 @@ import riskyken.armourersWorkshop.client.guidebook.IBookPage;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiBookBase extends GuiScreen {
@@ -103,7 +102,7 @@ public abstract class GuiBookBase extends GuiScreen {
         mc.renderEngine.bindTexture(bookTexture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.guiWidth, this.guiHeight);
         buttonBack.visible = pagePanelLeft != 1;
-        buttonForward.visible = pagePanelRight <= book.getTotalNumberOfPages();
+        buttonForward.visible = pagePanelRight < book.getTotalNumberOfPages();
         renderPageText(pagePanelLeft, 0, mouseX, mouseY, false);
         renderPageText(pagePanelRight, BookPage.PAGE_TEXTURE_WIDTH, mouseX, mouseY, false);
         //renderTurningPage();
