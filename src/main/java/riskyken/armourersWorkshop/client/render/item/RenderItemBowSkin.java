@@ -4,15 +4,11 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
@@ -105,7 +101,7 @@ public class RenderItemBowSkin implements IItemRenderer {
                     RenderBlocks renderBlocks = (RenderBlocks) data[0];
                     player = (AbstractClientPlayer) data[1];
                     useCount = player.getItemInUseDuration();
-                    hasArrow = player.inventory.hasItem(Items.arrow);
+                    hasArrow = player.inventory.hasItem(Items.ARROW);
                     IEntityEquipment entityEquipment = SkinModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
                     if (entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
                         skinPointerArrow = entityEquipment.getSkinPointer(SkinTypeRegistry.skinArrow, 0);

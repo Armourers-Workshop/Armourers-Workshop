@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiLabeledTextField extends GuiTextField {
@@ -11,8 +11,8 @@ public class GuiLabeledTextField extends GuiTextField {
     private final FontRenderer fontRenderer;
     private String emptyLabel = "";
     
-    public GuiLabeledTextField(FontRenderer fontRenderer, int x, int y, int width, int height) {
-        super(fontRenderer, x, y, width, height);
+    public GuiLabeledTextField(int componentId, FontRenderer fontRenderer, int x, int y, int width, int height) {
+        super(componentId, fontRenderer, x, y, width, height);
         this.fontRenderer = fontRenderer;
     }
     

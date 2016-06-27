@@ -83,11 +83,11 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
         checkShowHelper = new GuiCheckBox(6, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showHelper"), armourerBrain.isShowHelper());
         
-        textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
+        textItemName = new GuiTextField(0, fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
         textItemName.setText(armourerBrain.getCustomName());
         
-        textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
+        textUserSkin = new GuiTextField(0, fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
         textUserSkin.setMaxStringLength(30);
         buttonList.add(new GuiButtonExt(8, guiLeft + 138, guiTop + 88, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
         

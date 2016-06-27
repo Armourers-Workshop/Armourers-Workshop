@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
@@ -49,7 +50,7 @@ public class ItemSkin extends AbstractModItem {
     }
     
     public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, boolean showAdvancedItemTooltips) {
-        String cRed = EnumChatFormatting.RED.toString();
+        String cRed = TextFormatting.RED.toString();
         
         boolean isEquipmentSkin = stack.getItem() == ModItems.equipmentSkin;
         boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;

@@ -1,23 +1,25 @@
 package riskyken.armourersWorkshop.common.items;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
-import riskyken.plushieWrapper.common.item.PlushieItemStack;
 
-public class ItemGuideBook extends AbstractModItemNew {
+public class ItemGuideBook extends AbstractModItem {
 
     public ItemGuideBook() {
         super(LibItemNames.GUIDE_BOOK);
     }
     
     @Override
-    public PlushieItemStack onItemRightClick(PlushieItemStack stack,
-            WorldPointer world, PlushieEntityPlayer player) {
-        if (world.isRemote()) {
-            player.openGui(ArmourersWorkshop.instance, LibGuiIds.GUIDE_BOOK, world, new BlockLocation(0, 0, 0));
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        if (worldIn.isRemote) {
+            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.GUIDE_BOOK, worldIn, 0, 0, 0);
         }
-        return stack;
+        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
     }
 }

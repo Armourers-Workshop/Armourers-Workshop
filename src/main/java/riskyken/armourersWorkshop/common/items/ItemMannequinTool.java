@@ -2,11 +2,15 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,10 +30,9 @@ public class ItemMannequinTool extends AbstractModItem {
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
-            int side, float hitX, float hitY, float hitZ) {
-        
-        Block block = world.getBlock(x, y, z);
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
+            EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState block = worldIn.getBlockState(pos);
         if (block != null && (block == ModBlocks.mannequin | block == ModBlocks.doll)) {
             TileEntity te;
             int meta = world.getBlockMetadata(x, y, z);
@@ -40,7 +43,7 @@ public class ItemMannequinTool extends AbstractModItem {
             }
             if (te != null && te instanceof TileEntityMannequin) {
                 TileEntityMannequin teMan = (TileEntityMannequin) te;
-                if (player.isSneaking()) {
+                if (playerIn.isSneaking()) {
                     setRotationDataOnStack(stack, teMan.getBipedRotations());
                 } else {
                     BipedRotations bipedRotations = getRotationDataFromStack(stack);
@@ -48,10 +51,10 @@ public class ItemMannequinTool extends AbstractModItem {
                         teMan.setBipedRotations(bipedRotations);
                     }
                 }
-                return true;
+                return EnumActionResult.PASS;
             }
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
     
     private BipedRotations getRotationDataFromStack(ItemStack stack) {

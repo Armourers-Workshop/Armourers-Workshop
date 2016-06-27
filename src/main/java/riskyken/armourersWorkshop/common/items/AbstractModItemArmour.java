@@ -3,8 +3,10 @@ package riskyken.armourersWorkshop.common.items;
 import java.util.List;
 
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -21,7 +23,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class AbstractModItemArmour extends ItemArmor {
 
-    public AbstractModItemArmour(String name, ArmorMaterial armorMaterial, int armorType, boolean addCreativeTab) {
+    public AbstractModItemArmour(String name, ArmorMaterial armorMaterial, EntityEquipmentSlot armorType, boolean addCreativeTab) {
         super(armorMaterial, 2, armorType);
         if (addCreativeTab) {
             setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
@@ -85,13 +87,13 @@ public class AbstractModItemArmour extends ItemArmor {
     
     @Override
     @SideOnly(Side.CLIENT)
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack stack, int armorSlot) {
-        
-        if (!SkinNBTHelper.stackHasSkinData(stack)) {
+    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot,
+            ModelBiped _default) {
+        if (!SkinNBTHelper.stackHasSkinData(itemStack)) {
             return null;
         }
         
-        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(itemStack);
         
         AbstractModelSkin targetModel = null;
         SkinModelRenderer emr = SkinModelRenderer.INSTANCE;

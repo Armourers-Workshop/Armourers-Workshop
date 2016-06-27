@@ -2,16 +2,15 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 
 @SideOnly(Side.CLIENT)
 public class GuiIconButton extends GuiButtonExt {
@@ -59,8 +58,8 @@ public class GuiIconButton extends GuiButtonExt {
         if (!this.visible) {
             return;
         }
-        this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-        int hoverState = this.getHoverState(this.field_146123_n);
+        this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+        int hoverState = this.getHoverState(this.hovered);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         int xPos = iconPosX;
         if (hoverState == 0) {
@@ -78,16 +77,16 @@ public class GuiIconButton extends GuiButtonExt {
     }
     
     public void drawRollover(Minecraft mc, int mouseX, int mouseY) {
-        int hoverState = this.getHoverState(this.field_146123_n);
-        if (hoverState == 0 & this.field_146123_n) {
+        int hoverState = this.getHoverState(this.hovered);
+        if (hoverState == 0 & this.hovered) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(disableText);
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRendererObj, parent.width, parent.height, zLevel);
         }
         if (hoverState == 2) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(hoverText);
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRendererObj, parent.width, parent.height, zLevel);
         }
     }
 }

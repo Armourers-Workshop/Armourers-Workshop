@@ -4,12 +4,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
-import riskyken.armourersWorkshop.common.lib.LibSounds;
-import riskyken.armourersWorkshop.utils.UtilColour;
-import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.utils.UtilColour;
+import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 @SideOnly(Side.CLIENT)
 public class GuiBookTextButton extends GuiButtonExt {
@@ -21,8 +21,8 @@ public class GuiBookTextButton extends GuiButtonExt {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
-            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            int hoverState = this.getHoverState(this.field_146123_n);
+            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+            int hoverState = this.getHoverState(this.hovered);
             int color = UtilColour.getMinecraftColor(8, ColourFamily.MINECRAFT);
             
             if (hoverState == 2) {
@@ -30,10 +30,10 @@ public class GuiBookTextButton extends GuiButtonExt {
             }
             
             String buttonText = this.displayString;
-            int strWidth = mc.fontRenderer.getStringWidth(buttonText);
-            int ellipsisWidth = mc.fontRenderer.getStringWidth("...");
+            int strWidth = mc.fontRendererObj.getStringWidth(buttonText);
+            int ellipsisWidth = mc.fontRendererObj.getStringWidth("...");
             
-            mc.fontRenderer.drawString(buttonText, this.xPosition, this.yPosition, color);
+            mc.fontRendererObj.drawString(buttonText, this.xPosition, this.yPosition, color);
         }
     }
     

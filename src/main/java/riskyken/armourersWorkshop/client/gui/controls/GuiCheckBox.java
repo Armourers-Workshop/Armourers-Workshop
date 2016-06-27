@@ -19,8 +19,8 @@ public class GuiCheckBox extends net.minecraftforge.fml.client.config.GuiCheckBo
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
-            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.boxWidth && mouseY < this.yPosition + this.height;
-            GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.boxWidth, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.boxWidth && mouseY < this.yPosition + this.height;
+            GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.xPosition, this.yPosition, 0, 46, this.boxWidth, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
             this.mouseDragged(mc, mouseX, mouseY);
             int color = 4210752;
             
@@ -31,9 +31,9 @@ public class GuiCheckBox extends net.minecraftforge.fml.client.config.GuiCheckBo
             }
             
             if (this.isChecked()) {
-                this.drawCenteredString(mc.fontRenderer, "x", this.xPosition + this.boxWidth / 2 + 1, this.yPosition, 14737632);
+                this.drawCenteredString(mc.fontRendererObj, "x", this.xPosition + this.boxWidth / 2 + 1, this.yPosition, 14737632);
             }  
-            mc.fontRenderer.drawString(displayString, xPosition + this.boxWidth + 2, yPosition + 1, color, false);
+            mc.fontRendererObj.drawString(displayString, xPosition + this.boxWidth + 2, yPosition + 1, color, false);
         }
     }
 }

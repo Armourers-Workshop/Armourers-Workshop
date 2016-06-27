@@ -57,9 +57,9 @@ public class BlockArmourer extends AbstractModBlockContainer {
     }
 
     @Override
-    public Block setBlockName(String name) {
+    public Block setUnlocalizedName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
+        return super.setUnlocalizedName(name);
     }
 
     @Override

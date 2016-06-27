@@ -2,20 +2,19 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.awt.Color;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
 public class GuiHSBSlider extends GuiSlider {
@@ -40,9 +39,9 @@ public class GuiHSBSlider extends GuiSlider {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
             mouseCheck();
-            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            int k = this.getHoverState(this.field_146123_n);
-            GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+            int k = this.getHoverState(this.hovered);
+            GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
             mc.renderEngine.bindTexture(sliderTexture);
             
             if (type == HSBSliderType.SATURATION) {
@@ -102,7 +101,7 @@ public class GuiHSBSlider extends GuiSlider {
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             
-            ScaledResolution screenRes = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            ScaledResolution screenRes = new ScaledResolution(mc);
             double scaleWidth = (double)mc.displayWidth / screenRes.getScaledWidth_double();
             double scaleHeight = (double)mc.displayHeight / screenRes.getScaledHeight_double();
             
