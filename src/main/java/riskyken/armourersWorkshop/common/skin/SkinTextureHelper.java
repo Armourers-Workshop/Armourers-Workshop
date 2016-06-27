@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.skin;
 
 import java.awt.Point;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
  */
 public class SkinTextureHelper {
     
-    public static Point getTextureLocationFromWorldBlock(TileEntityBoundingBox te, int side) {
+    public static Point getTextureLocationFromWorldBlock(TileEntityBoundingBox te, EnumFacing side) {
         ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
         Point textureLocation = skinPart.getTextureLocation();
         IPoint3D textureModelSize = skinPart.getTextureModelSize();

@@ -2,13 +2,12 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.data.MiniCube;
@@ -157,7 +156,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.MINI_ARMOURER;
     }
 }

@@ -8,9 +8,6 @@ import java.util.WeakHashMap;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -19,6 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -90,7 +90,7 @@ public final class SkinModelRenderer {
         //Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
-            ItemStack armourStack = player.getCurrentArmor(slot);
+            ItemStack armourStack = player.inventory.armorItemInSlot(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
                 return getCustomArmourItemData(sp);
@@ -121,7 +121,7 @@ public final class SkinModelRenderer {
         //Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
-            ItemStack armourStack = player.getCurrentArmor(slot);
+            ItemStack armourStack = player.inventory.armorItemInSlot(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
                 return sp.getSkinDye();
@@ -207,11 +207,11 @@ public final class SkinModelRenderer {
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
-        EntityPlayer player = event.entityPlayer;
+        EntityPlayer player = event.getEntityPlayer();
         targetPlayer = player;
         
         if (ClientProxy.useAttachedModelRender()) {
-            attachModelsToBiped(event.renderer.modelBipedMain, event.renderer);
+            attachModelsToBiped(event.getRenderer().getMainModel(), event.getRenderer());
         }
         
         
@@ -261,8 +261,8 @@ public final class SkinModelRenderer {
         if (ClientProxy.useAttachedModelRender()) {
             return;
         }
-        EntityPlayer player = event.entityPlayer;
-        RenderPlayer render = event.renderer;
+        EntityPlayer player = event.getEntityPlayer();
+        RenderPlayer render = event.getRenderer();
         if (player.getGameProfile() == null) {
             return;
         }
@@ -295,35 +295,35 @@ public final class SkinModelRenderer {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                     if (data != null) {
-                        customHead.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customHead.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                     if (data != null) {
-                        customChest.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customChest.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
                     if (data != null) {
-                        customLegs.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customLegs.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     if (data != null) {
-                        customSkirt.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customSkirt.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
                     if (data != null) {
-                        customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customFeet.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
             }

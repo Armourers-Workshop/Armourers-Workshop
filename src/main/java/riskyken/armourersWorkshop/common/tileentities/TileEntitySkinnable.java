@@ -1,15 +1,15 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -19,7 +19,6 @@ import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class TileEntitySkinnable extends TileEntity {
 
@@ -45,7 +44,7 @@ public class TileEntitySkinnable extends TileEntity {
     public void setSkinPointer(SkinPointer skinPointer) {
         this.skinPointer = skinPointer;
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockRangeForRenderUpdate(pos, pos);
     }
     
     @Override
@@ -93,7 +92,7 @@ public class TileEntitySkinnable extends TileEntity {
     }
 
     private void rotateBlockBounds() {
-        ForgeDirection dir = ForgeDirection.UNKNOWN;
+        EnumFacing dir = null;
         int meta = getBlockMetadata() % 4;
         
         float oldMinX = minX;
@@ -102,16 +101,16 @@ public class TileEntitySkinnable extends TileEntity {
         float oldMaxZ = maxZ;
         
         if (meta == 0) {
-            dir = ForgeDirection.SOUTH;
+            dir = EnumFacing.SOUTH;
         }
         if (meta == 1) {
-            dir = ForgeDirection.WEST;
+            dir = EnumFacing.WEST;
         }
         if (meta == 2) {
-            dir = ForgeDirection.NORTH;
+            dir = EnumFacing.NORTH;
         }
         if (meta == 3) {
-            dir = ForgeDirection.EAST;
+            dir = EnumFacing.EAST;
         }
         
         switch (dir) {
@@ -148,30 +147,26 @@ public class TileEntitySkinnable extends TileEntity {
     }
 
     @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, compound);
+        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), compound);
+    }
+
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        NBTTagCompound compound = pkt.getNbtCompound();
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        NBTTagCompound compound = packet.func_148857_g();
-        readFromNBT(compound);
-    }
-    
-    @Override
-    public boolean canUpdate() {
-        return false;
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setBoolean(TAG_HAS_SKIN, hasSkin());
         if (hasSkin()) {
             skinPointer.writeToCompound(compound);
         }
+        return compound;
     }
 
     @Override
@@ -198,11 +193,11 @@ public class TileEntitySkinnable extends TileEntity {
 
     public class SkinnableBlockData {
         
-        public final BlockLocation blockLocation;
+        public final BlockPos blockPos;
         public final SkinPointer skinPointer;
         
-        public SkinnableBlockData(BlockLocation blockLocation, SkinPointer skinPointer) {
-            this.blockLocation = blockLocation;
+        public SkinnableBlockData(BlockPos blockPos, SkinPointer skinPointer) {
+            this.blockPos = blockPos;
             this.skinPointer = skinPointer;
         }
     }

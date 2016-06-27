@@ -4,17 +4,10 @@ import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntitySpellParticleFX;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -22,10 +15,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
@@ -42,16 +37,16 @@ public class BlockDoll extends AbstractModBlockContainer {
     private final boolean isValentins;
     
     public BlockDoll() {
-        super(LibBlockNames.DOLL, Material.rock, soundTypeMetal, !ConfigHandler.hideDollFromCreativeTabs);
+        super(LibBlockNames.DOLL, Material.SAND, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
         setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
     }
     
     @Override
-    public Block setBlockName(String name) {
+    public Block setUnlocalizedName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
+        return super.setUnlocalizedName(name);
     }
     
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
@@ -187,25 +182,5 @@ public class BlockDoll extends AbstractModBlockContainer {
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
         return new TileEntityMannequin(true);
-    }
-    
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-    
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return -1;
     }
 }

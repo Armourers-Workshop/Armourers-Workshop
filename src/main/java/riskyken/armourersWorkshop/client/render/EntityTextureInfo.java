@@ -4,10 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
@@ -86,8 +86,8 @@ public class EntityTextureInfo {
         
         if (bufferedEntityImage == null) {
             //Texture is most likely not downloaded yet.
-            lastEntityTextureHash = AbstractClientPlayer.locationStevePng.hashCode();
-            bufferedEntityImage = SkinHelper.getBufferedImageSkin(AbstractClientPlayer.locationStevePng);
+            lastEntityTextureHash = DefaultPlayerSkin.getDefaultSkinLegacy().hashCode();
+            bufferedEntityImage = SkinHelper.getBufferedImageSkin(DefaultPlayerSkin.getDefaultSkinLegacy());
             needsUpdate = true;
         }
     }

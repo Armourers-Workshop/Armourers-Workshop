@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -9,7 +10,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraft.creativetab.CreativeTabs;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -26,7 +26,6 @@ import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.SkinExtractor;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
@@ -114,7 +113,6 @@ public class ArmourersWorkshop {
         
         PacketHandler.init();
         EntityEquipmentDataManager.init();
-        EntitySkinHandler.init();
         
         proxy.init();
         proxy.registerKeyBindings();

@@ -2,13 +2,12 @@ package riskyken.armourersWorkshop.client.model.block;
 
 import java.awt.Color;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -62,11 +61,11 @@ public class ModelBlockArmourer extends ModelBase {
     public void render(TileEntityMiniArmourer tileEntity, float tickTime, float scale) {
         Minecraft.getMinecraft().renderEngine.bindTexture(modelImage);
         if (tileEntity != null) {
-            float angle = (((tileEntity.getWorldObj().getTotalWorldTime() + tileEntity.hashCode()) % 360) + tickTime);
+            float angle = (((tileEntity.getWorld().getTotalWorldTime() + tileEntity.hashCode()) % 360) + tickTime);
             setRotateAngle(this.shape8, (float)Math.toRadians(angle * 4), (float)Math.toRadians(angle), (float)Math.toRadians(angle * 2));
 
             Color c = new Color(tileEntity.red, tileEntity.green, tileEntity.blue);
-            if (tileEntity.getWorldObj().getTotalWorldTime() % 2 == 1) {
+            if (tileEntity.getWorld().getTotalWorldTime() % 2 == 1) {
                 c = UtilColour.addColourNoise(c, 3);
             }
             

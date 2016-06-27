@@ -83,7 +83,7 @@ public final class EquipmentWardrobeHandler {
         RenderPlayer renderer = event.getRenderer();
         if (equipmentWardrobeMap.containsKey(playerPointer)) {
             EquipmentWardrobeData ewd = equipmentWardrobeMap.get(playerPointer);
-            renderer.modelBipedMain.bipedHeadwear.isHidden = ewd.headOverlay;
+            renderer.getMainModel().bipedHeadwear.isHidden = ewd.headOverlay;
         }
     }
     
@@ -104,13 +104,13 @@ public final class EquipmentWardrobeHandler {
         PlayerPointer playerPointer = new PlayerPointer(player);
         RenderPlayer renderer = event.getRenderer();
         if (equipmentWardrobeMap.containsKey(playerPointer)) {
-            renderer.modelBipedMain.bipedHeadwear.isHidden = false;
+            renderer.getMainModel().bipedHeadwear.isHidden = false;
         }
     }
     
     @SubscribeEvent(priority=EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.SetArmorModel event) {
-        int slot = -event.slot + 3;
+        int slot = -event.getSlot() + 3;
         if (slot > 3) {
             return;
         }
@@ -127,7 +127,7 @@ public final class EquipmentWardrobeHandler {
         
         int result = -1;
         //Hide the armour if it had been skinned.
-        ItemStack stack = player.getCurrentArmor(event.slot);
+        ItemStack stack = player.getCurrentArmor(event.getSlot());
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             result = -2;
         }
@@ -140,6 +140,6 @@ public final class EquipmentWardrobeHandler {
                 result = -2;
             }
         }
-        event.result = result;
+        event.setResult(result);
     }
 }

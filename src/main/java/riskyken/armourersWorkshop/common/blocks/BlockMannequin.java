@@ -4,18 +4,14 @@ import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntitySpellParticleFX;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -24,94 +20,107 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
 public class BlockMannequin extends AbstractModBlockContainer {
-
-    public static DamageSource victoriousDamage = new DamageSource("victorious");
+    
+    public static final PropertyEnum<EnumPartType> PART = PropertyEnum.<EnumPartType>create("part", EnumPartType.class);
+    private static final AxisAlignedBB MANNEQUIN_AABB = new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
+    private static DamageSource victoriousDamage = new DamageSource("victorious");
     private static final String TAG_OWNER = "owner";
     private final boolean isValentins;
     
     public BlockMannequin() {
-        super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal, true);
+        super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
         setLightOpacity(0);
-        setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
     }
     
     @Override
-    public Block setBlockName(String name) {
+    public Block setUnlocalizedName(String name) {
         GameRegistry.registerBlock(this, ItemBlockMannequin.class, "block." + name);
-        return super.setBlockName(name);
+        return super.setUnlocalizedName(name);
     }
     
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return MANNEQUIN_AABB;
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity te = worldIn.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
-            int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
+            int l = MathHelper.floor_double((double)(placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
             ((TileEntityMannequin)te).setRotation(l);
-            if (!world.isRemote) {
+            if (!worldIn.isRemote) {
                 if (stack.hasTagCompound()) {
                     NBTTagCompound compound = stack.getTagCompound();
                     GameProfile gameProfile = null;
                     if (compound.hasKey(TAG_OWNER, 10)) {
-                        gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                        gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
                         ((TileEntityMannequin)te).setGameProfile(gameProfile);
                     }
                 }
             }
         }
-        world.setBlock(x, y + 1, z, this, 1, 2);
+        //world.setBlock(x, y + 1, z, this, 1, 2);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
-        if (isTopOfMannequin(world, x, y, z)) {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        if (isTopOfMannequin(worldIn, pos)) {
             if (isValentins) {
-                if (random.nextFloat() * 100 > 75) {
-                    world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
+                if (rand.nextFloat() * 100 > 75) {
+                    //worldIn.spawnParticle(EnumParticleTypes.HEART, pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY() - 1D, pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0, new int[0]);
+                    //worldIn.spawnParticle("heart", x + 0.2D + rand.nextFloat() * 0.6F, y + 1D, z + 0.2D + rand.nextFloat() * 0.6F, 0, 0, 0);
                 }
             }
-            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
+            TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
             if (te != null && te.isRenderExtras()) {
                 if (te.hasSpecialRender()) {
                     for (int i = 0; i < 4; i++) {
-                        EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
-                        ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
+                        /*
+                        //ParticleSpell.AmbientMobFactory.
+                        Particle entityfx = new ParticleSpell(worldIn, pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY() - 1D, pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0);
+                        ((ParticleSpell)entityfx).setBaseSpellTextureIndex(144);
                         float[] colour = te.getSpecialRenderColour();
                         entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
                         Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
+                        */
                     }
                 }
             }
         }
     }
     
-    public void convertToDoll(World world, int x, int y, int z) {
-        if (isTopOfMannequin(world, x, y, z)) {
-            Block block = world.getBlock(x, y - 1, z);
-            if (block == this) {
-                ((BlockMannequin)block).convertToDoll(world, x, y - 1, z);
-            }
+    public void convertToDoll(World world, BlockPos pos) {
+        if (isTopOfMannequin(world, pos)) {
+            convertToDoll(world, pos.add(0, -1, 0));
             return;
         }
         
-        if (world.getBlock(x, y + 1, z) == this) {
-            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
+        if (world.getBlockState(pos).getBlock() == this) {
+            TileEntityMannequin te = getMannequinTileEntity(world, pos);
             if (te != null) {
                 te.setDropItems(false);
                 NBTTagCompound compound = new NBTTagCompound();
@@ -129,39 +138,33 @@ public class BlockMannequin extends AbstractModBlockContainer {
         }
     }
     
-    public TileEntityMannequin getMannequinTileEntity(World world, int x, int y, int z) {
-        int offset = 0;
-        if (isTopOfMannequin(world, x, y, z)) {
-            offset = -1;
+    public TileEntityMannequin getMannequinTileEntity(World world, BlockPos pos) {
+        if (isTopOfMannequin(world, pos)) {
+            pos = pos.add(0, -1, 0);
         }
-        TileEntity te = world.getTileEntity(x, y + offset, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
             return (TileEntityMannequin) te;
         }
         return null;
     }
     
-    public boolean isTopOfMannequin(World world, int x, int y, int z) {
-        return isTopOfMannequin(world.getBlockMetadata(x, y, z));
+    public boolean isTopOfMannequin(World world, BlockPos pos) {
+        return isTopOfMannequin(world.getBlockState(pos));
     }
     
-    public boolean isTopOfMannequin(int meta) {
-        return meta == 1;
+    public boolean isTopOfMannequin(IBlockState blockState) {
+        return blockState.getValue(PART) == EnumPartType.TOP;
     }
     
     @Override
-    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
         if (world.isRemote) {
             return false;
         }
         
-        int meta = world.getBlockMetadata(x, y, z);
-        int yOffset = 0;
-        if (meta == 1) {
-            yOffset = -1;
-        }
-        TileEntity te = world.getTileEntity(x, y + yOffset, z);
-        if (te != null && te instanceof TileEntityMannequin) {
+        TileEntityMannequin te = getMannequinTileEntity(world, pos);
+        if (te != null) {
             int rotation = ((TileEntityMannequin)te).getRotation();
             rotation++;
             if (rotation > 15) {
@@ -171,7 +174,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
         }
         return true;
     }
-    
+    /*
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
         super.onEntityCollidedWithBlock(world, x, y, z, entity);
@@ -210,21 +213,16 @@ public class BlockMannequin extends AbstractModBlockContainer {
             }
         }
     }
+    */
     
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         ItemStack stack = new ItemStack(ModBlocks.mannequin, 1);
-        int meta = world.getBlockMetadata(x, y, z);
-        int yOffset = 0;
-        if (meta == 1) {
-            yOffset = -1;
-        }
-        TileEntity te = world.getTileEntity(x, y + yOffset, z);
-        if (te != null && te instanceof TileEntityMannequin) {
-            TileEntityMannequin teMan = (TileEntityMannequin) te;
-            if (teMan.getGameProfile() != null) {
+        TileEntityMannequin te = getMannequinTileEntity(world, pos);
+        if (te != null) {
+            if (te.getGameProfile() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.func_152460_a(profileTag, teMan.getGameProfile());
+                NBTUtil.writeGameProfile(profileTag, te.getGameProfile());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
@@ -234,20 +232,14 @@ public class BlockMannequin extends AbstractModBlockContainer {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         return true;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
+    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
     }
     
     @Override
@@ -312,7 +304,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
     
     @Override
-    public int quantityDropped(int meta, int fortune, Random random) {
+    public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
     }
     
@@ -331,22 +323,28 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
     
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] {PART});
     }
     
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return -1;
+    public static enum EnumPartType implements IStringSerializable {
+        TOP("top"),
+        BOTTOM("bottom");
+
+        private final String name;
+        
+        private EnumPartType(String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public String toString() {
+            return this.name;
+        }
+        
+        @Override
+        public String getName() {
+            return this.name;
+        }
     }
 }

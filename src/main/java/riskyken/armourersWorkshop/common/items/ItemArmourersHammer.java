@@ -9,12 +9,12 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 
-@Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")
-public class ItemArmourersHammer extends AbstractModItem implements IToolWrench {
+/*@Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")*/
+public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrench*/ {
 
     public ItemArmourersHammer() {
         super(LibItemNames.ARMOURERS_HAMMER);
@@ -80,7 +80,7 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
         }
         return false;
     }
-    
+    /*
     @Optional.Method(modid = "BuildCraft|Core")
     @Override
     public boolean canWrench(EntityPlayer player, int x, int y, int z) {
@@ -92,9 +92,10 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
     public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
         player.swingItem();
     }
+    */
     
     @Override
-    public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {
+    public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
         return true;
     }
 }

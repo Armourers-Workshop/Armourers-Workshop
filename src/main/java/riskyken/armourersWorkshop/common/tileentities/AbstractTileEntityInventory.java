@@ -5,6 +5,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public abstract class AbstractTileEntityInventory extends TileEntity implements IInventory {
@@ -64,7 +66,7 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
     public void closeInventory(EntityPlayer player) {}
     
     @Override
-    public boolean hasCustomInventoryName() {
+    public boolean hasCustomName() {
         return false;
     }
 
@@ -75,7 +77,7 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
     
     @Override
     public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-        return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) <= 64;
+        return entityplayer.getDistanceSq(pos) <= 64;
     }
 
     @Override
@@ -84,9 +86,10 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeItemsToNBT(compound);
+        return compound;
     }
     
     @Override
@@ -115,5 +118,32 @@ public abstract class AbstractTileEntityInventory extends TileEntity implements 
     
     public void readItemsFromNBT(NBTTagCompound compound) {
         NBTHelper.readStackArrayFromNBT(compound, TAG_ITEMS, items);
+    }
+    
+    @Override
+    public void clear() {
+    }
+    
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TextComponentString(getName());
+    }
+    
+    @Override
+    public int getField(int id) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    
+    @Override
+    public int getFieldCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    
+    @Override
+    public void setField(int id, int value) {
+        // TODO Auto-generated method stub
+        
     }
 }

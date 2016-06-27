@@ -1,28 +1,15 @@
 package riskyken.armourersWorkshop.common.addons;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 
 import org.apache.logging.log4j.Level;
 
-import com.google.common.collect.Maps;
-
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import net.minecraftforge.client.MinecraftForgeClient;
-import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
-import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
-import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class Addons {
     
-    private static IdentityHashMap<Item, IItemRenderer> customItemRenderers = Maps.newIdentityHashMap();
+    //private static IdentityHashMap<Item, IItemRenderer> customItemRenderers = Maps.newIdentityHashMap();
     
     private static ArrayList<AbstractAddon> loadedAddons = new ArrayList<AbstractAddon>(); 
     
@@ -230,12 +217,6 @@ public final class Addons {
         }
     }
     
-    public static void onWeaponRender(ItemRenderType type, EventState state) {
-        for (int i = 0; i < loadedAddons.size(); i++) {
-            loadedAddons.get(i).onWeaponRender(type, state);
-        }
-    }
-    
     public static void initRenderers() {    
         overrideSwordRenders();
         overrideBowRenders();
@@ -274,6 +255,7 @@ public final class Addons {
     }
     
     private static void overrideItemRenderer(String modId, String itemName, RenderType renderType) {
+        /*
         Item item = GameRegistry.findItem(modId, itemName);
         if (item != null) {
             ItemStack stack = new ItemStack(item);
@@ -295,8 +277,9 @@ public final class Addons {
         } else {
             ModLogger.log(Level.WARN, "Unable to override item renderer for: " + modId + " - " + itemName);
         }
+        */
     }
-    
+    /*
     private static IItemRenderer getItemRenderer(ItemStack stack) {
         try {
             IdentityHashMap<Item, IItemRenderer> customItemRenderers = null;
@@ -316,7 +299,7 @@ public final class Addons {
             return renderer;
         }
         return null;
-    }
+    }*/
     
     public static enum RenderType {
         SWORD,

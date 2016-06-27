@@ -59,7 +59,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                     int colour = getToolColour(stack);
                     PaintType paintType = getToolPaintType(stack);
                     ((IPantable)te).setColour(colour);
-                    ((IPantable)te).setPaintType(paintType, 0);
+                    ((IPantable)te).setPaintType(paintType, facing);
                 }
             }
             return EnumActionResult.PASS;

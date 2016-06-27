@@ -95,10 +95,10 @@ public class PlayerTextureHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.Post event) {
         
-        if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
+        if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {
             return;
         }
-        AbstractClientPlayer player = (AbstractClientPlayer) event.entityPlayer;
+        AbstractClientPlayer player = (AbstractClientPlayer) event.getEntityPlayer();
         if (player instanceof MannequinFakePlayer) {
             return;
         }

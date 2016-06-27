@@ -11,12 +11,10 @@ import org.lwjgl.opengl.GL12;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -29,6 +27,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.gui.GuiMannequin;
@@ -110,7 +110,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         mc.mcProfiler.endStartSection("fakePlayer");
         if (mannequinFakePlayer == null) {
-            mannequinFakePlayer = new MannequinFakePlayer(te.getWorldObj(), new GameProfile(null, "[Mannequin]"));
+            mannequinFakePlayer = new MannequinFakePlayer(te.getWorld(), new GameProfile(null, "[Mannequin]"));
             mannequinFakePlayer.posX = x;
             mannequinFakePlayer.posY = y;
             mannequinFakePlayer.posZ = z;
@@ -120,9 +120,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         if (te.getGameProfile() != null) {
-            if (te.getGameProfile() != null & te.getWorldObj() != null) {
+            if (te.getGameProfile() != null & te.getWorld() != null) {
                 if (fakePlayer == null) {
-                    fakePlayer = new MannequinFakePlayer(te.getWorldObj(), te.getGameProfile());
+                    fakePlayer = new MannequinFakePlayer(te.getWorld(), te.getGameProfile());
                     fakePlayer.posX = x;
                     fakePlayer.posY = y;
                     fakePlayer.posZ = z;
@@ -137,8 +137,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         if (te.getBipedRotations() != null) {
             te.getBipedRotations().applyRotationsToBiped(model);
-            te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);
-            te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
+            te.getBipedRotations().applyRotationsToBiped(renderPlayer.getMainModel());
+            //te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
         }
         
         
@@ -251,19 +251,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             renderModel(te, model, fakePlayer);
         }
         
-        if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
-            GL11.glPushMatrix();
-            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleZ), 0, 0, 1);
-            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleY), 0, 1, 0);
-            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleX), 1, 0, 0);
-            GL11.glTranslated(-5.5F * SCALE, 0, 0);
-            GL11.glTranslated(0, -6.5F * SCALE, 0);
-            model.bipedEars.render(SCALE);
-            GL11.glTranslated(11F * SCALE, 0, 0);
-            model.bipedEars.render(SCALE);
-            GL11.glPopMatrix();
-        }
-        
         //Magic circle.
         if (te.isRenderExtras()) {
             if (te.hasSpecialRender()) {
@@ -284,7 +271,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         model.bipedRightLeg.rotateAngleZ = 0F;
         model.bipedHead.rotateAngleZ = 0F;
         model.bipedHeadwear.rotateAngleZ = 0F;
-        
+        /*
         renderPlayer.modelArmor.bipedLeftLeg.rotateAngleZ = 0F;
         renderPlayer.modelArmor.bipedRightLeg.rotateAngleZ = 0F;
         renderPlayer.modelArmor.bipedHead.rotateAngleZ = 0F;
@@ -294,6 +281,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer.modelArmorChestplate.bipedRightLeg.rotateAngleZ = 0F;
         renderPlayer.modelArmorChestplate.bipedHead.rotateAngleZ = 0F;
         renderPlayer.modelArmorChestplate.bipedHeadwear.rotateAngleZ = 0F;
+        */
         mc.mcProfiler.endStartSection("pop");
         GL11.glPopAttrib();
         GL11.glPopAttrib();
@@ -485,9 +473,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private ISkinPointer getSkinPointerForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
         return SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
     }
-    
+
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
-        renderTileEntityAt((TileEntityMannequin)tileEntity, x, y, z, partialTickTime);
+    public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+        renderTileEntityAt((TileEntityMannequin)te, x, y, z, partialTicks);
     }
 }

@@ -1,31 +1,6 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
-import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-
-public class RenderItemBowSkin implements IItemRenderer {
+public class RenderItemBowSkin /*implements IItemRenderer*/ {/*
     
     private final RenderItem renderItem;
     private final Minecraft mc;
@@ -240,5 +215,5 @@ public class RenderItemBowSkin implements IItemRenderer {
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
         icon = stack.getItem().getIcon(stack, 1);
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
-    }
+    }*/
 }

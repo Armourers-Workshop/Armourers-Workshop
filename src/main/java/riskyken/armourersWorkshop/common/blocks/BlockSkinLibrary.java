@@ -2,22 +2,20 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import java.util.List;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
@@ -30,9 +28,9 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     }
     
     @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlockWithMetadata.class, "block." + name);
-        return super.setBlockName(name);
+    public Block setUnlocalizedName(String name) {
+        GameRegistry.registerBlock(this, "block." + name);
+        return super.setUnlocalizedName(name);
     }
     
     @Override
@@ -43,64 +41,18 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     }
     
     @Override
-    public int damageDropped(int meta) {
-        return meta;
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        UtilBlocks.dropInventoryBlocks(worldIn, pos);
+        super.breakBlock(worldIn, pos, state);
     }
     
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        UtilBlocks.dropInventoryBlocks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!world.isRemote) {
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ARMOUR_LIBRARY, world, x, y, z);
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!worldIn.isRemote) {
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.ARMOUR_LIBRARY, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon[] sideIcon;
-    @SideOnly(Side.CLIENT)
-    private IIcon[] bottomIcon;
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_TOP);
-        
-        sideIcon = new IIcon[2];
-        bottomIcon = new IIcon[2];
-        sideIcon[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_SIDE);
-        bottomIcon[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_BOTTOM);
-        sideIcon[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_SIDE);
-        bottomIcon[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_BOTTOM);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        if (side == 1) {
-            return blockIcon;
-        }
-        
-        if (side == 0 & meta == 0) {
-            return bottomIcon[0];
-        }
-        if (side == 0 & meta == 1) {
-            return bottomIcon[1];
-        }
-        
-        if (side > 1 & meta == 0) {
-            return sideIcon[0];
-        }
-        if (side > 1 & meta == 1) {
-            return sideIcon[1];
-        }
-        
-        return null;
     }
     
     @Override

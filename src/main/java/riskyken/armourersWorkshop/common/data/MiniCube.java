@@ -1,8 +1,9 @@
 package riskyken.armourersWorkshop.common.data;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -66,15 +67,15 @@ public class MiniCube implements IPantable {
     }
     
     @Override
-    public void setColour(int colour, int side) {
-        cc.setColour(colour, side);
+    public void setColour(int colour, EnumFacing side) {
+        cc.setColour(colour, side.ordinal());
     }
     
     @Override
-    public void setColour(byte[] rgb, int side) {
-        cc.setRed(rgb[0], side);
-        cc.setGreen(rgb[1], side);
-        cc.setBlue(rgb[2], side);
+    public void setColour(byte[] rgb, EnumFacing side) {
+        cc.setRed(rgb[0], side.ordinal());
+        cc.setGreen(rgb[1], side.ordinal());
+        cc.setBlue(rgb[2], side.ordinal());
     }
 
     @Override
@@ -83,18 +84,18 @@ public class MiniCube implements IPantable {
     }
 
     @Override
-    public int getColour(int side) {
-        return cc.getColour(side);
+    public int getColour(EnumFacing side) {
+        return cc.getColour(side.ordinal());
     }
 
     @Override
-    public void setPaintType(PaintType paintType, int side) {
-        cc.setPaintType((byte) paintType.getKey(), side);
+    public void setPaintType(PaintType paintType, EnumFacing side) {
+        cc.setPaintType((byte) paintType.getKey(), side.ordinal());
     }
 
     @Override
-    public PaintType getPaintType(int side) {
-        return PaintType.getPaintTypeFormSKey(cc.getPaintType(side));
+    public PaintType getPaintType(EnumFacing side) {
+        return PaintType.getPaintTypeFormSKey(cc.getPaintType(side.ordinal()));
     }
 
     @Override

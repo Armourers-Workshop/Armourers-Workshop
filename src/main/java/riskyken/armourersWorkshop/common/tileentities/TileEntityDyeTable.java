@@ -17,7 +17,7 @@ public class TileEntityDyeTable extends AbstractTileEntityInventory {
     }
     
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.DYE_TABLE;
     }
     @Override

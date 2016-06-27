@@ -103,5 +103,6 @@ public class FaceRenderer {
         } else {
             BUF.addVertex(x, y, z);
         }
+        BUF.endVertex();
     }
 }

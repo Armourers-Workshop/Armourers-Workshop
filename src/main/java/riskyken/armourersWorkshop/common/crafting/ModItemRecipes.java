@@ -5,7 +5,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public final class ModItemRecipes {
 
@@ -129,11 +128,11 @@ public final class ModItemRecipes {
                 'i', "ingotIron",
                 's', "stickWood"});
         
-        CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.guideBook), 1, 0), new Object[] {
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.guideBook, 1, 0), new Object[] {
             new ItemStack(Items.BOOK, 1),
             new ItemStack(ModBlocks.colourable, 1)});
         
-        CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.soap), 1, 0), new Object[] {
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.soap, 1, 0), new Object[] {
             new ItemStack(Items.WATER_BUCKET, 1),
             new ItemStack(Items.ROTTEN_FLESH, 1),
             "slimeball"});

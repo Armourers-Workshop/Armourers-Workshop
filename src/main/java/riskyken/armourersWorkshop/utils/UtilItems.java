@@ -6,13 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
-import riskyken.plushieWrapper.common.item.PlushieItemStack;
 
 public final class UtilItems {
-
-    public static int getIntensityFromStack(PlushieItemStack stack, int defaultValue) {
-        return getIntensityFromStack(stack.getMinecraftStack(), defaultValue);
-    }
     
     public static int getIntensityFromStack(ItemStack stack, int defaultValue) {
         if (!stack.hasTagCompound()) {

@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -30,7 +31,7 @@ public class UtilBlocks {
         return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
     }
     
-    public static int getColourFromTileEntity(World world, BlockPos pos, int side) {
+    public static int getColourFromTileEntity(World world, BlockPos pos, EnumFacing side) {
         TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour(side);

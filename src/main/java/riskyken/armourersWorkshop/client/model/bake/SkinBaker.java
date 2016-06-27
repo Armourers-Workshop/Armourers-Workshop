@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.util.EnumFacing;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -20,7 +20,7 @@ import riskyken.armourersWorkshop.proxies.ClientProxy;
 public final class SkinBaker {
     
     public static boolean withinMaxRenderDistance(double x, double y, double z) {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         if (player.getDistance(x, y, z) > ConfigHandler.maxSkinRenderDistance) {
             return false;
         }
@@ -70,9 +70,9 @@ public final class SkinBaker {
     
     private static ArrayList<CubeLocation> checkCubesAroundLocation(SkinCubeData cubeData, CubeLocation cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
         ArrayList<CubeLocation> openList = new ArrayList<SkinBaker.CubeLocation>();
-        ForgeDirection[] dirs = {ForgeDirection.DOWN, ForgeDirection.UP,
-                ForgeDirection.SOUTH, ForgeDirection.NORTH,
-                ForgeDirection.WEST, ForgeDirection.EAST };
+        EnumFacing[] dirs = {EnumFacing.DOWN, EnumFacing.UP,
+                EnumFacing.SOUTH, EnumFacing.NORTH,
+                EnumFacing.WEST, EnumFacing.EAST };
         
         int index = getIndexForLocation(cubeLocation, partBounds, cubeArray);
         
@@ -83,10 +83,10 @@ public final class SkinBaker {
         }
         
         for (int i = 0; i < dirs.length; i++) {
-            ForgeDirection dir = dirs[i];
-            int x = cubeLocation.x + dir.offsetX;
-            int y = cubeLocation.y + dir.offsetY;
-            int z = cubeLocation.z + dir.offsetZ;
+            EnumFacing dir = dirs[i];
+            int x = cubeLocation.x + dir.getFrontOffsetX();
+            int y = cubeLocation.y + dir.getFrontOffsetY();
+            int z = cubeLocation.z + dir.getFrontOffsetZ();
             int tarIndex = getIndexForLocation(x, y, z, partBounds, cubeArray);
             
             

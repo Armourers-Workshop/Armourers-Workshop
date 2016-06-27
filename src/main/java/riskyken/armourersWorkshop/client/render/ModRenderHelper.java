@@ -1,13 +1,13 @@
 package riskyken.armourersWorkshop.client.render;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import org.lwjgl.opengl.GL11;
 
 public final class ModRenderHelper {
     
@@ -24,8 +24,8 @@ public final class ModRenderHelper {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
     }
     
-    public static void setLightingForBlock(World world, int x, int y, int z) {
-        int i = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
+    public static void setLightingForBlock(World world, BlockPos pos) {
+        int i = world.getCombinedLight(pos, 0);
         int j = i % 65536;
         int k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);

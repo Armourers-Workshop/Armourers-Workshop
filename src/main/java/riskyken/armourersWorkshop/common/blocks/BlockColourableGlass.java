@@ -1,11 +1,9 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 
 public class BlockColourableGlass extends BlockColourable {
 
@@ -13,36 +11,16 @@ public class BlockColourableGlass extends BlockColourable {
         super(name, glowing);
     }
     
-    @SideOnly(Side.CLIENT)
     @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE_GLASS);
-        markerOverlay = register.registerIcon(LibBlockResources.MARKER);
-        noTexture = register.registerIcon(LibBlockResources.NO_TEXTURE);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int getRenderBlockPass() {
-        return 1;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
     
     @Override
-    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-        Block sideBlock = world.getBlock(x, y, z);
-        if (sideBlock == this) {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+        if (blockAccess.getBlockState(pos).getBlock() == this) {
             return false;
         }
-        return true;
-    }
-    
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
+        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
 }

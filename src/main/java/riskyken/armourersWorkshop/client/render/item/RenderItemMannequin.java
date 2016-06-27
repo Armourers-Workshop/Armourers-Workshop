@@ -1,25 +1,6 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.authlib.GameProfile;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.client.IItemRenderer;
-import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
-import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
-import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-
-public class RenderItemMannequin implements IItemRenderer {
+public class RenderItemMannequin /*implements IItemRenderer*/ {/*
     
     private static final String TAG_OWNER = "owner";
     private final ModelMannequin modelMannequin;
@@ -128,5 +109,5 @@ public class RenderItemMannequin implements IItemRenderer {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
-
+*/
 }

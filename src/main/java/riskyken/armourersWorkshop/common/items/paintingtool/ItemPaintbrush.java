@@ -46,8 +46,8 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
             TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
                 if (!worldIn.isRemote) {
-                    int colour = ((IPantable)te).getColour(0);
-                    PaintType paintType = ((IPantable)te).getPaintType(0);
+                    int colour = ((IPantable)te).getColour(facing);
+                    PaintType paintType = ((IPantable)te).getPaintType(facing);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }

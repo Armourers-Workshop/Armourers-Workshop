@@ -4,22 +4,15 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -32,7 +25,7 @@ import riskyken.armourersWorkshop.utils.UtilItems;
 public class BlockSkinnable extends AbstractModBlockContainer {
 
     public BlockSkinnable() {
-        super(LibBlockNames.SKINNABLE, Material.iron, soundTypeMetal, false);
+        super(LibBlockNames.SKINNABLE, Material.IRON, soundTypeMetal, false);
     }
     
     @Override
@@ -56,25 +49,6 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             return;
         }
         setBlockBounds(0, 0, 0, 1, 1, 1);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon cubeIcon;
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.SKINNABLE);
-        cubeIcon = register.registerIcon(LibBlockResources.CUBE);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        if (meta == 4) {
-            return cubeIcon;
-        }
-        return blockIcon;
     }
     
     @Override
@@ -123,26 +97,6 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinnable();
-    }
-    
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-    
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return -1;
     }
     
     @Override

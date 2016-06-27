@@ -3,10 +3,10 @@ package riskyken.armourersWorkshop.utils;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentString;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
@@ -71,7 +71,8 @@ public final class HolidayHelper {
             if (playerData.lastXmasYear < getYear()) {
                 ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);
                 if (!player.inventory.addItemStackToInventory(giftSack)) {
-                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("chat.armourersworkshop:inventoryGiftFail")));
+                    TextComponentString message = new TextComponentString(I18n.format("chat.armourersworkshop:inventoryGiftFail"));
+                    player.addChatComponentMessage(message);
                 } else {
                     playerData.lastXmasYear = getYear();
                 }

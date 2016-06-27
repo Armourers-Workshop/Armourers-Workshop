@@ -1,10 +1,8 @@
 package riskyken.armourersWorkshop.common.addons;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.utils.EventState;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 public class AddonAquaTweaks extends AbstractAddon {
 
@@ -48,9 +46,5 @@ public class AddonAquaTweaks extends AbstractAddon {
     @Override
     public String getModName() {
         return "Aqua Tweaks";
-    }
-
-    @Override
-    public void onWeaponRender(ItemRenderType type, EventState state) {
     }
 }

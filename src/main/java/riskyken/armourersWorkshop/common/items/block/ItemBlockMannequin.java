@@ -105,11 +105,11 @@ public class ItemBlockMannequin extends ModItemBlock {
         {
             return false;
         }
-        else if (y == 255 && this.field_150939_a.getMaterial().isSolid())
+        else if (y == 255 && this.block.getMaterial().isSolid())
         {
             return false;
         }
-        else if (world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, player, stack))
+        else if (world.canPlaceEntityOnSide(this.block, x, y, z, false, side, player, stack))
         {
             int i1 = this.getMetadata(stack.getItemDamage());
             int j1 = this.field_150939_a.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, i1);

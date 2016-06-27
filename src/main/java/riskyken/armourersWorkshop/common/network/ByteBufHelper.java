@@ -12,12 +12,26 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ByteBufHelper {
+    
+    public static void writeBlockPos(ByteBuf buf, BlockPos pos) {
+        buf.writeInt(pos.getX());
+        buf.writeInt(pos.getY());
+        buf.writeInt(pos.getZ());
+    }
+    
+    public static BlockPos readBlockPos(ByteBuf buf) {
+        int x = buf.readInt();
+        int y = buf.readInt();
+        int z = buf.readInt();
+        return new BlockPos(x, y, z);
+    }
     
     public static void writeUUID(ByteBuf buf, UUID uuid) {
         buf.writeLong(uuid.getMostSignificantBits());

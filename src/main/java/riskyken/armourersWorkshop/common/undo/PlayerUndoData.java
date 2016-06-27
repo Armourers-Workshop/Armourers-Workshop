@@ -85,7 +85,7 @@ public class PlayerUndoData {
             return;
         }
         UndoData undoData = undos.get(undos.size() - 1);
-        if (world.provider.dimensionId != undoData.dimensionId) {
+        if (world.provider.getDimension() != undoData.dimensionId) {
             return;
         }
         

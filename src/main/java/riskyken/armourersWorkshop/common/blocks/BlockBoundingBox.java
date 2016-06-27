@@ -7,25 +7,29 @@ import java.util.List;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
@@ -42,14 +46,15 @@ import riskyken.armourersWorkshop.utils.BitwiseUtils;
 public class BlockBoundingBox extends AbstractModBlockContainer implements IPantableBlock {
 
     protected BlockBoundingBox() {
-        super(LibBlockNames.BOUNDING_BOX, Material.cloth, soundTypeCloth, false);
+        super(LibBlockNames.BOUNDING_BOX, Material.CLOTH, SoundType.CLOTH, false);
         setBlockUnbreakable();
         setResistance(6000000.0F);
         setLightOpacity(0);
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
     }
     
     @Override
@@ -58,72 +63,62 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p_149689_5_, ItemStack p_149689_6_) {
-        world.setBlockToAir(x, y, z);
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        worldIn.setBlockToAir(pos);
     }
     
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return null;
     }
     
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (world.isRemote) {
             return true;
         }
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityBoundingBox) {
             if (((TileEntityBoundingBox)tileEntity).isParentValid()) {
                 tileEntity.markDirty();
-                world.markBlockForUpdate(x, y, z);
+                //world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+                world.markBlockRangeForRenderUpdate(pos, pos);
                 return false;
             } else {
-                world.setBlockToAir(x, y, z);
+                world.setBlockToAir(pos);
                 return true;
             }
         }
-        world.setBlockToAir(x, y, z);
+        world.setBlockToAir(pos);
+        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         return true;
     }
     
-    @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
-        return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
     }
     
     @Override
-    public int getRenderType() {
-        return -1;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
     
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
+    public Block setUnlocalizedName(String name) {
         GameRegistry.registerBlock(this, "block." + name);
-        return super.setBlockName(name);
+        return super.setUnlocalizedName(name);
     }
     
     @Override
@@ -137,7 +132,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
         return null;
     }
 
@@ -147,13 +142,13 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+    public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing side) {
+        BlockPos sideBlock = pos.offset(side);
+        if (world.getBlockState(sideBlock).getBlock() == this) {
             return false;
         }
         
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
@@ -173,19 +168,19 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public boolean setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side) {
+    public boolean setColour(IBlockAccess world, BlockPos pos, byte[] rgb, EnumFacing side) {
         int colour = new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF).getRGB();
-        return setColour(world, x, y, z, colour, side);
+        return setColour(world, pos, colour, side);
     }
 
     @Override
-    public int getColour(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+    public int getColour(IBlockAccess world, BlockPos pos, EnumFacing side) {
+        BlockPos sideBlock = pos.offset(side);
+        if (world.getBlockState(sideBlock).getBlock() == this) {
             return 0x00FFFFFF;
         }
         
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
@@ -196,7 +191,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                     if (paintType != 0) {
                         return colour;
                     } else {
-                        if (te.getWorldObj().isRemote) {
+                        if (te.getWorld().isRemote) {
                             GameProfile gameProfile = parent.getGameProfile();
                             if (gameProfile != null) {
                                 BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
@@ -216,13 +211,13 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+    public boolean isRemoteOnly(IBlockAccess world, BlockPos pos, EnumFacing side) {
+        BlockPos sideBlock = pos.offset(side);
+        if (world.getBlockState(sideBlock).getBlock() == this) {
             return false;
         }
         
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
@@ -239,13 +234,13 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+    public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing side) {
+        BlockPos sideBlock = pos.offset(side);
+        if (world.getBlockState(sideBlock).getBlock() == this) {
             return;
         }
         
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
@@ -263,13 +258,13 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+    public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing side) {
+        BlockPos sideBlock = pos.offset(side);
+        if (world.getBlockState(sideBlock).getBlock() == this) {
             return PaintType.NORMAL;
         }
         
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
@@ -284,7 +279,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
 
     @Override
-    public ICubeColour getColour(IBlockAccess world, int x, int y, int z) {
+    public ICubeColour getColour(IBlockAccess world, BlockPos pos) {
         return null;
     }
 }

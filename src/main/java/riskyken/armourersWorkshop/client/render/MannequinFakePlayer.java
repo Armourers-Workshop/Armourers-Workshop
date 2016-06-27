@@ -1,16 +1,13 @@
 package riskyken.armourersWorkshop.client.render;
 
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
-import com.mojang.authlib.GameProfile;
 
 public class MannequinFakePlayer extends AbstractClientPlayer {
     
@@ -31,6 +28,7 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
     @Override
     public void onUpdate() {
         //super.onUpdate();
+        /*
         this.field_71091_bM = this.field_71094_bP;
         this.field_71096_bN = this.field_71095_bQ;
         this.field_71097_bO = this.field_71085_bR;
@@ -70,7 +68,7 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
         }
         this.field_71094_bP += d3 * 0.25D;
         this.field_71085_bR += d1 * 0.25D;
-        this.field_71095_bQ += d0 * 0.25D;
+        this.field_71095_bQ += d0 * 0.25D;*/
     }
     
     @Override public boolean canCommandSenderUseCommand(int i, String s){ return false; }

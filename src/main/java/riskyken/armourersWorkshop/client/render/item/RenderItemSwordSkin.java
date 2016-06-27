@@ -1,26 +1,6 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.EventState;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-
-public class RenderItemSwordSkin implements IItemRenderer {
+public class RenderItemSwordSkin /*implements IItemRenderer*/ {/*
 
     private final RenderItem renderItem;
     private final Minecraft mc;
@@ -167,5 +147,5 @@ public class RenderItemSwordSkin implements IItemRenderer {
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
         icon = stack.getItem().getIcon(stack, 1);
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
-    }
+    }*/
 }
