@@ -2,27 +2,26 @@ package riskyken.armourersWorkshop.client.particles;
 
 import java.awt.Color;
 
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.UtilRender;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntityFXPaintSplash extends EntityFX {
+public class EntityFXPaintSplash extends Particle {
     
     private static final ResourceLocation paintSplashTextures = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/particles/paintSplash.png");
     private static final ResourceLocation particleTextures = ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "field_110737_b", "b");
     
-    public EntityFXPaintSplash(World world, double x, double y, double z, int colour, ForgeDirection dir) {
+    public EntityFXPaintSplash(World world, double x, double y, double z, int colour, EnumFacing dir) {
         super(world, x + dir.offsetX * 0.5D, y + dir.offsetY * 0.5D, z + dir.offsetZ * 0.5D);
         this.particleScale = 0.2F + world.rand.nextFloat() * 0.4F;
         particleMaxAge = 10;

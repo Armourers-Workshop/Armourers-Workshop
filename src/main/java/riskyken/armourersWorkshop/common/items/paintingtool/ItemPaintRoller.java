@@ -5,9 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
@@ -15,7 +21,6 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
@@ -31,88 +36,66 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
-            int side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
+            EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         
-        Block block = world.getBlock(x, y, z);
+        IBlockState blockState = worldIn.getBlockState(pos);
         
-        if (player.isSneaking() & block == ModBlocks.colourMixer) {
-            TileEntity te = world.getTileEntity(x, y, z);
+        if (playerIn.isSneaking() & blockState.getBlock() == ModBlocks.colourMixer) {
+            TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
-                if (!world.isRemote) {
+                if (!worldIn.isRemote) {
                     int colour = ((IPantable)te).getColour(0);
                     PaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }
             }
-            return true;
+            return EnumActionResult.PASS;
         }
         
-        if (block instanceof IPantableBlock) {
-            if (!world.isRemote) {
-                UndoManager.begin(player);
+        if (blockState.getBlock() instanceof IPantableBlock) {
+            if (!worldIn.isRemote) {
+                UndoManager.begin(playerIn);
             }
-            paintArea(world, block, player, stack, x, y, z, side);
-            if (!world.isRemote) {
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
-                UndoManager.end(player);
+            paintArea(worldIn, blockState.getBlock(), playerIn, stack, pos, facing);
+            if (!worldIn.isRemote) {
+                //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                UndoManager.end(playerIn);
             }
             
-            return true;
+            return EnumActionResult.PASS;
         }
         
-        if (block == ModBlocks.armourerBrain & player.isSneaking()) {
-            if (!world.isRemote) {
-                TileEntity te = world.getTileEntity(x, y, z);
+        if (blockState.getBlock() == ModBlocks.armourerBrain & playerIn.isSneaking()) {
+            if (!worldIn.isRemote) {
+                TileEntity te = worldIn.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityArmourer) {
-                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, world, stack, player);
+                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, playerIn);
                 }
             }
-            return true;
+            return EnumActionResult.PASS;
         }
         
-        return false;
+        return EnumActionResult.FAIL;
     }
     
-    private void paintArea(World world, Block targetBlock, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
+    private void paintArea(World world, Block targetBlock, EntityPlayer player, ItemStack stack, BlockPos pos, EnumFacing side) {
         int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
         for (int i = -radius + 1; i < radius; i++ ) {
             for (int j = -radius + 1; j < radius; j++ ) {
-                BlockLocation bl = null;
-                switch (side) {
-                    case 0:
-                        bl = new BlockLocation(x + j, y, z + i);
-                        break;
-                    case 1:
-                        bl = new BlockLocation(x + j , y, z + i);
-                        break;
-                    case 2:
-                        bl = new BlockLocation(x + i, y  + j, z);
-                        break;
-                    case 3:
-                        bl = new BlockLocation(x + i, y + j, z);
-                        break;
-                    case 4:
-                        bl = new BlockLocation(x, y + i, z + j);
-                        break;
-                    case 5:
-                        bl = new BlockLocation(x, y + i, z + j);
-                        break;
-                }
-                if (bl != null) {
-                    Block block = world.getBlock(bl.x, bl.y, bl.z);
-                    if ((targetBlock != ModBlocks.boundingBox & block != ModBlocks.boundingBox) |
-                            (targetBlock == ModBlocks.boundingBox & block == ModBlocks.boundingBox)) {
-                        usedOnBlockSide(stack, player, world, bl, block, side);
-                    }
+                BlockPos bp = pos.offset(side);
+                IBlockState blockState = world.getBlockState(pos);
+                if ((targetBlock != ModBlocks.boundingBox & blockState.getBlock() != ModBlocks.boundingBox) |
+                        (targetBlock == ModBlocks.boundingBox & blockState.getBlock() == ModBlocks.boundingBox)) {
+                    usedOnBlockSide(stack, player, world, bp, blockState.getBlock(), side);
                 }
             }
         }
     }
     
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
         if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
             PaintType paintType = getToolPaintType(stack);
@@ -120,31 +103,32 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                 IPantableBlock worldColourable = (IPantableBlock) block;
                 if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
                     for (int i = 0; i < 6; i++) {
-                        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, i);
-                        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, i).getKey();
-                        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, i);
-                        ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, i);
-                        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, i);
+                        EnumFacing face = EnumFacing.values()[i];
+                        int oldColour = worldColourable.getColour(world, pos, face);
+                        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getKey();
+                        UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, face);
+                        ((IPantableBlock)block).setColour(world, pos, newColour, face);
+                        ((IPantableBlock)block).setPaintType(world, pos, paintType, face);
                     }
                 } else {
-                    int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-                    byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
-                    UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
-                    ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
-                    ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+                    int oldColour = worldColourable.getColour(world, pos, side);
+                    byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, side).getKey();
+                    UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, side);
+                    ((IPantableBlock)block).setColour(world, pos, newColour, side);
+                    ((IPantableBlock)block).setPaintType(world, pos, paintType, side);
                 }
             } else {
-                spawnPaintParticles(world, bl.x, bl.y, bl.z, side, newColour);
+                spawnPaintParticles(world, pos, side, newColour);
             }
         }
     }
     
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (world.isRemote & player.isSneaking()) {
-            player.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, world, 0, 0, 0);
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        if (worldIn.isRemote & playerIn.isSneaking()) {
+            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
         }
-        return stack;
+        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
     }
     
     @Override

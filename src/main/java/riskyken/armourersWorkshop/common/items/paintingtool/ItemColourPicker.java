@@ -4,11 +4,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,7 +22,6 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -44,29 +47,30 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
-            int side, float hitX, float hitY, float hitZ) {
-        Block block = world.getBlock(x, y, z);
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn,
+            BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         
-        if (player.isSneaking() & block == ModBlocks.colourMixer & getToolHasColour(stack)) {
-            TileEntity te = world.getTileEntity(x, y, z);
+        IBlockState blockState = worldIn.getBlockState(pos);
+        
+        if (playerIn.isSneaking() & blockState.getBlock() == ModBlocks.colourMixer & getToolHasColour(stack)) {
+            TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
-                if (!world.isRemote) {
+                if (!worldIn.isRemote) {
                     int colour = getToolColour(stack);
                     PaintType paintType = getToolPaintType(stack);
                     ((IPantable)te).setColour(colour);
                     ((IPantable)te).setPaintType(paintType, 0);
                 }
             }
-            return true;
+            return EnumActionResult.PASS;
         }
         
-        if (block instanceof IPantableBlock) {
-            IPantableBlock paintable = (IPantableBlock) block;
-            PaintType paintType = paintable.getPaintType(world, x, y, z, side);
+        if (blockState.getBlock() instanceof IPantableBlock) {
+            IPantableBlock paintable = (IPantableBlock) blockState.getBlock();
+            PaintType paintType = paintable.getPaintType(worldIn, pos, facing);
             
-            if (paintable.isRemoteOnly(world, x, y, z, side) & world.isRemote) {
-                int colour = paintable.getColour(world, x, y, z, side);
+            if (paintable.isRemoteOnly(worldIn, pos, facing) & worldIn.isRemote) {
+                int colour = paintable.getColour(worldIn, pos, facing);
                 NBTTagCompound compound = new NBTTagCompound();
                 byte[] paintData = new byte[4];
                 Color c = new Color(colour);
@@ -76,18 +80,18 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                 paintData[3] = (byte) paintType.getKey();
                 PaintingHelper.setPaintData(compound, paintData);
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
-            } else if (!paintable.isRemoteOnly(world, x, y, z, side) & !world.isRemote) {
-                setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
+            } else if (!paintable.isRemoteOnly(worldIn, pos, facing) & !worldIn.isRemote) {
+                setToolColour(stack, ((IPantableBlock)blockState.getBlock()).getColour(worldIn, pos, facing));
                 setToolPaintType(stack, paintType);
             }
             
-            if (!world.isRemote) {
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+            if (!worldIn.isRemote) {
+                //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
-            return true;
+            return EnumActionResult.PASS;
         }
         
-        return false;
+        return EnumActionResult.FAIL;
     }
     
     @Override

@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,7 +22,6 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
@@ -33,35 +38,36 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
-            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        Block block = world.getBlock(x, y, z);
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn,
+            BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        
+        IBlockState blockState = worldIn.getBlockState(pos);
 
-        if (block instanceof IPantableBlock) {
-            if (!world.isRemote) {
-                UndoManager.begin(player);
-                usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
-                UndoManager.end(player);
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
+        if (blockState.getBlock() instanceof IPantableBlock) {
+            if (!worldIn.isRemote) {
+                UndoManager.begin(playerIn);
+                usedOnBlockSide(stack, playerIn, worldIn, pos, blockState.getBlock(), facing);
+                UndoManager.end(playerIn);
+                //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
             }
-            return true;
+            return EnumActionResult.PASS;
         }
         
-        if (block == ModBlocks.armourerBrain & player.isSneaking()) {
-            if (!world.isRemote) {
-                TileEntity te = world.getTileEntity(x, y, z);
+        if (blockState.getBlock() == ModBlocks.armourerBrain & playerIn.isSneaking()) {
+            if (!worldIn.isRemote) {
+                TileEntity te = worldIn.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityArmourer) {
-                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, world, stack, player);
+                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, playerIn);
                 }
             }
-            return true;
+            return EnumActionResult.PASS;
         }
         
-        return false;
+        return EnumActionResult.FAIL;
     }
 
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
         int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
         // TODO Auto-generated method stub
     }
@@ -79,11 +85,11 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     }
     
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (world.isRemote & player.isSneaking()) {
-            player.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, world, 0, 0, 0);
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        if (worldIn.isRemote & playerIn.isSneaking()) {
+            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
         }
-        return stack;
+        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
     }
     
     @Override

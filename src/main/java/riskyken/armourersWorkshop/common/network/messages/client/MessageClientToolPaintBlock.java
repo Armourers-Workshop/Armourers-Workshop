@@ -1,12 +1,14 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
@@ -22,7 +24,7 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
     public MessageClientToolPaintBlock() {
     }
     
-    public MessageClientToolPaintBlock(int x, int y, int z, byte side, byte[] rgbt) {
+    public MessageClientToolPaintBlock(BlockPos pos, EnumFacing side, byte[] rgbt) {
         this.x = x;
         this.y = y;
         this.z = z;

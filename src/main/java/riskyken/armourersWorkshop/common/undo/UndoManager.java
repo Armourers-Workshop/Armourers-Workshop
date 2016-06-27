@@ -3,8 +3,8 @@ package riskyken.armourersWorkshop.common.undo;
 import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
@@ -36,7 +36,7 @@ public final class UndoManager {
     }
     
     @Deprecated()
-    public static void blockPainted(EntityPlayer player, World world, int x, int y, int z, int oldColour, byte oldPaintType, int side) {
+    public static void blockPainted(EntityPlayer player, World world, BlockPos pos, int oldColour, byte oldPaintType, EnumFacing side) {
         byte[] oldrgb = new byte[3];
         oldrgb[0] = (byte) ((oldColour >> 16) & 0xFF);
         oldrgb[1] = (byte) ((oldColour >> 8) & 0xFF);

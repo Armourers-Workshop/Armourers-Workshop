@@ -1,6 +1,8 @@
 package riskyken.armourersWorkshop.common.items.paintingtool;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,10 +31,10 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     }
     
     @SideOnly(Side.CLIENT)
-    protected void spawnPaintParticles (World world, int x, int y, int z, int side, int colour) {
+    protected void spawnPaintParticles (World world, BlockPos pos, EnumFacing side, int colour) {
         for (int i = 0; i < 3; i++) {
-            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
-                    colour, ForgeDirection.getOrientation(side));
+            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D,
+                    colour, side);
             ParticleManager.INSTANCE.spawnParticle(world, particle);
         }
     }
