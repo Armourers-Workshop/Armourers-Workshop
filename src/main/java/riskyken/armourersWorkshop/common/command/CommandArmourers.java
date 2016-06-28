@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
@@ -84,7 +83,7 @@ public class CommandArmourers extends CommandBase {
             entityItem.setNoPickupDelay();
             entityItem.setOwner(player.getName());
         } else if (command.equals("clearSkins")) {
-            ExPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
+            //ExPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
         } else if (command.equals("setSkin")) {
             if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
@@ -99,7 +98,7 @@ public class CommandArmourers extends CommandBase {
             }
             SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData, skinName);
             ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
-            ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
+            //ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {
             PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);
         } else if (command.equals("setSkinColumnCount")) {
@@ -114,7 +113,7 @@ public class CommandArmourers extends CommandBase {
             } catch (Exception e) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
             }
-            ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(count);
+            //ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(count);
         } else {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }

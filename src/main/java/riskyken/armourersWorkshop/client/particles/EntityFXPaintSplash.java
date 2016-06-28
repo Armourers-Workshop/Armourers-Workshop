@@ -115,4 +115,5 @@ public class EntityFXPaintSplash extends Particle {
         UtilRender.bindTexture(particleTextures);
         renderBuffer.startDrawingQuads();
     }
+    
 }

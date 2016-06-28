@@ -5,7 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class RecipeSkinClear extends RecipeItemSkinning {
 
@@ -34,7 +33,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
                         return null;
                     }
                     skinItemStack = stack;
-                } else if (item == ModRegistry.getMinecraftItem(ModItems.soap)) {
+                } else if (item == ModItems.soap) {
                     if (soapStack != null) {
                         return null;
                     }
@@ -58,7 +57,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
     public void onCraft(IInventory inventory) {
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
-            if (stack.getItem() != ModRegistry.getMinecraftItem(ModItems.soap)) {
+            if (stack.getItem() != ModItems.soap) {
                 inventory.setInventorySlotContents(slotId, null);
             }
         }

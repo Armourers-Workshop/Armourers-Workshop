@@ -2,9 +2,7 @@ package riskyken.armourersWorkshop.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,7 +43,7 @@ public final class ModRenderHelper {
     }
     
     public static void renderItemStack(ItemStack stack) {
-        IIcon icon = stack.getItem().getIcon(stack, 0);
-        ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
+        //IIcon icon = stack.getItem().getIcon(stack, 0);
+        //ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
     }
 }

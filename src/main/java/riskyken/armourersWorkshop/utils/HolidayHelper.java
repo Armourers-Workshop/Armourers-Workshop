@@ -3,13 +3,8 @@ package riskyken.armourersWorkshop.utils;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 
 public final class HolidayHelper {
     
@@ -67,6 +62,7 @@ public final class HolidayHelper {
     
     public static void giftPlayer(EntityPlayerMP player) {
         if (christmas_season.isHolidayActive()) {
+            /*
             ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get(player);
             if (playerData.lastXmasYear < getYear()) {
                 ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);
@@ -77,6 +73,7 @@ public final class HolidayHelper {
                     playerData.lastXmasYear = getYear();
                 }
             }
+            */
         }
     }
     

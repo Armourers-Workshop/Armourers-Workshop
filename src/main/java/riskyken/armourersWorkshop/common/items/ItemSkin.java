@@ -146,7 +146,7 @@ public class ItemSkin extends AbstractModItem {
         if (y == 255) {
             return false;
         }
-        if (!world.canPlaceEntityOnSide(Blocks.stone, x, y, z, false, side, null, stack)) {
+        if (!world.canPlaceEntityOnSide(Blocks.STONE, x, y, z, false, side, null, stack)) {
             return false;
         }
         int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;

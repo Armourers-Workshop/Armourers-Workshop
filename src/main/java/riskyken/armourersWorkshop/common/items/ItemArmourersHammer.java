@@ -1,8 +1,5 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -23,6 +20,7 @@ public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrenc
     @Override
     public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
             BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        /*
         Block block = world.getBlock(pos);
         if (block != null) {
             if (block instanceof BlockBed) {
@@ -44,9 +42,10 @@ public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrenc
                 return !world.isRemote;
             }
         }
+        */
         return EnumActionResult.FAIL;
     }
-    
+    /*
     private boolean rotateBed(World world, int x, int y, int z, BlockBed block, ForgeDirection axis) {
         int meta = world.getBlockMetadata(x, y, z);
         ForgeDirection[] bedRots = {
@@ -79,7 +78,8 @@ public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrenc
             return true;
         }
         return false;
-    }
+    }*/
+    
     /*
     @Optional.Method(modid = "BuildCraft|Core")
     @Override

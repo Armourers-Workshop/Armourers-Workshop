@@ -2,12 +2,8 @@ package riskyken.armourersWorkshop.common.skin.type.arrow;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SkinArrow extends AbstractSkinTypeBase {
     
@@ -38,12 +34,5 @@ public class SkinArrow extends AbstractSkinTypeBase {
     @Override
     public boolean showHelperCheckbox() {
         return true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcon(IIconRegister register) {
-        this.icon = register.registerIcon(LibItemResources.TEMPLATE_ARROW);
-        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_ARROW);
     }
 }

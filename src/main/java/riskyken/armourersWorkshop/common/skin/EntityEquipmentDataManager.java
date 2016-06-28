@@ -1,34 +1,8 @@
 package riskyken.armourersWorkshop.common.skin;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.GameRules;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.common.addons.Addons;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.HolidayHelper;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public final class EntityEquipmentDataManager {
     
@@ -44,6 +18,7 @@ public final class EntityEquipmentDataManager {
     }
     
     public boolean isSwordRenderItem(Item item) {
+        /*
         UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
         if (ui != null) {
             for (int i = 0; i < Addons.overrideSwordsActive.length; i++) {
@@ -52,10 +27,12 @@ public final class EntityEquipmentDataManager {
                 }
             }
         }
+        */
         return false;
     }
     
     public boolean isBowRenderItem(Item item) {
+        /*
         UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
         if (ui != null) {
             for (int i = 0; i < Addons.overrideBowsActive.length; i++) {
@@ -64,9 +41,10 @@ public final class EntityEquipmentDataManager {
                 }
             }
         }
+        */
         return false;
     }
-    
+    /*
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == Side.SERVER & event.type == Type.PLAYER & event.phase == Phase.END) {
@@ -105,8 +83,8 @@ public final class EntityEquipmentDataManager {
                 }
             }
         }
-    }
-    
+    }*/
+    /*
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
         if (event.target instanceof EntityPlayerMP) {
@@ -139,16 +117,17 @@ public final class EntityEquipmentDataManager {
             HolidayHelper.giftPlayer((EntityPlayerMP) event.entity);
         }
     }
-    
+    */
+    /*
     @SubscribeEvent
     public void onLivingDeathEvent (LivingDeathEvent  event) {
-        if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
+        if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayerMP) {
             boolean dropSkins = true;
             
             GameRules gr = getGameRules();
             boolean keepInventory = false;
             if (gr.hasRule("keepInventory")) {
-                keepInventory = gr.getGameRuleBooleanValue("keepInventory");
+                keepInventory = gr.getBoolean("keepInventory");
             }
             
             switch (ConfigHandler.dropSkinsOnDeath) {
@@ -166,23 +145,24 @@ public final class EntityEquipmentDataManager {
                 break;
             }
 
-            ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
+            ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get((EntityPlayer) event.getEntity());
             if (dropSkins) {
-                playerData.getWardrobeInventoryContainer().dropItems((EntityPlayer) event.entity);
+                playerData.getWardrobeInventoryContainer().dropItems((EntityPlayer) event.getEntity());
             }
         }
     }
     
     private GameRules getGameRules() {
-        return MinecraftServer.getServer().worldServerForDimension(0).getGameRules();
+        return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(0).getGameRules();
     }
     
     @SubscribeEvent
     public void onLivingDeathEvent (PlayerEvent.Clone  event) {
         NBTTagCompound compound = new NBTTagCompound();
-        ExPropsPlayerEquipmentData oldProps = ExPropsPlayerEquipmentData.get(event.original);
-        ExPropsPlayerEquipmentData newProps = ExPropsPlayerEquipmentData.get(event.entityPlayer);
+        ExPropsPlayerEquipmentData oldProps = ExPropsPlayerEquipmentData.get(event.getOriginal());
+        ExPropsPlayerEquipmentData newProps = ExPropsPlayerEquipmentData.get(event.getEntityPlayer());
         oldProps.saveNBTData(compound);
         newProps.loadNBTData(compound);
     }
+    */
 }

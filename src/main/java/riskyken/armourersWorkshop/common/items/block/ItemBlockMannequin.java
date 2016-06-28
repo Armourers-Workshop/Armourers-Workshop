@@ -6,10 +6,13 @@ import com.mojang.authlib.GameProfile;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
@@ -23,17 +26,16 @@ public class ItemBlockMannequin extends ModItemBlock {
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player,
-            World world, int x, int y, int z, int side,
-            float hitX, float hitY, float hitZ) {
-        
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn,
+            BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        /*
         if (canPlaceBlockHere(stack, player, world, x, y, z, side, hitX, hitY, hitZ, false)) {
             if (canPlaceBlockHere(stack, player, world, x, y, z, side, hitX, hitY, hitZ, true)) {
-                return true;
+                return EnumActionResult.PASS;
             }
         }
-        
-        return false;
+        */
+        return EnumActionResult.FAIL;
     }
     
     @Override
@@ -49,18 +51,18 @@ public class ItemBlockMannequin extends ModItemBlock {
         }
         super.addInformation(stack, player, list, par4);
     }
-    
+    /*
     private boolean canPlaceBlockHere(ItemStack stack, EntityPlayer player,
-            World world, int x, int y, int z, int side,
+            World world, BlockPos pos, int side,
             float hitX, float hitY, float hitZ, boolean place) {
         
         Block block = world.getBlock(x, y, z);
 
-        if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, z) & 7) < 1)
+        if (block == Blocks.SNOW_LAYER && (world.getBlockMetadata(x, y, z) & 7) < 1)
         {
             side = 1;
         }
-        else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, z))
+        else if (block != Blocks.VINE && block != Blocks.TALLGRASS && block != Blocks.DEADBUSH && !block.isReplaceable(world, pos))
         {
             if (side == 0)
             {
@@ -129,4 +131,5 @@ public class ItemBlockMannequin extends ModItemBlock {
             return false;
         }
     }
+    */
 }

@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -25,13 +27,13 @@ import riskyken.armourersWorkshop.utils.UtilItems;
 public class BlockSkinnable extends AbstractModBlockContainer {
 
     public BlockSkinnable() {
-        super(LibBlockNames.SKINNABLE, Material.IRON, soundTypeMetal, false);
+        super(LibBlockNames.SKINNABLE, Material.IRON, SoundType.METAL, false);
     }
     
     @Override
-    public Block setBlockName(String name) {
+    public Block setUnlocalizedName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
+        return super.setUnlocalizedName(name);
     }
     
     @Override
@@ -80,16 +82,16 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
     
-    private void dropSkin(World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    private void dropSkin(World world, BlockPos pos) {
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             if (skinPointer != null) {
                 ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
                 SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
-                UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
+                UtilItems.spawnItemInWorld(world, pos, skinStack);
             } else {
-                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
+                ModLogger.log(Level.WARN, String.format("Block skin at %s had no skin data.", pos.toString()));
             }
         }
     }

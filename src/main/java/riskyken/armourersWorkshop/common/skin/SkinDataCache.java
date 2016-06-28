@@ -7,14 +7,14 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
@@ -200,7 +200,7 @@ public final class SkinDataCache implements Runnable {
                 PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), player);
             } else {
                 ModLogger.log(Level.ERROR, "Equipment id:" + skinId +" was requested by "
-            + player.getCommandSenderName() + " but was not found.");
+            + player.getName() + " but was not found.");
             }
         }
     }
@@ -232,7 +232,7 @@ public final class SkinDataCache implements Runnable {
                 }
             } else {
                 ModLogger.log(Level.ERROR, String.format("Player %s requested ID for file name %s but the file was not found.",
-                        player.getCommandSenderName(), fileName));
+                        player.getName(), fileName));
             }
         }
         

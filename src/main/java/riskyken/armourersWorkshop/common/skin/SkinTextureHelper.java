@@ -20,7 +20,7 @@ public class SkinTextureHelper {
         ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
         Point textureLocation = skinPart.getTextureLocation();
         IPoint3D textureModelSize = skinPart.getTextureModelSize();
-        ForgeDirection blockFace = ForgeDirection.getOrientation(side);
+        EnumFacing blockFace = side;
         
         byte blockX = te.getGuideX();
         byte blockY = te.getGuideY();
@@ -33,7 +33,7 @@ public class SkinTextureHelper {
         int shiftY = 0;
         
         if (skinPart.isTextureMirrored()) {
-            if (blockFace == ForgeDirection.EAST | blockFace == ForgeDirection.WEST) {
+            if (blockFace == EnumFacing.EAST | blockFace == EnumFacing.WEST) {
                 blockFace = blockFace.getOpposite();
             }
         }

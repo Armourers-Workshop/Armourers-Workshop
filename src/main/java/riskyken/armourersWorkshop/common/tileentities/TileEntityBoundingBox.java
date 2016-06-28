@@ -5,9 +5,8 @@ import java.awt.Point;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.math.BlockPos;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -36,7 +35,7 @@ public class TileEntityBoundingBox extends TileEntity {
         setParent(0, 0, 0, (byte) 0, (byte) 0, (byte) 0, null);
     }
     
-    public TileEntityBoundingBox(int parentX, int parentY, int parentZ,
+    public TileEntityBoundingBox(BlockPos parentPos,
             byte guideX, byte guideY, byte guideZ, ISkinPartType skinPart) {
         setParent(parentX, parentY, parentZ, guideX, guideY, guideZ, skinPart);
     }
@@ -105,7 +104,7 @@ public class TileEntityBoundingBox extends TileEntity {
         return this.skinPart;
     }
     
-    public void setParent(int x, int y, int z,byte guideX, byte guideY, byte guideZ,
+    public void setParent(BlockPos parentPos, byte guideX, byte guideY, byte guideZ,
             ISkinPartType skinPart) {
         this.parentX = x;
         this.parentY = y;

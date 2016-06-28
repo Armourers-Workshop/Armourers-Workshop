@@ -91,7 +91,7 @@ public class SkinDataHandler implements ISkinDataHandler {
     
     @Override
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId) {
-        ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
         BitSet armourOverride = entityProps.getArmourOverride();
         if (slotId < 4 & slotId >= 0) {
             return armourOverride.get(slotId);
@@ -100,11 +100,14 @@ public class SkinDataHandler implements ISkinDataHandler {
     }
     
     private ExPropsPlayerEquipmentData getExtendedPropsPlayerForPlayer(EntityPlayer player) {
+        /*
         ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
         if (entityProps == null) {
             ExPropsPlayerEquipmentData.register(player);
         }
         return ExPropsPlayerEquipmentData.get(player);
+        */
+        return null;
     }
 
     @Override

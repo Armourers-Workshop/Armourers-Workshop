@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -31,29 +31,28 @@ public class ContainerMiniArmourerBuilding extends Container {
     }
     
     @Override
-    public void addCraftingToCrafters(ICrafting player) {
-        super.addCraftingToCrafters(player);
+    public void addListener(IContainerListener listener) {
+        super.addListener(listener);
         MessageServerMiniArmourerSkinData message;
         message = new MessageServerMiniArmourerSkinData(tileEntity.getSkinParts());
-        if (player instanceof EntityPlayerMP) {
-            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) player);
+        if (listener instanceof EntityPlayerMP) {
+            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) listener);
         }
     }
-    
     
     ISkinType skinType;
     
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        if (skinType == tileEntity.getSkinType() & !tileEntity.getWorldObj().isRemote) {
+        if (skinType == tileEntity.getSkinType() & !tileEntity.getWorld().isRemote) {
             return;
         }
         MessageServerMiniArmourerSkinData message;
         message = new MessageServerMiniArmourerSkinData(tileEntity.getSkinParts());
-        for (int i = 0; i < crafters.size(); i++) {
-            ICrafting crafter = (ICrafting) crafters.get(i);
-            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) crafter);
+        for (int i = 0; i < listeners.size(); i++) {
+            IContainerListener listener = (IContainerListener) listeners.get(i);
+            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) listener);
         }
         skinType = tileEntity.getSkinType();
     }
@@ -97,11 +96,11 @@ public class ContainerMiniArmourerBuilding extends Container {
         }
         */
         //Send the cube update to all the players that have the GUI open.
-        for (int i = 0; i < crafters.size(); i++) {
-            ICrafting crafter = (ICrafting) crafters.get(i);
+        for (int i = 0; i < listeners.size(); i++) {
+            IContainerListener listener = (IContainerListener) listeners.get(i);
             MessageServerMiniArmourerCubeEdit message;
             message = new MessageServerMiniArmourerCubeEdit(skinPartType, cube, remove);
-            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) crafter);
+            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) listener);
         }
         tileEntity.markDirty();
     }

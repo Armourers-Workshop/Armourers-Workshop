@@ -3,10 +3,11 @@ package riskyken.armourersWorkshop.client.render;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public class MannequinFakePlayer extends AbstractClientPlayer {
@@ -16,12 +17,7 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
     }
     
     @Override
-    public String getCommandSenderName() {
-        return "[Mannequin]";
-    }
-    
-    @Override
-    public String getDisplayName() {
+    public String getDisplayNameString() {
         return "[Mannequin]";
     }
 
@@ -72,23 +68,12 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
     }
     
     @Override public boolean canCommandSenderUseCommand(int i, String s){ return false; }
-    @Override public ChunkCoordinates getPlayerCoordinates()
-    {
-        return new ChunkCoordinates(0,0,0);
-    }
-
-    @Override public void addChatComponentMessage(IChatComponent chatmessagecomponent){}
+    @Override public void addChatComponentMessage(ITextComponent chatComponent) {}
     @Override public void addStat(StatBase par1StatBase, int par2){}
     @Override public void openGui(Object mod, int modGuiId, World world, int x, int y, int z){}
-    @Override public boolean isEntityInvulnerable(){ return true; }
+    @Override public boolean isEntityInvulnerable(DamageSource source) { return true; }
     @Override public boolean canAttackPlayer(EntityPlayer player){ return false; }
     @Override public void onDeath(DamageSource source){ return; }
-    @Override public void travelToDimension(int dim){ return; }
-    @Override public void addChatMessage(IChatComponent p_145747_1_) {}
-    @Override
-    public IIcon getItemIcon(ItemStack p_70620_1_, int p_70620_2_) {
-        IIcon icon = p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
-        //ModLogger.log(icon);
-        return p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
-    }
+    @Override public Entity changeDimension(int dimensionIn) { return null; }
+    @Override public void addChatMessage(ITextComponent component) {}
 }

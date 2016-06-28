@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,7 +31,7 @@ public class BookPage extends BookPageBase {
     @Override
     public void renderPage(FontRenderer fontRenderer, int mouseX, int mouseY, boolean turning, int pageNumber) {
         Minecraft mc = Minecraft.getMinecraft();
-        RenderItem itemRender = new RenderItem();
+        //RenderItem itemRender = new RenderItem();
         ItemStack stack = new ItemStack(Blocks.STONE);
         
         mc.renderEngine.bindTexture(bookPageTexture);

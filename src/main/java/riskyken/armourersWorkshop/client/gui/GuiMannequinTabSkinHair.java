@@ -5,12 +5,13 @@ import java.awt.image.BufferedImage;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
@@ -42,14 +43,14 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         hairColour = tileEntity.getHairColour();
         
         selectSkinButton = new GuiButtonExt(0, width / 2 - 90, 25, 80, 14, 
-                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "selectSkin"));
+                GuiHelper.getLocalizedControlName(tileEntity.getName(), "selectSkin"));
         selectHairButton = new GuiButtonExt(0, width / 2 - 90, 40, 80, 14, 
-                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "selectHair"));
+                GuiHelper.getLocalizedControlName(tileEntity.getName(), "selectHair"));
         
         autoSkinButton = new GuiButtonExt(0, width / 2 + 10, 25, 80, 14,
-                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "autoSkin"));
+                GuiHelper.getLocalizedControlName(tileEntity.getName(), "autoSkin"));
         autoHairButton = new GuiButtonExt(0, width / 2 + 10, 40, 80, 14,
-                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "autoHair"));
+                GuiHelper.getLocalizedControlName(tileEntity.getName(), "autoHair"));
         
         buttonList.add(selectSkinButton);
         buttonList.add(selectHairButton);
@@ -109,7 +110,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingSkinColour = true;
         }
         if (button == autoSkinButton) {
-            ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+            ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
             if (tileEntity.getGameProfile() != null) {
                 rl = AbstractClientPlayer.getLocationSkin(tileEntity.getGameProfile().getName());
                 AbstractClientPlayer.getDownloadImageSkin(rl, tileEntity.getGameProfile().getName());
@@ -121,7 +122,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingHairColour = true;
         }
         if (button == autoHairButton) {
-            ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+            ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
             if (tileEntity.getGameProfile() != null) {
                 rl = AbstractClientPlayer.getLocationSkin(tileEntity.getGameProfile().getName());
                 AbstractClientPlayer.getDownloadImageSkin(rl, tileEntity.getGameProfile().getName());
@@ -134,7 +135,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     private BufferedImage getBufferedImage(ResourceLocation rl) {
         BufferedImage buff = SkinHelper.getBufferedImageSkin(rl);
         if (buff == null) {
-            buff = SkinHelper.getBufferedImageSkin(AbstractClientPlayer.locationStevePng);
+            buff = SkinHelper.getBufferedImageSkin(DefaultPlayerSkin.getDefaultSkinLegacy());
         }
         return buff;
     }

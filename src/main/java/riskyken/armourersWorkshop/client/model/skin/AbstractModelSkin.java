@@ -2,12 +2,13 @@ package riskyken.armourersWorkshop.client.model.skin;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
@@ -36,9 +37,9 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         super.setRotationAngles(p_78087_1_, p_78087_2_, p_78087_3_, p_78087_4_, p_78087_5_, p_78087_6_, p_78087_7_);
         this.isRiding = false;
         this.isSneak = false;
-        this.aimedBow = false;
+        this.leftArmPose = ArmPose.EMPTY;
+        this.rightArmPose = ArmPose.EMPTY;
         this.isChild = false;
-        this.heldItemRight = 0;
         bipedLeftLeg.rotateAngleZ = 0F;
         bipedRightLeg.rotateAngleZ = 0F;
         bipedHead.rotateAngleZ = 0F;
@@ -50,12 +51,13 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         if (npcEquipmentData != null) {
             this.isRiding = false;
             this.isSneak = false;
-            this.aimedBow = false;
+            this.leftArmPose = ArmPose.EMPTY;
+            this.rightArmPose = ArmPose.EMPTY;
             this.isChild = false;
-            this.heldItemRight = 0;
             if (entity instanceof EntityLivingBase) {
-                if (((EntityLivingBase)entity).getHeldItem() != null) {
-                    this.heldItemRight = 1;
+                if (((EntityLivingBase)entity).getHeldItem(EnumHand.MAIN_HAND) != null) {
+                    //TODO setup arms
+                    //this.heldItemRight = 1;
                 }
             }
             bipedLeftLeg.rotateAngleZ = 0F;
@@ -98,8 +100,8 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
         this.isSneak = false;
-        this.aimedBow = false;
-        this.heldItemRight = 0;
+        this.leftArmPose = ArmPose.EMPTY;
+        this.rightArmPose = ArmPose.EMPTY;
         if (modelBiped == null) {
             setRotation(bipedHead, 0F, 0F, 0F);
             setRotation(bipedBody, 0F, 0F, 0F);

@@ -7,7 +7,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -15,7 +16,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -27,19 +34,18 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
 public class BlockDoll extends AbstractModBlockContainer {
-
+    
+    private static final AxisAlignedBB DOLL_AABB = new AxisAlignedBB(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
     private static final String TAG_OWNER = "owner";
     private final boolean isValentins;
     
     public BlockDoll() {
         super(LibBlockNames.DOLL, Material.SAND, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
-        setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
     }
     
@@ -49,17 +55,23 @@ public class BlockDoll extends AbstractModBlockContainer {
         return super.setUnlocalizedName(name);
     }
     
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return DOLL_AABB;
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity te = worldIn.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
-            int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
+            int l = MathHelper.floor_double((double)(placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
             ((TileEntityMannequin)te).setRotation(l);
             
             if (stack.hasTagCompound()) {
                 NBTTagCompound compound = stack.getTagCompound();
                 GameProfile gameProfile = null;
                 if (compound.hasKey(TAG_OWNER, 10)) {
-                    gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                    gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
                     ((TileEntityMannequin)te).setGameProfile(gameProfile);
                 }
             }
@@ -69,34 +81,36 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         if (isValentins) {
-            if (random.nextFloat() * 100 > 80) {
-                world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
+            if (rand.nextFloat() * 100 > 80) {
+                //world.spawnParticle("heart", x + 0.2D + rand.nextFloat() * 0.6F, y + 1D, z + 0.2D + rand.nextFloat() * 0.6F, 0, 0, 0);
             }
         }
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityMannequin) {
             TileEntityMannequin te = (TileEntityMannequin) tileEntity;
             if (te.isRenderExtras()) {
                 if (te.hasSpecialRender()) {
+                    /*
                     EntityFX entityfx = new EntitySpellParticleFX(world,  x + random.nextFloat() * 1F, y, z + random.nextFloat() * 1F, 0, 0, 0);
                     ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
                     float[] colour = te.getSpecialRenderColour();
                     entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
                     Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
+                    */
                 }
             }
         }
     }
     
     @Override
-    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
         if (world.isRemote) {
             return false;
         }
         
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
             int rotation = ((TileEntityMannequin)te).getRotation();
             rotation++;
@@ -109,19 +123,14 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
     
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         ItemStack stack = new ItemStack(ModBlocks.doll, 1);
-        int meta = world.getBlockMetadata(x, y, z);
-        int yOffset = 0;
-        if (meta == 1) {
-            yOffset = -1;
-        }
-        TileEntity te = world.getTileEntity(x, y + yOffset, z);;
+        TileEntity te = world.getTileEntity(pos);;
         if (te != null && te instanceof TileEntityMannequin) {
             TileEntityMannequin teMan = (TileEntityMannequin) te;
             if (teMan.getGameProfile() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.func_152460_a(profileTag, teMan.getGameProfile());
+                NBTUtil.writeGameProfile(profileTag, teMan.getGameProfile());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
@@ -131,51 +140,46 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         return true;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
+    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
     }
     
-    @SideOnly(Side.CLIENT)
     @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
-    }
-    
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!playerIn.canPlayerEdit(pos, side, heldItem)) {
             return false;
         }
-        if (!world.isRemote) {
-            ItemStack stack = player.getCurrentEquippedItem();
-            if (stack != null && stack.getItem() == ModItems.mannequinTool) {
+        if (!worldIn.isRemote) {
+            if (heldItem != null && heldItem.getItem() == ModItems.mannequinTool) {
                 return false;
             }
-            if (stack != null && stack.getItem() == Items.name_tag) {
-                TileEntity te = world.getTileEntity(x, y, z);;
+            if (heldItem != null && heldItem.getItem() == Items.NAME_TAG) {
+                TileEntity te = worldIn.getTileEntity(pos);;
                 if (te != null && te instanceof TileEntityMannequin) {
-                    if (stack.getItem() == Items.name_tag) {
-                        ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
+                    if (heldItem.getItem() == Items.NAME_TAG) {
+                        ((TileEntityMannequin)te).setOwner(heldItem);
                     }
                 }
             } else {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y, z);
+                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN,
+                        worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
         }
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+        if (heldItem != null && heldItem.getItem() == ModItems.mannequinTool) {
             return false;
         }
         return true;
     }
     
     @Override
-    public int quantityDropped(int meta, int fortune, Random random) {
+    public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
     }
 
