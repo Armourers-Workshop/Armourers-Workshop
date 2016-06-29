@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.type.feet;
 
 import java.util.ArrayList;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
@@ -31,7 +32,7 @@ public class SkinFeet extends AbstractSkinTypeBase {
     }
 
     @Override
-    public int getVanillaArmourSlotId() {
-        return 3;
+    public EntityEquipmentSlot getEntityEquipmentSlot() {
+        return EntityEquipmentSlot.FEET;
     }
 }

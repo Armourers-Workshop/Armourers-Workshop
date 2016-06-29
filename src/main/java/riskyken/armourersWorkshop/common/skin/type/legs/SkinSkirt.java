@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.type.legs;
 
 import java.util.ArrayList;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
@@ -30,7 +31,7 @@ public class SkinSkirt extends AbstractSkinTypeBase {
     }
 
     @Override
-    public int getVanillaArmourSlotId() {
-        return 2;
+    public EntityEquipmentSlot getEntityEquipmentSlot() {
+        return EntityEquipmentSlot.LEGS;
     }
 }

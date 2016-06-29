@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
 import riskyken.armourersWorkshop.client.handler.EquipmentWardrobeHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
@@ -78,7 +77,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void initRenderers() {
         SkinModelRenderer.init();
-        new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
         //Render arrowRender = new RenderSkinnedArrow();
         //arrowRender.setRenderManager(RenderManager.instance);

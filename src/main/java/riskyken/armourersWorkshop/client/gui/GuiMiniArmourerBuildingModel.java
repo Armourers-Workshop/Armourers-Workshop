@@ -243,7 +243,8 @@ public class GuiMiniArmourerBuildingModel {
     
     private void renderArmourBlock(byte x, byte y, byte z, ICubeColour colour, float scale, boolean b) {
         for (int i = 0; i < 6; i++) {
-            FaceRenderer.renderFace(x, y, z, colour.getRed(i), colour.getGreen(i), colour.getBlue(i), (byte)255, (byte)i, false, (byte)1);
+            EnumFacing face = EnumFacing.values()[i];
+            FaceRenderer.renderFace(x, y, z, colour.getRed(face), colour.getGreen(face), colour.getBlue(face), (byte)255, (byte)i, false, (byte)1);
         }
     }
 
@@ -342,12 +343,12 @@ public class GuiMiniArmourerBuildingModel {
                 }
                 ICubeColour colour = new CubeColour();
                 if (fake) {
-                    colour.setColour(getColourFromId(colourId).getRGB(), 0);
-                    colour.setColour(getColourFromId(colourId + 1).getRGB(), 1);
-                    colour.setColour(getColourFromId(colourId + 2).getRGB(), 2);
-                    colour.setColour(getColourFromId(colourId + 3).getRGB(), 3);
-                    colour.setColour(getColourFromId(colourId + 4).getRGB(), 4);
-                    colour.setColour(getColourFromId(colourId + 5).getRGB(), 5);
+                    colour.setColour(getColourFromId(colourId).getRGB(), EnumFacing.values()[0]);
+                    colour.setColour(getColourFromId(colourId + 1).getRGB(), EnumFacing.values()[1]);
+                    colour.setColour(getColourFromId(colourId + 2).getRGB(), EnumFacing.values()[2]);
+                    colour.setColour(getColourFromId(colourId + 3).getRGB(), EnumFacing.values()[3]);
+                    colour.setColour(getColourFromId(colourId + 4).getRGB(), EnumFacing.values()[4]);
+                    colour.setColour(getColourFromId(colourId + 5).getRGB(), EnumFacing.values()[5]);
                 } else {
                     colour = cube.getCubeColour();
                 }

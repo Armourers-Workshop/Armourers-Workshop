@@ -1,14 +1,7 @@
 package riskyken.armourersWorkshop.common.items.block;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-
-public class ModItemBlockWithMetadata extends ItemBlockWithMetadata {
-
+public class ModItemBlockWithMetadata /*extends ItemBlockWithMetadata*/ {
+/*
     public ModItemBlockWithMetadata(Block block) {
         super(block, block);
     }
@@ -42,5 +35,5 @@ public class ModItemBlockWithMetadata extends ItemBlockWithMetadata {
         }
         
         super.addInformation(itemStack, player, list, par4);
-    }
+    }*/
 }

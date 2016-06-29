@@ -288,10 +288,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = super.getRenderBoundingBox();
-        
+        /*
         bb = AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 18,
                 xCoord + 20, yCoord + 40 + 20, zCoord + 20);
-        
+        */
         return bb;
     }
 

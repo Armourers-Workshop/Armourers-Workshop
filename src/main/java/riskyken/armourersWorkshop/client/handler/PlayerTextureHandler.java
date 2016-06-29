@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.client.handler;
 
 import java.util.HashMap;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.profiler.Profiler;
@@ -87,7 +85,7 @@ public class PlayerTextureHandler {
             textureInfo.updateDyes(dyes);
             
             ResourceLocation replacmentTexture = textureInfo.preRender();
-            player.func_152121_a(Type.SKIN, replacmentTexture);
+            //player.func_152121_a(Type.SKIN, replacmentTexture);
         }
         profiler.endSection();
     }
@@ -115,7 +113,7 @@ public class PlayerTextureHandler {
         if (playerTextureMap.containsKey(playerPointer)) {
             EntityTextureInfo textureInfo = playerTextureMap.get(playerPointer);
             ResourceLocation replacmentTexture = textureInfo.postRender();
-            player.func_152121_a(Type.SKIN, replacmentTexture);
+            //player.func_152121_a(Type.SKIN, replacmentTexture);
         } else {
             playerTextureMap.put(playerPointer, new EntityTextureInfo());
         }

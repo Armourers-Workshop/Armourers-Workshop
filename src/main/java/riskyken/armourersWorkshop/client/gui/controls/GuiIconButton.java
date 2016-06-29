@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import riskyken.armourersWorkshop.client.gui.GuiHelper;
 
 @SideOnly(Side.CLIENT)
 public class GuiIconButton extends GuiButtonExt {
@@ -81,12 +80,12 @@ public class GuiIconButton extends GuiButtonExt {
         if (hoverState == 0 & this.hovered) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(disableText);
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRendererObj, parent.width, parent.height, zLevel);
+            //GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRendererObj, parent.width, parent.height, zLevel);
         }
         if (hoverState == 2) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(hoverText);
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRendererObj, parent.width, parent.height, zLevel);
+            //GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRendererObj, parent.width, parent.height, zLevel);
         }
     }
 }

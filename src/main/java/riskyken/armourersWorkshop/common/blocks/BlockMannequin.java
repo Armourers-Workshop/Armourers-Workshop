@@ -7,9 +7,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +19,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -126,9 +125,9 @@ public class BlockMannequin extends AbstractModBlockContainer {
                 NBTTagCompound compound = new NBTTagCompound();
                 te.writeCommonToNBT(compound);
                 te.writeItemsToNBT(compound);
-                world.setBlockToAir(x, y + 1, z);
-                world.setBlock(x, y, z, ModBlocks.doll, 0, 3);
-                TileEntity newTe = world.getTileEntity(x, y, z);
+                world.setBlockToAir(pos.add(0, 1, 0));
+                world.setBlockState(pos, ModBlocks.doll.getDefaultState(), 3);
+                TileEntity newTe = world.getTileEntity(pos);
                 if (newTe != null && newTe instanceof TileEntityMannequin) {
                     ((TileEntityMannequin)newTe).readCommonFromNBT(compound);
                     ((TileEntityMannequin)newTe).readItemsFromNBT(compound);
@@ -243,52 +242,39 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
     
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0) {
-            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
-        } else {
-            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
-        }
-    }
-    
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!playerIn.canPlayerEdit(pos, side, heldItem)) {
             return false;
         }
-        if (!world.isRemote) {
-            if (player.inventory.getCurrentItem() != null) {
-                if (player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+        if (!worldIn.isRemote) {
+            if (playerIn.inventory.getCurrentItem() != null) {
+                if (playerIn.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
                     return false;
                 }
-                if (player.inventory.getCurrentItem().getItem() == ModItems.paintbrush) {
+                if (playerIn.inventory.getCurrentItem().getItem() == ModItems.paintbrush) {
                     return false;
                 }
             }
-            int meta = world.getBlockMetadata(x, y, z);
-            int yOffset = 0;
-            if (meta == 1) {
-                yOffset = -1;
-            }
-            ItemStack stack = player.getCurrentEquippedItem();
-            if (stack != null && stack.getItem() == Items.name_tag) {
-                TileEntity te = world.getTileEntity(x, y + yOffset, z);;
+            
+            if (heldItem != null && heldItem.getItem() == Items.NAME_TAG) {
+                TileEntity te = getMannequinTileEntity(worldIn, pos);
                 if (te != null && te instanceof TileEntityMannequin) {
-                    if (stack.getItem() == Items.name_tag) {
-                        ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
+                    if (heldItem.getItem() == Items.NAME_TAG) {
+                        ((TileEntityMannequin)te).setOwner(heldItem);
                     }
                 }
             } else {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y + yOffset, z);
+                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
         }
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+        if (playerIn.inventory.getCurrentItem() != null && playerIn.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
             return false;
         }
         return true;
     }
     
+    /*
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         int meta = world.getBlockMetadata(x, y, z);
@@ -302,31 +288,33 @@ public class BlockMannequin extends AbstractModBlockContainer {
             }
         }
     }
-    
+    */
     @Override
     public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
     }
     
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        if (state.getValue(PART) == EnumPartType.BOTTOM) {
+            return new TileEntityMannequin(false);
+        }
         return null;
     }
     
     @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        if (metadata == 0) {
-            return new TileEntityMannequin(false);
-        } else {
-            return null;
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        if (meta == 0) {
+            
         }
+        return null;
     }
-    
+    /*
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[] {PART});
     }
-    
+    */
     public static enum EnumPartType implements IStringSerializable {
         TOP("top"),
         BOTTOM("bottom");

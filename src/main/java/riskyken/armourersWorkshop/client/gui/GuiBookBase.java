@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL14;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ResourceLocation;
@@ -197,7 +196,7 @@ public abstract class GuiBookBase extends GuiScreen {
             ModLogger.log("resizing fbo to scale: " + scaleHeight);
         }
         
-        OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
+        //OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
         GL11.glClearColor(0F, 0F, 0F, 0F);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearDepth(1.0D);
@@ -240,11 +239,12 @@ public abstract class GuiBookBase extends GuiScreen {
     
     private void drawFboRec(int x, int y, int width, int height) {
         double zLevel = 1D;
-        Tessellator tess = new Tessellator().instance;
+        Tessellator tess = Tessellator.getInstance();
         //ModRenderHelper.enableAlphaBlend();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         //GL11.glColorMask(true, true, true, false);
         //OpenGlHelper.glBlendFunc(0, 0, 0, 0);
+        /*
         tess.startDrawingQuads();
         tess.setColorRGBA_F(1F, 1F, 1F, 1F);
         tess.setColorOpaque_I(-1);
@@ -258,5 +258,6 @@ public abstract class GuiBookBase extends GuiScreen {
         tess.addVertexWithUV(x, y, zLevel, 0, 1);
         
         tess.draw();
+        */
     }
 }

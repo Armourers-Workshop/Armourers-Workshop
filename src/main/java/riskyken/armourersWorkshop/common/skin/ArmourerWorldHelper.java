@@ -165,8 +165,9 @@ public final class ArmourerWorldHelper {
         cubeData.setCubeId(index, cubeType);
         cubeData.setCubeLocation(index, (byte) ix, (byte) iy, (byte) iz);
         for (int i = 0; i < 6; i++) {
-            cubeData.setCubeColour(index, i, c.getRed(i), c.getGreen(i), c.getBlue(i));
-            cubeData.setCubePaintType(index, i, c.getPaintType(i));
+            EnumFacing face = EnumFacing.values()[i];
+            cubeData.setCubeColour(index, i, c.getRed(face), c.getGreen(face), c.getBlue(face));
+            cubeData.setCubePaintType(index, i, c.getPaintType(face));
         }
         /*
         if (meta > 0) {
@@ -248,12 +249,13 @@ public final class ArmourerWorldHelper {
             if (te != null && te instanceof TileEntityColourable) {
                 CubeColour cc = new CubeColour();
                 for (int i = 0; i < 6; i++) {
+                    EnumFacing face = EnumFacing.values()[i];
                     byte[] c = cubeData.getCubeColour(index, i);
                     byte paintType = cubeData.getCubePaintType(index, i);
-                    cc.setRed(c[0], i);
-                    cc.setGreen(c[1], i);
-                    cc.setBlue(c[2], i);
-                    cc.setPaintType(paintType, i);
+                    cc.setRed(c[0], face);
+                    cc.setGreen(c[1], face);
+                    cc.setBlue(c[2], face);
+                    cc.setPaintType(paintType, face);
                 }
                 ((TileEntityColourable)te).setColour(cc);
             }

@@ -3,11 +3,13 @@ package riskyken.armourersWorkshop.utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public final class NBTHelper {
     
     private static final String TAG_SLOT = "slot";
+    private static final String TAG_BLOCK_POS = "blockPos";
     
     private NBTHelper() {}
     
@@ -57,5 +59,18 @@ public final class NBTHelper {
                 itemStacks[slot] = ItemStack.loadItemStackFromNBT(item);
             }
         }
+    }
+    
+    public static BlockPos readBlockPos(NBTTagCompound compound, String key) {
+        if (compound.hasKey(TAG_BLOCK_POS + key, 11)) {
+            int[] posArray = compound.getIntArray(TAG_BLOCK_POS + key);
+            return new BlockPos(posArray[0], posArray[1], posArray[2]);
+        }
+        return new BlockPos(0, 0, 0);
+    }
+    
+    public static void writeBlockPos(BlockPos pos, NBTTagCompound compound, String key) {
+        int[] posArray = new int[] {pos.getX(), pos.getY(), pos.getZ()};
+        compound.setIntArray(TAG_BLOCK_POS + key, posArray);
     }
 }

@@ -13,6 +13,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -88,8 +89,8 @@ public final class SkinModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         //Look for skinned armourer.
-        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
-            int slot = 3 - skinType.getVanillaArmourSlotId();
+        if (skinType.getEntityEquipmentSlot() != null && skinType.getEntityEquipmentSlot().getSlotType() == Type.ARMOR) {
+            int slot = 3 - skinType.getEntityEquipmentSlot().getSlotIndex();
             ItemStack armourStack = player.inventory.armorItemInSlot(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
@@ -119,8 +120,8 @@ public final class SkinModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         
         //Look for skinned armourer.
-        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
-            int slot = 3 - skinType.getVanillaArmourSlotId();
+        if (skinType.getEntityEquipmentSlot() != null && skinType.getEntityEquipmentSlot().getSlotType() == Type.ARMOR) {
+            int slot = 3 - skinType.getEntityEquipmentSlot().getSlotIndex();
             ItemStack armourStack = player.inventory.armorItemInSlot(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
@@ -291,35 +292,35 @@ public final class SkinModelRenderer {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glEnable(GL11.GL_BLEND);
             for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
-                if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
+                if (slot == SkinTypeRegistry.skinHead.getEntityEquipmentSlot().getSlotIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                     if (data != null) {
                         customHead.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
-                if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
+                if (slot == SkinTypeRegistry.skinChest.getEntityEquipmentSlot().getSlotIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                     if (data != null) {
                         customChest.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
-                if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
+                if (slot == SkinTypeRegistry.skinLegs.getEntityEquipmentSlot().getSlotIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
                     if (data != null) {
                         customLegs.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
-                if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
+                if (slot == SkinTypeRegistry.skinSkirt.getEntityEquipmentSlot().getSlotIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     if (data != null) {
                         customSkirt.render(player, render.getMainModel(), data, false, dye, extraColours, false);
                     }
                 }
-                if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
+                if (slot == SkinTypeRegistry.skinFeet.getEntityEquipmentSlot().getSlotIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
                     if (data != null) {

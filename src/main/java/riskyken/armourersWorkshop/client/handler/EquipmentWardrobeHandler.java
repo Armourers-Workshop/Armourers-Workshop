@@ -5,7 +5,6 @@ import java.util.HashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
@@ -16,8 +15,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
 public final class EquipmentWardrobeHandler {
@@ -45,7 +42,7 @@ public final class EquipmentWardrobeHandler {
         EntityPlayer localPlayer = Minecraft.getMinecraft().thePlayer;
         PlayerPointer localPointer = new PlayerPointer(localPlayer);
         if (playerPointer.equals(localPointer)) {
-            ExPropsPlayerEquipmentData.get(localPlayer).setSkinInfo(ewd, false);
+            //ExPropsPlayerEquipmentData.get(localPlayer).setSkinInfo(ewd, false);
         }
     }
     
@@ -127,11 +124,12 @@ public final class EquipmentWardrobeHandler {
         
         int result = -1;
         //Hide the armour if it had been skinned.
-        ItemStack stack = player.getCurrentArmor(event.getSlot());
+        //ItemStack stack = player.getCurrentArmor(event.getSlot());
+        /*
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             result = -2;
         }
-        
+        */
         //Hide the armour if the player has turned it off.
         PlayerPointer playerPointer = new PlayerPointer(player);
         if (equipmentWardrobeMap.containsKey(playerPointer)) {

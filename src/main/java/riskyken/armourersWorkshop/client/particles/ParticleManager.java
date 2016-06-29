@@ -15,9 +15,9 @@ public class ParticleManager {
 		spawnParticle(world, particle, false);
 	}
 	
-	public void spawnParticle(World world, EntityFX particle, boolean must) {
+	public void spawnParticle(World world, Particle particle, boolean must) {
 		Minecraft mc = Minecraft.getMinecraft();
-		if (mc != null && mc.renderViewEntity != null && mc.effectRenderer != null) {
+		if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null) {
 
 			if (!must) {
 				int particleSetting = mc.gameSettings.particleSetting;
@@ -25,15 +25,16 @@ public class ParticleManager {
 				if (particleSetting == 2 || (particleSetting == 1 && world.rand.nextInt(3) == 0)) {
 					return;
 				}
-				
-				double distanceX = mc.renderViewEntity.posX - particle.posX;
-				double distanceY = mc.renderViewEntity.posY - particle.posY;
-				double distanceZ = mc.renderViewEntity.posZ - particle.posZ;
+				/*
+				double distanceX = mc.getRenderViewEntity().posX - particle.posX;
+				double distanceY = mc.getRenderViewEntity().posY - particle.posY;
+				double distanceZ = mc.getRenderViewEntity().posZ - particle.posZ;
 				int maxDistance = 16;
 				
 				if (distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ > maxDistance * maxDistance) {
 					return;
 				}
+				*/
 			}
 			
 			if (particle != null) {

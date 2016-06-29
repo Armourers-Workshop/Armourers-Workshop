@@ -12,17 +12,12 @@ public class TileEntityDyeTable extends AbstractTileEntityInventory {
     }
     
     @Override
-    public boolean canUpdate() {
-        return false;
-    }
-    
-    @Override
     public String getName() {
         return LibBlockNames.DYE_TABLE;
     }
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        return super.writeToNBT(compound);
     }
     
     @Override

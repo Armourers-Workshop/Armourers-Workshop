@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
@@ -54,7 +55,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     @Override
     public void initGui() {
         super.initGui();
-        String guiName = armourerBrain.getInventoryName();
+        String guiName = armourerBrain.getName();
         
         buttonList.clear();
         
@@ -106,14 +107,14 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     }
     
     @Override
-    protected void mouseClicked(int x, int y, int button) {
+    protected void mouseClicked(int x, int y, int button) throws IOException {
         super.mouseClicked(x, y, button);
         textItemName.mouseClicked(x, y, button);
         textUserSkin.mouseClicked(x, y, button);
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) {
+    protected void keyTyped(char key, int keyCode) throws IOException {
         if (!textItemName.textboxKeyTyped(key, keyCode)) {
             if (!textUserSkin.textboxKeyTyped(key, keyCode)) {
                 super.keyTyped(key, keyCode);
@@ -150,12 +151,12 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourerBrain.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourerBrain.getName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
     
-        String itemNameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.itemName");
-        String usernameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.username");
-        String cloneLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.clone");
+        String itemNameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.itemName");
+        String usernameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.username");
+        String cloneLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.clone");
         String versionLabel = "Alpha: " + LibModInfo.VERSION;
         
         this.fontRendererObj.drawString(itemNameLabel, 64, 48, 4210752);

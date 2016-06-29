@@ -1,16 +1,17 @@
 package riskyken.armourersWorkshop.api.common.skin.cubes;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 
 public interface ICubeColour {
     
-    public byte getRed(int side);
+    public byte getRed(EnumFacing side);
     
-    public byte getGreen(int side);
+    public byte getGreen(EnumFacing side);
         
-    public byte getBlue(int side);
+    public byte getBlue(EnumFacing side);
     
-    public byte getPaintType(int side);
+    public byte getPaintType(EnumFacing side);
     
     public byte[] getRed();
     
@@ -20,18 +21,18 @@ public interface ICubeColour {
     
     public byte[] getPaintType();
     
-    public void setColour(int colour, int side);
+    public void setColour(int colour, EnumFacing side);
     
     @Deprecated
     public void setColour(int colour);
     
-    public void setRed(byte red, int side);
+    public void setRed(byte red, EnumFacing side);
     
-    public void setGreen(byte green, int side);
+    public void setGreen(byte green, EnumFacing side);
     
-    public void setBlue(byte blue, int side);
+    public void setBlue(byte blue, EnumFacing side);
     
-    public void setPaintType(byte type, int side);
+    public void setPaintType(byte type, EnumFacing side);
     
     public void readFromNBT(NBTTagCompound compound);
     

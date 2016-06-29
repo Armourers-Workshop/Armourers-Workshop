@@ -68,14 +68,14 @@ public class MiniCube implements IPantable {
     
     @Override
     public void setColour(int colour, EnumFacing side) {
-        cc.setColour(colour, side.ordinal());
+        cc.setColour(colour, side);
     }
     
     @Override
     public void setColour(byte[] rgb, EnumFacing side) {
-        cc.setRed(rgb[0], side.ordinal());
-        cc.setGreen(rgb[1], side.ordinal());
-        cc.setBlue(rgb[2], side.ordinal());
+        cc.setRed(rgb[0], side);
+        cc.setGreen(rgb[1], side);
+        cc.setBlue(rgb[2], side);
     }
 
     @Override
@@ -90,12 +90,12 @@ public class MiniCube implements IPantable {
 
     @Override
     public void setPaintType(PaintType paintType, EnumFacing side) {
-        cc.setPaintType((byte) paintType.getKey(), side.ordinal());
+        cc.setPaintType((byte) paintType.getKey(), side);
     }
 
     @Override
     public PaintType getPaintType(EnumFacing side) {
-        return PaintType.getPaintTypeFormSKey(cc.getPaintType(side.ordinal()));
+        return PaintType.getPaintTypeFormSKey(cc.getPaintType(side));
     }
 
     @Override

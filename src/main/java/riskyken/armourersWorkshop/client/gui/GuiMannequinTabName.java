@@ -1,10 +1,10 @@
 package riskyken.armourersWorkshop.client.gui;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -23,11 +23,11 @@ public class GuiMannequinTabName extends GuiTabPanel {
     @Override
     public void initGui() {
         super.initGui();
-        nameTextbox = new GuiTextField(fontRenderer, width / 2 - 78, 25, 100, 14);
+        nameTextbox = new GuiTextField(0 ,fontRenderer, width / 2 - 78, 25, 100, 14);
         if (tileEntity.getGameProfile() != null) {
             nameTextbox.setText(tileEntity.getGameProfile().getName());
         }
-        setNameButton = new GuiButtonExt(0, width / 2 + 28, 25, 50, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "set"));
+        setNameButton = new GuiButtonExt(0, width / 2 + 28, 25, 50, 14, GuiHelper.getLocalizedControlName(tileEntity.getName(), "set"));
         
         buttonList.add(setNameButton);
     }

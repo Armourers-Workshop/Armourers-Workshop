@@ -93,7 +93,7 @@ public class GuiArmourLibrary extends GuiContainer {
         this.xSize = reso.getScaledWidth();
         this.ySize = reso.getScaledHeight();
         super.initGui();
-        String guiName = armourLibrary.getInventoryName();
+        String guiName = armourLibrary.getName();
         
         int slotSize = 18;
         
@@ -342,9 +342,9 @@ public class GuiArmourLibrary extends GuiContainer {
         loadSaveButton.enabled = true;
         
         if (isLoading()) {
-            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "load");
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "load");
         } else {
-            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "save");
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "save");
         }
         if (!((Slot) inventorySlots.inventorySlots.get(36)).getHasStack() & !armourLibrary.isCreativeLibrary()) {
             loadSaveButton.displayString = "";
@@ -444,7 +444,7 @@ public class GuiArmourLibrary extends GuiContainer {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
         
         
@@ -469,16 +469,16 @@ public class GuiArmourLibrary extends GuiContainer {
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        super.mouseMovedOrUp(mouseX, mouseY, button);
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
         if (!dropDownList.getIsDroppedDown()) {
-            fileList.mouseMovedOrUp(mouseX, mouseY, button);
+            fileList.mouseMovedOrUp(mouseX, mouseY, state);
         }
         scrollbar.mouseReleased(mouseX, mouseY);
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) {
+    protected void keyTyped(char key, int keyCode) throws IOException {
         if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
             if (keyCode == 200) {
                 //Up
@@ -516,14 +516,14 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (armourLibrary.isCreativeLibrary()) {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "1", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getName() + "1", 0xCCCCCC);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "0", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getName() + "0", 0xCCCCCC);
         }
         
-        String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");
-        String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.filename");
-        String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.search");
+        String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.files");
+        String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.filename");
+        String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.search");
         /*
         this.fontRendererObj.drawString(filesLabel, 7, 55, 4210752);
         this.fontRendererObj.drawString(filenameLabel, 152, 27, 4210752);

@@ -1,14 +1,15 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabController;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
@@ -41,7 +42,7 @@ public class GuiMannequin extends GuiContainer {
         super(new ContainerMannequin(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.player = invPlayer.player;
-        this.inventoryName = tileEntity.getInventoryName();
+        this.inventoryName = tileEntity.getName();
         tabList = new ArrayList<GuiTabPanel>();
         
         tabInventory = new GuiMannequinTabInventory(0, this);
@@ -94,7 +95,7 @@ public class GuiMannequin extends GuiContainer {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
@@ -105,12 +106,12 @@ public class GuiMannequin extends GuiContainer {
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        super.mouseMovedOrUp(mouseX, mouseY, button);
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.mouseMovedOrUp(mouseX, mouseY, button);
+                tab.mouseMovedOrUp(mouseX, mouseY, state);
             }
         }
     }
@@ -123,7 +124,7 @@ public class GuiMannequin extends GuiContainer {
     }
     
     @Override
-    protected void keyTyped(char c, int keycode) {
+    protected void keyTyped(char c, int keycode) throws IOException {
         boolean keyTyped = false;
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
@@ -148,7 +149,7 @@ public class GuiMannequin extends GuiContainer {
         if (tileEntity.getIsDoll()) {
             GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, "doll", append, 4210752);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName(), append, 4210752);
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getName(), append, 4210752);
         }
         
         for (int i = 0; i < tabList.size(); i++) {

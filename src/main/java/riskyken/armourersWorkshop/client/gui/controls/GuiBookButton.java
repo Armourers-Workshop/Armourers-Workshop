@@ -3,14 +3,12 @@ package riskyken.armourersWorkshop.client.gui.controls;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.lib.LibSounds;
 
 @SideOnly(Side.CLIENT)
 public class GuiBookButton extends GuiButtonExt {
@@ -42,7 +40,7 @@ public class GuiBookButton extends GuiButtonExt {
     }
     
     @Override
-    public void func_146113_a(SoundHandler soundHandler) {
-        soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(LibSounds.PAGE_TURN), 1.0F));
+    public void playPressSound(SoundHandler soundHandlerIn) {
+        //soundHandlerIn.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(LibSounds.PAGE_TURN), 1.0F));
     }
 }

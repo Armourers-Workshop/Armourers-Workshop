@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class ModInventory implements IInventory {
@@ -64,8 +65,10 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slotId) {
-        return getStackInSlot(slotId);
+    public ItemStack removeStackFromSlot(int index) {
+        ItemStack stack = getStackInSlot(index);
+        setInventorySlotContents(index, stack);
+        return stack;
     }
 
     @Override
@@ -81,12 +84,17 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return this.name;
     }
 
     @Override
-    public boolean hasCustomInventoryName() {
+    public ITextComponent getDisplayName() {
+        return new TextComponentString(getName());
+    }
+    
+    @Override
+    public boolean hasCustomName() {
         return false;
     }
 
@@ -108,11 +116,11 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public void openInventory() {
+    public void openInventory(EntityPlayer player) {
     }
 
     @Override
-    public void closeInventory() {
+    public void closeInventory(EntityPlayer player) {
     }
 
     @Override
@@ -144,43 +152,7 @@ public class ModInventory implements IInventory {
             }
         }
     }
-
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player) {
-        // TODO Auto-generated method stub
-        
-    }
-
+    
     @Override
     public int getField(int id) {
         // TODO Auto-generated method stub

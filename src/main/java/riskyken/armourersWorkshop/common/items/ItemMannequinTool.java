@@ -6,7 +6,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -17,7 +16,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
@@ -34,6 +32,7 @@ public class ItemMannequinTool extends AbstractModItem {
             EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         IBlockState block = worldIn.getBlockState(pos);
         if (block != null && (block == ModBlocks.mannequin | block == ModBlocks.doll)) {
+            /*
             TileEntity te;
             int meta = world.getBlockMetadata(x, y, z);
             if (meta == 0) {
@@ -53,6 +52,7 @@ public class ItemMannequinTool extends AbstractModItem {
                 }
                 return EnumActionResult.PASS;
             }
+            */
         }
         return EnumActionResult.FAIL;
     }

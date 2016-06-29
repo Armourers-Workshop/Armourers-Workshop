@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -118,44 +121,44 @@ public class ItemSkin extends AbstractModItem {
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
-            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        Block block = world.getBlock(x, y, z);
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn,
+            BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState blockState = worldIn.getBlockState(pos.offset(facing));
         
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         
         if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
-            ForgeDirection dir = ForgeDirection.getOrientation(side);
-            Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-            if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
-                placeSkinAtLocation(world, player, side, stack, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, skinPointer);
-                return true;
+            if (blockState.getBlock().isReplaceable(worldIn, pos.offset(facing))) {
+                placeSkinAtLocation(worldIn, playerIn, facing, stack, pos.offset(facing), skinPointer);
+                return EnumActionResult.PASS;
             }
         }
 
-        return false;
+        return EnumActionResult.FAIL;
     }
     
-    private boolean placeSkinAtLocation(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
-        if (!player.canPlayerEdit(x, y, z, side, stack)) {
+    private boolean placeSkinAtLocation(World world, EntityPlayer player, EnumFacing side, ItemStack stack, BlockPos pos, SkinPointer skinPointer) {
+        if (!player.canPlayerEdit(pos, side, stack)) {
             return false;
         }
         if (stack.stackSize == 0) {
             return false;
         }
-        if (y == 255) {
+        if (pos.getY() == 255) {
             return false;
         }
-        if (!world.canPlaceEntityOnSide(Blocks.STONE, x, y, z, false, side, null, stack)) {
+        /*
+        if (!world.canPlaceEntityOnSide(Blocks.STONE, pos, false, side, null, stack)) {
             return false;
         }
+        */
         int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        world.setBlock(x, y, z, ModBlocks.skinnable, rotation, 2);
-        world.setTileEntity(x, y, z, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
-        TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x, y, z);
+        world.setBlockState(pos, ModBlocks.skinnable.getDefaultState());
+        world.setTileEntity(pos, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
+        TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(pos);
         te.setSkinPointer(skinPointer);
         stack.stackSize--;
-        world.playSoundEffect((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, "dig.stone", 1, 1);
+        //world.playSoundEffect((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, "dig.stone", 1, 1);
         return true;
     }
 }

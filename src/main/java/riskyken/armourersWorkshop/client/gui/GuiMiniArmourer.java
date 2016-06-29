@@ -32,7 +32,7 @@ public class GuiMiniArmourer extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        String guiName = tileEntity.getInventoryName();
+        String guiName = tileEntity.getName();
         buttonList.clear();
         
         buttonList.add(new GuiButtonExt(0, guiLeft + 58, guiTop + 53, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
@@ -41,10 +41,10 @@ public class GuiMiniArmourer extends GuiContainer {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, this.tileEntity.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, this.tileEntity.getName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
         
-        String labelBuildingAccess = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.buildingAccess");
+        String labelBuildingAccess = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.buildingAccess");
         this.fontRendererObj.drawSplitString(labelBuildingAccess, 5, 21, 170, 4210752);
     }
 

@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.handler;
 
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,7 +28,7 @@ public class DebugTextHandler {
         }
         if (event.getLeft() != null && event.getLeft().size() > 0) {
             EntityPlayerSP localPlayer = Minecraft.getMinecraft().thePlayer;
-            List playerList = localPlayer.sendQueue.playerInfoList;
+            //List playerList = localPlayer.sendQueue.playerInfoList;
             event.getLeft().add("");
             event.getLeft().add(TextFormatting.GOLD + "[" + LibModInfo.NAME + "]");
             event.getLeft().add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
@@ -46,13 +44,15 @@ public class DebugTextHandler {
                 event.getLeft().add("Attached Render: " + ClientProxy.useAttachedModelRender());
                 event.getLeft().add("TextureRender: " + ClientProxy.useSafeTextureRender());
                 if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
+                    /*
                     for (int i = 0; i < playerList.size(); i++) {
                         GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);
-                        if (player.name.equals(localPlayer.getCommandSenderName())) {
+                        if (player.name.equals(localPlayer.getName())) {
                             event.getLeft().add("ping:" + player.responseTime + "ms");
                             break;
                         }
-                    } 
+                    }
+                    */
                 }
             } else {
                 event.getLeft().add("Hold " + TextFormatting.GREEN + "Ctrl" + TextFormatting.WHITE + " for more.");  

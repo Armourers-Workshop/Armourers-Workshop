@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
@@ -90,21 +89,21 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         }
         if (update) {
             this.markDirty();
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
         }
     }
     
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        readFromNBT(packet.func_148857_g());
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        readFromNBT(packet.getNbtCompound());
+        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
     }
     
     @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), compound);
     }
     
     @Override
@@ -133,7 +132,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         if (skinType != null) {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
@@ -146,14 +145,12 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
             }
             */
         }
+        return compound;
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return AxisAlignedBB.getBoundingBox(
-                xCoord, yCoord, zCoord,
-                xCoord + 1, yCoord + 2, zCoord + 1
-                );
+        return new AxisAlignedBB(getPos());
     }
 
     @Override

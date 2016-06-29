@@ -80,11 +80,11 @@ public final class SkinHelper {
         ResourceLocation skinloc = DefaultPlayerSkin.getDefaultSkinLegacy();
         InputStream inputStream = null;
         Minecraft mc = Minecraft.getMinecraft();
-        Map map = mc.func_152342_ad().func_152788_a(gameProfile);
+        Map map = mc.getSkinManager().loadSkinFromCache(gameProfile);
         
         try {
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
+                skinloc = mc.getSkinManager().loadSkin((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
                 ITextureObject skintex = mc.getTextureManager().getTexture(skinloc);
                 
                 if (skintex instanceof ThreadDownloadImageData) {
@@ -119,9 +119,9 @@ public final class SkinHelper {
         ResourceLocation skin = DefaultPlayerSkin.getDefaultSkinLegacy();
         if (gameProfile != null) {
             Minecraft mc = Minecraft.getMinecraft();
-            Map<?, ?> map = mc.func_152342_ad().func_152788_a(gameProfile);
+            Map<?, ?> map = mc.getSkinManager().loadSkinFromCache(gameProfile);
             if (map.containsKey(type)) {
-                skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(type), type);
+                skin = mc.getSkinManager().loadSkin((MinecraftProfileTexture)map.get(type), type);
             }
         }
         return skin;

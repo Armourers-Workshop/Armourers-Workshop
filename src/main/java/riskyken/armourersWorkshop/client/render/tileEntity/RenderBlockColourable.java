@@ -78,7 +78,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
                 EnumFacing dir = EnumFacing.values()[i];
-                int paintType = cubeColour.getPaintType(i) & 0xFF;
+                int paintType = cubeColour.getPaintType(dir) & 0xFF;
                 if (paintType != 255) {
                     bindTexture(MARKERS);
                     GL11.glColor3f(0.77F, 0.77F, 0.77F);
@@ -104,9 +104,9 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
-                if (tileEntity.isPaintableSide(i)) {
-                    EnumFacing dir = EnumFacing.values()[i];
-                    PaintType paintType = tileEntity.getPaintType(i);
+                EnumFacing dir = EnumFacing.values()[i];
+                if (tileEntity.isPaintableSide(dir)) {
+                    PaintType paintType = tileEntity.getPaintType(dir);
                     if (paintType != PaintType.NONE) {
                         bindTexture(MARKERS);
                         GL11.glColor3f(0.77F, 0.77F, 0.77F);

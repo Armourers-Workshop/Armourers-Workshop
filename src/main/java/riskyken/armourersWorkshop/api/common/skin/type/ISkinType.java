@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.api.common.skin.type;
 
 import java.util.ArrayList;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
+
 /**
  * 
  * @author RiskyKen
@@ -43,7 +45,7 @@ public interface ISkinType {
      * If this skin is for vanilla armour return the slot id here, otherwise return -1.
      * @return slotId
      */
-    public int getVanillaArmourSlotId();
+    public EntityEquipmentSlot getEntityEquipmentSlot();
     
     /**
      * Should this skin be hidden from the user?

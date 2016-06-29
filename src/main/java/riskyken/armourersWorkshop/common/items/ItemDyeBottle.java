@@ -38,8 +38,8 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
             TileEntity te = world.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
-                    int colour = ((IPantable)te).getColour(0);
-                    PaintType paintType = ((IPantable)te).getPaintType(0);
+                    int colour = ((IPantable)te).getColour(side);
+                    PaintType paintType = ((IPantable)te).getPaintType(side);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }

@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -8,16 +8,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
-import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
 public class TileEntitySkinnable extends TileEntity {
@@ -54,7 +52,9 @@ public class TileEntitySkinnable extends TileEntity {
         
     }
 
-    public void setBoundsOnBlock(Block block) {
+    public AxisAlignedBB getAABBForBlock(IBlockAccess world, IBlockState state) {
+        return state.getBlock().getBoundingBox(state, world, getPos());
+        /*
         if (haveBlockBounds) {
             block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
             return;
@@ -89,6 +89,7 @@ public class TileEntitySkinnable extends TileEntity {
             }
         }
         block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
+        */
     }
 
     private void rotateBlockBounds() {
@@ -183,7 +184,7 @@ public class TileEntitySkinnable extends TileEntity {
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+        return new AxisAlignedBB(getPos());
     }
     
     @Override

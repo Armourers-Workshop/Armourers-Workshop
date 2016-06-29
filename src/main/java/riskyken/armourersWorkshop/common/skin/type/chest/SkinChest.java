@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.type.chest;
 
 import java.util.ArrayList;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
@@ -30,9 +31,9 @@ public class SkinChest extends AbstractSkinTypeBase {
     public String getName() {
         return "Chest";
     }
-
+    
     @Override
-    public int getVanillaArmourSlotId() {
-        return 1;
+    public EntityEquipmentSlot getEntityEquipmentSlot() {
+        return EntityEquipmentSlot.CHEST;
     }
 }
