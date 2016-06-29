@@ -18,9 +18,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -33,9 +35,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
@@ -55,8 +58,11 @@ public class BlockMannequin extends AbstractModBlockContainer {
     
     @Override
     public Block setUnlocalizedName(String name) {
-        GameRegistry.registerBlock(this, ItemBlockMannequin.class, "block." + name);
-        return super.setUnlocalizedName(name);
+        super.setUnlocalizedName(name);
+        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
+        GameRegistry.register(this);
+        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, name));
+        return this;
     }
     
     @Override
@@ -112,6 +118,11 @@ public class BlockMannequin extends AbstractModBlockContainer {
         }
     }
     
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+    
     public void convertToDoll(World world, BlockPos pos) {
         if (isTopOfMannequin(world, pos)) {
             convertToDoll(world, pos.add(0, -1, 0));
@@ -153,7 +164,8 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
     
     public boolean isTopOfMannequin(IBlockState blockState) {
-        return blockState.getValue(PART) == EnumPartType.TOP;
+        //return blockState.getValue(PART) == EnumPartType.TOP;
+        return false;
     }
     
     @Override
@@ -296,9 +308,11 @@ public class BlockMannequin extends AbstractModBlockContainer {
     
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
+        /*
         if (state.getValue(PART) == EnumPartType.BOTTOM) {
             return new TileEntityMannequin(false);
         }
+        */
         return null;
     }
     
@@ -308,6 +322,11 @@ public class BlockMannequin extends AbstractModBlockContainer {
             
         }
         return null;
+    }
+    
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
     }
     /*
     @Override

@@ -153,7 +153,6 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
             if (paintType == tileEntityColourMixer.getPaintType(null))
             return;
         }
-        
         MessageClientGuiColourUpdate message = new MessageClientGuiColourUpdate(this.colour.getRGB(), false, paintType);
         PacketHandler.networkWrapper.sendToServer(message);
     }

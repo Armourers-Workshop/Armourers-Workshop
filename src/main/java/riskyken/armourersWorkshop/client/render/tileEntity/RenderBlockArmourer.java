@@ -66,7 +66,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             mc.mcProfiler.endSection();
             if (te.isShowGuides()) {
                 mc.mcProfiler.startSection("renderGuideGrid");
-                SkinRenderHelper.renderBuildingGrid(skinType, scale);
+                //SkinRenderHelper.renderBuildingGrid(skinType, scale);
                 mc.mcProfiler.endSection();
             }
         }

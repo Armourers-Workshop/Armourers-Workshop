@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -41,9 +42,10 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         mc.mcProfiler.startSection("renderListSort");
         Collections.sort(renderList);
         mc.mcProfiler.endSection();
-        mc.entityRenderer.enableLightmap();
-        RenderHelper.enableStandardItemLighting();
-        ModRenderHelper.enableAlphaBlend();
+        //mc.entityRenderer.enableLightmap();
+        //RenderHelper.disableStandardItemLighting();
+        //RenderHelper.enableStandardItemLighting();
+        //ModRenderHelper.enableAlphaBlend();
         Minecraft.getMinecraft().mcProfiler.startSection("skinnableBlock");
         for (int i = 0; i < renderList.size(); i++) {
             RenderLast rl = renderList.get(i);
@@ -53,11 +55,14 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         RenderHelper.disableStandardItemLighting();
         renderList.clear();
         ModRenderHelper.disableAlphaBlend();
-        mc.entityRenderer.disableLightmap();
+        //mc.entityRenderer.disableLightmap();
     }
     
     public void renderTileEntityAt(TileEntitySkinnable tileEntity, double x, double y, double z, float partialTickTime) {
-        ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), tileEntity.getPos());
+        GL11.glPushMatrix();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+        //ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), tileEntity.getPos());
+        //GL11.glColor4f(1, 1, 1, 1);
         SkinPointer skinPointer = tileEntity.getSkinPointer();
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
@@ -66,15 +71,18 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             } else {
                 ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
                 GL11.glPushMatrix();
-                GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+                //GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
                 loadingModel.render(tileEntity, partialTickTime, 0.0625F);
                 GL11.glPopMatrix();
             }
         }
+        GL11.glColor4f(1, 1, 1, 1);
+        GL11.glPopMatrix();
     }
     
     private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, Skin skin) {
         int rotation = tileEntity.getBlockMetadata();
+        ModRenderHelper.enableAlphaBlend();
         GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         GL11.glScalef(-1, -1, 1);
         if (rotation != 0) {
@@ -90,10 +98,11 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance);
         }
         if (rotation != 0) {
-            GL11.glRotatef((90F * -rotation), 0, 1, 0);
+            //GL11.glRotatef((90F * -rotation), 0, 1, 0);
           }
-        GL11.glScalef(-1, -1, 1);
-        GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
+        ModRenderHelper.disableAlphaBlend();
+        //GL11.glScalef(-1, -1, 1);
+        //GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
     }
     
     private class RenderLast implements Comparable<RenderLast> {
@@ -127,6 +136,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-        renderList.add(new RenderLast(te, x, y, z));
+        renderTileEntityAt((TileEntitySkinnable) te, x, y, z, partialTicks);
+        //renderList.add(new RenderLast(te, x, y, z));
     }
 }

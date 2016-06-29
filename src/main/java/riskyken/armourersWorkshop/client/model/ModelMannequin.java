@@ -3,16 +3,15 @@ package riskyken.armourersWorkshop.client.model;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
-import org.lwjgl.opengl.GL11;
-
-import riskyken.armourersWorkshop.common.data.BipedRotations;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.data.BipedRotations;
 
 @SideOnly(Side.CLIENT)
 public class ModelMannequin extends ModelBiped {
@@ -20,7 +19,7 @@ public class ModelMannequin extends ModelBiped {
     private boolean compiled;
     
     public ModelMannequin() {
-        super();
+        super(0.0F, 0.0F, 64, 64);
         this.isChild = false;
         this.compiled = false;
     }

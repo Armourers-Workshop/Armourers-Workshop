@@ -6,8 +6,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
@@ -16,13 +18,23 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public class BlockArmourer extends AbstractModBlockContainer {
 
     public BlockArmourer() {
-        super(LibBlockNames.ARMOURER_BRAIN);
+        super(LibBlockNames.ARMOURER);
+    }
+    
+    @Override
+    public Block setUnlocalizedName(String name) {
+        super.setUnlocalizedName(name);
+        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
+        GameRegistry.register(this);
+        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, name));
+        return this;
     }
     
     @Override
@@ -57,12 +69,6 @@ public class BlockArmourer extends AbstractModBlockContainer {
     }
 
     @Override
-    public Block setUnlocalizedName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setUnlocalizedName(name);
-    }
-
-    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
             EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!playerIn.canPlayerEdit(pos, side, heldItem)) {
@@ -77,5 +83,10 @@ public class BlockArmourer extends AbstractModBlockContainer {
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityArmourer();
+    }
+    
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
     }
 }

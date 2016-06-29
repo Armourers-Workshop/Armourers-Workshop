@@ -16,8 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -34,6 +36,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
@@ -51,8 +54,11 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @Override
     public Block setUnlocalizedName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setUnlocalizedName(name);
+        super.setUnlocalizedName(name);
+        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
+        GameRegistry.register(this);
+        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, name));
+        return this;
     }
     
     @Override
@@ -77,6 +83,11 @@ public class BlockDoll extends AbstractModBlockContainer {
             }
             
         }
+    }
+    
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
     
     @SideOnly(Side.CLIENT)
@@ -186,5 +197,10 @@ public class BlockDoll extends AbstractModBlockContainer {
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
         return new TileEntityMannequin(true);
+    }
+    
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
     }
 }

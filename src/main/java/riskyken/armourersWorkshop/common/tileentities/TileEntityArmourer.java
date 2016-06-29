@@ -292,7 +292,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         bb = AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 18,
                 xCoord + 20, yCoord + 40 + 20, zCoord + 20);
         */
-        return bb;
+        return INFINITE_EXTENT_AABB;
     }
 
     public ISkinType getSkinType() {
@@ -368,7 +368,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     
     @Override
     public String getName() {
-        return LibBlockNames.ARMOURER_BRAIN;
+        return LibBlockNames.ARMOURER;
     }
     
     @Override

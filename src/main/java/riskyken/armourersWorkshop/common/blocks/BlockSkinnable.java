@@ -12,16 +12,22 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -36,8 +42,11 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     
     @Override
     public Block setUnlocalizedName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setUnlocalizedName(name);
+        super.setUnlocalizedName(name);
+        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
+        GameRegistry.register(this);
+        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, name));
+        return this;
     }
     
     @Override
@@ -100,6 +109,43 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinnable();
+    }
+    
+    @Override
+    public boolean isBlockNormalCube(IBlockState state) {
+        return false;
+    }
+    
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return false;
+    }
+    
+    @Override
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
+    
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+    
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        // TODO Auto-generated method stub
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+    
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
     }
     
     @Override

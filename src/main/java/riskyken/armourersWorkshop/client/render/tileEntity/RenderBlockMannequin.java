@@ -23,21 +23,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.gui.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.GuiMannequinTabSkinHair;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -166,7 +162,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         
         mc.mcProfiler.endStartSection("textureBuild");
-        
+        /*
         if (te.haveSkinsUpdated()) {
             te.sp = getSkinPointers(te);
         }
@@ -207,7 +203,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 }
             }
         }
-        
+        */
         mc.mcProfiler.endStartSection("textureBind");
         bindTexture(rl);
         

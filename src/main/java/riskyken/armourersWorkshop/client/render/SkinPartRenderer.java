@@ -65,11 +65,11 @@ public class SkinPartRenderer extends ModelBase {
                 skinModel.displayListCompiled[i] = true;
             }
         }
-        
+        mc.renderEngine.bindTexture(texture);
         if (ClientProxy.useSafeTextureRender()) {
-            mc.renderEngine.bindTexture(texture);
+            //mc.renderEngine.bindTexture(texture);
         } else {
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            //GL11.glDisable(GL11.GL_TEXTURE_2D);
         }
         
         int startIndex = 0;;
@@ -95,19 +95,19 @@ public class SkinPartRenderer extends ModelBase {
                 if (skinModel.hasList[i]) {
                     if (skinModel.displayListCompiled[i]) {
                         if (glowing) {
-                            GL11.glDisable(GL11.GL_LIGHTING);
-                            ModRenderHelper.disableLighting();
+                            //GL11.glDisable(GL11.GL_LIGHTING);
+                            //ModRenderHelper.disableLighting();
                         }
                         if (ConfigHandler.wireframeRender) {
-                            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                            //GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
                         }
                         GL11.glCallList(skinModel.displayList[i]);
                         if (ConfigHandler.wireframeRender) {
-                            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+                            //GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                         }
                         if (glowing) {
-                            ModRenderHelper.enableLighting();
-                            GL11.glEnable(GL11.GL_LIGHTING);
+                            //ModRenderHelper.enableLighting();
+                            //GL11.glEnable(GL11.GL_LIGHTING);
                         }
                     }
                 }
@@ -115,10 +115,10 @@ public class SkinPartRenderer extends ModelBase {
         }
         
         if (!ClientProxy.useSafeTextureRender()) {
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            //GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
-        
-        GL11.glColor3f(1F, 1F, 1F);
+        //GL11.glColor4f(1, 1, 1, 1);
+        //GlStateManager.color(1F, 1F, 1F, 1F);
         //mc.mcProfiler.endSection();
     }
     

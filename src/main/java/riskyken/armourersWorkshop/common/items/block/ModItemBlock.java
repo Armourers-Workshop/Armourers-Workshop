@@ -7,11 +7,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModItemBlock extends ItemBlock {
 
     public ModItemBlock(Block block) {
         super(block);
+    }
+    
+    @Override
+    public ItemBlock setUnlocalizedName(String unlocalizedName) {
+        GameRegistry.register(this);
+        return super.setUnlocalizedName(unlocalizedName);
     }
 
     @Override

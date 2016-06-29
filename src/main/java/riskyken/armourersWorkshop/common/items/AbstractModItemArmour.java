@@ -10,6 +10,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,8 +54,10 @@ public class AbstractModItemArmour extends ItemArmor {
 
     @Override
     public Item setUnlocalizedName(String name) {
-        GameRegistry.registerItem(this, name);
-        return super.setUnlocalizedName(name);
+        super.setUnlocalizedName(name);
+        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
+        GameRegistry.register(this);
+        return this;
     }
 
     @Override

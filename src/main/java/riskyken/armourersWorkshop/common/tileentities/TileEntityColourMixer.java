@@ -2,11 +2,14 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.awt.Color;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
@@ -18,6 +21,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 
@@ -79,6 +83,11 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         }
     }
     
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+        return super.shouldRefresh(world, pos, oldState, newSate);
+    }
+    
     public void setColourFamily(ColourFamily colourFamily) {
         this.colourFamily = colourFamily;
         markDirty();
@@ -96,6 +105,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public void receiveColourUpdateMessage(int colour, boolean item, PaintType paintType) {
         setColour(colour, item);
         setPaintType(paintType, null);
+        worldObj.markChunkDirty(pos, this);
     }
     
     public void setColour(int colour, boolean item){
@@ -132,14 +142,21 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
         compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
         compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
         if (itemUpdate) { itemUpdate = false; }
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), compound);
+        return compound;
+    }
+    
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        
+        ModLogger.log("sending update");
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
 
     @Override
@@ -151,6 +168,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
         worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
         colourUpdate = true;
+        ModLogger.log("got update");
     }
     
     @SideOnly(Side.CLIENT)

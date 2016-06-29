@@ -1,10 +1,9 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
@@ -12,6 +11,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 
@@ -50,7 +50,7 @@ public class ModBlocks {
     }
 
     public void registerTileEntities() {
-        registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER_BRAIN);
+        registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER);
         registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
