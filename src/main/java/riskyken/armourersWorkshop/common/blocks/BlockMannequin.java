@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -22,7 +21,6 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,15 +28,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
@@ -54,15 +49,6 @@ public class BlockMannequin extends AbstractModBlockContainer {
         super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
         setLightOpacity(0);
         isValentins = HolidayHelper.valentins.isHolidayActive();
-    }
-    
-    @Override
-    public Block setUnlocalizedName(String name) {
-        super.setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
-        GameRegistry.register(this);
-        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, name));
-        return this;
     }
     
     @Override

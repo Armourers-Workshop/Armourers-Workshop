@@ -20,10 +20,11 @@ public abstract class AbstractModItem extends Item {
     }
     
     public AbstractModItem(String name, boolean addCreativeTab) {
+        setUnlocalizedName(name);
         if (addCreativeTab) {
             setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         }
-        setUnlocalizedName(name);
+        
         setHasSubtypes(false);
         setMaxStackSize(1);
         setNoRepair();
@@ -54,8 +55,8 @@ public abstract class AbstractModItem extends Item {
     @Override
     public Item setUnlocalizedName(String name) {
         super.setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
-        GameRegistry.register(this);
+        //setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + name));
+        GameRegistry.register(this, new ResourceLocation(LibModInfo.ID, "item." + name));
         return this;
     }
 

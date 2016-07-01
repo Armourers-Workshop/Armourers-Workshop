@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -15,19 +14,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -38,15 +33,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
 
     public BlockSkinnable() {
         super(LibBlockNames.SKINNABLE, Material.IRON, SoundType.METAL, false);
-    }
-    
-    @Override
-    public Block setUnlocalizedName(String name) {
-        super.setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
-        GameRegistry.register(this);
-        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, name));
-        return this;
+        setLightOpacity(0);
     }
     
     @Override

@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -13,6 +14,9 @@ import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.capability.DefaultWardrobeCapability;
+import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
+import riskyken.armourersWorkshop.common.capability.WardrobeStorage;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.config.ConfigSynchronizeHandler;
@@ -86,7 +90,8 @@ public class ArmourersWorkshop {
         ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
         ConfigHandler.init(event.getSuggestedConfigurationFile());
-
+        CapabilityManager.INSTANCE.register(IWardrobeCapability.class, new WardrobeStorage(), DefaultWardrobeCapability.class);
+        
         Addons.preInit();
         proxy.preInit();
         

@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 @SideOnly(Side.CLIENT)
@@ -59,14 +60,15 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         GL11.glScalef(-1, -1, 1);
         GL11.glScalef(16, 16, 16);
+        skinType = SkinTypeRegistry.skinHead;
         
         if (skinType != null) {
             mc.mcProfiler.startSection("modelRender");
             SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
             mc.mcProfiler.endSection();
-            if (te.isShowGuides()) {
+            if (!te.isShowGuides()) {
                 mc.mcProfiler.startSection("renderGuideGrid");
-                //SkinRenderHelper.renderBuildingGrid(skinType, scale);
+                SkinRenderHelper.renderBuildingGrid(skinType, scale);
                 mc.mcProfiler.endSection();
             }
         }

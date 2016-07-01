@@ -1,10 +1,9 @@
 package riskyken.armourersWorkshop.client.model.armourer;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,11 +19,12 @@ public class ModelHead extends ModelBase {
         main = new ModelRenderer(this, 0, 0);
         main.addBox(-4F, -8F, -4F, 8, 8, 8);
         main.setRotationPoint(0, 0, 0);
+        main.setTextureSize(64, 64);
 
         overlay = new ModelRenderer(this, 32, 0);
         overlay.addBox(-4F, -8F, -4F, 8, 8, 8, 0.5F);
         overlay.setRotationPoint(0F, 0F, 0F);
-        overlay.setTextureSize(64, 32);
+        overlay.setTextureSize(64, 64);
     }
 
     public void render(float scale, boolean showOverlay) {

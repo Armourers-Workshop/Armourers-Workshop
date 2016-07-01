@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,6 +15,8 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.plushieWrapper.client.IRenderBuffer;
+import riskyken.plushieWrapper.client.RenderBridge;
 
 @SideOnly(Side.CLIENT)
 public final class SkinRenderHelper {
@@ -114,17 +117,34 @@ public final class SkinRenderHelper {
         default:
             break;
         }
+        IRenderBuffer buff = RenderBridge.INSTANCE;
+        buff.startDrawing(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        
+        buff.addVertexWithUV(0, 0, 0, 0, 0);
+        buff.endVertex();
+        
+        buff.addVertexWithUV(0, sizeY * scale, 0, sizeY, 0);
+        buff.endVertex();
+        
+        buff.addVertexWithUV(sizeX * scale, sizeY * scale, 0, sizeY, sizeX);
+        buff.endVertex();
+        
+        buff.addVertexWithUV(sizeX * scale, 0, 0, 0, sizeX);
+        buff.endVertex();
+        
         /*
         tessellator.setBrightness(15728880);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         
         tessellator.startDrawingQuads();
+        
         tessellator.addVertexWithUV(0, 0, 0, 0, 0);
         tessellator.addVertexWithUV(0, sizeY * scale, 0, sizeY, 0);
         tessellator.addVertexWithUV(sizeX * scale, sizeY * scale, 0, sizeY, sizeX);
         tessellator.addVertexWithUV(sizeX * scale, 0, 0, 0, sizeX);
         tessellator.draw();
         */
+        buff.draw();
         ModRenderHelper.disableAlphaBlend();
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();

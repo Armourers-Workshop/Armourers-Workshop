@@ -1,5 +1,5 @@
 # Block names
-tile.armourersworkshop:armourerBrain.name=Armourer
+tile.armourersworkshop:armourer.name=Armourer
 tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 tile.armourersworkshop:armourLibrary0.name=Equipment Library
 tile.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)

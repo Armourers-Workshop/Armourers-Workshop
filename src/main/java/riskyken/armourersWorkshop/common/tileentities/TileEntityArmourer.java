@@ -71,7 +71,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public TileEntityArmourer() {
         super(INVENTORY_SIZE);
         this.direction = EnumFacing.NORTH;
-        this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
+        this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeHead();
         this.showOverlay = true;
         this.showGuides = true;
         this.showHelper = true;

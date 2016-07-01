@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,14 +20,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
@@ -36,9 +33,7 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.SkinHelper;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
@@ -115,25 +110,6 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
-    }
-    
-    @Override
-    public Block setUnlocalizedName(String name) {
-        super.setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
-        GameRegistry.register(this);
-        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, name));
-        return this;
-    }
-    
-    @Override
-    public String getUnlocalizedName() {
-        return getModdedUnlocalizedName(super.getUnlocalizedName());
-    }
-
-    protected String getModdedUnlocalizedName(String unlocalizedName) {
-        String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-        return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
     }
     
     @Override

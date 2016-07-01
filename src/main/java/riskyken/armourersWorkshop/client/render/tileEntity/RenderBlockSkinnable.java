@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -60,7 +59,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     
     public void renderTileEntityAt(TileEntitySkinnable tileEntity, double x, double y, double z, float partialTickTime) {
         GL11.glPushMatrix();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+        //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
         //ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), tileEntity.getPos());
         //GL11.glColor4f(1, 1, 1, 1);
         SkinPointer skinPointer = tileEntity.getSkinPointer();

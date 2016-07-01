@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "items/stick"
+        "layer0": "armourersworkshop:items/paintRoller"
     }
 }
