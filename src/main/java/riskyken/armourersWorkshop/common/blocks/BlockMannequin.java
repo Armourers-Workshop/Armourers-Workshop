@@ -4,9 +4,12 @@ import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,10 +52,17 @@ public class BlockMannequin extends AbstractModBlockContainer {
         super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
         setLightOpacity(0);
         isValentins = HolidayHelper.valentins.isHolidayActive();
+        setDefaultState(this.blockState.getBaseState().withProperty(PART, EnumPartType.BOTTOM));
     }
     
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        if (state.getValue(PART) == EnumPartType.BOTTOM) {
+            return new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 1.9F, 0.9F);
+        }
+        if (state.getValue(PART) == EnumPartType.TOP) {
+            return new AxisAlignedBB(0.1F, -1, 0.1F, 0.9F, 0.9F, 0.9F);
+        }
         return MANNEQUIN_AABB;
     }
     
@@ -73,6 +83,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
                 }
             }
         }
+        worldIn.setBlockState(pos.offset(EnumFacing.UP), blockState.getBaseState().withProperty(PART, EnumPartType.TOP), 2);
         //world.setBlock(x, y + 1, z, this, 1, 2);
     }
     
@@ -150,8 +161,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
     
     public boolean isTopOfMannequin(IBlockState blockState) {
-        //return blockState.getValue(PART) == EnumPartType.TOP;
-        return false;
+        return blockState.getValue(PART) == EnumPartType.TOP;
     }
     
     @Override
@@ -272,21 +282,24 @@ public class BlockMannequin extends AbstractModBlockContainer {
         return true;
     }
     
-    /*
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0) {
-            if (world.getBlock(x, y + 1, z) != ModBlocks.mannequin) {
-                world.setBlockToAir(x, y, z);
-            }
-        } else {
-            if (world.getBlock(x, y - 1, z) != ModBlocks.mannequin) {
-                world.setBlockToAir(x, y, z);
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+        if (blockIn == this) {
+            switch (state.getValue(PART)) {
+            case TOP:
+                if (worldIn.getBlockState(pos.up()).getBlock() != this) {
+                    worldIn.setBlockToAir(pos);
+                }
+                break;
+            case BOTTOM:
+                if (worldIn.getBlockState(pos.down()).getBlock() != this) {
+                    worldIn.setBlockToAir(pos);
+                }
+                break;
             }
         }
     }
-    */
+    
     @Override
     public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
@@ -294,11 +307,9 @@ public class BlockMannequin extends AbstractModBlockContainer {
     
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
-        /*
         if (state.getValue(PART) == EnumPartType.BOTTOM) {
             return new TileEntityMannequin(false);
         }
-        */
         return null;
     }
     
@@ -314,12 +325,32 @@ public class BlockMannequin extends AbstractModBlockContainer {
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
     }
-    /*
+    
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[] {PART});
     }
-    */
+    
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        if (state.getValue(PART) == EnumPartType.TOP) {
+            return 1;
+        }
+        return 0;
+    }
+    
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        switch (meta) {
+        case 0:
+            return this.blockState.getBaseState().withProperty(PART, EnumPartType.BOTTOM);
+        case 1:
+            return this.blockState.getBaseState().withProperty(PART, EnumPartType.TOP);
+        default:
+            return getDefaultState();
+        }
+    }
+    
     public static enum EnumPartType implements IStringSerializable {
         TOP("top"),
         BOTTOM("bottom");

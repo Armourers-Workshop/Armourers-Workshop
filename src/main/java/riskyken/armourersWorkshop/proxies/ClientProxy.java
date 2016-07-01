@@ -2,7 +2,12 @@ package riskyken.armourersWorkshop.proxies;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -29,8 +34,10 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileType;
@@ -102,6 +109,53 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
         */
+        
+        
+        registerRender(ModItems.equipmentSkinTemplate);
+        registerRender(ModItems.equipmentSkin);
+        
+        registerRender(ModItems.paintbrush);
+        registerRender(ModItems.paintRoller);
+        registerRender(ModItems.colourPicker);
+        registerRender(ModItems.burnTool);
+        registerRender(ModItems.dodgeTool);
+        registerRender(ModItems.colourNoiseTool);
+        registerRender(ModItems.shadeNoiseTool);
+        registerRender(ModItems.hueTool);
+        //registerRender(ModItems.blendingTool);
+        registerRender(ModItems.blockMarker);
+        
+        registerRender(ModItems.mannequinTool);
+        registerRender(ModItems.wandOfStyle);
+        registerRender(ModItems.soap);
+        registerRender(ModItems.dyeBottle);
+        registerRender(ModItems.guideBook);
+        registerRender(ModItems.armourersHammer);
+        registerRender(ModItems.armourContainerItem);
+        registerRender(ModItems.armourContainer[0]);
+        registerRender(ModItems.armourContainer[1]);
+        registerRender(ModItems.armourContainer[2]);
+        registerRender(ModItems.armourContainer[3]);
+        
+        registerRender(ModBlocks.armourerBrain);
+        registerRender(ModBlocks.miniArmourer);
+        registerRender(ModBlocks.armourLibrary);
+        registerRender(ModBlocks.colourable);
+        registerRender(ModBlocks.colourableGlowing);
+        registerRender(ModBlocks.colourableGlass);
+        registerRender(ModBlocks.colourableGlassGlowing);
+        registerRender(ModBlocks.colourMixer);
+        registerRender(ModBlocks.skinningTable);
+        registerRender(ModBlocks.dyeTable);
+    }
+    
+    private void registerRender(Block block) {
+        registerRender(Item.getItemFromBlock(block));
+    }
+    
+    private void registerRender(Item item) {
+        ItemModelMesher imm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+        imm.register(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
     
     @Override
