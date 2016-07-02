@@ -21,7 +21,6 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 
 
@@ -105,7 +104,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public void receiveColourUpdateMessage(int colour, boolean item, PaintType paintType) {
         setColour(colour, item);
         setPaintType(paintType, null);
-        worldObj.markChunkDirty(pos, this);
+        syncWithClients();
     }
     
     public void setColour(int colour, boolean item){
@@ -117,7 +116,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         }
         this.colour = colour;
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     @Override
@@ -154,8 +153,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        
-        ModLogger.log("sending update");
         return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
 
@@ -168,7 +165,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
         worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
         colourUpdate = true;
-        ModLogger.log("got update");
     }
     
     @SideOnly(Side.CLIENT)
@@ -217,7 +213,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public void setPaintType(PaintType paintType, EnumFacing side) {
         this.paintType = paintType;
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     @Override

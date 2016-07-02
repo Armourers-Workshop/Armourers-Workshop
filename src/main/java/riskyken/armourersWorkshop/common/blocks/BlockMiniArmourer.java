@@ -19,6 +19,12 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
 
     public BlockMiniArmourer() {
         super(LibBlockNames.MINI_ARMOURER);
+        setLightOpacity(0);
+    }
+    
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
     
     @Override

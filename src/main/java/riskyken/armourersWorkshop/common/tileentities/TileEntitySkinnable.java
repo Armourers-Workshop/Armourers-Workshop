@@ -4,7 +4,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -18,7 +17,7 @@ import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
-public class TileEntitySkinnable extends TileEntity {
+public class TileEntitySkinnable extends ModTileEntity {
 
     private static final String TAG_HAS_SKIN = "hasSkin";
 
@@ -42,7 +41,7 @@ public class TileEntitySkinnable extends TileEntity {
     public void setSkinPointer(SkinPointer skinPointer) {
         this.skinPointer = skinPointer;
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     @Override
@@ -148,10 +147,15 @@ public class TileEntitySkinnable extends TileEntity {
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), compound);
+        return compound;
+    }
+    
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), getUpdateTag());
     }
 
 

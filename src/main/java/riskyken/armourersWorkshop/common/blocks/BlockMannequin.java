@@ -260,9 +260,6 @@ public class BlockMannequin extends AbstractModBlockContainer {
                 if (playerIn.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
                     return false;
                 }
-                if (playerIn.inventory.getCurrentItem().getItem() == ModItems.paintbrush) {
-                    return false;
-                }
             }
             
             if (heldItem != null && heldItem.getItem() == Items.NAME_TAG) {
@@ -273,10 +270,13 @@ public class BlockMannequin extends AbstractModBlockContainer {
                     }
                 }
             } else {
+                if (isTopOfMannequin(state)) {
+                    pos = pos.offset(EnumFacing.DOWN);
+                }
                 FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
         }
-        if (playerIn.inventory.getCurrentItem() != null && playerIn.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+        if (heldItem != null && heldItem.getItem() == ModItems.mannequinTool) {
             return false;
         }
         return true;

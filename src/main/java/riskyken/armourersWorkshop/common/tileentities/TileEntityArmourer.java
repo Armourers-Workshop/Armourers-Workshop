@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -86,7 +85,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void updatePaintData(int x, int y, int colour) {
         paintData[x + (y * SkinTexture.TEXTURE_WIDTH)] = colour;
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     public int getPaintData(int x, int y) {
@@ -205,7 +204,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             clearPaintData(true);
         }
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
         
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
@@ -218,7 +217,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         if (update) {
             this.markDirty();
-            worldObj.markBlockRangeForRenderUpdate(pos, pos);
+            syncWithClients();
         }
     }
     
@@ -278,7 +277,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void setDirection(EnumFacing direction) {
         this.direction = direction;
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     public EnumFacing getDirection() {
@@ -324,32 +323,32 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         clearPaintData(true);
         createBoundingBoxes(); 
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     public void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
         updateProfileData();
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     public void toggleOverlay() {
         this.showOverlay = !this.showOverlay;
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     public void toggleHelper() {
         this.showHelper = !this.showHelper;
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     public String getCustomName() {
@@ -359,7 +358,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void setCustomName(String customName) {
         this.customName = customName;
         this.markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     private void updateProfileData() {
@@ -376,11 +375,20 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         return super.getMaxRenderDistanceSquared() * 10;
     }
     
-    public Packet getDescriptionPacket() {
+    @Override
+    public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         writeCommonToNBT(compound);
-        return new SPacketUpdateTileEntity(pos, 5, compound);
+        return compound;
+    }
+    
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound compound = new NBTTagCompound();
+        writeBaseToNBT(compound);
+        writeCommonToNBT(compound);
+        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), getUpdateTag());
     }
     
     @Override
@@ -388,7 +396,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         NBTTagCompound compound = packet.getNbtCompound();
         readBaseFromNBT(compound);
         readCommonFromNBT(compound);
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
     
     @Override
@@ -454,6 +462,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void profileUpdated(GameProfile gameProfile) {
         newProfile = gameProfile;
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        syncWithClients();
     }
 }

@@ -97,7 +97,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.renderExtras = renderExtras;
         
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
 
     public float getOffsetX() {
@@ -189,7 +189,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (worldObj.isRemote) {
             setSkinsUpdated(true);
         }
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     public void setOwner(ItemStack stack) {
@@ -227,7 +227,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setSkinColour(int skinColour) {
         this.skinColour = skinColour;
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     public int getHairColour() {
@@ -237,7 +237,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setHairColour(int hairColour) {
         this.hairColour = hairColour;
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     @Override
@@ -267,7 +267,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             updateProfileData();
         }
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     public int getHeightOffset() {
@@ -284,7 +284,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setRotation(int rotation) {
         this.rotation = rotation;
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     public int getRotation() {
@@ -303,7 +303,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.bipedRotations = bipedRotations;
         updateHeightOffset();
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
         
     public MannequinFakePlayer getFakePlayer() {
@@ -376,12 +376,19 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         writeCommonToNBT(compound);
         return compound;
     }
+    
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound compound = new NBTTagCompound();
+        writeToNBT(compound);
+        return compound;
+    }
 
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), compound);
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
 
     @Override
@@ -390,7 +397,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         gameProfile = null;
         readFromNBT(compound);
         skinsUpdated = true;
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
     }
     
     @Override
