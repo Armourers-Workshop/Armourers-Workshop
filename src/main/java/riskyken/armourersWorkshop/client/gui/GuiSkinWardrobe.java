@@ -29,6 +29,7 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
+import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinWardrobe;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
@@ -36,7 +37,6 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -56,7 +56,7 @@ public class GuiSkinWardrobe extends GuiContainer {
     boolean headOverlay;
     boolean limitLimbs;
 
-    ExPropsPlayerEquipmentData customEquipmentData;
+    IWardrobeCapability wardrobe;
     EquipmentWardrobeData equipmentWardrobeData;
     EntityPlayer player;
     
@@ -77,10 +77,10 @@ public class GuiSkinWardrobe extends GuiContainer {
     private int lastMouseX;
     private int lastMouseY;
 
-    public GuiSkinWardrobe(InventoryPlayer inventory, ExPropsPlayerEquipmentData customEquipmentData) {
-        super(new ContainerSkinWardrobe(inventory, customEquipmentData));
+    public GuiSkinWardrobe(InventoryPlayer inventory, IWardrobeCapability wardrobe) {
+        super(new ContainerSkinWardrobe(inventory, wardrobe));
         
-        this.customEquipmentData = customEquipmentData;
+        this.wardrobe = wardrobe;
         this.player = inventory.player;
         
         PlayerPointer playerPointer = new PlayerPointer(player);

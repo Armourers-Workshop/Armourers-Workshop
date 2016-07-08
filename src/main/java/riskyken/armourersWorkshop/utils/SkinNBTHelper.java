@@ -177,14 +177,14 @@ public class SkinNBTHelper {
     }
     
     public static ItemStack makeArmouerContainerStack(Skin equipmentItemData) {
-        ItemStack stack = new ItemStack(ModItems.armourContainer[equipmentItemData.getSkinType().getEntityEquipmentSlot().getSlotIndex()], 1);
+        ItemStack stack = new ItemStack(ModItems.armourContainer[3 - equipmentItemData.getSkinType().getEntityEquipmentSlot().getIndex()], 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
         return stack;
     }
     
     public static ItemStack makeArmouerContainerStack(SkinPointer skinPointer) {
-        ItemStack stack = new ItemStack(ModItems.armourContainer[skinPointer.getSkinType().getEntityEquipmentSlot().getSlotIndex()], 1);
+        ItemStack stack = new ItemStack(ModItems.armourContainer[3 - skinPointer.getSkinType().getEntityEquipmentSlot().getIndex()], 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, skinPointer.getSkinType(), skinPointer.skinId, false);
         return stack;

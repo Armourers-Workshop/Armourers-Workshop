@@ -41,10 +41,8 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
     private final EntityPlayer player;
     private EquipmentWardrobeData equipmentWardrobeData = new EquipmentWardrobeData(); 
     public int lastXmasYear;
-    private boolean allowNetworkUpdates;
     
     public ExPropsPlayerEquipmentData(EntityPlayer player) {
-        allowNetworkUpdates = true;
         this.player = player;
         //An array of all the skins that can be placed in the players wardrobe.
 
@@ -59,15 +57,7 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
     public EntityPlayer getPlayer() {
         return player;
     }
-    /*
-    public static final void register(EntityPlayer player) {
-        player.registerExtendedProperties(ExPropsPlayerEquipmentData.TAG_EXT_PROP_NAME, new ExPropsPlayerEquipmentData(player));
-    }
     
-    public static final ExPropsPlayerEquipmentData get(EntityPlayer player) {
-        return (ExPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
-    }
-    */
     @Deprecated
     public void setEquipmentStack(ItemStack stack) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
@@ -109,30 +99,27 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
         }
     }
     
-    public void addCustomEquipment(ISkinType skinType, byte slotId, SkinPointer skinPointer) {
+    private void addCustomEquipment(ISkinType skinType, byte slotId, SkinPointer skinPointer) {
         equipmentData.addEquipment(skinType, slotId, skinPointer);
         updateEquipmentDataToPlayersAround();
     }
     
-    public void removeCustomEquipment(ISkinType skinType, byte slotId) {
+    private void removeCustomEquipment(ISkinType skinType, byte slotId) {
         equipmentData.removeEquipment(skinType, slotId);
         updateEquipmentDataToPlayersAround();
     }
     
     private void updateEquipmentDataToPlayersAround() {
-        if (!allowNetworkUpdates) {
-            return;
-        }
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), p);
     }
     
-    public EntityEquipmentData getEquipmentData() {
+    private EntityEquipmentData getEquipmentData() {
         return equipmentData;
     }
     
-    public void armourSlotUpdate(WardrobeInventory inventory, byte slot) {
+    private void armourSlotUpdate(WardrobeInventory inventory, byte slot) {
         ItemStack stack = inventory.getStackInSlot(slot);
         
         if (stack == null) {

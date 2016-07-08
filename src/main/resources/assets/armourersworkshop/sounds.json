@@ -2,38 +2,38 @@
     "pageTurn":
 	{"category": "master","sounds":
 	[
-	{"name": "book/pageTurn1","stream": false},
-	{"name": "book/pageTurn2","stream": false},
-	{"name": "book/pageTurn3","stream": false}
+	{"name": "armourersworkshop:book/pageTurn1","stream": false},
+	{"name": "armourersworkshop:book/pageTurn2","stream": false},
+	{"name": "armourersworkshop:book/pageTurn3","stream": false}
 	]},
 	
 	"paint":
 	{"category": "master","sounds":
 	[
-	{"name": "paint/paint1","stream": false},
-	{"name": "paint/paint2","stream": false},
-	{"name": "paint/paint3","stream": false}
+	{"name": "armourersworkshop:paint/paint1","stream": false},
+	{"name": "armourersworkshop:paint/paint2","stream": false},
+	{"name": "armourersworkshop:paint/paint3","stream": false}
 	]},
 	
 	"picker":
 	{"category": "master","sounds":
 	[
-	{"name": "paint/pickerfx1","stream": false},
-	{"name": "paint/pickerfx2","stream": false},
-	{"name": "paint/pickerfx3","stream": false},
-	{"name": "paint/pickerfx4","stream": false},
-	{"name": "paint/pickerfx5","stream": false}
+	{"name": "armourersworkshop:paint/pickerfx1","stream": false},
+	{"name": "armourersworkshop:paint/pickerfx2","stream": false},
+	{"name": "armourersworkshop:paint/pickerfx3","stream": false},
+	{"name": "armourersworkshop:paint/pickerfx4","stream": false},
+	{"name": "armourersworkshop:paint/pickerfx5","stream": false}
 	]},
 	
 	"burn":
 	{"category": "master","sounds":
 	[
-	{"name": "paint/burn","stream": false}
+	{"name": "armourersworkshop:paint/burn","stream": false}
 	]},
 	
 	"dodge":
 	{"category": "master","sounds":
 	[
-	{"name": "paint/dodge","stream": false}
+	{"name": "armourersworkshop:paint/dodge","stream": false}
 	]}
 }

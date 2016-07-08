@@ -13,6 +13,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -21,6 +23,7 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
@@ -52,7 +55,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                     setToolPaintType(stack, paintType);
                 }
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         if (blockState.getBlock() instanceof IPantableBlock) {
@@ -67,15 +70,16 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                     usedOnBlockSide(stack, playerIn, worldIn, pos, blockState.getBlock(), facing);
                 }
                 UndoManager.end(playerIn);
+                SoundEvent sound = new SoundEvent(LibSounds.PAINT);
                 if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
-                    //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F); 
+                    worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, sound, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F, false);
                 } else {
-                    //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 1.5F);
+                    worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, sound, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 1.5F, false);
                 }
             } else {
                 spawnPaintParticles(worldIn, pos, facing, newColour);
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         if (blockState.getBlock() == ModBlocks.armourerBrain & playerIn.isSneaking()) {
@@ -86,7 +90,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                 }
             }
             ModLogger.log("armourer");
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         return EnumActionResult.FAIL;

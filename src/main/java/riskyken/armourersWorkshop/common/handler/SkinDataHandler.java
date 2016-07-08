@@ -7,12 +7,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import riskyken.armourersWorkshop.api.common.skin.ISkinDataHandler;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.crafting.ItemSkinningRecipes;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -22,27 +24,55 @@ public class SkinDataHandler implements ISkinDataHandler {
 
     public static final SkinDataHandler INSTANCE = new SkinDataHandler();
     
+    @CapabilityInject(IWardrobeCapability.class)
+    private static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
+    
     @Override
-    public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        entityProps.setEquipmentStack(stack);
+    public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack, int columnIndex) {
+        IWardrobeCapability wardrobe = getPlayerWardrobe(player);
+        if (wardrobe != null) {
+            wardrobe.setSkinStack(stack, columnIndex);
+        }
         return false;
-    }
-
-    @Override
-    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        return entityProps.getEquipmentStack(skinType);
-    }
-
-    @Override
-    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        entityProps.clearEquipmentStack(skinType);
     }
     
     @Override
-    public boolean isValidEquipmentSkin(ItemStack stack) {
+    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType, int columnIndex) {
+        IWardrobeCapability wardrobe = getPlayerWardrobe(player);
+        if (wardrobe != null) {
+            return wardrobe.getSkinStack(skinType, columnIndex);
+        }
+        return null;
+    }
+    
+    @Override
+    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType, int columnIndex) {
+        IWardrobeCapability wardrobe = getPlayerWardrobe(player);
+        if (wardrobe != null) {
+            wardrobe.removeSkinStack(skinType, columnIndex);
+        }
+    }
+    
+    @Deprecated
+    @Override
+    public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack) {
+        return setSkinOnPlayer(player, stack, 0);
+    }
+    
+    @Deprecated
+    @Override
+    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType) {
+        return getSkinFormPlayer(player, skinType, 0);
+    }
+    
+    @Deprecated
+    @Override
+    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType) {
+        removeSkinFromPlayer(player, skinType, 0);
+    }
+    
+    @Override
+    public boolean isStackValidSkin(ItemStack stack) {
         return (stack != null && stack.getItem() == ModItems.equipmentSkin && stackHasSkinPointer(stack));
     }
 
@@ -91,23 +121,18 @@ public class SkinDataHandler implements ISkinDataHandler {
     
     @Override
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        BitSet armourOverride = entityProps.getArmourOverride();
-        if (slotId < 4 & slotId >= 0) {
-            return armourOverride.get(slotId);
+        IWardrobeCapability wardrobe = getPlayerWardrobe(player);
+        if (wardrobe != null) {
+            BitSet armourOverride = wardrobe.getArmourOverride();
+            if (slotId < 4 & slotId >= 0) {
+                return armourOverride.get(slotId);
+            }
         }
         return false;
     }
     
-    private ExPropsPlayerEquipmentData getExtendedPropsPlayerForPlayer(EntityPlayer player) {
-        /*
-        ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
-        if (entityProps == null) {
-            ExPropsPlayerEquipmentData.register(player);
-        }
-        return ExPropsPlayerEquipmentData.get(player);
-        */
-        return null;
+    private IWardrobeCapability getPlayerWardrobe(EntityPlayer player) {
+        return player.getCapability(WARDROBE_CAP, null);
     }
 
     @Override

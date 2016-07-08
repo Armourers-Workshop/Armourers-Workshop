@@ -15,7 +15,7 @@ tile.armourersworkshop:dyeTable.name=Dye Table
 tile.armourersworkshop:skinnable.name=Skinnable Block
 
 # Block flavour text
-tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
+tile.armourersworkshop:armourer.flavour=Lets you build equipment skins.
 tile.armourersworkshop:miniArmourer.flavour=Unfinished.
 tile.armourersworkshop:armourLibrary0.flavour=Save and load equipment templates from disk.
 tile.armourersworkshop:armourLibrary1.flavour=Save and load equipment templates from disk.%nCreative mode only.
@@ -168,7 +168,7 @@ skinPartType.armourers:block.base.name=Base
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
-inventory.armourersworkshop:armourerBrain.name=Armourer
+inventory.armourersworkshop:armourer.name=Armourer
 inventory.armourersworkshop:armourLibrary0.name=Equipment Library
 inventory.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
@@ -198,18 +198,18 @@ inventory.armourersworkshop:armourLibrary.rollover.refresh=Refresh library files
 inventory.armourersworkshop:armourLibrary.label.enterFileName=Enter file name.
 inventory.armourersworkshop:armourLibrary.label.typeToSearch=Type to search...
 
-inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
-inventory.armourersworkshop:armourerBrain.label.username=Username:
-inventory.armourersworkshop:armourerBrain.label.clone=Clone:
-inventory.armourersworkshop:armourerBrain.showGuide=Show building guide?
-inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?
-inventory.armourersworkshop:armourerBrain.showHelper=Show helper model?
-inventory.armourersworkshop:armourerBrain.save=Save
-inventory.armourersworkshop:armourerBrain.load=Load
-inventory.armourersworkshop:armourerBrain.set=Set
-inventory.armourersworkshop:armourerBrain.clear=Clear
-inventory.armourersworkshop:armourerBrain.westToEast=West to East
-inventory.armourersworkshop:armourerBrain.eastToWest=East to West
+inventory.armourersworkshop:armourer.label.itemName=Item Name:
+inventory.armourersworkshop:armourer.label.username=Username:
+inventory.armourersworkshop:armourer.label.clone=Clone:
+inventory.armourersworkshop:armourer.showGuide=Show building guide?
+inventory.armourersworkshop:armourer.showOverlay=Show head overlay?
+inventory.armourersworkshop:armourer.showHelper=Show helper model?
+inventory.armourersworkshop:armourer.save=Save
+inventory.armourersworkshop:armourer.load=Load
+inventory.armourersworkshop:armourer.set=Set
+inventory.armourersworkshop:armourer.clear=Clear
+inventory.armourersworkshop:armourer.westToEast=West to East
+inventory.armourersworkshop:armourer.eastToWest=East to West
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation

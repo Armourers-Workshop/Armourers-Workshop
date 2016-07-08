@@ -28,6 +28,11 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
     }
     
     @Override
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
+    
+    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
             EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!playerIn.canPlayerEdit(pos, side, heldItem)) {

@@ -6,24 +6,24 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotSkin;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerSkinWardrobe extends Container {
     
-    private ExPropsPlayerEquipmentData customEquipmentData;
+    private IWardrobeCapability wardrobe;
     private int slotsUnlocked;
     private int skinSlots = 0;
     
-    public ContainerSkinWardrobe(InventoryPlayer invPlayer, ExPropsPlayerEquipmentData customEquipmentData) {
-        this.customEquipmentData = customEquipmentData;
+    public ContainerSkinWardrobe(InventoryPlayer invPlayer, IWardrobeCapability wardrobe) {
+        this.wardrobe = wardrobe;
         
-        slotsUnlocked = customEquipmentData.getEquipmentWardrobeData().slotsUnlocked;
+        slotsUnlocked = wardrobe.getEquipmentWardrobeData().slotsUnlocked;
         
-        WardrobeInventoryContainer wardrobeInvContainer = customEquipmentData.getWardrobeInventoryContainer();
+        WardrobeInventoryContainer wardrobeInvContainer = wardrobe.getWardrobeInventoryContainer();
         
         WardrobeInventory headInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinHead);
         WardrobeInventory chestInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinChest);
@@ -59,7 +59,7 @@ public class ContainerSkinWardrobe extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return !player.isDead & customEquipmentData.getPlayer().equals(player);
+        return !player.isDead & wardrobe.getPlayer().equals(player);
     }
     
     @Override

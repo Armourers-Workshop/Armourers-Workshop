@@ -1,12 +1,33 @@
 package riskyken.armourersWorkshop.common.skin;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
+import riskyken.armourersWorkshop.common.capability.WardrobeProvider;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
+import riskyken.armourersWorkshop.utils.HolidayHelper;
 
 public final class EntityEquipmentDataManager {
     
     public static EntityEquipmentDataManager INSTANCE;
+    
+    @CapabilityInject(IWardrobeCapability.class)
+    private static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
+    public static ResourceLocation WARDROBE_KEY = new ResourceLocation(LibModInfo.ID, "playerWardrobe");
     
     public static void init() {
         INSTANCE = new EntityEquipmentDataManager();
@@ -15,6 +36,13 @@ public final class EntityEquipmentDataManager {
     public EntityEquipmentDataManager() {
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
+    }
+    
+    @SubscribeEvent
+    public void onEntityConstructing(AttachCapabilitiesEvent.Entity event) {
+        if (event.getEntity() instanceof EntityPlayer & getEffectiveSide() == Side.SERVER) {
+            event.addCapability(WARDROBE_KEY, new WardrobeProvider((EntityPlayer) event.getEntity()));
+        }
     }
     
     public boolean isSwordRenderItem(Item item) {
@@ -83,41 +111,41 @@ public final class EntityEquipmentDataManager {
                 }
             }
         }
-    }*/
-    /*
+    }
+    */
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
-        if (event.target instanceof EntityPlayerMP) {
-            EntityPlayerMP targetPlayer = (EntityPlayerMP) event.target;
-            ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer(targetPlayer);
+        if (event.getTarget() instanceof EntityPlayerMP && event.getEntity()instanceof EntityPlayer) {
+            EntityPlayer sourcePlayer = (EntityPlayer) event.getEntity();
+            EntityPlayerMP targetPlayer = (EntityPlayerMP) event.getTarget();
+            IWardrobeCapability wardrobe = sourcePlayer.getCapability(WARDROBE_CAP, null);
+            if (wardrobe != null) {
+                wardrobe.sendWardrobeDataToPlayer(targetPlayer);
+            }
         }
     }
     
     @SubscribeEvent
     public void onStopTracking(PlayerEvent.StopTracking event) {
-        if (event.target instanceof EntityPlayerMP) {
-            EntityPlayerMP target = (EntityPlayerMP) event.target;
+        if (event.getTarget() instanceof EntityPlayerMP) {
+            EntityPlayerMP target = (EntityPlayerMP) event.getTarget();
             MessageServerPlayerLeftTrackingRange message = new MessageServerPlayerLeftTrackingRange(new PlayerPointer(target));
-            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) event.entityPlayer);
-        }
-    }
-    
-    @SubscribeEvent
-    public void onEntityConstructing(EntityConstructing event) {
-        if (event.entity instanceof EntityPlayer && ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity) == null) {
-            ExPropsPlayerEquipmentData.register((EntityPlayer) event.entity);
+            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) event.getEntityPlayer());
         }
     }
     
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
-            ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
-            playerData.sendCustomArmourDataToPlayer((EntityPlayerMP) event.entity);
-            HolidayHelper.giftPlayer((EntityPlayerMP) event.entity);
+        if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
+            IWardrobeCapability wardrobe = player.getCapability(WARDROBE_CAP, null);
+            if (wardrobe != null) {
+                wardrobe.sendWardrobeDataToPlayer(player);
+            }
+            HolidayHelper.giftPlayer(player);
         }
     }
-    */
+    
     /*
     @SubscribeEvent
     public void onLivingDeathEvent (LivingDeathEvent  event) {
@@ -165,4 +193,8 @@ public final class EntityEquipmentDataManager {
         newProps.loadNBTData(compound);
     }
     */
+    
+    private Side getEffectiveSide() {
+        return FMLCommonHandler.instance().getEffectiveSide();
+    }
 }

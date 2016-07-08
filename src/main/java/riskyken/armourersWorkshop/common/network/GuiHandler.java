@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -18,8 +20,10 @@ import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
+import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
+import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
@@ -27,6 +31,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
+import riskyken.armourersWorkshop.common.inventory.ContainerSkinWardrobe;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -41,7 +46,10 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class GuiHandler implements IGuiHandler {
-
+    
+    @CapabilityInject(IWardrobeCapability.class)
+    private static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
+    
     public GuiHandler() {
         NetworkRegistry.INSTANCE.registerGuiHandler(ArmourersWorkshop.instance, this);
     }
@@ -71,10 +79,10 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                /*
-                ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
-                return new ContainerSkinWardrobe(player.inventory, customEquipmentData);
-                */
+                IWardrobeCapability wardrobe = player.getCapability(WARDROBE_CAP, null);
+                if (wardrobe != null) {
+                    return new ContainerSkinWardrobe(player.inventory, wardrobe);
+                }
             case LibGuiIds.MANNEQUIN:
                 if (te instanceof TileEntityMannequin) {
                     return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
@@ -147,10 +155,10 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                /*
-                ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
-                return new GuiSkinWardrobe(player.inventory, customEquipmentData);
-                */
+                IWardrobeCapability wardrobe = player.getCapability(WARDROBE_CAP, null);
+                if (wardrobe != null) {
+                    return new GuiSkinWardrobe(player.inventory, wardrobe);
+                }
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getHeldItemMainhand().getItem() instanceof IConfigurableTool) {
                     return new GuiToolOptions(player.getHeldItemMainhand());

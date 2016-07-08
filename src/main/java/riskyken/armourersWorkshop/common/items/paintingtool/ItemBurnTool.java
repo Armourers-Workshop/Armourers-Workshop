@@ -13,7 +13,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -66,8 +65,7 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
             }
             if (!worldIn.isRemote) {
                 UndoManager.end(playerIn);
-                ResourceLocation rl = new ResourceLocation(LibSounds.BURN);
-                SoundEvent se = new SoundEvent(rl);
+                SoundEvent se = new SoundEvent(LibSounds.BURN);
                 worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, se, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
             
