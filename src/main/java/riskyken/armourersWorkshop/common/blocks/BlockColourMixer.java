@@ -1,22 +1,27 @@
 package riskyken.armourersWorkshop.common.blocks;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
-public class BlockColourMixer extends AbstractModBlockContainer {
+public class BlockColourMixer extends AbstractModBlockContainer implements IBlockColor {
 
     public BlockColourMixer() {
         super(LibBlockNames.COLOUR_MIXER);
@@ -48,5 +53,21 @@ public class BlockColourMixer extends AbstractModBlockContainer {
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT_MIPPED;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te != null && te instanceof TileEntityColourMixer) {
+            return ((TileEntityColourMixer)te).getColour(null);
+        }
+        return 0xFFFFFFFF;
     }
 }

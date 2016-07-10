@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -147,6 +148,12 @@ public class ClientProxy extends CommonProxy {
         registerRender(ModBlocks.colourMixer);
         registerRender(ModBlocks.skinningTable);
         registerRender(ModBlocks.dyeTable);
+        
+        registerBlockColorHandler(ModBlocks.colourMixer);
+    }
+    
+    private void registerBlockColorHandler(Block block) {
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
     }
     
     private void registerRender(Block block) {
