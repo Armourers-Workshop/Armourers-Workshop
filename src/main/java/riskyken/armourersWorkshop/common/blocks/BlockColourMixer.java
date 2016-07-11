@@ -64,9 +64,11 @@ public class BlockColourMixer extends AbstractModBlockContainer implements IBloc
     @SideOnly(Side.CLIENT)
     @Override
     public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te != null && te instanceof TileEntityColourMixer) {
-            return ((TileEntityColourMixer)te).getColour(null);
+        if (pos != null) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te != null && te instanceof TileEntityColourMixer) {
+                return ((TileEntityColourMixer)te).getColour(null);
+            }
         }
         return 0xFFFFFFFF;
     }

@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.blocks;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -14,7 +15,7 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 
-public class BlockColourable extends AbstractModBlockContainer implements IPantableBlock {
+public class BlockColourable extends AbstractModBlockContainer implements IPantableBlock, IBlockColor {
     
     public BlockColourable(String name, boolean glowing) {
         super(name);
@@ -92,7 +93,20 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
-        // TODO Auto-generated method stub
-        return super.getRenderType(state);
+        return EnumBlockRenderType.MODEL;
+    }
+
+    @Override
+    public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
+        if (pos != null) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (tintIndex >= 0 & tintIndex <= 5) {
+                if (te != null && te instanceof TileEntityColourable) {
+                    return ((TileEntityColourable)te).getColour(EnumFacing.values()[tintIndex]);
+                }
+            }
+            
+        }
+        return 0xFFFFFFFF;
     }
 }

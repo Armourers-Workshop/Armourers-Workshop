@@ -5,7 +5,6 @@ import java.awt.Color;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
@@ -13,7 +12,7 @@ import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 
-public class TileEntityColourable extends TileEntity implements IPantable {
+public class TileEntityColourable extends ModTileEntity implements IPantable {
     
     private ICubeColour colour;
 
@@ -43,30 +42,35 @@ public class TileEntityColourable extends TileEntity implements IPantable {
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), compound);
+        return compound;
+    }
+    
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         readFromNBT(packet.getNbtCompound());
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
     }
 
     @Override
     public void setColour(int colour) {
         this.colour.setColour(colour);
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     @Override
     public void setColour(int colour, EnumFacing side) {
         this.colour.setColour(colour, side);
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     @Override
@@ -75,7 +79,7 @@ public class TileEntityColourable extends TileEntity implements IPantable {
         this.colour.setGreen(rgb[1], side);
         this.colour.setBlue(rgb[2], side);
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     @Override
@@ -93,7 +97,7 @@ public class TileEntityColourable extends TileEntity implements IPantable {
     public void setPaintType(PaintType paintType, EnumFacing side) {
         colour.setPaintType((byte)paintType.getKey(), side);
         markDirty();
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+        syncWithClients();
     }
     
     @Override

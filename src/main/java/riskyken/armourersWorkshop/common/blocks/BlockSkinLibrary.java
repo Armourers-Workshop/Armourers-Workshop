@@ -2,28 +2,41 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public class BlockSkinLibrary extends AbstractModBlockContainer {
-
+    
+    public static final PropertyEnum<EnumType> TYPE = PropertyEnum.<EnumType>create("type", EnumType.class);
+    
     public BlockSkinLibrary() {
         super(LibBlockNames.ARMOUR_LIBRARY);
+    }
+    
+    @Override
+    protected ItemBlock getItemBlock() {
+        return new ModItemBlockWithMetadata(this);
     }
     
     @Override
@@ -56,5 +69,51 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
+    }
+    
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] {TYPE});
+    }
+    
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        if (state.getValue(TYPE) == EnumType.CREATIVE) {
+            return 1;
+        }
+        return 0;
+    }
+    
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        switch (meta) {
+        case 0:
+            return this.blockState.getBaseState().withProperty(TYPE, EnumType.NORMAL);
+        case 1:
+            return this.blockState.getBaseState().withProperty(TYPE, EnumType.CREATIVE);
+        default:
+            return getDefaultState();
+        }
+    }
+    
+    public static enum EnumType implements IStringSerializable {
+        NORMAL("normal"),
+        CREATIVE("creative");
+
+        private final String name;
+        
+        private EnumType(String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public String toString() {
+            return this.name;
+        }
+        
+        @Override
+        public String getName() {
+            return this.name;
+        }
     }
 }

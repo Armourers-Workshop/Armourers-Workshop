@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
-import riskyken.armourersWorkshop.common.capability.WardrobeProvider;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -41,7 +40,7 @@ public final class EntityEquipmentDataManager {
     @SubscribeEvent
     public void onEntityConstructing(AttachCapabilitiesEvent.Entity event) {
         if (event.getEntity() instanceof EntityPlayer & getEffectiveSide() == Side.SERVER) {
-            event.addCapability(WARDROBE_KEY, new WardrobeProvider((EntityPlayer) event.getEntity()));
+            //event.addCapability(WARDROBE_KEY, new WardrobeProvider((EntityPlayer) event.getEntity()));
         }
     }
     

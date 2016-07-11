@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +31,7 @@ import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
-public class ItemColourPicker extends AbstractModItem implements IPaintingTool, IConfigurableTool {
+public class ItemColourPicker extends AbstractModItem implements IPaintingTool, IConfigurableTool, IItemColor {
     
     public ItemColourPicker() {
         super(LibItemNames.COLOUR_PICKER);
@@ -62,7 +63,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                     ((IPantable)te).setPaintType(paintType, facing);
                 }
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         if (blockState.getBlock() instanceof IPantableBlock) {
@@ -88,7 +89,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             if (!worldIn.isRemote) {
                 //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PICKER, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         return EnumActionResult.FAIL;
@@ -142,5 +143,14 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     @Override
     public PaintType getToolPaintType(ItemStack stack) {
         return PaintingHelper.getToolPaintType(stack) ;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+        if (tintIndex == 1) {
+            return getToolColour(stack);
+        }
+        return 0xFFFFFFFF;
     }
 }

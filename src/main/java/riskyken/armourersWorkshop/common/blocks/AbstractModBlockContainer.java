@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -35,8 +36,12 @@ public abstract class AbstractModBlockContainer extends BlockContainer {
         super.setUnlocalizedName(name);
         setRegistryName(new ResourceLocation(LibModInfo.ID, "tile." + name));
         GameRegistry.register(this);
-        GameRegistry.register(new ModItemBlock(this), new ResourceLocation(LibModInfo.ID, "tile." + name));
+        GameRegistry.register(getItemBlock(), new ResourceLocation(LibModInfo.ID, "tile." + name));
         return this;
+    }
+    
+    protected ItemBlock getItemBlock() {
+        return new ModItemBlock(this);
     }
     
     @Override

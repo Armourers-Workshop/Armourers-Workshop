@@ -2,12 +2,15 @@ package riskyken.armourersWorkshop.proxies;
 
 import java.lang.reflect.Field;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -140,7 +143,8 @@ public class ClientProxy extends CommonProxy {
         
         registerRender(ModBlocks.armourerBrain);
         registerRender(ModBlocks.miniArmourer);
-        registerRender(ModBlocks.armourLibrary);
+        registerRender(ModBlocks.armourLibrary, 0);
+        registerRender(ModBlocks.armourLibrary, 1);
         registerRender(ModBlocks.colourable);
         registerRender(ModBlocks.colourableGlowing);
         registerRender(ModBlocks.colourableGlass);
@@ -148,21 +152,55 @@ public class ClientProxy extends CommonProxy {
         registerRender(ModBlocks.colourMixer);
         registerRender(ModBlocks.skinningTable);
         registerRender(ModBlocks.dyeTable);
+        registerRender(ModBlocks.mannequin);
+        
+        registerItemColorHandler(ModItems.paintbrush);
+        registerItemColorHandler(ModItems.paintRoller);
+        registerItemColorHandler(ModItems.colourPicker);
+        registerItemColorHandler(ModItems.hueTool);
         
         registerBlockColorHandler(ModBlocks.colourMixer);
+        registerBlockColorHandler(ModBlocks.colourable);
+        registerBlockColorHandler(ModBlocks.colourableGlowing);
+        registerBlockColorHandler(ModBlocks.colourableGlass);
+        registerBlockColorHandler(ModBlocks.colourableGlassGlowing);
     }
     
     private void registerBlockColorHandler(Block block) {
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
+        if (block instanceof IBlockColor) {
+            Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
+        } else {
+            ModLogger.log(Level.ERROR, String.format(
+                    "Tried to register block %s as colourable but it has no IBlockColor interface.",
+                    block.getRegistryName().toString()));
+        }
+    }
+    
+    private void registerItemColorHandler(Item item) {
+        if (item instanceof IItemColor) {
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)item, item);
+        } else {
+            ModLogger.log(Level.ERROR, String.format(
+                    "Tried to register item %s as colourable but it has no IItemColor interface.",
+                    item.getRegistryName().toString()));
+        }
     }
     
     private void registerRender(Block block) {
-        registerRender(Item.getItemFromBlock(block));
+        registerRender(block, 0);
+    }
+    
+    private void registerRender(Block block, int meta) {
+        registerRender(Item.getItemFromBlock(block), meta);
     }
     
     private void registerRender(Item item) {
+        registerRender(item, 0);
+    }
+    
+    private void registerRender(Item item, int meta) {
         ItemModelMesher imm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-        imm.register(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+        imm.register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
     
     @Override

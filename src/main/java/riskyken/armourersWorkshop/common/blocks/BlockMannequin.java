@@ -9,6 +9,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -43,6 +45,7 @@ import riskyken.armourersWorkshop.utils.HolidayHelper;
 public class BlockMannequin extends AbstractModBlockContainer {
     
     public static final PropertyEnum<EnumPartType> PART = PropertyEnum.<EnumPartType>create("part", EnumPartType.class);
+    public static final PropertyInteger ROTATION = PropertyInteger.create("rotation", 0, 15);
     private static final AxisAlignedBB MANNEQUIN_AABB = new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
     private static DamageSource victoriousDamage = new DamageSource("victorious");
     private static final String TAG_OWNER = "owner";
@@ -53,6 +56,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
         setLightOpacity(0);
         isValentins = HolidayHelper.valentins.isHolidayActive();
         setDefaultState(this.blockState.getBaseState().withProperty(PART, EnumPartType.BOTTOM));
+        translucent = true;
     }
     
     @Override
@@ -145,7 +149,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
         }
     }
     
-    public TileEntityMannequin getMannequinTileEntity(World world, BlockPos pos) {
+    public TileEntityMannequin getMannequinTileEntity(IBlockAccess world, BlockPos pos) {
         if (isTopOfMannequin(world, pos)) {
             pos = pos.add(0, -1, 0);
         }
@@ -156,7 +160,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
         return null;
     }
     
-    public boolean isTopOfMannequin(World world, BlockPos pos) {
+    public boolean isTopOfMannequin(IBlockAccess world, BlockPos pos) {
         return isTopOfMannequin(world.getBlockState(pos));
     }
     
@@ -326,9 +330,15 @@ public class BlockMannequin extends AbstractModBlockContainer {
         return EnumBlockRenderType.INVISIBLE;
     }
     
+    @SideOnly(Side.CLIENT)
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+    
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {PART});
+        return new BlockStateContainer(this, new IProperty[] {PART, ROTATION});
     }
     
     @Override
@@ -349,6 +359,15 @@ public class BlockMannequin extends AbstractModBlockContainer {
         default:
             return getDefaultState();
         }
+    }
+    
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
+        if (te != null) {
+            state = state.withProperty(ROTATION, te.getRotation());
+        }
+        return state;
     }
     
     public static enum EnumPartType implements IStringSerializable {

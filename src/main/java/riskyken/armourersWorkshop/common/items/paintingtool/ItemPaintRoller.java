@@ -51,7 +51,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                     setToolPaintType(stack, paintType);
                 }
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         if (blockState.getBlock() instanceof IPantableBlock) {
@@ -64,7 +64,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                 UndoManager.end(playerIn);
             }
             
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         if (blockState.getBlock() == ModBlocks.armourerBrain & playerIn.isSneaking()) {
@@ -74,7 +74,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                     ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, playerIn);
                 }
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         return EnumActionResult.FAIL;
@@ -84,7 +84,32 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
         for (int i = -radius + 1; i < radius; i++ ) {
             for (int j = -radius + 1; j < radius; j++ ) {
-                BlockPos bp = pos.offset(side);
+                BlockPos bp = null;
+                int x = pos.getX();
+                int y = pos.getY();
+                int z = pos.getZ();
+                
+                switch (side) {
+                case DOWN:
+                    bp = new BlockPos(x + j, y, z + i);
+                break;
+                case UP:
+                    bp = new BlockPos(x + j , y, z + i);
+                break;
+                case NORTH:
+                    bp = new BlockPos(x + i, y + j, z);
+                break;
+                case SOUTH:
+                    bp = new BlockPos(x + i, y + j, z);
+                break;
+                case WEST:
+                    bp = new BlockPos(x, y + i, z + j);
+                break;
+                case EAST:
+                    bp = new BlockPos(x, y + i, z + j);
+                break;
+                }
+                
                 IBlockState blockState = world.getBlockState(pos);
                 if ((targetBlock != ModBlocks.boundingBox & blockState.getBlock() != ModBlocks.boundingBox) |
                         (targetBlock == ModBlocks.boundingBox & blockState.getBlock() == ModBlocks.boundingBox)) {

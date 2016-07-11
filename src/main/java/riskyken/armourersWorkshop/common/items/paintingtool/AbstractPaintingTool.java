@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.items.paintingtool;
 
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +15,7 @@ import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 
-public abstract class AbstractPaintingTool extends AbstractModItem implements IPaintingTool, IBlockPainter {
+public abstract class AbstractPaintingTool extends AbstractModItem implements IPaintingTool, IBlockPainter, IItemColor {
 
     public AbstractPaintingTool(String name) {
         super(name);
@@ -62,5 +63,14 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     @Override
     public PaintType getToolPaintType(ItemStack stack) {
         return PaintingHelper.getToolPaintType(stack) ;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+        if (tintIndex == 1) {
+            return getToolColour(stack);
+        }
+        return 0xFFFFFFFF;
     }
 }

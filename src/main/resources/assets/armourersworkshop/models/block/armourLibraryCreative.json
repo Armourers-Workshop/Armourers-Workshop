@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "side": "armourersworkshop:blocks/equipmentLibrary1Side",
+        "top": "armourersworkshop:blocks/equipmentLibraryTop",
+        "bottom": "armourersworkshop:blocks/equipmentLibrary0Bottom"
+    }
+}

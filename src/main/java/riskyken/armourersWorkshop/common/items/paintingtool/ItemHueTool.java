@@ -53,7 +53,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
                     setToolPaintType(stack, paintType);
                 }
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         if (blockState.getBlock() instanceof IPantableBlock) {
@@ -73,7 +73,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
                 //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
             }
             
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         if (blockState.getBlock() == ModBlocks.armourerBrain & playerIn.isSneaking()) {
@@ -83,7 +83,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
                     ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, playerIn);
                 }
             }
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
         
         return EnumActionResult.FAIL;

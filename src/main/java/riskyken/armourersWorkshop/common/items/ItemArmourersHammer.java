@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.items;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -9,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 /*@Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")*/
 public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrench*/ {
@@ -20,6 +22,8 @@ public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrenc
     @Override
     public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
             BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        IBlockState blockState = world.getBlockState(pos);
+        
         /*
         Block block = world.getBlock(pos);
         if (block != null) {
@@ -43,6 +47,17 @@ public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrenc
             }
         }
         */
+        
+        EnumFacing dir = side;
+        if (player.isSneaking()) {
+            dir = dir.getOpposite();
+        }
+        if (blockState.getBlock().rotateBlock(world, pos, dir)) {
+            player.swingArm(hand);
+            ModLogger.log(blockState);
+            return EnumActionResult.SUCCESS;
+        }
+        
         return EnumActionResult.FAIL;
     }
     /*
