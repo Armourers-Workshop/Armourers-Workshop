@@ -68,7 +68,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_CULL_FACE);
             ModRenderHelper.enableAlphaBlend();
-            render(entity, npcEquipmentData, false, null, null, false);
+            render(entity, npcEquipmentData, false, null, null, false, 0);
             ModRenderHelper.disableAlphaBlend();
             GL11.glPopAttrib();
             
@@ -77,9 +77,9 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye, extraColour, itemRender);
+        render(entity, armourData, showSkinPaint, skinDye, extraColour, itemRender, distance);
     }
     
     @Override
@@ -88,12 +88,12 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_CULL_FACE);
         ModRenderHelper.enableAlphaBlend();
-        render(entity, armourData, false, null, null, false);
+        render(entity, armourData, false, null, null, false, 0);
         ModRenderHelper.disableAlphaBlend();
         GL11.glPopAttrib();
     }
     
-    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender);
+    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
@@ -119,7 +119,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         }
     }
     
-    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, byte[] extraColour) {
-        SkinPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColour);
+    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance) {
+        SkinPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColour, distance);
     }
 }
