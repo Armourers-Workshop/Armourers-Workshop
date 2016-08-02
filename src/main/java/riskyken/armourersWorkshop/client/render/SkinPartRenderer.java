@@ -74,21 +74,22 @@ public class SkinPartRenderer extends ModelBase {
         int startIndex = 0;;
         int endIndex = 0;;
         
-        if (multipassSkinRendering) {
-            endIndex = 3;
-        } else {
-            endIndex = 1;
-        }
         if (lod != 0) {
-            startIndex = endIndex + lod;
-            endIndex = startIndex;
+            startIndex = lod * 4;
         }
+        
+        if (multipassSkinRendering) {
+            endIndex = startIndex + 3;
+        } else {
+            endIndex = startIndex + 1;
+        }
+
         
         int listCount = skinModel.displayList.length;
         for (int i = startIndex; i <= endIndex; i++) {
             if (i >= startIndex & i <= endIndex) {
                 boolean glowing = false;
-                if (i % 2 == 1 & lod == 0) {
+                if (i % 2 == 1) {
                     glowing = true;
                 }
                 if (skinModel.hasList[i]) {
