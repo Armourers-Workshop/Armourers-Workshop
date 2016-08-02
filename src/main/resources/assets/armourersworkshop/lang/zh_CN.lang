@@ -225,6 +225,12 @@ inventory.armourersworkshop:equipmentWardrobe.autoSkin=自动
 inventory.armourersworkshop:equipmentWardrobe.selectHair=挑选头发颜色
 inventory.armourersworkshop:equipmentWardrobe.autoHair=自动
 inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=皮肤覆盖
+inventory.armourersworkshop:equipmentWardrobe.renderHeadArmour=显示/隐藏头部装备
+inventory.armourersworkshop:equipmentWardrobe.renderChestArmour=显示/隐藏上衣装备
+inventory.armourersworkshop:equipmentWardrobe.renderLegArmour=显示/隐藏裤子装备
+inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=显示/隐藏鞋子装备
+inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=显示/隐藏头部双层皮肤
+inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=限制抬腿幅度
 
 inventory.armourersworkshop:mannequin.label.headRotation=转动头部
 inventory.armourersworkshop:mannequin.label.leftArmRotation=转动左臂
