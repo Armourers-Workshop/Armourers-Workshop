@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.Entity;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
@@ -18,6 +19,10 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public final class SkinBaker {
+    
+    public static boolean withinMaxRenderDistance(Entity entity) {
+        return withinMaxRenderDistance(entity.posX, entity.posY, entity.posZ);
+    }
     
     public static boolean withinMaxRenderDistance(double x, double y, double z) {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
@@ -148,7 +153,7 @@ public final class SkinBaker {
         
         ArrayList<ColouredFace>[] renderLists;
         
-        int lodLevels = 4;
+        int lodLevels = ConfigHandler.maxLodLevels;
         
         /* LOD Indexs
          * 
@@ -163,11 +168,7 @@ public final class SkinBaker {
          * 1 = glowing
          */
         
-        if (multipassSkinRendering) {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[4 * (lodLevels + 1)];
-        } else {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[2 * (lodLevels + 1)];
-        }
+        renderLists = (ArrayList<ColouredFace>[]) new ArrayList[ClientProxy.getNumberOfRenderLayers() * (lodLevels + 1)];
         
         for (int i = 0; i < renderLists.length; i++) {
             renderLists[i] = new ArrayList<ColouredFace>();
@@ -295,8 +296,7 @@ public final class SkinBaker {
                                             listIndex = 1;
                                         }
                                     }
-                                    int lodIndex = ((lod) * lodLevels) + listIndex;
-                                    
+                                    int lodIndex = ((lod) * ClientProxy.getNumberOfRenderLayers()) + listIndex;
                                     
                                     ColouredFace ver = new ColouredFace(
                                             (byte)(ix + pb.getX()), (byte)(iy + pb.getY()), (byte)(iz + pb.getZ()),

@@ -40,11 +40,11 @@ public class SkinPartRenderer extends ModelBase {
     
     public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance) {
         int lod = MathHelper.floor_double(distance / ConfigHandler.lodDistance);
-        lod = MathHelper.clamp_int(lod, 0, 4);
+        lod = MathHelper.clamp_int(lod, 0, ConfigHandler.maxLodLevels);
         renderPart(skinPart, scale, skinDye, extraColour, lod);
     }
     
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod) {
+    private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod) {
         //mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         //GL11.glColor3f(1F, 1F, 1F);
@@ -62,6 +62,7 @@ public class SkinPartRenderer extends ModelBase {
                     GL11.glEndList();
                 }
                 skinModel.displayListCompiled[i] = true;
+                skinModel.setLoaded();
             }
         }
         
@@ -74,40 +75,51 @@ public class SkinPartRenderer extends ModelBase {
         int startIndex = 0;;
         int endIndex = 0;;
         
+        int loadingLod = skinModel.getLoadingLod();
+        if (loadingLod > lod) {
+            lod = loadingLod;
+        }
+        
         if (lod != 0) {
-            startIndex = lod * 4;
+            if (multipassSkinRendering) {
+                startIndex = lod * 4;
+            } else {
+                startIndex = lod * 2;
+            }
         }
         
         if (multipassSkinRendering) {
-            endIndex = startIndex + 3;
+            endIndex = startIndex + 4;
         } else {
-            endIndex = startIndex + 1;
+            endIndex = startIndex + 2;
         }
 
         
         int listCount = skinModel.displayList.length;
-        for (int i = startIndex; i <= endIndex; i++) {
-            if (i >= startIndex & i <= endIndex) {
+        for (int i = startIndex; i < endIndex; i++) {
+            if (i >= startIndex & i < endIndex) {
                 boolean glowing = false;
                 if (i % 2 == 1) {
                     glowing = true;
                 }
-                if (skinModel.hasList[i]) {
-                    if (skinModel.displayListCompiled[i]) {
-                        if (glowing) {
-                            GL11.glDisable(GL11.GL_LIGHTING);
-                            ModRenderHelper.disableLighting();
-                        }
-                        if (ConfigHandler.wireframeRender) {
-                            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-                        }
-                        GL11.glCallList(skinModel.displayList[i]);
-                        if (ConfigHandler.wireframeRender) {
-                            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-                        }
-                        if (glowing) {
-                            ModRenderHelper.enableLighting();
-                            GL11.glEnable(GL11.GL_LIGHTING);
+                if (i >= 0 & i < skinModel.displayList.length) {
+                    if (skinModel.hasList[i]) {
+                        if (skinModel.displayListCompiled[i]) {
+                            if (glowing) {
+                                GL11.glDisable(GL11.GL_LIGHTING);
+                                ModRenderHelper.disableLighting();
+                            }
+                            if (ConfigHandler.wireframeRender) {
+                                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                            }
+                            GL11.glCallList(skinModel.displayList[i]);
+                            if (ConfigHandler.wireframeRender) {
+                                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+                            }
+                            if (glowing) {
+                                ModRenderHelper.enableLighting();
+                                GL11.glEnable(GL11.GL_LIGHTING);
+                            }
                         }
                     }
                 }

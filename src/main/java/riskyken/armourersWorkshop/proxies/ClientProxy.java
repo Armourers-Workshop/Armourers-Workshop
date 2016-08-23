@@ -212,6 +212,14 @@ public class ClientProxy extends CommonProxy {
         return ConfigHandler.multipassSkinRendering;
     }
     
+    public static int getNumberOfRenderLayers() {
+        if (useMultipassSkinRendering()) {
+            return 4;
+        } else {
+            return 2;
+        }
+    }
+    
     private void spamSillyMessages() {
         if (Loader.isModLoaded("Tails")) {
             ModLogger.log("Tails detected! - Sand praising module active.");
