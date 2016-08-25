@@ -62,6 +62,7 @@ public class ConfigHandler {
     public static boolean showSkinTooltipDebugInfo;
     public static boolean showArmourerDebugRender;
     public static boolean wireframeRender;
+    public static boolean disableTexturePainting;
     
     
     //Register
@@ -216,6 +217,11 @@ public class ConfigHandler {
                 .get(CATEGORY_DEBUG, "wireframeRender", false,
                 "Render models in a wireframe.")
                 .getBoolean(false);
+        
+        disableTexturePainting = config.getBoolean("disableTexturePainting", CATEGORY_DEBUG, false,
+                "Disables replacing the players texture with a painted version.\n"
+                + "Disabling this may fix issues with the players texture rendering\n"
+                + "incorrectly or showing the steve skin.");
     }
     
     private static void loadCategoryCompatibility() {
