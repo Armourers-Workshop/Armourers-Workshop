@@ -57,6 +57,15 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
                 if (((EntityLivingBase)entity).getHeldItem() != null) {
                     this.heldItemRight = 1;
                 }
+                if (((EntityLivingBase)entity).isRiding()) {
+                    this.isRiding = true;
+                }
+                if (((EntityLivingBase)entity).isSneaking()) {
+                    this.isSneak = true;
+                }
+                if (((EntityLivingBase)entity).isChild()) {
+                    this.isChild = true;
+                }
             }
             bipedLeftLeg.rotateAngleZ = 0F;
             bipedRightLeg.rotateAngleZ = 0F;
