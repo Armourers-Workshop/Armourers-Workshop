@@ -1,3 +1,18 @@
+Build 0.39.6
+Added:
+	ko_KR lang file (ISJump).
+	Loading LOD models.
+	Config option to disable skin painting.
+	LODs to entity skin renders.
+Fixed
+	Memory leak in armourer arrow render.
+	Glowing cubes not showing in model LODs.
+	Armour container's not checking riding, sneaking or child options on entities.
+	Painting armourer blocks sometimes reverting to the steve skin.
+Change:
+	Updated zh_CN lang file.
+
+
 Build 0.39.5
 Added: ru_RU lang file. (Shtopm)
 Added: Missing localization to the lang file.
