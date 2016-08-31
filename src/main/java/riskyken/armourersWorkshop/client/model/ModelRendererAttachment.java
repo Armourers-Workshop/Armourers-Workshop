@@ -4,13 +4,15 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -18,7 +20,7 @@ import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -33,7 +35,10 @@ import riskyken.armourersWorkshop.proxies.ClientProxy;
  */
 @SideOnly(Side.CLIENT)
 public class ModelRendererAttachment extends ModelRenderer {
-
+    
+    @CapabilityInject(IWardrobeCapability.class)
+    private static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
+    
     private final ISkinType skinType;
     private final ISkinPartType skinPart;
     private final Minecraft mc;
@@ -69,7 +74,14 @@ public class ModelRendererAttachment extends ModelRenderer {
             return;
         }
         
-        EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
+        IWardrobeCapability wardrobe = player.getCapability(WARDROBE_CAP, null);
+        if (wardrobe == null) {
+            mc.mcProfiler.endSection();
+            return;
+        }
+        EquipmentWardrobeData ewd = wardrobe.getEquipmentWardrobeData();
+        
+        
         byte[] extraColours = null;
         if (ewd != null) {
             Color skinColour = new Color(ewd.skinColour);

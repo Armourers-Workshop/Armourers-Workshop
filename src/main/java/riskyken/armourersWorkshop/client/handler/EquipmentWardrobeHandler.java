@@ -40,9 +40,11 @@ public final class EquipmentWardrobeHandler {
         }
         
         EntityPlayer localPlayer = Minecraft.getMinecraft().thePlayer;
-        PlayerPointer localPointer = new PlayerPointer(localPlayer);
-        if (playerPointer.equals(localPointer)) {
-            //ExPropsPlayerEquipmentData.get(localPlayer).setSkinInfo(ewd, false);
+        if (localPlayer != null) {
+            PlayerPointer localPointer = new PlayerPointer(localPlayer);
+            if (playerPointer.equals(localPointer)) {
+                //ExPropsPlayerEquipmentData.get(localPlayer).setSkinInfo(ewd, false);
+            }
         }
     }
     

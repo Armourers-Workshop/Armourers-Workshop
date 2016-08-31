@@ -90,6 +90,7 @@ public class ArmourersWorkshop {
         ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
         ConfigHandler.init(event.getSuggestedConfigurationFile());
+        SkinTypeRegistry.init();
         CapabilityManager.INSTANCE.register(IWardrobeCapability.class, new WardrobeStorage(), WardrobeProvider.class);
         
         Addons.preInit();
@@ -102,7 +103,6 @@ public class ArmourersWorkshop {
         modItems = new ModItems();
         modBlocks = new ModBlocks();
         
-        SkinTypeRegistry.init();
         CubeRegistry.init();
         proxy.initLibraryManager();
     }

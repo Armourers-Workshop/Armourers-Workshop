@@ -77,10 +77,10 @@ public class WardrobeProvider implements ICapabilitySerializable, IWardrobeCapab
     @Override
     public NBTBase serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
-        /*
+        
         wardrobeInventoryContainer.writeToNBT(compound);
         equipmentWardrobeData.saveNBTData(compound);
-        */
+        
         compound.setInteger(TAG_LAST_XMAS_YEAR, this.lastXmasYear);
         return compound;
     }
@@ -88,7 +88,7 @@ public class WardrobeProvider implements ICapabilitySerializable, IWardrobeCapab
     @Override
     public void deserializeNBT(NBTBase nbt) {
         NBTTagCompound compound = (NBTTagCompound) nbt;
-        /*
+        
         wardrobeInventoryContainer.readFromNBT(compound);
         equipmentWardrobeData.loadNBTData(compound);
         allowNetworkUpdates = false;
@@ -106,7 +106,7 @@ public class WardrobeProvider implements ICapabilitySerializable, IWardrobeCapab
         } else {
             this.lastXmasYear = 0;
         }
-        */
+        
     }
 
     @Override
@@ -178,6 +178,9 @@ public class WardrobeProvider implements ICapabilitySerializable, IWardrobeCapab
     
     @Override
     public void sendWardrobeDataToAllAround() {
+        if (!allowNetworkUpdates) {
+            return;
+        }
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 64);
         PlayerPointer playerPointer = new PlayerPointer(player);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), p);

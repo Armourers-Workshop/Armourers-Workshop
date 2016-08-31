@@ -83,6 +83,7 @@ public class GuiHandler implements IGuiHandler {
                 if (wardrobe != null) {
                     return new ContainerSkinWardrobe(player.inventory, wardrobe);
                 }
+                break;
             case LibGuiIds.MANNEQUIN:
                 if (te instanceof TileEntityMannequin) {
                     return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
@@ -159,6 +160,7 @@ public class GuiHandler implements IGuiHandler {
                 if (wardrobe != null) {
                     return new GuiSkinWardrobe(player.inventory, wardrobe);
                 }
+                break;
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getHeldItemMainhand().getItem() instanceof IConfigurableTool) {
                     return new GuiToolOptions(player.getHeldItemMainhand());
