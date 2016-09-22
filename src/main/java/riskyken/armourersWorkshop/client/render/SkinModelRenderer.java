@@ -296,11 +296,18 @@ public final class SkinModelRenderer {
                     (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
         }
         
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glTranslated(0, 22 * 0.0625F, 0);
+        GL11.glScalef(1F, -1F, -1F);
+        GL11.glRotatef((player.renderYawOffset - player.prevRenderYawOffset) * event.getPartialRenderTick() + player.renderYawOffset, 0, 1, 0);
+        
+        
+        
         for (int slot = 0; slot < 4; slot++) {
-            GL11.glPushMatrix();
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glEnable(GL11.GL_BLEND);
+
             for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
                 if (slot == SkinTypeRegistry.skinHead.getEntityEquipmentSlot().getIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
@@ -338,10 +345,11 @@ public final class SkinModelRenderer {
                     }
                 }
             }
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            GL11.glPopMatrix();
+
         }
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glPopMatrix();
     }
     
     public AbstractModelSkin getModelForEquipmentType(ISkinType skinType) {
