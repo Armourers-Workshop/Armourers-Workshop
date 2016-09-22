@@ -34,6 +34,7 @@ import riskyken.armourersWorkshop.client.model.skin.ModelSkinHead;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinLegs;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSkirt;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSword;
+import riskyken.armourersWorkshop.client.model.skin.ModelSkinWings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -73,6 +74,7 @@ public final class SkinModelRenderer {
     public final ModelSkinFeet customFeet = new ModelSkinFeet();
     public final ModelSkinSword customSword = new ModelSkinSword();
     public final ModelSkinBow customBow = new ModelSkinBow();
+    public final ModelSkinWings customWings = new ModelSkinWings();
     
     public EntityPlayer targetPlayer = null;
     
@@ -354,6 +356,8 @@ public final class SkinModelRenderer {
             return customSword;
         } else if (skinType == SkinTypeRegistry.skinBow) {
             return customBow;
+        } else if (skinType == SkinTypeRegistry.skinWings) {
+            return customWings;
         }
         return null;
     }

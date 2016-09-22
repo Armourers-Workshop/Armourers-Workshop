@@ -465,7 +465,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         case 6:
-            //renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         }
         

@@ -15,6 +15,7 @@ public class SkinWings extends AbstractSkinTypeBase {
     public SkinWings() {
         skinParts = new ArrayList<ISkinPartType>();
         skinParts.add(new SkinWingsPartLeftWing(this));
+        skinParts.add(new SkinWingsPartRightWing(this));
     }
     
     @Override
@@ -35,10 +36,5 @@ public class SkinWings extends AbstractSkinTypeBase {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcon(IIconRegister register) {
-    }
-    
-    @Override
-    public boolean enabled() {
-        return false;
     }
 }

@@ -325,6 +325,17 @@ public class RenderBlockMannequinItems {
         rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
     }
     
+    public void renderWingsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
+        Item targetItem = stack.getItem();
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
+            if (sp.getSkinType() == SkinTypeRegistry.skinWings) {
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance);
+                return;
+            }
+        }
+    }
+    
     private void bindTexture(ResourceLocation resourceLocation) {
         UtilRender.bindTexture(resourceLocation);
     }

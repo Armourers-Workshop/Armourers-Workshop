@@ -78,7 +78,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinBow);
         registerSkin(skinArrow);
         registerSkin(skinBlock);
-        //registerSkin(skinWings);
+        registerSkin(skinWings);
     }
     
     @Override
