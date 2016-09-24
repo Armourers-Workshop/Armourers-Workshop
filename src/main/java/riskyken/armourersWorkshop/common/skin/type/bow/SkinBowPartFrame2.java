@@ -14,7 +14,7 @@ public class SkinBowPartFrame2 extends AbstractSkinPartTypeBase {
     
     public SkinBowPartFrame2(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-10, -20, -18, 20, 62, 36);
+        this.buildingSpace = new Rectangle3D(-10, -20, -46, 20, 62, 64);
         this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);
         this.offset = new Point3D(21, 0, 0);
     }
