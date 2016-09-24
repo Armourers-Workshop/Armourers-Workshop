@@ -135,6 +135,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             }
         }
         
+        mannequinFakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+        
         if (te.getBipedRotations() != null) {
             te.getBipedRotations().applyRotationsToBiped(model);
             te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmor);

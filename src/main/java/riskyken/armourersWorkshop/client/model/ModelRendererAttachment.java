@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.utils.SkinUtils;
 
 /**
  * A ModelRenderer that is attached to each ModelRenderer on the
@@ -105,6 +106,18 @@ public class ModelRendererAttachment extends ModelRenderer {
                         if (player.isRiding()) {
                             GL11.glRotated(-70, 1F, 0F, 0F);
                         }
+                    }
+                    if (skinType == SkinTypeRegistry.skinWings) {
+                        GL11.glTranslated(0, 0, scale * 2);
+                        double angle = SkinUtils.getFlapAngleForWings(player, data);
+                        GL11.glTranslated(0, 0, scale * 0.5F);
+                        if (skinPart.getRegistryName().equals("armourers:wings.leftWing")) {
+                            GL11.glRotated(angle, 0, 1, 0);
+                        } else {
+                            GL11.glRotated(-angle, 0, 1, 0);
+                        }
+                        
+                        //GL11.glTranslated(0, 0, scale * -0.5F);
                     }
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

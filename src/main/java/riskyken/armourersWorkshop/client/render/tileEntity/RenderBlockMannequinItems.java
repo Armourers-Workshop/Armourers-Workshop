@@ -330,7 +330,7 @@ public class RenderBlockMannequinItems {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
             if (sp.getSkinType() == SkinTypeRegistry.skinWings) {
-                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(fakePlayer, stack, null, extraColours, distance);
                 return;
             }
         }

@@ -32,7 +32,7 @@ public class ContainerSkinWardrobe extends Container {
         WardrobeInventory swordInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinSword);
         WardrobeInventory bowInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinBow);
         WardrobeInventory arrowInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinArrow);
-        
+        WardrobeInventory wingInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinWings);
         
         for (int i = 0; i < slotsUnlocked; i++) {
             addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 88 + i * 19, 18));
@@ -44,7 +44,8 @@ public class ContainerSkinWardrobe extends Container {
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 29, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 49, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinArrow, arrowInv, 0, 69, 113));
-        skinSlots += 3;
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinWings, wingInv, 0, 89, 113));
+        skinSlots += 4;
         
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 54 + 18 * x, 232));

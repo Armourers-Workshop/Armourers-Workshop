@@ -165,6 +165,8 @@ skinPartType.armourers:bow.frame2.name=Frame 2
 skinPartType.armourers:bow.frame3.name=Frame 3
 skinPartType.armourers:arrow.base.name=Base
 skinPartType.armourers:block.base.name=Base
+skinPartType.armourers:wings.leftWing.name=Left Wing
+skinPartType.armourers:wings.rightWing.name=Right Wing
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerMannequin extends Container {
 
@@ -47,12 +48,25 @@ public class ContainerMannequin extends Container {
                 boolean slotted = false;
                 for (int i = 0; i < 7; i++) {
                     Slot targetSlot = getSlot(i);
-                    if (targetSlot.isItemValid(stack)) {
-                        if (this.mergeItemStack(stack, i, i + 1, false)) {
-                            slotted = true;
-                            break;
+                    
+                    if (SkinNBTHelper.getSkinTypeFromStack(stack) != null) {
+                        if (i != 4 & i != 5) {
+                            if (targetSlot.isItemValid(stack)) {
+                                if (this.mergeItemStack(stack, i, i + 1, false)) {
+                                    slotted = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        if (targetSlot.isItemValid(stack)) {
+                            if (this.mergeItemStack(stack, i, i + 1, false)) {
+                                slotted = true;
+                                break;
+                            }
                         }
                     }
+                    
                 }
                 if (!slotted) {
                     return null;

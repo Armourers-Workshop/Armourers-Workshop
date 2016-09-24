@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
@@ -18,27 +17,9 @@ public class SkinWingsPartRightWing extends AbstractSkinPartTypeBase implements 
 
     public SkinWingsPartRightWing(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(0, -24, 0, 32, 32, 8);
+        this.buildingSpace = new Rectangle3D(0, -24, 0, 32, 48, 8);
         this.guideSpace = new Rectangle3D(-4, -12, -4, 8, 12, 4);
         this.offset = new Point3D(0, -1, 0);
-    }
-    
-    @Override
-    public IRectangle3D getBuildingSpace() {
-        this.buildingSpace = new Rectangle3D(0, -24, 0, 32, 32, 8);
-        return super.getBuildingSpace();
-    }
-    
-    @Override
-    public IRectangle3D getGuideSpace() {
-        this.guideSpace = new Rectangle3D(-4, -12, -4, 8, 12, 4);
-        return super.getGuideSpace();
-    }
-    
-    @Override
-    public IPoint3D getOffset() {
-        this.offset = new Point3D(0, -1, 0);
-        return super.getOffset();
     }
     
     @Override

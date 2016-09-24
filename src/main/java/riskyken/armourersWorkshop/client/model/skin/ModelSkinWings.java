@@ -11,14 +11,17 @@ import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.SkinUtils;
 
 public class ModelSkinWings extends AbstractModelSkin  {
 
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
-        if (armourData == null) { return; }
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
+        if (skin == null) {
+            return;
+        }
         
-        ArrayList<SkinPart> parts = armourData.getParts();
+        ArrayList<SkinPart> parts = skin.getParts();
         
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -31,7 +34,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSword);
-        armourData.onUsed();
+        skin.onUsed();
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
             
@@ -44,15 +47,15 @@ public class ModelSkinWings extends AbstractModelSkin  {
             }
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
-            double maxAngle = 20D;
-            double rotation = ((double)System.currentTimeMillis() / 50 % 100);
-            rotation = Math.sin(rotation / 100 * Math.PI * 2);
+            double angle = 45D;
+            
+            angle = SkinUtils.getFlapAngleForWings(entity, skin);
             
             if (part.getPartType().getPartName().equals("leftWing")) {
-                renderLeftWing(part, SCALE, skinDye, extraColour, distance, rotation * maxAngle - 100);
+                renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle);
             }
             if (part.getPartType().getPartName().equals("rightWing")) {
-                renderRightWing(part, SCALE, skinDye, extraColour, distance, rotation * maxAngle - 100);
+                renderRightWing(part, SCALE, skinDye, extraColour, distance, angle);
             }
             GL11.glPopMatrix();
         }
