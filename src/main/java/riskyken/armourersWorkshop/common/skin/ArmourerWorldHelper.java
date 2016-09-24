@@ -23,6 +23,7 @@ import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
@@ -68,7 +69,11 @@ public final class ArmourerWorldHelper {
         if (paintData != null) {
             paintData = paintData.clone();
         }
-        Skin skin = new Skin(authorName, customName, tags, skinType, paintData, parts);
+        SkinProperties skinProps = new SkinProperties();
+        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
+        skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
+        skinProps.setProperty(Skin.KEY_TAGS, tags);
+        Skin skin = new Skin(skinProps, skinType, paintData, parts);
         
         //Check if there are any blocks in the build guides.
         if (skin.getParts().size() == 0 && !skin.hasPaintData()) {
