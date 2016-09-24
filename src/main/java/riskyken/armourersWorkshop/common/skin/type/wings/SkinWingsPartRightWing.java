@@ -17,7 +17,7 @@ public class SkinWingsPartRightWing extends AbstractSkinPartTypeBase implements 
 
     public SkinWingsPartRightWing(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(0, -24, 0, 32, 48, 8);
+        this.buildingSpace = new Rectangle3D(0, -24, 0, 32, 48, 12);
         this.guideSpace = new Rectangle3D(-4, -12, -4, 8, 12, 4);
         this.offset = new Point3D(0, -1, 0);
     }
