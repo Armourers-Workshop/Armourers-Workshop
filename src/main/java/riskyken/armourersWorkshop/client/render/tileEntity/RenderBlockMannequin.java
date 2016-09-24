@@ -129,13 +129,19 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     fakePlayer.prevPosX = x;
                     fakePlayer.prevPosY = y;
                     fakePlayer.prevPosZ = z;
-                    
                     te.setFakePlayer(fakePlayer);
+                } else {
+                    fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+                    fakePlayer.isAirBorne = te.isFlying();
+                    fakePlayer.capabilities.isFlying = te.isFlying();
                 }
             }
+        } else {
+            mannequinFakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+            mannequinFakePlayer.isAirBorne = te.isFlying();
+            mannequinFakePlayer.capabilities.isFlying = te.isFlying();
         }
         
-        mannequinFakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
         
         if (te.getBipedRotations() != null) {
             te.getBipedRotations().applyRotationsToBiped(model);

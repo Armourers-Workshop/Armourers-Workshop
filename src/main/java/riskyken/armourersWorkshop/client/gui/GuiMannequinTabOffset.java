@@ -89,10 +89,11 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
         float offsetZ = (float) bipedOffsetZslider.getValue();
         
         boolean renderExtras = ((GuiMannequin)parent).tabExtraRenders.isExtraRenders.isChecked();
+        boolean flying = ((GuiMannequin)parent).tabExtraRenders.isFlying.isChecked();
         String name = ((GuiMannequin)parent).tabName.nameTextbox.getText();
         int skinColour = ((GuiMannequin)parent).tabSkinAndHair.skinColour;
         int hairColour = ((GuiMannequin)parent).tabSkinAndHair.hairColour;
-        MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour, hairColour, name, renderExtras);
+        MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour, hairColour, name, renderExtras, flying);
         PacketHandler.networkWrapper.sendToServer(message);
     }
 }
