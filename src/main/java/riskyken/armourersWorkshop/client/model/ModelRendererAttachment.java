@@ -11,6 +11,8 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -110,14 +112,65 @@ public class ModelRendererAttachment extends ModelRenderer {
                     if (skinType == SkinTypeRegistry.skinWings) {
                         GL11.glTranslated(0, 0, scale * 2);
                         double angle = SkinUtils.getFlapAngleForWings(player, data);
-                        GL11.glTranslated(0, 0, scale * 0.5F);
-                        if (skinPart.getRegistryName().equals("armourers:wings.leftWing")) {
-                            GL11.glRotated(angle, 0, 1, 0);
-                        } else {
-                            GL11.glRotated(-angle, 0, 1, 0);
+                        Point3D point = new Point3D(0, 0, 0);
+                        ForgeDirection axis = ForgeDirection.DOWN;
+                        
+                        if (partData.getMarkerCount() > 0) {
+                            point = partData.getMarker(0);
+                            axis = partData.getMarkerSide(0);
                         }
                         
-                        //GL11.glTranslated(0, 0, scale * -0.5F);
+                        GL11.glTranslated(scale * 0.5F, scale * 0.5F, scale * 0.5F);
+                        GL11.glTranslated(scale * point.getX(), scale * point.getY(), scale * point.getZ());
+                        if (skinPart.getRegistryName().equals("armourers:wings.leftWing")) {
+                            switch (axis) {
+                            case UP:
+                                GL11.glRotated(angle, 0, 1, 0);
+                                break;
+                            case DOWN:
+                                GL11.glRotated(angle, 0, 1, 0);
+                                break;
+                            case NORTH:
+                                GL11.glRotated(angle, 1, 0, 0);
+                                break;
+                            case EAST:
+                                GL11.glRotated(angle, 1, 0, 0);
+                                break;
+                            case SOUTH:
+                                GL11.glRotated(angle, 0, 0, 1);
+                                break;
+                            case WEST:
+                                GL11.glRotated(angle, 0, 0, 1);
+                                break;
+                            case UNKNOWN:
+                                break;
+                            }
+                        } else {
+                            switch (axis) {
+                            case UP:
+                                GL11.glRotated(-angle, 0, 1, 0);
+                                break;
+                            case DOWN:
+                                GL11.glRotated(-angle, 0, 1, 0);
+                                break;
+                            case NORTH:
+                                GL11.glRotated(-angle, 1, 0, 0);
+                                break;
+                            case EAST:
+                                GL11.glRotated(-angle, 1, 0, 0);
+                                break;
+                            case SOUTH:
+                                GL11.glRotated(-angle, 0, 0, 1);
+                                break;
+                            case WEST:
+                                GL11.glRotated(angle, 1, 0, 0);
+                                break;
+                            case UNKNOWN:
+                                break;
+                            }
+                        }
+                        GL11.glTranslated(scale * -point.getX(), scale * -point.getY(), scale * -point.getZ());
+                        GL11.glTranslated(scale * -0.5F, scale * -0.5F, scale * -0.5F);
                     }
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

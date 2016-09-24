@@ -6,6 +6,8 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -55,7 +57,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
                 renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle);
             }
             if (part.getPartType().getPartName().equals("rightWing")) {
-                renderRightWing(part, SCALE, skinDye, extraColour, distance, angle);
+                renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle);
             }
             GL11.glPopMatrix();
         }
@@ -66,14 +68,54 @@ public class ModelSkinWings extends AbstractModelSkin  {
     private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle) {
         GL11.glPushMatrix();
         
+        Point3D point = new Point3D(0, 0, 0);
+        ForgeDirection axis = ForgeDirection.DOWN;
+        
+        if (part.getMarkerCount() > 0) {
+            point = part.getMarker(0);
+            axis = part.getMarkerSide(0);
+        }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
-
+        GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
+        GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
+        
+        switch (axis) {
+        case UP:
+            GL11.glRotated(angle, 0, 1, 0);
+            break;
+        case DOWN:
+            GL11.glRotated(angle, 0, 1, 0);
+            break;
+        case NORTH:
+            GL11.glRotated(angle, 1, 0, 0);
+            break;
+        case EAST:
+            GL11.glRotated(angle, 1, 0, 0);
+            break;
+        case SOUTH:
+            GL11.glRotated(angle, 0, 0, 1);
+            break;
+        case WEST:
+            GL11.glRotated(angle, 0, 0, 1);
+            break;
+        case UNKNOWN:
+            break;
+        }
+        GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
+        GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
+        
+        //GL11.glRotated(angle, 1 * axis.offsetX, 1 * axis.offsetY, 1 * axis.offsetZ);
+        
+        
+        /*
         GL11.glTranslated(0, 0, SCALE * 0.5F);
         GL11.glRotated(angle, 0, 1, 0);
         GL11.glTranslated(0, 0, SCALE * -0.5F);
+        */
+        
         //ModLogger.log(Math.sin(System.currentTimeMillis() / 25 % Math.PI * 2));
         
         renderPart(part, scale, skinDye, extraColour, distance);
@@ -82,14 +124,44 @@ public class ModelSkinWings extends AbstractModelSkin  {
     
     private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle) {
         GL11.glPushMatrix();
+        Point3D point = new Point3D(0, 0, 0);
+        ForgeDirection axis = ForgeDirection.DOWN;
         
+        if (part.getMarkerCount() > 0) {
+            point = part.getMarker(0);
+            axis = part.getMarkerSide(0);
+        }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
-        GL11.glTranslated(0, 0, SCALE * 0.5F);
-        GL11.glRotated(-angle, 0, 1, 0);
-        GL11.glTranslated(0, 0, SCALE * -0.5F);
+        GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
+        GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
+        switch (axis) {
+        case UP:
+            GL11.glRotated(angle, 0, 1, 0);
+            break;
+        case DOWN:
+            GL11.glRotated(angle, 0, 1, 0);
+            break;
+        case NORTH:
+            GL11.glRotated(angle, 1, 0, 0);
+            break;
+        case EAST:
+            GL11.glRotated(angle, 1, 0, 0);
+            break;
+        case SOUTH:
+            GL11.glRotated(angle, 0, 0, 1);
+            break;
+        case WEST:
+            GL11.glRotated(-angle, 1, 0, 0);
+            break;
+        case UNKNOWN:
+            break;
+        }
+        GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
+        GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
+        
         renderPart(part, scale, skinDye, extraColour, distance);
         GL11.glPopMatrix();
     }

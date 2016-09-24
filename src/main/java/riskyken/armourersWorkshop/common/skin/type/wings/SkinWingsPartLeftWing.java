@@ -58,4 +58,14 @@ public class SkinWingsPartLeftWing extends AbstractSkinPartTypeBase implements I
     public IPoint3D getTextureModelSize() {
         return new Point3D(8, 12, 4);
     }
+    
+    @Override
+    public int getMaximumMarkersNeeded() {
+        return 1;
+    }
+    
+    @Override
+    public int getMinimumMarkersNeeded() {
+        return 1;
+    }
 }
