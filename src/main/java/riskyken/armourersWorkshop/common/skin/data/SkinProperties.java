@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.skin.data;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SkinProperties {
@@ -11,6 +12,15 @@ public class SkinProperties {
     
     public SkinProperties() {
         properties = new HashMap<String, Object>();
+    }
+    
+    public ArrayList<String> getPropertiesList() {
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < properties.size(); i++) {
+            String key = (String) properties.keySet().toArray()[i];
+            list.add(key + ":" + properties.get(key));
+        }
+        return list;
     }
 
     public void writeToStream(DataOutputStream stream) throws IOException {

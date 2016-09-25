@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -55,8 +54,7 @@ public final class ArmourerWorldHelper {
      * @throws InvalidCubeTypeException
      * @throws SkinSaveException 
      */
-    public static Skin saveSkinFromWorld(World world, EntityPlayerMP player, ISkinType skinType,
-            String customName, String tags, int[] paintData,
+    public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
@@ -70,15 +68,6 @@ public final class ArmourerWorldHelper {
             paintData = paintData.clone();
         }
         
-        SkinProperties skinProps = new SkinProperties();
-        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getCommandSenderName());
-        if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
-            skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
-        }
-        skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
-        if (tags != null && !tags.equalsIgnoreCase("")) {
-            skinProps.setProperty(Skin.KEY_TAGS, tags);
-        }
         Skin skin = new Skin(skinProps, skinType, paintData, parts);
         
         //Check if there are any blocks in the build guides.

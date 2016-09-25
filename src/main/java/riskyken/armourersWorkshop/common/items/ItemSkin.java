@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
@@ -95,6 +96,11 @@ public class ItemSkin extends AbstractModItem {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinPaintData", data.hasPaintData()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinMarkerCount", data.getMarkerCount()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinDyeCount", skinData.getSkinDye().getNumberOfDyes()));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinProperties"));
+                        ArrayList<String> props = data.getProperties().getPropertiesList();
+                        for (int i = 0; i < props.size(); i++) {
+                            tooltip.add("  " + props.get(i));
+                        }
                     } else {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinHoldShiftForInfo"));
                     }

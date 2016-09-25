@@ -106,6 +106,7 @@ item.armourersworkshop:rollover.skinInvalidItem=&cError: Invalid equipment skin,
 item.armourersworkshop:rollover.skinIdError1=&cWarning: This skin is using an old file format.
 item.armourersworkshop:rollover.skinIdError2=&cPlease save and reload it from the library to fix this.
 item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
+item.armourersworkshop:rollover.skinProperties=&eSkin Properties:
 
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=Full block mode

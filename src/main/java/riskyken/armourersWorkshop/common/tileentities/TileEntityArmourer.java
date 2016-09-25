@@ -33,6 +33,7 @@ import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
@@ -126,9 +127,27 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         
         Skin armourItemData = null;
         
+        SkinProperties skinProps = new SkinProperties();
+        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getCommandSenderName());
+        if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
+            skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
+        }
+        skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
+        if (tags != null && !tags.equalsIgnoreCase("")) {
+            skinProps.setProperty(Skin.KEY_TAGS, tags);
+        }
+        
+        if (skinType == SkinTypeRegistry.skinBlock) {
+            
+        }
+        
+        if (skinType == SkinTypeRegistry.skinWings) {
+            
+        }
+        
         try {
-            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, player, skinType, customName,
-                    tags, paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType,
+                    paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         } catch (InvalidCubeTypeException e) {
             ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
             e.printStackTrace();
