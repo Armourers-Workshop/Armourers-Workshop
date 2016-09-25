@@ -203,6 +203,10 @@ inventory.armourersworkshop:armourLibrary.label.typeToSearch=Type to search...
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
+inventory.armourersworkshop:armourerBrain.label.idleSpeed=Idle Speed:
+inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Flying Speed:
+inventory.armourersworkshop:armourerBrain.label.minAngle=Minimum Angle:
+inventory.armourersworkshop:armourerBrain.label.maxAngle=Maximum Angle:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:
 inventory.armourersworkshop:armourerBrain.showGuide=Show building guide?
 inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?

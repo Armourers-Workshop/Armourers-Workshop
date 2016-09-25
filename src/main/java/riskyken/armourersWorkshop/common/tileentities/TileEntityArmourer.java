@@ -67,6 +67,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private int[] paintData;
     @SideOnly(Side.CLIENT)
     public SkinTexture skinTexture;
+    public boolean loadedArmourItem = false;
     
     public TileEntityArmourer() {
         super(INVENTORY_SIZE);
@@ -218,7 +219,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
         Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
-        skinProps.setProperty(Skin.KEY_CUSTOM_NAME, equipmentData.getCustomName());
+        skinProps = new SkinProperties(equipmentData.getProperties());
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
         if (equipmentData.hasPaintData()) {
@@ -282,7 +283,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (skinType != null) {
             ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
             clearPaintData(true);
-            skinProps.setProperty(Skin.KEY_CUSTOM_NAME, "");
+            skinProps = new SkinProperties();
             resyncData();
         }
     }
@@ -418,6 +419,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         readBaseFromNBT(compound);
         readCommonFromNBT(compound);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        loadedArmourItem = true;
     }
     
     @Override
@@ -446,6 +448,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (compound.hasKey(TAG_SHOW_HELPER)) {
             showHelper = compound.getBoolean(TAG_SHOW_HELPER);
         }
+        skinProps = new SkinProperties();
         skinProps.readFromNBT(compound);
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));

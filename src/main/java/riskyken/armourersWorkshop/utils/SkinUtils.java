@@ -57,7 +57,7 @@ public final class SkinUtils {
     
     public static double getFlapAngleForWings(Entity entity, Skin skin) {
         
-        double maxAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 35D);
+        double maxAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D);
         double minAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D);
         double idleSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D);
         double flyingSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D);
@@ -79,6 +79,7 @@ public final class SkinUtils {
             angle = Math.sin(angle / flapTime * Math.PI * 2);
         }
         
-        return angle * maxAngle - maxAngle;
+        double fullAngle = maxAngle - minAngle;
+        return -minAngle - fullAngle * ((angle + 1D) / 2);
     }
 }
