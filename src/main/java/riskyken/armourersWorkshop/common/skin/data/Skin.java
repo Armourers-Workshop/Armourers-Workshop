@@ -28,8 +28,14 @@ public class Skin implements ISkin {
     public static final int FILE_VERSION = 12;
     
     public static final String KEY_AUTHOR_NAME = "authorName";
+    public static final String KEY_AUTHOR_UUID = "authorUUID";
     public static final String KEY_CUSTOM_NAME = "customName";
     public static final String KEY_TAGS = "tags";
+    
+    public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
+    public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
+    public static final String KEY_WINGS_IDLE_SPEED = "wingsIdleSpeed";
+    public static final String KEY_WINGS_FLYING_SPEED = "wingsFlyingSpeed";
     
     private SkinProperties properties;
     private ISkinType equipmentSkinType;
@@ -120,6 +126,9 @@ public class Skin implements ISkin {
         return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
     }
     
+    public SkinProperties getProperties() {
+        return properties;
+    }
     
     /** Number of ticks from when this skin was last used. */
     private int ticksFromLastAccess = 0;

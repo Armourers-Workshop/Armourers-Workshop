@@ -121,14 +121,13 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
         
-        String authorName = player.getCommandSenderName();
         //authorName = "";
         String customName = name;
         
         Skin armourItemData = null;
         
         try {
-            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, player, skinType, authorName, customName,
+            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, player, skinType, customName,
                     tags, paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         } catch (InvalidCubeTypeException e) {
             ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");

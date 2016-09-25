@@ -60,10 +60,18 @@ public class SkinProperties {
         return defaultValue;
     }
     
-    public int getPropertyString(String key, int defaultValue) {
+    public int getPropertyInt(String key, int defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Integer) {
             return (int) value;
+        }
+        return defaultValue;
+    }
+    
+    public double getPropertyDouble(String key, double defaultValue) {
+        Object value = properties.get(key);
+        if (value != null && value instanceof Double) {
+            return (double) value;
         }
         return defaultValue;
     }

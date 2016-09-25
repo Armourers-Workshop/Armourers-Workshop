@@ -56,26 +56,29 @@ public final class SkinUtils {
     }
     
     public static double getFlapAngleForWings(Entity entity, Skin skin) {
-        double maxAngle = 35D;
         
-        double angle = 45D;
-        double flapTime = 6000D;
+        double maxAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 35D);
+        double minAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D);
+        double idleSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D);
+        double flyingSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D);
+        
+        double angle = maxAngle;
+        double flapTime = idleSpeed;
         
         if (entity != null) {
             if (entity.isAirBorne) {
                 if (entity instanceof EntityPlayer) {
                     if (((EntityPlayer)entity).capabilities.isFlying) {
-                        flapTime = 350;
+                        flapTime = flyingSpeed;
                     }
                 } else {
-                    flapTime = 350;
+                    flapTime = flyingSpeed;
                 }
             }
             angle = (((double)System.currentTimeMillis() + entity.getEntityId()) % flapTime);
-        } else {
-            //rotation = ((double)System.currentTimeMillis() / 10D % 100D);
+            angle = Math.sin(angle / flapTime * Math.PI * 2);
         }
-        angle = Math.sin(angle / flapTime * Math.PI * 2);
+        
         return angle * maxAngle - maxAngle;
     }
 }

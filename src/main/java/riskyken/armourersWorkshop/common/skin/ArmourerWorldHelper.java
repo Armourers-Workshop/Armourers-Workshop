@@ -56,7 +56,7 @@ public final class ArmourerWorldHelper {
      * @throws SkinSaveException 
      */
     public static Skin saveSkinFromWorld(World world, EntityPlayerMP player, ISkinType skinType,
-            String authorName, String customName, String tags, int[] paintData,
+            String customName, String tags, int[] paintData,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
@@ -69,10 +69,16 @@ public final class ArmourerWorldHelper {
         if (paintData != null) {
             paintData = paintData.clone();
         }
+        
         SkinProperties skinProps = new SkinProperties();
-        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
+        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getCommandSenderName());
+        if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
+            skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
+        }
         skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
-        skinProps.setProperty(Skin.KEY_TAGS, tags);
+        if (tags != null && !tags.equalsIgnoreCase("")) {
+            skinProps.setProperty(Skin.KEY_TAGS, tags);
+        }
         Skin skin = new Skin(skinProps, skinType, paintData, parts);
         
         //Check if there are any blocks in the build guides.
