@@ -337,6 +337,12 @@ public final class SkinModelRenderer {
                     }
                 }
             }
+            Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
+            ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
+            if (data != null) {
+                customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+            }
+            
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glPopMatrix();
