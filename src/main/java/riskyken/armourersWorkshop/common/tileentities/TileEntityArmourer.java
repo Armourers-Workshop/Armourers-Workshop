@@ -142,7 +142,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             skinProps.setProperty(Skin.KEY_WINGS_FLYING_SPEED, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D));
             skinProps.setProperty(Skin.KEY_WINGS_IDLE_SPEED, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D));
             skinProps.setProperty(Skin.KEY_WINGS_MIN_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D));
-            skinProps.setProperty(Skin.KEY_WINGS_MAX_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 35D));
+            skinProps.setProperty(Skin.KEY_WINGS_MAX_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D));
         }
         
         try {

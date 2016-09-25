@@ -219,6 +219,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
             skinProps = armourerBrain.getSkinProps();
             
             textItemName.setText(skinProps.getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
+            checkBlockGlowing.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
+            
             sliderWingMinAngle.setValue(skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D));
             sliderWingMinAngle.updateSlider();
             sliderWingMaxAngle.setValue(skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D));
