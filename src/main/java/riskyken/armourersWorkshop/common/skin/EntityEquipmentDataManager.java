@@ -5,8 +5,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,10 +42,10 @@ public final class EntityEquipmentDataManager {
     }
     
     public boolean isSwordRenderItem(Item item) {
-        UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
-        if (ui != null) {
+        String itemName = item.itemRegistry.getNameForObject(item);
+        if (itemName != null && !itemName.equals("")) {
             for (int i = 0; i < Addons.overrideSwordsActive.length; i++) {
-                if (Addons.overrideSwordsActive[i].equals(ui.toString())) {
+                if (Addons.overrideSwordsActive[i].equals(itemName)) {
                     return true;
                 }
             }
@@ -56,10 +54,10 @@ public final class EntityEquipmentDataManager {
     }
     
     public boolean isBowRenderItem(Item item) {
-        UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
-        if (ui != null) {
+        String itemName = item.itemRegistry.getNameForObject(item);
+        if (itemName != null && !itemName.equals("")) {
             for (int i = 0; i < Addons.overrideBowsActive.length; i++) {
-                if (Addons.overrideBowsActive[i].equals(ui.toString())) {
+                if (Addons.overrideBowsActive[i].equals(itemName)) {
                     return true;
                 }
             }
