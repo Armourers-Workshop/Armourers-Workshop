@@ -200,8 +200,20 @@ public class ItemSkin extends AbstractModItem {
             return false;
         }
         int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        world.setBlock(x, y, z, ModBlocks.skinnable, rotation, 2);
-        world.setTileEntity(x, y, z, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
+        
+        Block targetBlock = ModBlocks.skinnable;
+        Skin skin = SkinUtils.getSkinDetectSide(stack, false, true);
+        if (skin == null) {
+            return false;
+        }
+        
+        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false)) {
+            targetBlock = ModBlocks.skinnableGlowing;
+        }
+        
+        world.setBlock(x, y, z, targetBlock, rotation, 2);
+        world.setTileEntity(x, y, z, ((ITileEntityProvider)targetBlock).createNewTileEntity(world, 0));
+        
         TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x, y, z);
         te.setSkinPointer(skinPointer);
         stack.stackSize--;

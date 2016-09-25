@@ -4,7 +4,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
@@ -12,6 +11,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 
@@ -30,6 +30,7 @@ public class ModBlocks {
     public static Block doll;
     public static Block skinningTable;
     public static Block skinnable;
+    public static Block skinnableGlowing;
     public static Block dyeTable;
     
     public ModBlocks() {
@@ -46,6 +47,7 @@ public class ModBlocks {
         doll = new BlockDoll();
         skinningTable = new BlockSkinningTable();
         skinnable = new BlockSkinnable();
+        skinnableGlowing = new BlockSkinnableGlowing();
         dyeTable = new BlockDyeTable();
     }
 

@@ -32,6 +32,9 @@ public class Skin implements ISkin {
     public static final String KEY_CUSTOM_NAME = "customName";
     public static final String KEY_TAGS = "tags";
     
+    public static final String KEY_BLOCK_GLOWING = "blockGlowing";
+    public static final String KEY_BLOCK_LADDER = "blockLadder";
+    
     public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
     public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
     public static final String KEY_WINGS_IDLE_SPEED = "wingsIdleSpeed";
@@ -420,7 +423,7 @@ public class Skin implements ISkin {
 
     @Override
     public String toString() {
-        String returnString = "Skin [properties=" + properties.toString() + ", type=" + equipmentSkinType.getName().toUpperCase();
+        String returnString = "Skin [properties=" + properties + ", type=" + equipmentSkinType.getName().toUpperCase();
         if (this.paintData != null) {
             returnString += ", paintData=" + Arrays.hashCode(paintData);
         }

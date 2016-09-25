@@ -1,17 +1,28 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import org.apache.commons.io.IOUtils;
+
+import net.minecraft.nbt.NBTTagCompound;
 
 public class SkinProperties {
     
-    private final HashMap<String, Object> properties;
+    private static final String TAG_SKIN_PROPS = "skinProps";
+    private final LinkedHashMap<String, Object> properties;
     
     public SkinProperties() {
-        properties = new HashMap<String, Object>();
+        properties = new LinkedHashMap<String, Object>();
+    }
+    
+    public SkinProperties(SkinProperties skinProps) {
+        properties = (LinkedHashMap<String, Object>) skinProps.properties.clone();
     }
     
     public ArrayList<String> getPropertiesList() {
@@ -37,6 +48,14 @@ public class SkinProperties {
                 stream.writeByte(DataTypes.INT.ordinal());
                 stream.writeInt((Integer) value);
             }
+            if (value instanceof Double) {
+                stream.writeByte(DataTypes.DOUBLE.ordinal());
+                stream.writeDouble((Double) value);
+            }
+            if (value instanceof Boolean) {
+                stream.writeByte(DataTypes.BOOLEAN.ordinal());
+                stream.writeBoolean((Boolean) value);
+            }
         }
     }
     
@@ -52,6 +71,12 @@ public class SkinProperties {
                 break;
             case INT:
                 value = stream.readInt();
+                break;
+            case DOUBLE:
+                value = stream.readDouble();
+                break;
+            case BOOLEAN:
+                value = stream.readBoolean();
                 break;
             }
             properties.put(key, value);
@@ -85,14 +110,18 @@ public class SkinProperties {
         }
         return defaultValue;
     }
-
+    
+    public Boolean getPropertyBoolean(String key, Boolean defaultValue) {
+        Object value = properties.get(key);
+        if (value != null && value instanceof Boolean) {
+            return (Boolean) value;
+        }
+        return defaultValue;
+    }
+    
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((properties == null) ? 0 : properties.hashCode());
-        return result;
+        return toString().hashCode();
     }
 
     @Override
@@ -119,6 +148,42 @@ public class SkinProperties {
     
     private enum DataTypes {
         STRING,
-        INT
+        INT,
+        DOUBLE,
+        BOOLEAN
+    }
+
+    public void readFromNBT(NBTTagCompound compound) {
+        if (!compound.hasKey(TAG_SKIN_PROPS)) {
+            return;
+        }
+        byte[] data = compound.getByteArray(TAG_SKIN_PROPS);
+        
+        ByteArrayInputStream bais = new ByteArrayInputStream(data);
+        DataInputStream dataInputStream = new DataInputStream(bais);
+        try {
+            readFromStream(dataInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(dataInputStream);
+            IOUtils.closeQuietly(bais);
+        }
+    }
+
+    public void writeToNBT(NBTTagCompound compound) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(baos);
+        try {
+            writeToStream(dataOutputStream);
+            dataOutputStream.flush();
+            byte[] data = baos.toByteArray();
+            compound.setByteArray(TAG_SKIN_PROPS, data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(dataOutputStream);
+            IOUtils.closeQuietly(baos);
+        }
     }
 }

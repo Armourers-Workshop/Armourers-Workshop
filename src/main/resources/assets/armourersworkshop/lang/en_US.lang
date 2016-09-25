@@ -213,6 +213,7 @@ inventory.armourersworkshop:armourerBrain.set=Set
 inventory.armourersworkshop:armourerBrain.clear=Clear
 inventory.armourersworkshop:armourerBrain.westToEast=West to East
 inventory.armourersworkshop:armourerBrain.eastToWest=East to West
+inventory.armourersworkshop:armourerBrain.glowing=Glowing?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation

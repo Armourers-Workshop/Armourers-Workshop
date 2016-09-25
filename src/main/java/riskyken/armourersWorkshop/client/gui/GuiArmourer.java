@@ -23,12 +23,15 @@ import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerCustomName;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinProps;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
@@ -39,6 +42,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     private GuiCheckBox checkShowGuides;
     private GuiCheckBox checkShowOverlay;
     private GuiCheckBox checkShowHelper;
+    private GuiCheckBox checkBlockGlowing;
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
@@ -82,10 +86,11 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         checkShowGuides = new GuiCheckBox(7, guiLeft + 64, guiTop + 118, GuiHelper.getLocalizedControlName(guiName, "showGuide"), armourerBrain.isShowGuides());
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
         checkShowHelper = new GuiCheckBox(6, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showHelper"), armourerBrain.isShowHelper());
+        checkBlockGlowing = new GuiCheckBox(15, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "glowing"), armourerBrain.getSkinProps().getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
         
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
-        textItemName.setText(armourerBrain.getCustomName());
+        textItemName.setText(armourerBrain.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
         
         textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
         textUserSkin.setMaxStringLength(30);
@@ -100,6 +105,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         buttonList.add(checkShowGuides);
         buttonList.add(checkShowOverlay);
         buttonList.add(checkShowHelper);
+        buttonList.add(checkBlockGlowing);
         //buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
         //buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
@@ -119,15 +125,23 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
                 super.keyTyped(key, keyCode);
             }
         } else {
+            SkinProperties skinProps = armourerBrain.getSkinProps();
             String sendText = textItemName.getText().trim();
-            if (!sendText.equals(armourerBrain.getCustomName())) {
-                PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerCustomName(sendText));
+            String oldText = skinProps.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
+            if (!sendText.equals(oldText)) {
+                skinProps.setProperty(Skin.KEY_CUSTOM_NAME, sendText);
+                PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
             }
         }
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
+        SkinProperties skinProps = armourerBrain.getSkinProps();
+        if (button == checkBlockGlowing) {
+            skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, checkBlockGlowing.isChecked());
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
+        }
         switch (button.id) {
         case 13:
             PacketHandler.networkWrapper.sendToServer(new MessageClientLoadArmour(textItemName.getText().trim(), ""));
@@ -141,7 +155,11 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         default:
             if (button.id == 14) {
                 loadedArmourItem = true;
-                armourerBrain.setCustomName("");
+                armourerBrain.getSkinProps().setProperty(Skin.KEY_CUSTOM_NAME, "");
+            }
+            if (button.id == 10) {
+                ModLogger.log("button");
+                textItemName.setText("");
             }
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
             break;
@@ -170,8 +188,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         if (loadedArmourItem) {
-            if (!armourerBrain.getCustomName().equals("")) {
-                textItemName.setText(armourerBrain.getCustomName());
+            if (!armourerBrain.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, "").equals("")) {
+                textItemName.setText(armourerBrain.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
                 loadedArmourItem = false;
             }
         }
@@ -196,6 +214,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback {
         } else {
             checkShowHelper.visible = false;
         }
+        
+        checkBlockGlowing.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
         
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);

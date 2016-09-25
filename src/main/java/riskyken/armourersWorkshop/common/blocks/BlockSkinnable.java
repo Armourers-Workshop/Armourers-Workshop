@@ -32,7 +32,11 @@ import riskyken.armourersWorkshop.utils.UtilItems;
 public class BlockSkinnable extends AbstractModBlockContainer {
 
     public BlockSkinnable() {
-        super(LibBlockNames.SKINNABLE, Material.iron, soundTypeMetal, false);
+        this(LibBlockNames.SKINNABLE);
+    }
+    
+    public BlockSkinnable(String name) {
+        super(name, Material.iron, soundTypeMetal, false);
     }
     
     @Override
