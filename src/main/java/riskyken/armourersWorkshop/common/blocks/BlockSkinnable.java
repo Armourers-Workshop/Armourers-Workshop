@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -23,10 +24,12 @@ import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinUtils;
 import riskyken.armourersWorkshop.utils.UtilItems;
 
 public class BlockSkinnable extends AbstractModBlockContainer {
@@ -79,6 +82,23 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             return cubeIcon;
         }
         return blockIcon;
+    }
+    
+    @Override
+    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntitySkinnable) {
+            SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
+            if (skinPointer != null) {
+                Skin skin = SkinUtils.getSkinDetectSide(skinPointer, true, true);
+                if (skin != null) {
+                    return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false);
+                }
+            } else {
+                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
+            }
+        }
+        return false;
     }
     
     @Override
