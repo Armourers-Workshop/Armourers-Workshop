@@ -25,7 +25,7 @@ public class SkinProperties {
             }
             if (value instanceof Integer) {
                 stream.writeByte(DataTypes.INT.ordinal());
-                stream.writeInt((int) value);
+                stream.writeInt((Integer) value);
             }
         }
     }
@@ -63,7 +63,7 @@ public class SkinProperties {
     public int getPropertyInt(String key, int defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Integer) {
-            return (int) value;
+            return (Integer) value;
         }
         return defaultValue;
     }
@@ -71,7 +71,7 @@ public class SkinProperties {
     public double getPropertyDouble(String key, double defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Double) {
-            return (double) value;
+            return (Double) value;
         }
         return defaultValue;
     }
