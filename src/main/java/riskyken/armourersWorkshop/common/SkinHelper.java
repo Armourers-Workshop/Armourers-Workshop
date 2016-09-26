@@ -109,7 +109,7 @@ public final class SkinHelper {
     
     public static BufferedImage getBufferedImageSkinNew(GameProfile gameProfile) {
         BufferedImage bufferedImage = null;
-        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+        ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
         
         if (gameProfile != null) {
             rl = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
@@ -118,7 +118,7 @@ public final class SkinHelper {
         bufferedImage = getBuffFromResourceLocation(rl);
         
         if (bufferedImage == null) {
-            bufferedImage = getBuffFromResourceLocation(AbstractClientPlayer.locationStevePng);
+            bufferedImage = getBuffFromResourceLocation(DefaultPlayerSkin.getDefaultSkinLegacy());
         }
         return bufferedImage;
     }

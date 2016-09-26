@@ -6,7 +6,8 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
@@ -29,9 +30,13 @@ public class ModelSkinWings extends AbstractModelSkin  {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
-            this.heldItemRight = 0;
-            if (player.getHeldItem() != null) {
-                this.heldItemRight = 1;
+            this.rightArmPose = ArmPose.EMPTY;
+            this.leftArmPose = ArmPose.EMPTY;
+            if (player.getHeldItem(EnumHand.MAIN_HAND) != null) {
+                this.rightArmPose = ArmPose.ITEM;
+            }
+            if (player.getHeldItem(EnumHand.OFF_HAND) != null) {
+                this.leftArmPose = ArmPose.ITEM;
             }
         }
         
@@ -69,7 +74,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
-        ForgeDirection axis = ForgeDirection.DOWN;
+        EnumFacing axis = EnumFacing.DOWN;
         
         if (part.getMarkerCount() > 0) {
             point = part.getMarker(0);
@@ -101,8 +106,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
         case WEST:
             GL11.glRotated(angle, 0, 0, 1);
             break;
-        case UNKNOWN:
-            break;
         }
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
@@ -125,7 +128,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
     private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
-        ForgeDirection axis = ForgeDirection.DOWN;
+        EnumFacing axis = EnumFacing.DOWN;
         
         if (part.getMarkerCount() > 0) {
             point = part.getMarker(0);
@@ -155,8 +158,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
             break;
         case WEST:
             GL11.glRotated(-angle, 1, 0, 0);
-            break;
-        case UNKNOWN:
             break;
         }
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());

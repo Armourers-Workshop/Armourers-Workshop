@@ -9,27 +9,20 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-<<<<<<< .merge_file_a02648
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-=======
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
->>>>>>> .merge_file_a04988
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-<<<<<<< .merge_file_a02648
 import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
-=======
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.data.PlayerPointer;
->>>>>>> .merge_file_a04988
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -132,7 +125,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                         GL11.glTranslated(0, 0, scale * 2);
                         double angle = SkinUtils.getFlapAngleForWings(player, data);
                         Point3D point = new Point3D(0, 0, 0);
-                        ForgeDirection axis = ForgeDirection.DOWN;
+                        EnumFacing axis = EnumFacing.DOWN;
                         
                         if (partData.getMarkerCount() > 0) {
                             point = partData.getMarker(0);
@@ -161,8 +154,6 @@ public class ModelRendererAttachment extends ModelRenderer {
                             case WEST:
                                 GL11.glRotated(angle, 0, 0, 1);
                                 break;
-                            case UNKNOWN:
-                                break;
                             }
                         } else {
                             switch (axis) {
@@ -183,8 +174,6 @@ public class ModelRendererAttachment extends ModelRenderer {
                                 break;
                             case WEST:
                                 GL11.glRotated(angle, 1, 0, 0);
-                                break;
-                            case UNKNOWN:
                                 break;
                             }
                         }

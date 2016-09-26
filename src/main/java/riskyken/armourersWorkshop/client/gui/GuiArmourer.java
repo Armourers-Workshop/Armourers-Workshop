@@ -5,14 +5,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-<<<<<<< .merge_file_a03836
-=======
-import cpw.mods.fml.client.config.GuiButtonExt;
-import cpw.mods.fml.client.config.GuiSlider;
-import cpw.mods.fml.client.config.GuiSlider.ISlider;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
->>>>>>> .merge_file_a06080
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -21,6 +13,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -104,9 +98,9 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
         checkShowHelper = new GuiCheckBox(6, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showHelper"), armourerBrain.isShowHelper());
         
-<<<<<<< .merge_file_a03836
+        
         textItemName = new GuiTextField(0, fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
-=======
+
         checkBlockGlowing = new GuiCheckBox(15, guiLeft + 177, guiTop + 45, GuiHelper.getLocalizedControlName(guiName, "glowing"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
         checkBlockLadder = new GuiCheckBox(15, guiLeft + 177, guiTop + 60, GuiHelper.getLocalizedControlName(guiName, "ladder"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
         
@@ -115,8 +109,6 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         sliderWingMinAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 85, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
         sliderWingMaxAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 105, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
         
-        textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
->>>>>>> .merge_file_a06080
         textItemName.setMaxStringLength(40);
         textItemName.setText(armourerBrain.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
         
@@ -213,10 +205,10 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         this.fontRendererObj.drawString(usernameLabel, 64, 78, 4210752);
         
         if (armourerBrain.getSkinType() == SkinTypeRegistry.skinWings) {
-            String idleSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.idleSpeed");
-            String flyingSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.flyingSpeed");
-            String minAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.minAngle");
-            String maxAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.maxAngle");
+            String idleSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.idleSpeed");
+            String flyingSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.flyingSpeed");
+            String minAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.minAngle");
+            String maxAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.maxAngle");
             
             this.fontRendererObj.drawString(idleSpeedLabel, 177, 36, 4210752);
             this.fontRendererObj.drawString(flyingSpeedLabel, 177, 56, 4210752);

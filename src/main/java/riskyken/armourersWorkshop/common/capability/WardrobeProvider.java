@@ -44,7 +44,8 @@ public class WardrobeProvider implements ICapabilitySerializable, IWardrobeCapab
             SkinTypeRegistry.skinFeet,
             SkinTypeRegistry.skinSword,
             SkinTypeRegistry.skinBow,
-            SkinTypeRegistry.skinArrow
+            SkinTypeRegistry.skinArrow,
+            SkinTypeRegistry.skinWings
             };
     
     private final WardrobeInventoryContainer wardrobeInventoryContainer;

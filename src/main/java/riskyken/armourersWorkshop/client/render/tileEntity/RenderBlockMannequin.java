@@ -122,13 +122,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     fakePlayer.prevPosZ = z;
                     te.setFakePlayer(fakePlayer);
                 } else {
-                    fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+                    fakePlayer.setEntityId(te.getPos().getX() * 31 * -te.getPos().getZ());
                     fakePlayer.isAirBorne = te.isFlying();
                     fakePlayer.capabilities.isFlying = te.isFlying();
                 }
             }
         } else {
-            mannequinFakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+            mannequinFakePlayer.setEntityId(te.getPos().getX() * 31 * -te.getPos().getZ());
             mannequinFakePlayer.isAirBorne = te.isFlying();
             mannequinFakePlayer.capabilities.isFlying = te.isFlying();
         }
@@ -261,7 +261,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         //Render items.
         mc.mcProfiler.endStartSection("equippedItems");
-<<<<<<< .merge_file_a04564
+        
         /*
         if (te.getDistanceFrom(field_147501_a.field_147560_j, field_147501_a.field_147561_k, field_147501_a.field_147558_l) < ConfigHandler.mannequinMaxEquipmentRenderDistance) {
             renderEquippedItems(te, fakePlayer, model);
@@ -377,7 +377,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         int b = Math.round(buffer.get() * 255);
         return new Color(r,g,b);
     }
-<<<<<<< .merge_file_a04564
+    
     /*
     private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
 =======
@@ -431,7 +431,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         return false;
     }
-<<<<<<< .merge_file_a04564
+    
     /*
     private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours) {
 =======

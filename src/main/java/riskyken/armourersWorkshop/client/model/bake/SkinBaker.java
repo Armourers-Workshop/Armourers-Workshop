@@ -4,14 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import net.minecraft.client.Minecraft;
-<<<<<<< .merge_file_a02412
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.EnumFacing;
-=======
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.common.util.ForgeDirection;
->>>>>>> .merge_file_a05504
+import net.minecraft.util.EnumFacing;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;

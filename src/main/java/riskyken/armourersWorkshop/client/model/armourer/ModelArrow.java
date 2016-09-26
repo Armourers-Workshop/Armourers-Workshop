@@ -34,13 +34,9 @@ public class ModelArrow {
     }
     
     public void render(float scale, boolean ghost) {
-<<<<<<< .merge_file_a02672
-        //buildDisplayList();
-=======
         if (displayList == -1) {
-            buildDisplayList();
+            //buildDisplayList();
         }
->>>>>>> .merge_file_a05700
         GL11.glPushMatrix();
         GL11.glRotatef(90F, 0F, 1F, 0F);
         GL11.glTranslatef(-3 * scale, -0.5F * scale, -0.5F * scale);
@@ -48,13 +44,6 @@ public class ModelArrow {
         if (ghost) {
             GL11.glColor4f(1F, 1F, 1F, 0.25F);
         }
-<<<<<<< .merge_file_a02672
-        if (displayList == -1) {
-            //buildDisplayList();
-        }
-        
-=======
->>>>>>> .merge_file_a05700
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         UtilRender.bindTexture(arrowTextures);
         GL11.glCallList(this.displayList);

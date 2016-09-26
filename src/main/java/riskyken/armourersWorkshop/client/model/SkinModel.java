@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.client.model;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 

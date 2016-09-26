@@ -8,13 +8,7 @@ import java.util.WeakHashMap;
 
 import org.lwjgl.opengl.GL11;
 
-<<<<<<< .merge_file_a05792
-=======
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
->>>>>>> .merge_file_a05188
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -45,11 +39,8 @@ import riskyken.armourersWorkshop.client.model.skin.ModelSkinSkirt;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSword;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinWings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-<<<<<<< .merge_file_a05792
 import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
-=======
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
->>>>>>> .merge_file_a05188
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -332,71 +323,43 @@ public final class SkinModelRenderer {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                     if (data != null) {
-<<<<<<< .merge_file_a05792
-                        customHead.render(player, render.getMainModel(), data, false, dye, extraColours, false);
-=======
-                        customHead.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
->>>>>>> .merge_file_a05188
+                        customHead.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinChest.getEntityEquipmentSlot().getIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                     if (data != null) {
-<<<<<<< .merge_file_a05792
-                        customChest.render(player, render.getMainModel(), data, false, dye, extraColours, false);
-=======
-                        customChest.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
->>>>>>> .merge_file_a05188
+                        customChest.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinLegs.getEntityEquipmentSlot().getIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
                     if (data != null) {
-<<<<<<< .merge_file_a05792
-                        customLegs.render(player, render.getMainModel(), data, false, dye, extraColours, false);
-=======
-                        customLegs.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
->>>>>>> .merge_file_a05188
+                        customLegs.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinSkirt.getEntityEquipmentSlot().getIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     if (data != null) {
-<<<<<<< .merge_file_a05792
-                        customSkirt.render(player, render.getMainModel(), data, false, dye, extraColours, false);
-=======
-                        customSkirt.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
->>>>>>> .merge_file_a05188
+                        customSkirt.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinFeet.getEntityEquipmentSlot().getIndex()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
                     if (data != null) {
-<<<<<<< .merge_file_a05792
-                        customFeet.render(player, render.getMainModel(), data, false, dye, extraColours, false);
-                    }
-                }
-            }
-
-=======
-                        customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+                        customFeet.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
                     }
                 }
             }
             Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
             ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
             if (data != null) {
-                customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+                customWings.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
             }
-            
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            GL11.glPopMatrix();
->>>>>>> .merge_file_a05188
         }
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);

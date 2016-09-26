@@ -2,17 +2,15 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -22,6 +20,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.UtilItems;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -102,7 +101,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.renderExtras = renderExtras;
         
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
 
     public float getOffsetX() {
@@ -193,17 +192,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     @Override
-    public boolean canUpdate() {
-        return false;
-    }
-    
-    @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
         if (worldObj.isRemote) {
             setSkinsUpdated(true);
         }
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     public void setOwner(ItemStack stack) {
@@ -241,7 +235,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setSkinColour(int skinColour) {
         this.skinColour = skinColour;
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     public int getHairColour() {
@@ -251,7 +245,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setHairColour(int hairColour) {
         this.hairColour = hairColour;
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     @Override
@@ -263,18 +257,13 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             }
             if (gameProfile != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.func_152460_a(profileTag, gameProfile);
+                NBTUtil.writeGameProfile(profileTag, gameProfile);
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
                 //stack.setStackDisplayName(gameProfile.getName());
             }
-            float f = 0.7F;
-            double xV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double yV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
-            worldObj.spawnEntityInWorld(entityitem);
-            UtilBlocks.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
+            UtilItems.spawnItemInWorld(getWorld(), getPos(), stack);
+            UtilBlocks.dropInventoryBlocks(getWorld(), this, getPos());
         }
         super.invalidate();
     }
@@ -286,7 +275,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             updateProfileData();
         }
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     public int getHeightOffset() {
@@ -303,7 +292,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setRotation(int rotation) {
         this.rotation = rotation;
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     public int getRotation() {
@@ -322,7 +311,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.bipedRotations = bipedRotations;
         updateHeightOffset();
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
         
     public MannequinFakePlayer getFakePlayer() {
@@ -359,7 +348,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             this.flying = compound.getBoolean(TAG_FLYING);
         }
         if (compound.hasKey(TAG_OWNER, 10)) {
-            this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+            this.gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
         }
     }
     
@@ -382,7 +371,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         }
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
-            NBTUtil.func_152460_a(profileTag, this.gameProfile);
+            NBTUtil.writeGameProfile(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
     }
@@ -394,9 +383,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeCommonToNBT(compound);
+        return compound;
     }
     
     @Override
@@ -407,30 +397,30 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
 
     @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        NBTTagCompound compound = packet.func_148857_g();
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.getNbtCompound();
         gameProfile = null;
         readFromNBT(compound);
         skinsUpdated = true;
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = INFINITE_EXTENT_AABB;
-        bb = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
+        //bb = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
         return bb;
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.MANNEQUIN;
     }
 

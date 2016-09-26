@@ -44,15 +44,11 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRender(RenderPlayerEvent.Pre event) {
-<<<<<<< .merge_file_a05332
-        if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {
-=======
         disableTexturePainting = ConfigHandler.disableTexturePainting;
         if(disableTexturePainting) {
             return;
         }
-        if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
->>>>>>> .merge_file_a05200
+        if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {
             return;
         }
         AbstractClientPlayer player = (AbstractClientPlayer) event.getEntityPlayer();
@@ -100,15 +96,10 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.Post event) {
-<<<<<<< .merge_file_a05332
-        
-        if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {
-=======
         if(disableTexturePainting) {
             return;
         }
-        if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
->>>>>>> .merge_file_a05200
+        if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {
             return;
         }
         AbstractClientPlayer player = (AbstractClientPlayer) event.getEntityPlayer();

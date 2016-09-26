@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -159,13 +160,9 @@ public class ItemSkin extends AbstractModItem {
         }
         */
         int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-<<<<<<< .merge_file_a02200
-        world.setBlockState(pos, ModBlocks.skinnable.getDefaultState());
-        world.setTileEntity(pos, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
-        TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(pos);
-=======
         
         Block targetBlock = ModBlocks.skinnable;
+        
         Skin skin = SkinUtils.getSkinDetectSide(stack, false, true);
         if (skin == null) {
             return false;
@@ -175,11 +172,10 @@ public class ItemSkin extends AbstractModItem {
             targetBlock = ModBlocks.skinnableGlowing;
         }
         
-        world.setBlock(x, y, z, targetBlock, rotation, 2);
-        world.setTileEntity(x, y, z, ((ITileEntityProvider)targetBlock).createNewTileEntity(world, 0));
+        world.setBlockState(pos, ModBlocks.skinnable.getDefaultState());
+        world.setTileEntity(pos, ((ITileEntityProvider)targetBlock).createNewTileEntity(world, 0));
+        TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(pos);
         
-        TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x, y, z);
->>>>>>> .merge_file_a02652
         te.setSkinPointer(skinPointer);
         stack.stackSize--;
         //world.playSoundEffect((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, "dig.stone", 1, 1);
