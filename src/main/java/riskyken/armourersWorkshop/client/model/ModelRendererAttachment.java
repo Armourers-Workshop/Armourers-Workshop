@@ -20,7 +20,6 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -183,7 +182,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance);
+                    //SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance);
                     GL11.glDisable(GL11.GL_CULL_FACE);
                     GL11.glPopMatrix();
                     break;

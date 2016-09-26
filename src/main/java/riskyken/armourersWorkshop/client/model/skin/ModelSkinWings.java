@@ -82,7 +82,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
@@ -134,12 +134,15 @@ public class ModelSkinWings extends AbstractModelSkin  {
             point = part.getMarker(0);
             axis = part.getMarkerSide(0);
         }
+        
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
+
+        
         switch (axis) {
         case UP:
             GL11.glRotated(angle, 0, 1, 0);

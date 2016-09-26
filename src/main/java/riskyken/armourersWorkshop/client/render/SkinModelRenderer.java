@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.Profile;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -306,15 +308,12 @@ public final class SkinModelRenderer {
                     (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
         }
         
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glEnable(GL11.GL_BLEND);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableCull();
+        GlStateManager.enableBlendProfile(Profile.TRANSPARENT_MODEL);
         GL11.glTranslated(0, 22 * 0.0625F, 0);
         GL11.glScalef(1F, -1F, -1F);
         GL11.glRotatef((player.renderYawOffset - player.prevRenderYawOffset) * event.getPartialRenderTick() + player.renderYawOffset, 0, 1, 0);
-        
-        
         
         for (int slot = 0; slot < 4; slot++) {
 
@@ -355,15 +354,17 @@ public final class SkinModelRenderer {
                     }
                 }
             }
-            Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
-            ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
-            if (data != null) {
-                customWings.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
-            }
+
         }
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glPopMatrix();
+        
+        Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
+        ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
+        if (data != null) {
+            //customWings.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance);
+        }
+        GlStateManager.disableBlend();
+        GlStateManager.disableCull();
+        GlStateManager.popMatrix();
     }
     
     public AbstractModelSkin getModelForEquipmentType(ISkinType skinType) {

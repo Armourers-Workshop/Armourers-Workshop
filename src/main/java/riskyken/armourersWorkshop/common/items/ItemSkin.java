@@ -172,7 +172,7 @@ public class ItemSkin extends AbstractModItem {
             targetBlock = ModBlocks.skinnableGlowing;
         }
         
-        world.setBlockState(pos, ModBlocks.skinnable.getDefaultState());
+        world.setBlockState(pos, targetBlock.getDefaultState());
         world.setTileEntity(pos, ((ITileEntityProvider)targetBlock).createNewTileEntity(world, 0));
         TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(pos);
         

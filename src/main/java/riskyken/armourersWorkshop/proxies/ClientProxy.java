@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,6 +31,7 @@ import riskyken.armourersWorkshop.client.library.ClientLibraryManager;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.entity.layers.LayerSkin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockColourable;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMannequin;
@@ -113,6 +115,12 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
         */
+        
+        String[] skinTypes = {"default", "slim"};
+        for (int i = 0; i < skinTypes.length; i++) {
+            RenderPlayer playerRenderer = Minecraft.getMinecraft().getRenderManager().getSkinMap().get(skinTypes[i]);
+            playerRenderer.addLayer(new LayerSkin(playerRenderer));
+        }
         
         registerRender(ModItems.equipmentSkinTemplate);
         registerRender(ModItems.equipmentSkin);
