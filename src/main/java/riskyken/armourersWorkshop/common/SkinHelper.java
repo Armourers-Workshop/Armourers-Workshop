@@ -107,6 +107,42 @@ public final class SkinHelper {
         return bufferedImage;
     }
     
+    public static BufferedImage getBufferedImageSkinNew(GameProfile gameProfile) {
+        BufferedImage bufferedImage = null;
+        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+        
+        if (gameProfile != null) {
+            rl = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
+            AbstractClientPlayer.getDownloadImageSkin(rl, gameProfile.getName());
+        }
+        bufferedImage = getBuffFromResourceLocation(rl);
+        
+        if (bufferedImage == null) {
+            bufferedImage = getBuffFromResourceLocation(AbstractClientPlayer.locationStevePng);
+        }
+        return bufferedImage;
+    }
+    
+    private static BufferedImage getBuffFromResourceLocation(ResourceLocation rl) {
+        BufferedImage bi = null;
+        InputStream inputStream = null;
+        try {
+            ITextureObject skintex = Minecraft.getMinecraft().getTextureManager().getTexture(rl);
+            if (skintex instanceof ThreadDownloadImageData) {
+                ThreadDownloadImageData imageData = (ThreadDownloadImageData)skintex;
+                bi  = ObfuscationReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage", "field_110560_d", "bpr.h");
+            } else {
+                inputStream = Minecraft.getMinecraft().getResourceManager().getResource(rl).getInputStream();
+                bi = ImageIO.read(inputStream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        return bi;
+    }
+    
     public static void bindPlayersNormalSkin(GameProfile gameProfile) {
         ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
         if (gameProfile != null) {

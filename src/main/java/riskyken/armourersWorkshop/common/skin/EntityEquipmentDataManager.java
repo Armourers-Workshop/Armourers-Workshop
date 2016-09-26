@@ -49,8 +49,12 @@ public final class EntityEquipmentDataManager {
         /*
         UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
         if (ui != null) {
+=======
+        String itemName = item.itemRegistry.getNameForObject(item);
+        if (itemName != null && !itemName.equals("")) {
+>>>>>>> .merge_file_a05612
             for (int i = 0; i < Addons.overrideSwordsActive.length; i++) {
-                if (Addons.overrideSwordsActive[i].equals(ui.toString())) {
+                if (Addons.overrideSwordsActive[i].equals(itemName)) {
                     return true;
                 }
             }
@@ -63,8 +67,12 @@ public final class EntityEquipmentDataManager {
         /*
         UniqueIdentifier ui = GameRegistry.findUniqueIdentifierFor(item);
         if (ui != null) {
+=======
+        String itemName = item.itemRegistry.getNameForObject(item);
+        if (itemName != null && !itemName.equals("")) {
+>>>>>>> .merge_file_a05612
             for (int i = 0; i < Addons.overrideBowsActive.length; i++) {
-                if (Addons.overrideBowsActive[i].equals(ui.toString())) {
+                if (Addons.overrideBowsActive[i].equals(itemName)) {
                     return true;
                 }
             }

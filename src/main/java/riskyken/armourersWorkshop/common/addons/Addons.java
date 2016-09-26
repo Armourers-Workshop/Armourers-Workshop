@@ -226,13 +226,14 @@ public final class Addons {
         for (int i = 0; i < overrideSwordsActive.length; i++) {
             String arrayItem = overrideSwordsActive[i];
             if (arrayItem.contains(":")) {
-                String[] splitItem = arrayItem.split(":");
-                if (Loader.isModLoaded(splitItem[0]) | splitItem[0].equalsIgnoreCase("minecraft")) {
-                    overrideItemRenderer(splitItem[0], splitItem[1], RenderType.SWORD);
+                String modId = arrayItem.substring(0, arrayItem.indexOf(":"));
+                String itemId = arrayItem.substring(arrayItem.indexOf(":") + 1);
+                if (Loader.isModLoaded(modId) | modId.equalsIgnoreCase("minecraft")) {
+                    overrideItemRenderer(modId, itemId, RenderType.SWORD);
                 }
             } else {
                 if (!arrayItem.isEmpty()) {
-                    ModLogger.log(Level.ERROR, "Invalid sword override in config file: " + arrayItem);
+                    ModLogger.log(Level.ERROR, String.format("Invalid sword override in config file: %s", arrayItem));
                 }
             }
         }
@@ -242,13 +243,14 @@ public final class Addons {
         for (int i = 0; i < overrideBowsActive.length; i++) {
             String arrayItem = overrideBowsActive[i];
             if (arrayItem.contains(":")) {
-                String[] splitItem = arrayItem.split(":");
-                if (Loader.isModLoaded(splitItem[0]) | splitItem[0].equalsIgnoreCase("minecraft")) {
-                    overrideItemRenderer(splitItem[0], splitItem[1], RenderType.BOW);
+                String modId = arrayItem.substring(0, arrayItem.indexOf(":"));
+                String itemId = arrayItem.substring(arrayItem.indexOf(":") + 1);
+                if (Loader.isModLoaded(modId) | modId.equalsIgnoreCase("minecraft")) {
+                    overrideItemRenderer(modId, itemId, RenderType.BOW);
                 }
             } else {
                 if (!arrayItem.isEmpty()) {
-                    ModLogger.log(Level.ERROR, "Invalid bow override in config file: " + arrayItem);
+                    ModLogger.log(Level.ERROR, String.format("Invalid bow override in config file: %s", arrayItem));
                 }
             }
         }

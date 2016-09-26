@@ -35,6 +35,8 @@ public class ConfigHandler {
     public static int mannequinMaxEquipmentRenderDistance = 1024;
     public static int blockSkinMaxRenderDistance = 2500;
     public static double lodDistance = 32F;
+    public static int skinLoadAnimationTime = 500;
+    public static int maxLodLevels = 4;
     
     //server
     public static int serverModelCacheTime = 12000;
@@ -60,6 +62,7 @@ public class ConfigHandler {
     public static boolean showSkinTooltipDebugInfo;
     public static boolean showArmourerDebugRender;
     public static boolean wireframeRender;
+    public static boolean disableTexturePainting;
     
     
     //Register
@@ -214,6 +217,11 @@ public class ConfigHandler {
                 .get(CATEGORY_DEBUG, "wireframeRender", false,
                 "Render models in a wireframe.")
                 .getBoolean(false);
+        
+        disableTexturePainting = config.getBoolean("disableTexturePainting", CATEGORY_DEBUG, false,
+                "Disables replacing the players texture with a painted version.\n"
+                + "Disabling this may fix issues with the players texture rendering\n"
+                + "incorrectly or showing the steve skin.");
     }
     
     private static void loadCategoryCompatibility() {
@@ -271,6 +279,13 @@ public class ConfigHandler {
         
         lodDistance = config.getFloat("lodDistance", CATEGORY_CLIENT, 32F, 8, 128,
                 "Distance away that skins will have lod applied to them.");
+        
+        skinLoadAnimationTime = config.getInt("skinLoadAnimationTime", CATEGORY_CLIENT, 500, 0, 10000,
+                "How long skins will display their loading animation for in milliseconds\n"
+                + "Settings this to 0 will disable loading animations.");
+        
+        maxLodLevels = config.getInt("maxLodLevels", CATEGORY_CLIENT, 4, 0, 4,
+                "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.");
     }
     
     private static void loadCategoryServer() {

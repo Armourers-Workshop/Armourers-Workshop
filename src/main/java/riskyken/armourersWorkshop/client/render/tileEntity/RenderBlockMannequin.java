@@ -120,11 +120,19 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     fakePlayer.prevPosX = x;
                     fakePlayer.prevPosY = y;
                     fakePlayer.prevPosZ = z;
-                    
                     te.setFakePlayer(fakePlayer);
+                } else {
+                    fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+                    fakePlayer.isAirBorne = te.isFlying();
+                    fakePlayer.capabilities.isFlying = te.isFlying();
                 }
             }
+        } else {
+            mannequinFakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+            mannequinFakePlayer.isAirBorne = te.isFlying();
+            mannequinFakePlayer.capabilities.isFlying = te.isFlying();
         }
+        
         
         if (te.getBipedRotations() != null) {
             te.getBipedRotations().applyRotationsToBiped(model);
@@ -253,9 +261,18 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         //Render items.
         mc.mcProfiler.endStartSection("equippedItems");
+<<<<<<< .merge_file_a04564
         /*
         if (te.getDistanceFrom(field_147501_a.field_147560_j, field_147501_a.field_147561_k, field_147501_a.field_147558_l) < ConfigHandler.mannequinMaxEquipmentRenderDistance) {
             renderEquippedItems(te, fakePlayer, model);
+=======
+        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+                te.xCoord + 0.5F,
+                te.yCoord + 0.5F,
+                te.zCoord + 0.5F);
+        if (distance <= ConfigHandler.mannequinMaxEquipmentRenderDistance) {
+            renderEquippedItems(te, fakePlayer, model, distance);
+>>>>>>> .merge_file_a04928
         }
         */
         
@@ -360,8 +377,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         int b = Math.round(buffer.get() * 255);
         return new Color(r,g,b);
     }
+<<<<<<< .merge_file_a04564
     /*
     private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
+=======
+    
+    private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped, double distance) {
+>>>>>>> .merge_file_a04928
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         MannequinFakePlayer renderEntity = fakePlayer;
         if (renderEntity == null) {
@@ -383,10 +405,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             ItemStack stack = te.getStackInSlot(i);
             if (renderEntity != null) {
                 if (i == 0 & isHalloweenSeason) {
-                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i, extraColours);
+                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i, extraColours, distance);
                 } else {
                     if (stack != null) {
-                        renderEquippedItem(renderEntity, stack, targetBiped, i, extraColours);
+                        renderEquippedItem(renderEntity, stack, targetBiped, i, extraColours, distance);
                     }
                 }
             }
@@ -409,8 +431,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         return false;
     }
+<<<<<<< .merge_file_a04564
     /*
     private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours) {
+=======
+    
+    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours, double distance) {
+>>>>>>> .merge_file_a04928
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         
@@ -427,25 +454,25 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         targetBiped.isChild = false;
         switch (slot) {
         case 0:
-            renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         case 1:
-            renderItems.renderChestStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderChestStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         case 2:
-            renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         case 3:
-            renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         case 4:
-            renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         case 5:
-            renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         case 6:
-            //renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         }
         

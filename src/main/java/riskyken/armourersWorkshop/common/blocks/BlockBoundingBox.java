@@ -175,14 +175,13 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                         if (te.getWorld().isRemote) {
                             GameProfile gameProfile = parent.getGameProfile();
                             if (gameProfile != null) {
-                                BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
+                                BufferedImage playerSkin = SkinHelper.getBufferedImageSkinNew(gameProfile);
                                 if (playerSkin != null) {
                                     colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
                                     return colour;
                                 }
                             }
                         }
-
                     }
                 }
             }

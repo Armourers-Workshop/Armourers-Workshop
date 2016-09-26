@@ -2,15 +2,17 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -20,7 +22,6 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
-import riskyken.armourersWorkshop.utils.UtilItems;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -34,6 +35,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private static final String TAG_OFFSET_Y = "offsetY";
     private static final String TAG_OFFSET_Z = "offsetZ";
     private static final String TAG_RENDER_EXTRAS = "renderExtras";
+    private static final String TAG_FLYING = "flying";
     private static final int INVENTORY_SIZE = 7;
     
     private GameProfile gameProfile = null;
@@ -50,6 +52,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private float offsetZ = 0F;
     
     private boolean renderExtras = true;
+    
+    private boolean flying = false;
     
     /** Is this mannequin a one block tall doll model? */
     private boolean isDoll;
@@ -81,12 +85,13 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     public void gotUpdateFromClient(float offsetX, float offsetY, float offsetZ,
-            int skinColour, int hairColour, String username, boolean renderExtras) {
+            int skinColour, int hairColour, String username, boolean renderExtras, boolean flying) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;
         this.skinColour = skinColour;
         this.hairColour = hairColour;
+        this.flying = flying;
         if (gameProfile == null) {
             setGameProfile(username);
         } else {
@@ -97,7 +102,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.renderExtras = renderExtras;
         
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     public float getOffsetX() {
@@ -114,6 +119,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
 
     public boolean isRenderExtras() {
         return renderExtras;
+    }
+    
+    public boolean isFlying() {
+        return flying;
     }
 
     public TileEntityMannequin(boolean isDoll) {
@@ -184,12 +193,17 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     @Override
+    public boolean canUpdate() {
+        return false;
+    }
+    
+    @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
         if (worldObj.isRemote) {
             setSkinsUpdated(true);
         }
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public void setOwner(ItemStack stack) {
@@ -227,7 +241,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setSkinColour(int skinColour) {
         this.skinColour = skinColour;
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public int getHairColour() {
@@ -237,7 +251,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setHairColour(int hairColour) {
         this.hairColour = hairColour;
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
@@ -249,13 +263,18 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             }
             if (gameProfile != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, gameProfile);
+                NBTUtil.func_152460_a(profileTag, gameProfile);
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
                 //stack.setStackDisplayName(gameProfile.getName());
             }
-            UtilItems.spawnItemInWorld(getWorld(), getPos(), stack);
-            UtilBlocks.dropInventoryBlocks(worldObj, this, getPos());
+            float f = 0.7F;
+            double xV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double yV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
+            worldObj.spawnEntityInWorld(entityitem);
+            UtilBlocks.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
         }
         super.invalidate();
     }
@@ -267,7 +286,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             updateProfileData();
         }
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public int getHeightOffset() {
@@ -284,7 +303,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setRotation(int rotation) {
         this.rotation = rotation;
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public int getRotation() {
@@ -303,7 +322,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.bipedRotations = bipedRotations;
         updateHeightOffset();
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
         
     public MannequinFakePlayer getFakePlayer() {
@@ -336,8 +355,11 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (compound.hasKey(TAG_RENDER_EXTRAS)) {
             this.renderExtras = compound.getBoolean(TAG_RENDER_EXTRAS);
         }
+        if (compound.hasKey(TAG_FLYING)) {
+            this.flying = compound.getBoolean(TAG_FLYING);
+        }
         if (compound.hasKey(TAG_OWNER, 10)) {
-            this.gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
+            this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
     }
     
@@ -353,13 +375,14 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         compound.setFloat(TAG_OFFSET_Y, this.offsetY);
         compound.setFloat(TAG_OFFSET_Z, this.offsetZ);
         compound.setBoolean(TAG_RENDER_EXTRAS, this.renderExtras);
+        compound.setBoolean(TAG_FLYING, this.flying);
         if (this.newProfile != null) {
             this.gameProfile = newProfile;
             this.newProfile = null;
         }
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
-            NBTUtil.writeGameProfile(profileTag, this.gameProfile);
+            NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
     }
@@ -371,10 +394,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeCommonToNBT(compound);
-        return compound;
     }
     
     @Override
@@ -385,30 +407,30 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        NBTTagCompound compound = packet.getNbtCompound();
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.func_148857_g();
         gameProfile = null;
         readFromNBT(compound);
         skinsUpdated = true;
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = INFINITE_EXTENT_AABB;
-        
-        //bb = new AxisAlignedBB(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
+        bb = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
         return bb;
     }
 
     @Override
-    public String getName() {
+    public String getInventoryName() {
         return LibBlockNames.MANNEQUIN;
     }
 

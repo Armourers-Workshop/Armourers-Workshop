@@ -1,8 +1,10 @@
 package riskyken.armourersWorkshop.utils;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
@@ -51,5 +53,33 @@ public final class SkinUtils {
     @SideOnly(Side.CLIENT)
     private static Skin getSkinOnClient(SkinPointer skinPointer, boolean requestSkin) {
         return ClientSkinCache.INSTANCE.getSkin(skinPointer, requestSkin);
+    }
+    
+    public static double getFlapAngleForWings(Entity entity, Skin skin) {
+        
+        double maxAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D);
+        double minAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D);
+        double idleSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D);
+        double flyingSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D);
+        
+        double angle = maxAngle;
+        double flapTime = idleSpeed;
+        
+        if (entity != null) {
+            if (entity.isAirBorne) {
+                if (entity instanceof EntityPlayer) {
+                    if (((EntityPlayer)entity).capabilities.isFlying) {
+                        flapTime = flyingSpeed;
+                    }
+                } else {
+                    flapTime = flyingSpeed;
+                }
+            }
+            angle = (((double)System.currentTimeMillis() + entity.getEntityId()) % flapTime);
+            angle = Math.sin(angle / flapTime * Math.PI * 2);
+        }
+        
+        double fullAngle = maxAngle - minAngle;
+        return -minAngle - fullAngle * ((angle + 1D) / 2);
     }
 }

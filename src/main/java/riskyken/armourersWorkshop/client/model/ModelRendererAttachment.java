@@ -9,23 +9,33 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+<<<<<<< .merge_file_a02648
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+=======
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.Point3D;
+>>>>>>> .merge_file_a04988
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
+<<<<<<< .merge_file_a02648
 import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
+=======
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
+>>>>>>> .merge_file_a04988
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.utils.SkinUtils;
 
 /**
  * A ModelRenderer that is attached to each ModelRenderer on the
@@ -69,8 +79,12 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.mcProfiler.endSection();
             return;
         }
-        if (!SkinBaker.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
-            mc.mcProfiler.endSection();
+        
+        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+                player.posX,
+                player.posY,
+                player.posZ);
+        if (distance > ConfigHandler.maxSkinRenderDistance) {
             return;
         }
         
@@ -114,10 +128,73 @@ public class ModelRendererAttachment extends ModelRenderer {
                             GL11.glRotated(-70, 1F, 0F, 0F);
                         }
                     }
+                    if (skinType == SkinTypeRegistry.skinWings) {
+                        GL11.glTranslated(0, 0, scale * 2);
+                        double angle = SkinUtils.getFlapAngleForWings(player, data);
+                        Point3D point = new Point3D(0, 0, 0);
+                        ForgeDirection axis = ForgeDirection.DOWN;
+                        
+                        if (partData.getMarkerCount() > 0) {
+                            point = partData.getMarker(0);
+                            axis = partData.getMarkerSide(0);
+                        }
+                        
+                        GL11.glTranslated(scale * 0.5F, scale * 0.5F, scale * 0.5F);
+                        GL11.glTranslated(scale * point.getX(), scale * point.getY(), scale * point.getZ());
+                        if (skinPart.getRegistryName().equals("armourers:wings.leftWing")) {
+                            switch (axis) {
+                            case UP:
+                                GL11.glRotated(angle, 0, 1, 0);
+                                break;
+                            case DOWN:
+                                GL11.glRotated(angle, 0, 1, 0);
+                                break;
+                            case NORTH:
+                                GL11.glRotated(angle, 1, 0, 0);
+                                break;
+                            case EAST:
+                                GL11.glRotated(angle, 1, 0, 0);
+                                break;
+                            case SOUTH:
+                                GL11.glRotated(angle, 0, 0, 1);
+                                break;
+                            case WEST:
+                                GL11.glRotated(angle, 0, 0, 1);
+                                break;
+                            case UNKNOWN:
+                                break;
+                            }
+                        } else {
+                            switch (axis) {
+                            case UP:
+                                GL11.glRotated(-angle, 0, 1, 0);
+                                break;
+                            case DOWN:
+                                GL11.glRotated(-angle, 0, 1, 0);
+                                break;
+                            case NORTH:
+                                GL11.glRotated(-angle, 1, 0, 0);
+                                break;
+                            case EAST:
+                                GL11.glRotated(-angle, 1, 0, 0);
+                                break;
+                            case SOUTH:
+                                GL11.glRotated(-angle, 0, 0, 1);
+                                break;
+                            case WEST:
+                                GL11.glRotated(angle, 1, 0, 0);
+                                break;
+                            case UNKNOWN:
+                                break;
+                            }
+                        }
+                        GL11.glTranslated(scale * -point.getX(), scale * -point.getY(), scale * -point.getZ());
+                        GL11.glTranslated(scale * -0.5F, scale * -0.5F, scale * -0.5F);
+                    }
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours);
+                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance);
                     GL11.glDisable(GL11.GL_CULL_FACE);
                     GL11.glPopMatrix();
                     break;

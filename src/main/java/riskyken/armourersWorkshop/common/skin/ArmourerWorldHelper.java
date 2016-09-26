@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +23,7 @@ import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.UtilBlocks;
@@ -54,8 +54,7 @@ public final class ArmourerWorldHelper {
      * @throws InvalidCubeTypeException
      * @throws SkinSaveException 
      */
-    public static Skin saveSkinFromWorld(World world, EntityPlayerMP player, ISkinType skinType,
-            String authorName, String customName, String tags, int[] paintData,
+    public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData,
             BlockPos pos, EnumFacing direction) throws InvalidCubeTypeException, SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
@@ -68,7 +67,8 @@ public final class ArmourerWorldHelper {
         if (paintData != null) {
             paintData = paintData.clone();
         }
-        Skin skin = new Skin(authorName, customName, tags, skinType, paintData, parts);
+        
+        Skin skin = new Skin(skinProps, skinType, paintData, parts);
         
         //Check if there are any blocks in the build guides.
         if (skin.getParts().size() == 0 && !skin.hasPaintData()) {

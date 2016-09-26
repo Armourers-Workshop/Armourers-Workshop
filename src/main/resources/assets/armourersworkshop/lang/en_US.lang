@@ -1,5 +1,5 @@
 # Block names
-tile.armourersworkshop:armourer.name=Armourer
+tile.armourersworkshop:armourerBrain.name=Armourer
 tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 tile.armourersworkshop:armourLibrary0.name=Equipment Library
 tile.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
@@ -15,7 +15,7 @@ tile.armourersworkshop:dyeTable.name=Dye Table
 tile.armourersworkshop:skinnable.name=Skinnable Block
 
 # Block flavour text
-tile.armourersworkshop:armourer.flavour=Lets you build equipment skins.
+tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
 tile.armourersworkshop:miniArmourer.flavour=Unfinished.
 tile.armourersworkshop:armourLibrary0.flavour=Save and load equipment templates from disk.
 tile.armourersworkshop:armourLibrary1.flavour=Save and load equipment templates from disk.%nCreative mode only.
@@ -106,6 +106,7 @@ item.armourersworkshop:rollover.skinInvalidItem=&cError: Invalid equipment skin,
 item.armourersworkshop:rollover.skinIdError1=&cWarning: This skin is using an old file format.
 item.armourersworkshop:rollover.skinIdError2=&cPlease save and reload it from the library to fix this.
 item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
+item.armourersworkshop:rollover.skinProperties=&eSkin Properties:
 
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=Full block mode
@@ -165,10 +166,12 @@ skinPartType.armourers:bow.frame2.name=Frame 2
 skinPartType.armourers:bow.frame3.name=Frame 3
 skinPartType.armourers:arrow.base.name=Base
 skinPartType.armourers:block.base.name=Base
+skinPartType.armourers:wings.leftWing.name=Left Wing
+skinPartType.armourers:wings.rightWing.name=Right Wing
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
-inventory.armourersworkshop:armourer.name=Armourer
+inventory.armourersworkshop:armourerBrain.name=Armourer
 inventory.armourersworkshop:armourLibrary0.name=Equipment Library
 inventory.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
@@ -198,18 +201,24 @@ inventory.armourersworkshop:armourLibrary.rollover.refresh=Refresh library files
 inventory.armourersworkshop:armourLibrary.label.enterFileName=Enter file name.
 inventory.armourersworkshop:armourLibrary.label.typeToSearch=Type to search...
 
-inventory.armourersworkshop:armourer.label.itemName=Item Name:
-inventory.armourersworkshop:armourer.label.username=Username:
-inventory.armourersworkshop:armourer.label.clone=Clone:
-inventory.armourersworkshop:armourer.showGuide=Show building guide?
-inventory.armourersworkshop:armourer.showOverlay=Show head overlay?
-inventory.armourersworkshop:armourer.showHelper=Show helper model?
-inventory.armourersworkshop:armourer.save=Save
-inventory.armourersworkshop:armourer.load=Load
-inventory.armourersworkshop:armourer.set=Set
-inventory.armourersworkshop:armourer.clear=Clear
-inventory.armourersworkshop:armourer.westToEast=West to East
-inventory.armourersworkshop:armourer.eastToWest=East to West
+inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
+inventory.armourersworkshop:armourerBrain.label.username=Username:
+inventory.armourersworkshop:armourerBrain.label.idleSpeed=Idle Speed:
+inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Flying Speed:
+inventory.armourersworkshop:armourerBrain.label.minAngle=Minimum Angle:
+inventory.armourersworkshop:armourerBrain.label.maxAngle=Maximum Angle:
+inventory.armourersworkshop:armourerBrain.label.clone=Clone:
+inventory.armourersworkshop:armourerBrain.showGuide=Show building guide?
+inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?
+inventory.armourersworkshop:armourerBrain.showHelper=Show helper model?
+inventory.armourersworkshop:armourerBrain.save=Save
+inventory.armourersworkshop:armourerBrain.load=Load
+inventory.armourersworkshop:armourerBrain.set=Set
+inventory.armourersworkshop:armourerBrain.clear=Clear
+inventory.armourersworkshop:armourerBrain.westToEast=West to East
+inventory.armourersworkshop:armourerBrain.eastToWest=East to West
+inventory.armourersworkshop:armourerBrain.glowing=Glowing?
+inventory.armourersworkshop:armourerBrain.ladder=Ladder?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation
@@ -239,6 +248,7 @@ inventory.armourersworkshop:mannequin.label.leftLegRotation=Left Leg Rotation
 inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Extra Renders?
+inventory.armourersworkshop:mannequin.label.isFlying=Flying?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
 inventory.armourersworkshop:mannequin.set=Set

@@ -30,6 +30,7 @@ public class ModBlocks {
     public static Block doll;
     public static Block skinningTable;
     public static Block skinnable;
+    public static Block skinnableGlowing;
     public static Block dyeTable;
     
     public ModBlocks() {
@@ -46,6 +47,7 @@ public class ModBlocks {
         doll = new BlockDoll();
         skinningTable = new BlockSkinningTable();
         skinnable = new BlockSkinnable();
+        skinnableGlowing = new BlockSkinnableGlowing();
         dyeTable = new BlockDyeTable();
     }
 

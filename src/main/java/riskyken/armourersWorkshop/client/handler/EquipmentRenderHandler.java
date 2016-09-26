@@ -32,7 +32,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, null);
+        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, null, 0);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, modelBiped, null);
+        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, modelBiped, null, 0);
     }
 
     @Override

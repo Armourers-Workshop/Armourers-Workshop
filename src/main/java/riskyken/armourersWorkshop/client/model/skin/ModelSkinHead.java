@@ -20,7 +20,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 public class ModelSkinHead extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
         if (skin == null) {
             return;
         }
@@ -73,7 +73,7 @@ public class ModelSkinHead extends AbstractModelSkin {
                 GL11.glTranslated(0, 1 * SCALE, 0);
             }
 
-            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColour);
+            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColour, distance);
             
             GL11.glPopMatrix();
         }
@@ -81,10 +81,10 @@ public class ModelSkinHead extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColours) {
+    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColours, double distance) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-        renderPart(part, scale, skinDye, extraColours);
+        renderPart(part, scale, skinDye, extraColours, distance);
         GL11.glPopMatrix();
     }
 }

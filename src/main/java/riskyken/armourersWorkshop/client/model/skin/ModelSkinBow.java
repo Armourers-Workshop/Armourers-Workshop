@@ -21,7 +21,7 @@ public class ModelSkinBow extends AbstractModelSkin {
     public int frame = 0;
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
         if (armourData == null) { return; }
         
         ArrayList<SkinPart> parts = armourData.getParts();
@@ -62,7 +62,7 @@ public class ModelSkinBow extends AbstractModelSkin {
         }
 
         ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
-        renderRightArm(part, SCALE, skinDye, extraColour);
+        renderRightArm(part, SCALE, skinDye, extraColour, distance);
         
         GL11.glPopMatrix();
         
@@ -71,7 +71,7 @@ public class ModelSkinBow extends AbstractModelSkin {
         frame = 0;
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -85,7 +85,7 @@ public class ModelSkinBow extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye, extraColour);
+        renderPart(part, scale, skinDye, extraColour, distance);
         GL11.glPopMatrix();
     }
 }

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Level;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -23,16 +24,23 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.SkinUtils;
 import riskyken.armourersWorkshop.utils.UtilItems;
 
 public class BlockSkinnable extends AbstractModBlockContainer {
 
     public BlockSkinnable() {
-        super(LibBlockNames.SKINNABLE, Material.IRON, SoundType.METAL, false);
+        this(LibBlockNames.SKINNABLE);
+        
+    }
+    
+    public BlockSkinnable(String name) {
+        super(name, Material.IRON, SoundType.METAL, false);
         setLightOpacity(0);
     }
     
@@ -48,6 +56,23 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         setBlockBounds(0, 0, 0, 1, 1, 1);
         */
         return super.getBoundingBox(state, source, pos);
+    }
+    
+    @Override
+    public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity) {
+        TileEntity te = world.getTileEntity(pos);
+        if (te != null && te instanceof TileEntitySkinnable) {
+            SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
+            if (skinPointer != null) {
+                Skin skin = SkinUtils.getSkinDetectSide(skinPointer, true, true);
+                if (skin != null) {
+                    return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false);
+                }
+            } else {
+                ModLogger.log(Level.WARN, String.format("Block skin at %s had no skin data.", pos.toString()));
+            }
+        }
+        return false;
     }
     
     @Override

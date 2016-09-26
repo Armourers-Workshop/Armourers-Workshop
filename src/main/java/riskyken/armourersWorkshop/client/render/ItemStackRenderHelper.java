@@ -100,7 +100,7 @@ public final class ItemStackRenderHelper {
             return;
         }
         
-        targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true);
+        targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true, 0);
     }
     
     public static void renderSkinWithoutHelper(ISkinPointer skinPointer) {

@@ -13,11 +13,11 @@ public class RenderBlockMannequinItems {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
     }
     
-    public void renderHeadStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
+    public void renderHeadStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
             return;
         }
         
@@ -67,10 +67,10 @@ public class RenderBlockMannequinItems {
         }
     }
 
-    public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
+    public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -119,10 +119,10 @@ public class RenderBlockMannequinItems {
             }
         }
     }
-    public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
+    public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -160,10 +160,10 @@ public class RenderBlockMannequinItems {
         }
     }
     
-    public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
+    public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -199,7 +199,7 @@ public class RenderBlockMannequinItems {
         }
     }
     
-    public void renderRightArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
+    public void renderRightArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         float blockScale = 0.5F;
         float itemScale = 1 - (float)1 / 3;
@@ -221,7 +221,7 @@ public class RenderBlockMannequinItems {
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(1 * scale, 0 * scale, 2 * scale);
-                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance);
                 return;
             }
         }
@@ -248,7 +248,7 @@ public class RenderBlockMannequinItems {
         rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
     }
     
-    public void renderLeftArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours) {
+    public void renderLeftArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         float blockScale = 0.5F;
         float itemScale = 1 - (float)1 / 3;
@@ -272,7 +272,7 @@ public class RenderBlockMannequinItems {
                 GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);
                 GL11.glScalef(-1, 1, 1);
                 GL11.glCullFace(GL11.GL_FRONT);
-                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance);
                 GL11.glCullFace(GL11.GL_BACK);
                 return;
             }
@@ -298,6 +298,17 @@ public class RenderBlockMannequinItems {
         }
         
         rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
+    }
+    
+    public void renderWingsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
+        Item targetItem = stack.getItem();
+        if (SkinNBTHelper.stackHasSkinData(stack)) {
+            SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
+            if (sp.getSkinType() == SkinTypeRegistry.skinWings) {
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(fakePlayer, stack, null, extraColours, distance);
+                return;
+            }
+        }
     }
     
     private void bindTexture(ResourceLocation resourceLocation) {

@@ -106,6 +106,7 @@ item.armourersworkshop:rollover.skinInvalidItem=&c错误: 无效的时装, 请�
 item.armourersworkshop:rollover.skinIdError1=&c警告:这时装使用旧文件格式.
 item.armourersworkshop:rollover.skinIdError2=&c请从资源库保存并重新加载它来解决这个问题。
 item.armourersworkshop:rollover.skinIdError3=&c调试 - 旧 ID: %s 新 ID: %s
+item.armourersworkshop:rollover.skinProperties=&e时装属性:
 
 # Tool Options 工具选项
 tooloption.armourersworkshop:fullBlockMode=涂整个方块
@@ -165,6 +166,8 @@ skinPartType.armourers:bow.frame1.name=框架1
 skinPartType.armourers:bow.frame2.name=框架2
 skinPartType.armourers:arrow.base.name=箭
 skinPartType.armourers:block.base.name=方块
+skinPartType.armourers:wings.leftWing.name=左翼
+skinPartType.armourers:wings.rightWing.name=右翼
 
 # Inventory names 
 inventory.armourersworkshop:colourMixer.name=调色器
@@ -200,6 +203,10 @@ inventory.armourersworkshop:armourLibrary.label.typeToSearch=输入搜索内容.
 
 inventory.armourersworkshop:armourerBrain.label.itemName=物品名:
 inventory.armourersworkshop:armourerBrain.label.username=用户名:
+inventory.armourersworkshop:armourerBrain.label.idleSpeed=正常速度:
+inventory.armourersworkshop:armourerBrain.label.flyingSpeed=飞行速度:
+inventory.armourersworkshop:armourerBrain.label.minAngle=最小角度:
+inventory.armourersworkshop:armourerBrain.label.maxAngle=最大角度:
 inventory.armourersworkshop:armourerBrain.label.clone=克隆:
 inventory.armourersworkshop:armourerBrain.showGuide=显示可建设范围
 inventory.armourersworkshop:armourerBrain.showOverlay=显示双层皮肤
@@ -210,6 +217,8 @@ inventory.armourersworkshop:armourerBrain.set=设置
 inventory.armourersworkshop:armourerBrain.clear=清除
 inventory.armourersworkshop:armourerBrain.westToEast=西到东
 inventory.armourersworkshop:armourerBrain.eastToWest=东到西
+inventory.armourersworkshop:armourerBrain.glowing=是否发光?
+inventory.armourersworkshop:armourerBrain.ladder=是否为梯子?
 
 inventory.armourersworkshop:colourMixer.label.hue=色相
 inventory.armourersworkshop:colourMixer.label.saturation=饱和度
@@ -225,6 +234,12 @@ inventory.armourersworkshop:equipmentWardrobe.autoSkin=自动
 inventory.armourersworkshop:equipmentWardrobe.selectHair=挑选头发颜色
 inventory.armourersworkshop:equipmentWardrobe.autoHair=自动
 inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=皮肤覆盖
+inventory.armourersworkshop:equipmentWardrobe.renderHeadArmour=显示/隐藏头部装备
+inventory.armourersworkshop:equipmentWardrobe.renderChestArmour=显示/隐藏上衣装备
+inventory.armourersworkshop:equipmentWardrobe.renderLegArmour=显示/隐藏裤子装备
+inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=显示/隐藏鞋子装备
+inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=显示/隐藏头部双层皮肤
+inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=限制抬腿幅度
 
 inventory.armourersworkshop:mannequin.label.headRotation=转动头部
 inventory.armourersworkshop:mannequin.label.leftArmRotation=转动左臂
@@ -233,6 +248,7 @@ inventory.armourersworkshop:mannequin.label.leftLegRotation=转动左腿
 inventory.armourersworkshop:mannequin.label.rightLegRotation=转动右腿
 inventory.armourersworkshop:mannequin.label.isChild=小孩子模型？
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Duang？
+inventory.armourersworkshop:mannequin.label.isFlying=起飞?
 inventory.armourersworkshop:mannequin.random=随机
 inventory.armourersworkshop:mannequin.reset=重置
 inventory.armourersworkshop:mannequin.set=设置

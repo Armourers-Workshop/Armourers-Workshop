@@ -19,13 +19,14 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
     private int hairColour;
     private String username;
     private boolean renderExtras;
+    private boolean flying;
     
     public MessageClientGuiMannequinData() {
     }
     
     public MessageClientGuiMannequinData(float xOffset, float yOffset,
             float zOffset, int skinColour, int hairColour, String username,
-            boolean renderExtras) {
+            boolean renderExtras, boolean flying) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.zOffset = zOffset;
@@ -33,6 +34,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         this.hairColour = hairColour;
         this.username = username;
         this.renderExtras = renderExtras;
+        this.flying = flying;
     }
 
 
@@ -45,6 +47,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         buf.writeInt(hairColour);
         ByteBufUtils.writeUTF8String(buf, username);
         buf.writeBoolean(renderExtras);
+        buf.writeBoolean(flying);
     }
     
     @Override
@@ -56,6 +59,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         hairColour = buf.readInt();
         username = ByteBufUtils.readUTF8String(buf);
         renderExtras = buf.readBoolean();
+        flying = buf.readBoolean();
     }
 
     @Override
@@ -68,7 +72,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         if (container != null && container instanceof ContainerMannequin) {
             TileEntityMannequin tileEntity = ((ContainerMannequin)container).getTileEntity();
             tileEntity.gotUpdateFromClient(message.xOffset, message.yOffset, message.zOffset,
-                    message.skinColour, message.hairColour, message.username, message.renderExtras);
+                    message.skinColour, message.hairColour, message.username, message.renderExtras, message.flying);
         }
         return null;
     }

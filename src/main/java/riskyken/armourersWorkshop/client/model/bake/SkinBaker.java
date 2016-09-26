@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import net.minecraft.client.Minecraft;
+<<<<<<< .merge_file_a02412
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.EnumFacing;
+=======
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.Entity;
+import net.minecraftforge.common.util.ForgeDirection;
+>>>>>>> .merge_file_a05504
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -18,6 +24,10 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public final class SkinBaker {
+    
+    public static boolean withinMaxRenderDistance(Entity entity) {
+        return withinMaxRenderDistance(entity.posX, entity.posY, entity.posZ);
+    }
     
     public static boolean withinMaxRenderDistance(double x, double y, double z) {
         EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
@@ -148,13 +158,22 @@ public final class SkinBaker {
         
         ArrayList<ColouredFace>[] renderLists;
         
-        int lodLevels = 4;
+        int lodLevels = ConfigHandler.maxLodLevels;
         
-        if (multipassSkinRendering) {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[4 + lodLevels];
-        } else {
-            renderLists = (ArrayList<ColouredFace>[]) new ArrayList[2 + lodLevels];
-        }
+        /* LOD Indexs
+         * 
+         * with multipass;
+         * 0 = normal
+         * 1 = glowing
+         * 2 = glass
+         * 3 = glass glowing
+         * 
+         * without multipass
+         * 0 = normal
+         * 1 = glowing
+         */
+        
+        renderLists = (ArrayList<ColouredFace>[]) new ArrayList[ClientProxy.getNumberOfRenderLayers() * (lodLevels + 1)];
         
         for (int i = 0; i < renderLists.length; i++) {
             renderLists[i] = new ArrayList<ColouredFace>();
@@ -254,22 +273,36 @@ public final class SkinBaker {
                         
                     }
                     
-                    
+                    //Create model LODs
                     for (int lod = 1; lod < lodLevels + 1; lod++) {
-                        int listIndex = 1;
-                        if (multipassSkinRendering) {
-                            listIndex = 3;
-                        }
-                        //TODO get listIndex for glowing cubes
-                        int lodIndex = listIndex + lod;
                         byte lodLevel = (byte)Math.pow(2, lod);
                         if ((ix) % lodLevel == 0 & (iy) % lodLevel == 0 & (iz) % lodLevel == 0) {
                             
                             for (int j = 0; j < 6; j++) {
                                 boolean showFace = getAverageFaceFlags(ix, iy, iz, lodLevel, cubeArray, cubeData, pb, j);
-                                
                                 if (showFace) {
                                     byte[] avegC = getAverageRGBAT(ix, iy, iz, lodLevel, cubeArray, cubeData, pb, j);
+                                    
+                                    ICube cube = CubeRegistry.INSTANCE.getCubeFormId(avegC[5]);
+                                    
+                                    int listIndex = 0;
+                                    if (multipassSkinRendering) {
+                                        if (cube.isGlowing() && !cube.needsPostRender()) {
+                                            listIndex = 1;
+                                        }
+                                        if (cube.needsPostRender() && !cube.isGlowing()) {
+                                            listIndex = 2;
+                                        }
+                                        if (cube.isGlowing() && cube.needsPostRender()) {
+                                            listIndex = 3;
+                                        }
+                                    } else {
+                                        if (cube.isGlowing()) {
+                                            listIndex = 1;
+                                        }
+                                    }
+                                    int lodIndex = ((lod) * ClientProxy.getNumberOfRenderLayers()) + listIndex;
+                                    
                                     ColouredFace ver = new ColouredFace(
                                             (byte)(ix + pb.getX()), (byte)(iy + pb.getY()), (byte)(iz + pb.getZ()),
                                             avegC[0], avegC[1], avegC[2],
@@ -311,7 +344,8 @@ public final class SkinBaker {
         int g = 0;
         int b = 0;
         int a = 0;
-        int[] type = new int[256];
+        int[] paintTypes = new int[256];
+        int[] cubeTypes = new int[256];
         for (int ix = 0; ix < lodLevel; ix++) {
             for (int iy = 0; iy < lodLevel; iy++) {
                 for (int iz = 0; iz < lodLevel; iz++) {
@@ -327,27 +361,40 @@ public final class SkinBaker {
                             } else {
                                 a += 255;
                             }
-                            type[cubeData.getCubePaintType(index)[face] & 0xFF] += 1;
+                            paintTypes[cubeData.getCubePaintType(index)[face] & 0xFF] += 1;
+                            cubeTypes[cubeData.getCubeId(index) & 0xFF] += 1;
                         }
                     }
                 }
             }
         }
-        byte[] rgbat = new byte[5];
+        byte[] rgbat = new byte[6];
         if (count != 0) {
             rgbat[0] = (byte) (r / count);
             rgbat[1] = (byte) (g / count);
             rgbat[2] = (byte) (b / count);
             rgbat[3] = (byte) (a / count);
-            int commonIndex = 0;
-            int mostCount = 0;
-            for (int i = 0; i < type.length; i++) {
-                if (type[i] > mostCount) {
-                    mostCount = type[i];
-                    commonIndex = i;
+            
+            int commonPaintTypeIndex = 0;
+            int mostPaintTypes = 0;
+            for (int i = 0; i < paintTypes.length; i++) {
+                if (paintTypes[i] > mostPaintTypes) {
+                    mostPaintTypes = paintTypes[i];
+                    commonPaintTypeIndex = i;
                 }
             }
-            rgbat[4] = (byte) commonIndex;
+            rgbat[4] = (byte) commonPaintTypeIndex;
+            
+            int commonCubeTypesIndex = 0;
+            int mostCubeTypes = 0;
+            for (int i = 0; i < cubeTypes.length; i++) {
+                if (cubeTypes[i] > mostCubeTypes) {
+                    mostCubeTypes = cubeTypes[i];
+                    commonCubeTypesIndex = i;
+                }
+            }
+            rgbat[5] = (byte) commonCubeTypesIndex;
+            
         }
         return rgbat;
     }

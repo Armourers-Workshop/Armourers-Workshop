@@ -22,6 +22,10 @@ public final class LibItemResources {
     public static final String TEMPLATE_WEAPON = PREFIX_RESOURCE + "templateWeapon";
     public static final String TEMPLATE_BOW = PREFIX_RESOURCE + "templateBow";
     public static final String TEMPLATE_ARROW = PREFIX_RESOURCE + "templateArrow";
+<<<<<<< .merge_file_a00532
+=======
+    public static final String TEMPLATE_WINGS = PREFIX_RESOURCE + "templateWings";
+>>>>>>> .merge_file_a04280
     public static final String TEMPLATE_LOADING = PREFIX_RESOURCE + "templateLoading";
     
     public static final String TEMPLATE_BLANK = PREFIX_RESOURCE + "templateBlank";
@@ -55,5 +59,9 @@ public final class LibItemResources {
     public static final String SLOT_SKIN_SWORD = PREFIX_RESOURCE + "slot/skinSword";
     public static final String SLOT_SKIN_BOW = PREFIX_RESOURCE + "slot/skinBow";
     public static final String SLOT_SKIN_ARROW = PREFIX_RESOURCE + "slot/skinArrow";
+<<<<<<< .merge_file_a00532
+=======
+    public static final String SLOT_SKIN_WINGS = PREFIX_RESOURCE + "slot/skinWings";
+>>>>>>> .merge_file_a04280
     public static final String SLOT_DYE_BOTTLE = PREFIX_RESOURCE + "slot/dyeBottle";
 }

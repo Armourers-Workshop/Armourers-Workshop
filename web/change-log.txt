@@ -1,3 +1,34 @@
+Build 0.40.0
+Added:
+	Added wing skins.
+	Added flying option to mannequins.
+	Added skin properties system.
+	Block skins can be set as glowing.
+	Block skins can be ladders.
+	Added Angel Wings, Bat Wings, Butterfly Wings and Evil Wings skins. (Ethan)
+Fixed:
+	Fixed not being able to override renders on items with more than one colon in their name.
+Changed:
+	Updated ru-RU land file. (Shtopm)
+	Increased allowed depth of bow skins to 64 blocks.
+	Players UUID is saved skins they create.
+	Updated zh_CN land file. (Ethan)
+	
+Build 0.39.6
+Added:
+	ko_KR lang file (ISJump).
+	Loading LOD models.
+	Config option to disable skin painting.
+	LODs to entity skin renders.
+Fixed
+	Memory leak in armourer arrow render.
+	Glowing cubes not showing in model LODs.
+	Armour container's not checking riding, sneaking or child options on entities.
+	Painting armourer blocks sometimes reverting to the steve skin.
+Change:
+	Updated zh_CN lang file.
+
+
 Build 0.39.5
 Added: ru_RU lang file. (Shtopm)
 Added: Missing localization to the lang file.

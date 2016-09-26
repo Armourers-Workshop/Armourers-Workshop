@@ -3,11 +3,15 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+import net.minecraftforge.common.IExtendedEntityProperties;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
@@ -21,7 +25,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
+public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
 
     public static final int MAX_SLOTS_PER_SKIN_TYPE = 5;
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
@@ -33,7 +37,8 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
             SkinTypeRegistry.skinFeet,
             SkinTypeRegistry.skinSword,
             SkinTypeRegistry.skinBow,
-            SkinTypeRegistry.skinArrow
+            SkinTypeRegistry.skinArrow,
+            SkinTypeRegistry.skinWings
             };
     
     private final WardrobeInventoryContainer wardrobeInventoryContainer;
@@ -41,8 +46,10 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
     private final EntityPlayer player;
     private EquipmentWardrobeData equipmentWardrobeData = new EquipmentWardrobeData(); 
     public int lastXmasYear;
+    private boolean allowNetworkUpdates;
     
     public ExPropsPlayerEquipmentData(EntityPlayer player) {
+        allowNetworkUpdates = true;
         this.player = player;
         //An array of all the skins that can be placed in the players wardrobe.
 
@@ -56,6 +63,14 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
     
     public EntityPlayer getPlayer() {
         return player;
+    }
+    
+    public static final void register(EntityPlayer player) {
+        player.registerExtendedProperties(ExPropsPlayerEquipmentData.TAG_EXT_PROP_NAME, new ExPropsPlayerEquipmentData(player));
+    }
+    
+    public static final ExPropsPlayerEquipmentData get(EntityPlayer player) {
+        return (ExPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
     @Deprecated
@@ -99,27 +114,30 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
         }
     }
     
-    private void addCustomEquipment(ISkinType skinType, byte slotId, SkinPointer skinPointer) {
+    public void addCustomEquipment(ISkinType skinType, byte slotId, SkinPointer skinPointer) {
         equipmentData.addEquipment(skinType, slotId, skinPointer);
         updateEquipmentDataToPlayersAround();
     }
     
-    private void removeCustomEquipment(ISkinType skinType, byte slotId) {
+    public void removeCustomEquipment(ISkinType skinType, byte slotId) {
         equipmentData.removeEquipment(skinType, slotId);
         updateEquipmentDataToPlayersAround();
     }
     
     private void updateEquipmentDataToPlayersAround() {
+        if (!allowNetworkUpdates) {
+            return;
+        }
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), p);
     }
     
-    private EntityEquipmentData getEquipmentData() {
+    public EntityEquipmentData getEquipmentData() {
         return equipmentData;
     }
     
-    private void armourSlotUpdate(WardrobeInventory inventory, byte slot) {
+    public void armourSlotUpdate(WardrobeInventory inventory, byte slot) {
         ItemStack stack = inventory.getStackInSlot(slot);
         
         if (stack == null) {
@@ -185,7 +203,7 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
     public BitSet getArmourOverride() {
         return equipmentWardrobeData.armourOverride;
     }
-    /*
+    
     @Override
     public void saveNBTData(NBTTagCompound compound) {
         wardrobeInventoryContainer.writeToNBT(compound);
@@ -213,10 +231,14 @@ public class ExPropsPlayerEquipmentData implements IInventorySlotUpdate {
             this.lastXmasYear = 0;
         }
     }
-    */
+    
     private void loadFromItemStack(ItemStack stack, byte slotId) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         addCustomEquipment(skinPointer.skinType, slotId, skinPointer);
+    }
+    
+    @Override
+    public void init(Entity entity, World world) {
     }
 
     @Override
