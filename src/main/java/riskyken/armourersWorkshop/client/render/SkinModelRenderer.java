@@ -294,12 +294,12 @@ public final class SkinModelRenderer {
                     (byte)skinColour.getRed(), (byte)skinColour.getGreen(), (byte)skinColour.getBlue(),
                     (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
         }
-        
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
         for (int slot = 0; slot < 4; slot++) {
-            GL11.glPushMatrix();
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glEnable(GL11.GL_BLEND);
+
             for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
                 if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
@@ -337,16 +337,15 @@ public final class SkinModelRenderer {
                     }
                 }
             }
-            Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
-            ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
-            if (data != null) {
-                customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
-            }
-            
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            GL11.glPopMatrix();
         }
+        Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
+        ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
+        if (data != null) {
+            customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+        }
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glPopMatrix();
     }
     
     public AbstractModelSkin getModelForEquipmentType(ISkinType skinType) {
