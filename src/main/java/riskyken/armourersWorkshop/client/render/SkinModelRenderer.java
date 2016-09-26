@@ -44,6 +44,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -213,7 +214,7 @@ public final class SkinModelRenderer {
         EntityPlayer player = event.entityPlayer;
         targetPlayer = player;
         
-        if (ClientProxy.useAttachedModelRender()) {
+        if (ClientProxy.getSkinRenderType() == SkinRenderType.MODEL_ATTACHMENT) {
             attachModelsToBiped(event.renderer.modelBipedMain, event.renderer);
         }
         
@@ -263,7 +264,7 @@ public final class SkinModelRenderer {
     
     @SubscribeEvent
     public void onRenderSpecialsPost(RenderPlayerEvent.Specials.Post event) {
-        if (ClientProxy.useAttachedModelRender()) {
+        if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_EVENT) {
             return;
         }
         EntityPlayer player = event.entityPlayer;

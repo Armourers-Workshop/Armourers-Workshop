@@ -26,6 +26,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
 import riskyken.armourersWorkshop.utils.SkinUtils;
 
 /**
@@ -53,7 +54,7 @@ public class ModelRendererAttachment extends ModelRenderer {
     
     @Override
     public void render(float scale) {
-        if (!ClientProxy.useAttachedModelRender()) {
+        if (ClientProxy.getSkinRenderType() != SkinRenderType.MODEL_ATTACHMENT) {
             return;
         }
         mc.mcProfiler.startSection("armourers player render");

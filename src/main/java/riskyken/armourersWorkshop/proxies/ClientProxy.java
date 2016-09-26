@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.proxies;
 
 import java.lang.reflect.Field;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -186,13 +188,25 @@ public class ClientProxy extends CommonProxy {
             smartMovingLoaded = true;
             ModLogger.log("Smart Moving support active");
         }
+        if (moreplayermodelsLoaded & smartMovingLoaded) {
+            ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop cannot support this.");
+        }
     }
     
-    public static boolean useAttachedModelRender() {
-        if (smartMovingLoaded) {
-            return true;
+    public static SkinRenderType getSkinRenderType() {
+        switch (ConfigHandler.skinRenderType) {
+        case 1: //Force render event
+            return SkinRenderType.RENDER_EVENT;
+        case 2: //Force model attachment
+            return SkinRenderType.MODEL_ATTACHMENT;
+        case 3: //Force render layer
+            return SkinRenderType.RENDER_LAYER;
+        default: //Auto
+            if (moreplayermodelsLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            return SkinRenderType.MODEL_ATTACHMENT;
         }
-        return ConfigHandler.useAttachedModelRender;
     }
     
     public static boolean useSafeTextureRender() {
@@ -288,5 +302,11 @@ public class ClientProxy extends CommonProxy {
             return RenderBlockColourMixer.renderId;
         }
         return super.getBlockRenderType(block);
+    }
+    
+    public static enum SkinRenderType {
+        RENDER_EVENT,
+        MODEL_ATTACHMENT,
+        RENDER_LAYER
     }
 }

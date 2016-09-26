@@ -44,8 +44,8 @@ public class DebugTextHandler {
                 event.left.add("Baking Queue: " + bakeQueue);
                 event.left.add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));
                 event.left.add("Texture Count: " + ClientSkinPaintCache.INSTANCE.size());
-                event.left.add("Attached Render: " + ClientProxy.useAttachedModelRender());
-                event.left.add("TextureRender: " + ClientProxy.useSafeTextureRender());
+                event.left.add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
+                event.left.add("Texture Render: " + ClientProxy.useSafeTextureRender());
                 if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     for (int i = 0; i < playerList.size(); i++) {
                         GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);

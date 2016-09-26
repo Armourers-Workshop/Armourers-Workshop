@@ -57,7 +57,7 @@ public class ConfigHandler {
     
     //debug
     public static boolean skinTextureRenderOverride;
-    public static boolean useAttachedModelRender;
+    public static int skinRenderType;
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
     public static boolean showArmourerDebugRender;
@@ -185,12 +185,15 @@ public class ConfigHandler {
     }
     
     private static void loadCategoryDebug() {
-        useAttachedModelRender = config
-                .get(CATEGORY_DEBUG, "useAttachedModelRender", false,
-                "Only enable this if you are having rendering issues with skins on players. "
-                + "(normally fixes skins not rotating on players)\n"
-                + "This option is force on if Smart Moving is installed.\n")
-                .getBoolean(false);
+        skinRenderType = config
+                .getInt("skinRenderType", CATEGORY_DEBUG, 0, 0, 2,
+                "Only change this if you are having rendering issues with skins on players." +
+                "(normally fixes skins not rotating on players)\n" +
+                "This option is force on if Smart Moving is installed.\n" +
+                "\n" +
+                "0 = auto\n" +
+                "1 = render event\n" +
+                "2 = model attachment\n");
         
         skinTextureRenderOverride = config
                 .get(CATEGORY_DEBUG, "skinTextureRenderOverride", false,
