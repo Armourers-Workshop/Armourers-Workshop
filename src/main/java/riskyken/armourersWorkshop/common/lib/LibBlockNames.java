@@ -17,4 +17,5 @@ public class LibBlockNames {
     public static final String SKINNABLE = "skinnable";
     public static final String SKINNABLE_GLOWING = "skinnableGlowing";
     public static final String DYE_TABLE = "dyeTable";
+    public static final String GLOBAL_SKIN_LIBRARY = "globalSkinLibrary";
 }

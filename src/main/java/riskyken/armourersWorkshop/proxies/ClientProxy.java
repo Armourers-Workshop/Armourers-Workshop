@@ -44,6 +44,7 @@ import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockColourable;
+import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
@@ -66,6 +67,7 @@ import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
@@ -118,6 +120,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockColourable());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         
         //Register item renderers.
         ModelMannequin modelMannequin = new ModelMannequin();

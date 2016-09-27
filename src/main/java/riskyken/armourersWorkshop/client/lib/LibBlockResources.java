@@ -15,6 +15,10 @@ public final class LibBlockResources {
     public static final String EQUIPMENT_LIBRARY_0_SIDE = PREFIX_RESOURCE + "equipmentLibrary0Side";
     public static final String EQUIPMENT_LIBRARY_0_BOTTOM = PREFIX_RESOURCE + "equipmentLibrary0Bottom";
     
+    public static final String GLOBAL_SKIN_LIBRARY_TOP = PREFIX_RESOURCE + "globalSkinLibraryTop";
+    public static final String GLOBAL_SKIN_LIBRARY_SIDE = PREFIX_RESOURCE + "globalSkinLibrarySide";
+    public static final String GLOBAL_SKIN_LIBRARY_BOTTOM = PREFIX_RESOURCE + "globalSkinLibraryBottom";
+    
     public static final String COLOURABLE = PREFIX_RESOURCE + "colourable";
     public static final String COLOURABLE_GLASS = PREFIX_RESOURCE + "colourableGlass";
     
