@@ -53,6 +53,7 @@ item.armourersworkshop:blockMarker.name=Block Marker
 item.armourersworkshop:dyeBottle.name=Dye Bottle
 item.armourersworkshop:blendingTool.name=Blending Tool
 item.armourersworkshop:armourersHammer.name=Armourers Hammer
+item.armourersworkshop:debugTool.name=Debug Tool
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
