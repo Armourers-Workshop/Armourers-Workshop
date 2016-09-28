@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui;
+package riskyken.armourersWorkshop.client.gui.miniarmourer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;

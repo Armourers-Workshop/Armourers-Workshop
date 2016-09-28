@@ -31,7 +31,7 @@ public final class SkinDownloader implements Runnable  {
         String data = null;
         try {
             in = new URL("http://plushie.moe/armourers_workshop/skin-list.php").openStream();
-            data = IOUtils.toString( in );
+            data = IOUtils.toString(in);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui;
+package riskyken.armourersWorkshop.client.gui.miniarmourer;
 
 import java.util.ArrayList;
 
