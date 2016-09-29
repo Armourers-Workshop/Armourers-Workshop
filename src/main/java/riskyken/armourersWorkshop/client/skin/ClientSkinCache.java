@@ -143,6 +143,10 @@ public class ClientSkinCache {
                 }
                 requestedSkinIDs.remove(skinID);
             } else {
+                skinID = skin.lightHash();
+                synchronized (skinIDMap) {
+                    skinIDMap.put(skinID, skin);
+                }
                 ModLogger.log(Level.WARN, "Got an unknown skin ID: " + skinID);
             }
         }

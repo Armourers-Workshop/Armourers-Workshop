@@ -1,5 +1,8 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -8,9 +11,6 @@ import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageClientGuiButton implements IMessage, IMessageHandler<MessageClientGuiButton, IMessage> {
 
@@ -69,6 +69,14 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             colourMixer.setColourFamily(ColourFamily.values()[message.buttonId]);
         }
         
+        if (container instanceof IButtonPress) {
+            ((IButtonPress)container).buttonPressed(message.buttonId);
+        }
+        
         return null;
+    }
+    
+    public static interface IButtonPress {
+        public void buttonPressed(byte buttonId);
     }
 }

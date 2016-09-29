@@ -3,9 +3,10 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 
-public class ContainerGlobalSkinLibrary extends Container {
+public class ContainerGlobalSkinLibrary extends Container implements IButtonPress {
     
     private TileEntityGlobalSkinLibrary tileEntity;
     
@@ -25,5 +26,10 @@ public class ContainerGlobalSkinLibrary extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotId) {
         return null;
+    }
+
+    @Override
+    public void buttonPressed(byte buttonId) {
+        getTileEntity().buttonPressed(buttonId);
     }
 }
