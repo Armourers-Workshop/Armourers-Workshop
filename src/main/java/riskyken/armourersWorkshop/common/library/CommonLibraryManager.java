@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Level;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
@@ -21,25 +22,26 @@ public class CommonLibraryManager implements ILibraryManager {
 
     private final LibraryFileList serverPublicFiles;
     private final HashMap<UUID, LibraryFileList> serverPrivateFiles;
+    private boolean loadingLibaray;
     
     public CommonLibraryManager() {
         serverPublicFiles = new LibraryFileList(LibraryFileType.SERVER_PUBLIC);
         serverPrivateFiles = new HashMap<UUID, LibraryFileList>();
+        loadingLibaray = false;
     }
     
     @Override
     public void reloadLibrary() {
-        long startTime = System.currentTimeMillis();
-        ModLogger.log("Loading public library skins");
-        int publicFileCount = loadPublicFiles();
-        int endTime = (int) (System.currentTimeMillis() - startTime);
-        ModLogger.log(String.format("Finished loading %d public library skins in %d ms", publicFileCount, endTime));
-        
-        ModLogger.log("Loading private library skins");
-        startTime = System.currentTimeMillis();
-        int privateFileCount = loadPrivateFiles();
-        endTime = (int) (System.currentTimeMillis() - startTime);
-        ModLogger.log(String.format("Finished loading %d private library skins in %d ms", privateFileCount, endTime));
+        if (!loadingLibaray) {
+            loadingLibaray = true;
+            (new Thread(new LibraryLoader(this),LibModInfo.NAME + " library thread.")).start();
+        } else {
+            ModLogger.log("Library is already loading.");
+        }
+    }
+    
+    private void finishedLoading() {
+        loadingLibaray = false;
     }
     
     private int loadPublicFiles() {
@@ -155,6 +157,31 @@ public class CommonLibraryManager implements ILibraryManager {
         LibraryFileList privateList = serverPrivateFiles.get(player.getUniqueID());
         if (privateList != null) {
             privateList.syncFileListWithPlayer(player);
+        }
+    }
+    
+    private static class LibraryLoader implements Runnable {
+
+        private CommonLibraryManager libraryManager;
+        
+        public LibraryLoader(CommonLibraryManager libraryManager) {
+            this.libraryManager = libraryManager;
+        }
+        
+        @Override
+        public void run() {
+            long startTime = System.currentTimeMillis();
+            ModLogger.log("Loading public library skins");
+            int publicFileCount = libraryManager.loadPublicFiles();
+            int endTime = (int) (System.currentTimeMillis() - startTime);
+            ModLogger.log(String.format("Finished loading %d server public library skins in %d ms", publicFileCount, endTime));
+            
+            ModLogger.log("Loading private library skins");
+            startTime = System.currentTimeMillis();
+            int privateFileCount = libraryManager.loadPrivateFiles();
+            endTime = (int) (System.currentTimeMillis() - startTime);
+            ModLogger.log(String.format("Finished loading %d server private library skins in %d ms", privateFileCount, endTime));
+            libraryManager.finishedLoading();
         }
     }
 }
