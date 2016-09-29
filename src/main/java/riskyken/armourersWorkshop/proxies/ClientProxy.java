@@ -177,7 +177,6 @@ public class ClientProxy extends CommonProxy {
             ModLogger.log("Shaders mod support active");
             shadersModLoaded = true;
         } catch (Exception e) {
-            //ModLogger.log("Shaders mod not found");
         }
         if (Loader.isModLoaded("moreplayermodels")) {
             moreplayermodelsLoaded = true;
@@ -194,6 +193,11 @@ public class ClientProxy extends CommonProxy {
         if (moreplayermodelsLoaded & smartMovingLoaded) {
             ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop cannot support this.");
         }
+        if (coloredLightsLoaded & smartMovingLoaded) {
+            ModLogger.log(Level.WARN, "Colored Lights and Smart Moving are both installed. Armourer's Workshop cannot support this.");
+        }
+        
+        ModLogger.log("Skin render type set to: " + getSkinRenderType().toString().toLowerCase());
     }
     
     public static SkinRenderType getSkinRenderType() {
@@ -206,6 +210,12 @@ public class ClientProxy extends CommonProxy {
             return SkinRenderType.RENDER_LAYER;
         default: //Auto
             if (moreplayermodelsLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            if (shadersModLoaded & !smartMovingLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            if (coloredLightsLoaded & !smartMovingLoaded) {
                 return SkinRenderType.RENDER_EVENT;
             }
             return SkinRenderType.MODEL_ATTACHMENT;
