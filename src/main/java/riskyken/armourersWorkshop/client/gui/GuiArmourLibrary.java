@@ -242,11 +242,11 @@ public class GuiArmourLibrary extends GuiContainer {
             break;
         case SERVER_PUBLIC:
             fileSwitchRemotePublic.setPressed(true);
-            reloadButton.visible = isPlayerOp(mc.thePlayer);
+            reloadButton.visible = false;
             break;
         case SERVER_PRIVATE:
             fileSwitchRemotePrivate.setPressed(true);
-            reloadButton.visible = isPlayerOp(mc.thePlayer);
+            reloadButton.visible = false;
             break;
         }
         fileSwitchType = type;
