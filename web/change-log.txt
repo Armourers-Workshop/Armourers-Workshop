@@ -1,3 +1,14 @@
+Build 0.40.1
+Added:
+	Added refresh button to the library.
+	Added unfinished global library.
+Fixed:
+	Fixed wings rendering multiple times.
+Changed:
+	Improved performance when shaders mod is loaded.
+	Library skin list load is now threaded. (massive increase in launch speed)
+
+
 Build 0.40.0
 Added:
 	Added wing skins.
@@ -13,7 +24,8 @@ Changed:
 	Increased allowed depth of bow skins to 64 blocks.
 	Players UUID is saved skins they create.
 	Updated zh_CN land file. (Ethan)
-	
+
+
 Build 0.39.6
 Added:
 	ko_KR lang file (ISJump).
