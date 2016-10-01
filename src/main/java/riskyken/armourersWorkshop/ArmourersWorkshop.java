@@ -24,7 +24,7 @@ import riskyken.armourersWorkshop.common.network.GuiHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.skin.SkinExtractor;
-import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -133,12 +133,12 @@ public class ArmourersWorkshop {
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandArmourers());
-        SkinDataCache.INSTANCE.serverStarted();
+        CommonSkinCache.INSTANCE.serverStarted();
     }
     
     @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
-        SkinDataCache.INSTANCE.serverStopped();
+        CommonSkinCache.INSTANCE.serverStopped();
     }
     
     @Mod.EventHandler

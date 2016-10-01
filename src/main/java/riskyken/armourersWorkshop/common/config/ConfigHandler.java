@@ -27,7 +27,7 @@ public class ConfigHandler {
     public static boolean hideDollFromCreativeTabs;
     
     //client
-    public static int clientModelCacheTime = 12000;
+    public static int clientModelCacheTime = 600000;
     public static int clientTextureCacheTime = 600000;
     public static int maxSkinRenderDistance = 40;
     public static int maxModelBakingThreads = 1;
@@ -39,7 +39,7 @@ public class ConfigHandler {
     public static int maxLodLevels = 4;
     
     //server
-    public static int serverModelCacheTime = 12000;
+    public static int serverModelCacheTime = 600000;
     public static int serverSkinSendRate = 4000;
     
     //general
@@ -262,7 +262,7 @@ public class ConfigHandler {
         clientModelCacheTime = config
                 .get(CATEGORY_CLIENT, "clientModelCacheTime", 600000,
                 "How long in ms the client will keep skins in it's cache.\n" + 
-                "Default 600000 ticks is 10 minutes.")
+                "Default 600000 ms is 10 minutes.")
                 .getInt(600000);
         
         clientTextureCacheTime = config
@@ -293,10 +293,10 @@ public class ConfigHandler {
     
     private static void loadCategoryServer() {
         serverModelCacheTime = config
-                .get(CATEGORY_SERVER, "serverModelCacheTime", 12000,
-                "How long in ticks the server will keep skins in it's cache.\n" + 
-                "Default 12000 ticks is 10 minutes.")
-                .getInt(12000);
+                .get(CATEGORY_SERVER, "serverModelCacheTime", 600000,
+                "How long in ms the server will keep skins in it's cache.\n" + 
+                "Default 600000 ms is 10 minutes.")
+                .getInt(600000);
         
         serverSkinSendRate = config.getInt("serverModelSendRate", CATEGORY_SERVER, 4000, 0, 8000,
                 "The maximum number of skins the server is allow to send every minute.\n"

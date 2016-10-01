@@ -30,7 +30,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
-import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
@@ -170,7 +170,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             return;
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
@@ -219,7 +219,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
-        Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
+        Skin equipmentData = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
         skinProps = new SkinProperties(equipmentData.getProperties());
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);

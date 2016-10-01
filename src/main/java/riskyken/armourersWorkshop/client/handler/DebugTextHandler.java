@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPaintCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
@@ -37,7 +38,10 @@ public class DebugTextHandler {
             event.left.add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
             event.left.add("Model Count: " + ClientSkinCache.INSTANCE.getModelCount());
             if (GuiScreen.isCtrlKeyDown()) {
-                event.left.add("Skin Count: " + ArmourersWorkshop.proxy.getPlayerModelCacheSize());
+                event.left.add("Client Skin Count: " + ArmourersWorkshop.proxy.getPlayerModelCacheSize());
+                if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
+                    event.left.add("Common Skin Count: " + CommonSkinCache.INSTANCE.size());
+                }
                 event.left.add("Part Count: " + ClientSkinCache.INSTANCE.getPartCount());
                 event.left.add("Player Data: " + SkinModelRenderer.INSTANCE.getSkinDataMapSize());
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
@@ -46,6 +50,7 @@ public class DebugTextHandler {
                 event.left.add("Texture Count: " + ClientSkinPaintCache.INSTANCE.size());
                 event.left.add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
                 event.left.add("Texture Render: " + ClientProxy.useSafeTextureRender());
+                
                 if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     for (int i = 0; i < playerList.size(); i++) {
                         GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);

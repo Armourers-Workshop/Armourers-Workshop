@@ -15,7 +15,7 @@ import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -144,7 +144,7 @@ public class TileEntitySkinnable extends TileEntity {
     }
 
     private Skin getSkinServer(ISkinPointer skinPointer) {
-        return SkinDataCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
+        return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
@@ -44,9 +44,9 @@ public final class SkinUtils {
     
     private static Skin getSkinOnServer(SkinPointer skinPointer, boolean softLoad) {
         if (softLoad) {
-            return SkinDataCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
+            return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
         } else {
-            return SkinDataCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
+            return CommonSkinCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
         }
     }
     
