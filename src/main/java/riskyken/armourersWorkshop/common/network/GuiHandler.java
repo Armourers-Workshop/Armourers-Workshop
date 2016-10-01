@@ -14,11 +14,11 @@ import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
 import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
-import riskyken.armourersWorkshop.client.gui.GuiGlobalSkinLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
@@ -202,7 +202,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.GLOBAL_SKIN_LIBRARY:
                 if (te instanceof TileEntityGlobalSkinLibrary) {
-                    return new GuiGlobalSkinLibrary((TileEntityGlobalSkinLibrary)te);
+                    return new GuiGlobalLibrary((TileEntityGlobalSkinLibrary)te);
                 }
                 break;
         }

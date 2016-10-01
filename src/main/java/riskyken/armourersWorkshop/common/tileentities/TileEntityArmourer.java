@@ -30,7 +30,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;

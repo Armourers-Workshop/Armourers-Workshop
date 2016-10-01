@@ -2,16 +2,15 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 
 @SideOnly(Side.CLIENT)
 public class GuiIconButton extends GuiButtonExt {

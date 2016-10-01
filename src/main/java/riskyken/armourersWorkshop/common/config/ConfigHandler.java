@@ -260,10 +260,10 @@ public class ConfigHandler {
                 .getInt(1);
         
         clientModelCacheTime = config
-                .get(CATEGORY_CLIENT, "clientModelCacheTime", 12000,
-                "How long in ticks the client will keep skins in it's cache.\n" + 
-                "Default 12000 ticks is 10 minutes.")
-                .getInt(12000);
+                .get(CATEGORY_CLIENT, "clientModelCacheTime", 600000,
+                "How long in ms the client will keep skins in it's cache.\n" + 
+                "Default 600000 ticks is 10 minutes.")
+                .getInt(600000);
         
         clientTextureCacheTime = config
                 .getInt("clientTextureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,

@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.crafting.ItemSkinningRecipes;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;

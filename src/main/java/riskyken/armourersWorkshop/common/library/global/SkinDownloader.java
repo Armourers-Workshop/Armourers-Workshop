@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -21,24 +22,26 @@ public final class SkinDownloader implements Runnable  {
     
     private IDownloadListCallback listCallback = null;
     private IDownloadSkinCallback skinCallback = null;
-    private ArrayList<String> remoteSkins;
     private ArrayList<String> downloadedModels = new ArrayList<String>();
+    private String url;
+    private JsonArray json;
     
-    private SkinDownloader(IDownloadListCallback callback) {
+    private SkinDownloader(IDownloadListCallback callback, String url) {
         this.listCallback = callback;
+        this.url = url;
     }
     
-    private SkinDownloader(IDownloadSkinCallback callback, ArrayList<String> remoteSkins) {
+    private SkinDownloader(IDownloadSkinCallback callback, JsonArray json) {
         this.skinCallback = callback;
-        this.remoteSkins = remoteSkins;
+        this.json = json;
     }
     
-    public static void downloadSkinList(IDownloadListCallback callback) {
-        (new Thread(new SkinDownloader(callback), LibModInfo.NAME + " download thread.")).start();
+    public static void downloadJson(IDownloadListCallback callback, String url) {
+        (new Thread(new SkinDownloader(callback, url), LibModInfo.NAME + " download thread.")).start();
     }
     
-    public static void downloadSkins(IDownloadSkinCallback callback, ArrayList<String> remoteSkins) {
-        (new Thread(new SkinDownloader(callback, remoteSkins), LibModInfo.NAME + " download thread.")).start();
+    public static void downloadSkins(IDownloadSkinCallback callback, JsonArray json) {
+        (new Thread(new SkinDownloader(callback, json), LibModInfo.NAME + " download thread.")).start();
     }
     
     private void downloadSkinList() {
@@ -46,7 +49,7 @@ public final class SkinDownloader implements Runnable  {
         InputStream in = null;
         String data = null;
         try {
-            in = new URL("http://plushie.moe/armourers_workshop/skin-list.php").openStream();
+            in = new URL(url).openStream();
             data = IOUtils.toString(in);
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,9 +61,9 @@ public final class SkinDownloader implements Runnable  {
             return;
         }
         
-        JsonObject json = null;
+        JsonArray json = null;
         try {
-            json = (JsonObject) new JsonParser().parse(data);
+            json = (JsonArray) new JsonParser().parse(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,15 +75,17 @@ public final class SkinDownloader implements Runnable  {
         if (json != null & listCallback != null) {
             listCallback.listDownloadFinished(json);
         }
-        ModLogger.log(json);
+        //ModLogger.log(json);
         
         ModLogger.log("Download Test Finished");
     }
     
     private void downloadSkins() {
-        for (int i = 0; i < remoteSkins.size(); i++) {
-            if (!downloadedSkin(remoteSkins.get(i))) {
-                downloadSkin(remoteSkins.get(i));
+        for (int i = 0; i < json.size(); i++) {
+            JsonObject obj = json.get(i).getAsJsonObject();
+            String name = obj.get("file_name").getAsString();
+            if (!downloadedSkin(name)) {
+                downloadSkin(name);
             }
         }
     }
@@ -102,7 +107,7 @@ public final class SkinDownloader implements Runnable  {
         String data = null;
         Skin skin = null;
         try {
-            in = new URL("http://plushie.moe/armourers_workshop/" + name.replace(" ", "%20")).openStream();
+            in = new URL("http://plushie.moe/armourers_workshop/skins/" + name).openStream();
             skin = SkinIOUtils.loadSkinFromStream(new BufferedInputStream(in));
         } catch (IOException e) {
             e.printStackTrace();
@@ -126,13 +131,13 @@ public final class SkinDownloader implements Runnable  {
         if (listCallback != null) {
             downloadSkinList();
         }
-        if (skinCallback != null & remoteSkins != null) {
+        if (skinCallback != null & json != null) {
             downloadSkins();
         }
     }
     
     public static interface IDownloadListCallback {
-        public void listDownloadFinished(JsonObject json);
+        public void listDownloadFinished(JsonArray json);
     }
     
     public static interface IDownloadSkinCallback {

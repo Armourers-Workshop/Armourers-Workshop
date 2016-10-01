@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;

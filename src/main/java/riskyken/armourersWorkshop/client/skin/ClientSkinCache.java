@@ -14,6 +14,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
+import riskyken.armourersWorkshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinId;
@@ -21,11 +23,11 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
-public class ClientSkinCache {
+public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     
     public static ClientSkinCache INSTANCE;
     
-    private final HashMap<Integer, Skin> skinIDMap;
+    private final ExpiringHashMap<Integer, Skin> skinIDMap;
     private final HashMap<String, Integer> skinNameMap;
     private final HashSet<Integer> requestedSkinIDs;
     private final HashSet<String> requestedSkinNames;
@@ -35,7 +37,7 @@ public class ClientSkinCache {
     }
     
     protected ClientSkinCache() {
-        skinIDMap = new HashMap<Integer, Skin>();
+        skinIDMap = new ExpiringHashMap<Integer, Skin>(ConfigHandler.clientModelCacheTime, this);
         skinNameMap = new HashMap<String, Integer>();
         requestedSkinIDs = new HashSet<Integer>();
         requestedSkinNames = new HashSet<String>();
@@ -167,10 +169,10 @@ public class ClientSkinCache {
     public int getModelCount() {
         int count = 0;
         synchronized (skinIDMap) {
-            Object[] keySet = skinIDMap.keySet().toArray();
+            Object[] keySet = skinIDMap.getKeySet().toArray();
             for (int i = 0; i < keySet.length; i++) {
                 int key = (Integer) keySet[i];
-                Skin skin = skinIDMap.get(key);
+                Skin skin = skinIDMap.getQuiet(key);
                 count += skin.getModelCount();
             }
         }
@@ -180,10 +182,10 @@ public class ClientSkinCache {
     public int getPartCount() {
         int count = 0;
         synchronized (skinIDMap) {
-            Object[] keySet = skinIDMap.keySet().toArray();
+            Object[] keySet = skinIDMap.getKeySet().toArray();
             for (int i = 0; i < keySet.length; i++) {
                 int key = (Integer) keySet[i];
-                Skin skin = skinIDMap.get(key);
+                Skin skin = skinIDMap.getQuiet(key);
                 count += skin.getPartCount();
             }
         }
@@ -192,7 +194,7 @@ public class ClientSkinCache {
     
     public void clearCache() {
         synchronized (skinIDMap) {
-            Object[] keySet = skinIDMap.keySet().toArray();
+            Object[] keySet = skinIDMap.getKeySet().toArray();
             for (int i = 0; i < keySet.length; i++) {
                 int key = (Integer) keySet[i];
                 Skin customArmourItemData = skinIDMap.get(key);
@@ -221,27 +223,12 @@ public class ClientSkinCache {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
-            tick();
+            skinIDMap.cleanupCheck();
         }
     }
-    
-    public void tick() {
-        synchronized (skinIDMap) {
-            Object[] keySet = skinIDMap.keySet().toArray();
-            for (int i = 0; i < keySet.length; i++) {
-                int key = (Integer) keySet[i];
-                skinIDMap.get(key).tick();
-            }
-            
-            for (int i = 0; i < keySet.length; i++) {
-                int key = (Integer) keySet[i];
-                Skin customArmourItemData = skinIDMap.get(key);
-                if (customArmourItemData.needsCleanup(ConfigHandler.clientModelCacheTime)) {
-                    skinIDMap.remove(key);
-                    customArmourItemData.cleanUpDisplayLists();
-                    break;
-                }
-            }
-        }
+
+    @Override
+    public void itemExpired(Skin mapItem) {
+        mapItem.cleanUpDisplayLists();
     }
 }

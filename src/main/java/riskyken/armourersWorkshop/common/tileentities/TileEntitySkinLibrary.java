@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;

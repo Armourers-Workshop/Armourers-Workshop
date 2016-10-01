@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin;
+package riskyken.armourersWorkshop.common.skin.cache;
 
 import java.io.File;
 import java.io.InputStream;
