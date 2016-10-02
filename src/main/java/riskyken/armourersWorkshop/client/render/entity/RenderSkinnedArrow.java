@@ -53,7 +53,6 @@ public class RenderSkinnedArrow extends RenderArrow {
         if (skin == null) {
             return;
         }
-        skin.onUsed();
         
         float scale = 0.0625F;
         GL11.glPushMatrix();

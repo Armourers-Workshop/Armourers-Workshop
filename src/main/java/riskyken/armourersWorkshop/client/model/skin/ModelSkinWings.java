@@ -36,7 +36,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSword);
-        skin.onUsed();
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
             

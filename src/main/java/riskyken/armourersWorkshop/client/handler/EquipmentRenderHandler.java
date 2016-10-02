@@ -108,7 +108,6 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skin == null) {
             return false;
         }
-        skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             if (skinPart.getPartType() == skinPartType) {

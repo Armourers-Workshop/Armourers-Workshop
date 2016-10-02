@@ -111,7 +111,6 @@ public final class ItemStackRenderHelper {
         if (skin == null) {
             return;
         }
-        skin.onUsed();
         float scale = 1F / 16F;
         for (int i = 0; i < skin.getParts().size(); i++) {
             GL11.glPushMatrix();

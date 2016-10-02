@@ -133,24 +133,6 @@ public class Skin implements ISkin {
         return properties;
     }
     
-    /** Number of ticks from when this skin was last used. */
-    private int ticksFromLastAccess = 0;
-    
-    public void onUsed() {
-        ticksFromLastAccess = 0;
-    }
-    
-    public void tick() {
-        ticksFromLastAccess++;
-    }
-    
-    public boolean needsCleanup(int maxUnusedTicks) {
-        if (ticksFromLastAccess > maxUnusedTicks) {
-            return true;
-        }
-        return false;
-    }
-    
     public Skin(SkinProperties properties, ISkinType equipmentSkinType, int[] paintData, ArrayList<SkinPart> equipmentSkinParts) {
         this.properties = properties;
         this.equipmentSkinType = equipmentSkinType;

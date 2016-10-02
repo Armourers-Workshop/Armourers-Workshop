@@ -37,7 +37,6 @@ public class ModelSkinFeet extends AbstractModelSkin {
         }
 
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinFeet);
-        armourData.onUsed();
         RenderHelper.enableGUIStandardItemLighting();
         
         if (armourData.hasPaintData() & showSkinPaint) {

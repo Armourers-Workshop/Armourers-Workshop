@@ -180,7 +180,6 @@ public class RenderItemBowSkin implements IItemRenderer {
                     if (skinPointerArrow != null && ClientSkinCache.INSTANCE.isSkinInCache(skinPointerArrow)) {
                         Skin arrowSkin = ClientSkinCache.INSTANCE.getSkin(skinPointerArrow);
                         if (arrowSkin != null) {
-                            arrowSkin.onUsed();
                             for (int i = 0; i < arrowSkin.getParts().size(); i++) {
                                 SkinPart skinPart = arrowSkin.getParts().get(i);
                                 SkinPartRenderer.INSTANCE.renderPart(skinPart, scale, skinPointer.getSkinDye(), null, false);

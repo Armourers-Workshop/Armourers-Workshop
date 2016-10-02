@@ -80,7 +80,6 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         if (rotation != 0) {
           GL11.glRotatef((90F * rotation), 0, 1, 0);
         }
-        skin.onUsed();
         double distance = Minecraft.getMinecraft().thePlayer.getDistance(
                 tileEntity.xCoord + 0.5F,
                 tileEntity.yCoord + 0.5F,

@@ -38,7 +38,6 @@ public class ModelSkinBow extends AbstractModelSkin {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinBow);
-        armourData.onUsed();
         
         if (frame > parts.size() - 1) {
             frame = parts.size() - 1;

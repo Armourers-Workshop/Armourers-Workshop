@@ -34,7 +34,6 @@ public class ModelSkinSword extends AbstractModelSkin {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSword);
-        armourData.onUsed();
         
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);

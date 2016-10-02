@@ -184,7 +184,6 @@ public final class CommonSkinCache implements Runnable {
             if (skinDataCache.containsKey(skinId)) {
                 Skin skin = skinDataCache.get(skinId);
                 skin.requestId = skinId;
-                skin.onUsed();
                 PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), player);
             } else {
                 ModLogger.log(Level.ERROR, "Equipment id:" + skinId +" was requested by "
@@ -269,7 +268,6 @@ public final class CommonSkinCache implements Runnable {
         }
         if (skinDataCache.containsKey(equipmentId)) {
             Skin skin = skinDataCache.get(equipmentId);
-            skin.onUsed();
             return skin;
         }
         return null;
@@ -283,7 +281,6 @@ public final class CommonSkinCache implements Runnable {
     public Skin softGetSkin(int skinId) {
         if (skinDataCache.containsKey(skinId)) {
             Skin skin = skinDataCache.get(skinId);
-            skin.onUsed();
             return skin;
         }
         synchronized (skinLoadQueue) {

@@ -93,7 +93,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 continue;
             }
             ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType, skinIndex);
-            data.onUsed();
+
             int size = data.getParts().size();
             for (int i = 0; i < size; i++) {
                 SkinPart partData = data.getParts().get(i);

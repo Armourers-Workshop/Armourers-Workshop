@@ -36,7 +36,6 @@ public class ModelSkinHead extends AbstractModelSkin {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinHead);
-        skin.onUsed();
         RenderHelper.enableGUIStandardItemLighting();
         
         if (skin.hasPaintData() & showSkinPaint) {
