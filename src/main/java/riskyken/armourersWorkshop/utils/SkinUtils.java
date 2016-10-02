@@ -62,7 +62,7 @@ public final class SkinUtils {
         double idleSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D);
         double flyingSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D);
         
-        double angle = maxAngle;
+        double angle = 0;
         double flapTime = idleSpeed;
         
         if (entity != null) {

@@ -13,7 +13,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -38,7 +38,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     }
     
     protected ClientSkinCache() {
-        skinIDMap = new ExpiringHashMap<Integer, Skin>(ConfigHandler.clientModelCacheTime, this);
+        skinIDMap = new ExpiringHashMap<Integer, Skin>(ConfigHandlerClient.clientModelCacheTime, this);
         skinNameMap = new HashMap<String, Integer>();
         skinServerIdMap = new HashMap<Integer, Integer>();
         requestedSkinIDs = new HashSet<Integer>();
@@ -105,6 +105,12 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
             }
         }
         return null;
+    }
+    
+    public void addServerIdMap(Skin skin) {
+        synchronized (skinServerIdMap) {
+            skinServerIdMap.put(skin.serverId, skin.lightHash());
+        }
     }
     
     private boolean haveIdForFileName(String fileName) {

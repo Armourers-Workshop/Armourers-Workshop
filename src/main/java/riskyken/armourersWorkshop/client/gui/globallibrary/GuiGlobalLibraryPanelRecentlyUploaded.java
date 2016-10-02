@@ -26,14 +26,25 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
     
     private Object syncLock = new Object();
     private ArrayList<SkinPointer> skins = new ArrayList<SkinPointer>();
+    private int displayLimit = 1;
     
     public GuiGlobalLibraryPanelRecentlyUploaded(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        updateRecentlyUploadedSkin();
     }
     
     public void updateRecentlyUploadedSkin() {
-        SkinDownloader.downloadJson(this, RECENTLY_UPLOADED_URL);
+        clearSkin();
+        SkinDownloader.downloadJson(this, RECENTLY_UPLOADED_URL + "?limit=" + displayLimit);
+    }
+    
+    @Override
+    public void initGui() {
+        int boxW = width - 5;
+        int boxH = height - 5 - 12;
+        int iconSize = 50;
+        int rowSize = (int) Math.floor(boxW / iconSize);
+        int colSize = (int) Math.floor(boxH / iconSize);
+        displayLimit = colSize * rowSize;
     }
     
     @Override
@@ -60,7 +71,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
                 if (skin != null) {
                     float scale = iconSize / 2;
                     if (y < colSize) {
-                        fontRenderer.drawString(skin.getCustomName(), this.x + x * iconSize, this.y + y * iconSize + iconSize, 0xFFEEEEEE);
+                        //fontRenderer.drawString(skin.getCustomName(), this.x + x * iconSize, this.y + y * iconSize + iconSize, 0xFFEEEEEE);
                         GL11.glPushMatrix();
                         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
                         GL11.glTranslatef(this.x + iconSize / 2 + x * iconSize, 12 + this.y + iconSize / 2 + y * iconSize, 200.0F);
@@ -106,6 +117,10 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
         if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
             ModelBakery.INSTANCE.receivedUnbakedModel(skin);
         } else {
+            if (skin != null) {
+                ClientSkinCache.INSTANCE.addServerIdMap(skin);
+            }
+            
             ModLogger.log("Model was already downloaded.");
         }
     }

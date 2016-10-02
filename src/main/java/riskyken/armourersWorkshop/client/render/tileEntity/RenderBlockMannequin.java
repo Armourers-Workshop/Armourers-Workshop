@@ -40,7 +40,7 @@ import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -215,7 +215,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 te.skinTexture.updateDyes(dyes);
                 
                 if (te.skinTexture.getNeedsUpdate()) {
-                    if (lastTextureBuild + 100L < System.currentTimeMillis()) {
+                    if (lastTextureBuild + 200L < System.currentTimeMillis()) {
                         lastTextureBuild = System.currentTimeMillis();
                         rl = te.skinTexture.preRender();
                     }
@@ -287,7 +287,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 te.xCoord + 0.5F,
                 te.yCoord + 0.5F,
                 te.zCoord + 0.5F);
-        if (distance <= ConfigHandler.mannequinMaxEquipmentRenderDistance) {
+        if (distance <= ConfigHandlerClient.mannequinMaxEquipmentRenderDistance) {
             renderEquippedItems(te, fakePlayer, model, distance);
         }
         

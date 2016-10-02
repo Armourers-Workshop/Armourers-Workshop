@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 /**
@@ -67,9 +68,9 @@ public final class ItemStackRenderHelper {
         height = Math.max(height, sb.getHeight());
         depth = Math.max(depth, sb.getDepth());
         
-        scaleX = Math.min(scaleX, 1F / width);
-        scaleY = Math.min(scaleY, 1F / height);
-        scaleZ = Math.min(scaleZ, 1F / depth);
+        scaleX = Math.min(scaleX, 1F / (float)width);
+        scaleY = Math.min(scaleY, 1F / (float)height);
+        scaleZ = Math.min(scaleZ, 1F / (float)depth);
         
         scale = Math.min(scale, scaleX);
         scale = Math.min(scale, scaleY);
@@ -85,6 +86,10 @@ public final class ItemStackRenderHelper {
         GL11.glTranslatef(offsetX * mcScale, 0, 0);
         GL11.glTranslatef(0, offsetY * mcScale, 0);
         GL11.glTranslatef(0, 0, offsetZ * mcScale);
+        
+        if (skin.getSkinType() == SkinTypeRegistry.skinWings) {
+            GL11.glTranslated(-offsetX * mcScale, 0, 0);
+        }
         
         renderSkinWithHelper(skin, skinPointer, showSkinPaint, doLodLoading);
 

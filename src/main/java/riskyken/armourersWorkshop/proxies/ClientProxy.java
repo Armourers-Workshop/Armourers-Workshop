@@ -54,7 +54,7 @@ import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -201,7 +201,7 @@ public class ClientProxy extends CommonProxy {
     }
     
     public static SkinRenderType getSkinRenderType() {
-        switch (ConfigHandler.skinRenderType) {
+        switch (ConfigHandlerClient.skinRenderType) {
         case 1: //Force render event
             return SkinRenderType.RENDER_EVENT;
         case 2: //Force model attachment
@@ -226,7 +226,7 @@ public class ClientProxy extends CommonProxy {
         if (shadersModLoaded) {
             return true;
         }
-        if (ConfigHandler.skinTextureRenderOverride) {
+        if (ConfigHandlerClient.skinTextureRenderOverride) {
             return true;
         }
         if (coloredLightsLoaded) {
@@ -236,7 +236,7 @@ public class ClientProxy extends CommonProxy {
     }
     
     public static boolean useMultipassSkinRendering() {
-        return ConfigHandler.multipassSkinRendering;
+        return ConfigHandlerClient.multipassSkinRendering;
     }
     
     public static int getNumberOfRenderLayers() {

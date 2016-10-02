@@ -95,10 +95,14 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
     
     public void switchScreen(Screen screen) {
         if (screen == Screen.HOME) {
+            
             ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkin();
         }
         this.screen = screen;
         setupPanels();
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).initGui();
+        }
     }
     
     @Override

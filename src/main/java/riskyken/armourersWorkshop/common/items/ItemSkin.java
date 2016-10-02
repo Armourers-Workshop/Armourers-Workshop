@@ -24,7 +24,7 @@ import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -85,7 +85,7 @@ public class ItemSkin extends AbstractModItem {
                     String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
                 }
-                if (ConfigHandler.showSkinTooltipDebugInfo) {
+                if (ConfigHandlerClient.showSkinTooltipDebugInfo) {
                     if (GuiScreen.isShiftKeyDown()) {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.skinId));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));

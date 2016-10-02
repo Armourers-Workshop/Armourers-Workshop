@@ -36,7 +36,7 @@ import riskyken.armourersWorkshop.client.model.skin.ModelSkinSkirt;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSword;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinWings;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -282,7 +282,7 @@ public final class SkinModelRenderer {
                 player.posY,
                 player.posZ);
         
-        if (distance > ConfigHandler.maxSkinRenderDistance) {
+        if (distance > ConfigHandlerClient.maxSkinRenderDistance) {
             return;
         }
         

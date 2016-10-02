@@ -14,7 +14,7 @@ import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -193,7 +193,7 @@ public class TileEntitySkinnable extends TileEntity {
     
     @Override
     public double getMaxRenderDistanceSquared() {
-        return ConfigHandler.blockSkinMaxRenderDistance;
+        return ConfigHandlerClient.blockSkinMaxRenderDistance;
     }
 
     public class SkinnableBlockData {

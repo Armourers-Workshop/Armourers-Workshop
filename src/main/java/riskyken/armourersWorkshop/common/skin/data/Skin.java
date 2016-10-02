@@ -120,9 +120,6 @@ public class Skin implements ISkin {
             }
         }
         
-        if (hasPaintData()) {
-        }
-        
         return new Rectangle3D(x, y, z, width, height, depth);
     }
     

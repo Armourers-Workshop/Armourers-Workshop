@@ -15,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -64,7 +64,7 @@ public final class ModelBakery {
     }
     
     private void loadOvens() {
-        if (runningOvens.get() >= ConfigHandler.maxModelBakingThreads & ConfigHandler.maxModelBakingThreads > 0) {
+        if (runningOvens.get() >= ConfigHandlerClient.maxModelBakingThreads & ConfigHandlerClient.maxModelBakingThreads > 0) {
             return;
         }
         if (unbakedModels.size() == 0) {

@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPaintCache;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -27,7 +27,7 @@ public class DebugTextHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onDebugText(RenderGameOverlayEvent.Text event) {
-        if (!ConfigHandler.showF3DebugInfo) {
+        if (!ConfigHandlerClient.showF3DebugInfo) {
             return;
         }
         if (event.left != null && event.left.size() > 0) {

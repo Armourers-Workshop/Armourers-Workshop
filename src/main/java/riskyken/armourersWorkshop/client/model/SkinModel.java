@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 
 @SideOnly(Side.CLIENT)
 public class SkinModel {
@@ -34,7 +34,7 @@ public class SkinModel {
         long time = System.currentTimeMillis();
         if (time < loadedTime + 500) {
             long timePassed = time - loadedTime;
-            return MathHelper.clamp_int((ConfigHandler.maxLodLevels + 1) - ((int) (timePassed / 125F) + 1), 0, ConfigHandler.maxLodLevels + 1);
+            return MathHelper.clamp_int((ConfigHandlerClient.maxLodLevels + 1) - ((int) (timePassed / 125F) + 1), 0, ConfigHandlerClient.maxLodLevels + 1);
         }
         return 0;
     }

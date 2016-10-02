@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop;
 
+import java.io.File;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -15,6 +17,7 @@ import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.config.ConfigSynchronizeHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
@@ -86,7 +89,14 @@ public class ArmourersWorkshop {
     public void perInit(FMLPreInitializationEvent event) {
         ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
-        ConfigHandler.init(event.getSuggestedConfigurationFile());
+        
+        File configDir = event.getSuggestedConfigurationFile().getParentFile();
+        configDir = new File(configDir, LibModInfo.ID);
+        if (!configDir.exists()) {
+            configDir.mkdirs();
+        }
+        ConfigHandler.init(new File(configDir, "common.cfg"));
+        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
 
         Addons.preInit();
         proxy.preInit();

@@ -6,6 +6,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonArray;
 
+import cpw.mods.fml.client.config.GuiButtonExt;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
@@ -23,9 +25,38 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel implements IDownloadListCallback, IDownloadSkinCallback {
     
     private ArrayList<SkinPointer> skins = new ArrayList<SkinPointer>();
+    private int page = 0;
+    private int displayCount = 1;
     
     public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
+    }
+    
+    @Override
+    public void initGui() {
+        buttonList.clear();
+        buttonList.add(new GuiButtonExt(0, x + 5, y + height - 25, 80, 20, "<<"));
+        buttonList.add(new GuiButtonExt(1, x + width - 85, y + height - 25, 80, 20, ">>"));
+    }
+    
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        int skinCount = 0;
+        synchronized (skins) {
+            skinCount = skins.size();
+        }
+        int maxPages = (int) Math.ceil((float)skinCount / (float)displayCount);
+        
+        if (button.id == 0) {
+            if (page > 0) {
+                page--;
+            }
+        }
+        if (button.id == 1) {
+            if (page < maxPages - 1) {
+                page++;
+            }
+        }
     }
     
     @Override
@@ -36,23 +67,28 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel implements IDow
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         super.drawScreen(mouseX, mouseY, partialTickTime);
         
-        fontRenderer.drawString("Search Results:", x + 5, y + 6, 0xFFEEEEEE);
-        
         int boxW = width - 5;
         int boxH = height - 5 - 12;
-        int iconSize = 120;
+        int iconSize = 110;
         synchronized (skins) {
-            for (int i = 0; i < skins.size(); i++) {
+            int maxPages = (int) Math.ceil((float)skins.size() / (float)displayCount);
+            fontRenderer.drawString("Search Results:  Page " + (page + 1) + " of " + (maxPages) + " - Total of " + skins.size() + " Results", x + 5, y + 6, 0xFFEEEEEE);
+            
+            //ModLogger.log(maxPages);
+            for (int i = page * displayCount; i < skins.size(); i++) {
                 int rowSize = (int) Math.floor(boxW / iconSize);
                 int colSize = (int) Math.floor(boxH / iconSize);
-                int x = i % rowSize;
-                int y = (int) (i / rowSize);
+                displayCount = rowSize * colSize;
+                int x = (i - page * displayCount) % rowSize;
+                int y = (i - page * displayCount) / rowSize;
+                
                 SkinPointer skinPointer = skins.get(i);
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
                 if (skin != null) {
                     float scale = iconSize / 3;
                     if (y < colSize) {
-                        fontRenderer.drawString(skin.getCustomName(), this.x + x * iconSize, this.y + y * iconSize + iconSize, 0xFFEEEEEE);
+                        int size = fontRenderer.getStringWidth(skin.getCustomName());
+                        fontRenderer.drawString(skin.getCustomName(), (int) (this.x + x * iconSize + iconSize / 2 - size / 2), this.y + y * iconSize + iconSize, 0xFFEEEEEE);
                         GL11.glPushMatrix();
                         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
                         GL11.glTranslatef(this.x + iconSize / 2 + x * iconSize, 12 + this.y + iconSize / 2 + y * iconSize, 200.0F);
@@ -78,6 +114,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel implements IDow
     public void clearSkin() {
         synchronized (skins) {
             skins.clear();
+            page = 0;
         }
     }
     
