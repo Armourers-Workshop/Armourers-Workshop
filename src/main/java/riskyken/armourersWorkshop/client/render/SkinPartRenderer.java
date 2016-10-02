@@ -34,17 +34,17 @@ public class SkinPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour) {
-        renderPart(skinPart, scale, skinDye, extraColour, 0);
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, boolean doLodLoading) {
+        renderPart(skinPart, scale, skinDye, extraColour, 0, doLodLoading);
     }
     
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance) {
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
         int lod = MathHelper.floor_double(distance / ConfigHandler.lodDistance);
         lod = MathHelper.clamp_int(lod, 0, ConfigHandler.maxLodLevels);
-        renderPart(skinPart, scale, skinDye, extraColour, lod);
+        renderPart(skinPart, scale, skinDye, extraColour, lod, doLodLoading);
     }
     
-    private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod) {
+    private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod, boolean doLodLoading) {
         //mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         //GL11.glColor3f(1F, 1F, 1F);
@@ -76,6 +76,9 @@ public class SkinPartRenderer extends ModelBase {
         int endIndex = 0;;
         
         int loadingLod = skinModel.getLoadingLod();
+        if (!doLodLoading) {
+            loadingLod = 0;
+        }
         if (loadingLod > lod) {
             lod = loadingLod;
         }

@@ -87,7 +87,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
                 tileEntity.zCoord + 0.5F);
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true);
         }
         if (rotation != 0) {
             GL11.glRotatef((90F * -rotation), 0, 1, 0);

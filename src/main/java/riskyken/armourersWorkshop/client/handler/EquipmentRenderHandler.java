@@ -32,7 +32,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, null, 0);
+        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, null, 0, true);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, modelBiped, null, 0);
+        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, modelBiped, null, 0, true);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             if (skinPart.getPartType() == skinPartType) {
-                SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null);
+                SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null, true);
                 return true;
             }
         }

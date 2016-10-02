@@ -306,35 +306,35 @@ public final class SkinModelRenderer {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                     if (data != null) {
-                        customHead.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+                        customHead.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                     if (data != null) {
-                        customChest.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+                        customChest.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
                     if (data != null) {
-                        customLegs.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+                        customLegs.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     if (data != null) {
-                        customSkirt.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+                        customSkirt.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
                     if (data != null) {
-                        customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+                        customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
             }
@@ -342,7 +342,7 @@ public final class SkinModelRenderer {
         Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
         ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
         if (data != null) {
-            customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance);
+            customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
         }
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);
@@ -370,22 +370,22 @@ public final class SkinModelRenderer {
         return null;
     }
     
-    public boolean renderEquipmentPartFromStack(Entity entity, ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance) {
+    public boolean renderEquipmentPartFromStack(Entity entity, ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer == null) {
             return false;
         }
         Skin data = getCustomArmourItemData(skinPointer);
-        return renderEquipmentPart(entity, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance);
+        return renderEquipmentPart(entity, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
     }
     
-    public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance) {
+    public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer == null) {
             return false;
         }
         Skin data = getCustomArmourItemData(skinPointer);
-        return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance);
+        return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
     }
     
     public boolean renderEquipmentPartFromSkinPointer(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
@@ -393,7 +393,7 @@ public final class SkinModelRenderer {
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
-    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, byte[] extraColours, double distance) {
+    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, byte[] extraColours, double distance, boolean doLodLoading) {
         if (data == null) {
             return false;
         }
@@ -405,7 +405,7 @@ public final class SkinModelRenderer {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
-        model.render(entity, modelBiped, data, false, skinDye, extraColours, false, distance);
+        model.render(entity, modelBiped, data, false, skinDye, extraColours, false, distance, doLodLoading);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);
         return true;

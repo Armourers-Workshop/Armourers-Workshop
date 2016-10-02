@@ -30,16 +30,16 @@ public final class ItemStackRenderHelper {
     public static void renderItemAsArmourModel(ItemStack stack, boolean showSkinPaint) {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-            renderItemModelFromSkinPointer(skinPointer, showSkinPaint);
+            renderItemModelFromSkinPointer(skinPointer, showSkinPaint, false);
         }
     }
     
-    public static void renderItemModelFromSkinPointer(ISkinPointer skinPointer, boolean showSkinPaint) {
-        renderItemModelFromSkin(ClientSkinCache.INSTANCE.getSkin(skinPointer), skinPointer, showSkinPaint);
+    public static void renderItemModelFromSkinPointer(ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
+        renderItemModelFromSkin(ClientSkinCache.INSTANCE.getSkin(skinPointer), skinPointer, showSkinPaint, doLodLoading);
     }
     
     
-    public static void renderItemModelFromSkin(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint) {
+    public static void renderItemModelFromSkin(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
         if (skin == null) {
             return;
         }
@@ -86,12 +86,12 @@ public final class ItemStackRenderHelper {
         GL11.glTranslatef(0, offsetY * mcScale, 0);
         GL11.glTranslatef(0, 0, offsetZ * mcScale);
         
-        renderSkinWithHelper(skin, skinPointer, showSkinPaint);
+        renderSkinWithHelper(skin, skinPointer, showSkinPaint, doLodLoading);
 
         GL11.glPopMatrix();
     }
     
-    public static void renderSkinWithHelper(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint) {
+    public static void renderSkinWithHelper(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
         ISkinType skinType = skinPointer.getSkinType();
         
         IEquipmentModel targetModel = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
@@ -99,14 +99,14 @@ public final class ItemStackRenderHelper {
         
         
         if (targetModel == null) {
-            renderSkinWithoutHelper(skinPointer);
+            renderSkinWithoutHelper(skinPointer, doLodLoading);
             return;
         }
         
-        targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true, 0);
+        targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true, 0, doLodLoading);
     }
     
-    public static void renderSkinWithoutHelper(ISkinPointer skinPointer) {
+    public static void renderSkinWithoutHelper(ISkinPointer skinPointer, boolean doLodLoading) {
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
@@ -118,7 +118,7 @@ public final class ItemStackRenderHelper {
             SkinPart skinPart = skin.getParts().get(i);
             IPoint3D offset = skinPart.getPartType().getOffset();
             GL11.glTranslated(offset.getX() * scale, (offset.getY() + 1) * scale, offset.getZ() * scale);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null, doLodLoading);
             GL11.glPopMatrix();
         }
         

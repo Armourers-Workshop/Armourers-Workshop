@@ -176,7 +176,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance);
+                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance, true);
                     GL11.glDisable(GL11.GL_CULL_FACE);
                     GL11.glPopMatrix();
                     break;

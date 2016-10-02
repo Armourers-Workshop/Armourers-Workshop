@@ -469,7 +469,7 @@ public class GuiArmourLibrary extends GuiContainer {
                     GL11.glEnable(GL11.GL_NORMALIZE);
                     GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                     ModRenderHelper.enableAlphaBlend();
-                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true);
+                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
                     GL11.glPopMatrix();
                 }
             }

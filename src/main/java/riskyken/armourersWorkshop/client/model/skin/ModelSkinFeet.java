@@ -22,7 +22,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 public class ModelSkinFeet extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -72,9 +72,9 @@ public class ModelSkinFeet extends AbstractModelSkin {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("leftFoot")) {
-                renderLeftFoot(part, SCALE, skinDye, extraColour, itemRender, distance);
+                renderLeftFoot(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
             } else if (part.getPartType().getPartName().equals("rightFoot")) {
-                renderRightFoot(part, SCALE, skinDye, extraColour, itemRender, distance);
+                renderRightFoot(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
             }
             
             GL11.glPopMatrix();
@@ -83,7 +83,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
+    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -98,11 +98,11 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
         
         
-        renderPart(part, scale, skinDye, extraColour, distance);
+        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         GL11.glPopMatrix();
     }
     
-    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
+    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -116,7 +116,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye, extraColour, distance);
+        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }
