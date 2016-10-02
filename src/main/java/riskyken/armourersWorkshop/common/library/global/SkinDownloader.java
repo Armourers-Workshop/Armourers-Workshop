@@ -12,6 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -84,8 +85,9 @@ public final class SkinDownloader implements Runnable  {
         for (int i = 0; i < json.size(); i++) {
             JsonObject obj = json.get(i).getAsJsonObject();
             String name = obj.get("file_name").getAsString();
+            int serverid = obj.get("id").getAsInt();
             if (!downloadedSkin(name)) {
-                downloadSkin(name);
+                downloadSkin(name, serverid);
             }
         }
     }
@@ -99,13 +101,25 @@ public final class SkinDownloader implements Runnable  {
         return false;
     }
     
-    private void downloadSkin(String name) {
+    private void downloadSkin(String name, int serverId) {
         downloadedModels.add(name);
-        ModLogger.log(String.format("Downloading skin %s", name));
+       
         
+        Skin skin = null;
+        
+        //Check if we already have the skin in the cache.
+        skin = ClientSkinCache.INSTANCE.getSkinFromServerId(serverId);
+        if (skin != null) {
+            skin.serverId = serverId;
+            if (skinCallback != null) {
+                skinCallback.skinDownloaded(skin, new SkinPointer(skin));
+            }
+            return;
+        }
+        
+        ModLogger.log(String.format("Downloading skin %s", name));
         InputStream in = null;
         String data = null;
-        Skin skin = null;
         try {
             in = new URL("http://plushie.moe/armourers_workshop/skins/" + name).openStream();
             skin = SkinIOUtils.loadSkinFromStream(new BufferedInputStream(in));
@@ -115,8 +129,8 @@ public final class SkinDownloader implements Runnable  {
             IOUtils.closeQuietly(in);
         }
         
-        
         if (skin != null) {
+            skin.serverId = serverId;
             if (skinCallback != null) {
                 ModLogger.log("Downloaded skin " + skin.lightHash());
                 skinCallback.skinDownloaded(skin, new SkinPointer(skin));

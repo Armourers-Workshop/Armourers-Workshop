@@ -29,6 +29,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     
     private final ExpiringHashMap<Integer, Skin> skinIDMap;
     private final HashMap<String, Integer> skinNameMap;
+    private final HashMap<Integer, Integer> skinServerIdMap;
     private final HashSet<Integer> requestedSkinIDs;
     private final HashSet<String> requestedSkinNames;
     
@@ -39,6 +40,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     protected ClientSkinCache() {
         skinIDMap = new ExpiringHashMap<Integer, Skin>(ConfigHandler.clientModelCacheTime, this);
         skinNameMap = new HashMap<String, Integer>();
+        skinServerIdMap = new HashMap<Integer, Integer>();
         requestedSkinIDs = new HashSet<Integer>();
         requestedSkinNames = new HashSet<String>();
         FMLCommonHandler.instance().bus().register(this);
@@ -89,6 +91,22 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         return null;
     }
     
+    public Skin getSkinFromServerId(int serverId) {
+        synchronized (skinServerIdMap) {
+            if (skinServerIdMap.containsKey(serverId)) {
+                int skinId = skinServerIdMap.get(serverId);
+                if (isSkinInCache(skinId)) {
+                    synchronized (skinIDMap) {
+                        return skinIDMap.get(skinId);
+                    }
+                } else {
+                    skinServerIdMap.remove(serverId);
+                }
+            }
+        }
+        return null;
+    }
+    
     private boolean haveIdForFileName(String fileName) {
         synchronized (skinNameMap) {
             return skinNameMap.containsKey(fileName);
@@ -131,25 +149,33 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         
         synchronized (requestedSkinIDs) {
             synchronized (skinIDMap) {
+                
                 if (skinIDMap.containsKey(skinID)) {
                     Skin oldSkin = skinIDMap.get(skinID);
                     skinIDMap.remove(skinID);
                     oldSkin.cleanUpDisplayLists();
                     ModLogger.log("removing skin");
                 }
-            }
-            
-            if (requestedSkinIDs.contains(skinID)) {
-                synchronized (skinIDMap) {
+                
+                
+                
+                if (requestedSkinIDs.contains(skinID)) {
                     skinIDMap.put(skinID, skin);
-                }
-                requestedSkinIDs.remove(skinID);
-            } else {
-                skinID = skin.lightHash();
-                synchronized (skinIDMap) {
+                    requestedSkinIDs.remove(skinID);
+                } else if (skin.serverId != -1) {
+                    skinID = skin.lightHash();
+                    synchronized (skinIDMap) {
+                        skinServerIdMap.put(skin.serverId, skinID);
+                    }
                     skinIDMap.put(skinID, skin);
+                } else {
+                    skinID = skin.lightHash();
+                    skinIDMap.put(skinID, skin);
+                    ModLogger.log(Level.WARN, "Got an unknown skin ID: " + skinID);
                 }
-                ModLogger.log(Level.WARN, "Got an unknown skin ID: " + skinID);
+                
+                
+                
             }
         }
     }

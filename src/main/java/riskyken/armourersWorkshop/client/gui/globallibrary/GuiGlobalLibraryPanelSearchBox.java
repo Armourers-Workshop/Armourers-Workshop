@@ -24,6 +24,9 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
+        if (!visible | !enabled) {
+            return;
+        }
         super.mouseClicked(mouseX, mouseY, button);
         searchTextbox.mouseClicked(mouseX, mouseY, button);
         if (button == 1) {
@@ -35,6 +38,9 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public boolean keyTyped(char c, int keycode) {
+        if (!visible | !enabled) {
+            return false;
+        }
         boolean pressed = searchTextbox.textboxKeyTyped(c, keycode);
         if (keycode == 28) {
             ((GuiGlobalLibrary)parent).preformSearch(searchTextbox.getText());
@@ -49,8 +55,13 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+        if (!visible) {
+            return;
+        }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         super.drawScreen(mouseX, mouseY, partialTickTime);
         searchTextbox.drawTextBox();
     }
+
+
 }

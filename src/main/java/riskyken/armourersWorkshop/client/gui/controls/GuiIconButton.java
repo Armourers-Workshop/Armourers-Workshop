@@ -33,11 +33,12 @@ public class GuiIconButton extends GuiButtonExt {
         this.disableText = "";
     }
     
-    public void setIconLocation(int x, int y, int width, int height) {
+    public GuiIconButton setIconLocation(int x, int y, int width, int height) {
         this.iconPosX = x;
         this.iconPosY = y;
         this.iconWidth = width;
         this.iconHeight = height;
+        return this;
     }
     
     public void setPressed(boolean isPressed) {

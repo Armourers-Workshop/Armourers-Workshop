@@ -20,8 +20,8 @@ public abstract class GuiPanel extends Gui {
     protected int y;
     protected int width;
     protected int height;
-    private boolean enabled;
-    private boolean visible;
+    protected boolean enabled;
+    protected boolean visible;
     
     protected ArrayList<GuiButton> buttonList;
     private GuiButton selectedButton;

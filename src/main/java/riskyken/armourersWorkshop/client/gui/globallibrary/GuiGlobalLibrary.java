@@ -22,6 +22,18 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
     private GuiPanel panelHeader;
     private GuiPanel panelSearchBox;
     private GuiPanel panelRecentlyUploaded;
+    private GuiPanel panelSearchResults;
+    
+    private Screen screen;
+    
+    public static enum Screen {
+        HOME,
+        SEARCH,
+        UPLOAD,
+        SKIN_INFO,
+        FRIENDS,
+        FAVOURITES
+    }
     
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity) {
         this.tileEntity = tileEntity;
@@ -36,25 +48,57 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
         
         panelRecentlyUploaded = new GuiGlobalLibraryPanelRecentlyUploaded(this, 2, 136, width / 2 - 5, height - 141);
         panelList.add(panelRecentlyUploaded);
+        
+        panelSearchResults = new GuiGlobalLibraryPanelSearchResults(this, 5, 5, 100, 100);
+        panelList.add(panelSearchResults);
+        
+        switchScreen(Screen.HOME);
     }
     
     @Override
     public void initGui() {
         buttonList.clear();
-        
-        
-        int yOffset = PADDING;
-        panelHeader.setPosition(PADDING, PADDING).setSize(width - PADDING * 2, 26);
-        yOffset += PADDING + 26;
-        
-        panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
-        yOffset += PADDING + 23;
-        
-        panelRecentlyUploaded.setPosition(5, yOffset).setSize(width / 2, height - yOffset - PADDING);
-        
+        setupPanels();
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).initGui();
         }
+    }
+    
+    private void setupPanels() {
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).setVisible(false);
+        }
+        int yOffset = PADDING;
+        panelHeader.setPosition(PADDING, PADDING).setSize(width - PADDING * 2, 26);
+        panelHeader.setVisible(true);
+        yOffset += PADDING + 26;
+        
+        switch (screen) {
+        case HOME:
+            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setVisible(true);
+            yOffset += PADDING + 23;
+            panelRecentlyUploaded.setPosition(5, yOffset).setSize(width / 2, height - yOffset - PADDING);
+            panelRecentlyUploaded.setVisible(true);
+            break;
+        case SEARCH:
+            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setVisible(true);
+            yOffset += PADDING + 23;
+            panelSearchResults.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelSearchResults.setVisible(true);
+            break;
+        default:
+            break;
+        }
+    }
+    
+    public void switchScreen(Screen screen) {
+        if (screen == Screen.HOME) {
+            ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkin();
+        }
+        this.screen = screen;
+        setupPanels();
     }
     
     @Override
@@ -106,7 +150,8 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
 
     @Override
     public void downloadSearchResultsFinished(JsonArray json) {
-        ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).clearSkin();
-        ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).listDownloadFinished(json);
+        switchScreen(Screen.SEARCH);
+        ((GuiGlobalLibraryPanelSearchResults)panelSearchResults).clearSkin();
+        ((GuiGlobalLibraryPanelSearchResults)panelSearchResults).listDownloadFinished(json);
     }
 }

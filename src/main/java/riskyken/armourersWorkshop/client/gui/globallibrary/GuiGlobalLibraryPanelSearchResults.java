@@ -20,20 +20,12 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements IDownloadListCallback, IDownloadSkinCallback {
+public class GuiGlobalLibraryPanelSearchResults extends GuiPanel implements IDownloadListCallback, IDownloadSkinCallback {
     
-    private static final String RECENTLY_UPLOADED_URL = "http://plushie.moe/armourers_workshop/recently-uploaded.php";
-    
-    private Object syncLock = new Object();
     private ArrayList<SkinPointer> skins = new ArrayList<SkinPointer>();
     
-    public GuiGlobalLibraryPanelRecentlyUploaded(GuiScreen parent, int x, int y, int width, int height) {
+    public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        updateRecentlyUploadedSkin();
-    }
-    
-    public void updateRecentlyUploadedSkin() {
-        SkinDownloader.downloadJson(this, RECENTLY_UPLOADED_URL);
     }
     
     @Override
@@ -44,11 +36,11 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         super.drawScreen(mouseX, mouseY, partialTickTime);
         
-        fontRenderer.drawString("Recently Uploaded", x + 5, y + 6, 0xFFEEEEEE);
+        fontRenderer.drawString("Search Results:", x + 5, y + 6, 0xFFEEEEEE);
         
         int boxW = width - 5;
         int boxH = height - 5 - 12;
-        int iconSize = 50;
+        int iconSize = 120;
         synchronized (skins) {
             for (int i = 0; i < skins.size(); i++) {
                 int rowSize = (int) Math.floor(boxW / iconSize);
@@ -58,7 +50,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
                 SkinPointer skinPointer = skins.get(i);
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
                 if (skin != null) {
-                    float scale = iconSize / 2;
+                    float scale = iconSize / 3;
                     if (y < colSize) {
                         fontRenderer.drawString(skin.getCustomName(), this.x + x * iconSize, this.y + y * iconSize + iconSize, 0xFFEEEEEE);
                         GL11.glPushMatrix();
@@ -83,15 +75,6 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
         }
     }
     
-    private void renderSkin() {
-        
-    }
-
-    @Override
-    public void listDownloadFinished(JsonArray json) {
-        SkinDownloader.downloadSkins(this, json);
-    }
-
     public void clearSkin() {
         synchronized (skins) {
             skins.clear();
@@ -108,5 +91,10 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
         } else {
             ModLogger.log("Model was already downloaded.");
         }
+    }
+
+    @Override
+    public void listDownloadFinished(JsonArray json) {
+        SkinDownloader.downloadSkins(this, json);
     }
 }
