@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -25,9 +27,14 @@ public class ItemDebugTool extends AbstractModItem {
     
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (world.isRemote & player.isSneaking()) {
+        if (world.isRemote) {
             player.openGui(ArmourersWorkshop.instance, LibGuiIds.DEBUG_TOOL, world, 0, 0, 0);
         }
         return stack;
+    }
+    
+    public static interface IDebug {
+        
+        public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines);
     }
 }

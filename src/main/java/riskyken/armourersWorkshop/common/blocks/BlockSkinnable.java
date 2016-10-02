@@ -50,6 +50,15 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntitySkinnable) {
+            Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
+            if (skin != null) {
+                if (skin.getProperties().getPropertyBoolean(Skin.KEY_NO_COLLISION, false)) {
+                    return null;
+                }
+            }
+        }
         setBlockBoundsBasedOnState(world, x, y, z);
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }

@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
+import riskyken.armourersWorkshop.client.gui.GuiDebugTool;
 import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
 import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
@@ -205,6 +206,8 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiGlobalLibrary((TileEntityGlobalSkinLibrary)te);
                 }
                 break;
+            case LibGuiIds.DEBUG_TOOL:
+                return new GuiDebugTool();
         }
         return null;
     }

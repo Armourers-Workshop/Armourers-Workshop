@@ -121,11 +121,6 @@ public class ConfigHandlerClient {
                 "Shows extra debug renders on the armourer.")
                 .getBoolean(false);
         
-        wireframeRender = config
-                .get(CATEGORY_DEBUG, "wireframeRender", false,
-                "Render models in a wireframe.")
-                .getBoolean(false);
-        
         disableTexturePainting = config.getBoolean("disableTexturePainting", CATEGORY_DEBUG, false,
                 "Disables replacing the players texture with a painted version.\n"
                 + "Disabling this may fix issues with the players texture rendering\n"

@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
@@ -30,6 +31,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -38,7 +40,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
-public class BlockMannequin extends AbstractModBlockContainer {
+public class BlockMannequin extends AbstractModBlockContainer implements IDebug {
 
     public static DamageSource victoriousDamage = new DamageSource("victorious");
     private static final String TAG_OWNER = "owner";
@@ -348,5 +350,10 @@ public class BlockMannequin extends AbstractModBlockContainer {
     @Override
     public int getRenderType() {
         return -1;
+    }
+
+    @Override
+    public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines) {
+        textLines.add("top=" + isTopOfMannequin(world, x, y, z));
     }
 }
