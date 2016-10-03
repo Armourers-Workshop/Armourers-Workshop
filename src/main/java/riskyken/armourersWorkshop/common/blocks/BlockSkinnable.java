@@ -6,8 +6,10 @@ import java.util.List;
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -23,6 +25,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -58,11 +61,17 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
             if (skin != null) {
                 if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
-                    
-                    
                     List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
                     if (seats.size() == 0) {
-                        Seat seat = new Seat(world, x, y, z);
+                        Point3D point = null;
+                        if (skin.getParts().get(0).getMarkerCount() > 0) {
+                            point = skin.getParts().get(0).getMarker(0);
+                        } else {
+                            point = new Point3D(0, 0, 0);
+                        }
+                        int rotation = world.getBlockMetadata(x, y, z);
+                        skin.getParts().get(0).getMarker(0);
+                        Seat seat = new Seat(world, x, y, z, point, rotation);
                         world.spawnEntityInWorld(seat);
                         player.mountEntity(seat);
                                               
@@ -227,27 +236,52 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         return true;
     }
     
-    public static class Seat extends Entity {
+    public static class Seat extends Entity implements IEntityAdditionalSpawnData {
 
         private int noRiderTime = 0;
+        private Point3D offset;
+        private int rotation;
         
-        public Seat(World world) {
-            super(world);
-        }
-        
-        public Seat(World world, int x, int y, int z) {
+        public Seat(World world, int x, int y, int z, Point3D offset, int rotation) {
             super(world);
             setPosition(x, y, z);
             setSize(0F, 0F);
+            this.offset = offset;
+            this.rotation = rotation;
         }
         
-        @Override
-        public double getMountedYOffset() {
-            return 1;
+        public Seat(World world) {
+            super(world);
+            setSize(0F, 0F);
+            this.offset = new Point3D(0, 0, 0);
         }
         
         @Override
         protected void entityInit() {
+        }
+        
+        @Override
+        public void updateRiderPosition() {
+            if (this.riddenByEntity != null) {
+                ForgeDirection[] rotMatrix =  {ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.EAST};
+                float scale = 0.0625F;
+                
+                ForgeDirection dir = rotMatrix[rotation];
+                ModLogger.log(dir + " - " + rotation);
+                
+                float offsetX = (offset.getX() * scale) * dir.offsetZ + (-offset.getZ() * scale) * dir.offsetX;
+                float offsetY = offset.getY() * scale;
+                float offsetZ = (-offset.getZ() * scale) * dir.offsetZ + (-offset.getX() * scale) * dir.offsetX;
+                
+                if (rotation != 0) {
+                    //GL11.glRotatef((90F * rotation), 0, 1, 0);
+                }
+                
+                this.riddenByEntity.setPosition(
+                        this.posX + 0.5 - offsetX,
+                        this.posY + this.riddenByEntity.getYOffset() + 0.5F - offsetY,
+                        this.posZ + 0.5F - offsetZ);
+            }
         }
         
         @Override
@@ -289,6 +323,20 @@ public class BlockSkinnable extends AbstractModBlockContainer {
 
         @Override
         protected void writeEntityToNBT(NBTTagCompound compound) {
+        }
+
+        @Override
+        public void writeSpawnData(ByteBuf buf) {
+            buf.writeInt(offset.getX());
+            buf.writeInt(offset.getY());
+            buf.writeInt(offset.getZ());
+            buf.writeInt(rotation);
+        }
+
+        @Override
+        public void readSpawnData(ByteBuf buf) {
+            offset = new Point3D(buf.readInt(), buf.readInt(), buf.readInt());
+            rotation = buf.readInt();
         }
     }
 }
