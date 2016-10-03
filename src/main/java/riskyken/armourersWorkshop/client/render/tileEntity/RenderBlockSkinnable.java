@@ -87,14 +87,13 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         if (rotation != 0) {
           GL11.glRotatef((90F * rotation), 0, 1, 0);
         }
-        skin.onUsed();
         double distance = Minecraft.getMinecraft().thePlayer.getDistance(
                 tileEntity.getPos().getX() + 0.5F,
                 tileEntity.getPos().getY() + 0.5F,
                 tileEntity.getPos().getZ() + 0.5F);
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true);
         }
         if (rotation != 0) {
             //GL11.glRotatef((90F * -rotation), 0, 1, 0);

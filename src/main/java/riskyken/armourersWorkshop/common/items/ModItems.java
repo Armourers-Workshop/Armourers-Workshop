@@ -38,6 +38,7 @@ public class ModItems {
     public static Item dyeBottle;
     public static Item guideBook;
     public static Item armourersHammer;
+    public static Item debugTool;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -65,6 +66,7 @@ public class ModItems {
         dyeBottle = new ItemDyeBottle();
         guideBook = new ItemGuideBook();
         armourersHammer = new ItemArmourersHammer();
+        debugTool = new ItemDebugTool();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];

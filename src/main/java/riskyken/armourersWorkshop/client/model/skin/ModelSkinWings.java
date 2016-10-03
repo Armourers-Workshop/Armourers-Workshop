@@ -19,7 +19,7 @@ import riskyken.armourersWorkshop.utils.SkinUtils;
 public class ModelSkinWings extends AbstractModelSkin  {
 
     @Override
-    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         if (skin == null) {
             return;
         }
@@ -41,7 +41,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSword);
-        skin.onUsed();
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
             
@@ -59,10 +58,10 @@ public class ModelSkinWings extends AbstractModelSkin  {
             angle = SkinUtils.getFlapAngleForWings(entity, skin);
             
             if (part.getPartType().getPartName().equals("leftWing")) {
-                renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle);
+                renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading);
             }
             if (part.getPartType().getPartName().equals("rightWing")) {
-                renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle);
+                renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle, doLodLoading);
             }
             GL11.glPopMatrix();
         }
@@ -70,7 +69,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle) {
+    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading) {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
@@ -110,22 +109,11 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
-        //GL11.glRotated(angle, 1 * axis.offsetX, 1 * axis.offsetY, 1 * axis.offsetZ);
-        
-        
-        /*
-        GL11.glTranslated(0, 0, SCALE * 0.5F);
-        GL11.glRotated(angle, 0, 1, 0);
-        GL11.glTranslated(0, 0, SCALE * -0.5F);
-        */
-        
-        //ModLogger.log(Math.sin(System.currentTimeMillis() / 25 % Math.PI * 2));
-        
-        renderPart(part, scale, skinDye, extraColour, distance);
+        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         GL11.glPopMatrix();
     }
     
-    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle) {
+    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;
@@ -166,7 +154,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
-        renderPart(part, scale, skinDye, extraColour, distance);
+        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

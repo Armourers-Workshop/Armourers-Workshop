@@ -55,7 +55,6 @@ public abstract class RenderSkinnedArrow<T extends EntityArrow> extends RenderAr
         if (skin == null) {
             return;
         }
-        skin.onUsed();
         
         float scale = 0.0625F;
         GL11.glPushMatrix();
@@ -76,7 +75,7 @@ public abstract class RenderSkinnedArrow<T extends EntityArrow> extends RenderAr
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             //TODO apply dyes to arrows.
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null, true);
         }
         GL11.glPopMatrix();
     }

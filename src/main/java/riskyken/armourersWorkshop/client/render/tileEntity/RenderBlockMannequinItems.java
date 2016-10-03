@@ -17,7 +17,7 @@ public class RenderBlockMannequinItems {
         Item targetItem = stack.getItem();
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance, true);
             return;
         }
         
@@ -70,7 +70,7 @@ public class RenderBlockMannequinItems {
     public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance, true);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -122,7 +122,7 @@ public class RenderBlockMannequinItems {
     public void renderLegsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance, true);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -163,7 +163,7 @@ public class RenderBlockMannequinItems {
     public void renderFeetStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance);
+            SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance, true);
             return;
         }
         if (targetItem instanceof ItemArmor) {
@@ -221,7 +221,7 @@ public class RenderBlockMannequinItems {
             if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(1 * scale, 0 * scale, 2 * scale);
-                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance, true);
                 return;
             }
         }
@@ -272,7 +272,7 @@ public class RenderBlockMannequinItems {
                 GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);
                 GL11.glScalef(-1, 1, 1);
                 GL11.glCullFace(GL11.GL_FRONT);
-                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance, true);
                 GL11.glCullFace(GL11.GL_BACK);
                 return;
             }
@@ -305,7 +305,7 @@ public class RenderBlockMannequinItems {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
             if (sp.getSkinType() == SkinTypeRegistry.skinWings) {
-                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(fakePlayer, stack, null, extraColours, distance);
+                SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(fakePlayer, stack, null, extraColours, distance, true);
                 return;
             }
         }

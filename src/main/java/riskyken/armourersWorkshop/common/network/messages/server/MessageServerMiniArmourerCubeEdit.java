@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
+import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.data.MiniCube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 

@@ -34,6 +34,8 @@ public class Skin implements ISkin {
     
     public static final String KEY_BLOCK_GLOWING = "blockGlowing";
     public static final String KEY_BLOCK_LADDER = "blockLadder";
+    public static final String KEY_BLOCK_NO_COLLISION = "blockNoCollision";
+    public static final String KEY_BLOCK_SEAT= "blockSeat";
     
     public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
     public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
@@ -45,6 +47,7 @@ public class Skin implements ISkin {
     private int[] paintData;
     private ArrayList<SkinPart> parts;
     public int requestId;
+    public int serverId = -1;
     private int lightHash = 0;
     
     @SideOnly(Side.CLIENT)
@@ -119,9 +122,6 @@ public class Skin implements ISkin {
             }
         }
         
-        if (hasPaintData()) {
-        }
-        
         return new Rectangle3D(x, y, z, width, height, depth);
     }
     
@@ -131,24 +131,6 @@ public class Skin implements ISkin {
     
     public SkinProperties getProperties() {
         return properties;
-    }
-    
-    /** Number of ticks from when this skin was last used. */
-    private int ticksFromLastAccess = 0;
-    
-    public void onUsed() {
-        ticksFromLastAccess = 0;
-    }
-    
-    public void tick() {
-        ticksFromLastAccess++;
-    }
-    
-    public boolean needsCleanup(int maxUnusedTicks) {
-        if (ticksFromLastAccess > maxUnusedTicks) {
-            return true;
-        }
-        return false;
     }
     
     public Skin(SkinProperties properties, ISkinType equipmentSkinType, int[] paintData, ArrayList<SkinPart> equipmentSkinParts) {

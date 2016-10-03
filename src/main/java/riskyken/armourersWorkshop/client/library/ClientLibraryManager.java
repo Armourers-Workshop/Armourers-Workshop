@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileList;
@@ -24,11 +25,13 @@ public class ClientLibraryManager implements ILibraryManager {
     private final LibraryFileList serverPublicFiles;
     private final LibraryFileList serverPrivateFiles;
     private final LibraryFileList clientFiles;
+    private boolean loadingLibaray;
     
     public ClientLibraryManager() {
         serverPublicFiles = new LibraryFileList(LibraryFileType.SERVER_PUBLIC);
         serverPrivateFiles = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
         clientFiles = new LibraryFileList(LibraryFileType.LOCAL);
+        loadingLibaray = false;
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -41,12 +44,16 @@ public class ClientLibraryManager implements ILibraryManager {
     
     @Override
     public void reloadLibrary() {
-        long startTime = System.currentTimeMillis();
-        ModLogger.log("Loading library skins");
-        File directory = SkinIOUtils.getSkinLibraryDirectory();
-        ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory);
-        setFileList(fileList, LibraryFileType.LOCAL);
-        ModLogger.log(String.format("Finished loading %d library skins in %d ms", clientFiles.getFileCount(), System.currentTimeMillis() - startTime));
+        if (!loadingLibaray) {
+            loadingLibaray = true;
+            (new Thread(new LibraryLoader(this),LibModInfo.NAME + " library thread.")).start();
+        } else {
+            ModLogger.log("Library is already loading client.");
+        }
+    }
+    
+    private void finishedLoading() {
+        loadingLibaray = false;
     }
     
     @Override
@@ -113,5 +120,25 @@ public class ClientLibraryManager implements ILibraryManager {
     public void syncLibraryWithPlayer(EntityPlayerMP player) {
         // TODO Check if this is ever called on the client.
         // Maybe used on LAN servers?
+    }
+    
+    private static class LibraryLoader implements Runnable {
+
+        private ClientLibraryManager libraryManager;
+        
+        public LibraryLoader(ClientLibraryManager libraryManager) {
+            this.libraryManager = libraryManager;
+        }
+        
+        @Override
+        public void run() {
+            long startTime = System.currentTimeMillis();
+            ModLogger.log("Loading library skins");
+            File directory = SkinIOUtils.getSkinLibraryDirectory();
+            ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory);
+            libraryManager.setFileList(fileList, LibraryFileType.LOCAL);
+            ModLogger.log(String.format("Finished loading %d client library skins in %d ms", libraryManager.clientFiles.getFileCount(), System.currentTimeMillis() - startTime));
+            libraryManager.finishedLoading();
+        }
     }
 }

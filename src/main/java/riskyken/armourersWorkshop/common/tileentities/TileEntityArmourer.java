@@ -30,7 +30,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
@@ -131,6 +131,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (skinType == SkinTypeRegistry.skinBlock) {
             skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
             skinProps.setProperty(Skin.KEY_BLOCK_LADDER, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_SEAT, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
         }
         
         if (skinType == SkinTypeRegistry.skinWings) {
@@ -164,7 +166,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             return;
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
@@ -213,7 +215,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
-        Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
+        Skin equipmentData = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
         skinProps = new SkinProperties(equipmentData.getProperties());
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, pos.add(0, HEIGHT_OFFSET, 0), equipmentData, direction);

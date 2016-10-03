@@ -20,13 +20,15 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
 import riskyken.armourersWorkshop.utils.SkinUtils;
 
 /**
@@ -57,7 +59,7 @@ public class ModelRendererAttachment extends ModelRenderer {
     
     @Override
     public void render(float scale) {
-        if (!ClientProxy.useAttachedModelRender()) {
+        if (ClientProxy.getSkinRenderType() != SkinRenderType.MODEL_ATTACHMENT) {
             return;
         }
         mc.mcProfiler.startSection("armourers player render");
@@ -76,7 +78,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 player.posX,
                 player.posY,
                 player.posZ);
-        if (distance > ConfigHandler.maxSkinRenderDistance) {
+        if (distance > ConfigHandlerClient.maxSkinRenderDistance) {
             return;
         }
         
@@ -103,7 +105,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 continue;
             }
             ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType, skinIndex);
-            data.onUsed();
+
             int size = data.getParts().size();
             for (int i = 0; i < size; i++) {
                 SkinPart partData = data.getParts().get(i);
@@ -182,7 +184,9 @@ public class ModelRendererAttachment extends ModelRenderer {
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    //SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance);
+                    
+                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance, true);
+
                     GL11.glDisable(GL11.GL_CULL_FACE);
                     GL11.glPopMatrix();
                     break;

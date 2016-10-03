@@ -13,4 +13,6 @@ public class LibGuiIds {
     public static final int ENTITY_SKIN_INVENTORY = 9;
     public static final int SKNNING_TABLE = 10;
     public static final int DYE_TABLE = 11;
+    public static final int DEBUG_TOOL = 12;
+    public static final int GLOBAL_SKIN_LIBRARY = 13;
 }

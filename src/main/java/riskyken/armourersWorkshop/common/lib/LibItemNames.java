@@ -24,4 +24,5 @@ public class LibItemNames {
     public static final String DYE_BOTTLE = "dyeBottle";
     public static final String BLENDING_TOOL = "blendingTool";
     public static final String ARMOURERS_HAMMER = "armourersHammer";
+    public static final String DEBUG_TOOL = "debugTool";
 }

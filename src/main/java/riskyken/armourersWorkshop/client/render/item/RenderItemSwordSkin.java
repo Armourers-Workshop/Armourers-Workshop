@@ -108,7 +108,7 @@ public class RenderItemSwordSkin /*implements IItemRenderer*/ {/*
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
-                ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, false);
+                ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, false, false);
             }
             Addons.onWeaponRender(type, EventState.POST);
             GL11.glPopAttrib();

@@ -90,7 +90,7 @@ public class GuiDyeTable extends GuiContainer {
             if (dyeSlot != -1) {
                 GL11.glPushMatrix();
                 //GL11.glEnable(GL11.GL_CULL_FACE);
-                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true);
+                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
                 GL11.glPopMatrix();
                 GL11.glPopMatrix();
                 Color c = new Color(198,198,198, (int)(200 + alpha));
@@ -112,9 +112,9 @@ public class GuiDyeTable extends GuiContainer {
                     }
                 }
                 GL11.glColor3f(1F, 1F, 1F);
-                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true);
+                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
             } else {
-                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true);
+                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
             }
             
             

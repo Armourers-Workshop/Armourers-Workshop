@@ -25,8 +25,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.gui.GuiMannequin;
-import riskyken.armourersWorkshop.client.gui.GuiMannequinTabSkinHair;
+import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
+import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequinTabSkinHair;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
@@ -206,7 +206,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 te.skinTexture.updateDyes(dyes);
                 
                 if (te.skinTexture.getNeedsUpdate()) {
-                    if (lastTextureBuild + 100L < System.currentTimeMillis()) {
+                    if (lastTextureBuild + 200L < System.currentTimeMillis()) {
                         lastTextureBuild = System.currentTimeMillis();
                         rl = te.skinTexture.preRender();
                     }
@@ -270,7 +270,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 te.xCoord + 0.5F,
                 te.yCoord + 0.5F,
                 te.zCoord + 0.5F);
-        if (distance <= ConfigHandler.mannequinMaxEquipmentRenderDistance) {
+        if (distance <= ConfigHandlerClient.mannequinMaxEquipmentRenderDistance) {
             renderEquippedItems(te, fakePlayer, model, distance);
 >>>>>>> .merge_file_a04928
         }

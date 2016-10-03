@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui;
+package riskyken.armourersWorkshop.client.gui.miniarmourer;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;
@@ -220,7 +220,7 @@ public class GuiMiniArmourerBuildingModel {
                 for (int i = 0; i < skin.getParts().size(); i++) {
                     SkinPart part = skin.getParts().get(i);
                     if (part.getPartType() == currentSkinPartType) {
-                        SkinPartRenderer.INSTANCE.renderPart(part, scale, skinPointer.getSkinDye(), null);
+                        SkinPartRenderer.INSTANCE.renderPart(part, scale, skinPointer.getSkinDye(), null, false);
                     }
                 }
             }

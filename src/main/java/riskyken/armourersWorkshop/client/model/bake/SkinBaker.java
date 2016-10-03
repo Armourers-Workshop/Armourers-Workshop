@@ -11,7 +11,7 @@ import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
@@ -26,7 +26,7 @@ public final class SkinBaker {
     
     public static boolean withinMaxRenderDistance(double x, double y, double z) {
         EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-        if (player.getDistance(x, y, z) > ConfigHandler.maxSkinRenderDistance) {
+        if (player.getDistance(x, y, z) > ConfigHandlerClient.maxSkinRenderDistance) {
             return false;
         }
         return true;
@@ -153,7 +153,7 @@ public final class SkinBaker {
         
         ArrayList<ColouredFace>[] renderLists;
         
-        int lodLevels = ConfigHandler.maxLodLevels;
+        int lodLevels = ConfigHandlerClient.maxLodLevels;
         
         /* LOD Indexs
          * 

@@ -17,7 +17,7 @@ import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.model.SkinModel;
 import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -35,17 +35,17 @@ public class SkinPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour) {
-        renderPart(skinPart, scale, skinDye, extraColour, 0);
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, boolean doLodLoading) {
+        renderPart(skinPart, scale, skinDye, extraColour, 0, doLodLoading);
     }
     
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance) {
-        int lod = MathHelper.floor_double(distance / ConfigHandler.lodDistance);
-        lod = MathHelper.clamp_int(lod, 0, ConfigHandler.maxLodLevels);
-        renderPart(skinPart, scale, skinDye, extraColour, lod);
+    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
+        int lod = MathHelper.floor_double(distance / ConfigHandlerClient.lodDistance);
+        lod = MathHelper.clamp_int(lod, 0, ConfigHandlerClient.maxLodLevels);
+        renderPart(skinPart, scale, skinDye, extraColour, lod, doLodLoading);
     }
     
-    private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod) {
+    private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod, boolean doLodLoading) {
         //mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         //GL11.glColor3f(1F, 1F, 1F);
@@ -77,6 +77,9 @@ public class SkinPartRenderer extends ModelBase {
         int endIndex = 0;;
         
         int loadingLod = skinModel.getLoadingLod();
+        if (!doLodLoading) {
+            loadingLod = 0;
+        }
         if (loadingLod > lod) {
             lod = loadingLod;
         }
@@ -110,12 +113,12 @@ public class SkinPartRenderer extends ModelBase {
                                 //GL11.glDisable(GL11.GL_LIGHTING);
                                 //ModRenderHelper.disableLighting();
                             }
-                            if (ConfigHandler.wireframeRender) {
-                                //GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                            if (ConfigHandlerClient.wireframeRender) {
+                                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
                             }
                             GL11.glCallList(skinModel.displayList[i]);
-                            if (ConfigHandler.wireframeRender) {
-                                //GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+                            if (ConfigHandlerClient.wireframeRender) {
+                                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                             }
                             if (glowing) {
                                 //ModRenderHelper.enableLighting();

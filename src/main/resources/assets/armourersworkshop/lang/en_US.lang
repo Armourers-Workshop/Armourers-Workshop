@@ -3,6 +3,7 @@ tile.armourersworkshop:armourerBrain.name=Armourer
 tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 tile.armourersworkshop:armourLibrary0.name=Equipment Library
 tile.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
+tile.armourersworkshop:globalSkinLibrary.name=Global Skin Library - (WIP)
 tile.armourersworkshop:colourable.name=Equipment Cube
 tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
 tile.armourersworkshop:colourableGlass.name=Glass Equipment Cube
@@ -53,6 +54,7 @@ item.armourersworkshop:blockMarker.name=Block Marker
 item.armourersworkshop:dyeBottle.name=Dye Bottle
 item.armourersworkshop:blendingTool.name=Blending Tool
 item.armourersworkshop:armourersHammer.name=Armourers Hammer
+item.armourersworkshop:debugTool.name=Debug Tool
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -219,6 +221,8 @@ inventory.armourersworkshop:armourerBrain.westToEast=West to East
 inventory.armourersworkshop:armourerBrain.eastToWest=East to West
 inventory.armourersworkshop:armourerBrain.glowing=Glowing?
 inventory.armourersworkshop:armourerBrain.ladder=Ladder?
+inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
+inventory.armourersworkshop:armourerBrain.seat=Seat?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation

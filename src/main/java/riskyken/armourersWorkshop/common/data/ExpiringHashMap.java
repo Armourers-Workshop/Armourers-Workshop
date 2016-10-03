@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class ExpiringHashMap<K, V> implements Runnable {
     
@@ -21,6 +22,7 @@ public class ExpiringHashMap<K, V> implements Runnable {
         this.callback = callback;
         cleanupList = new ArrayList<V>();
         cleanupThread = new Thread(this);
+        cleanupThread.setDaemon(true);
         cleanupThread.start();
     }
     
@@ -49,9 +51,35 @@ public class ExpiringHashMap<K, V> implements Runnable {
         return null;
     }
     
+    public V getQuiet(K key) {
+        synchronized (cacheMap) {
+            if (cacheMap.containsKey(key)) {
+                return cacheMap.get(key).getMapItemQuiet();
+            }
+        }
+        return null;
+    }
+    
+    public V remove(K key) {
+        synchronized (cacheMap) {
+            if (cacheMap.containsKey(key)) {
+                V mapItem = cacheMap.get(key).mapItem;
+                cacheMap.remove(key);
+                return mapItem;
+            }
+            return null;
+        }
+    }
+    
     public boolean containsKey(K key) {
         synchronized (cacheMap) {
             return cacheMap.containsKey(key);
+        }
+    }
+    
+    public Set<K> getKeySet() {
+        synchronized (cacheMap) {
+            return cacheMap.keySet();
         }
     }
     
@@ -75,7 +103,7 @@ public class ExpiringHashMap<K, V> implements Runnable {
                 thisThread.sleep(1000);
                 cleanup();
             } catch (InterruptedException e) {
-                
+                e.printStackTrace();
             }
         }
     }
@@ -95,12 +123,13 @@ public class ExpiringHashMap<K, V> implements Runnable {
             for (int i = 0; i < keySet.length; i++) {
                 Object key = keySet[i];
                 CacheMapObject mapObject = cacheMap.get(key);
-                if (mapObject.lastAccessed + (long)expiryTime < System.currentTimeMillis()) {
+                long systemTime = System.currentTimeMillis();
+                if (mapObject.lastAccessed + (long)expiryTime < systemTime) {
                     cacheMap.remove(key);
-                }
-                if (callback != null) {
-                    synchronized (cleanupList) {
-                        cleanupList.add(mapObject.mapItem);
+                    if (callback != null) {
+                        synchronized (cleanupList) {
+                            cleanupList.add(mapObject.mapItem);
+                        }
                     }
                 }
             }
@@ -113,12 +142,16 @@ public class ExpiringHashMap<K, V> implements Runnable {
         private long lastAccessed;
         
         public CacheMapObject(V mapItem) {
-            this.mapItem = mapItem;
             lastAccessed = System.currentTimeMillis();
+            this.mapItem = mapItem;
         }
         
         public V getMapItem() {
             lastAccessed = System.currentTimeMillis();
+            return mapItem;
+        }
+        
+        public V getMapItemQuiet() {
             return mapItem;
         }
         

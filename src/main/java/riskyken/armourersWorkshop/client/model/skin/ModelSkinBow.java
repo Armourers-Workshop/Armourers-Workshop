@@ -21,7 +21,7 @@ public class ModelSkinBow extends AbstractModelSkin {
     public int frame = 0;
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         if (armourData == null) { return; }
         
         ArrayList<SkinPart> parts = armourData.getParts();
@@ -41,7 +41,6 @@ public class ModelSkinBow extends AbstractModelSkin {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinBow);
-        armourData.onUsed();
         
         if (frame > parts.size() - 1) {
             frame = parts.size() - 1;
@@ -62,7 +61,7 @@ public class ModelSkinBow extends AbstractModelSkin {
         }
 
         ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
-        renderRightArm(part, SCALE, skinDye, extraColour, distance);
+        renderRightArm(part, SCALE, skinDye, extraColour, distance, doLodLoading);
         
         GL11.glPopMatrix();
         
@@ -71,7 +70,7 @@ public class ModelSkinBow extends AbstractModelSkin {
         frame = 0;
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -85,7 +84,7 @@ public class ModelSkinBow extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye, extraColour, distance);
+        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

@@ -12,8 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
@@ -143,7 +143,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     }
 
     private Skin getSkinServer(ISkinPointer skinPointer) {
-        return SkinDataCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
+        return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
     }
 
     @Override
@@ -193,7 +193,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     
     @Override
     public double getMaxRenderDistanceSquared() {
-        return ConfigHandler.blockSkinMaxRenderDistance;
+        return ConfigHandlerClient.blockSkinMaxRenderDistance;
     }
 
     public class SkinnableBlockData {

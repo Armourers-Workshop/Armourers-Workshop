@@ -1,10 +1,10 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 
 public class MessageClientRequestSkinData implements IMessage, IMessageHandler<MessageClientRequestSkinData, IMessage> {
 
@@ -28,7 +28,7 @@ public class MessageClientRequestSkinData implements IMessage, IMessageHandler<M
 
     @Override
     public IMessage onMessage(MessageClientRequestSkinData message, MessageContext ctx) {
-        SkinDataCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, ctx.getServerHandler().playerEntity);
+        CommonSkinCache.INSTANCE.clientRequestEquipmentData(message.equpmentId, ctx.getServerHandler().playerEntity);
         return null;
     }
 

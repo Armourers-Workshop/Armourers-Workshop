@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
@@ -36,18 +37,20 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
-public class BlockMannequin extends AbstractModBlockContainer {
+public class BlockMannequin extends AbstractModBlockContainer implements IDebug  {
     
     public static final PropertyEnum<EnumPartType> PART = PropertyEnum.<EnumPartType>create("part", EnumPartType.class);
     public static final PropertyInteger ROTATION = PropertyInteger.create("rotation", 0, 15);
     private static final AxisAlignedBB MANNEQUIN_AABB = new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
     private static DamageSource victoriousDamage = new DamageSource("victorious");
+    
     private static final String TAG_OWNER = "owner";
     private final boolean isValentins;
     
@@ -389,5 +392,10 @@ public class BlockMannequin extends AbstractModBlockContainer {
         public String getName() {
             return this.name;
         }
+    }
+
+    @Override
+    public void getDebugHoverText(World world, BlockPos pos, ArrayList<String> textLines) {
+        textLines.add("top=" + isTopOfMannequin(world, pos));
     }
 }

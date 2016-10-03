@@ -9,6 +9,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
@@ -20,6 +21,7 @@ public class ModBlocks {
     public static Block armourerBrain;
     public static Block miniArmourer;
     public static Block armourLibrary;
+    public static Block globalSkinLibrary;
     public static Block boundingBox;
     public static Block colourable;
     public static Block colourableGlowing;
@@ -37,6 +39,7 @@ public class ModBlocks {
         armourerBrain = new BlockArmourer();
         miniArmourer = new BlockMiniArmourer();
         armourLibrary = new BlockSkinLibrary();
+        globalSkinLibrary = new BlockGlobalSkinLibrary();
         boundingBox = new BlockBoundingBox();
         colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
         colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
@@ -55,6 +58,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER);
         registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
+        registerTileEntity(TileEntityGlobalSkinLibrary.class, LibBlockNames.GLOBAL_SKIN_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);
         registerTileEntity(TileEntityBoundingBox.class, LibBlockNames.BOUNDING_BOX);

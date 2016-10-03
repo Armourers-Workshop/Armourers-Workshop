@@ -74,7 +74,6 @@ public abstract class GuiTabPanel extends Gui {
         }
     }
     
-    //partialTickTime
     public void drawForegroundLayer(int mouseX, int mouseY) {
         for (int i = 0; i < buttonList.size(); i++) {
             buttonList.get(i).drawButton(mc, mouseX, mouseY);
