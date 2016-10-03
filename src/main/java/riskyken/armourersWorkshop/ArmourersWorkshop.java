@@ -11,9 +11,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
@@ -97,7 +99,9 @@ public class ArmourersWorkshop {
         }
         ConfigHandler.init(new File(configDir, "common.cfg"));
         ConfigHandlerClient.init(new File(configDir, "client.cfg"));
-
+        
+        EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
+        
         Addons.preInit();
         proxy.preInit();
         

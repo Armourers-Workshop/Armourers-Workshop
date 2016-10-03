@@ -222,6 +222,7 @@ inventory.armourersworkshop:armourerBrain.eastToWest=East to West
 inventory.armourersworkshop:armourerBrain.glowing=Glowing?
 inventory.armourersworkshop:armourerBrain.ladder=Ladder?
 inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
+inventory.armourersworkshop:armourerBrain.seat=Seat?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation

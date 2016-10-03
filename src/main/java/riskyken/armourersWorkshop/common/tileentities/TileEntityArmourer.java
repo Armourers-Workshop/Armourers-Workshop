@@ -137,7 +137,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (skinType == SkinTypeRegistry.skinBlock) {
             skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
             skinProps.setProperty(Skin.KEY_BLOCK_LADDER, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
-            skinProps.setProperty(Skin.KEY_NO_COLLISION, this.skinProps.getPropertyBoolean(Skin.KEY_NO_COLLISION, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_SEAT, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
         }
         
         if (skinType == SkinTypeRegistry.skinWings) {

@@ -44,9 +44,12 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     private GuiCheckBox checkShowGuides;
     private GuiCheckBox checkShowOverlay;
     private GuiCheckBox checkShowHelper;
+    
     private GuiCheckBox checkBlockGlowing;
     private GuiCheckBox checkBlockLadder;
     private GuiCheckBox checkBlockNoCollision;
+    private GuiCheckBox checkBlockSeat;
+    
     private GuiCustomSlider sliderWingIdleSpeed;
     private GuiCustomSlider sliderWingFlyingSpeed;
     private GuiCustomSlider sliderWingMinAngle;
@@ -100,7 +103,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         
         checkBlockGlowing = new GuiCheckBox(15, guiLeft + 177, guiTop + 45, GuiHelper.getLocalizedControlName(guiName, "glowing"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
         checkBlockLadder = new GuiCheckBox(15, guiLeft + 177, guiTop + 60, GuiHelper.getLocalizedControlName(guiName, "ladder"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
-        checkBlockNoCollision = new GuiCheckBox(15, guiLeft + 177, guiTop + 75, GuiHelper.getLocalizedControlName(guiName, "noCollision"), skinProps.getPropertyBoolean(Skin.KEY_NO_COLLISION, false));
+        checkBlockNoCollision = new GuiCheckBox(15, guiLeft + 177, guiTop + 75, GuiHelper.getLocalizedControlName(guiName, "noCollision"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
+        checkBlockSeat = new GuiCheckBox(15, guiLeft + 177, guiTop + 90, GuiHelper.getLocalizedControlName(guiName, "seat"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 45, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 65, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
@@ -124,9 +128,12 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         buttonList.add(checkShowGuides);
         buttonList.add(checkShowOverlay);
         buttonList.add(checkShowHelper);
+        
         buttonList.add(checkBlockGlowing);
         buttonList.add(checkBlockLadder);
         buttonList.add(checkBlockNoCollision);
+        buttonList.add(checkBlockSeat);
+        
         buttonList.add(sliderWingIdleSpeed);
         buttonList.add(sliderWingFlyingSpeed);
         buttonList.add(sliderWingMinAngle);
@@ -163,10 +170,11 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     @Override
     protected void actionPerformed(GuiButton button) {
         skinProps = armourerBrain.getSkinProps();
-        if (button == checkBlockGlowing | button == checkBlockLadder | button == checkBlockNoCollision) {
+        if (button == checkBlockGlowing | button == checkBlockLadder | button == checkBlockNoCollision | button == checkBlockSeat) {
             skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, checkBlockGlowing.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_LADDER, checkBlockLadder.isChecked());
-            skinProps.setProperty(Skin.KEY_NO_COLLISION, checkBlockNoCollision.isChecked());
+            skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, checkBlockNoCollision.isChecked());
+            skinProps.setProperty(Skin.KEY_BLOCK_SEAT, checkBlockSeat.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         switch (button.id) {
@@ -230,7 +238,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
             textItemName.setText(skinProps.getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
             checkBlockGlowing.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
             checkBlockLadder.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
-            checkBlockNoCollision.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_NO_COLLISION, false));
+            checkBlockNoCollision.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
+            checkBlockSeat.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
             
             sliderWingMinAngle.setValue(skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D));
             sliderWingMinAngle.updateSlider();
@@ -271,6 +280,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         checkBlockGlowing.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockLadder.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockNoCollision.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
+        checkBlockSeat.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
         
         sliderWingIdleSpeed.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingFlyingSpeed.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
