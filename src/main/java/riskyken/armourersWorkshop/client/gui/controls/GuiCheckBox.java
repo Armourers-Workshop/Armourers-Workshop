@@ -15,7 +15,7 @@ public class GuiCheckBox extends cpw.mods.fml.client.config.GuiCheckBox {
         super(id, x, y, text, checked);
         this.boxWidth = 9;
         this.height = 9;
-        this.textColour = 14737632;
+        this.textColour = 4210752;
     }
     
     public GuiCheckBox setTextColour(int textColour) {
