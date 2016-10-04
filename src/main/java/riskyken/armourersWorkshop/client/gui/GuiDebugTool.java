@@ -26,7 +26,10 @@ public class GuiDebugTool extends GuiScreen {
         guiTop = height / 2 - guiHeight / 2;
         
         buttonList.clear();
+        
         checkWireframe = new GuiCheckBox(-1, guiLeft + 5, guiTop + 5, "wire frame", ConfigHandlerClient.wireframeRender);
+        checkWireframe.setTextColour(0xFFEEEEEE);
+        
         buttonList.add(checkWireframe);
     }
     
