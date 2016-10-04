@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
@@ -53,16 +52,14 @@ public class SkinPartRenderer extends ModelBase {
         SkinModel skinModel = cspd.getModelForDye(skinDye, extraColour);
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
-        for (int i = 0; i < skinModel.displayListCompiled.length; i++) {
-            if (!skinModel.displayListCompiled[i]) {
-                if (skinModel.hasList[i]) {
-                    skinModel.displayList[i] = GLAllocation.generateDisplayLists(1);
-                    GL11.glNewList(skinModel.displayList[i], GL11.GL_COMPILE);
+        for (int i = 0; i < skinModel.displayList.length; i++) {
+            if (skinModel.haveList[i]) {
+                if (!skinModel.displayList[i].isCompiled()) {
+                    skinModel.displayList[i].begin();
                     renderVertexList(cspd.vertexLists[i], scale, skinDye, extraColour, cspd);
-                    GL11.glEndList();
+                    skinModel.displayList[i].end();
+                    skinModel.setLoaded();
                 }
-                skinModel.displayListCompiled[i] = true;
-                skinModel.setLoaded();
             }
         }
         
@@ -106,8 +103,8 @@ public class SkinPartRenderer extends ModelBase {
                     glowing = true;
                 }
                 if (i >= 0 & i < skinModel.displayList.length) {
-                    if (skinModel.hasList[i]) {
-                        if (skinModel.displayListCompiled[i]) {
+                    if (skinModel.haveList[i]) {
+                        if (skinModel.displayList[i].isCompiled()) {
                             if (glowing) {
                                 GL11.glDisable(GL11.GL_LIGHTING);
                                 ModRenderHelper.disableLighting();
@@ -115,7 +112,7 @@ public class SkinPartRenderer extends ModelBase {
                             if (ConfigHandlerClient.wireframeRender) {
                                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
                             }
-                            GL11.glCallList(skinModel.displayList[i]);
+                            skinModel.displayList[i].render();
                             if (ConfigHandlerClient.wireframeRender) {
                                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                             }
