@@ -1,16 +1,25 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.concurrent.FutureTask;
+
+import com.google.gson.JsonArray;
+
 import cpw.mods.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
+import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 
 public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
+    private static final String SEARCH_URL = "http://plushie.moe/armourers_workshop/skin-search.php";
+    
     private GuiLabeledTextField searchTextbox;
     
-    public GuiGlobalLibraryPanelSearchBox(GuiScreen parent, int x, int y, int width, int height) {
+    public GuiGlobalLibraryPanelSearchBox(GuiGlobalLibrary parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
     }
     
@@ -43,14 +52,26 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
         }
         boolean pressed = searchTextbox.textboxKeyTyped(c, keycode);
         if (keycode == 28) {
-            ((GuiGlobalLibrary)parent).preformSearch(searchTextbox.getText());
+            doSearch();
         }
         return pressed;
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        ((GuiGlobalLibrary)parent).preformSearch(searchTextbox.getText());
+        doSearch();
+    }
+    
+    private void doSearch() {
+        try {
+            String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode(searchTextbox.getText(), "UTF-8");
+            FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
+            ((GuiGlobalLibrary)parent).panelSearchResults.setDownloadSearchResultsTask(futureTask);
+            ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(futureTask);
+            ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -62,6 +83,4 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
         super.drawScreen(mouseX, mouseY, partialTickTime);
         searchTextbox.drawTextBox();
     }
-
-
 }

@@ -126,4 +126,7 @@ public abstract class GuiPanel extends Gui {
     public boolean keyTyped(char c, int keycode) {
         return false;
     }
+
+    public void updatePanel() {
+    }
 }

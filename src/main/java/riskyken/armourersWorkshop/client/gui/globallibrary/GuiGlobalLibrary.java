@@ -1,28 +1,30 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
 import java.util.ArrayList;
-
-import com.google.gson.JsonArray;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
-import riskyken.armourersWorkshop.common.library.global.SkinSearch;
-import riskyken.armourersWorkshop.common.library.global.SkinSearch.ISearchResultsCallback;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 
-public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallback {
+public class GuiGlobalLibrary extends GuiScreen {
     
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
     
+    public ExecutorService jsonDownloadExecutor = Executors.newFixedThreadPool(1);
+    //public ExecutorService skinDownloadExecutor = Executors.newFixedThreadPool(1);
+    
     private static final int PADDING = 5;
-    private GuiPanel panelHeader;
-    private GuiPanel panelSearchBox;
-    private GuiPanel panelRecentlyUploaded;
-    private GuiPanel panelSearchResults;
+    
+    public GuiGlobalLibraryPanelHeader panelHeader;
+    public GuiGlobalLibraryPanelSearchBox panelSearchBox;
+    public GuiGlobalLibraryPanelRecentlyUploaded panelRecentlyUploaded;
+    public GuiGlobalLibraryPanelSearchResults panelSearchResults;
     
     private Screen screen;
     
@@ -52,7 +54,14 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
         panelSearchResults = new GuiGlobalLibraryPanelSearchResults(this, 5, 5, 100, 100);
         panelList.add(panelSearchResults);
         
-        switchScreen(Screen.HOME);
+        screen = Screen.HOME;
+    }
+    
+    @Override
+    protected void finalize() throws Throwable {
+        jsonDownloadExecutor.shutdown();
+        //skinDownloadExecutor.shutdown();
+        super.finalize();
     }
     
     @Override
@@ -61,6 +70,9 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
         setupPanels();
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).initGui();
+        }
+        if (screen == Screen.HOME) {
+            ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkins();
         }
     }
     
@@ -93,11 +105,14 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
         }
     }
     
-    public void switchScreen(Screen screen) {
-        if (screen == Screen.HOME) {
-            
-            ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkin();
+    @Override
+    public void updateScreen() {
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).updatePanel();
         }
+    }
+    
+    public void switchScreen(Screen screen) {
         this.screen = screen;
         setupPanels();
         for (int i = 0; i < panelList.size(); i++) {
@@ -146,16 +161,5 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
     @Override
     public boolean doesGuiPauseGame() {
         return false;
-    }
-
-    public void preformSearch(String searchText) {
-        SkinSearch.downloadSearchResults(searchText, this);
-    }
-
-    @Override
-    public void downloadSearchResultsFinished(JsonArray json) {
-        switchScreen(Screen.SEARCH);
-        ((GuiGlobalLibraryPanelSearchResults)panelSearchResults).clearSkin();
-        ((GuiGlobalLibraryPanelSearchResults)panelSearchResults).listDownloadFinished(json);
     }
 }

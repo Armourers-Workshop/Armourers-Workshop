@@ -273,10 +273,6 @@ public class BlockSkinnable extends AbstractModBlockContainer {
                 float offsetY = offset.getY() * scale;
                 float offsetZ = (-offset.getZ() * scale) * dir.offsetZ + (-offset.getX() * scale) * dir.offsetX;
                 
-                if (rotation != 0) {
-                    //GL11.glRotatef((90F * rotation), 0, 1, 0);
-                }
-                
                 this.riddenByEntity.setPosition(
                         this.posX + 0.5 - offsetX,
                         this.posY + this.riddenByEntity.getYOffset() + 0.5F - offsetY,

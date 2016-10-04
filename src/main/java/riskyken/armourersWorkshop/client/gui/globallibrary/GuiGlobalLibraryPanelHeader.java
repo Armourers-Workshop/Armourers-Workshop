@@ -62,8 +62,14 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         mc.renderEngine.bindTexture(rl);
         
         int size = 16;
+        
+        this.func_152125_a(this.x + 5, this.y + 5, 8, 8, 8, 8, size, size, 64, 32);
+        this.func_152125_a(this.x + 4, this.y + 4, 40, 8, 8, 8, size + 2, size + 2, 64, 32);
+        /*
         this.drawTexturedModalRectScaled(this.x + 5, this.y + 5, 8, 8, 8, 8, size, size);
         this.drawTexturedModalRectScaled(this.x + 4, this.y + 4, 40, 8, 8, 8, size + 2, size + 2);
+        */
+        
         this.fontRenderer.drawString(" - RiskyKen", this.x + 24, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xAAFFAA);
         drawCenteredString(fontRenderer, ((GuiGlobalLibrary)parent).tileEntity.getBlockType().getLocalizedName(),x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
         super.drawScreen(mouseX, mouseY, partialTickTime);

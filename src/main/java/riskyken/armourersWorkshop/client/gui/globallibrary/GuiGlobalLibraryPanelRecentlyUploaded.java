@@ -1,6 +1,8 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import org.lwjgl.opengl.GL11;
 
@@ -13,14 +15,14 @@ import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
-import riskyken.armourersWorkshop.common.library.global.SkinDownloader.IDownloadListCallback;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader.IDownloadSkinCallback;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements IDownloadListCallback, IDownloadSkinCallback {
+public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements IDownloadSkinCallback {
     
     private static final String RECENTLY_UPLOADED_URL = "http://plushie.moe/armourers_workshop/recently-uploaded.php";
     
@@ -28,13 +30,32 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
     private ArrayList<SkinPointer> skins = new ArrayList<SkinPointer>();
     private int displayLimit = 1;
     
+    private FutureTask<JsonArray> downloadListTask;
+    
     public GuiGlobalLibraryPanelRecentlyUploaded(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
     }
     
-    public void updateRecentlyUploadedSkin() {
+    public void updateRecentlyUploadedSkins() {
         clearSkin();
-        SkinDownloader.downloadJson(this, RECENTLY_UPLOADED_URL + "?limit=" + displayLimit);
+        downloadListTask = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + displayLimit));
+        ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(downloadListTask);
+    }
+    
+    @Override
+    public void updatePanel() {
+        if (downloadListTask != null && downloadListTask.isDone()) {
+            try {
+                JsonArray array = downloadListTask.get();
+                ModLogger.log(array);
+                SkinDownloader.downloadSkins(this, array);
+                downloadListTask = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     @Override
@@ -93,15 +114,6 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
             }
         }
     }
-    
-    private void renderSkin() {
-        
-    }
-
-    @Override
-    public void listDownloadFinished(JsonArray json) {
-        SkinDownloader.downloadSkins(this, json);
-    }
 
     public void clearSkin() {
         synchronized (skins) {
@@ -120,8 +132,6 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
             if (skin != null) {
                 ClientSkinCache.INSTANCE.addServerIdMap(skin);
             }
-            
-            ModLogger.log("Model was already downloaded.");
         }
     }
 }

@@ -23,11 +23,9 @@ public final class SkinUploader implements Runnable {
         this.player = player;
     }
     
-    
     public static void startUpload(EntityPlayer player) {
         (new Thread(new SkinUploader(player), LibModInfo.NAME + " upload thread.")).start();
     }
-    
     
     @Override
     public void run() {
