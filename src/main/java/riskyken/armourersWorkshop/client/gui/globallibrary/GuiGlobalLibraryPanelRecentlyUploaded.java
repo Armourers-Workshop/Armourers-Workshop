@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
-import java.util.ArrayList;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
@@ -9,6 +8,7 @@ import java.util.concurrent.FutureTask;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
@@ -26,8 +26,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     
     private static final String RECENTLY_UPLOADED_URL = "http://plushie.moe/armourers_workshop/recently-uploaded.php";
     
-    private Object syncLock = new Object();
-    private ArrayList<SkinPointer> skins = new ArrayList<SkinPointer>();
+    private JsonArray json = null;
     private int displayLimit = 1;
     
     private FutureTask<JsonArray> downloadListTask;
@@ -39,7 +38,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     }
     
     public void updateRecentlyUploadedSkins() {
-        skins.clear();
+        json = null;
         downloadListTask = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + displayLimit));
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(downloadListTask);
     }
@@ -48,7 +47,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     public void updatePanel() {
         if (downloadListTask != null && downloadListTask.isDone()) {
             try {
-                JsonArray json = downloadListTask.get();
+                json = downloadListTask.get();
                 SkinDownloader.downloadSkins(skinCompletion, json);
                 //SkinDownloader.downloadSkins(this, json);
                 downloadListTask = null;
@@ -63,7 +62,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
                 Skin skin = futureSkin.get();
                 if (skin != null) {
                     SkinPointer skinPointer = new SkinPointer(skin);
-                    skins.add(skinPointer);
+                    //skins.add(skinPointer);
                     if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
                         ModelBakery.INSTANCE.receivedUnbakedModel(skin);
                     } else {
@@ -101,14 +100,14 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
         int boxW = width - 5;
         int boxH = height - 5 - 12;
         int iconSize = 50;
-        synchronized (skins) {
-            for (int i = 0; i < skins.size(); i++) {
+        if (json != null) {
+            for (int i = 0; i < json.size(); i++) {
                 int rowSize = (int) Math.floor(boxW / iconSize);
                 int colSize = (int) Math.floor(boxH / iconSize);
                 int x = i % rowSize;
                 int y = (int) (i / rowSize);
-                SkinPointer skinPointer = skins.get(i);
-                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
+                JsonObject skinJson = json.get(i).getAsJsonObject();
+                Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
                 if (skin != null) {
                     float scale = iconSize / 2;
                     if (y < colSize) {
@@ -126,7 +125,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
                         GL11.glEnable(GL11.GL_NORMALIZE);
                         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                         ModRenderHelper.enableAlphaBlend();
-                        ItemStackRenderHelper.renderItemModelFromSkin(skin, skinPointer, true, false);
+                        ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
                         GL11.glPopAttrib();
                         GL11.glPopMatrix();
                     }

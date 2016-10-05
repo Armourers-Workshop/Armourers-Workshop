@@ -25,6 +25,9 @@ public class GuiGlobalLibrary extends GuiScreen {
     public GuiGlobalLibraryPanelSearchBox panelSearchBox;
     public GuiGlobalLibraryPanelRecentlyUploaded panelRecentlyUploaded;
     public GuiGlobalLibraryPanelSearchResults panelSearchResults;
+    public GuiGlobalLibraryPanelSkinInfo panelSkinInfo;
+    public GuiGlobalLibraryPanelLogin panelLogin;
+    public GuiGlobalLibraryPanelCreateAccount panelCreateAccount;
     
     private Screen screen;
     
@@ -34,7 +37,9 @@ public class GuiGlobalLibrary extends GuiScreen {
         UPLOAD,
         SKIN_INFO,
         FRIENDS,
-        FAVOURITES
+        FAVOURITES,
+        LOGON,
+        CREATE_ACCOUNT
     }
     
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity) {
@@ -53,6 +58,15 @@ public class GuiGlobalLibrary extends GuiScreen {
         
         panelSearchResults = new GuiGlobalLibraryPanelSearchResults(this, 5, 5, 100, 100);
         panelList.add(panelSearchResults);
+        
+        panelSkinInfo = new GuiGlobalLibraryPanelSkinInfo(this, 5, 5, 100, 100);
+        panelList.add(panelSkinInfo);
+        
+        panelLogin = new GuiGlobalLibraryPanelLogin(this, 5, 5, 500, 500);
+        panelList.add(panelLogin);
+        
+        panelCreateAccount = new GuiGlobalLibraryPanelCreateAccount(this, 5, 5, 100, 100);
+        panelList.add(panelCreateAccount);
         
         screen = Screen.HOME;
     }
@@ -92,6 +106,17 @@ public class GuiGlobalLibrary extends GuiScreen {
             yOffset += PADDING + 23;
             panelSearchResults.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
             panelSearchResults.setVisible(true);
+            break;
+        case SKIN_INFO:
+            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setVisible(true);
+            yOffset += PADDING + 23;
+            panelSkinInfo.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelSkinInfo.setVisible(true);
+            break;
+        case LOGON:
+            panelLogin.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelLogin.setVisible(true);
             break;
         default:
             break;

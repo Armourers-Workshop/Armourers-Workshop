@@ -44,13 +44,16 @@ public final class SkinDownloader {
             return skin;
         }
         
-        private Skin downloadSkin(String name, int serverId) {
+        private Skin downloadSkin(String name, int serverId) throws InterruptedException {
             //Check if we already have the skin in the cache.
             Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(serverId);
             if (skin != null) {
                 skin.serverId = serverId;
                 return skin;
             }
+            
+            long startTime = System.currentTimeMillis();
+            long maxRate = 100;
             
             ModLogger.log(String.format("Downloading skin: %s", name));
             InputStream in = null;
@@ -62,6 +65,11 @@ public final class SkinDownloader {
                 e.printStackTrace();
             } finally {
                 IOUtils.closeQuietly(in);
+            }
+            
+            long waitTime = maxRate - (System.currentTimeMillis() - startTime);
+            if (waitTime > 0) {
+                Thread.sleep(waitTime);
             }
             
             if (skin != null) {
