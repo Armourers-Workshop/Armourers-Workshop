@@ -1,7 +1,10 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.lwjgl.opengl.GL11;
@@ -16,21 +19,22 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
-import riskyken.armourersWorkshop.common.library.global.SkinDownloader.IDownloadSkinCallback;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
-public class GuiGlobalLibraryPanelSearchResults extends GuiPanel implements IDownloadSkinCallback {
+public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     private ArrayList<SkinPointer> skins = new ArrayList<SkinPointer>();
     private int page = 0;
     private int displayCount = 1;
     private FutureTask<JsonArray> downloadSearchResultsTask;
+    private CompletionService<Skin> skinCompletion;
     
     public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
+        skinCompletion = new ExecutorCompletionService<Skin>(((GuiGlobalLibrary)parent).skinDownloadExecutor);
     }
     
     public void setDownloadSearchResultsTask(FutureTask<JsonArray> downloadSearchResultsTask) {
@@ -43,13 +47,33 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel implements IDow
             try {
                 clearSkins();
                 JsonArray json = downloadSearchResultsTask.get();
-                SkinDownloader.downloadSkins(this, json);
+                SkinDownloader.downloadSkins(skinCompletion, json);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
             downloadSearchResultsTask = null;
+        }
+        
+        Future<Skin> futureSkin = skinCompletion.poll();
+        if (futureSkin != null) {
+            try {
+                Skin skin = futureSkin.get();
+                if (skin != null) {
+                    SkinPointer skinPointer = new SkinPointer(skin);
+                    skins.add(skinPointer);
+                    if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
+                        ModelBakery.INSTANCE.receivedUnbakedModel(skin);
+                    } else {
+                        if (skin != null) {
+                            ClientSkinCache.INSTANCE.addServerIdMap(skin);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -135,15 +159,5 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel implements IDow
     public void clearSkins() {
         skins.clear();
         page = 0;
-    }
-    
-    @Override
-    public void skinDownloaded(Skin skin, SkinPointer skinPointer) {
-        synchronized (skins) {
-            skins.add(skinPointer);
-        }
-        if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
-            ModelBakery.INSTANCE.receivedUnbakedModel(skin);
-        }
     }
 }

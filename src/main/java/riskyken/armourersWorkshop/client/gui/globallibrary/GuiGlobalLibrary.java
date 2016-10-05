@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import net.minecraft.client.Minecraft;
@@ -16,8 +16,8 @@ public class GuiGlobalLibrary extends GuiScreen {
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
     
-    public ExecutorService jsonDownloadExecutor = Executors.newFixedThreadPool(1);
-    //public ExecutorService skinDownloadExecutor = Executors.newFixedThreadPool(1);
+    public Executor jsonDownloadExecutor = Executors.newFixedThreadPool(1);
+    public Executor skinDownloadExecutor = Executors.newFixedThreadPool(1);
     
     private static final int PADDING = 5;
     
@@ -55,13 +55,6 @@ public class GuiGlobalLibrary extends GuiScreen {
         panelList.add(panelSearchResults);
         
         screen = Screen.HOME;
-    }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        jsonDownloadExecutor.shutdown();
-        //skinDownloadExecutor.shutdown();
-        super.finalize();
     }
     
     @Override

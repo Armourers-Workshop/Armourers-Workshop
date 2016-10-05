@@ -36,7 +36,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
 import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;

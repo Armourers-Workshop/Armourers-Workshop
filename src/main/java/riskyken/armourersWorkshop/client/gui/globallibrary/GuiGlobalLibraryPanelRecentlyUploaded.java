@@ -1,7 +1,9 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.lwjgl.opengl.GL11;
@@ -14,15 +16,13 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
-import riskyken.armourersWorkshop.common.library.global.SkinDownloader.IDownloadSkinCallback;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements IDownloadSkinCallback {
+public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     
     private static final String RECENTLY_UPLOADED_URL = "http://plushie.moe/armourers_workshop/recently-uploaded.php";
     
@@ -31,13 +31,15 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
     private int displayLimit = 1;
     
     private FutureTask<JsonArray> downloadListTask;
+    private CompletionService<Skin> skinCompletion;
     
     public GuiGlobalLibraryPanelRecentlyUploaded(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
+        skinCompletion = new ExecutorCompletionService<Skin>(((GuiGlobalLibrary)parent).skinDownloadExecutor);
     }
     
     public void updateRecentlyUploadedSkins() {
-        clearSkin();
+        skins.clear();
         downloadListTask = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + displayLimit));
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(downloadListTask);
     }
@@ -46,13 +48,31 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
     public void updatePanel() {
         if (downloadListTask != null && downloadListTask.isDone()) {
             try {
-                JsonArray array = downloadListTask.get();
-                ModLogger.log(array);
-                SkinDownloader.downloadSkins(this, array);
+                JsonArray json = downloadListTask.get();
+                SkinDownloader.downloadSkins(skinCompletion, json);
+                //SkinDownloader.downloadSkins(this, json);
                 downloadListTask = null;
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (ExecutionException e) {
+            }
+        }
+        
+        Future<Skin> futureSkin = skinCompletion.poll();
+        if (futureSkin != null) {
+            try {
+                Skin skin = futureSkin.get();
+                if (skin != null) {
+                    SkinPointer skinPointer = new SkinPointer(skin);
+                    skins.add(skinPointer);
+                    if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
+                        ModelBakery.INSTANCE.receivedUnbakedModel(skin);
+                    } else {
+                        if (skin != null) {
+                            ClientSkinCache.INSTANCE.addServerIdMap(skin);
+                        }
+                    }
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -111,26 +131,6 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel implements I
                         GL11.glPopMatrix();
                     }
                 }
-            }
-        }
-    }
-
-    public void clearSkin() {
-        synchronized (skins) {
-            skins.clear();
-        }
-    }
-    
-    @Override
-    public void skinDownloaded(Skin skin, SkinPointer skinPointer) {
-        synchronized (skins) {
-            skins.add(skinPointer);
-        }
-        if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
-            ModelBakery.INSTANCE.receivedUnbakedModel(skin);
-        } else {
-            if (skin != null) {
-                ClientSkinCache.INSTANCE.addServerIdMap(skin);
             }
         }
     }

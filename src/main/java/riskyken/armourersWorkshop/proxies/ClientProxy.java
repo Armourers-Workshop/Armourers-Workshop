@@ -49,7 +49,7 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;

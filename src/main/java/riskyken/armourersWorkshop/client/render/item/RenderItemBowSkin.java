@@ -20,7 +20,7 @@ import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;

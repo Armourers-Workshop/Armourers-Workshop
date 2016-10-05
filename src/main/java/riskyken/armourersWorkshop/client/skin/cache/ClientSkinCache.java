@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.skin;
+package riskyken.armourersWorkshop.client.skin.cache;
 
 import java.util.HashMap;
 import java.util.HashSet;

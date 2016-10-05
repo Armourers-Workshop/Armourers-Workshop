@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.skin;
+package riskyken.armourersWorkshop.client.skin.cache;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,6 +10,8 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
+import riskyken.armourersWorkshop.client.skin.SkinTextureKey;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap.IExpiringMapCallback;

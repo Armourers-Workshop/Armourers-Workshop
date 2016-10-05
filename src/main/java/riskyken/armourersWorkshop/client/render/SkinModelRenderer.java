@@ -35,7 +35,7 @@ import riskyken.armourersWorkshop.client.model.skin.ModelSkinLegs;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSkirt;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSword;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinWings;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
