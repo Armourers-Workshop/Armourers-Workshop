@@ -5,12 +5,21 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelCreateAccount;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelLogin;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelRecentlyUploaded;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
+import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 
-public class GuiGlobalLibrary extends GuiScreen {
+public class GuiGlobalLibrary extends GuiContainer {
     
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
@@ -42,7 +51,8 @@ public class GuiGlobalLibrary extends GuiScreen {
         CREATE_ACCOUNT
     }
     
-    public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity) {
+    public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
+        super(new ContainerGlobalSkinLibrary(inventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.player = Minecraft.getMinecraft().thePlayer;
         this.panelList = new ArrayList<GuiPanel>();
@@ -126,7 +136,7 @@ public class GuiGlobalLibrary extends GuiScreen {
     @Override
     public void updateScreen() {
         for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).updatePanel();
+            panelList.get(i).update();
         }
     }
     
@@ -168,16 +178,14 @@ public class GuiGlobalLibrary extends GuiScreen {
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTickTime);
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).drawScreen(mouseX, mouseY, partialTickTime);
-        }
-    }
-    
-    @Override
     public boolean doesGuiPauseGame() {
         return false;
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).draw(mouseX, mouseY, partialTickTime);
+        }
     }
 }

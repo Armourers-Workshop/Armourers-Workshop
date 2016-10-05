@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui.globallibrary;
+package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -10,6 +10,7 @@ import cpw.mods.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 
@@ -25,6 +26,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public void initGui() {
+        super.initGui();
         buttonList.clear();
         searchTextbox = new GuiLabeledTextField(fontRenderer, x + 5, y + 5, width - 10 - 85, 12);
         searchTextbox.setEmptyLabel("Type to search...");
@@ -33,7 +35,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
-        if (!visible | !enabled) {
+        if (!visible | !enabled | haveOpenDialog()) {
             return;
         }
         super.mouseClicked(mouseX, mouseY, button);
@@ -47,7 +49,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public boolean keyTyped(char c, int keycode) {
-        if (!visible | !enabled) {
+        if (!visible | !enabled | haveOpenDialog()) {
             return false;
         }
         boolean pressed = searchTextbox.textboxKeyTyped(c, keycode);
@@ -75,12 +77,12 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+    public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
-        super.drawScreen(mouseX, mouseY, partialTickTime);
+        super.draw(mouseX, mouseY, partialTickTime);
         searchTextbox.drawTextBox();
     }
 }

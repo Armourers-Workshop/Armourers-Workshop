@@ -121,7 +121,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.GLOBAL_SKIN_LIBRARY:
                 if (te instanceof TileEntityGlobalSkinLibrary) {
-                    return new ContainerGlobalSkinLibrary((TileEntityGlobalSkinLibrary)te);
+                    return new ContainerGlobalSkinLibrary(player.inventory, (TileEntityGlobalSkinLibrary)te);
                 }
                 break;
         }
@@ -203,7 +203,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.GLOBAL_SKIN_LIBRARY:
                 if (te instanceof TileEntityGlobalSkinLibrary) {
-                    return new GuiGlobalLibrary((TileEntityGlobalSkinLibrary)te);
+                    return new GuiGlobalLibrary((TileEntityGlobalSkinLibrary)te, player.inventory);
                 }
                 break;
             case LibGuiIds.DEBUG_TOOL:

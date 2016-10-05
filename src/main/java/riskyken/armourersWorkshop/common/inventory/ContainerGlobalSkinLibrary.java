@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
@@ -10,7 +11,7 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
     
     private TileEntityGlobalSkinLibrary tileEntity;
     
-    public ContainerGlobalSkinLibrary(TileEntityGlobalSkinLibrary tileEntity) {
+    public ContainerGlobalSkinLibrary(InventoryPlayer inventoryPlayer, TileEntityGlobalSkinLibrary tileEntity) {
         this.tileEntity = tileEntity;
     }
     

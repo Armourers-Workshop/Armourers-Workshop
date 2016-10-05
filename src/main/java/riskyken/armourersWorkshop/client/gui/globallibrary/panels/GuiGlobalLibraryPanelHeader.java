@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui.globallibrary;
+package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import com.mojang.authlib.GameProfile;
 
@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -25,6 +26,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     
     @Override
     public void initGui() {
+        super.initGui();
         buttonList.clear();
         buttonList.add(new GuiIconButton(parent, 0, this.x + this.width - 21, this.y + 5, 16, 16, "Home", BUTTON_TEXTURES).setIconLocation(0, 0, 16, 16));
         buttonList.add(new GuiIconButton(parent, 1, this.x + this.width - 42, this.y + 5, 16, 16, "Favourites", BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16));
@@ -55,7 +57,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+    public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
             return;
         }
@@ -63,7 +65,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         
         buttonLogin.visible = !ConfigHandlerClient.globalLibraryLoggedIn;
         
-        super.drawScreen(mouseX, mouseY, partialTickTime);
+        super.draw(mouseX, mouseY, partialTickTime);
         
         if (ConfigHandlerClient.globalLibraryLoggedIn) {
             String username = "player";
@@ -77,7 +79,8 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
             this.fontRenderer.drawString("Not logged in.", this.x + 90, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFAAAA);
         }
         
-        drawCenteredString(fontRenderer, ((GuiGlobalLibrary)parent).tileEntity.getBlockType().getLocalizedName(),x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
+        String titleText = ((GuiGlobalLibrary)parent).tileEntity.getBlockType().getLocalizedName();
+        drawCenteredString(fontRenderer, titleText, x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
     }
     
     private void drawPlayerHead(String username) {

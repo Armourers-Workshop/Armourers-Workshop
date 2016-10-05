@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui.globallibrary;
+package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -44,7 +45,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     }
     
     @Override
-    public void updatePanel() {
+    public void update() {
         if (downloadSearchResultsTask != null && downloadSearchResultsTask.isDone()) {
             try {
                 json = null;
@@ -81,6 +82,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     @Override
     public void initGui() {
+        super.initGui();
         buttonList.clear();
         buttonList.add(new GuiButtonExt(0, x + 5, y + height - 25, 80, 20, "<<"));
         buttonList.add(new GuiButtonExt(1, x + width - 85, y + height - 25, 80, 20, ">>"));
@@ -108,25 +110,24 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
-        if (!this.enabled | !this.visible) {
+        if (!visible | !enabled | haveOpenDialog()) {
             return;
         }
         mouseDownIndex = getSkinIndexAtLocation(mouseX, mouseY);
+        super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
     public void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        super.mouseMovedOrUp(mouseX, mouseY, button);
-        if (!this.enabled | !this.visible) {
+        if (!visible | !enabled | haveOpenDialog()) {
             return;
         }
-        
         int index = getSkinIndexAtLocation(mouseX, mouseY);
         if (index == mouseDownIndex & index != -1) {
             ((GuiGlobalLibrary)parent).panelSkinInfo.displaySkinInfo(json.get(index).getAsJsonObject());
             index = -1;
         }
+        super.mouseMovedOrUp(mouseX, mouseY, button);
     }
     
     private int getSkinIndexAtLocation(int locX, int locY) {
@@ -161,12 +162,12 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+    public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
-        super.drawScreen(mouseX, mouseY, partialTickTime);
+        super.draw(mouseX, mouseY, partialTickTime);
         
         int boxW = width - 5;
         int boxH = height - 5 - 12;

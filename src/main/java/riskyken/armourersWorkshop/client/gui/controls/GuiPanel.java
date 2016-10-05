@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -10,6 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
 
+@SideOnly(Side.CLIENT)
 public abstract class GuiPanel extends Gui {
     
     protected final GuiScreen parent;
@@ -22,6 +25,7 @@ public abstract class GuiPanel extends Gui {
     protected int height;
     protected boolean enabled;
     protected boolean visible;
+    protected GuiDialog dialog;
     
     protected ArrayList<GuiButton> buttonList;
     private GuiButton selectedButton;
@@ -42,6 +46,9 @@ public abstract class GuiPanel extends Gui {
     }
     
     public void initGui() {
+        if (haveOpenDialog()) {
+            this.dialog.initGui();
+        }
     }
     
     public GuiPanel setPosition(int x, int y) {
@@ -74,8 +81,24 @@ public abstract class GuiPanel extends Gui {
         return enabled;
     }
     
+    public boolean haveOpenDialog() {
+        return dialog != null;
+    }
+    
+    public GuiDialog getDialog() {
+        return dialog;
+    }
+    
+    public void setDialog(GuiDialog dialog) {
+        this.dialog = dialog;
+    }
+    
     public void mouseClicked(int mouseX, int mouseY, int button) {
         if (!this.enabled | !this.visible) {
+            return;
+        }
+        if (haveOpenDialog()) {
+            this.dialog.mouseClicked(mouseX, mouseY, button);
             return;
         }
         if (button == 0) {
@@ -103,16 +126,27 @@ public abstract class GuiPanel extends Gui {
         if (!this.enabled | !this.visible) {
             return;
         }
+        if (haveOpenDialog()) {
+            this.dialog.mouseMovedOrUp(mouseX, mouseY, button);
+            return;
+        }
         if (this.selectedButton != null && button == 0) {
             this.selectedButton.mouseReleased(mouseX, mouseY);
             this.selectedButton = null;
         }
     }
     
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
-        if (!this.visible) {
-            return;
+    public boolean keyTyped(char c, int keycode) {
+        if (!this.enabled | !this.visible) {
+            return false;
         }
+        if (haveOpenDialog()) {
+            return this.dialog.keyTyped(c, keycode);
+        }
+        return false;
+    }
+    
+    protected void drawbuttons(int mouseX, int mouseY) {
         for (int i = 0; i < buttonList.size(); i++) {
             buttonList.get(i).drawButton(mc, mouseX, mouseY);
         }
@@ -123,10 +157,19 @@ public abstract class GuiPanel extends Gui {
         }
     }
     
-    public boolean keyTyped(char c, int keycode) {
-        return false;
+    public void draw(int mouseX, int mouseY, float partialTickTime) {
+        if (!this.visible) {
+            return;
+        }
+        drawbuttons(mouseX, mouseY);
+        if (haveOpenDialog()) {
+            this.dialog.draw(mouseX, mouseY, partialTickTime);
+        }
     }
-
-    public void updatePanel() {
+    
+    public void update() {
+        if (haveOpenDialog()) {
+            this.dialog.update();
+        }
     }
 }

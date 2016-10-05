@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui.globallibrary;
+package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
@@ -20,12 +20,12 @@ public class GuiGlobalLibraryPanelCreateAccount extends GuiPanel {
 
     @Override
     public void initGui() {
-        
+        super.initGui();
     }
     
     @Override
     public boolean keyTyped(char c, int keycode) {
-        if (!visible | !enabled) {
+        if (!visible | !enabled | haveOpenDialog()) {
             return false;
         }
         
@@ -45,11 +45,11 @@ public class GuiGlobalLibraryPanelCreateAccount extends GuiPanel {
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+    public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
-        super.drawScreen(mouseX, mouseY, partialTickTime);
+        super.draw(mouseX, mouseY, partialTickTime);
     }
 }

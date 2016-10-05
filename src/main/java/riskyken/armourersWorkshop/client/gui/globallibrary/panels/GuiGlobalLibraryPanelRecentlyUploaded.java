@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui.globallibrary;
+package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -44,7 +45,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     }
     
     @Override
-    public void updatePanel() {
+    public void update() {
         if (downloadListTask != null && downloadListTask.isDone()) {
             try {
                 json = downloadListTask.get();
@@ -79,6 +80,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     
     @Override
     public void initGui() {
+        super.initGui();
         int boxW = width - 5;
         int boxH = height - 5 - 12;
         int iconSize = 50;
@@ -88,12 +90,12 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+    public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
-        super.drawScreen(mouseX, mouseY, partialTickTime);
+        super.draw(mouseX, mouseY, partialTickTime);
         
         fontRenderer.drawString("Recently Uploaded", x + 5, y + 6, 0xFFEEEEEE);
         
