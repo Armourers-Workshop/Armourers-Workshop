@@ -411,10 +411,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             ItemStack stack = te.getStackInSlot(i);
             if (renderEntity != null) {
                 if (i == 0 & isHalloweenSeason) {
-                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i, extraColours, distance);
+                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i, extraColours, distance, te.getBipedRotations());
                 } else {
                     if (stack != null) {
-                        renderEquippedItem(renderEntity, stack, targetBiped, i, extraColours, distance);
+                        renderEquippedItem(renderEntity, stack, targetBiped, i, extraColours, distance, te.getBipedRotations());
                     }
                 }
             }
@@ -438,7 +438,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         return false;
     }
     
-    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours, double distance) {
+    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         
@@ -456,21 +456,39 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         switch (slot) {
         case 0:
             renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 1:
             renderItems.renderChestStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 2:
             renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 3:
             renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 4:
             renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 5:
             renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 6:
             renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
