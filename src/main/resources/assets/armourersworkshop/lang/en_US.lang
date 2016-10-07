@@ -327,3 +327,11 @@ book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
 
 # Chapter 7
 book.armourersworkshop:guideBook.recipes.name=Recipes
+
+# Chapter 8
+book.armourersworkshop:guideBook.credits.name=Credits
+book.armourersworkshop:guideBook.credits.programing=Programing
+book.armourersworkshop:guideBook.credits.premade Skins=Premade Skins
+book.armourersworkshop:guideBook.credits.textures=Textures
+book.armourersworkshop:guideBook.credits.sound=Sound
+book.armourersworkshop:guideBook.credits.localisations=Localisations
