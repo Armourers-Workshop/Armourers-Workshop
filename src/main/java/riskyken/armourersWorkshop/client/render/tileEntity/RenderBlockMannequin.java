@@ -58,6 +58,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
     private static boolean isHalloweenSeason;
+    private static boolean isHalloween;
     private final static float SCALE = 0.0625F;
     private static long lastTextureBuild = 0;
     private static long lastSkinDownload = 0;
@@ -72,13 +73,16 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         model = new ModelMannequin();
-        isHalloweenSeason = HolidayHelper.halloween_season.isHolidayActive();
     }
     
     public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
         mc.mcProfiler.startSection("armourersMannequin");
+        mc.mcProfiler.startSection("holidayCheck");
+        isHalloweenSeason = HolidayHelper.halloween_season.isHolidayActive();
+        isHalloween = HolidayHelper.halloween.isHolidayActive();
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
-        mc.mcProfiler.startSection("move");
+        mc.mcProfiler.endStartSection("move");
+        
         model.compile(SCALE);
         
         GL11.glPushMatrix();
@@ -149,7 +153,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             te.getBipedRotations().applyRotationsToBiped(renderPlayer.modelArmorChestplate);
         }
         
-        
         ApiRegistrar.INSTANCE.onRenderMannequin(te, te.getGameProfile());
         
         model.bipedRightArm.setRotationPoint(-5.0F, 2.0F , 0.0F);
@@ -160,9 +163,27 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         model.bipedLeftLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
         
         rots.applyRotationsToBiped(model);
+        
         model.bipedBody.rotateAngleX = 0;
         model.bipedBody.rotateAngleY = 0;
         model.bipedBody.rotateAngleZ = 0;
+        
+        if (isHalloween) {
+            double dX = -x - 0.5F;
+            double dY = -y - 1.72F;
+            double dZ = -z - 0.5F;
+            
+            double yaw = Math.atan2(dZ, dX);
+            double pitch = Math.atan2(Math.sqrt(dZ * dZ + dX * dX), dY) + Math.PI;
+            
+            yaw -= Math.toRadians(rotaion * 22.5F - 90F);
+            pitch += Math.PI / 2D;
+            
+            model.bipedHead.rotateAngleX = (float) (pitch);
+            model.bipedHead.rotateAngleY = (float) (yaw);
+            model.bipedHeadwear.rotateAngleX = model.bipedHead.rotateAngleX;
+            model.bipedHeadwear.rotateAngleY = model.bipedHead.rotateAngleY;
+        }
         
         mc.mcProfiler.endStartSection("getTexture");
         ResourceLocation rl = AbstractClientPlayer.locationStevePng;
