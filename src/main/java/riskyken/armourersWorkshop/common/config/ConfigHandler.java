@@ -26,7 +26,7 @@ public class ConfigHandler {
     //server
     public static int serverModelCacheTime = 600000;
     public static int serverSkinSendRate = 4000;
-    public static boolean serverCompressSkins = true;
+    public static boolean serverCompressesSkins = true;
     
     //general
     public static boolean extractOfficialSkins;
@@ -176,8 +176,8 @@ public class ConfigHandler {
                 "The maximum number of skins the server is allow to send every minute.\n"
                 + "Less that 1 equals unlimited. (not recommended may cause bandwidth and cpu spikes on the server)");
         
-        serverCompressSkins = config.getBoolean("serverCompressSkins", CATEGORY_SERVER, true,
-                "Will the server compress skins before sending them to clients.\n" +
+        serverCompressesSkins = config.getBoolean("serverCompressesSkins", CATEGORY_SERVER, true,
+                "If enabled the server will compress skins before sending them to clients.\n" +
                 "Highly recommended unless the server has a very slow CPU.");
     }
 }

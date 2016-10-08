@@ -50,7 +50,7 @@ public final class ByteBufHelper {
     public static void writeSkinToByteBuf(ByteBuf buf, Skin skin) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(baos);
-        boolean compress = ConfigHandler.serverCompressSkins;
+        boolean compress = ConfigHandler.serverCompressesSkins;
         buf.writeBoolean(compress);
         try {
             skin.writeToStream(dataOutputStream);
