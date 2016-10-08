@@ -269,7 +269,6 @@ public class BlockSkinnable extends AbstractModBlockContainer {
                 float scale = 0.0625F;
                 
                 ForgeDirection dir = rotMatrix[rotation];
-                ModLogger.log(dir + " - " + rotation);
                 
                 float offsetX = (offset.getX() * scale) * dir.offsetZ + (-offset.getZ() * scale) * dir.offsetX;
                 float offsetY = offset.getY() * scale;
