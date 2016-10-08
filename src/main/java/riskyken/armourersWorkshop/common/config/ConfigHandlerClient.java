@@ -99,7 +99,6 @@ public class ConfigHandlerClient {
                 .getInt("skinRenderType", CATEGORY_DEBUG, 0, 0, 2,
                 "Only change this if you are having rendering issues with skins on players." +
                 "(normally fixes skins not rotating on players)\n" +
-                "This option is force on if Smart Moving is installed.\n" +
                 "\n" +
                 "0 = auto\n" +
                 "1 = render event\n" +
