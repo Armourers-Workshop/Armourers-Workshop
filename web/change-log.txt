@@ -1,3 +1,21 @@
+Build 0.41.0
+Added:
+	Added no collision option for block skins.
+	Added seat option for block skins.
+	Added compession for skins being sent from the server to the client. (skins are now around 10% the size)
+	Added serverCompressesSkins config option.
+	Added display list count to the F3 debug text.
+	Added credits chapter to the guide book.
+Fixed:
+	Fixed a bug that was causing skin textures to get rebuild when it was not required.
+	Fixed mannequins rotations sometimes getting changed by rendering armour.
+Changed:
+	Moved client configs into their own files and moved configs into their own directory.
+	Stopped model loading LODs showing in GUIs.
+	Removed disabledSkins config option.
+	Updated zh_CN. (Ethan)
+
+
 Build 0.40.1
 Added:
 	Added refresh button to the library.
