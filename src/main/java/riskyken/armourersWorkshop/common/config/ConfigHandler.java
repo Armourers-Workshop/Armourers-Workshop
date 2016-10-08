@@ -31,7 +31,6 @@ public class ConfigHandler {
     //general
     public static boolean extractOfficialSkins;
     public static boolean allowEquipmentWardrobe = true;
-    public static String[] disabledSkins = {};
     public static boolean allowClientsToDownloadSkins = false;
     public static boolean allowClientsToUploadSkins = true;
     public static boolean enableHolidayEvents = true;
@@ -79,21 +78,6 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "allowClientsToUploadSkins", true,
                 "Allows clients to load skins from their local computer onto the server using the library.")
                 .getBoolean(true);
-        
-        disabledSkins = config
-                .getStringList("disabledSkins", CATEGORY_GENERAL, new String[] {},
-                "List of skins that will be disabled.\n"
-                + "\n"
-                + "Here is a list of all the skins that come with the mod.\n" 
-                + "armourers:head\n"
-                + "armourers:chest\n"
-                + "armourers:legs\n"
-                + "armourers:skirt\n"
-                + "armourers:feet\n"
-                + "armourers:sword\n"
-                + "armourers:bow\n"
-                + "armourers:arrow\n"
-                + "\n");
         
         extractOfficialSkins = config
                 .get(CATEGORY_GENERAL, "extractOfficialSkins", true,

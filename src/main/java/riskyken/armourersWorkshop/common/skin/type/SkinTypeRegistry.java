@@ -15,7 +15,6 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.type.arrow.SkinArrow;
 import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 import riskyken.armourersWorkshop.common.skin.type.bow.SkinBow;
@@ -110,15 +109,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         return true;
     }
     
-    public boolean isSkinDisabled(ISkinType skinType) {
-        for (int i = 0; i < ConfigHandler.disabledSkins.length; i++) {
-            if (skinType.getRegistryName().equals(ConfigHandler.disabledSkins[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     @Override
     public ISkinType getSkinTypeFromRegistryName(String registryName) {
         if (registryName == null | registryName.trim().isEmpty()) {
@@ -128,9 +118,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return skinLegs;
         }
         ISkinType skinType = skinTypeMap.get(registryName);
-        if (skinType != null && isSkinDisabled(skinType)) {
-            return null;
-        }
         return skinType;
     }
     
