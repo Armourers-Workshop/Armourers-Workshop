@@ -28,6 +28,7 @@ public class ConfigHandlerClient {
     public static boolean showArmourerDebugRender;
     public static boolean wireframeRender;
     public static boolean disableTexturePainting;
+    public static boolean showLodLevels;
     
     public static String globalLibraryUsername = "";
     public static String globalLibraryPassword = "";
@@ -119,11 +120,6 @@ public class ConfigHandlerClient {
                 .get(CATEGORY_DEBUG, "showSkinTooltipDebugInfo", true,
                 "Shows extra debug info on skin tooltips.")
                 .getBoolean(true);
-        
-        showArmourerDebugRender = config
-                .get(CATEGORY_DEBUG, "showArmourerDebugRender", false,
-                "Shows extra debug renders on the armourer.")
-                .getBoolean(false);
         
         disableTexturePainting = config.getBoolean("disableTexturePainting", CATEGORY_DEBUG, false,
                 "Disables replacing the players texture with a painted version.\n"
