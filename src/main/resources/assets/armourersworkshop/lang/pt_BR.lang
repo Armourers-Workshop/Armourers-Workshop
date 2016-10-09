@@ -167,26 +167,47 @@ skinPartType.armourers:arrow.base.name=Base
 skinPartType.armourers:block.base.name=Base
 
 # Inventory names
+inventory.armourersworkshop:colourMixer.name=Misturador de Cores
+inventory.armourersworkshop:armourerBrain.name=Armeiro
+inventory.armourersworkshop:armourLibrary0.name=Biblioteca de Equipamentos
+inventory.armourersworkshop:armourLibrary1.name=Biblioteca de Equipamentos - (Criativo)
+inventory.armourersworkshop:equipmentWardrobe.name=Guarda-Roupa de Equipamentos
 inventory.armourersworkshop:mannequin.name=Manequim
 inventory.armourersworkshop:doll.name=Boneco
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
+inventory.armourersworkshop:entityEquipment.name=Equipamento da Entidade
 inventory.armourersworkshop:skinningTable.name=Mesa de Aplicação de Pele
 inventory.armourersworkshop:dyeTable.name=Mesa de Corantes
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Busca:
+inventory.armourersworkshop:armourLibrary.label.filename=Nome do Arquivo:
+inventory.armourersworkshop:armourLibrary.label.files=Arquivo:
 inventory.armourersworkshop:armourLibrary.error.noFileName=&7You must enter a file name to save a skin.
 inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7You must select a skin from the list to load.
+inventory.armourersworkshop:armourLibrary.save=Salvar
+inventory.armourersworkshop:armourLibrary.load=Carregar
+inventory.armourersworkshop:armourLibrary.openFolder=Abrir Pasta...
 inventory.armourersworkshop:armourLibrary.rollover.localFiles=View files on this computer.
 inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=View public files on the server.
 inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=View private files on the server.
 inventory.armourersworkshop:armourLibrary.rollover.notOnServer=You must be connected to a server to use this feature.
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Open library folder on your computer.
+inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Apagar pele.
 inventory.armourersworkshop:armourLibrary.rollover.refresh=Refresh library files.
 inventory.armourersworkshop:armourLibrary.label.enterFileName=Enter file name.
+inventory.armourersworkshop:armourLibrary.label.typeToSearch=Digitar para buscar...
 
+inventory.armourersworkshop:armourerBrain.label.itemName=Nome do Item:
+inventory.armourersworkshop:armourerBrain.label.username=Nome do Usuário:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:
+inventory.armourersworkshop:armourerBrain.showGuide=Mostrar guia de construção?
+inventory.armourersworkshop:armourerBrain.showOverlay=Mostrar overlay da cabeça?
+inventory.armourersworkshop:armourerBrain.showHelper=Mostrar modelo de auxílio?
+inventory.armourersworkshop:armourerBrain.save=Salvar
+inventory.armourersworkshop:armourerBrain.load=Carregar
 inventory.armourersworkshop:armourerBrain.set=Set
+inventory.armourersworkshop:armourerBrain.clear=Limpar
 inventory.armourersworkshop:armourerBrain.westToEast=West to East
 inventory.armourersworkshop:armourerBrain.eastToWest=East to West
 
@@ -257,6 +278,8 @@ itemGroup.armourersworkshop=Armourer's Workshop
 
 # Keybindings
 keys.armourersworkshop:category=Armourer's Workshop
+keys.armourersworkshop.equipmentWardrobe=Guarda-Roupa de Equipamentos
+keys.armourersworkshop.undo=Desfaz
 
 # Guide Book
 # Chapter 1
