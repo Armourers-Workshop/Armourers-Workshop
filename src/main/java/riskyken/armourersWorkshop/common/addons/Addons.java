@@ -466,7 +466,32 @@ public final class Addons {
         "maplecrafted:item.sword53",
         "maplecrafted:item.sword54",
         "maplecrafted:item.sword55",
-        "maplecrafted:item.sword57"
+        "maplecrafted:item.sword57",
+        "",
+        
+        "OreSpawn:OreSpawn_Bertha",
+        "OreSpawn:OreSpawn_UltimateSword",
+        "OreSpawn:OreSpawn_BattleAxe",
+        "OreSpawn:OreSpawn_Royal",
+        "OreSpawn:OreSpawn_Slice",
+        "OreSpawn:OreSpawn_Hammy",
+        "OreSpawn:OreSpawn_NightmareSword",
+        "OreSpawn:OreSpawn_QueenBattleAxe",
+        "OreSpawn:OreSpawn_Chainsaw",
+        "OreSpawn:OreSpawn_EmeraldSword",
+        "OreSpawn:OreSpawn_RoseSword",
+        "OreSpawn:OreSpawn_ExperienceSword",
+        "OreSpawn:OreSpawn_PoisonSword",
+        "OreSpawn:OreSpawn_RatSword",
+        "OreSpawn:OreSpawn_FairySword",
+        "OreSpawn:OreSpawn_CrystalPinkSword",
+        "OreSpawn:OreSpawn_TigersEyeSword",
+        "OreSpawn:OreSpawn_CrystalStoneSword",
+        "OreSpawn:OreSpawn_CrystalWoodSword",
+        "OreSpawn:OreSpawn_RubySword",
+        "OreSpawn:OreSpawn_AmethystSword",
+        "OreSpawn:OreSpawn_UltimatePickaxe",
+        "OreSpawn:OreSpawn_BigHammer"
     };
     
     public static final String[] overrideBowsDefault = {
