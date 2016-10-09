@@ -1,10 +1,13 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.dialogs;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDialog;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 
+@SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryDialogDownloadSkin extends GuiDialog {
 
     private GuiButtonExt buttonClose;
