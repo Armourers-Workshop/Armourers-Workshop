@@ -15,5 +15,7 @@ public class LibBlockNames {
     public static final String DOLL = "doll";
     public static final String SKINNING_TABLE = "skinningTable";
     public static final String SKINNABLE = "skinnable";
+    public static final String SKINNABLE_GLOWING = "skinnableGlowing";
     public static final String DYE_TABLE = "dyeTable";
+    public static final String GLOBAL_SKIN_LIBRARY = "globalSkinLibrary";
 }

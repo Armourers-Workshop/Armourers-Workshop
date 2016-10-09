@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui;
+package riskyken.armourersWorkshop.client.gui.mannequin;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabController;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;

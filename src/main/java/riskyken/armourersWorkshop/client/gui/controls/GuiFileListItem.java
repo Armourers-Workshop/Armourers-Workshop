@@ -9,7 +9,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -70,7 +70,8 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                     GL11.glEnable(GL11.GL_NORMALIZE);
                     GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                     ModRenderHelper.enableAlphaBlend();
-                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true);
+                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                     GL11.glPopAttrib();
                     GL11.glPopMatrix();
                 }

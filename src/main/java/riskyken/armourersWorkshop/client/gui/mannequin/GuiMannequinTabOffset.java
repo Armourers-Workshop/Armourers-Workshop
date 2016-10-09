@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui;
+package riskyken.armourersWorkshop.client.gui.mannequin;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;
@@ -6,6 +6,7 @@ import cpw.mods.fml.client.config.GuiSlider.ISlider;
 import cpw.mods.fml.client.config.GuiUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
@@ -89,10 +90,11 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
         float offsetZ = (float) bipedOffsetZslider.getValue();
         
         boolean renderExtras = ((GuiMannequin)parent).tabExtraRenders.isExtraRenders.isChecked();
+        boolean flying = ((GuiMannequin)parent).tabExtraRenders.isFlying.isChecked();
         String name = ((GuiMannequin)parent).tabName.nameTextbox.getText();
         int skinColour = ((GuiMannequin)parent).tabSkinAndHair.skinColour;
         int hairColour = ((GuiMannequin)parent).tabSkinAndHair.hairColour;
-        MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour, hairColour, name, renderExtras);
+        MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour, hairColour, name, renderExtras, flying);
         PacketHandler.networkWrapper.sendToServer(message);
     }
 }

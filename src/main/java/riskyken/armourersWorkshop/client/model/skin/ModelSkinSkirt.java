@@ -18,7 +18,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 public class ModelSkinSkirt extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         if (armourData == null) { return; }
         
         ArrayList<SkinPart> parts = armourData.getParts();
@@ -34,7 +34,6 @@ public class ModelSkinSkirt extends AbstractModelSkin {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSkirt);
-        armourData.onUsed();
         
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
@@ -49,7 +48,7 @@ public class ModelSkinSkirt extends AbstractModelSkin {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("base")) {
-                renderSkirt(part, SCALE, skinDye, extraColour);
+                renderSkirt(part, SCALE, skinDye, extraColour, distance, doLodLoading);
             }
             
             GL11.glPopMatrix();
@@ -58,7 +57,7 @@ public class ModelSkinSkirt extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderSkirt(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour) {
+    private void renderSkirt(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         
@@ -68,7 +67,7 @@ public class ModelSkinSkirt extends AbstractModelSkin {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         
-        renderPart(part, scale, skinDye, extraColour);
+        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

@@ -25,15 +25,29 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class Skin implements ISkin {
     
-    public static final int FILE_VERSION = 11;
+    public static final int FILE_VERSION = 12;
     
-    private String authorName;
-    private String customName;
-    private String tags;
+    public static final String KEY_AUTHOR_NAME = "authorName";
+    public static final String KEY_AUTHOR_UUID = "authorUUID";
+    public static final String KEY_CUSTOM_NAME = "customName";
+    public static final String KEY_TAGS = "tags";
+    
+    public static final String KEY_BLOCK_GLOWING = "blockGlowing";
+    public static final String KEY_BLOCK_LADDER = "blockLadder";
+    public static final String KEY_BLOCK_NO_COLLISION = "blockNoCollision";
+    public static final String KEY_BLOCK_SEAT= "blockSeat";
+    
+    public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
+    public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
+    public static final String KEY_WINGS_IDLE_SPEED = "wingsIdleSpeed";
+    public static final String KEY_WINGS_FLYING_SPEED = "wingsFlyingSpeed";
+    
+    private SkinProperties properties;
     private ISkinType equipmentSkinType;
     private int[] paintData;
     private ArrayList<SkinPart> parts;
     public int requestId;
+    public int serverId = -1;
     private int lightHash = 0;
     
     @SideOnly(Side.CLIENT)
@@ -108,9 +122,6 @@ public class Skin implements ISkin {
             }
         }
         
-        if (hasPaintData()) {
-        }
-        
         return new Rectangle3D(x, y, z, width, height, depth);
     }
     
@@ -118,29 +129,12 @@ public class Skin implements ISkin {
         return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
     }
     
-    
-    /** Number of ticks from when this skin was last used. */
-    private int ticksFromLastAccess = 0;
-    
-    public void onUsed() {
-        ticksFromLastAccess = 0;
+    public SkinProperties getProperties() {
+        return properties;
     }
     
-    public void tick() {
-        ticksFromLastAccess++;
-    }
-    
-    public boolean needsCleanup(int maxUnusedTicks) {
-        if (ticksFromLastAccess > maxUnusedTicks) {
-            return true;
-        }
-        return false;
-    }
-    
-    public Skin(String authorName, String customName, String tags, ISkinType equipmentSkinType, int[] paintData, ArrayList<SkinPart> equipmentSkinParts) {
-        this.authorName = authorName;
-        this.customName = customName;
-        this.tags = tags;
+    public Skin(SkinProperties properties, ISkinType equipmentSkinType, int[] paintData, ArrayList<SkinPart> equipmentSkinParts) {
+        this.properties = properties;
         this.equipmentSkinType = equipmentSkinType;
         this.paintData = null;
         //Check if the paint data has any paint on it.
@@ -198,14 +192,13 @@ public class Skin implements ISkin {
     }
     
     public Skin(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
+        this.properties = new SkinProperties();
         readFromStream(stream);
     }
     
     public void writeToStream(DataOutputStream stream) throws IOException {
         stream.writeInt(FILE_VERSION);
-        stream.writeUTF(this.authorName);
-        stream.writeUTF(this.customName);
-        stream.writeUTF(this.tags);
+        properties.writeToStream(stream);
         stream.writeUTF(this.equipmentSkinType.getRegistryName());
         if (this.paintData != null) {
             stream.writeBoolean(true);
@@ -226,13 +219,25 @@ public class Skin implements ISkin {
         if (fileVersion > FILE_VERSION) {
             throw new NewerFileVersionException();
         }
-        this.authorName = stream.readUTF();
-        this.customName = stream.readUTF();
-        if (!(fileVersion < 4)) {
-            this.tags = stream.readUTF(); 
+        
+        if (fileVersion < 12) {
+            String authorName = stream.readUTF();
+            String customName = stream.readUTF();
+            String tags = "";
+            if (!(fileVersion < 4)) {
+                tags = stream.readUTF(); 
+            } else {
+                tags = "";
+            }
+            properties.setProperty(KEY_AUTHOR_NAME, authorName);
+            properties.setProperty(KEY_CUSTOM_NAME, customName);
+            if (tags != null && !tags.equalsIgnoreCase("")) {
+                properties.setProperty(KEY_TAGS, tags);
+            }
         } else {
-            this.tags = "";
+            properties.readFromStream(stream);
         }
+
         if (fileVersion < 5) {
             equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
         } else {
@@ -270,11 +275,23 @@ public class Skin implements ISkin {
         if (fileVersion > FILE_VERSION) {
             throw new NewerFileVersionException();
         }
-        String authorName = stream.readUTF();
-        String customName = stream.readUTF();
-        String tags = "";
-        if (!(fileVersion < 4)) {
-            tags = stream.readUTF(); 
+        SkinProperties properties = new SkinProperties();
+        if (fileVersion < 12) {
+            String authorName = stream.readUTF();
+            String customName = stream.readUTF();
+            String tags = "";
+            if (!(fileVersion < 4)) {
+                tags = stream.readUTF(); 
+            } else {
+                tags = "";
+            }
+            properties.setProperty(KEY_AUTHOR_NAME, authorName);
+            properties.setProperty(KEY_CUSTOM_NAME, customName);
+            if (tags != null && !tags.equalsIgnoreCase("")) {
+                properties.setProperty(KEY_TAGS, tags);
+            }
+        } else {
+            properties.readFromStream(stream);
         }
         
         
@@ -328,11 +345,11 @@ public class Skin implements ISkin {
     }
     
     public String getCustomName() {
-        return customName;
+        return properties.getPropertyString(KEY_CUSTOM_NAME, "");
     }
     
     public String getAuthorName() {
-        return authorName;
+        return properties.getPropertyString(KEY_AUTHOR_NAME, "");
     }
     
     public int getTotalCubes() {
@@ -371,15 +388,10 @@ public class Skin implements ISkin {
         if (getClass() != obj.getClass())
             return false;
         Skin other = (Skin) obj;
-        if (authorName == null) {
-            if (other.authorName != null)
+        if (properties == null) {
+            if (other.properties != null)
                 return false;
-        } else if (!authorName.equals(other.authorName))
-            return false;
-        if (customName == null) {
-            if (other.customName != null)
-                return false;
-        } else if (!customName.equals(other.customName))
+        } else if (!properties.equals(other.properties))
             return false;
         if (parts == null) {
             if (other.parts != null)
@@ -393,8 +405,7 @@ public class Skin implements ISkin {
 
     @Override
     public String toString() {
-        String returnString = "Skin [authorName=" + authorName
-                + ", customName=" + customName + ", type=" + equipmentSkinType.getName().toUpperCase();
+        String returnString = "Skin [properties=" + properties + ", type=" + equipmentSkinType.getName().toUpperCase();
         if (this.paintData != null) {
             returnString += ", paintData=" + Arrays.hashCode(paintData);
         }

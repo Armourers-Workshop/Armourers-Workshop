@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui;
+package riskyken.armourersWorkshop.client.gui.miniarmourer;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;
@@ -20,7 +20,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.bake.FaceRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.MiniCube;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
@@ -219,7 +219,7 @@ public class GuiMiniArmourerBuildingModel {
                 for (int i = 0; i < skin.getParts().size(); i++) {
                     SkinPart part = skin.getParts().get(i);
                     if (part.getPartType() == currentSkinPartType) {
-                        SkinPartRenderer.INSTANCE.renderPart(part, scale, skinPointer.getSkinDye(), null);
+                        SkinPartRenderer.INSTANCE.renderPart(part, scale, skinPointer.getSkinDye(), null, false);
                     }
                 }
             }

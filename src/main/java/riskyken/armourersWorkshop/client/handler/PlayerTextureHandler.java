@@ -18,12 +18,18 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
+/**
+ * Handles replacing the players texture with the painted version.
+ * @author RiskyKen
+ *
+ */
 @SideOnly(Side.CLIENT)
 public class PlayerTextureHandler {
 
@@ -31,21 +37,19 @@ public class PlayerTextureHandler {
     
     private HashMap<PlayerPointer, EntityTextureInfo> playerTextureMap = new HashMap<PlayerPointer, EntityTextureInfo>();
     private final Profiler profiler;
+    private boolean disableTexturePainting;
     
     public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
         profiler = Minecraft.getMinecraft().mcProfiler;
     }
     
-    public EntityTextureInfo getPlayersNakedData(PlayerPointer playerPointer) {
-        if (!playerTextureMap.containsKey(playerPointer)) {
-            return null;
-        }
-        return playerTextureMap.get(playerPointer);
-    }
-    
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRender(RenderPlayerEvent.Pre event) {
+        disableTexturePainting = ConfigHandlerClient.disableTexturePainting;
+        if(disableTexturePainting) {
+            return;
+        }
         if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
             return;
         }
@@ -94,7 +98,9 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.Post event) {
-        
+        if(disableTexturePainting) {
+            return;
+        }
         if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
             return;
         }

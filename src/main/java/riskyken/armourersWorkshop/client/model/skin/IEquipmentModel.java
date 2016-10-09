@@ -12,5 +12,5 @@ public interface IEquipmentModel {
     
     public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX);
     
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender);
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading);
 }

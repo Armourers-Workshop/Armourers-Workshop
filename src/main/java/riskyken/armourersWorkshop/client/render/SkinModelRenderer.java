@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -24,7 +25,6 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.ModelRendererAttachment;
-import riskyken.armourersWorkshop.client.model.bake.SkinBaker;
 import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
 import riskyken.armourersWorkshop.client.model.skin.IEquipmentModel;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
@@ -34,7 +34,9 @@ import riskyken.armourersWorkshop.client.model.skin.ModelSkinHead;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinLegs;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSkirt;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinSword;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.model.skin.ModelSkinWings;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -42,6 +44,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -72,6 +75,7 @@ public final class SkinModelRenderer {
     public final ModelSkinFeet customFeet = new ModelSkinFeet();
     public final ModelSkinSword customSword = new ModelSkinSword();
     public final ModelSkinBow customBow = new ModelSkinBow();
+    public final ModelSkinWings customWings = new ModelSkinWings();
     
     public EntityPlayer targetPlayer = null;
     
@@ -210,7 +214,7 @@ public final class SkinModelRenderer {
         EntityPlayer player = event.entityPlayer;
         targetPlayer = player;
         
-        if (ClientProxy.useAttachedModelRender()) {
+        if (ClientProxy.getSkinRenderType() == SkinRenderType.MODEL_ATTACHMENT) {
             attachModelsToBiped(event.renderer.modelBipedMain, event.renderer);
         }
         
@@ -246,7 +250,9 @@ public final class SkinModelRenderer {
         modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.rightLeg")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.skirt")));
         modelBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.leftFoot")));
-        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));            
+        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));  
+        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.leftWing")));
+        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.rightWing")));
         ModLogger.log(String.format("Added model render attachment to %s", modelBiped.toString()));
         ModLogger.log(String.format("Using player renderer %s", renderPlayer.toString()));
     }
@@ -258,7 +264,7 @@ public final class SkinModelRenderer {
     
     @SubscribeEvent
     public void onRenderSpecialsPost(RenderPlayerEvent.Specials.Post event) {
-        if (ClientProxy.useAttachedModelRender()) {
+        if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_EVENT) {
             return;
         }
         EntityPlayer player = event.entityPlayer;
@@ -271,7 +277,12 @@ public final class SkinModelRenderer {
             return;
         }
         
-        if (!SkinBaker.withinMaxRenderDistance(player.posX, player.posY, player.posZ)) {
+        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+                player.posX,
+                player.posY,
+                player.posZ);
+        
+        if (distance > ConfigHandlerClient.maxSkinRenderDistance) {
             return;
         }
         
@@ -284,53 +295,58 @@ public final class SkinModelRenderer {
                     (byte)skinColour.getRed(), (byte)skinColour.getGreen(), (byte)skinColour.getBlue(),
                     (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
         }
-        
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_BLEND);
         for (int slot = 0; slot < 4; slot++) {
-            GL11.glPushMatrix();
-            GL11.glEnable(GL11.GL_CULL_FACE);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glEnable(GL11.GL_BLEND);
+
             for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
                 if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                     if (data != null) {
-                        customHead.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customHead.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                     if (data != null) {
-                        customChest.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customChest.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
                     if (data != null) {
-                        customLegs.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customLegs.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     if (data != null) {
-                        customSkirt.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customSkirt.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
                     if (data != null) {
-                        customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false);
+                        customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
             }
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            GL11.glPopMatrix();
         }
+        Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
+        ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
+        if (data != null) {
+            customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+        }
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        GL11.glPopMatrix();
     }
     
     public AbstractModelSkin getModelForEquipmentType(ISkinType skinType) {
@@ -348,17 +364,28 @@ public final class SkinModelRenderer {
             return customSword;
         } else if (skinType == SkinTypeRegistry.skinBow) {
             return customBow;
+        } else if (skinType == SkinTypeRegistry.skinWings) {
+            return customWings;
         }
         return null;
     }
     
-    public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, byte[] extraColours) {
+    public boolean renderEquipmentPartFromStack(Entity entity, ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer == null) {
             return false;
         }
         Skin data = getCustomArmourItemData(skinPointer);
-        return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye(), extraColours);
+        return renderEquipmentPart(entity, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
+    }
+    
+    public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        if (skinPointer == null) {
+            return false;
+        }
+        Skin data = getCustomArmourItemData(skinPointer);
+        return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
     }
     
     public boolean renderEquipmentPartFromSkinPointer(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
@@ -366,7 +393,7 @@ public final class SkinModelRenderer {
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
-    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, byte[] extraColours) {
+    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, byte[] extraColours, double distance, boolean doLodLoading) {
         if (data == null) {
             return false;
         }
@@ -378,7 +405,7 @@ public final class SkinModelRenderer {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
-        model.render(entity, modelBiped, data, false, skinDye, extraColours, false);
+        model.render(entity, modelBiped, data, false, skinDye, extraColours, false, distance, doLodLoading);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);
         return true;

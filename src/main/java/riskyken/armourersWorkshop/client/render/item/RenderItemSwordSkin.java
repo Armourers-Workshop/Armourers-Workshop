@@ -13,7 +13,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.Addons;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -128,7 +128,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
-                ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, false);
+                ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, false, false);
             }
             Addons.onWeaponRender(type, EventState.POST);
             GL11.glPopAttrib();

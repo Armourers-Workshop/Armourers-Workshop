@@ -30,9 +30,10 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
@@ -51,7 +52,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
     private static final String TAG_SHOW_HELPER = "showHelper";
-    private static final String TAG_CUSTOM_NAME = "customeName";
     private static final String TAG_PAINT_DATA = "paintData";
     private static final int HEIGHT_OFFSET = 1;
     private static final int INVENTORY_SIZE = 2;
@@ -63,10 +63,11 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private boolean showGuides;
     private boolean showOverlay;
     private boolean showHelper;
-    private String customName;
+    private SkinProperties skinProps;
     private int[] paintData;
     @SideOnly(Side.CLIENT)
     public SkinTexture skinTexture;
+    public boolean loadedArmourItem = false;
     
     public TileEntityArmourer() {
         super(INVENTORY_SIZE);
@@ -75,7 +76,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         this.showOverlay = true;
         this.showGuides = true;
         this.showHelper = true;
-        this.customName = "";
+        this.skinProps = new SkinProperties();
         clearPaintData(false);
     }
     
@@ -103,7 +104,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
      * @param player The player that pressed the save button.
      * @param name Custom name for the item.
      */
-    public void saveArmourItem(EntityPlayerMP player, String name, String tags) {
+    public void saveArmourItem(EntityPlayerMP player, String customName, String tags) {
         if (this.worldObj.isRemote) {
             return;
         }
@@ -121,15 +122,35 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
         
-        String authorName = player.getCommandSenderName();
-        //authorName = "";
-        String customName = name;
-        
         Skin armourItemData = null;
         
+        SkinProperties skinProps = new SkinProperties();
+        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getCommandSenderName());
+        if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
+            skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
+        }
+        skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
+        if (tags != null && !tags.equalsIgnoreCase("")) {
+            skinProps.setProperty(Skin.KEY_TAGS, tags);
+        }
+        
+        if (skinType == SkinTypeRegistry.skinBlock) {
+            skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_LADDER, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_SEAT, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
+        }
+        
+        if (skinType == SkinTypeRegistry.skinWings) {
+            skinProps.setProperty(Skin.KEY_WINGS_FLYING_SPEED, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D));
+            skinProps.setProperty(Skin.KEY_WINGS_IDLE_SPEED, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D));
+            skinProps.setProperty(Skin.KEY_WINGS_MIN_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D));
+            skinProps.setProperty(Skin.KEY_WINGS_MAX_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D));
+        }
+        
         try {
-            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, player, skinType, authorName, customName,
-                    tags, paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType,
+                    paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         } catch (InvalidCubeTypeException e) {
             ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
             e.printStackTrace();
@@ -151,7 +172,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             return;
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
@@ -200,8 +221,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
-        Skin equipmentData = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
-        setCustomName(equipmentData.getCustomName());
+        Skin equipmentData = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
+        skinProps = new SkinProperties(equipmentData.getProperties());
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
         if (equipmentData.hasPaintData()) {
@@ -265,6 +286,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (skinType != null) {
             ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
             clearPaintData(true);
+            skinProps = new SkinProperties();
+            resyncData();
         }
     }
     
@@ -326,6 +349,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         removeBoundingBoxes();
         this.skinType = skinType;
+        skinProps = new SkinProperties();
         clearPaintData(true);
         createBoundingBoxes(); 
         this.markDirty();
@@ -357,12 +381,16 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    public String getCustomName() {
-        return customName;
+    public SkinProperties getSkinProps() {
+        return skinProps;
     }
     
-    public void setCustomName(String customName) {
-        this.customName = customName;
+    public void setSkinProps(SkinProperties skinProps) {
+        this.skinProps = skinProps;
+        resyncData();
+    }
+    
+    public void resyncData() {
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -394,6 +422,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         readBaseFromNBT(compound);
         readCommonFromNBT(compound);
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        loadedArmourItem = true;
     }
     
     @Override
@@ -422,7 +451,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (compound.hasKey(TAG_SHOW_HELPER)) {
             showHelper = compound.getBoolean(TAG_SHOW_HELPER);
         }
-        customName = compound.getString(TAG_CUSTOM_NAME);
+        skinProps = new SkinProperties();
+        skinProps.readFromNBT(compound);
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
@@ -441,7 +471,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setBoolean(TAG_SHOW_HELPER, showHelper);
-        compound.setString(TAG_CUSTOM_NAME, customName);
+        skinProps.writeToNBT(compound);
         if (this.newProfile != null) {
             this.gameProfile = newProfile;
             this.newProfile = null;

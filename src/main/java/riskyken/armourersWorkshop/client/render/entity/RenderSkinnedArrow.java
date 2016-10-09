@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -53,7 +53,6 @@ public class RenderSkinnedArrow extends RenderArrow {
         if (skin == null) {
             return;
         }
-        skin.onUsed();
         
         float scale = 0.0625F;
         GL11.glPushMatrix();
@@ -74,7 +73,7 @@ public class RenderSkinnedArrow extends RenderArrow {
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             //TODO apply dyes to arrows.
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null, true);
         }
         GL11.glPopMatrix();
     }

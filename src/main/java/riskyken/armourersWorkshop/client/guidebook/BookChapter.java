@@ -3,39 +3,23 @@ package riskyken.armourersWorkshop.client.guidebook;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class BookChapter implements IBookChapter {
+public class BookChapter extends BookChapterBase {
     
-    private static final int PAGE_WIDTH = 104;
-    private static final int PAGE_HEIGHT = 130;
-    
-    private final IBook parentBook;
-    private final String name;
     private final int numberOfParagraphs;
-    private final ArrayList<IBookPage> pages;
     
     public BookChapter(IBook parentBook, String name, int numberOfParagraphs) {
-        this.parentBook = parentBook;
-        this.name = name;
+        super(parentBook, name);
         this.numberOfParagraphs = numberOfParagraphs;
-        this.pages = new ArrayList<IBookPage>();
     }
     
-    private String getParagraphText(int paragraphNumber) {
-        return getLocalizedText(getUnlocalizedName() + ".paragraph" + paragraphNumber);
-    }
-    
-    private String getLocalizedText(String unlocalizedText) {
-        return StatCollector.translateToLocal(unlocalizedText);
-    }
-
     private ArrayList<IBookPage> createPagesForText(String text) {
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         List<String> lines = fontRenderer.listFormattedStringToWidth(text, PAGE_WIDTH);
@@ -76,23 +60,11 @@ public class BookChapter implements IBookChapter {
         this.pages.addAll(createPagesForText(chapterText));
     }
     
-    @Override
-    public String getUnlocalizedName() {
-        return parentBook.getUnlocalizedName() + "." + this.name;
+    private String getParagraphText(int paragraphNumber) {
+        return getLocalizedText(getUnlocalizedName() + ".paragraph" + paragraphNumber);
     }
     
-    @Override
-    public int getNumberOfPages() {
-        return this.pages.size();
-    }
-    
-    @Override
-    public IBookPage getPageNumber(int pageNumber) {
-        return this.pages.get(pageNumber);
-    }
-
-    @Override
-    public void addPage(IBookPage page) {
-        this.pages.add(page);
+    private String getLocalizedText(String unlocalizedText) {
+        return StatCollector.translateToLocal(unlocalizedText);
     }
 }

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin;
+package riskyken.armourersWorkshop.common.skin.cache;
 
 import java.io.File;
 import java.io.InputStream;
@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinIdSend;
@@ -30,12 +31,12 @@ import riskyken.armourersWorkshop.utils.SkinIOUtils;
  * @author RiskyKen
  *
  */
-public final class SkinDataCache implements Runnable {
+public final class CommonSkinCache implements Runnable {
     
-    public static final SkinDataCache INSTANCE = new SkinDataCache();
+    public static final CommonSkinCache INSTANCE = new CommonSkinCache();
     
     /** Cache of skins that are in memory. */
-    private HashMap<Integer, Skin> skinDataCache = new HashMap<Integer, Skin>();
+    private ExpiringHashMap<Integer, Skin> skinDataCache;
     
     private HashMap<String, Integer> fileNameIdLinkMap = new HashMap<String, Integer>();
     
@@ -50,7 +51,8 @@ public final class SkinDataCache implements Runnable {
     
     private boolean madeDatabase = false;
     
-    public SkinDataCache() {
+    public CommonSkinCache() {
+        skinDataCache = new ExpiringHashMap<Integer, Skin>(ConfigHandler.serverModelCacheTime);
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -76,7 +78,7 @@ public final class SkinDataCache implements Runnable {
     @SubscribeEvent
     public void onServerTickEvent(TickEvent.ServerTickEvent event) {
         if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
-            checkForOldSkins();
+            skinDataCache.cleanupCheck();
         }
     }
     
@@ -145,20 +147,6 @@ public final class SkinDataCache implements Runnable {
         }
     }
     
-    private void checkForOldSkins() {
-        synchronized (skinDataCache) {
-            Object[] keySet = skinDataCache.keySet().toArray();
-            for (int i = 0; i < keySet.length; i++) {
-                int key = (Integer) keySet[i];
-                Skin skin = skinDataCache.get(key);
-                skin.tick();
-                if (skin.needsCleanup(ConfigHandler.serverModelCacheTime)) {
-                    skinDataCache.remove(key);
-                }
-            }
-        }
-    }
-    
     public Skin addSkinToCache(InputStream inputStream) {
         Skin skin = SkinIOUtils.loadSkinFromStream(inputStream);
         if (skin != null) {
@@ -196,7 +184,6 @@ public final class SkinDataCache implements Runnable {
             if (skinDataCache.containsKey(skinId)) {
                 Skin skin = skinDataCache.get(skinId);
                 skin.requestId = skinId;
-                skin.onUsed();
                 PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), player);
             } else {
                 ModLogger.log(Level.ERROR, "Equipment id:" + skinId +" was requested by "
@@ -281,7 +268,6 @@ public final class SkinDataCache implements Runnable {
         }
         if (skinDataCache.containsKey(equipmentId)) {
             Skin skin = skinDataCache.get(equipmentId);
-            skin.onUsed();
             return skin;
         }
         return null;
@@ -295,7 +281,6 @@ public final class SkinDataCache implements Runnable {
     public Skin softGetSkin(int skinId) {
         if (skinDataCache.containsKey(skinId)) {
             Skin skin = skinDataCache.get(skinId);
-            skin.onUsed();
             return skin;
         }
         synchronized (skinLoadQueue) {
@@ -311,6 +296,12 @@ public final class SkinDataCache implements Runnable {
             }
         }
         return null;
+    }
+    
+    public int size() {
+        synchronized (skinDataCache) {
+            return skinDataCache.size();
+        }
     }
     
     private boolean haveEquipmentOnDisk(int equipmentId) {

@@ -3,10 +3,12 @@ package riskyken.armourersWorkshop.utils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
@@ -42,14 +44,42 @@ public final class SkinUtils {
     
     private static Skin getSkinOnServer(SkinPointer skinPointer, boolean softLoad) {
         if (softLoad) {
-            return SkinDataCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
+            return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
         } else {
-            return SkinDataCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
+            return CommonSkinCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
         }
     }
     
     @SideOnly(Side.CLIENT)
     private static Skin getSkinOnClient(SkinPointer skinPointer, boolean requestSkin) {
         return ClientSkinCache.INSTANCE.getSkin(skinPointer, requestSkin);
+    }
+    
+    public static double getFlapAngleForWings(Entity entity, Skin skin) {
+        
+        double maxAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D);
+        double minAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D);
+        double idleSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D);
+        double flyingSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D);
+        
+        double angle = 0;
+        double flapTime = idleSpeed;
+        
+        if (entity != null) {
+            if (entity.isAirBorne) {
+                if (entity instanceof EntityPlayer) {
+                    if (((EntityPlayer)entity).capabilities.isFlying) {
+                        flapTime = flyingSpeed;
+                    }
+                } else {
+                    flapTime = flyingSpeed;
+                }
+            }
+            angle = (((double)System.currentTimeMillis() + entity.getEntityId()) % flapTime);
+            angle = Math.sin(angle / flapTime * Math.PI * 2);
+        }
+        
+        double fullAngle = maxAngle - minAngle;
+        return -minAngle - fullAngle * ((angle + 1D) / 2);
     }
 }

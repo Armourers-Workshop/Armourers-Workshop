@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
-import riskyken.armourersWorkshop.client.gui.GuiMiniArmourerBuilding;
+import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.data.MiniCube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 

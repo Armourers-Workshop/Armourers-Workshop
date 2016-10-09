@@ -146,7 +146,7 @@ public class SkinPart implements ISkinPart {
     public ForgeDirection getMarkerSide(int index) {
         if (index >= 0 & index < markerBlocks.size()) {
             CubeMarkerData cmd = markerBlocks.get(index);
-            return  ForgeDirection.getOrientation(cmd.meta);
+            return  ForgeDirection.getOrientation(cmd.meta - 1);
         }
         return null;
     }

@@ -35,7 +35,9 @@ public class ModelArrow {
     }
     
     public void render(float scale, boolean ghost) {
-        buildDisplayList();
+        if (displayList == -1) {
+            buildDisplayList();
+        }
         GL11.glPushMatrix();
         GL11.glRotatef(90F, 0F, 1F, 0F);
         GL11.glTranslatef(-3 * scale, -0.5F * scale, -0.5F * scale);
@@ -43,15 +45,10 @@ public class ModelArrow {
         if (ghost) {
             GL11.glColor4f(1F, 1F, 1F, 0.25F);
         }
-        if (displayList == -1) {
-            buildDisplayList();
-        }
-        
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         UtilRender.bindTexture(arrowTextures);
         GL11.glCallList(this.displayList);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        
         if (ghost) {
             GL11.glColor4f(1F, 1F, 1F, 1F);
         }

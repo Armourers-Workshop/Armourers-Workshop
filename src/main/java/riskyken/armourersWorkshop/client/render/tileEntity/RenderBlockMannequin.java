@@ -31,16 +31,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.gui.GuiMannequin;
-import riskyken.armourersWorkshop.client.gui.GuiMannequinTabSkinHair;
+import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
+import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequinTabSkinHair;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -129,11 +129,19 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     fakePlayer.prevPosX = x;
                     fakePlayer.prevPosY = y;
                     fakePlayer.prevPosZ = z;
-                    
                     te.setFakePlayer(fakePlayer);
+                } else {
+                    fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+                    fakePlayer.isAirBorne = te.isFlying();
+                    fakePlayer.capabilities.isFlying = te.isFlying();
                 }
             }
+        } else {
+            mannequinFakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+            mannequinFakePlayer.isAirBorne = te.isFlying();
+            mannequinFakePlayer.capabilities.isFlying = te.isFlying();
         }
+        
         
         if (te.getBipedRotations() != null) {
             te.getBipedRotations().applyRotationsToBiped(model);
@@ -207,7 +215,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 te.skinTexture.updateDyes(dyes);
                 
                 if (te.skinTexture.getNeedsUpdate()) {
-                    if (lastTextureBuild + 100L < System.currentTimeMillis()) {
+                    if (lastTextureBuild + 200L < System.currentTimeMillis()) {
                         lastTextureBuild = System.currentTimeMillis();
                         rl = te.skinTexture.preRender();
                     }
@@ -275,8 +283,12 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         //Render items.
         mc.mcProfiler.endStartSection("equippedItems");
-        if (te.getDistanceFrom(field_147501_a.field_147560_j, field_147501_a.field_147561_k, field_147501_a.field_147558_l) < ConfigHandler.mannequinMaxEquipmentRenderDistance) {
-            renderEquippedItems(te, fakePlayer, model);
+        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+                te.xCoord + 0.5F,
+                te.yCoord + 0.5F,
+                te.zCoord + 0.5F);
+        if (distance <= ConfigHandlerClient.mannequinMaxEquipmentRenderDistance) {
+            renderEquippedItems(te, fakePlayer, model, distance);
         }
         
         mc.mcProfiler.endStartSection("reset");
@@ -377,7 +389,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         return new Color(r,g,b);
     }
     
-    private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped) {
+    private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped, double distance) {
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         MannequinFakePlayer renderEntity = fakePlayer;
         if (renderEntity == null) {
@@ -399,10 +411,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             ItemStack stack = te.getStackInSlot(i);
             if (renderEntity != null) {
                 if (i == 0 & isHalloweenSeason) {
-                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i, extraColours);
+                    renderEquippedItem(renderEntity, new ItemStack(Blocks.lit_pumpkin), targetBiped, i, extraColours, distance, te.getBipedRotations());
                 } else {
                     if (stack != null) {
-                        renderEquippedItem(renderEntity, stack, targetBiped, i, extraColours);
+                        renderEquippedItem(renderEntity, stack, targetBiped, i, extraColours, distance, te.getBipedRotations());
                     }
                 }
             }
@@ -426,7 +438,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         return false;
     }
     
-    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours) {
+    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         
@@ -443,25 +455,43 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         targetBiped.isChild = false;
         switch (slot) {
         case 0:
-            renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderHeadStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 1:
-            renderItems.renderChestStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderChestStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 2:
-            renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderLegsStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 3:
-            renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderFeetStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 4:
-            renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderRightArmStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 5:
-            renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderLeftArmStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
+            if (rots != null) {
+                rots.applyRotationsToBiped(targetBiped);
+            }
             break;
         case 6:
-            //renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours);
+            renderItems.renderWingsStack(fakePlayer, stack, targetBiped, rm, extraColours, distance);
             break;
         }
         

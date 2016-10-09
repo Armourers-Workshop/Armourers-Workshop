@@ -3,6 +3,7 @@ tile.armourersworkshop:armourerBrain.name=Armourer
 tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 tile.armourersworkshop:armourLibrary0.name=Equipment Library
 tile.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
+tile.armourersworkshop:globalSkinLibrary.name=Global Skin Library - (WIP)
 tile.armourersworkshop:colourable.name=Equipment Cube
 tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
 tile.armourersworkshop:colourableGlass.name=Glass Equipment Cube
@@ -53,6 +54,7 @@ item.armourersworkshop:blockMarker.name=Block Marker
 item.armourersworkshop:dyeBottle.name=Dye Bottle
 item.armourersworkshop:blendingTool.name=Blending Tool
 item.armourersworkshop:armourersHammer.name=Armourers Hammer
+item.armourersworkshop:debugTool.name=Debug Tool
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -106,6 +108,7 @@ item.armourersworkshop:rollover.skinInvalidItem=&cError: Invalid equipment skin,
 item.armourersworkshop:rollover.skinIdError1=&cWarning: This skin is using an old file format.
 item.armourersworkshop:rollover.skinIdError2=&cPlease save and reload it from the library to fix this.
 item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
+item.armourersworkshop:rollover.skinProperties=&eSkin Properties:
 
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=Full block mode
@@ -165,6 +168,8 @@ skinPartType.armourers:bow.frame2.name=Frame 2
 skinPartType.armourers:bow.frame3.name=Frame 3
 skinPartType.armourers:arrow.base.name=Base
 skinPartType.armourers:block.base.name=Base
+skinPartType.armourers:wings.leftWing.name=Left Wing
+skinPartType.armourers:wings.rightWing.name=Right Wing
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
@@ -200,6 +205,10 @@ inventory.armourersworkshop:armourLibrary.label.typeToSearch=Type to search...
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
+inventory.armourersworkshop:armourerBrain.label.idleSpeed=Idle Speed:
+inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Flying Speed:
+inventory.armourersworkshop:armourerBrain.label.minAngle=Minimum Angle:
+inventory.armourersworkshop:armourerBrain.label.maxAngle=Maximum Angle:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:
 inventory.armourersworkshop:armourerBrain.showGuide=Show building guide?
 inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?
@@ -210,6 +219,10 @@ inventory.armourersworkshop:armourerBrain.set=Set
 inventory.armourersworkshop:armourerBrain.clear=Clear
 inventory.armourersworkshop:armourerBrain.westToEast=West to East
 inventory.armourersworkshop:armourerBrain.eastToWest=East to West
+inventory.armourersworkshop:armourerBrain.glowing=Glowing?
+inventory.armourersworkshop:armourerBrain.ladder=Ladder?
+inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
+inventory.armourersworkshop:armourerBrain.seat=Seat?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation
@@ -239,6 +252,7 @@ inventory.armourersworkshop:mannequin.label.leftLegRotation=Left Leg Rotation
 inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Extra Renders?
+inventory.armourersworkshop:mannequin.label.isFlying=Flying?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
 inventory.armourersworkshop:mannequin.set=Set
@@ -313,3 +327,11 @@ book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
 
 # Chapter 7
 book.armourersworkshop:guideBook.recipes.name=Recipes
+
+# Chapter 8
+book.armourersworkshop:guideBook.credits.name=Credits
+book.armourersworkshop:guideBook.credits.programing=Programing
+book.armourersworkshop:guideBook.credits.premade Skins=Premade Skins
+book.armourersworkshop:guideBook.credits.textures=Textures
+book.armourersworkshop:guideBook.credits.sound=Sound
+book.armourersworkshop:guideBook.credits.localisations=Localisations

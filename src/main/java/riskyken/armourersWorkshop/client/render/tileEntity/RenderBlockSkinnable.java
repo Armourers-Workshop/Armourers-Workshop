@@ -18,7 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -80,14 +80,13 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         if (rotation != 0) {
           GL11.glRotatef((90F * rotation), 0, 1, 0);
         }
-        skin.onUsed();
         double distance = Minecraft.getMinecraft().thePlayer.getDistance(
                 tileEntity.xCoord + 0.5F,
                 tileEntity.yCoord + 0.5F,
                 tileEntity.zCoord + 0.5F);
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true);
         }
         if (rotation != 0) {
             GL11.glRotatef((90F * -rotation), 0, 1, 0);

@@ -13,7 +13,7 @@ import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -71,7 +71,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
         
-        Skin skin = SkinDataCache.INSTANCE.getEquipmentData(skinPointer.skinId);
+        Skin skin = CommonSkinCache.INSTANCE.getEquipmentData(skinPointer.skinId);
         if (skin == null) {
             return;
         }
@@ -117,7 +117,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
         
-        Skin skin = SkinDataCache.INSTANCE.getEquipmentData(equipmentId);
+        Skin skin = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
         if (skin == null) {
             return;
         }
@@ -192,9 +192,9 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         }
         
         if (publicFiles) {
-            SkinDataCache.INSTANCE.addEquipmentDataToCache(skin, fileName);
+            CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, fileName);
         } else {
-            SkinDataCache.INSTANCE.addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  fileName);
+            CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  fileName);
         }
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
@@ -235,7 +235,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        SkinDataCache.INSTANCE.addEquipmentDataToCache(skin, null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, null);
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, inputItem);

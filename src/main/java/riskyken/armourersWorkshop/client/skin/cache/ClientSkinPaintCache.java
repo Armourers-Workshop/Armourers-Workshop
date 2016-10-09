@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.skin;
+package riskyken.armourersWorkshop.client.skin.cache;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,7 +10,9 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
+import riskyken.armourersWorkshop.client.skin.SkinTextureKey;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -27,7 +29,7 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
     private volatile Thread textureGenThread;
     
     public ClientSkinPaintCache() {
-        textureMap = new ExpiringHashMap<SkinTextureKey, SkinModelTexture>(1000 * ConfigHandler.clientTextureCacheTime, this);
+        textureMap = new ExpiringHashMap<SkinTextureKey, SkinModelTexture>(1000 * ConfigHandlerClient.clientTextureCacheTime, this);
         requestSet = new HashSet<TextureGenInfo>();
         requestList = new ArrayList<TextureGenInfo>();
         textureGenThread = new Thread(this, "Texture Gen Thread");

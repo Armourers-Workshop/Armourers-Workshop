@@ -24,13 +24,17 @@ public final class SkinExtractor {
     
     private static final String SKINS_ASSETS_LOCATION = "assets/armourersworkshop/skins/";
     private static final String[] SKIN_FILES = {
+        "Angel Wings",
         "Arbalest",
         "Arrow",
         "Barrel",
+        "Bat Wings",
+        "Butterfly Wings",
         "Chessboard",
         "Dress Shoes",
         "Dress Skirt",
         "Dress Top",
+        "Evil Wings",
         "Fez",
         "Fox Ears",
         "Glass Chair",
