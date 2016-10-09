@@ -3,7 +3,7 @@ tile.armourersworkshop:armourerBrain.name=Armeiro
 tile.armourersworkshop:miniArmourer.name=Mini Armeiro - (TEMP)
 tile.armourersworkshop:armourLibrary0.name=Biblioteca de Equipamentos
 tile.armourersworkshop:armourLibrary1.name=Biblioteca de Equipamentos - (Criativo)
-tile.armourersworkshop:globalSkinLibrary.name=Biblioteca Global de Peles - (WIP)
+tile.armourersworkshop:globalSkinLibrary.name=Biblioteca Global de Peles - (TEMP)
 tile.armourersworkshop:colourable.name=Cubo de Equipamento
 tile.armourersworkshop:colourableGlowing.name=Cubo de Equipamento (Brilhante)
 tile.armourersworkshop:colourableGlass.name=Cubo de Equipamento de Vidro
@@ -67,11 +67,11 @@ item.armourersworkshop:colourNoiseTool.flavour=Aplica ruído de cor aleatória e
 item.armourersworkshop:shadeNoiseTool.flavour=Aplica sombreamento aleatório em um bloco.
 item.armourersworkshop:mannequinTool.flavour=Salvar e carregar rotações do manequim.%nBotão direito para aplicar configuração.%nAgachar-se com o botão direito para salvar as configurações.
 item.armourersworkshop:guideBook.flavour=Seu guia para Armourer's Workshop.
-item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to placed on NPC's.%nUse in skinning table to apply skin.
-item.armourersworkshop:soap.flavour=Use in the Skinner Table to clear an items skin.
-item.armourersworkshop:hueTool.flavour=Changes the colour of a block%nwithout affecting the shading.
-item.armourersworkshop:blockMarker.flavour=Creates a marker on an equipment cube.%nOnly use with skins that need marker blocks.
-item.armourersworkshop:dyeBottle.flavour=Used in the dye table to dye skins.
+item.armourersworkshop:armourContainer.flavour=Item só para modo criativo para desenvolvedores de mapas.%nPermite que a pele armadura seja colocada em NPCs.%nUse na Mesa de Aplicação de Pele para aplicar pele.
+item.armourersworkshop:soap.flavour=Use na Mesa de Aplicação de Pele para limpar a pele de um item.
+item.armourersworkshop:hueTool.flavour=Muda a cor de um bloco%nsem afetar o sombreamento.
+item.armourersworkshop:blockMarker.flavour=Cria um marcador em um cubo de equipamento.%nUtilize apenas com peles que necessitam de marcador de blocos.
+item.armourersworkshop:dyeBottle.flavour=Usado na Mesa de Corantes para tingir peles.
 item.armourersworkshop:armourersHammer.flavour=Usado para girar blocos.
 
 # Rollover Text
@@ -179,7 +179,7 @@ inventory.armourersworkshop:armourLibrary1.name=Biblioteca de Equipamentos - (Cr
 inventory.armourersworkshop:equipmentWardrobe.name=Guarda-Roupa de Equipamentos
 inventory.armourersworkshop:mannequin.name=Manequim
 inventory.armourersworkshop:doll.name=Boneco
-inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
+inventory.armourersworkshop:miniArmourer.name=Mini Armeiro - (TEMP)
 inventory.armourersworkshop:entityEquipment.name=Equipamento da Entidade
 inventory.armourersworkshop:skinningTable.name=Mesa de Aplicação de Pele
 inventory.armourersworkshop:dyeTable.name=Mesa de Corantes
@@ -197,10 +197,10 @@ inventory.armourersworkshop:armourLibrary.rollover.localFiles=View files on this
 inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=View public files on the server.
 inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=View private files on the server.
 inventory.armourersworkshop:armourLibrary.rollover.notOnServer=You must be connected to a server to use this feature.
-inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Open library folder on your computer.
+inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Abrir pasta da biblioteca no seu computador.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Apagar pele.
-inventory.armourersworkshop:armourLibrary.rollover.refresh=Refresh library files.
-inventory.armourersworkshop:armourLibrary.label.enterFileName=Enter file name.
+inventory.armourersworkshop:armourLibrary.rollover.refresh=Atualizar ficheiros da biblioteca.
+inventory.armourersworkshop:armourLibrary.label.enterFileName=Inserir o nome do ficheiro.
 inventory.armourersworkshop:armourLibrary.label.typeToSearch=Digitar para buscar...
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Nome do Item:
@@ -215,7 +215,7 @@ inventory.armourersworkshop:armourerBrain.showOverlay=Mostrar overlay da cabeça
 inventory.armourersworkshop:armourerBrain.showHelper=Mostrar modelo de auxílio?
 inventory.armourersworkshop:armourerBrain.save=Salvar
 inventory.armourersworkshop:armourerBrain.load=Carregar
-inventory.armourersworkshop:armourerBrain.set=Set
+inventory.armourersworkshop:armourerBrain.set=Definir
 inventory.armourersworkshop:armourerBrain.clear=Limpar
 inventory.armourersworkshop:armourerBrain.westToEast=West to East
 inventory.armourersworkshop:armourerBrain.eastToWest=East to West
@@ -229,7 +229,7 @@ inventory.armourersworkshop:colourMixer.label.saturation=Saturação
 inventory.armourersworkshop:colourMixer.label.brightness=Brilho
 inventory.armourersworkshop:colourMixer.label.hex=Hex
 inventory.armourersworkshop:colourMixer.label.presets=Presets
-inventory.armourersworkshop:colourMixer.label.paintType=Paint Type
+inventory.armourersworkshop:colourMixer.label.paintType=Tipo de Pintura
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Cor da Pele
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Cor do Cabelo
@@ -321,9 +321,9 @@ book.armourersworkshop:guideBook.paintingTools.paragraph3=Burn Tool&nMakes an Eq
 book.armourersworkshop:guideBook.paintingTools.paragraph4=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
 
 # Chapter 6
-book.armourersworkshop:guideBook.equipmentWardrobe.name=Guarda-Roupa de Equipamentos
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=WIP
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
+book.armourersworkshop:guideBook.equipmentWardrobe.name=Guarda-Roupa de Equip.
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=TEMP
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=TEMP
 
 # Chapter 7
 book.armourersworkshop:guideBook.recipes.name=Receitas
