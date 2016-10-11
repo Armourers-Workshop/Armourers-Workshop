@@ -20,7 +20,7 @@ public class SkinChestPartRightArm extends AbstractSkinPartTypeBase implements I
         super(baseType);
         this.buildingSpace = new Rectangle3D(-3, -16, -14, 14, 32, 28);
         this.guideSpace = new Rectangle3D(-1, -10, -2, 4, 12, 4);
-        this.offset = new Point3D(-10, 0, 0);
+        this.offset = new Point3D(-10, -7, 0);
     }
     
     @Override
