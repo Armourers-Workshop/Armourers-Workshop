@@ -54,7 +54,9 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                 json = null;
                 page = 0;
                 json = downloadSearchResultsTask.get();
-                SkinDownloader.downloadSkins(skinCompletion, json);
+                if (json != null) {
+                    SkinDownloader.downloadSkins(skinCompletion, json);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

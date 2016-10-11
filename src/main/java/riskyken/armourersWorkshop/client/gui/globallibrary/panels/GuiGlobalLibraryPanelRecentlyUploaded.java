@@ -52,8 +52,9 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
         if (downloadListTask != null && downloadListTask.isDone()) {
             try {
                 json = downloadListTask.get();
-                SkinDownloader.downloadSkins(skinCompletion, json);
-                //SkinDownloader.downloadSkins(this, json);
+                if (json != null) {
+                    SkinDownloader.downloadSkins(skinCompletion, json);
+                }
                 downloadListTask = null;
             } catch (Exception e) {
                 e.printStackTrace();
