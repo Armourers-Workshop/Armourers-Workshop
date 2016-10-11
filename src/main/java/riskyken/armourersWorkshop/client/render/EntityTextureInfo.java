@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class EntityTextureInfo {
     
@@ -48,6 +49,8 @@ public class EntityTextureInfo {
     private BufferedImage bufferedEntitySkinnedImage;
     /** Does the texture need to be remade? */
     private boolean needsUpdate;
+    /** Is this texture still loading? */
+    private boolean loading;
     
     public EntityTextureInfo() {
         lastEntityTextureHash = -1;
@@ -65,6 +68,7 @@ public class EntityTextureInfo {
         lastEntityHairColour = -1;
         bufferedEntitySkinnedImage = new BufferedImage(TEXTURE_WIDTH, TEXTURE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
         needsUpdate = true;
+        loading = false;
     }
     
     public boolean getNeedsUpdate() {
@@ -76,19 +80,22 @@ public class EntityTextureInfo {
             BufferedImage buff = SkinHelper.getBufferedImageSkin(resourceLocation);
             bufferedEntityImage = null;
             if (buff != null) {
+                loading = false;
                 lastEntityTextureHash = resourceLocation.hashCode();
                 normalTexture = resourceLocation;
                 bufferedEntityImage = buff;
                 needsUpdate = true;
             }
-            
         }
         
         if (bufferedEntityImage == null) {
             //Texture is most likely not downloaded yet.
             lastEntityTextureHash = AbstractClientPlayer.locationStevePng.hashCode();
             bufferedEntityImage = SkinHelper.getBufferedImageSkin(AbstractClientPlayer.locationStevePng);
-            needsUpdate = true;
+            if (bufferedEntityImage != null & !loading) {
+                loading = true;
+                needsUpdate = true;
+            }
         }
     }
     
@@ -142,6 +149,7 @@ public class EntityTextureInfo {
     
     public void checkTexture() {
         if (needsUpdate) {
+            ModLogger.log("rebuilding texture");
             buildTexture();
             needsUpdate = false;
         }

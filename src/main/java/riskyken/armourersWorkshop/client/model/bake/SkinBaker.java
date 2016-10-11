@@ -405,6 +405,8 @@ public final class SkinBaker {
             this.z = z;
         }
 
+
+
         @Override
         public int hashCode() {
             return toString().hashCode();
@@ -432,6 +434,5 @@ public final class SkinBaker {
         public String toString() {
             return "CubeLocation [x=" + x + ", y=" + y + ", z=" + z + "]";
         }
-        
     }
 }
