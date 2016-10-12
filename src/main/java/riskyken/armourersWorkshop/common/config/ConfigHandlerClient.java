@@ -13,6 +13,7 @@ public class ConfigHandlerClient {
     public static int clientTextureCacheTime = 600000;
     public static int maxSkinRenderDistance = 128;
     public static int maxModelBakingThreads = 1;
+    public static boolean slowModelBaking = true;
     public static boolean multipassSkinRendering = true;
     public static int mannequinMaxEquipmentRenderDistance = 1024;
     public static int blockSkinMaxRenderDistance = 2500;
@@ -58,10 +59,11 @@ public class ConfigHandlerClient {
                 "The max distance away squared that skins will render.")
                 .getInt(8192);
         
-        maxModelBakingThreads = config
-                .get(CATEGORY_CLIENT, "maxModelBakingThreads", 1,
-                "The maximum number of threads that will be used to bake models. Less that 1 equals unlimited.")
-                .getInt(1);
+        maxModelBakingThreads = config.getInt("maxModelBakingThreads", CATEGORY_CLIENT, 1, 1, 20,
+                "The maximum number of threads that will be used to bake models.");
+        
+        slowModelBaking = config.getBoolean("slowModelBaking", CATEGORY_CLIENT, true,
+                "Limits how fast models can be baked to provide a smoother frame rate.");
         
         clientModelCacheTime = config
                 .get(CATEGORY_CLIENT, "clientModelCacheTime", 600000,

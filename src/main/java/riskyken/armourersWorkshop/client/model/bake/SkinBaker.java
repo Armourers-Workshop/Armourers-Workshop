@@ -40,6 +40,8 @@ public final class SkinBaker {
         Rectangle3D pb = skinPart.getPartBounds();
         int[][][] cubeArray = new int[pb.getWidth()][pb.getHeight()][pb.getDepth()];
         
+        int updates = 0;
+        
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             int cubeId = cubeData.getCubeId(i);
             byte[] cubeLoc = cubeData.getCubeLocation(i);
@@ -48,8 +50,19 @@ public final class SkinBaker {
             int y = (int)cubeLoc[1] - pb.getY();
             int z = (int)cubeLoc[2] - pb.getZ();
             cubeArray[x][y][z] = i + 1;
+            if (ConfigHandlerClient.slowModelBaking) {
+                updates++;
+                if (updates > 40) {
+                    try {
+                        Thread.sleep(1);
+                        updates = 0;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-        
+
         ArrayList<CubeLocation> openList = new ArrayList<CubeLocation>();
         HashSet<Integer> closedSet = new HashSet<Integer>();
         CubeLocation startCube = new CubeLocation(-1, -1, -1);
@@ -66,6 +79,17 @@ public final class SkinBaker {
                     closedSet.add(foundLocation.hashCode());
                     if (isCubeInSearchArea(foundLocation, pb)) {
                         openList.add(foundLocation);
+                    }
+                }
+            }
+            if (ConfigHandlerClient.slowModelBaking) {
+                updates++;
+                if (updates > 40) {
+                    try {
+                        Thread.sleep(1);
+                        updates = 0;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
