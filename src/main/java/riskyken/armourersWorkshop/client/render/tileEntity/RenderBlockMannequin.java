@@ -45,6 +45,7 @@ import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -218,8 +219,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 if (sp[i] != null) {
                     skins[i] = ClientSkinCache.INSTANCE.getSkin(sp[i]);
                     dyes[i] = sp[i].getSkinDye();
-                    if (skins[i] != null && skins[i].hasPaintData()) {
-                        hasPaintedSkin = true;
+                    if (skins[i] != null) {
+                        if (skins[i].hasPaintData() | skins[i].getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false)) {
+                            hasPaintedSkin = true;
+                        }
                     }
                 }
             }
@@ -455,6 +458,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         if (isHalloweenSeason) {
             return true;
+        }
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        if (skinPointer != null) {
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
+            if (skin != null) {
+                return skin.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            }
         }
         return false;
     }

@@ -7,10 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.IPoint3D;
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -201,12 +198,6 @@ public final class SkinBaker {
         float scale = 0.0625F;
         
         SkinCubeData cubeData = partData.getCubeData();
-        ISkinPartType partType = partData.getPartType();
-        IRectangle3D gs = partType.getGuideSpace();
-        IRectangle3D bs = partType.getBuildingSpace();
-        IPoint3D offset = partType.getOffset();
-        
-        partData.isClippingGuide = false;
         Rectangle3D pb = partData.getPartBounds();
         
         for (int ix = 0; ix < pb.getWidth(); ix++) {
@@ -217,17 +208,6 @@ public final class SkinBaker {
                         byte[] loc = cubeData.getCubeLocation(i);
                         byte[] paintType = cubeData.getCubePaintType(i);
                         ICube cube = partData.getCubeData().getCube(i);
-                        
-                        if (loc[0] >= gs.getX() & loc [0] < gs.getX() + gs.getWidth()) {
-                            int y = -loc[1] - 1;
-                            if (y >= gs.getY()) {
-                                if (y < gs.getHeight()) {
-                                    if (loc[2] >= gs.getZ() & loc [2] < gs.getZ() + gs.getDepth()) {
-                                        partData.isClippingGuide = true;
-                                    }
-                                }
-                            }
-                        }
                         
                         
                         byte a = (byte) 255;

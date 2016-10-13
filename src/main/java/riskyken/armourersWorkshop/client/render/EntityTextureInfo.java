@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.render;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -10,12 +11,16 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -175,34 +180,78 @@ public class EntityTextureInfo {
     
     private void applySkinsToTexture() {
         for (int i = 0; i < skins.length; i++) {
-            if (skins[i] != null && skins[i].hasPaintData()) {
+            Skin skin = skins[i];
+            if (skin != null && skin.hasPaintData()) {
                 for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
                     for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
                         
-                        int paintColour = skins[i].getPaintData()[ix + (iy * TEXTURE_WIDTH)];
+                        int paintColour = skin.getPaintData()[ix + (iy * TEXTURE_WIDTH)];
                         PaintType paintType = PaintType.getPaintTypeFromColour(paintColour);
                         
                         if (paintType == PaintType.NORMAL) {
                             bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                         }
                         if (paintType == PaintType.HAIR) {
-                            int colour = dyeColour(lastEntityHairColour, paintColour, 9, skins[i]);
+                            int colour = dyeColour(lastEntityHairColour, paintColour, 9, skin);
                             bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
                         }
                         if (paintType == PaintType.SKIN) {
-                            int colour = dyeColour(lastEntitySkinColour, paintColour, 8, skins[i]);
+                            int colour = dyeColour(lastEntitySkinColour, paintColour, 8, skin);
                             bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
                         }
                         if (paintType.getKey() >= 1 && paintType.getKey() <= 8) {
                             int dyeNumber = paintType.getKey() - 1;
                             if (dyes != null && dyes[i] != null && dyes[i].haveDyeInSlot(dyeNumber)) {
                                 byte[] dye = dyes[i].getDyeColour(dyeNumber);
-                                int colour = dyeColour(dye, paintColour, dyeNumber, skins[i]);
+                                int colour = dyeColour(dye, paintColour, dyeNumber, skin);
                                 bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
                             } else {
                                 bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                             }
+                        } 
+                    }
+                }
+            }
+        }
+        
+        for (int i = 0; i < skins.length; i++) {
+            Skin skin = skins[i];
+            if (skin!= null && skin.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false)) {
+                for (int j = 0; j < skin.getPartCount(); j++) {
+                    SkinPart skinPart = skin.getParts().get(j);
+                    if (skinPart.getPartType() instanceof ISkinPartTypeTextured) {
+                        ISkinPartTypeTextured typeTextured = (ISkinPartTypeTextured) skinPart.getPartType();
+                        Point texLoc = typeTextured.getTextureLocation();
+                        IPoint3D texSize = typeTextured.getTextureModelSize();
+                        
+                        
+
+                        
+                        for (int ix = 0; ix < texSize.getZ() * 2 + texSize.getX() * 2; ix++) {
+                            for (int iy = 0; iy < texSize.getZ() + texSize.getY(); iy++) {
+                                if (skin.getSkinType() == SkinTypeRegistry.skinLegs) {
+                                    if (iy >= 12) {
+                                        continue;
+                                    }
+                                    if (iy < 4 & ix > 7 & ix < 12) {
+                                        continue;
+                                    }
+                                }
+                                if (skin.getSkinType() == SkinTypeRegistry.skinFeet) {
+                                    if (iy < 12) {
+                                        if (!(iy < 4 & ix > 7 & ix < 12)) {
+                                            continue;
+                                        }
+                                        
+                                    }
+                                }
+                                bufferedEntitySkinnedImage.setRGB((int)texLoc.getX() + ix, (int)texLoc.getY() + iy, 0x00FFFFFF);
+                            }
                         }
+                        
+                        
+                        
+                        
                     }
                 }
             }

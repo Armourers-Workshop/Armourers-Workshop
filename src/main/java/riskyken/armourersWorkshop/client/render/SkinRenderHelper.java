@@ -32,25 +32,25 @@ public final class SkinRenderHelper {
         }
     }
     
-    public static void renderBuildingGrid(ISkinType skinType, float scale) {
+    public static void renderBuildingGrid(ISkinType skinType, float scale, boolean showGuides, boolean hidden) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPartType = skinType.getSkinParts().get(i);
             IPoint3D partOffset = skinPartType.getOffset();
             GL11.glTranslated(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
-            renderBuildingGrid(skinPartType, scale);
+            renderBuildingGrid(skinPartType, scale, showGuides, hidden);
             GL11.glTranslated(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
         }
     }
     
-    public static void renderBuildingGrid(ISkinPartType skinPartType, float scale) {
+    public static void renderBuildingGrid(ISkinPartType skinPartType, float scale, boolean showGuides, boolean hidden) {
         GL11.glTranslated(0, skinPartType.getBuildingSpace().getY() * scale, 0);
         GL11.glScalef(-1, -1, 1);
-        SkinRenderHelper.renderGuidePart(skinPartType, scale);
+        SkinRenderHelper.renderGuidePart(skinPartType, scale, showGuides, hidden);
         GL11.glScalef(-1, -1, 1);
         GL11.glTranslated(0, -skinPartType.getBuildingSpace().getY() * scale, 0);
     }
     
-    private static void renderGuidePart(ISkinPartType part, float scale) {
+    private static void renderGuidePart(ISkinPartType part, float scale, boolean showGuides, boolean hidden) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glPushMatrix();
@@ -60,18 +60,25 @@ public final class SkinRenderHelper {
         
         GL11.glDisable(GL11.GL_LIGHTING);
         
-        GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
-        renderGuideBox(buildRec.getX(), buildRec.getY(), buildRec.getZ(), buildRec.getWidth(), buildRec.getHeight(), buildRec.getDepth(), scale);
+        if (showGuides) {
+            GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
+            renderGuideBox(buildRec.getX(), buildRec.getY(), buildRec.getZ(), buildRec.getWidth(), buildRec.getHeight(), buildRec.getDepth(), scale);
+            
+            GL11.glColor4f(0F, 1F, 0F, 0.5F);
+            //renderGuideBox(0.0F, 0.0F, 0.0F, 1, 1, 1, scale);
+            renderGuideBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, scale);
+        }
+
         
         if (ConfigHandlerClient.showArmourerDebugRender) {
             GL11.glColor4f(1F, 0F, 0F, 0.25F);
             renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(), guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale);
         }
-        
-        GL11.glColor4f(0F, 1F, 0F, 0.5F);
-        //renderGuideBox(0.0F, 0.0F, 0.0F, 1, 1, 1, scale);
-        renderGuideBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, scale);
 
+        if (hidden) {
+            GL11.glColor4f(0F, 0F, 1F, 0.25F);
+            renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(), guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale);
+        }
         
         GL11.glColor4f(1F, 1F, 1F, 1F);
         

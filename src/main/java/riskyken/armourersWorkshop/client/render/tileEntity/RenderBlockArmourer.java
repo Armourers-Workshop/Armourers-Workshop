@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
@@ -62,13 +63,25 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         if (skinType != null) {
             mc.mcProfiler.startSection("modelRender");
-            SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
-            mc.mcProfiler.endSection();
-            if (te.isShowGuides()) {
-                mc.mcProfiler.startSection("renderGuideGrid");
-                SkinRenderHelper.renderBuildingGrid(skinType, scale);
-                mc.mcProfiler.endSection();
+            boolean hidden = false;
+            if (skinType.getVanillaArmourSlotId() != -1) {
+                if (te.getSkinProps().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false)) {
+                    hidden = true;
+                }
             }
+            GL11.glPolygonOffset(-3F, -3F);
+            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+            if (!hidden) {
+                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
+            }
+            
+            GL11.glPolygonOffset(-3F, -3F);
+            mc.mcProfiler.endSection();
+            mc.mcProfiler.startSection("renderGuideGrid");
+            SkinRenderHelper.renderBuildingGrid(skinType, scale, te.isShowGuides(), hidden);
+            mc.mcProfiler.endSection();
+            GL11.glPolygonOffset(0F, 0F);
+            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
         }
         
         GL11.glPopAttrib();

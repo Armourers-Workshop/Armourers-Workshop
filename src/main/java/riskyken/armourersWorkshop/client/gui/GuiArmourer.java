@@ -54,6 +54,9 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     private GuiCustomSlider sliderWingFlyingSpeed;
     private GuiCustomSlider sliderWingMinAngle;
     private GuiCustomSlider sliderWingMaxAngle;
+    
+    private GuiCheckBox checkArmourOverrideBodyPart;
+    
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
@@ -111,6 +114,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         sliderWingMinAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 85, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
         sliderWingMaxAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 105, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
         
+        checkArmourOverrideBodyPart = new GuiCheckBox(15, guiLeft + 177, guiTop + 45, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
+        
         textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
         textItemName.setText(armourerBrain.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
@@ -138,6 +143,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         buttonList.add(sliderWingFlyingSpeed);
         buttonList.add(sliderWingMinAngle);
         buttonList.add(sliderWingMaxAngle);
+        
+        buttonList.add(checkArmourOverrideBodyPart);
         //buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
         //buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
@@ -177,6 +184,11 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
             skinProps.setProperty(Skin.KEY_BLOCK_SEAT, checkBlockSeat.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
+        if (button == checkArmourOverrideBodyPart) {
+            skinProps.setProperty(Skin.KEY_ARMOUR_OVERRIDE, checkArmourOverrideBodyPart.isChecked());
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
+        }
+        
         switch (button.id) {
         case 13:
             PacketHandler.networkWrapper.sendToServer(new MessageClientLoadArmour(textItemName.getText().trim(), ""));
@@ -250,6 +262,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
             sliderWingFlyingSpeed.setValue(skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D));
             sliderWingFlyingSpeed.updateSlider();
             
+            checkArmourOverrideBodyPart.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
+            
             armourerBrain.loadedArmourItem = false;
             loadedArmourItem = false;
         }
@@ -286,6 +300,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         sliderWingFlyingSpeed.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingMinAngle.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingMaxAngle.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
+        
+        checkArmourOverrideBodyPart.visible = armourerBrain.getSkinType().getVanillaArmourSlotId() != -1;
         
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
