@@ -69,7 +69,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
                     hidden = true;
                 }
             }
-            GL11.glPolygonOffset(-3F, -3F);
+            GL11.glPolygonOffset(3F, 3F);
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
             if (!hidden) {
                 SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
