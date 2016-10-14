@@ -17,9 +17,9 @@ import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 
-public final class UtilBlocks {
+public final class BlockUtils {
     
-    private UtilBlocks() {}
+    private BlockUtils() {}
     
     public static int determineOrientation(World world, int x, int y, int z, EntityLivingBase entity) {
         if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
@@ -79,7 +79,6 @@ public final class UtilBlocks {
         ArrayList<BlockLocation> openList = new ArrayList<BlockLocation>();
         ArrayList<BlockLocation> closedList = new ArrayList<BlockLocation>();
         
-        
         openList.add(new BlockLocation(x, y ,z).offset(dir));
         ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
         
@@ -120,10 +119,11 @@ public final class UtilBlocks {
             }
         }
         
-        
-        
-        
         return blockFaces;
+    }
+    
+    public static class BlockPath {
+        
     }
     
     public static class BlockFace extends BlockLocation {

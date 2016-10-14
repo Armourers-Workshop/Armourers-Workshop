@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
@@ -38,8 +39,8 @@ import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
 import riskyken.armourersWorkshop.utils.UtilItems;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 
@@ -82,16 +83,20 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
             return;
         }
         
-        int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
-        ArrayList<BlockLocation> blocks = UtilBlocks.findTouchingBlockFaces(world, x, y, z, side, radius);
+        int radiusSample = (Integer) ToolOptions.RADIUS_SAMPLE.readFromNBT(stack.getTagCompound(), 2);
+        int radiusEffect = (Integer) ToolOptions.RADIUS_EFFECT.readFromNBT(stack.getTagCompound(), 1);
+        
+        ArrayList<BlockLocation> blockSamples = BlockUtils.findTouchingBlockFaces(world, x, y, z, side, radiusSample);
+        ArrayList<BlockLocation> blockEffects = BlockUtils.findTouchingBlockFaces(world, x, y, z, side, radiusEffect);
         
         double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks;
         double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks;
         double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks;
         float f1 = 0.002F;
         
-        for (int i = 0; i < blocks.size(); i++) {
-            BlockLocation blockLoc = blocks.get(i);
+        for (int i = 0; i < blockSamples.size(); i++) {
+            int colour = 0xFF0000;
+            BlockLocation blockLoc = blockSamples.get(i);
             AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(blockLoc.x, blockLoc.y, blockLoc.z, blockLoc.x + 1, blockLoc.y + 1, blockLoc.z + 1);
             aabb.offset(-xOff, -yOff, -zOff);
             GL11.glEnable(GL11.GL_BLEND);
@@ -100,11 +105,31 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
             GL11.glLineWidth(2.0F);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glDepthMask(false);
-            RenderGlobal.drawOutlinedBoundingBox(aabb.expand(f1, f1, f1), 0x4400FFFF);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            RenderGlobal.drawOutlinedBoundingBox(aabb.expand(f1, f1, f1), colour);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
             GL11.glDepthMask(true);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glDisable(GL11.GL_BLEND);
         }
+        for (int i = 0; i < blockEffects.size(); i++) {
+            BlockLocation blockLoc = blockEffects.get(i);
+            AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(blockLoc.x + 0.10F, blockLoc.y + 0.10F, blockLoc.z + 0.10F, blockLoc.x + 0.90F, blockLoc.y + 0.90F, blockLoc.z + 0.90F);
+            aabb.offset(-xOff, -yOff, -zOff);
+            GL11.glEnable(GL11.GL_BLEND);
+            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.2F);
+            GL11.glLineWidth(2.0F);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            //GL11.glDepthMask(false);
+            RenderGlobal.drawOutlinedBoundingBox(aabb.expand(f1, f1, f1), 0x00FF00);
+            //GL11.glDepthMask(true);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_BLEND); 
+        }
+        event.setCanceled(true);
     }
     
     @Override
@@ -138,15 +163,22 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
-        int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
-        ArrayList<BlockLocation> blocks = UtilBlocks.findTouchingBlockFaces(world, bl.x, bl.y, bl.z, side, radius);
+        int radiusSample = (Integer) ToolOptions.RADIUS_SAMPLE.readFromNBT(stack.getTagCompound(), 2);
+        int radiusEffect = (Integer) ToolOptions.RADIUS_EFFECT.readFromNBT(stack.getTagCompound(), 1);
+        
+        ArrayList<BlockLocation> blockSamples = BlockUtils.findTouchingBlockFaces(world, bl.x, bl.y, bl.z, side, radiusSample);
+        ArrayList<BlockLocation> blockEffects = BlockUtils.findTouchingBlockFaces(world, bl.x, bl.y, bl.z, side, radiusEffect);
+        
+        if (blockSamples.size() == 0 | blockEffects.size() == 0) {
+            return;
+        }
         
         int r = 0;
         int g = 0;
         int b = 0;
         
-        for (int i = 0; i < blocks.size(); i++) {
-            BlockLocation loc = blocks.get(i);
+        for (int i = 0; i < blockSamples.size(); i++) {
+            BlockLocation loc = blockSamples.get(i);
             Block tarBlock = world.getBlock(loc.x, loc.y, loc.z);
             if (tarBlock instanceof IPantableBlock) {
                 IPantableBlock pBlock = (IPantableBlock) tarBlock;
@@ -157,16 +189,46 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
             }
         }
         
-        r = r / blocks.size();
-        g = g / blocks.size();
-        b = b / blocks.size();
+        r = r / blockSamples.size();
+        g = g / blockSamples.size();
+        b = b / blockSamples.size();
         
-        IPantableBlock worldColourable = (IPantableBlock) block;
-        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
-        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
         
-        ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, new Color(r, g, b).getRGB(), side);
+        
+        for (int i = 0; i < blockEffects.size(); i++) {
+            BlockLocation loc = blockEffects.get(i);
+            Block tarBlock = world.getBlock(loc.x, loc.y, loc.z);
+            if (tarBlock instanceof IPantableBlock) {
+                IPantableBlock worldColourable = (IPantableBlock) tarBlock;
+                int oldColour = worldColourable.getColour(world, loc.x, loc.y, loc.z, side);
+                byte oldPaintType = (byte) worldColourable.getPaintType(world, loc.x, loc.y, loc.z, side).getKey();
+                
+                Color oldC = new Color(oldColour);
+                int oldR = oldC.getRed();
+                int oldG = oldC.getGreen();
+                int oldB = oldC.getBlue();
+                
+                float newR = r / 100F * intensity;
+                newR += oldR / 100F * (100 - intensity);
+                newR = MathHelper.clamp_int((int) newR, 0, 255);
+                
+                float newG = g / 100F * intensity;
+                newG += oldG / 100F * (100 - intensity);
+                newG = MathHelper.clamp_int((int) newG, 0, 255);
+                
+                float newB = b / 100F * intensity;
+                newB += oldB / 100F * (100 - intensity);
+                newB = MathHelper.clamp_int((int) newB, 0, 255);
+                
+                Color newC = new Color(
+                        (int)newR,
+                        (int)newG,
+                        (int)newB);
+                
+                UndoManager.blockPainted(player, world, loc.x, loc.y, loc.z, oldColour, oldPaintType, side);
+                ((IPantableBlock)block).setColour(world, loc.x, loc.y, loc.z, newC.getRGB(), side);
+            }
+        }
     }
     
     @SideOnly(Side.CLIENT)
@@ -174,10 +236,12 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
         super.addInformation(stack, player, list, p_77624_4_);
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
-        int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
+        int radiusSample = (Integer) ToolOptions.RADIUS_SAMPLE.readFromNBT(stack.getTagCompound(), 2);
+        int radiusEffect = (Integer) ToolOptions.RADIUS_EFFECT.readFromNBT(stack.getTagCompound(), 1);
         
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.intensity", intensity));
-        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.radius", radius * 2 - 1 , radius * 2 - 1, 1));
+        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.radius", radiusSample, radiusSample, 1));
+        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.radius", radiusEffect, radiusEffect, 1));
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
     }
     
