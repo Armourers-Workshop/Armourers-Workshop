@@ -8,10 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ToolOptionRadius extends AbstractToolOption {
     
-    private static final String TAG_RADIUS = "radius";
-
-    public ToolOptionRadius() {
-        super(TAG_RADIUS);
+    public ToolOptionRadius(String optionName) {
+        super(optionName);
     }
 
     @SideOnly(Side.CLIENT)
@@ -37,8 +35,8 @@ public class ToolOptionRadius extends AbstractToolOption {
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
         int intensityValue = 2;
-        if (compound != null && compound.hasKey(TAG_RADIUS)) {
-            intensityValue = compound.getInteger(TAG_RADIUS);
+        if (compound != null && compound.hasKey(optionName)) {
+            intensityValue = compound.getInteger(optionName);
         }
         return intensityValue;
     }
@@ -51,6 +49,6 @@ public class ToolOptionRadius extends AbstractToolOption {
 
     @Override
     public void writeToNBT(NBTTagCompound compound, Object value) {
-        compound.setInteger(TAG_RADIUS, (Integer) value);
+        compound.setInteger(optionName, (Integer) value);
     }
 }

@@ -157,6 +157,8 @@ tooloption.armourersworkshop:changeBrightness=Change Brightness
 tooloption.armourersworkshop:changePaintType=Change Paint Type
 tooloption.armourersworkshop:intensity=Intensity
 tooloption.armourersworkshop:radius=Radius
+tooloption.armourersworkshop:radius.sample=Sample Radius
+tooloption.armourersworkshop:radius.effect=Effect Radius
 
 # Paint Types
 paintType.armourersworkshop:normal.name=Normal
