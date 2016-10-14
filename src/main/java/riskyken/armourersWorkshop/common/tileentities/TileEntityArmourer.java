@@ -226,7 +226,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
         Skin equipmentData = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
-        skinProps = new SkinProperties(equipmentData.getProperties());
+        setSkinProps(new SkinProperties(equipmentData.getProperties()));
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
         if (equipmentData.hasPaintData()) {
@@ -290,7 +290,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (skinType != null) {
             ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
             clearPaintData(true);
-            skinProps = new SkinProperties();
+            setSkinProps(new SkinProperties());
             resyncData();
         }
     }
