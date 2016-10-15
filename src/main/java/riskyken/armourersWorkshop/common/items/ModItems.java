@@ -4,7 +4,6 @@ import org.apache.logging.log4j.Level;
 
 import net.minecraft.item.Item;
 import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
-import riskyken.armourersWorkshop.common.items.paintingtool.ItemBlendingTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemBurnTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourNoiseTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourPicker;
@@ -60,7 +59,7 @@ public class ModItems {
         shadeNoiseTool = new ItemShadeNoiseTool();
         hueTool = new ItemHueTool();
         blockMarker = new ItemBlockMarker();
-        blendingTool = new ItemBlendingTool();
+        //blendingTool = new ItemBlendingTool();
         
         mannequinTool = new ItemMannequinTool();
         wandOfStyle = new ItemWandOfStyle();
