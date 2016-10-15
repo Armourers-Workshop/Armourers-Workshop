@@ -125,7 +125,6 @@ public class ModelSkinLegs extends AbstractModelSkin {
             GL11.glTranslated(0, 12 * scale, 0);
         }
         
-        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
