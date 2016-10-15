@@ -1,3 +1,27 @@
+Build 0.42.0
+Added:
+	Added sword skin support for MapleCrafted
+	Added sword skin support for OreSpawn.
+	Add pt_PT and pt_BR lang files. (EzerArch)
+	Added global skin database directory. (for map makers, works like the old equipment-database directory)
+	Added slowModelBaking config option.
+	Allowed replacing body parts with skins.
+Fixed:
+	Stopped console spam when a player is sitting on a block skin.
+	Fixed chest skin on mannequins not using some rotation axes.
+	Fixed rare crash when trying to get a skin from the cache as it's being removed
+	Fixed global library spamming errors if it was unable to download the skins JSON list.
+	Fixed mannequin textures getting rebuilt every frame if they had not been downloaded.
+	Fixed z fighting on armourer building guide grid and model. (finally)
+	Fixed skirts on mannequin not rotation around their y axes.
+	Fixed mannequin game profiles not updating correctly when changed.
+Changed:
+	Updated Halloween event!
+	Added more build space below the chest
+	Improved client model baking speed.
+	Removed showArmourerDebugRender config option. (now on the debug tool)
+
+
 Build 0.41.0
 Added:
 	Added no collision option for block skins.
