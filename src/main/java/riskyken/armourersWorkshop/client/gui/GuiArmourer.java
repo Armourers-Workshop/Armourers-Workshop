@@ -61,6 +61,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
     private SkinProperties skinProps;
+    private final String DEGREE  = "\u00b0";
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourer armourerBrain) {
         super(new ContainerArmourer(invPlayer, armourerBrain));
@@ -111,8 +112,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 45, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 65, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
-        sliderWingMinAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 85, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
-        sliderWingMaxAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 105, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
+        sliderWingMinAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 85, 70, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
+        sliderWingMaxAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 105, 70, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
         
         checkArmourOverrideBodyPart = new GuiCheckBox(15, guiLeft + 177, guiTop + 45, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
         
