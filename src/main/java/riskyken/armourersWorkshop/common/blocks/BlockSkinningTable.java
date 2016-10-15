@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 
 public class BlockSkinningTable extends AbstractModBlockContainer {
 
@@ -48,7 +48,7 @@ public class BlockSkinningTable extends AbstractModBlockContainer {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinningTable) {
             TileEntitySkinningTable tileEntity = (TileEntitySkinningTable) te;
-            UtilBlocks.dropInventoryBlocks(world, tileEntity.getCraftingInventory(), x, y, z);
+            BlockUtils.dropInventoryBlocks(world, tileEntity.getCraftingInventory(), x, y, z);
         }
         super.breakBlock(world, x, y, z, block, meta);
     }

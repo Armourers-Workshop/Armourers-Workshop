@@ -41,6 +41,8 @@ public class Skin implements ISkin {
     public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
     public static final String KEY_WINGS_IDLE_SPEED = "wingsIdleSpeed";
     public static final String KEY_WINGS_FLYING_SPEED = "wingsFlyingSpeed";
+
+    public static final String KEY_ARMOUR_OVERRIDE = "armourOverride";
     
     private SkinProperties properties;
     private ISkinType equipmentSkinType;

@@ -17,7 +17,7 @@ public final class HolidayHelper {
     
     //Spooky scary skeletons.
     public static final Holiday halloween = new Holiday(31, Calendar.OCTOBER, 0, 24);
-    public static final Holiday halloween_season = new Holiday(24, Calendar.OCTOBER, 14, 0);
+    public static final Holiday halloween_season = new Holiday(24, Calendar.OCTOBER, 8, 0);
     
     //Some guy was born or something.
     public static final Holiday christmas = new Holiday(25, Calendar.DECEMBER, 0, 24);

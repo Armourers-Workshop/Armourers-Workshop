@@ -28,8 +28,6 @@ public class SkinPart implements ISkinPart {
     private ISkinPartType skinPart;
     @SideOnly(Side.CLIENT)
     private ClientSkinPartData clientSkinPartData;
-    @SideOnly(Side.CLIENT)
-    public boolean isClippingGuide;
     
     public SkinPart(SkinCubeData cubeData, ISkinPartType skinPart, ArrayList<CubeMarkerData> markerBlocks) {
         this.cubeData = cubeData;

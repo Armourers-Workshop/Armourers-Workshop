@@ -21,7 +21,7 @@ import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 
 public class BlockSkinLibrary extends AbstractModBlockContainer {
 
@@ -49,7 +49,7 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        UtilBlocks.dropInventoryBlocks(world, x, y, z);
+        BlockUtils.dropInventoryBlocks(world, x, y, z);
         super.breakBlock(world, x, y, z, block, meta);
     }
 

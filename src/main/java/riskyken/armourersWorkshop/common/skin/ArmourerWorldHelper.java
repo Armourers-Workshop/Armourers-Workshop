@@ -25,7 +25,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 /**
  * Helper class for converting back and forth from
@@ -157,7 +157,7 @@ public final class ArmourerWorldHelper {
         }
             
         int meta = world.getBlockMetadata(x, y, z);
-        ICubeColour c = UtilBlocks.getColourFromTileEntity(world, x, y, z);
+        ICubeColour c = BlockUtils.getColourFromTileEntity(world, x, y, z);
         byte cubeType = CubeRegistry.INSTANCE.getCubeFromBlock(block).getId();
         
         cubeData.setCubeId(index, cubeType);

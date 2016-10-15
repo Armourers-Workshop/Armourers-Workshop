@@ -47,7 +47,12 @@ public class ToolOptionCheck extends AbstractToolOption {
     
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
-        boolean checked = defaultCheck;
+        return readFromNBT(compound, defaultCheck);
+    }
+    
+    @Override
+    public Object readFromNBT(NBTTagCompound compound, Object value) {
+        boolean checked = (boolean) value;
         if (compound != null && compound.hasKey(optionName)) {
             checked = compound.getBoolean(optionName);
         }

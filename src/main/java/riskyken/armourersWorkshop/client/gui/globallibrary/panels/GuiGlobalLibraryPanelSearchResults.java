@@ -12,6 +12,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
@@ -25,6 +27,7 @@ import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
+@SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     private JsonArray json = null;
@@ -51,7 +54,9 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                 json = null;
                 page = 0;
                 json = downloadSearchResultsTask.get();
-                SkinDownloader.downloadSkins(skinCompletion, json);
+                if (json != null) {
+                    SkinDownloader.downloadSkins(skinCompletion, json);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

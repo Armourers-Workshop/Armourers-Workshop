@@ -14,6 +14,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
@@ -84,6 +85,12 @@ public final class EquipmentWardrobeHandler {
         if (equipmentWardrobeMap.containsKey(playerPointer)) {
             EquipmentWardrobeData ewd = equipmentWardrobeMap.get(playerPointer);
             renderer.modelBipedMain.bipedHeadwear.isHidden = ewd.headOverlay;
+            if (!ewd.headOverlay) {
+                if (SkinModelRenderer.INSTANCE.playerHasCustomHead(player)) {
+                    renderer.modelBipedMain.bipedHeadwear.isHidden = true;
+                }
+            }
+            
         }
     }
     

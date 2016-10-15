@@ -19,7 +19,7 @@ import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 
 public class BlockArmourer extends AbstractModBlockContainer {
 
@@ -33,7 +33,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
             EntityPlayer player = (EntityPlayer)entity;
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityArmourer) {
-                ForgeDirection direction = ForgeDirection.getOrientation(UtilBlocks.determineOrientationSide(world, x, y, z, entity));
+                ForgeDirection direction = ForgeDirection.getOrientation(BlockUtils.determineOrientationSide(world, x, y, z, entity));
                 ((TileEntityArmourer)te).setDirection(ForgeDirection.NORTH);
                 if (!world.isRemote) {
                     ((TileEntityArmourer)te).setGameProfile(player.getGameProfile());
@@ -45,7 +45,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
     
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        UtilBlocks.dropInventoryBlocks(world, x, y, z);
+        BlockUtils.dropInventoryBlocks(world, x, y, z);
         super.breakBlock(world, x, y, z, block, meta);
     }
     

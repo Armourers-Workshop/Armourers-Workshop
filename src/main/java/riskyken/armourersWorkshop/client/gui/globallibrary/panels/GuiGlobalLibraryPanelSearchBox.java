@@ -7,6 +7,8 @@ import java.util.concurrent.FutureTask;
 import com.google.gson.JsonArray;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
@@ -14,6 +16,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 
+@SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     private static final String SEARCH_URL = "http://plushie.moe/armourers_workshop/skin-search.php";

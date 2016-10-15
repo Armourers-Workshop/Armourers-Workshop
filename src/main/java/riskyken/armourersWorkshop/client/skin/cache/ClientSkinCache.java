@@ -205,7 +205,9 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
             for (int i = 0; i < keySet.length; i++) {
                 int key = (Integer) keySet[i];
                 Skin skin = skinIDMap.getQuiet(key);
-                count += skin.getModelCount();
+                if (skin != null) {
+                    count += skin.getModelCount();
+                }
             }
         }
         return count;

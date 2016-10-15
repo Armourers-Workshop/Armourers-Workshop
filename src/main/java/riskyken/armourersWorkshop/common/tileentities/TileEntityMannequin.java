@@ -19,9 +19,9 @@ import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -278,7 +278,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
             worldObj.spawnEntityInWorld(entityitem);
-            UtilBlocks.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
+            BlockUtils.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
         }
         super.invalidate();
     }
@@ -435,6 +435,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void profileUpdated(GameProfile gameProfile) {
         newProfile = gameProfile;
         markDirty();
-        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }
