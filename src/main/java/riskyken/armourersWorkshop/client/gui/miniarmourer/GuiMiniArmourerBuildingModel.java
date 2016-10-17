@@ -1,10 +1,8 @@
 package riskyken.armourersWorkshop.client.gui.miniarmourer;
 
 import java.awt.Color;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -116,8 +114,8 @@ public class GuiMiniArmourerBuildingModel {
         
         GL11.glScalef(-1, -1, 1);
         drawBuildingCubes(true);
-        Color c = getColourAtPos(Mouse.getX(), Mouse.getY());
-        hoverCubeId = getIdFromColour(c);
+        Color c = GuiMiniArmourerHelper.getColourAtPos(Mouse.getX(), Mouse.getY());
+        hoverCubeId = GuiMiniArmourerHelper.getIdFromColour(c);
         
         if (Mouse.isButtonDown(0)) {
             if (!mouseLeftIsDown) {
@@ -384,23 +382,6 @@ public class GuiMiniArmourerBuildingModel {
             id -= 1;
         }
         return new Color(r, g, b);
-    }
-    
-    private Color getColourAtPos(int x, int y) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
-        GL11.glReadPixels(x, y, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, buffer);
-        int r = Math.round(buffer.get() * 255);
-        int g = Math.round(buffer.get() * 255);
-        int b = Math.round(buffer.get() * 255);
-        return new Color(r,g,b);
-    }
-    
-    private int getIdFromColour(Color colour) {
-        Color c = new Color(colour.getRGB());
-        int id = c.getRed();
-        id += c.getGreen() * 256;
-        id += c.getBlue() * 256 * 256;
-        return id;
     }
     
     private ForgeDirection getDirectionForCubeFace(int cubeFace) {
