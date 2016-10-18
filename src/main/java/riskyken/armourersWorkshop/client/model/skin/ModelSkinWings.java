@@ -52,6 +52,10 @@ public class ModelSkinWings extends AbstractModelSkin  {
             
             angle = SkinUtils.getFlapAngleForWings(entity, skin);
             
+            if (isSneak) {
+                GL11.glRotated(28F, 1F, 0, 0);
+            }
+            
             if (part.getPartType().getPartName().equals("leftWing")) {
                 renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading);
             }

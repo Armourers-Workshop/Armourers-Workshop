@@ -66,7 +66,6 @@ public class ModelSkinChest extends AbstractModelSkin {
 
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
-            
             if (part.getPartType().getPartName().equals("base")) {
                 renderChest(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
             } else if (part.getPartType().getPartName().equals("leftArm")) {
@@ -84,6 +83,9 @@ public class ModelSkinChest extends AbstractModelSkin {
     
     private void renderChest(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
+        if (isSneak) {
+            GL11.glRotated(28F, 1F, 0, 0);
+        }
         GL11.glColor3f(1F, 1F, 1F);
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
