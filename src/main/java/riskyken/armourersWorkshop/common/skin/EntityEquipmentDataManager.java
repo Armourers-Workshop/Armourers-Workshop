@@ -19,7 +19,7 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -44,8 +44,8 @@ public final class EntityEquipmentDataManager {
     public boolean isSwordRenderItem(Item item) {
         String itemName = item.itemRegistry.getNameForObject(item);
         if (itemName != null && !itemName.equals("")) {
-            for (int i = 0; i < Addons.overrideSwordsActive.length; i++) {
-                if (Addons.overrideSwordsActive[i].equals(itemName)) {
+            for (int i = 0; i < ModAddonManager.itemOverrides.length; i++) {
+                if (ModAddonManager.itemOverrides[i].equals("sword:" + itemName)) {
                     return true;
                 }
             }
@@ -56,8 +56,8 @@ public final class EntityEquipmentDataManager {
     public boolean isBowRenderItem(Item item) {
         String itemName = item.itemRegistry.getNameForObject(item);
         if (itemName != null && !itemName.equals("")) {
-            for (int i = 0; i < Addons.overrideBowsActive.length; i++) {
-                if (Addons.overrideBowsActive[i].equals(itemName)) {
+            for (int i = 0; i < ModAddonManager.itemOverrides.length; i++) {
+                if (ModAddonManager.itemOverrides[i].equals("bow:" + itemName)) {
                     return true;
                 }
             }

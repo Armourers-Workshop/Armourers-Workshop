@@ -6,7 +6,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 
@@ -19,15 +19,13 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     
     private boolean allowClientsToDownloadSkins;
     private boolean allowClientsToUploadSkins;
-    private String[] overrideSwordsActive;
-    private String[] overrideBowsActive;
+    private String[] itemOverrides;
     private boolean libraryShowsModelPreviews;
     
     public MessageServerSyncConfig() {
         this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
         this.allowClientsToUploadSkins = ConfigHandler.allowClientsToUploadSkins;
-        this.overrideSwordsActive = Addons.overrideSwordsActive;
-        this.overrideBowsActive = Addons.overrideBowsActive;
+        this.itemOverrides = ModAddonManager.itemOverrides;
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
     }
     
@@ -35,8 +33,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(allowClientsToDownloadSkins);
         buf.writeBoolean(allowClientsToUploadSkins);
-        ByteBufHelper.writeStringArrayToBuf(buf, overrideSwordsActive);
-        ByteBufHelper.writeStringArrayToBuf(buf, overrideBowsActive);
+        ByteBufHelper.writeStringArrayToBuf(buf, itemOverrides);
         buf.writeBoolean(libraryShowsModelPreviews);
     }
     
@@ -45,8 +42,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     public void fromBytes(ByteBuf buf) {
         allowClientsToDownloadSkins = buf.readBoolean();
         allowClientsToUploadSkins = buf.readBoolean();
-        overrideSwordsActive = ByteBufHelper.readStringArrayFromBuf(buf);
-        overrideBowsActive = ByteBufHelper.readStringArrayFromBuf(buf);
+        itemOverrides = ByteBufHelper.readStringArrayFromBuf(buf);
         libraryShowsModelPreviews = buf.readBoolean();
     }
 
@@ -60,8 +56,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private void setConfigsOnClient(MessageServerSyncConfig message) {
         ConfigHandler.allowClientsToDownloadSkins = message.allowClientsToDownloadSkins;
         ConfigHandler.allowClientsToUploadSkins = message.allowClientsToUploadSkins;
-        Addons.overrideSwordsActive = message.overrideSwordsActive;
-        Addons.overrideBowsActive = message.overrideBowsActive;
+        ModAddonManager.itemOverrides = message.itemOverrides;
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
     }
 }

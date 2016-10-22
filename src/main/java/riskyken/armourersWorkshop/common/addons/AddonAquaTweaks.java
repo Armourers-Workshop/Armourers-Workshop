@@ -1,17 +1,15 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.utils.EventState;
 import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
-public class AddonAquaTweaks extends AbstractAddon {
+public class AddonAquaTweaks extends ModAddon {
 
-    @Override
-    public void preInit() {
+    public AddonAquaTweaks() {
+        super("AquaTweaks", "Aqua Tweaks");
     }
-
+    
     @Override
     public void init() {
         NBTTagCompound compound = new NBTTagCompound();
@@ -34,23 +32,5 @@ public class AddonAquaTweaks extends AbstractAddon {
         compound.setString("modid", LibModInfo.ID);
         compound.setString("block", "block.skinnable");
         FMLInterModComms.sendMessage(getModId(), "registerAquaConnectable", compound);
-    }
-
-    @Override
-    public void postInit() {
-    }
-    
-    @Override
-    public String getModId() {
-        return "AquaTweaks";
-    }
-
-    @Override
-    public String getModName() {
-        return "Aqua Tweaks";
-    }
-
-    @Override
-    public void onWeaponRender(ItemRenderType type, EventState state) {
     }
 }
