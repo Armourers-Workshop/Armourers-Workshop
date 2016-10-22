@@ -125,21 +125,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         if (te.getGameProfile() != null) {
-            if (te.getGameProfile() != null & te.getWorldObj() != null) {
-                if (fakePlayer == null) {
-                    fakePlayer = new MannequinFakePlayer(te.getWorldObj(), te.getGameProfile());
-                    fakePlayer.posX = x;
-                    fakePlayer.posY = y;
-                    fakePlayer.posZ = z;
-                    fakePlayer.prevPosX = x;
-                    fakePlayer.prevPosY = y;
-                    fakePlayer.prevPosZ = z;
-                    te.setFakePlayer(fakePlayer);
-                } else {
-                    fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
-                    fakePlayer.isAirBorne = te.isFlying();
-                    fakePlayer.capabilities.isFlying = te.isFlying();
-                }
+            if (te.getWorldObj() != null) {
+                fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+                fakePlayer.isAirBorne = te.isFlying();
+                fakePlayer.capabilities.isFlying = te.isFlying();
             }
         } else {
             mannequinFakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
