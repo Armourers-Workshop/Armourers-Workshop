@@ -44,6 +44,8 @@ public class Skin implements ISkin {
 
     public static final String KEY_ARMOUR_OVERRIDE = "armourOverride";
     
+    public static final String KEY_FILE_NAME = "fileName";
+    
     private SkinProperties properties;
     private ISkinType equipmentSkinType;
     private int[] paintData;

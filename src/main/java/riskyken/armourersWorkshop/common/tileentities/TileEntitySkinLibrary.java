@@ -181,21 +181,22 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         
         Skin skin = null;
+        String fullFileName = fileName;
+        
         if (publicFiles) {
             skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
         } else {
             skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour", player);
+            fullFileName = player.getUniqueID().toString() + "\\" + fullFileName;
         }
         
         if (skin == null) {
             return;
         }
         
-        if (publicFiles) {
-            CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, fileName);
-        } else {
-            CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  fileName);
-        }
+        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, fullFileName + ".armour");
+        
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, fullFileName);
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
         
