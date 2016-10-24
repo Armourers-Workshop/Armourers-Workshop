@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.items;
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.item.Item;
-import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemBurnTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourNoiseTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourPicker;
@@ -85,7 +85,7 @@ public class ModItems {
     private void setEquipmentSkinType() {
         boolean skinTypeSet = true;
         
-        if (AddonBuildCraft.isSkinCompatibleVersion()) {
+        if (ModAddonManager.addonBuildCraft.isSkinCompatibleVersion()) {
             try {
                 Class<?> c = Class.forName("riskyken.armourersWorkshop.common.items.ItemSkinRobotOverlay");
                 Object classObject = c.newInstance();

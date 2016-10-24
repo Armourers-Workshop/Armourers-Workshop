@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
+import java.util.ArrayList;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -23,7 +24,7 @@ import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
+import riskyken.armourersWorkshop.common.library.global.SkinDownloader.DownloadSkinCallable;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
@@ -31,6 +32,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     private JsonArray json = null;
+    private ArrayList<JsonObject> downloadedSkins = null;
     private int displayCount = 1;
     private int page = 0;
     private int mouseDownIndex = -1;
@@ -40,6 +42,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
+        downloadedSkins = new ArrayList<JsonObject>();
         skinCompletion = new ExecutorCompletionService<Skin>(((GuiGlobalLibrary)parent).skinDownloadExecutor);
     }
     
@@ -52,11 +55,9 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         if (downloadSearchResultsTask != null && downloadSearchResultsTask.isDone()) {
             try {
                 json = null;
+                downloadedSkins.clear();
                 page = 0;
                 json = downloadSearchResultsTask.get();
-                if (json != null) {
-                    SkinDownloader.downloadSkins(skinCompletion, json);
-                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -195,22 +196,30 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                 int x = (i - page * displayCount) % rowSize;
                 int y = (i - page * displayCount) / rowSize;
                 JsonObject skinJson = json.get(i).getAsJsonObject();
-                Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
-                if (skin != null) {
-                    float scale = iconSize / 3;
-                    if (y < colSize) {
-                        int iconX = this.x + x * iconSize + 5;
-                        int iconY = this.y + y * iconSize + 5 + 22;
-                        int iconW = iconX + iconSize - 10;
-                        int iconH = iconY + iconSize - 10;
-                        int hoverColour = 0xC0101010;
-                        if (mouseX >= iconX & mouseX < iconW) {
-                            if (mouseY >= iconY & mouseY < iconH) {
-                                hoverColour = 0xC0444410;
-                            }
+                
+                float scale = iconSize / 3;
+                if (y < colSize) {
+                    int iconX = this.x + x * iconSize + 5;
+                    int iconY = this.y + y * iconSize + 5 + 22;
+                    int iconW = iconX + iconSize - 10;
+                    int iconH = iconY + iconSize - 10;
+                    int hoverColour = 0xC0101010;
+                    if (mouseX >= iconX & mouseX < iconW) {
+                        if (mouseY >= iconY & mouseY < iconH) {
+                            hoverColour = 0xC0444410;
                         }
-                        drawGradientRect(iconX, iconY, iconW, iconH, hoverColour, 0xD0101010);
-                        
+                    }
+                    
+                    Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
+                    if (!downloadedSkins.contains(skinJson)) {
+                        downloadedSkins.add(skinJson);
+                        String name = skinJson.get("file_name").getAsString();
+                        int serverId = skinJson.get("id").getAsInt();
+                        skinCompletion.submit(new DownloadSkinCallable(name, serverId));
+                    }
+                    drawGradientRect(iconX, iconY, iconW, iconH, hoverColour, 0xD0101010);
+                    
+                    if (skin != null) {
                         int size = fontRenderer.getStringWidth(skin.getCustomName());
                         fontRenderer.drawString(skin.getCustomName(), (int) (this.x + x * iconSize + iconSize / 2 - size / 2), this.y + y * iconSize + iconSize, 0xFFEEEEEE);
                         GL11.glPushMatrix();

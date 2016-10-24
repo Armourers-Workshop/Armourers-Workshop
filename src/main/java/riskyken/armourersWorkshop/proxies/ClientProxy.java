@@ -50,7 +50,7 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmour
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -145,7 +145,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void postInit() {
-        Addons.initRenderers();
+        ModAddonManager.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
         if (HolidayHelper.valentins.isHolidayActive()) {
             enableValentinsClouds();

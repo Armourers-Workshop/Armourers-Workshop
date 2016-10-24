@@ -14,7 +14,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
@@ -97,12 +97,14 @@ public class ArmourersWorkshop {
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
+        
+        ModAddonManager.preInit();
         ConfigHandler.init(new File(configDir, "common.cfg"));
         ConfigHandlerClient.init(new File(configDir, "client.cfg"));
         
         EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
         
-        Addons.preInit();
+        
         proxy.preInit();
         
         SkinIOUtils.makeLibraryDirectory();
@@ -134,13 +136,13 @@ public class ArmourersWorkshop {
         proxy.registerKeyBindings();
         proxy.initRenderers();
         
-        Addons.init();
+        ModAddonManager.init();
     }
     
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
-        Addons.postInit();
+        ModAddonManager.postInit();
         proxy.libraryManager.reloadLibrary();
     }
     

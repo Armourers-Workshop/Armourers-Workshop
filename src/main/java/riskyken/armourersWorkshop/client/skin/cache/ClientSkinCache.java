@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.client.skin.cache;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.Level;
 
@@ -32,6 +34,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     private final HashMap<Integer, Integer> skinServerIdMap;
     private final HashSet<Integer> requestedSkinIDs;
     private final HashSet<String> requestedSkinNames;
+    private final Executor skinRequestExecutor;
     
     public static void init() {
         INSTANCE = new ClientSkinCache();
@@ -43,6 +46,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         skinServerIdMap = new HashMap<Integer, Integer>();
         requestedSkinIDs = new HashSet<Integer>();
         requestedSkinNames = new HashSet<String>();
+        skinRequestExecutor = Executors.newFixedThreadPool(1);
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -53,7 +57,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     private void requestSkinFromServer(int skinId) {
         synchronized (requestedSkinIDs) {
             if (!requestedSkinIDs.contains(skinId)) {
-                PacketHandler.networkWrapper.sendToServer(new MessageClientRequestSkinData(skinId));
+                skinRequestExecutor.execute(new SkinRequestThread(skinId));
                 requestedSkinIDs.add(skinId);
             }
         }
@@ -264,5 +268,20 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     @Override
     public void itemExpired(Skin mapItem) {
         mapItem.cleanUpDisplayLists();
+    }
+    
+    private static class SkinRequestThread implements Runnable {
+        
+        private int skinId;
+        
+        public SkinRequestThread(int skinId) {
+            this.skinId = skinId;
+        }
+        
+        @Override
+        public void run() {
+            Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestSkinData(skinId));
+        }
     }
 }
