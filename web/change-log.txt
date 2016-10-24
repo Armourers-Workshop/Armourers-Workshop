@@ -1,3 +1,16 @@
+Build 0.42.3
+Added:
+	File name skin property. (allow skins to update when the library file is changed - planned not implemented yet)
+Fixed:
+	Client NPE crash when a skinnable block is rotated.
+	Wings not getting cleared with the armourers clear command.
+	Wings and chest skins not rotation when the player is sneaking.
+	Frame drops when a client requests a large number of skins.
+	Frame drops when mannequins are first seen by the client.
+Changed:
+	Changed the way item overrides are formatted in the config file. (note: item, pickaxe, axe, shovel and hoe are not implemented)
+
+
 Build 0.42.0
 Added:
 	Added sword skin support for MapleCrafted
