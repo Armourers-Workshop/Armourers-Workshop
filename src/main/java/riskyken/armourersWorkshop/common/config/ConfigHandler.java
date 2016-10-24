@@ -151,7 +151,15 @@ public class ConfigHandler {
         Property prop = config.get(CATEGORY_COMPATIBILITY, "itemOverrides", ModAddonManager.getDefaultOverrides());
         prop.setLanguageKey("itemOverrides");
         prop.comment = "List of items that can have skins applied.\n"
-                + "Format [override type:mod id:item name]";
+                + "Format [override type:mod id:item name]\n"
+                + "Valid override types are:\n"
+                + "sword\n"
+                + "item\n"
+                + "pickaxe\n"
+                + "axe\n"
+                + "shovel\n"
+                + "hoe\n"
+                + "bow";
         ModAddonManager.itemOverrides =  prop.getStringList();
     }
     
