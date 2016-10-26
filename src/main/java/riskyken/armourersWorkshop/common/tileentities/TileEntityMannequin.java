@@ -42,7 +42,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private GameProfile newProfile = null;
     
     @SideOnly(Side.CLIENT)
-    private MannequinFakePlayer fakePlayer = null;
+    private MannequinFakePlayer fakePlayer;
     
     private BipedRotations bipedRotations;
     private int rotation;
