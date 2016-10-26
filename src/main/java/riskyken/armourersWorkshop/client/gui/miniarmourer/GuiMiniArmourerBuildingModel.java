@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
@@ -30,6 +32,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
 
+@SideOnly(Side.CLIENT)
 public class GuiMiniArmourerBuildingModel {
 
     private final Minecraft mc;
@@ -187,7 +190,7 @@ public class GuiMiniArmourerBuildingModel {
                 MiniCube tarCube = renderCubes.get(cubeId - 1);
                 
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
-                ForgeDirection dir = getDirectionForCubeFace(cubeFace);
+                ForgeDirection dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
                 newCube.setX((byte) (tarCube.getX() + dir.offsetX));
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
@@ -251,7 +254,7 @@ public class GuiMiniArmourerBuildingModel {
             if (button == 0) {
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
                 newCube.setColour(0xFFFFFFFF);
-                ForgeDirection dir = getDirectionForCubeFace(cubeFace);
+                ForgeDirection dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
                 newCube.setX((byte) (tarCube.getX() + dir.offsetX));
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
@@ -339,12 +342,12 @@ public class GuiMiniArmourerBuildingModel {
                 }
                 ICubeColour colour = new CubeColour();
                 if (fake) {
-                    colour.setColour(getColourFromId(colourId).getRGB(), 0);
-                    colour.setColour(getColourFromId(colourId + 1).getRGB(), 1);
-                    colour.setColour(getColourFromId(colourId + 2).getRGB(), 2);
-                    colour.setColour(getColourFromId(colourId + 3).getRGB(), 3);
-                    colour.setColour(getColourFromId(colourId + 4).getRGB(), 4);
-                    colour.setColour(getColourFromId(colourId + 5).getRGB(), 5);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId).getRGB(), 0);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 1).getRGB(), 1);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 2).getRGB(), 2);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 3).getRGB(), 3);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 4).getRGB(), 4);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 5).getRGB(), 5);
                 } else {
                     colour = cube.getCubeColour();
                 }
@@ -363,52 +366,5 @@ public class GuiMiniArmourerBuildingModel {
             GL11.glEnable(GL11.GL_LIGHTING);
         }
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-    }
-    
-    private Color getColourFromId(int id) {
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        while (id > 255 * 256) {
-            b += 1;
-            id -= 256 * 256;
-        }
-        while (id > 255) {
-            g += 1;
-            id -= 256;
-        }
-        while (id > 0) {
-            r += 1;
-            id -= 1;
-        }
-        return new Color(r, g, b);
-    }
-    
-    private ForgeDirection getDirectionForCubeFace(int cubeFace) {
-        ForgeDirection dir;
-        switch (cubeFace) {
-        case 1:
-            dir = ForgeDirection.EAST;
-            break;
-        case 0:
-            dir = ForgeDirection.WEST;
-            break;
-        case 4:
-            dir = ForgeDirection.DOWN;
-            break;
-        case 5:
-            dir = ForgeDirection.UP;
-            break;
-        case 3:
-            dir = ForgeDirection.NORTH;
-            break;
-        case 2:
-            dir = ForgeDirection.SOUTH;
-            break;
-        default:
-            dir = ForgeDirection.UNKNOWN;
-            break;
-        }
-        return dir;
     }
 }
