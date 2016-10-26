@@ -1,3 +1,7 @@
+Build 0.42.4
+Fixed:
+	Dedicated server crash when mannequin is loaded.
+
 Build 0.42.3
 Added:
 	File name skin property. (allow skins to update when the library file is changed - planned not implemented yet)
