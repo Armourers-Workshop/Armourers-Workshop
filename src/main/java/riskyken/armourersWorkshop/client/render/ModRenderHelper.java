@@ -1,13 +1,13 @@
 package riskyken.armourersWorkshop.client.render;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
-import org.lwjgl.opengl.GL11;
 
 public final class ModRenderHelper {
     

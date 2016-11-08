@@ -69,6 +69,13 @@ public class MiniCube implements IPantable {
     public void setColour(int colour, int side) {
         cc.setColour(colour, side);
     }
+    
+    @Override
+    public void setColour(byte[] rgb, int side) {
+        cc.setRed(rgb[0], side);
+        cc.setGreen(rgb[1], side);
+        cc.setBlue(rgb[2], side);
+    }
 
     @Override
     public void setColour(ICubeColour cubeColour) {

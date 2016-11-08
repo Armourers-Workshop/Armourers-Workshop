@@ -5,10 +5,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import org.apache.logging.log4j.Level;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -17,22 +19,23 @@ public class UpdateCheck implements Runnable {
     /** Should we check for updates. */
 	public static boolean checkForUpdates = true;
 	
-	/** Only show update for this version of Mincraft. */
-	public static boolean relevantUpdates = true;
-	
 	/** The url to use for update checking */
-	//private static final String UPDATE_URL = "https://dl.dropboxusercontent.com/u/9733425/app_update/mods/armourers-workshop/update.txt";
-	private static final String UPDATE_URL = "http://bit.ly/1qLai6P";
+	//http://plushie.moe/app_update/minecraft_mods/armourers_workshop/update.txt
+	//http://bit.ly/2dm5iGe
+	
+	//http://plushie.moe/app_update/minecraft_mods/armourers_workshop/update.json
+	//http://bit.ly/2dxhJ1c
+	private static final String UPDATE_URL = "http://bit.ly/2dxhJ1c";
 	
 	/** Was an update found. */
 	public static boolean updateFound = false;
 	
 	public static String remoteModVersion;
-	public static String remoteMinecraftVersion;
-	public static String remoteVersionInfo;
 	
 	public static void checkForUpdates() {
-		if (!checkForUpdates) { return; }
+		if (!checkForUpdates){
+		    return;
+		}
 		
 		(new Thread(new UpdateCheck(),LibModInfo.NAME + " update thread.")).start();
 	}
@@ -42,6 +45,7 @@ public class UpdateCheck implements Runnable {
 		ModLogger.log("Starting Update Check");
 		String localVersion = LibModInfo.VERSION;
 		
+		//localVersion = "1.7.10-0.39.9";
 		if(localVersion.equals("@VERSION@")) {
 		    return;
 		}
@@ -71,38 +75,28 @@ public class UpdateCheck implements Runnable {
 				throw new NullPointerException();
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-			String line;
-
+			
+			String data = "";
+			
+			String line = "";
 			while ((line = reader.readLine()) != null) {
-				String[] tokens = line.split("@");
-				if (tokens[0] != null && !tokens[0].equals("") && tokens.length > 2) {
-					remoteModVersion = tokens[0];
-					remoteMinecraftVersion = tokens[1];
-					remoteVersionInfo = tokens[2];
-					break;
-				}
+			    data += line;
 			}
-			conn.disconnect();
-			reader.close();
+	        conn.disconnect();
+	        reader.close();
+	        
+			JsonObject json = (JsonObject) new JsonParser().parse(data);
+			
+			remoteModVersion = json.getAsJsonObject("promos").get(MinecraftForge.MC_VERSION + "-latest").getAsString();
+			
+			ModLogger.log(String.format("Latest version for Minecraft %s is %s.", MinecraftForge.MC_VERSION, remoteModVersion));
 
 			if (versionCompare(localVersion, remoteModVersion) < 0) {
-			    if (relevantUpdates) {
-			        if (!MinecraftForge.MC_VERSION.equals(remoteMinecraftVersion)) {
-			            updateFound = false;
-			            ModLogger.log("Update found but not relevant.");
-			        } else {
-			            updateFound = true;
-		                ModLogger.log("Update needed. New version " + remoteModVersion + " your version " + LibModInfo.VERSION);
-			        }
-			    } else {
-			        updateFound = true;
-			        ModLogger.log("Update needed. New version " + remoteModVersion + " your version " + LibModInfo.VERSION);
-			    }
-			}
-			else {
+                updateFound = true;
+                ModLogger.log("Update needed. New version " + remoteModVersion + " your version " + localVersion);
+			} else {
 			    updateFound = false;
-				ModLogger.log("Is up to date");
+				ModLogger.log("Mod is up to date with the latest version.");
 			}
 			
 		} catch (Exception e) {
@@ -110,7 +104,6 @@ public class UpdateCheck implements Runnable {
 			ModLogger.log(Level.WARN, e.toString());
 			updateFound = false;
 		}
-		
 	}
 	
 	private int versionCompare(String str1, String str2)

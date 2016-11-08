@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -23,9 +22,10 @@ import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 /**
  * Helper class for converting back and forth from
@@ -54,8 +54,7 @@ public final class ArmourerWorldHelper {
      * @throws InvalidCubeTypeException
      * @throws SkinSaveException 
      */
-    public static Skin saveSkinFromWorld(World world, EntityPlayerMP player, ISkinType skinType,
-            String authorName, String customName, String tags, int[] paintData,
+    public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
@@ -65,7 +64,11 @@ public final class ArmourerWorldHelper {
             saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
         }
         
-        Skin skin = new Skin(authorName, customName, tags, skinType, paintData, parts);
+        if (paintData != null) {
+            paintData = paintData.clone();
+        }
+        
+        Skin skin = new Skin(skinProps, skinType, paintData, parts);
         
         //Check if there are any blocks in the build guides.
         if (skin.getParts().size() == 0 && !skin.hasPaintData()) {
@@ -154,7 +157,7 @@ public final class ArmourerWorldHelper {
         }
             
         int meta = world.getBlockMetadata(x, y, z);
-        ICubeColour c = UtilBlocks.getColourFromTileEntity(world, x, y, z);
+        ICubeColour c = BlockUtils.getColourFromTileEntity(world, x, y, z);
         byte cubeType = CubeRegistry.INSTANCE.getCubeFromBlock(block).getId();
         
         cubeData.setCubeId(index, cubeType);

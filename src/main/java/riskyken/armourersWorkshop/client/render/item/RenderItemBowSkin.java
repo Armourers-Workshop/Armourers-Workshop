@@ -20,8 +20,8 @@ import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -41,7 +41,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -63,7 +63,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -167,7 +167,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             model.frame = getAnimationFrame(useCount);
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-            model.render(player, skin, false, skinPointer.getSkinDye(), null, false);
+            model.render(player, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
             if (hasArrow & useCount > 0) {
                 GL11.glTranslatef(1 * scale, 1 * scale, -12 * scale);
                 int tarPart = getAnimationFrame(useCount);
@@ -180,10 +180,9 @@ public class RenderItemBowSkin implements IItemRenderer {
                     if (skinPointerArrow != null && ClientSkinCache.INSTANCE.isSkinInCache(skinPointerArrow)) {
                         Skin arrowSkin = ClientSkinCache.INSTANCE.getSkin(skinPointerArrow);
                         if (arrowSkin != null) {
-                            arrowSkin.onUsed();
                             for (int i = 0; i < arrowSkin.getParts().size(); i++) {
                                 SkinPart skinPart = arrowSkin.getParts().get(i);
-                                SkinPartRenderer.INSTANCE.renderPart(skinPart, scale, skinPointer.getSkinDye(), null);
+                                SkinPartRenderer.INSTANCE.renderPart(skinPart, scale, skinPointer.getSkinDye(), null, false);
                             }
                         } else {
                             ModelArrow.MODEL.render(scale, false);
@@ -206,7 +205,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
 
         } else {
-            IItemRenderer render = Addons.getItemRenderer(stack, type);
+            IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
             if (render != null) {
                 render.renderItem(type, stack, data);
             } else {

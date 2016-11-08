@@ -19,7 +19,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
@@ -34,10 +33,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintType;
-import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -175,6 +171,12 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
         
         return false;
     }
+    
+    @Override
+    public boolean setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side) {
+        int colour = new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF).getRGB();
+        return setColour(world, x, y, z, colour, side);
+    }
 
     @Override
     public int getColour(IBlockAccess world, int x, int y, int z, int side) {
@@ -197,28 +199,42 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                         if (te.getWorldObj().isRemote) {
                             GameProfile gameProfile = parent.getGameProfile();
                             if (gameProfile != null) {
-                                BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(gameProfile);
+                                BufferedImage playerSkin = SkinHelper.getBufferedImageSkinNew(gameProfile);
                                 if (playerSkin != null) {
                                     colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
-                                    NBTTagCompound compound = new NBTTagCompound();
-                                    byte[] paintData = new byte[4];
-                                    Color c = new Color(colour);
-                                    paintData[0] = (byte) c.getRed();
-                                    paintData[1] = (byte) c.getGreen();
-                                    paintData[2] = (byte) c.getBlue();
-                                    paintData[3] = (byte) PaintType.NORMAL.getKey();
-                                    PaintingHelper.setPaintData(compound, paintData);
-                                    PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
+                                    return colour;
                                 }
                             }
                         }
-
                     }
                 }
             }
         }
         
         return 0x00FFFFFF;
+    }
+    
+    @Override
+    public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side) {
+        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+            return false;
+        }
+        
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof TileEntityBoundingBox) {
+            TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
+            if (parent != null) {
+                if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
+                    int paintType = BitwiseUtils.getUByteFromInt(colour, 0);
+                    return paintType == 0;
+                }
+            }
+        }
+        
+        return false;
     }
     
     @Override

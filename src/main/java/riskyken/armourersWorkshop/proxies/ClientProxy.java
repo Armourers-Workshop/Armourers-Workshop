@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.proxies;
 
 import java.lang.reflect.Field;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -42,16 +44,17 @@ import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockColourable;
+import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -64,6 +67,7 @@ import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
@@ -116,6 +120,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockColourable());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         
         //Register item renderers.
         ModelMannequin modelMannequin = new ModelMannequin();
@@ -140,7 +145,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void postInit() {
-        Addons.initRenderers();
+        ModAddonManager.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
         if (HolidayHelper.valentins.isHolidayActive()) {
             enableValentinsClouds();
@@ -172,7 +177,6 @@ public class ClientProxy extends CommonProxy {
             ModLogger.log("Shaders mod support active");
             shadersModLoaded = true;
         } catch (Exception e) {
-            //ModLogger.log("Shaders mod not found");
         }
         if (Loader.isModLoaded("moreplayermodels")) {
             moreplayermodelsLoaded = true;
@@ -186,20 +190,43 @@ public class ClientProxy extends CommonProxy {
             smartMovingLoaded = true;
             ModLogger.log("Smart Moving support active");
         }
+        if (moreplayermodelsLoaded & smartMovingLoaded) {
+            ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop cannot support this.");
+        }
+        if (coloredLightsLoaded & smartMovingLoaded) {
+            ModLogger.log(Level.WARN, "Colored Lights and Smart Moving are both installed. Armourer's Workshop cannot support this.");
+        }
+        
+        ModLogger.log("Skin render type set to: " + getSkinRenderType().toString().toLowerCase());
     }
     
-    public static boolean useAttachedModelRender() {
-        if (smartMovingLoaded) {
-            return true;
+    public static SkinRenderType getSkinRenderType() {
+        switch (ConfigHandlerClient.skinRenderType) {
+        case 1: //Force render event
+            return SkinRenderType.RENDER_EVENT;
+        case 2: //Force model attachment
+            return SkinRenderType.MODEL_ATTACHMENT;
+        case 3: //Force render layer
+            return SkinRenderType.RENDER_LAYER;
+        default: //Auto
+            if (moreplayermodelsLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            if (shadersModLoaded & !smartMovingLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            if (coloredLightsLoaded & !smartMovingLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            return SkinRenderType.MODEL_ATTACHMENT;
         }
-        return ConfigHandler.useAttachedModelRender;
     }
     
     public static boolean useSafeTextureRender() {
         if (shadersModLoaded) {
             return true;
         }
-        if (ConfigHandler.skinTextureRenderOverride) {
+        if (ConfigHandlerClient.skinTextureRenderOverride) {
             return true;
         }
         if (coloredLightsLoaded) {
@@ -209,7 +236,15 @@ public class ClientProxy extends CommonProxy {
     }
     
     public static boolean useMultipassSkinRendering() {
-        return ConfigHandler.multipassSkinRendering;
+        return ConfigHandlerClient.multipassSkinRendering;
+    }
+    
+    public static int getNumberOfRenderLayers() {
+        if (useMultipassSkinRendering()) {
+            return 4;
+        } else {
+            return 2;
+        }
     }
     
     private void spamSillyMessages() {
@@ -280,5 +315,11 @@ public class ClientProxy extends CommonProxy {
             return RenderBlockColourMixer.renderId;
         }
         return super.getBlockRenderType(block);
+    }
+    
+    public static enum SkinRenderType {
+        RENDER_EVENT,
+        MODEL_ATTACHMENT,
+        RENDER_LAYER
     }
 }

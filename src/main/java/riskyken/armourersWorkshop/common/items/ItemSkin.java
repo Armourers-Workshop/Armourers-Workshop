@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
@@ -21,9 +22,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -84,7 +85,7 @@ public class ItemSkin extends AbstractModItem {
                     String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
                 }
-                if (ConfigHandler.showSkinTooltipDebugInfo) {
+                if (ConfigHandlerClient.showSkinTooltipDebugInfo) {
                     if (GuiScreen.isShiftKeyDown()) {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.skinId));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
@@ -95,6 +96,11 @@ public class ItemSkin extends AbstractModItem {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinPaintData", data.hasPaintData()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinMarkerCount", data.getMarkerCount()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinDyeCount", skinData.getSkinDye().getNumberOfDyes()));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinProperties"));
+                        ArrayList<String> props = data.getProperties().getPropertiesList();
+                        for (int i = 0; i < props.size(); i++) {
+                            tooltip.add("  " + props.get(i));
+                        }
                     } else {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinHoldShiftForInfo"));
                     }
@@ -171,7 +177,6 @@ public class ItemSkin extends AbstractModItem {
         if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
             Skin skin = SkinUtils.getSkinDetectSide(skinPointer, false, true);
             if (skin != null) {
-                skin.onUsed();
                 ForgeDirection dir = ForgeDirection.getOrientation(side);
                 Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
                 if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
@@ -197,8 +202,20 @@ public class ItemSkin extends AbstractModItem {
             return false;
         }
         int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        world.setBlock(x, y, z, ModBlocks.skinnable, rotation, 2);
-        world.setTileEntity(x, y, z, ((ITileEntityProvider)ModBlocks.skinnable).createNewTileEntity(world, 0));
+        
+        Block targetBlock = ModBlocks.skinnable;
+        Skin skin = SkinUtils.getSkinDetectSide(stack, false, true);
+        if (skin == null) {
+            return false;
+        }
+        
+        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false)) {
+            targetBlock = ModBlocks.skinnableGlowing;
+        }
+        
+        world.setBlock(x, y, z, targetBlock, rotation, 2);
+        world.setTileEntity(x, y, z, ((ITileEntityProvider)targetBlock).createNewTileEntity(world, 0));
+        
         TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x, y, z);
         te.setSkinPointer(skinPointer);
         stack.stackSize--;

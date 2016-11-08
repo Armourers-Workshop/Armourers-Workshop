@@ -7,11 +7,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ToolOptionIntensity extends AbstractToolOption {
-
-    private static final String TAG_INTENSITY = "intensity";
     
-    public ToolOptionIntensity() {
-        super(TAG_INTENSITY);
+    public ToolOptionIntensity(String optionName) {
+        super(optionName);
     }
 
     @SideOnly(Side.CLIENT)
@@ -36,9 +34,14 @@ public class ToolOptionIntensity extends AbstractToolOption {
 
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
-        int intensityValue = 16;
-        if (compound != null && compound.hasKey(TAG_INTENSITY)) {
-            intensityValue = compound.getInteger(TAG_INTENSITY);
+        return readFromNBT(compound, 16);
+    }
+    
+    @Override
+    public Object readFromNBT(NBTTagCompound compound, Object value) {
+        int intensityValue = (Integer) value;
+        if (compound != null && compound.hasKey(optionName)) {
+            intensityValue = compound.getInteger(optionName);
         }
         return intensityValue;
     }
@@ -51,6 +54,6 @@ public class ToolOptionIntensity extends AbstractToolOption {
 
     @Override
     public void writeToNBT(NBTTagCompound compound, Object value) {
-        compound.setInteger(TAG_INTENSITY, (Integer) value);
+        compound.setInteger(optionName, (Integer) value);
     }
 }

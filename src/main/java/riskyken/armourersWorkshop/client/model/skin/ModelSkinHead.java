@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
-import riskyken.armourersWorkshop.client.skin.ClientSkinPaintCache;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinPaintCache;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -20,7 +20,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 public class ModelSkinHead extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender) {
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
         if (skin == null) {
             return;
         }
@@ -36,7 +36,6 @@ public class ModelSkinHead extends AbstractModelSkin {
         }
         
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinHead);
-        skin.onUsed();
         RenderHelper.enableGUIStandardItemLighting();
         
         if (skin.hasPaintData() & showSkinPaint) {
@@ -70,7 +69,7 @@ public class ModelSkinHead extends AbstractModelSkin {
                 GL11.glTranslated(0, 1 * SCALE, 0);
             }
 
-            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColour);
+            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColour, distance, doLodLoading);
             
             GL11.glPopMatrix();
         }
@@ -78,10 +77,10 @@ public class ModelSkinHead extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColours) {
+    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColours, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-        renderPart(part, scale, skinDye, extraColours);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

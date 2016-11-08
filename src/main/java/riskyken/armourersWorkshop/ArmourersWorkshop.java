@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop;
 
+import java.io.File;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -9,12 +11,15 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
+import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.config.ConfigSynchronizeHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
@@ -23,8 +28,8 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.GuiHandler;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
-import riskyken.armourersWorkshop.common.skin.SkinDataCache;
 import riskyken.armourersWorkshop.common.skin.SkinExtractor;
+import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -86,9 +91,20 @@ public class ArmourersWorkshop {
     public void perInit(FMLPreInitializationEvent event) {
         ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
-        ConfigHandler.init(event.getSuggestedConfigurationFile());
-
-        Addons.preInit();
+        
+        File configDir = event.getSuggestedConfigurationFile().getParentFile();
+        configDir = new File(configDir, LibModInfo.ID);
+        if (!configDir.exists()) {
+            configDir.mkdirs();
+        }
+        
+        ModAddonManager.preInit();
+        ConfigHandler.init(new File(configDir, "common.cfg"));
+        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
+        
+        EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
+        
+        
         proxy.preInit();
         
         SkinIOUtils.makeLibraryDirectory();
@@ -120,25 +136,25 @@ public class ArmourersWorkshop {
         proxy.registerKeyBindings();
         proxy.initRenderers();
         
-        Addons.init();
+        ModAddonManager.init();
     }
     
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
-        Addons.postInit();
+        ModAddonManager.postInit();
         proxy.libraryManager.reloadLibrary();
     }
     
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandArmourers());
-        SkinDataCache.INSTANCE.serverStarted();
+        CommonSkinCache.INSTANCE.serverStarted();
     }
     
     @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
-        SkinDataCache.INSTANCE.serverStopped();
+        CommonSkinCache.INSTANCE.serverStopped();
     }
     
     @Mod.EventHandler

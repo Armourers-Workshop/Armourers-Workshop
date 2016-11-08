@@ -31,8 +31,6 @@ public class SkinPart implements ISkinPart {
     private ISkinPartType skinPart;
     @SideOnly(Side.CLIENT)
     private ClientSkinPartData clientSkinPartData;
-    @SideOnly(Side.CLIENT)
-    public boolean isClippingGuide;
     
     public SkinPart(SkinCubeData cubeData, ISkinPartType skinPart, ArrayList<CubeMarkerData> markerBlocks) {
         this.cubeData = cubeData;
@@ -179,7 +177,7 @@ public class SkinPart implements ISkinPart {
     public ForgeDirection getMarkerSide(int index) {
         if (index >= 0 & index < markerBlocks.size()) {
             CubeMarkerData cmd = markerBlocks.get(index);
-            return  ForgeDirection.getOrientation(cmd.meta);
+            return  ForgeDirection.getOrientation(cmd.meta - 1);
         }
         return null;
     }

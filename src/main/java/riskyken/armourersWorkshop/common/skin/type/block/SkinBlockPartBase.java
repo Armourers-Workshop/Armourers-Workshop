@@ -22,4 +22,14 @@ public class SkinBlockPartBase extends AbstractSkinPartTypeBase {
     @Override
     public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
     }
+    
+    @Override
+    public int getMaximumMarkersNeeded() {
+        return 1;
+    }
+    
+    @Override
+    public int getMinimumMarkersNeeded() {
+        return 0;
+    }
 }

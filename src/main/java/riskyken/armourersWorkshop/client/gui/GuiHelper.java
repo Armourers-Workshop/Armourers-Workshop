@@ -77,12 +77,16 @@ public class GuiHelper {
                 i1 += 2 + (textList.size() - 1) * 10;
             }
 
-            if (renderX + k > width) {
+            if (renderX + k > width - 2) {
                 renderX -= 28 + k;
             }
 
             if (renderY + i1 + 6 > height) {
                 renderY = height - i1 - 6;
+            }
+            
+            if (renderY < 5) {
+                renderY = 5;
             }
 
             zLevel = 300.0F;

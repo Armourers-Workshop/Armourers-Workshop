@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.common.blocks.BlockBoundingBox;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
 import riskyken.plushieWrapper.common.item.PlushieItemStack;
 import riskyken.plushieWrapper.common.world.BlockLocation;
@@ -45,6 +46,7 @@ public class ItemSoap extends AbstractModItemNew {
             BlockBoundingBox bb = (BlockBoundingBox) block;
             if (!world.isRemote()) {
                 bb.setColour(world.getMinecraftWorld(), bl.x, bl.y, bl.z, 0x00FFFFFF, side);
+                bb.setPaintType(world.getMinecraftWorld(), bl.x, bl.y, bl.z, PaintType.NONE, side);
                 world.playSoundEffect(bl.x + 0.5D, bl.y + 0.5D, bl.z + 0.5D, LibSounds.PAINT, 1.0F, world.rand().nextFloat() * 0.1F + 0.9F);
             }
             return true;

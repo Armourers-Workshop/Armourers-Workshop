@@ -19,9 +19,9 @@ import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -35,11 +35,14 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private static final String TAG_OFFSET_Y = "offsetY";
     private static final String TAG_OFFSET_Z = "offsetZ";
     private static final String TAG_RENDER_EXTRAS = "renderExtras";
+    private static final String TAG_FLYING = "flying";
     private static final int INVENTORY_SIZE = 7;
     
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;
-    private MannequinFakePlayer fakePlayer = null;
+    
+    @SideOnly(Side.CLIENT)
+    private MannequinFakePlayer fakePlayer;
     
     private BipedRotations bipedRotations;
     private int rotation;
@@ -51,6 +54,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private float offsetZ = 0F;
     
     private boolean renderExtras = true;
+    
+    private boolean flying = false;
     
     /** Is this mannequin a one block tall doll model? */
     private boolean isDoll;
@@ -82,12 +87,13 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     public void gotUpdateFromClient(float offsetX, float offsetY, float offsetZ,
-            int skinColour, int hairColour, String username, boolean renderExtras) {
+            int skinColour, int hairColour, String username, boolean renderExtras, boolean flying) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;
         this.skinColour = skinColour;
         this.hairColour = hairColour;
+        this.flying = flying;
         if (gameProfile == null) {
             setGameProfile(username);
         } else {
@@ -116,6 +122,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public boolean isRenderExtras() {
         return renderExtras;
     }
+    
+    public boolean isFlying() {
+        return flying;
+    }
 
     public TileEntityMannequin(boolean isDoll) {
         super(INVENTORY_SIZE);
@@ -141,16 +151,18 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             "eba64cb1-0d29-4434-8d5e-31004b00488c", //RiskyKen
             "b027a4f4-d480-426c-84a3-a9cb029f4b72", //Vic
             "4fda0709-ada7-48a6-b4bf-0bbce8c40dfa", //Nanoha
-            "5b6ab850-1b1a-45d0-9669-f84972f94d47", //EXTZ
-            "b9e99f95-09fe-497a-8a77-1ccc839ab0f4"  //VermillionX
+            "b9e99f95-09fe-497a-8a77-1ccc839ab0f4", //VermillionX
+            "0d98df01-26da-496c-ba7c-744a20a7b2c2", //Servantfly
+            "eda5e4cb-3b09-4b2c-b56c-d27d658d2e5d"  //Gray_Mooo
             };
   
     private static float[][] specialColours = {
             {249F / 255, 223F / 255, 140F / 255},
             {208F / 255, 212F / 255, 248F / 255},
             {1F, 173F / 255, 1F},
-            {41F / 255, 25F / 255, 0F},
-            {45F / 255, 45F / 255, 45F / 255}
+            {45F / 255, 45F / 255, 45F / 255},
+            {0F, 247F / 255, 141F / 255 },
+            {1F, 0F, 0F}
             };
     
     public boolean hasSpecialRender() {
@@ -268,7 +280,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
             worldObj.spawnEntityInWorld(entityitem);
-            UtilBlocks.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
+            BlockUtils.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
         }
         super.invalidate();
     }
@@ -318,13 +330,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
-        
+    
+    @SideOnly(Side.CLIENT)
     public MannequinFakePlayer getFakePlayer() {
         return fakePlayer;
-    }
-    
-    public void setFakePlayer(MannequinFakePlayer fakePlayer) {
-        this.fakePlayer = fakePlayer;
     }
     
     private void updateProfileData(){
@@ -349,6 +358,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (compound.hasKey(TAG_RENDER_EXTRAS)) {
             this.renderExtras = compound.getBoolean(TAG_RENDER_EXTRAS);
         }
+        if (compound.hasKey(TAG_FLYING)) {
+            this.flying = compound.getBoolean(TAG_FLYING);
+        }
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
@@ -366,6 +378,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         compound.setFloat(TAG_OFFSET_Y, this.offsetY);
         compound.setFloat(TAG_OFFSET_Z, this.offsetZ);
         compound.setBoolean(TAG_RENDER_EXTRAS, this.renderExtras);
+        compound.setBoolean(TAG_FLYING, this.flying);
         if (this.newProfile != null) {
             this.gameProfile = newProfile;
             this.newProfile = null;
@@ -402,7 +415,24 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         gameProfile = null;
         readFromNBT(compound);
         skinsUpdated = true;
+        if (worldObj != null && worldObj.isRemote) {
+            setupFakePlayer();
+        }
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private void setupFakePlayer() {
+        if (fakePlayer != null) {
+            return;
+        }
+        fakePlayer = new MannequinFakePlayer(worldObj, new GameProfile(null, "[Mannequin]"));
+        fakePlayer.posX = xCoord;
+        fakePlayer.posY = yCoord;
+        fakePlayer.posZ = zCoord;
+        fakePlayer.prevPosX = xCoord;
+        fakePlayer.prevPosY = yCoord;
+        fakePlayer.prevPosZ = zCoord;
     }
     
     @Override
@@ -421,6 +451,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void profileUpdated(GameProfile gameProfile) {
         newProfile = gameProfile;
         markDirty();
-        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

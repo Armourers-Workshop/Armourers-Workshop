@@ -92,6 +92,16 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
         }
         return false;
     }
+    
+    @Override
+    public boolean setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null & te instanceof IPantable) {
+            ((IPantable)te).setColour(rgb, side);
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public int getColour(IBlockAccess world, int x, int y, int z, int side) {
@@ -126,6 +136,11 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
             return ((IPantable)te).getPaintType(side);
         }
         return PaintType.NORMAL;
+    }
+    
+    @Override
+    public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side) {
+        return false;
     }
     
     @Override

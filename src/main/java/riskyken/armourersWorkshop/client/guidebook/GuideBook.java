@@ -1,22 +1,23 @@
 package riskyken.armourersWorkshop.client.guidebook;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.plushieWrapper.common.registry.ModRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuideBook extends BookBase {
 
-    private BookChapter chapterContents;
-    private BookChapter chapterIntroduction;
-    private BookChapter chapterArmourer;
-    private BookChapter chapterEquipmentTemplates;
-    private BookChapter chapterPaintingTools;
-    private BookChapter chapterEquipmentWardrobe;
-    private BookChapter chapterRecipes;
+    private IBookChapter chapterContents;
+    private IBookChapter chapterIntroduction;
+    private IBookChapter chapterArmourer;
+    private IBookChapter chapterEquipmentTemplates;
+    private IBookChapter chapterPaintingTools;
+    private IBookChapter chapterEquipmentWardrobe;
+    private IBookChapter chapterRecipes;
+    private IBookChapter chapterCredits;
     
     public GuideBook() {
         super(LibModInfo.ID.toLowerCase() + ":guideBook");
@@ -25,13 +26,18 @@ public class GuideBook extends BookBase {
     }
     
     private void registerChapters() {
-        chapterContents = new BookChapter(this, "contents", 1);
+        //Add chapters
+        chapterContents = new BookChapter(this, "contents", 0);
         chapterIntroduction = new BookChapter(this, "introduction", 2);
         chapterArmourer = new BookChapter(this, "armourer", 2);
         chapterEquipmentTemplates = new BookChapter(this, "equipmentTemplates", 1);
         chapterPaintingTools = new BookChapter(this, "paintingTools", 4);
         chapterEquipmentWardrobe = new  BookChapter(this, "equipmentWardrobe", 2);
         chapterRecipes = new  BookChapter(this, "recipes", 0);
+        chapterCredits = new BookChapterCredits(this, "credits");
+        
+        //Add pages
+        chapterContents.addPage(new BookPageContents(this));
         
         //Blocks
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourerBrain));
@@ -43,6 +49,7 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourMixer));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.mannequin));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinningTable));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.dyeTable));
         
         //Items
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.paintbrush));
@@ -53,9 +60,12 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourNoiseTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourPicker));
         chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.soap)));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.wandOfStyle)));
+        //chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.wandOfStyle)));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.hueTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.guideBook)));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.mannequinTool));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.dyeBottle));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.armourersHammer));
         
         addChapter(chapterContents);
         addChapter(chapterIntroduction);
@@ -64,6 +74,7 @@ public class GuideBook extends BookBase {
         addChapter(chapterPaintingTools);
         addChapter(chapterEquipmentWardrobe);
         addChapter(chapterRecipes);
+        addChapter(chapterCredits);
     }
     
     private void createPages() {

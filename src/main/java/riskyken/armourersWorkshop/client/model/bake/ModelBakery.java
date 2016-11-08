@@ -1,7 +1,11 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -11,12 +15,10 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
@@ -27,19 +29,13 @@ public final class ModelBakery {
 
     public static final ModelBakery INSTANCE = new ModelBakery();
     
-    /** Lock object use to keep threads in sync. */
-    private final Object bakeLock = new Object();
-    
-    /** Number of model baking threads currently running. */
-    private AtomicInteger runningOvens = new AtomicInteger(0);
-    
-    /** List of models that still need to be baked. */
-    private final ArrayList<Skin> unbakedModels = new ArrayList<Skin>();
-    
-    /** Models that have been baked and should be send to the model cache. */
-    private final ArrayList<Skin> bakedModels = new ArrayList<Skin>();
+    public Executor skinDownloadExecutor = Executors.newFixedThreadPool(1);
+    private CompletionService<Skin> skinCompletion;
+    private AtomicInteger bakingQueue = new AtomicInteger(0);
     
     public ModelBakery() {
+        skinDownloadExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.maxModelBakingThreads);
+        skinCompletion = new ExecutorCompletionService<Skin>(skinDownloadExecutor);
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -51,64 +47,41 @@ public final class ModelBakery {
     }
     
     public void receivedUnbakedModel(Skin skin) {
-        synchronized (bakeLock) {
-            unbakedModels.add(skin);
-        }
+        bakingQueue.incrementAndGet();
+        skinCompletion.submit(new BakingOven(skin));
     }
     
     private void checkBakery() {
-        synchronized (bakeLock) {
-            loadOvens();
-            dispatchBakery();
-        }
-    }
-    
-    private void loadOvens() {
-        if (runningOvens.get() >= ConfigHandler.maxModelBakingThreads & ConfigHandler.maxModelBakingThreads > 0) {
-            return;
-        }
-        if (unbakedModels.size() == 0) {
-            return;
-        }
-        Skin skin = unbakedModels.get(0);
-        unbakedModels.remove(0);
-        runningOvens.incrementAndGet();
-        Thread t = new Thread(new BakingOven(skin), LibModInfo.NAME + " model bake thread.");
-        t.setPriority(Thread.MIN_PRIORITY);
-        t.start();
-    }
-    
-    private void dispatchBakery() {
-        for (int i = 0; i < bakedModels.size(); i++) {
-            Skin skin = bakedModels.get(i);
-            if (skin.hasPaintData()) {
-                try {
-                    skin.skinModelTexture.loadTexture(Minecraft.getMinecraft().getResourceManager());
-                } catch (IOException e) {
-                    e.printStackTrace();
+        Future<Skin> futureSkin = skinCompletion.poll();
+        while (futureSkin != null) {
+            try {
+                Skin skin = futureSkin.get();
+                if (skin != null) {
+                    bakingQueue.decrementAndGet();
+                    ClientSkinCache.INSTANCE.receivedModelFromBakery(skin);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            ClientSkinCache.INSTANCE.receivedModelFromBakery(skin);
+            futureSkin = skinCompletion.poll();
         }
-        bakedModels.clear();
     }
     
     public int getBakingQueueSize() {
-        synchronized (bakeLock) {
-            return unbakedModels.size();
-        }
+        return bakingQueue.get();
     }
     
-    private class BakingOven implements Runnable {
+    private class BakingOven implements Callable<Skin> {
 
         private final Skin skin;
         
         public BakingOven(Skin skin) {
             this.skin = skin;
         }
-        
+
         @Override
-        public void run() {
+        public Skin call() throws Exception {
+            Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
             skin.lightHash();
             
             int[][] dyeColour;
@@ -178,10 +151,7 @@ public final class ModelBakery {
                 skin.skinModelTexture.createTextureForColours(skin, null);
             }
             
-            synchronized (bakeLock) {
-                bakedModels.add(skin);
-                runningOvens.decrementAndGet();
-            }
+            return skin;
         }
     }
 }

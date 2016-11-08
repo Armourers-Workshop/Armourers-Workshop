@@ -8,10 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class ToolOptionRadius extends AbstractToolOption {
     
-    private static final String TAG_RADIUS = "radius";
-
-    public ToolOptionRadius() {
-        super(TAG_RADIUS);
+    public ToolOptionRadius(String optionName) {
+        super(optionName);
     }
 
     @SideOnly(Side.CLIENT)
@@ -29,16 +27,21 @@ public class ToolOptionRadius extends AbstractToolOption {
     @SideOnly(Side.CLIENT)
     @Override
     public GuiButton getGuiControl(int id, int x, int y, NBTTagCompound compound) {
-        GuiSlider sliderControl = new GuiSlider(id, x, y, getLocalisedLabel() + " ", 2, 6, (Integer) readFromNBT(compound), null);
+        GuiSlider sliderControl = new GuiSlider(id, x, y, getLocalisedLabel() + " ", 1, 6, (Integer) readFromNBT(compound), null);
         sliderControl.showDecimal = false;
         return sliderControl;
     }
 
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
-        int intensityValue = 2;
-        if (compound != null && compound.hasKey(TAG_RADIUS)) {
-            intensityValue = compound.getInteger(TAG_RADIUS);
+        return readFromNBT(compound, 2);
+    }
+    
+    @Override
+    public Object readFromNBT(NBTTagCompound compound, Object value) {
+        int intensityValue = (Integer) value;
+        if (compound != null && compound.hasKey(optionName)) {
+            intensityValue = compound.getInteger(optionName);
         }
         return intensityValue;
     }
@@ -51,6 +54,6 @@ public class ToolOptionRadius extends AbstractToolOption {
 
     @Override
     public void writeToNBT(NBTTagCompound compound, Object value) {
-        compound.setInteger(TAG_RADIUS, (Integer) value);
+        compound.setInteger(optionName, (Integer) value);
     }
 }

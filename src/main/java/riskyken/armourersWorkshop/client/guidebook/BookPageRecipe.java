@@ -3,6 +3,12 @@ package riskyken.armourersWorkshop.client.guidebook;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -19,13 +25,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BookPageRecipe extends BookPageBase {
@@ -58,18 +57,27 @@ public class BookPageRecipe extends BookPageBase {
     
     @Override
     public void renderPage(FontRenderer fontRenderer, int mouseX, int mouseY, boolean turning, int pageNumber) {
+        GL11.glEnable(GL11.GL_BLEND);
         drawPageTitleAndNumber(fontRenderer, pageNumber);
         ItemStack result = new ItemStack(item);
-        renderStringCenter(fontRenderer, result.getDisplayName(), PAGE_MARGIN_TOP + PAGE_PADDING_TOP + fontRenderer.FONT_HEIGHT * 2);
+        
+        List<String> lines = fontRenderer.listFormattedStringToWidth(result.getDisplayName(), PAGE_TEXTURE_WIDTH);
+        for (int i = 0; i < lines.size(); i++) {
+            renderStringCenter(fontRenderer, lines.get(i), PAGE_MARGIN_TOP + PAGE_PADDING_TOP + fontRenderer.FONT_HEIGHT * 2 + i * fontRenderer.FONT_HEIGHT);
+        }
+        
+        
+        
         Minecraft mc = Minecraft.getMinecraft();
         
         //mc.renderEngine.bindTexture(bookPageTexture);
         GL11.glColor4f(1, 1, 1, 1);
         //drawTexturedModalRect(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);
-        drawPageTitleAndNumber(fontRenderer, pageNumber);
+        //drawPageTitleAndNumber(fontRenderer, pageNumber);
         if (validRecipes.size() > 0) {
-            renderRecipe(mc ,fontRenderer, validRecipes.get(0), 0, 0);
+            renderRecipe(mc ,fontRenderer, validRecipes.get(0), 0, lines.size() * fontRenderer.FONT_HEIGHT);
         }
+        
     }
     
     private void renderRecipe(Minecraft mc, FontRenderer fontRenderer, IRecipe recipe, int x, int y) {
@@ -117,9 +125,9 @@ public class BookPageRecipe extends BookPageBase {
                         }
                         
                         itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
-                                stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
+                                stack, x + 32 + ix * 18, y + 30 + iy * 18 + 10);
                         itemRender.renderItemOverlayIntoGUI(fontRenderer, mc.getTextureManager(),
-                                stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
+                                stack, x + 32 + ix * 18, y + 30 + iy * 18 + 10);
                     }
                 }
             }
@@ -143,9 +151,9 @@ public class BookPageRecipe extends BookPageBase {
                         stack = (ItemStack) inputObj;
                     }
                     itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
-                            stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
+                            stack, x + 32 + ix * 18, y + 30 + iy * 18 + 10);
                     itemRender.renderItemOverlayIntoGUI(fontRenderer, mc.getTextureManager(),
-                            stack, x + 42 + ix * 18, y + 30 + iy * 18 + 10);
+                            stack, x + 32 + ix * 18, y + 30 + iy * 18 + 10);
                 }
                 ix++;
                 if (ix > 2) {
@@ -156,7 +164,7 @@ public class BookPageRecipe extends BookPageBase {
         }
         
         itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
-                recipe.getRecipeOutput(), x + 60, y + 100);
+                recipe.getRecipeOutput(), x + 50, y + 100);
         GL11.glDisable(GL11.GL_LIGHTING);
     }
     

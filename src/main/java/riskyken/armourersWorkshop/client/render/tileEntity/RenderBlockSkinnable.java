@@ -10,15 +10,19 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -75,19 +79,42 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     
     private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, Skin skin) {
         int rotation = tileEntity.getBlockMetadata();
+        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+                tileEntity.xCoord + 0.5F,
+                tileEntity.yCoord + 0.5F,
+                tileEntity.zCoord + 0.5F);
+        
+        if (ConfigHandlerClient.showLodLevels) {
+            int colour = 0x00FF00;
+            int lod = MathHelper.floor_double(distance / ConfigHandlerClient.lodDistance);
+            lod = MathHelper.clamp_int(lod, 0, ConfigHandlerClient.maxLodLevels);
+            if (lod == 1) {
+                colour = 0xFFFF00;
+            } else if (lod == 2) {
+                colour = 0xFF0000;
+            }
+            else if (lod == 3) {
+                colour = 0xFF00FF;
+            }
+            AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+            GL11.glLineWidth(1.0F);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            RenderGlobal.drawOutlinedBoundingBox(aabb, colour);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+        }
+        
         GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         GL11.glScalef(-1, -1, 1);
         if (rotation != 0) {
           GL11.glRotatef((90F * rotation), 0, 1, 0);
         }
-        skin.onUsed();
-        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
-                tileEntity.xCoord + 0.5F,
-                tileEntity.yCoord + 0.5F,
-                tileEntity.zCoord + 0.5F);
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance);
+            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true);
         }
         if (rotation != 0) {
             GL11.glRotatef((90F * -rotation), 0, 1, 0);

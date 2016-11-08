@@ -69,7 +69,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
             if (!world.isRemote) {
                 UndoManager.begin(player);
             }
-            paintArea(world, player, stack, x, y, z, side);
+            paintArea(world, block, player, stack, x, y, z, side);
             if (!world.isRemote) {
                 world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
                 UndoManager.end(player);
@@ -91,7 +91,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         return false;
     }
     
-    private void paintArea(World world, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
+    private void paintArea(World world, Block targetBlock, EntityPlayer player, ItemStack stack, int x, int y, int z, int side) {
         int radius = (Integer) ToolOptions.RADIUS.readFromNBT(stack.getTagCompound());
         for (int i = -radius + 1; i < radius; i++ ) {
             for (int j = -radius + 1; j < radius; j++ ) {
@@ -118,7 +118,10 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                 }
                 if (bl != null) {
                     Block block = world.getBlock(bl.x, bl.y, bl.z);
-                    usedOnBlockSide(stack, player, world, bl, block, side);
+                    if ((targetBlock != ModBlocks.boundingBox & block != ModBlocks.boundingBox) |
+                            (targetBlock == ModBlocks.boundingBox & block == ModBlocks.boundingBox)) {
+                        usedOnBlockSide(stack, player, world, bl, block, side);
+                    }
                 }
             }
         }
@@ -170,7 +173,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
         String colourText = TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB());
         String hexText = TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex);
-        String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.toString());
+        String paintText = TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.getLocalizedName());
         String radiusText = TranslateUtils.translate("item.armourersworkshop:rollover.radius", radius * 2 - 1, radius * 2 - 1, 1);
         
         list.add(colourText);

@@ -10,6 +10,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,9 +18,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -33,7 +36,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
 import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
@@ -76,6 +79,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private GuiButtonExt loadSaveButton;
     private GuiIconButton openFolderButton;
     private GuiIconButton deleteButton;
+    private GuiIconButton reloadButton;
     private GuiScrollbar scrollbar;
     private GuiLabeledTextField filenameTextbox;
     private GuiLabeledTextField searchTextbox;
@@ -138,16 +142,18 @@ public class GuiArmourLibrary extends GuiContainer {
         fileSwitchRemotePublic.setIconLocation(0, 31, 50, 30);
         fileSwitchRemotePrivate.setIconLocation(0, 62, 50, 30);
         
+        reloadButton = new GuiIconButton(this, -1, PADDING * 2 + 20, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.refresh"), texture);
+        reloadButton.setIconLocation(50, 93, 24, 24);
+        buttonList.add(reloadButton);
+        
         if (mc.isSingleplayer()) {
             fileSwitchRemotePublic.enabled = false;
             fileSwitchRemotePrivate.enabled = false;
             fileSwitchRemotePublic.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
             fileSwitchRemotePrivate.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
-            fileSwitchlocal.setPressed(true);
-            fileSwitchType = LibraryFileType.LOCAL;
+            setFileSwitchType(LibraryFileType.LOCAL);
         } else {
-            fileSwitchRemotePublic.setPressed(true);
-            fileSwitchType = LibraryFileType.SERVER_PUBLIC;
+            setFileSwitchType(LibraryFileType.SERVER_PUBLIC);
         }
         
         buttonList.add(fileSwitchlocal);
@@ -162,7 +168,7 @@ public class GuiArmourLibrary extends GuiContainer {
         openFolderButton.setIconLocation(0, 93, 24, 24);
         buttonList.add(openFolderButton);
         
-        deleteButton = new GuiIconButton(this, -1, PADDING * 2 + 20, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
+        deleteButton = new GuiIconButton(this, -1, PADDING * 2 + 40, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
         deleteButton.setIconLocation(0, 118, 24, 24);
         //buttonList.add(deleteButton);
         
@@ -172,11 +178,11 @@ public class GuiArmourLibrary extends GuiContainer {
         
         filenameTextbox = new GuiLabeledTextField(fontRendererObj, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
         filenameTextbox.setMaxStringLength(30);
-        filenameTextbox.setEmptyLabel("Enter file name.");
+        filenameTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.enterFileName"));
         
         searchTextbox = new GuiLabeledTextField(fontRendererObj, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
         searchTextbox.setMaxStringLength(30);
-        searchTextbox.setEmptyLabel("Type to search...");
+        searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
 
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 12);
@@ -220,30 +226,57 @@ public class GuiArmourLibrary extends GuiContainer {
         return true;
     }
     
+    private boolean isPlayerOp(EntityPlayer player) {
+        MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+        return minecraftServer.getConfigurationManager().func_152596_g(player.getGameProfile());
+    }
+    
+    private void setFileSwitchType(LibraryFileType type) {
+        fileSwitchlocal.setPressed(false);
+        fileSwitchRemotePublic.setPressed(false);
+        fileSwitchRemotePrivate.setPressed(false);
+        switch (type) {
+        case LOCAL:
+            fileSwitchlocal.setPressed(true);
+            reloadButton.visible = true;
+            break;
+        case SERVER_PUBLIC:
+            fileSwitchRemotePublic.setPressed(true);
+            reloadButton.visible = false;
+            break;
+        case SERVER_PRIVATE:
+            fileSwitchRemotePrivate.setPressed(true);
+            reloadButton.visible = false;
+            break;
+        }
+        fileSwitchType = type;
+    }
+    
     @Override
     protected void actionPerformed(GuiButton button) {
         String filename = filenameTextbox.getText().trim();
         
         if (button == fileSwitchlocal | button == fileSwitchRemotePublic | button == fileSwitchRemotePrivate) {
-            fileSwitchlocal.setPressed(false);
-            fileSwitchRemotePublic.setPressed(false);
-            fileSwitchRemotePrivate.setPressed(false);
             if (button == fileSwitchlocal) {
-                fileSwitchlocal.setPressed(true);
-                fileSwitchType = LibraryFileType.LOCAL;
+                setFileSwitchType(LibraryFileType.LOCAL);
             }
             if (button == fileSwitchRemotePublic) {
-                fileSwitchRemotePublic.setPressed(true);
-                fileSwitchType = LibraryFileType.SERVER_PUBLIC;
+                setFileSwitchType(LibraryFileType.SERVER_PUBLIC);
             }
             if (button == fileSwitchRemotePrivate) {
-                fileSwitchRemotePrivate.setPressed(true);
-                fileSwitchType = LibraryFileType.SERVER_PRIVATE;
+                setFileSwitchType(LibraryFileType.SERVER_PRIVATE);
             }
         }
         
         if (button.id == 4) {
             openEquipmentFolder();
+        }
+        
+        if (button == reloadButton) {
+            if (fileSwitchType == LibraryFileType.LOCAL) {
+                ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+                libraryManager.reloadLibrary();
+            }
         }
         
         if (!filename.equals("")) {
@@ -436,7 +469,7 @@ public class GuiArmourLibrary extends GuiContainer {
                     GL11.glEnable(GL11.GL_NORMALIZE);
                     GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                     ModRenderHelper.enableAlphaBlend();
-                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true);
+                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
                     GL11.glPopMatrix();
                 }
             }

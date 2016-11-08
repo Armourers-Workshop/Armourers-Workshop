@@ -14,7 +14,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -32,7 +32,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, null);
+        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, null, 0, true);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, modelBiped, null);
+        return SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, modelBiped, null, 0, true);
     }
 
     @Override
@@ -108,11 +108,10 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (skin == null) {
             return false;
         }
-        skin.onUsed();
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             if (skinPart.getPartType() == skinPartType) {
-                SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null);
+                SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null, true);
                 return true;
             }
         }

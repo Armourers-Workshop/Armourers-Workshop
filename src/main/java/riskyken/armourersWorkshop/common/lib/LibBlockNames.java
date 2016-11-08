@@ -4,7 +4,7 @@ public class LibBlockNames {
     public static final String ARMOURER_BRAIN = "armourerBrain";
     public static final String MINI_ARMOURER = "miniArmourer";
     public static final String ARMOUR_LIBRARY = "armourLibrary";
-    public static final String BOUNDING_BOX = "awBoundingBox3";
+    public static final String BOUNDING_BOX = "awBoundingBox4";
     public static final String COLOURABLE = "colourable";
     public static final String COLOURABLE_GLOWING = "colourableGlowing";
     public static final String COLOURABLE_GLASS = "colourableGlass";
@@ -15,5 +15,7 @@ public class LibBlockNames {
     public static final String DOLL = "doll";
     public static final String SKINNING_TABLE = "skinningTable";
     public static final String SKINNABLE = "skinnable";
+    public static final String SKINNABLE_GLOWING = "skinnableGlowing";
     public static final String DYE_TABLE = "dyeTable";
+    public static final String GLOBAL_SKIN_LIBRARY = "globalSkinLibrary";
 }

@@ -13,8 +13,8 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EventState;
@@ -32,7 +32,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -54,7 +54,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
 
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -123,14 +123,14 @@ public class RenderItemSwordSkin implements IItemRenderer {
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_CULL_FACE);
             ModRenderHelper.enableAlphaBlend();
-            Addons.onWeaponRender(type, EventState.PRE);
+            ModAddonManager.onWeaponRender(type, EventState.PRE);
             
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
-                ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, false);
+                ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, false, false);
             }
-            Addons.onWeaponRender(type, EventState.POST);
+            ModAddonManager.onWeaponRender(type, EventState.POST);
             GL11.glPopAttrib();
             GL11.glPopMatrix();
             
@@ -139,7 +139,7 @@ public class RenderItemSwordSkin implements IItemRenderer {
             }
 
         } else {
-            IItemRenderer render = Addons.getItemRenderer(stack, type);
+            IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
             if (render != null) {
                 render.renderItem(type, stack, data);
             } else {

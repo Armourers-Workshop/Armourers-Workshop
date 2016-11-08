@@ -1,8 +1,48 @@
+# Notes for translators.
+#
+# Thank you for considering localising Armourer's Workshop.
+# Before you start consider getting the newest localisation file from GitHub development branch.
+# https://github.com/RiskyKen/Armourers-Workshop/tree/develop/src/main/resources/assets/armourersworkshop/lang
+# This file will often have localisations for the next version of the mod.
+#
+# When the localisation file is done send it to me in whatever way you feel comfortable with.
+# Email:   riskyken.web@gmail.com
+# Twitter: @RiskyKen
+# GitHub:  https://github.com/RiskyKen please send pull request to the development branch.
+#
+# Please also send your Minecraft username/uuid so I can add you to the credits.
+#
+# The following colour codes can be added to the start of text to colour it.
+# &0 Black
+# &1 Dark Blue
+# &2 Dark Green
+# &3 Dark Aqua
+# &4 Dark Red
+# &5 Dark Purple
+# &6 Gold
+# &7 Gray
+# &8 Dark Gray
+# &9 Blue
+# &a Green
+# &b Aqua
+# &c Red
+# &d Light Purple
+# &e Yellow
+# &f White
+#
+# A new line can be inserted with %n. Please add/remove new lines to fit the localisations you are writing.
+#
+# The text %s will be replace with text. Example: "Author: %s" could become "Author: RiskyKen".  
+# The text %d will be replace with a number. Example: "Radius: %d*%d*%d" could become "Radius: 3*3*3"
+#
+# That's all have "fun" translating!
+
 # Block names
 tile.armourersworkshop:armourerBrain.name=Armourer
 tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 tile.armourersworkshop:armourLibrary0.name=Equipment Library
 tile.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
+tile.armourersworkshop:globalSkinLibrary.name=Global Skin Library - (WIP)
 tile.armourersworkshop:colourable.name=Equipment Cube
 tile.armourersworkshop:colourableGlowing.name=Equipment Cube (Glowing)
 tile.armourersworkshop:colourableGlass.name=Glass Equipment Cube
@@ -53,6 +93,7 @@ item.armourersworkshop:blockMarker.name=Block Marker
 item.armourersworkshop:dyeBottle.name=Dye Bottle
 item.armourersworkshop:blendingTool.name=Blending Tool
 item.armourersworkshop:armourersHammer.name=Armourers Hammer
+item.armourersworkshop:debugTool.name=Debug Tool
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -106,6 +147,7 @@ item.armourersworkshop:rollover.skinInvalidItem=&cError: Invalid equipment skin,
 item.armourersworkshop:rollover.skinIdError1=&cWarning: This skin is using an old file format.
 item.armourersworkshop:rollover.skinIdError2=&cPlease save and reload it from the library to fix this.
 item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
+item.armourersworkshop:rollover.skinProperties=&eSkin Properties:
 
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=Full block mode
@@ -115,6 +157,27 @@ tooloption.armourersworkshop:changeBrightness=Change Brightness
 tooloption.armourersworkshop:changePaintType=Change Paint Type
 tooloption.armourersworkshop:intensity=Intensity
 tooloption.armourersworkshop:radius=Radius
+tooloption.armourersworkshop:radius.sample=Sample Radius
+tooloption.armourersworkshop:radius.effect=Effect Radius
+
+# Paint Types
+paintType.armourersworkshop:normal.name=Normal
+paintType.armourersworkshop:dye_1.name=Dye 1
+paintType.armourersworkshop:dye_2.name=Dye 2
+paintType.armourersworkshop:dye_3.name=Dye 3
+paintType.armourersworkshop:dye_4.name=Dye 4
+paintType.armourersworkshop:dye_5.name=Dye 5
+paintType.armourersworkshop:dye_6.name=Dye 6
+paintType.armourersworkshop:dye_7.name=Dye 7
+paintType.armourersworkshop:dye_8.name=Dye 8
+paintType.armourersworkshop:none.name=None
+paintType.armourersworkshop:skin.name=Skin
+paintType.armourersworkshop:hair.name=Hair
+
+# Colour Families
+colourFamily.armourersworkshop:wool.name=Wool
+colourFamily.armourersworkshop:minecraft.name=Minecraft
+colourFamily.armourersworkshop:pastel.name=Pastel
 
 # Skin Types
 skinType.armourers:head.name=Head
@@ -146,6 +209,8 @@ skinPartType.armourers:bow.frame2.name=Frame 2
 skinPartType.armourers:bow.frame3.name=Frame 3
 skinPartType.armourers:arrow.base.name=Base
 skinPartType.armourers:block.base.name=Base
+skinPartType.armourers:wings.leftWing.name=Left Wing
+skinPartType.armourers:wings.rightWing.name=Right Wing
 
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
@@ -154,6 +219,7 @@ inventory.armourersworkshop:armourLibrary0.name=Equipment Library
 inventory.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
 inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
+inventory.armourersworkshop:doll.name=Doll
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 inventory.armourersworkshop:entityEquipment.name=Entity Equipment
 inventory.armourersworkshop:skinningTable.name=Skinning Table
@@ -174,9 +240,16 @@ inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=View priva
 inventory.armourersworkshop:armourLibrary.rollover.notOnServer=You must be connected to a server to use this feature.
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Open library folder on your computer.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Delete skin.
+inventory.armourersworkshop:armourLibrary.rollover.refresh=Refresh library files.
+inventory.armourersworkshop:armourLibrary.label.enterFileName=Enter file name.
+inventory.armourersworkshop:armourLibrary.label.typeToSearch=Type to search...
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
+inventory.armourersworkshop:armourerBrain.label.idleSpeed=Idle Speed:
+inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Flying Speed:
+inventory.armourersworkshop:armourerBrain.label.minAngle=Minimum Angle:
+inventory.armourersworkshop:armourerBrain.label.maxAngle=Maximum Angle:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:
 inventory.armourersworkshop:armourerBrain.showGuide=Show building guide?
 inventory.armourersworkshop:armourerBrain.showOverlay=Show head overlay?
@@ -187,6 +260,11 @@ inventory.armourersworkshop:armourerBrain.set=Set
 inventory.armourersworkshop:armourerBrain.clear=Clear
 inventory.armourersworkshop:armourerBrain.westToEast=West to East
 inventory.armourersworkshop:armourerBrain.eastToWest=East to West
+inventory.armourersworkshop:armourerBrain.glowing=Glowing?
+inventory.armourersworkshop:armourerBrain.ladder=Ladder?
+inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
+inventory.armourersworkshop:armourerBrain.seat=Seat?
+inventory.armourersworkshop:armourerBrain.overrideBodyPart=Override?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation
@@ -202,6 +280,12 @@ inventory.armourersworkshop:equipmentWardrobe.autoSkin=Auto
 inventory.armourersworkshop:equipmentWardrobe.selectHair=Pick Hair Colour
 inventory.armourersworkshop:equipmentWardrobe.autoHair=Auto
 inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Skin Override
+inventory.armourersworkshop:equipmentWardrobe.renderHeadArmour=Render head armour?
+inventory.armourersworkshop:equipmentWardrobe.renderChestArmour=Render chest armour?
+inventory.armourersworkshop:equipmentWardrobe.renderLegArmour=Render leg armour?
+inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=Render foot armour?
+inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=Render head overlay?
+inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=Limit limb movement?
 
 inventory.armourersworkshop:mannequin.label.headRotation=Head Rotation
 inventory.armourersworkshop:mannequin.label.leftArmRotation=Left Arm Rotation
@@ -210,8 +294,14 @@ inventory.armourersworkshop:mannequin.label.leftLegRotation=Left Leg Rotation
 inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Extra Renders?
+inventory.armourersworkshop:mannequin.label.isFlying=Flying?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
+inventory.armourersworkshop:mannequin.set=Set
+inventory.armourersworkshop:mannequin.selectSkin=Select Skin
+inventory.armourersworkshop:mannequin.selectHair=Select Hair
+inventory.armourersworkshop:mannequin.autoSkin=Auto Skin
+inventory.armourersworkshop:mannequin.autoHair=Auto Hair
 inventory.armourersworkshop:mannequin.tab.inventory=Inventory
 inventory.armourersworkshop:mannequin.tab.rotations=Rotations
 inventory.armourersworkshop:mannequin.tab.offset=Offset
@@ -228,6 +318,9 @@ chat.armourersworkshop:undo.outOfUndos=No more undos
 chat.armourersworkshop:undo.undoing=Undoing
 chat.armourersworkshop:inventoryFull=Your inventory is full
 chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but you had nowhere to put it!
+chat.armourersworkshop:updateAvailable=Armourer's Workshop update %s is available.
+chat.armourersworkshop:updateDownload=[Download]
+chat.armourersworkshop:updateDownloadRollover=Click to goto the download page
 
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
@@ -276,3 +369,11 @@ book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
 
 # Chapter 7
 book.armourersworkshop:guideBook.recipes.name=Recipes
+
+# Chapter 8
+book.armourersworkshop:guideBook.credits.name=Credits
+book.armourersworkshop:guideBook.credits.programing=Programing
+book.armourersworkshop:guideBook.credits.premade Skins=Premade Skins
+book.armourersworkshop:guideBook.credits.textures=Textures
+book.armourersworkshop:guideBook.credits.sound=Sound
+book.armourersworkshop:guideBook.credits.localisations=Localisations

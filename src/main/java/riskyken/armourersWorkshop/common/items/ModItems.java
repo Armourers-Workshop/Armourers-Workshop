@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.items;
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.item.Item;
-import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemBurnTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourNoiseTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourPicker;
@@ -39,6 +39,7 @@ public class ModItems {
     public static Item dyeBottle;
     public static PlushieItem guideBook;
     public static Item armourersHammer;
+    public static Item debugTool;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -66,6 +67,7 @@ public class ModItems {
         dyeBottle = new ItemDyeBottle();
         guideBook = new ItemGuideBook();
         armourersHammer = new ItemArmourersHammer();
+        debugTool = new ItemDebugTool();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];
@@ -83,7 +85,7 @@ public class ModItems {
     private void setEquipmentSkinType() {
         boolean skinTypeSet = true;
         
-        if (AddonBuildCraft.isSkinCompatibleVersion()) {
+        if (ModAddonManager.addonBuildCraft.isSkinCompatibleVersion()) {
             try {
                 Class<?> c = Class.forName("riskyken.armourersWorkshop.common.items.ItemSkinRobotOverlay");
                 Object classObject = c.newInstance();

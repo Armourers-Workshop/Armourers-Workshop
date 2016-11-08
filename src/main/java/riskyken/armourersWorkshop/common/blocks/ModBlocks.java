@@ -4,14 +4,15 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 
@@ -20,6 +21,7 @@ public class ModBlocks {
     public static Block armourerBrain;
     public static Block miniArmourer;
     public static Block armourLibrary;
+    public static Block globalSkinLibrary;
     public static Block boundingBox;
     public static Block colourable;
     public static Block colourableGlowing;
@@ -30,12 +32,14 @@ public class ModBlocks {
     public static Block doll;
     public static Block skinningTable;
     public static Block skinnable;
+    public static Block skinnableGlowing;
     public static Block dyeTable;
     
     public ModBlocks() {
         armourerBrain = new BlockArmourer();
         miniArmourer = new BlockMiniArmourer();
         armourLibrary = new BlockSkinLibrary();
+        globalSkinLibrary = new BlockGlobalSkinLibrary();
         boundingBox = new BlockBoundingBox();
         colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
         colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
@@ -46,6 +50,7 @@ public class ModBlocks {
         doll = new BlockDoll();
         skinningTable = new BlockSkinningTable();
         skinnable = new BlockSkinnable();
+        skinnableGlowing = new BlockSkinnableGlowing();
         dyeTable = new BlockDyeTable();
     }
 
@@ -53,6 +58,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER_BRAIN);
         registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
+        registerTileEntity(TileEntityGlobalSkinLibrary.class, LibBlockNames.GLOBAL_SKIN_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);
         registerTileEntity(TileEntityBoundingBox.class, LibBlockNames.BOUNDING_BOX);

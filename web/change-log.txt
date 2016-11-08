@@ -1,9 +1,134 @@
+Build 0.42.4
+Fixed:
+	Dedicated server crash when mannequin is loaded.
+
+Build 0.42.3
+Added:
+	File name skin property. (allow skins to update when the library file is changed - planned not implemented yet)
+Fixed:
+	Client NPE crash when a skinnable block is rotated.
+	Wings not getting cleared with the armourers clear command.
+	Wings and chest skins not rotation when the player is sneaking.
+	Frame drops when a client requests a large number of skins.
+	Frame drops when mannequins are first seen by the client.
+Changed:
+	Changed the way item overrides are formatted in the config file. (note: item, pickaxe, axe, shovel and hoe are not implemented)
+
+
+Build 0.42.0
+Added:
+	Added sword skin support for MapleCrafted
+	Added sword skin support for OreSpawn.
+	Add pt_PT and pt_BR lang files. (EzerArch)
+	Added global skin database directory. (for map makers, works like the old equipment-database directory)
+	Added slowModelBaking config option.
+	Allowed replacing body parts with skins.
+Fixed:
+	Stopped console spam when a player is sitting on a block skin.
+	Fixed chest skin on mannequins not using some rotation axes.
+	Fixed rare crash when trying to get a skin from the cache as it's being removed
+	Fixed global library spamming errors if it was unable to download the skins JSON list.
+	Fixed mannequin textures getting rebuilt every frame if they had not been downloaded.
+	Fixed z fighting on armourer building guide grid and model. (finally)
+	Fixed skirts on mannequin not rotation around their y axes.
+	Fixed mannequin game profiles not updating correctly when changed.
+Changed:
+	Updated Halloween event!
+	Added more build space below the chest
+	Improved client model baking speed.
+	Removed showArmourerDebugRender config option. (now on the debug tool)
+
+
+Build 0.41.0
+Added:
+	Added no collision option for block skins.
+	Added seat option for block skins.
+	Added compession for skins being sent from the server to the client. (skins are now around 10% the size)
+	Added serverCompressesSkins config option.
+	Added display list count to the F3 debug text.
+	Added credits chapter to the guide book.
+Fixed:
+	Fixed a bug that was causing skin textures to get rebuild when it was not required.
+	Fixed mannequins rotations sometimes getting changed by rendering armour.
+Changed:
+	Moved client configs into their own files and moved configs into their own directory.
+	Stopped model loading LODs showing in GUIs.
+	Removed disabledSkins config option.
+	Updated zh_CN. (Ethan)
+
+
+Build 0.40.1
+Added:
+	Added refresh button to the library.
+	Added unfinished global library.
+Fixed:
+	Fixed wings rendering multiple times.
+Changed:
+	Improved performance when shaders mod is loaded.
+	Library skin list load is now threaded. (massive increase in launch speed)
+
+
+Build 0.40.0
+Added:
+	Added wing skins.
+	Added flying option to mannequins.
+	Added skin properties system.
+	Block skins can be set as glowing.
+	Block skins can be ladders.
+	Added Angel Wings, Bat Wings, Butterfly Wings and Evil Wings skins. (Ethan)
+Fixed:
+	Fixed not being able to override renders on items with more than one colon in their name.
+Changed:
+	Updated ru-RU land file. (Shtopm)
+	Increased allowed depth of bow skins to 64 blocks.
+	Players UUID is saved skins they create.
+	Updated zh_CN land file. (Ethan)
+
+
+Build 0.39.6
+Added:
+	ko_KR lang file (ISJump).
+	Loading LOD models.
+	Config option to disable skin painting.
+	LODs to entity skin renders.
+Fixed
+	Memory leak in armourer arrow render.
+	Glowing cubes not showing in model LODs.
+	Armour container's not checking riding, sneaking or child options on entities.
+	Painting armourer blocks sometimes reverting to the steve skin.
+Change:
+	Updated zh_CN lang file.
+
+
+Build 0.39.5
+Added: ru_RU lang file. (Shtopm)
+Added: Missing localization to the lang file.
+Fixed: Lighting issues on mannequins.
+Fixed: Guide book text hanging off the page.
+Fixed: small block texture stopping mipmaps being enabled.
+
+
+Build 0.39.4
+Added: Missing localization text from the lang file.
+Added: Missing item recipes to the guide book.
+Fixed: Severe bug that allowed mutable skins to reference the same paint data.
+Fixed: All skins not rendering when using the attached model render.
+Fixed: Soap not clearing paint type on bounding boxes.
+Fixed: Some tools not working correctly on the large armourer models.
+Fixed: Limited how fast mannequin textures can be downloaded.
+Fixed: Armourers command not working in command blocks.
+Change: Tilted skirt if the player is mounted.
+Change: Random rotations no longer turns the mannequin body.
+Change: How model bipeds are tracked for model attachments.
+Change: Allowed dye bottles to be shift clicked onto the colour mixer.
+Change: Paint roller painting armourer models will no longer effect equipment cubes.
+
+
 Build 0.39.3
-Change: Cleaned up F3 debug text/
+Change: Cleaned up F3 debug text.
 Fixed: Not being able to shade skin and hair paint.
 Fixed: Clear paint data when switching armourer skin type
 Fixed: Skinned armour items rendering 5 times.
-
 
 
 Build 0.39.2
