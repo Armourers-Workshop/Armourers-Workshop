@@ -9,6 +9,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -69,7 +70,7 @@ public class TileEntitySkinnable extends TileEntity {
             
             if (skin != null) {
                 ForgeDirection dir = getDirectionFromMeta(getBlockMetadata());
-                float[] bounds = getBlockBounds(skin, 1, 0, 0, dir);
+                float[] bounds = getBlockBounds(skin, 1 - dir.offsetX, 0, 1 + dir.offsetZ, dir);
                 if (bounds != null) {
                     minX = bounds[0];
                     minY = bounds[1];
@@ -112,7 +113,25 @@ public class TileEntitySkinnable extends TileEntity {
         float scale = 0.0625F;
         SkinPart skinPart = skin.getParts().get(0);
         
+        gridX = MathHelper.clamp_int(gridX, 0, 2);
+        gridY = MathHelper.clamp_int(gridY, 0, 2);
+        gridZ = MathHelper.clamp_int(gridZ, 0, 2);
+        
         Rectangle3D rec = skinPart.getBlockBounds(gridX, gridY, gridZ);
+        switch (dir) {
+        case SOUTH:
+            rec = skinPart.getBlockBounds(2 - gridX, gridY, 2 - gridZ);
+            break;
+        case EAST:
+            rec = skinPart.getBlockBounds(2 - gridZ, gridY, gridX);
+            break;
+        case WEST:
+            rec = skinPart.getBlockBounds(gridZ, gridY, 2 - gridX);
+            break;
+        default:
+            break;
+        }
+        
         if (rec != null) {
             int x = 8 + rec.getX();
             int y = 8 - rec.getHeight() - rec.getY();

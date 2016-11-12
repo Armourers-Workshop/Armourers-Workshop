@@ -190,7 +190,7 @@ public class BlockHighlightRenderHandler {
                         double maxZ = bounds[5];
                         
                         AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-                        aabb.offset(-xOff, -yOff, -zOff);
+                        aabb.offset(-xOff + dir.offsetX, -yOff, -zOff + 1 + dir.offsetZ);
                         aabb.offset(x, y, z);
                         aabb.offset(ix - 1, 1D + iy, iz - 2);
                         GL11.glEnable(GL11.GL_BLEND);
