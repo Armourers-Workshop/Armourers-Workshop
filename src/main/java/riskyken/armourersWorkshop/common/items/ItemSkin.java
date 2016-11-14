@@ -12,7 +12,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
@@ -188,7 +187,7 @@ public class ItemSkin extends AbstractModItem {
         return false;
     }
     
-    private boolean placeSkinAtLocation(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
+    private boolean canPlaceSkinAtLocation(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
         if (!player.canPlayerEdit(x, y, z, side, stack)) {
             return false;
         }
@@ -198,19 +197,38 @@ public class ItemSkin extends AbstractModItem {
         if (y == 255) {
             return false;
         }
-        if (!world.canPlaceEntityOnSide(Blocks.stone, x, y, z, false, side, null, stack)) {
+        if (!world.canPlaceEntityOnSide(world.getBlock(x, y, z), x, y, z, false, side, null, stack)) {
             return false;
         }
-        int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         
-        Block targetBlock = ModBlocks.skinnable;
+        return true;
+    }
+    
+    private boolean canPlaceChildren(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
+        return true;
+    }
+    
+    private boolean placeSkinAtLocation(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
+        if (!canPlaceSkinAtLocation(world, player, side, stack, x, y, z, skinPointer)) {
+            return false;
+        }
+        
+        int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         Skin skin = SkinUtils.getSkinDetectSide(stack, false, true);
         if (skin == null) {
             return false;
         }
         
+        Block targetBlock = ModBlocks.skinnable;
         if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false)) {
             targetBlock = ModBlocks.skinnableGlowing;
+        }
+        
+        boolean multiblock = skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+        if (multiblock) {
+            if (!canPlaceChildren(world, player, side, stack, x, y, z, skinPointer)) {
+                return false;
+            }
         }
         
         world.setBlock(x, y, z, targetBlock, rotation, 2);
@@ -221,5 +239,9 @@ public class ItemSkin extends AbstractModItem {
         stack.stackSize--;
         world.playSoundEffect((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, "dig.stone", 1, 1);
         return true;
+    }
+    
+    private void placeChildren(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
+        
     }
 }

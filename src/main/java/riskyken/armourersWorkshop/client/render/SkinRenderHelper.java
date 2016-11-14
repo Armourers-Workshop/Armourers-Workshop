@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 @SideOnly(Side.CLIENT)
 public final class SkinRenderHelper {
@@ -32,14 +33,22 @@ public final class SkinRenderHelper {
         }
     }
     
-    public static void renderBuildingGrid(ISkinType skinType, float scale, boolean showGuides, boolean hidden) {
+    public static void renderBuildingGrid(ISkinType skinType, float scale, boolean showGuides, boolean hidden, boolean multiblock) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPartType = skinType.getSkinParts().get(i);
             IPoint3D partOffset = skinPartType.getOffset();
             GL11.glTranslated(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
-            renderBuildingGrid(skinPartType, scale, showGuides, hidden);
+            if (skinType == SkinTypeRegistry.skinBlock) {
+                if (skinPartType.getPartName().equals("multiblock") & multiblock) {
+                    renderBuildingGrid(skinPartType, scale, showGuides, hidden);
+                } else if (skinPartType.getPartName().equals("base") & !multiblock) {
+                    renderBuildingGrid(skinPartType, scale, showGuides, hidden);
+                }
+            } else {
+                renderBuildingGrid(skinPartType, scale, showGuides, hidden);
+            }
             GL11.glTranslated(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
-        }
+        }  
     }
     
     public static void renderBuildingGrid(ISkinPartType skinPartType, float scale, boolean showGuides, boolean hidden) {

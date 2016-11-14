@@ -49,6 +49,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     private GuiCheckBox checkBlockLadder;
     private GuiCheckBox checkBlockNoCollision;
     private GuiCheckBox checkBlockSeat;
+    private GuiCheckBox checkBlockMultiblock;
     
     private GuiCustomSlider sliderWingIdleSpeed;
     private GuiCustomSlider sliderWingFlyingSpeed;
@@ -109,6 +110,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         checkBlockLadder = new GuiCheckBox(15, guiLeft + 177, guiTop + 60, GuiHelper.getLocalizedControlName(guiName, "ladder"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
         checkBlockNoCollision = new GuiCheckBox(15, guiLeft + 177, guiTop + 75, GuiHelper.getLocalizedControlName(guiName, "noCollision"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
         checkBlockSeat = new GuiCheckBox(15, guiLeft + 177, guiTop + 90, GuiHelper.getLocalizedControlName(guiName, "seat"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
+        checkBlockMultiblock = new GuiCheckBox(15, guiLeft + 177, guiTop + 105, GuiHelper.getLocalizedControlName(guiName, "multiblock"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 45, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 65, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
@@ -139,6 +141,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         buttonList.add(checkBlockLadder);
         buttonList.add(checkBlockNoCollision);
         buttonList.add(checkBlockSeat);
+        buttonList.add(checkBlockMultiblock);
         
         buttonList.add(sliderWingIdleSpeed);
         buttonList.add(sliderWingFlyingSpeed);
@@ -178,11 +181,12 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     @Override
     protected void actionPerformed(GuiButton button) {
         skinProps = armourerBrain.getSkinProps();
-        if (button == checkBlockGlowing | button == checkBlockLadder | button == checkBlockNoCollision | button == checkBlockSeat) {
+        if (button == checkBlockGlowing | button == checkBlockLadder | button == checkBlockNoCollision | button == checkBlockSeat | button == checkBlockMultiblock) {
             skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, checkBlockGlowing.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_LADDER, checkBlockLadder.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, checkBlockNoCollision.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_SEAT, checkBlockSeat.isChecked());
+            skinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, checkBlockMultiblock.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         if (button == checkArmourOverrideBodyPart) {
@@ -253,6 +257,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
             checkBlockLadder.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
             checkBlockNoCollision.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
             checkBlockSeat.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
+            checkBlockMultiblock.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
             
             sliderWingMinAngle.setValue(skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D));
             sliderWingMinAngle.updateSlider();
@@ -296,6 +301,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         checkBlockLadder.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockNoCollision.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockSeat.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
+        checkBlockMultiblock.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinBlock;
         
         sliderWingIdleSpeed.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingFlyingSpeed.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;

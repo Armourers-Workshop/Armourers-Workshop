@@ -23,6 +23,8 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.BlockUtils;
@@ -59,9 +61,17 @@ public final class ArmourerWorldHelper {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
-        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-            ISkinPartType partType = skinType.getSkinParts().get(i);
+        if (skinType == SkinTypeRegistry.skinBlock) {
+            ISkinPartType partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partBase;
+            if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+                partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
+            }
             saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+        } else {
+            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+                ISkinPartType partType = skinType.getSkinParts().get(i);
+                saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+            }
         }
         
         if (paintData != null) {

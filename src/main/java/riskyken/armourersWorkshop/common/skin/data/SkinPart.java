@@ -60,7 +60,8 @@ public class SkinPart implements ISkinPart {
     }
     
     private Rectangle3D setupPartBounds() {
-        if (skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.base")) {
+        if (skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.base") |
+            skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.multiblock")) {
             setupBlockBounds();
         }
         int minX = 127;
