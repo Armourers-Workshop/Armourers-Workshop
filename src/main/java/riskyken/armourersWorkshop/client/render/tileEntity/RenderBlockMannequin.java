@@ -125,7 +125,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         if (te.getGameProfile() != null) {
-            if (te.getWorldObj() != null) {
+            if (te.getWorldObj() != null & fakePlayer != null) {
                 fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
                 fakePlayer.isAirBorne = te.isFlying();
                 fakePlayer.capabilities.isFlying = te.isFlying();
