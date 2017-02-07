@@ -36,6 +36,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private static final String TAG_OFFSET_Z = "offsetZ";
     private static final String TAG_RENDER_EXTRAS = "renderExtras";
     private static final String TAG_FLYING = "flying";
+    private static final String TAG_VISIBLE = "visible";
     private static final int INVENTORY_SIZE = 7;
     
     private GameProfile gameProfile = null;
@@ -56,6 +57,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private boolean renderExtras = true;
     
     private boolean flying = false;
+    
+    private boolean visible = true;
     
     /** Is this mannequin a one block tall doll model? */
     private boolean isDoll;
@@ -87,13 +90,15 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     public void gotUpdateFromClient(float offsetX, float offsetY, float offsetZ,
-            int skinColour, int hairColour, String username, boolean renderExtras, boolean flying) {
+            int skinColour, int hairColour, String username, boolean renderExtras,
+            boolean flying, boolean visible) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;
         this.skinColour = skinColour;
         this.hairColour = hairColour;
         this.flying = flying;
+        this.visible = visible;
         if (gameProfile == null) {
             setGameProfile(username);
         } else {
@@ -125,6 +130,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public boolean isFlying() {
         return flying;
+    }
+    
+    public boolean isVisible() {
+        return visible;
     }
 
     public TileEntityMannequin(boolean isDoll) {
@@ -361,6 +370,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (compound.hasKey(TAG_FLYING)) {
             this.flying = compound.getBoolean(TAG_FLYING);
         }
+        if (compound.hasKey(TAG_VISIBLE)) {
+            this.visible = compound.getBoolean(TAG_VISIBLE);
+        }
         if (compound.hasKey(TAG_OWNER, 10)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
@@ -379,6 +391,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         compound.setFloat(TAG_OFFSET_Z, this.offsetZ);
         compound.setBoolean(TAG_RENDER_EXTRAS, this.renderExtras);
         compound.setBoolean(TAG_FLYING, this.flying);
+        compound.setBoolean(TAG_VISIBLE, this.visible);
         if (this.newProfile != null) {
             this.gameProfile = newProfile;
             this.newProfile = null;

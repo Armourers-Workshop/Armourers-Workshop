@@ -108,7 +108,6 @@ public final class HolidayHelper {
                     return true;
                 }
             }
-            
             return false;
         }
 

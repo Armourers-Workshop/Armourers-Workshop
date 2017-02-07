@@ -261,14 +261,14 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         if (selectingColour) {
             GL11.glDisable(GL11.GL_LIGHTING);
-            if (!(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
+            if (te.isVisible() & !(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
                 renderModel(te, model, fakePlayer);
             }
             tabSkinHair.hoverColour = getColourAtPos(Mouse.getX(), Mouse.getY());
             GL11.glEnable(GL11.GL_LIGHTING);
         }
         
-        if (!(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
+        if (te.isVisible() & !(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
             renderModel(te, model, fakePlayer);
         }
         

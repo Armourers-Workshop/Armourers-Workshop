@@ -20,13 +20,14 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
     private String username;
     private boolean renderExtras;
     private boolean flying;
+    private boolean visible;
     
     public MessageClientGuiMannequinData() {
     }
     
     public MessageClientGuiMannequinData(float xOffset, float yOffset,
             float zOffset, int skinColour, int hairColour, String username,
-            boolean renderExtras, boolean flying) {
+            boolean renderExtras, boolean flying, boolean visible) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.zOffset = zOffset;
@@ -35,6 +36,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         this.username = username;
         this.renderExtras = renderExtras;
         this.flying = flying;
+        this.visible = visible;
     }
 
 
@@ -48,6 +50,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         ByteBufUtils.writeUTF8String(buf, username);
         buf.writeBoolean(renderExtras);
         buf.writeBoolean(flying);
+        buf.writeBoolean(visible);
     }
     
     @Override
@@ -60,6 +63,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         username = ByteBufUtils.readUTF8String(buf);
         renderExtras = buf.readBoolean();
         flying = buf.readBoolean();
+        visible = buf.readBoolean();
     }
 
     @Override
@@ -72,7 +76,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         if (container != null && container instanceof ContainerMannequin) {
             TileEntityMannequin tileEntity = ((ContainerMannequin)container).getTileEntity();
             tileEntity.gotUpdateFromClient(message.xOffset, message.yOffset, message.zOffset,
-                    message.skinColour, message.hairColour, message.username, message.renderExtras, message.flying);
+                    message.skinColour, message.hairColour, message.username, message.renderExtras, message.flying, message.visible);
         }
         return null;
     }
