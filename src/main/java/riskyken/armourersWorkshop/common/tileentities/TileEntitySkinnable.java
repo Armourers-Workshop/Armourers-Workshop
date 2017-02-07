@@ -70,7 +70,7 @@ public class TileEntitySkinnable extends TileEntity {
             
             if (skin != null) {
                 ForgeDirection dir = getDirectionFromMeta(getBlockMetadata());
-                float[] bounds = getBlockBounds(skin, 1 - dir.offsetX, 0, 1 + dir.offsetZ, dir);
+                float[] bounds = getBlockBounds(skin, xOffset, yOffset, zOffset, dir);
                 if (bounds != null) {
                     minX = bounds[0];
                     minY = bounds[1];
@@ -120,13 +120,13 @@ public class TileEntitySkinnable extends TileEntity {
         Rectangle3D rec = skinPart.getBlockBounds(gridX, gridY, gridZ);
         switch (dir) {
         case SOUTH:
-            rec = skinPart.getBlockBounds(2 - gridX, gridY, 2 - gridZ);
+            //rec = skinPart.getBlockBounds(2 - gridX, gridY, 2 - gridZ);
             break;
         case EAST:
-            rec = skinPart.getBlockBounds(2 - gridZ, gridY, gridX);
+            //rec = skinPart.getBlockBounds(2 - gridZ, gridY, gridX);
             break;
         case WEST:
-            rec = skinPart.getBlockBounds(gridZ, gridY, 2 - gridX);
+            //rec = skinPart.getBlockBounds(gridZ, gridY, 2 - gridX);
             break;
         default:
             break;

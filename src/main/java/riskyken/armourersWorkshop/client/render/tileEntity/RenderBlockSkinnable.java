@@ -27,6 +27,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
@@ -125,7 +126,10 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
-        renderList.add(new RenderLast(tileEntity, x, y, z));
+        if (!(tileEntity instanceof TileEntitySkinnableChild)) {
+            renderList.add(new RenderLast(tileEntity, x, y, z));
+        }
+        
     }
     
     private class RenderLast implements Comparable<RenderLast> {

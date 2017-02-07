@@ -23,7 +23,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -159,10 +158,10 @@ public class BlockHighlightRenderHandler {
     private void drawSkinnableBlockHelper(World world, int x, int y, int z, EntityPlayer player, float partialTicks, ISkinPointer skinPointer) {
         int meta = world.getBlockMetadata(x, y, z);
         
-        Rectangle3D[][][] blockGrid;
+        //Rectangle3D[][][] blockGrid;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
         if (skin != null) {
-            blockGrid = skin.getParts().get(0).getBlockGrid();
+            //blockGrid = skin.getParts().get(0).getBlockGrid();
         } else {
             return;
         }

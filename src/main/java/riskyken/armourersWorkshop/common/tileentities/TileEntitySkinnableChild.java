@@ -10,9 +10,9 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
     private static final String TAG_PARENT_Y = "parentY";
     private static final String TAG_PARENT_Z = "parentZ";
     
-    private int parentX;
-    private int parentY;
-    private int parentZ;
+    public int parentX;
+    public int parentY;
+    public int parentZ;
     
     public boolean isParentValid() {
         return getParent() != null;
@@ -28,7 +28,7 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
     
     @Override
     public void setBoundsOnBlock(Block block, int xOffset, int yOffset, int zOffset) {
-        super.setBoundsOnBlock(block, xOffset, yOffset, zOffset);
+        super.setBoundsOnBlock(block, 1, 0, 0);
     }
     
     public TileEntitySkinnable getParent() {

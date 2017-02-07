@@ -117,7 +117,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             TileEntitySkinnable tes = (TileEntitySkinnable) te;
-            tes.setBoundsOnBlock(this, 0, 0 ,0);
+            tes.setBoundsOnBlock(this, 1, 0 ,0);
             return;
         }
         setBlockBounds(0, 0, 0, 1, 1, 1);

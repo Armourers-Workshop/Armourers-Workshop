@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 
 public class ModBlocks {
@@ -33,6 +34,8 @@ public class ModBlocks {
     public static Block skinningTable;
     public static Block skinnable;
     public static Block skinnableGlowing;
+    public static Block skinnableChild;
+    public static Block skinnableChildGlowing;
     public static Block dyeTable;
     
     public ModBlocks() {
@@ -51,6 +54,8 @@ public class ModBlocks {
         skinningTable = new BlockSkinningTable();
         skinnable = new BlockSkinnable();
         skinnableGlowing = new BlockSkinnableGlowing();
+        skinnableChild = new BlockSkinnableChild();
+        skinnableChildGlowing = new BlockSkinnableChildGlowing();
         dyeTable = new BlockDyeTable();
     }
 
@@ -66,6 +71,7 @@ public class ModBlocks {
         registerTileEntity(TileEntitySkinningTable.class, LibBlockNames.SKINNING_TABLE);
         registerTileEntity(TileEntitySkinnable.class, LibBlockNames.SKINNABLE);
         registerTileEntity(TileEntityDyeTable.class, LibBlockNames.DYE_TABLE);
+        registerTileEntity(TileEntitySkinnableChild.class, LibBlockNames.SKINNABLE_CHILD);
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
