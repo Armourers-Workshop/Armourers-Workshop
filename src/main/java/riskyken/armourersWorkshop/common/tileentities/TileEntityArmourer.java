@@ -148,6 +148,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             skinProps.setProperty(Skin.KEY_WINGS_MAX_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D));
         }
         
+        if (skinType.getVanillaArmourSlotId() != -1) {
+            skinProps.setProperty(Skin.KEY_ARMOUR_OVERRIDE, this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
+        }
+        
         try {
             armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType,
                     paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
@@ -222,7 +226,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
         Skin equipmentData = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
-        skinProps = new SkinProperties(equipmentData.getProperties());
+        setSkinProps(new SkinProperties(equipmentData.getProperties()));
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
         if (equipmentData.hasPaintData()) {
@@ -286,7 +290,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (skinType != null) {
             ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
             clearPaintData(true);
-            skinProps = new SkinProperties();
+            setSkinProps(new SkinProperties());
             resyncData();
         }
     }
@@ -299,7 +303,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     
     protected void createBoundingBoxes() {
         if (skinType != null) {
-            ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType);
+            boolean hadBounds = !this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            if (hadBounds) {
+                ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType);
+            }
         }
     }
     
@@ -386,7 +393,19 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     }
     
     public void setSkinProps(SkinProperties skinProps) {
+        boolean updateBounds = false;
+        if (skinType != null && skinType.getVanillaArmourSlotId() != -1) {
+            boolean hadBounds = !this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            boolean haveBounds = !skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            if (hadBounds != haveBounds) {
+                updateBounds = true;
+            }
+        }
         this.skinProps = skinProps;
+        if (updateBounds) {
+            removeBoundingBoxes();
+            createBoundingBoxes();
+        }
         resyncData();
     }
     

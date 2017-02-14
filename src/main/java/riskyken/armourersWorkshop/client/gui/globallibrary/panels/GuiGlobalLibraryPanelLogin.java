@@ -1,11 +1,14 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 
+@SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelLogin extends GuiPanel {
 
     private GuiTextField textboxUsername;
@@ -21,9 +24,9 @@ public class GuiGlobalLibraryPanelLogin extends GuiPanel {
         super.initGui();
         buttonList.clear();
         
-        textboxUsername = new GuiTextField(fontRenderer, this.x + 5, this.y + 5, 120, 16);
-        textboxPassword = new GuiTextField(fontRenderer, this.x + 5, this.y + 30, 120, 16);
-        buttonLogin = new GuiButtonExt(0, this.x + 5, this.y + 50, 80, 16, "Login");
+        textboxUsername = new GuiTextField(fontRenderer, this.x + 5, this.y + 15, 120, 16);
+        textboxPassword = new GuiTextField(fontRenderer, this.x + 5, this.y + 45, 120, 16);
+        buttonLogin = new GuiButtonExt(0, this.x + 5, this.y + 65, 80, 16, "Login");
         buttonList.add(buttonLogin);
     }
     
@@ -61,6 +64,8 @@ public class GuiGlobalLibraryPanelLogin extends GuiPanel {
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         super.draw(mouseX, mouseY, partialTickTime);
+        fontRenderer.drawString("Username:", this.x + 5, this.y + 5, 0xEEEEEE);
+        fontRenderer.drawString("Password:", this.x + 5, this.y + 35, 0xEEEEEE);
         textboxUsername.drawTextBox();
         textboxPassword.drawTextBox();
     }

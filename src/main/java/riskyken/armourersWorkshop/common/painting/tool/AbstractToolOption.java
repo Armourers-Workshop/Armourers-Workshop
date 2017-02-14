@@ -38,6 +38,8 @@ public abstract class AbstractToolOption {
     
     public abstract Object readFromNBT(NBTTagCompound compound);
     
+    public abstract Object readFromNBT(NBTTagCompound compound, Object value);
+    
     public abstract void writeToNBT(NBTTagCompound compound, GuiButton control);
     
     public abstract void writeToNBT(NBTTagCompound compound, Object value);

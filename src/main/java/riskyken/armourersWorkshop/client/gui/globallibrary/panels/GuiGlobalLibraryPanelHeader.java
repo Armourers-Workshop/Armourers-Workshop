@@ -3,6 +3,8 @@ package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,6 +16,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Scre
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
+@SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelHeader extends GuiPanel {
 
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/globalLibrary.png");

@@ -209,6 +209,24 @@ public final class SkinModelRenderer {
         return false;
     }
     
+    public boolean playerHasCustomHead(EntityPlayer player) {
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
+        if (equipmentData != null) {
+            for (int i = 0; i < 5; i++) {
+                ISkinPointer sp = equipmentData.getSkinPointer(SkinTypeRegistry.skinHead, i);
+                if (sp != null) {
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(sp, false);
+                    if (skin!= null) {
+                        if (skin.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.entityPlayer;

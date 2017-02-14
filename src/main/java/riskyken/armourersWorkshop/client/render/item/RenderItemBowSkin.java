@@ -21,7 +21,7 @@ import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -41,7 +41,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -63,7 +63,7 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -205,7 +205,7 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
 
         } else {
-            IItemRenderer render = Addons.getItemRenderer(stack, type);
+            IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
             if (render != null) {
                 render.renderItem(type, stack, data);
             } else {

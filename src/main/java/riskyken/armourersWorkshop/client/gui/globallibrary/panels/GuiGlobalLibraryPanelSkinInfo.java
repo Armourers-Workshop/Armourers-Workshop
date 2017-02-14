@@ -5,6 +5,8 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
@@ -18,6 +20,7 @@ import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
+@SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
 
     private GuiButtonExt buttonBack;

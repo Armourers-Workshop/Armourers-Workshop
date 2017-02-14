@@ -31,6 +31,13 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     private ISkinType skinType;
     private ArrayList<SkinPart> skinParts;
     
+    /*
+     * Around 1.65MB for the 20*62*56 sword skin, may want to change this if skins get any bigger.
+     * Thats around 4.96MB for the bow skin, the biggest skin so far.
+     * 
+     * Should have an array with each skin part then an array when each part layer.
+     */
+    
     public TileEntityMiniArmourer() {
         super(INVENTORY_SIZE);
         this.skinParts = new ArrayList<SkinPart>();

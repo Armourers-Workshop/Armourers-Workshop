@@ -95,7 +95,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     public void clearAllEquipmentStacks() {
         ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
-        for (int i = 0; i < skinList.size() - 1; i++) {
+        for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
             WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
             if (wi != null) {

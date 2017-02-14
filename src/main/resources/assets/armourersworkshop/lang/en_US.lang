@@ -1,3 +1,42 @@
+# Notes for translators.
+#
+# Thank you for considering localising Armourer's Workshop.
+# Before you start consider getting the newest localisation file from GitHub development branch.
+# https://github.com/RiskyKen/Armourers-Workshop/tree/develop/src/main/resources/assets/armourersworkshop/lang
+# This file will often have localisations for the next version of the mod.
+#
+# When the localisation file is done send it to me in whatever way you feel comfortable with.
+# Email:   riskyken.web@gmail.com
+# Twitter: @RiskyKen
+# GitHub:  https://github.com/RiskyKen please send pull request to the development branch.
+#
+# Please also send your Minecraft username/uuid so I can add you to the credits.
+#
+# The following colour codes can be added to the start of text to colour it.
+# &0 Black
+# &1 Dark Blue
+# &2 Dark Green
+# &3 Dark Aqua
+# &4 Dark Red
+# &5 Dark Purple
+# &6 Gold
+# &7 Gray
+# &8 Dark Gray
+# &9 Blue
+# &a Green
+# &b Aqua
+# &c Red
+# &d Light Purple
+# &e Yellow
+# &f White
+#
+# A new line can be inserted with %n. Please add/remove new lines to fit the localisations you are writing.
+#
+# The text %s will be replace with text. Example: "Author: %s" could become "Author: RiskyKen".  
+# The text %d will be replace with a number. Example: "Radius: %d*%d*%d" could become "Radius: 3*3*3"
+#
+# That's all have "fun" translating!
+
 # Block names
 tile.armourersworkshop:armourerBrain.name=Armourer
 tile.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
@@ -118,6 +157,8 @@ tooloption.armourersworkshop:changeBrightness=Change Brightness
 tooloption.armourersworkshop:changePaintType=Change Paint Type
 tooloption.armourersworkshop:intensity=Intensity
 tooloption.armourersworkshop:radius=Radius
+tooloption.armourersworkshop:radius.sample=Sample Radius
+tooloption.armourersworkshop:radius.effect=Effect Radius
 
 # Paint Types
 paintType.armourersworkshop:normal.name=Normal
@@ -223,6 +264,7 @@ inventory.armourersworkshop:armourerBrain.glowing=Glowing?
 inventory.armourersworkshop:armourerBrain.ladder=Ladder?
 inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
 inventory.armourersworkshop:armourerBrain.seat=Seat?
+inventory.armourersworkshop:armourerBrain.overrideBodyPart=Override?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation

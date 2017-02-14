@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
@@ -23,6 +25,7 @@ import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
+@SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     
     private static final String RECENTLY_UPLOADED_URL = "http://plushie.moe/armourers_workshop/recently-uploaded.php";
@@ -49,8 +52,9 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
         if (downloadListTask != null && downloadListTask.isDone()) {
             try {
                 json = downloadListTask.get();
-                SkinDownloader.downloadSkins(skinCompletion, json);
-                //SkinDownloader.downloadSkins(this, json);
+                if (json != null) {
+                    SkinDownloader.downloadSkins(skinCompletion, json);
+                }
                 downloadListTask = null;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -110,13 +114,25 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
                 int y = (int) (i / rowSize);
                 JsonObject skinJson = json.get(i).getAsJsonObject();
                 Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
+                
+                int iconX = this.x + x * iconSize + 5;
+                int iconY = this.y + y * iconSize + 5 + 22;
+                int iconW = iconX + iconSize - 10;
+                int iconH = iconY + iconSize - 10;
+                int hoverColour = 0xC0101010;
+                if (mouseX >= iconX & mouseX < iconW) {
+                    if (mouseY >= iconY & mouseY < iconH) {
+                        hoverColour = 0xC0444410;
+                    }
+                }
+                drawGradientRect(iconX, iconY, iconW, iconH, hoverColour, 0xD0101010);
                 if (skin != null) {
                     float scale = iconSize / 2;
                     if (y < colSize) {
                         //fontRenderer.drawString(skin.getCustomName(), this.x + x * iconSize, this.y + y * iconSize + iconSize, 0xFFEEEEEE);
                         GL11.glPushMatrix();
                         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-                        GL11.glTranslatef(this.x + iconSize / 2 + x * iconSize, 12 + this.y + iconSize / 2 + y * iconSize, 200.0F);
+                        GL11.glTranslatef(iconX + iconSize / 2, iconY + iconSize / 2 - 4, 200.0F);
                         GL11.glScalef((float)(-scale), (float)scale, (float)scale);
                         GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
                         GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
