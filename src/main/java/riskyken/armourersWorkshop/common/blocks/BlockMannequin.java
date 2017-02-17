@@ -27,8 +27,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StringUtils;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
@@ -44,6 +46,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
 
     public static DamageSource victoriousDamage = new DamageSource("victorious");
     private static final String TAG_OWNER = "owner";
+    private static final String TAG_IMAGE_URL = "imageUrl";
     private final boolean isValentins;
     
     public BlockMannequin() {
@@ -72,6 +75,9 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                     if (compound.hasKey(TAG_OWNER, 10)) {
                         gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
                         ((TileEntityMannequin)te).setGameProfile(gameProfile);
+                    }
+                    if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
+                        ((TileEntityMannequin)te).setImageUrl(compound.getString(TAG_IMAGE_URL));
                     }
                 }
             }
@@ -229,6 +235,10 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                 NBTUtil.func_152460_a(profileTag, teMan.getGameProfile());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
+            }
+            if (!StringUtils.isNullOrEmpty(teMan.getImageUrl())) {
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setString(TAG_IMAGE_URL, teMan.getImageUrl());
             }
         }
         return stack;

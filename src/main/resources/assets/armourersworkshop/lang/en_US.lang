@@ -123,6 +123,7 @@ item.armourersworkshop:rollover.nopaint=&6No paint.
 item.armourersworkshop:rollover.settingsSaved=&6Settings Saved.
 item.armourersworkshop:rollover.noSettingsSaved=&cNo Settings Saved.
 item.armourersworkshop:rollover.user=&6User:&7 %s
+item.armourersworkshop:rollover.url=&6URL:&7 %s
 item.armourersworkshop:rollover.empty=&6Empty.
 item.armourersworkshop:rollover.openSettings=Sneak right click to open settings.
 
@@ -298,6 +299,8 @@ inventory.armourersworkshop:mannequin.label.isFlying=Flying?
 inventory.armourersworkshop:mannequin.label.isVisible=Visible?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
+inventory.armourersworkshop:mannequin.dropdown.user=User
+inventory.armourersworkshop:mannequin.dropdown.url=URL
 inventory.armourersworkshop:mannequin.set=Set
 inventory.armourersworkshop:mannequin.selectSkin=Select Skin
 inventory.armourersworkshop:mannequin.selectHair=Select Hair

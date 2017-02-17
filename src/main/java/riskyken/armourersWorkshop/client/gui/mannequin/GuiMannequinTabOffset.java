@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMannequinData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
 public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
     
@@ -92,10 +93,11 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
         boolean renderExtras = ((GuiMannequin)parent).tabExtraRenders.isExtraRenders.isChecked();
         boolean flying = ((GuiMannequin)parent).tabExtraRenders.isFlying.isChecked();
         boolean visible = ((GuiMannequin)parent).tabExtraRenders.isVisible.isChecked();
-        String name = ((GuiMannequin)parent).tabName.nameTextbox.getText();
+        TextureType textureType = TextureType.values()[((GuiMannequin)parent).tabTexture.textureTypeList.getListSelectedIndex()];
+        String name = ((GuiMannequin)parent).tabTexture.nameTextbox.getText();
         int skinColour = ((GuiMannequin)parent).tabSkinAndHair.skinColour;
         int hairColour = ((GuiMannequin)parent).tabSkinAndHair.hairColour;
-        MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour, hairColour, name, renderExtras, flying, visible);
+        MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour,hairColour, name, renderExtras, flying, visible, textureType);
         PacketHandler.networkWrapper.sendToServer(message);
     }
 }

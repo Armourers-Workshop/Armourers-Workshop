@@ -13,6 +13,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.common.util.Constants;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
@@ -37,6 +38,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private static final String TAG_RENDER_EXTRAS = "renderExtras";
     private static final String TAG_FLYING = "flying";
     private static final String TAG_VISIBLE = "visible";
+    private static final String TAG_TEXTURE_TYPE = "textureType";
+    private static final String TAG_IMAGE_URL = "imageUrl";
     private static final int INVENTORY_SIZE = 7;
     
     private GameProfile gameProfile = null;
@@ -59,6 +62,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private boolean flying = false;
     
     private boolean visible = true;
+    
+    private TextureType textureType = TextureType.USER;
+    
+    private String imageUrl = null;
     
     /** Is this mannequin a one block tall doll model? */
     private boolean isDoll;
@@ -91,7 +98,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public void gotUpdateFromClient(float offsetX, float offsetY, float offsetZ,
             int skinColour, int hairColour, String username, boolean renderExtras,
-            boolean flying, boolean visible) {
+            boolean flying, boolean visible, TextureType textureType) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;
@@ -99,13 +106,21 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.hairColour = hairColour;
         this.flying = flying;
         this.visible = visible;
-        if (gameProfile == null) {
-            setGameProfile(username);
-        } else {
-            if (!gameProfile.getName().equals(username)) {
+        this.textureType = textureType;
+        if (this.textureType == TextureType.USER) {
+            if (gameProfile == null) {
                 setGameProfile(username);
+            } else {
+                if (!gameProfile.getName().equals(username)) {
+                    setGameProfile(username);
+                }
             }
+            this.imageUrl = null;
+        } else {
+            this.imageUrl = username;
+            this.gameProfile = null;
         }
+
         this.renderExtras = renderExtras;
         
         markDirty();
@@ -134,6 +149,14 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public boolean isVisible() {
         return visible;
+    }
+    
+    public TextureType getTextureType() {
+        return textureType;
+    }
+    
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public TileEntityMannequin(boolean isDoll) {
@@ -283,6 +306,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
                 //stack.setStackDisplayName(gameProfile.getName());
             }
+            if (!StringUtils.isNullOrEmpty(imageUrl)) {
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setString(TAG_IMAGE_URL, imageUrl);
+            }
             float f = 0.7F;
             double xV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             double yV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
@@ -297,11 +324,22 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public void setGameProfile(GameProfile gameProfile) {
         this.newProfile = null;
         this.gameProfile = gameProfile;
+        if (gameProfile != null) {
+            textureType = TextureType.USER;
+        }
         if (!worldObj.isRemote) {
             updateProfileData();
         }
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+        if (!StringUtils.isNullOrEmpty(imageUrl)) {
+            textureType = TextureType.URL;
+        }
+        markDirty();
     }
     
     public int getHeightOffset() {
@@ -373,8 +411,18 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (compound.hasKey(TAG_VISIBLE)) {
             this.visible = compound.getBoolean(TAG_VISIBLE);
         }
-        if (compound.hasKey(TAG_OWNER, 10)) {
+        if (compound.hasKey(TAG_TEXTURE_TYPE, Constants.NBT.TAG_BYTE)) {
+            this.textureType = TextureType.values()[compound.getByte(TAG_TEXTURE_TYPE)];
+        }
+        if (compound.hasKey(TAG_OWNER, Constants.NBT.TAG_COMPOUND)) {
             this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+        } else {
+            this.gameProfile = null;
+        }
+        if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
+            this.imageUrl = compound.getString(TAG_IMAGE_URL);
+        } else {
+            this.imageUrl = null;
         }
     }
     
@@ -392,6 +440,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         compound.setBoolean(TAG_RENDER_EXTRAS, this.renderExtras);
         compound.setBoolean(TAG_FLYING, this.flying);
         compound.setBoolean(TAG_VISIBLE, this.visible);
+        compound.setByte(TAG_TEXTURE_TYPE, (byte) this.textureType.ordinal());
         if (this.newProfile != null) {
             this.gameProfile = newProfile;
             this.newProfile = null;
@@ -400,6 +449,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             NBTTagCompound profileTag = new NBTTagCompound();
             NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
+        }
+        if (this.imageUrl != null) {
+            compound.setString(TAG_IMAGE_URL, this.imageUrl);
         }
     }
     
@@ -465,5 +517,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         newProfile = gameProfile;
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public static enum TextureType {
+        USER,
+        URL
     }
 }

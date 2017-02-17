@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;
-import java.util.HashSet;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
@@ -14,7 +13,6 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -33,6 +31,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequinTabSkinHair;
+import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
@@ -62,8 +61,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private static boolean isHalloween;
     private final static float SCALE = 0.0625F;
     private static long lastTextureBuild = 0;
-    private static long lastSkinDownload = 0;
-    private static final HashSet<String> downloadedSkins = new HashSet<String>();;
     
     private final ModelMannequin model;
     private MannequinFakePlayer mannequinFakePlayer;
@@ -176,22 +173,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         mc.mcProfiler.endStartSection("getTexture");
-        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
-        if (te.getGameProfile() != null) {
-            String name = te.getGameProfile().getName();
-            if (downloadedSkins.contains(name)) {
-                rl = AbstractClientPlayer.getLocationSkin(name);
-                AbstractClientPlayer.getDownloadImageSkin(rl, name);
-            } else {
-                if (lastSkinDownload + 100L < System.currentTimeMillis()) {
-                    lastSkinDownload = System.currentTimeMillis();
-                    rl = AbstractClientPlayer.getLocationSkin(name);
-                    AbstractClientPlayer.getDownloadImageSkin(rl, name);
-                    downloadedSkins.add(name);
-                }
-            }
-        }
-        
+        ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(te);
         
         mc.mcProfiler.endStartSection("textureBuild");
         
