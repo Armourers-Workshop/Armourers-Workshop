@@ -17,9 +17,6 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 
 public class RenderItemMannequin implements IItemRenderer {
     
-    private static final String TAG_OWNER = "owner";
-    private static final String TAG_IMAGE_URL = "imageUrl";
-    
     private final ModelMannequin modelMannequin;
     
     public RenderItemMannequin(ModelMannequin modelMannequin) {

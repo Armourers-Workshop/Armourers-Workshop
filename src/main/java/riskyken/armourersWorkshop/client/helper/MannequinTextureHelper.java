@@ -5,6 +5,8 @@ import java.util.HashSet;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ImageBufferDownload;
@@ -21,6 +23,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
+@SideOnly(Side.CLIENT)
 public final class MannequinTextureHelper {
     
     private static final String TAG_OWNER = "owner";
@@ -39,7 +42,7 @@ public final class MannequinTextureHelper {
         
         if (itemStack.hasTagCompound()) {
             NBTTagCompound compound = itemStack.getTagCompound();
-            if (compound.hasKey(TAG_OWNER, 10)) {
+            if (compound.hasKey(TAG_OWNER, Constants.NBT.TAG_COMPOUND)) {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
             }
             if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
