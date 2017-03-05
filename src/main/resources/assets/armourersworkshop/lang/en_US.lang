@@ -325,6 +325,7 @@ chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but yo
 chat.armourersworkshop:updateAvailable=Armourer's Workshop update %s is available.
 chat.armourersworkshop:updateDownload=[Download]
 chat.armourersworkshop:updateDownloadRollover=Click to goto the download page
+chat.armourersworkshop:devWarning=Warning you are using a development version of the Armourer's Workshop. Development versions are for testing only and not recommended for public use.
 
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
