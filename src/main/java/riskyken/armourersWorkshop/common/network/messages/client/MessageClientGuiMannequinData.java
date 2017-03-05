@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
 public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<MessageClientGuiMannequinData, IMessage> {
 
@@ -20,13 +21,15 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
     private String username;
     private boolean renderExtras;
     private boolean flying;
+    private boolean visible;
+    private TextureType textureType;
     
     public MessageClientGuiMannequinData() {
     }
     
     public MessageClientGuiMannequinData(float xOffset, float yOffset,
             float zOffset, int skinColour, int hairColour, String username,
-            boolean renderExtras, boolean flying) {
+            boolean renderExtras, boolean flying, boolean visible, TextureType textureType) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.zOffset = zOffset;
@@ -35,6 +38,8 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         this.username = username;
         this.renderExtras = renderExtras;
         this.flying = flying;
+        this.visible = visible;
+        this.textureType = textureType;
     }
 
 
@@ -48,6 +53,8 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         ByteBufUtils.writeUTF8String(buf, username);
         buf.writeBoolean(renderExtras);
         buf.writeBoolean(flying);
+        buf.writeBoolean(visible);
+        buf.writeByte(textureType.ordinal());
     }
     
     @Override
@@ -60,6 +67,8 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         username = ByteBufUtils.readUTF8String(buf);
         renderExtras = buf.readBoolean();
         flying = buf.readBoolean();
+        visible = buf.readBoolean();
+        textureType = TextureType.values()[buf.readByte()];
     }
 
     @Override
@@ -72,7 +81,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         if (container != null && container instanceof ContainerMannequin) {
             TileEntityMannequin tileEntity = ((ContainerMannequin)container).getTileEntity();
             tileEntity.gotUpdateFromClient(message.xOffset, message.yOffset, message.zOffset,
-                    message.skinColour, message.hairColour, message.username, message.renderExtras, message.flying);
+                    message.skinColour, message.hairColour, message.username, message.renderExtras, message.flying, message.visible, message.textureType);
         }
         return null;
     }

@@ -85,6 +85,8 @@ public class ClientProxy extends CommonProxy {
     private static boolean moreplayermodelsLoaded;
     private static boolean coloredLightsLoaded;
     private static boolean smartMovingLoaded;
+    private static boolean jrbaClientLoaded;
+    
     public static int renderPass;
     public static IIcon dyeBottleSlotIcon;
     
@@ -190,6 +192,10 @@ public class ClientProxy extends CommonProxy {
             smartMovingLoaded = true;
             ModLogger.log("Smart Moving support active");
         }
+        if(Loader.isModLoaded("jinryuufamilyc")) {
+            jrbaClientLoaded = true;
+            ModLogger.log("JRBA Client support active");
+        }
         if (moreplayermodelsLoaded & smartMovingLoaded) {
             ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop cannot support this.");
         }
@@ -216,6 +222,9 @@ public class ClientProxy extends CommonProxy {
                 return SkinRenderType.RENDER_EVENT;
             }
             if (coloredLightsLoaded & !smartMovingLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            if (jrbaClientLoaded) {
                 return SkinRenderType.RENDER_EVENT;
             }
             return SkinRenderType.MODEL_ATTACHMENT;

@@ -123,6 +123,7 @@ item.armourersworkshop:rollover.nopaint=&6No paint.
 item.armourersworkshop:rollover.settingsSaved=&6Settings Saved.
 item.armourersworkshop:rollover.noSettingsSaved=&cNo Settings Saved.
 item.armourersworkshop:rollover.user=&6User:&7 %s
+item.armourersworkshop:rollover.url=&6URL:&7 %s
 item.armourersworkshop:rollover.empty=&6Empty.
 item.armourersworkshop:rollover.openSettings=Sneak right click to open settings.
 
@@ -296,8 +297,11 @@ inventory.armourersworkshop:mannequin.label.rightLegRotation=Right Leg Rotation
 inventory.armourersworkshop:mannequin.label.isChild=Child Model?
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Extra Renders?
 inventory.armourersworkshop:mannequin.label.isFlying=Flying?
+inventory.armourersworkshop:mannequin.label.isVisible=Visible?
 inventory.armourersworkshop:mannequin.random=Random
 inventory.armourersworkshop:mannequin.reset=Reset
+inventory.armourersworkshop:mannequin.dropdown.user=User
+inventory.armourersworkshop:mannequin.dropdown.url=URL
 inventory.armourersworkshop:mannequin.set=Set
 inventory.armourersworkshop:mannequin.selectSkin=Select Skin
 inventory.armourersworkshop:mannequin.selectHair=Select Hair
@@ -322,6 +326,7 @@ chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but yo
 chat.armourersworkshop:updateAvailable=Armourer's Workshop update %s is available.
 chat.armourersworkshop:updateDownload=[Download]
 chat.armourersworkshop:updateDownloadRollover=Click to goto the download page
+chat.armourersworkshop:devWarning=Warning you are using a development version of the Armourer's Workshop. Development versions are for testing only and not recommended for public use.
 
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.

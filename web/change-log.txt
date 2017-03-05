@@ -1,3 +1,7 @@
+Build 0.42.5
+Fixed:
+	Client crash when a doll is placed.
+
 Build 0.42.4
 Fixed:
 	Dedicated server crash when mannequin is loaded.

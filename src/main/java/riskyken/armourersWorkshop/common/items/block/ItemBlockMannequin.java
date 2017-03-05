@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.items.block;
 
 import java.util.List;
 
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -9,13 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-
-import com.mojang.authlib.GameProfile;
 
 public class ItemBlockMannequin extends ModItemBlock {
     
     private static final String TAG_OWNER = "owner";
+    private static final String TAG_IMAGE_URL = "imageUrl";
     
     public ItemBlockMannequin(Block block) {
         super(block);
@@ -45,6 +47,11 @@ public class ItemBlockMannequin extends ModItemBlock {
                 gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
                 String user = TranslateUtils.translate("item.armourersworkshop:rollover.user", gameProfile.getName());
                 list.add(user);
+            }
+            if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
+                String imageUrl = compound.getString(TAG_IMAGE_URL);
+                String urlLine = TranslateUtils.translate("item.armourersworkshop:rollover.url", imageUrl);
+                list.add(urlLine);
             }
         }
         super.addInformation(stack, player, list, par4);

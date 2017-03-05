@@ -35,7 +35,7 @@ public class GuiMannequin extends GuiContainer {
     public GuiMannequinTabInventory tabInventory;
     public GuiMannequinTabOffset tabOffset;
     public GuiMannequinTabSkinHair tabSkinAndHair;
-    public GuiMannequinTabName tabName;
+    public GuiMannequinTabTexture tabTexture;
     public GuiMannequinTabExtraRenders tabExtraRenders;
     
     public GuiMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
@@ -49,14 +49,14 @@ public class GuiMannequin extends GuiContainer {
         tabRotations = new GuiMannequinTabRotations(1, this, inventoryName, tileEntity.getBipedRotations());
         tabOffset = new GuiMannequinTabOffset(2, this, inventoryName, tileEntity);
         tabSkinAndHair = new GuiMannequinTabSkinHair(3, this, tileEntity);
-        tabName = new GuiMannequinTabName(4, this, tileEntity);
+        tabTexture = new GuiMannequinTabTexture(4, this, tileEntity);
         tabExtraRenders = new GuiMannequinTabExtraRenders(5, this, inventoryName, tileEntity);
         
         tabList.add(tabInventory);
         tabList.add(tabRotations);
         tabList.add(tabOffset);
         tabList.add(tabSkinAndHair);
-        tabList.add(tabName);
+        tabList.add(tabTexture);
         tabList.add(tabExtraRenders);
     }
     

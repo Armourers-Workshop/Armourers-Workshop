@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
+import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -110,11 +111,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingSkinColour = true;
         }
         if (button == autoSkinButton) {
-            ResourceLocation rl = AbstractClientPlayer.locationStevePng;
-            if (tileEntity.getGameProfile() != null) {
-                rl = AbstractClientPlayer.getLocationSkin(tileEntity.getGameProfile().getName());
-                AbstractClientPlayer.getDownloadImageSkin(rl, tileEntity.getGameProfile().getName());
-            }
+            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
             skinColour = autoColourSkin(rl);
             ((GuiMannequin)parent).tabOffset.sendData();
         }
@@ -122,11 +119,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingHairColour = true;
         }
         if (button == autoHairButton) {
-            ResourceLocation rl = AbstractClientPlayer.locationStevePng;
-            if (tileEntity.getGameProfile() != null) {
-                rl = AbstractClientPlayer.getLocationSkin(tileEntity.getGameProfile().getName());
-                AbstractClientPlayer.getDownloadImageSkin(rl, tileEntity.getGameProfile().getName());
-            }
+            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
             hairColour = autoColourHair(rl);
             ((GuiMannequin)parent).tabOffset.sendData();
         }

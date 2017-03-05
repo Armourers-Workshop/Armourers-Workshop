@@ -27,6 +27,7 @@ public class ModClientFMLEventHandler {
     
     private static final String DOWNLOAD_URL = "http://minecraft.curseforge.com/mc-mods/229523-armourers-workshop/files";
     private boolean shownUpdateInfo = false;
+    private boolean showmDevWarning;
     public static float renderTickTime;
     public static int skinRendersThisTick = 0;
     public static int skinRenderLastTick = 0;
@@ -40,7 +41,6 @@ public class ModClientFMLEventHandler {
     
     public void onPlayerTickEndEvent() {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-        
         if (!shownUpdateInfo && UpdateCheck.updateFound) {
             shownUpdateInfo = true;
             ChatComponentText updateMessage = new ChatComponentText(TranslateUtils.translate("chat.armourersworkshop:updateAvailable", UpdateCheck.remoteModVersion) + " ");
@@ -51,6 +51,12 @@ public class ModClientFMLEventHandler {
             updateURL.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, DOWNLOAD_URL));
             updateMessage.appendSibling(updateURL);
             player.addChatMessage(updateMessage);
+        }
+        if (!showmDevWarning && LibModInfo.DEVELOPMENT_VERSION) {
+            ChatComponentText devWarning = new ChatComponentText(TranslateUtils.translate("chat.armourersworkshop:devWarning"));
+            devWarning.getChatStyle().setColor(EnumChatFormatting.RED);
+            player.addChatMessage(devWarning);
+            showmDevWarning = true;
         }
     }
     
