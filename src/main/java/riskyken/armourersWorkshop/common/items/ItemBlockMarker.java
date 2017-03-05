@@ -1,29 +1,36 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import java.util.ArrayList;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
+import riskyken.plushieWrapper.common.item.PlushieItemStack;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 
-public class ItemBlockMarker extends AbstractModItem {
+public class ItemBlockMarker extends AbstractModItemNew {
 
     public ItemBlockMarker() {
         super(LibItemNames.BLOCK_MARKER);
     }
     
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn,
-            BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        IBlockState blockState = worldIn.getBlockState(pos);
-        if (CubeRegistry.INSTANCE.isBuildingBlock(blockState.getBlock())) {
-            if (!worldIn.isRemote) {
-                /*
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(ArrayList<String> iconList) {
+        iconList.add(LibItemResources.BLOCK_MARKER);
+    }
+    
+    @Override
+    public boolean onItemUse(PlushieItemStack stack, PlushieEntityPlayer player, WorldPointer world,
+            BlockLocation blockLocation, int side, float hitX, float hitY, float hitZ) {
+        Block block = world.getBlock(blockLocation);
+        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
+            if (!world.isRemote()) {
                 int meta = world.getBlockMetadata(blockLocation);
                 int newMeta = side + 1;
                 if (newMeta == meta) {
@@ -32,10 +39,9 @@ public class ItemBlockMarker extends AbstractModItem {
                 } else {
                     world.setBlockMetaData(blockLocation, newMeta, 2);
                 }
-                */
             }
-            return EnumActionResult.PASS;
+            return true;
         }
-        return EnumActionResult.FAIL;
+        return false;
     }
 }

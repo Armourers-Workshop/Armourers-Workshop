@@ -12,9 +12,9 @@ import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiMiniArmourer extends GuiContainer {
@@ -33,7 +33,7 @@ public class GuiMiniArmourer extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        String guiName = tileEntity.getName();
+        String guiName = tileEntity.getInventoryName();
         buttonList.clear();
         
         buttonList.add(new GuiButtonExt(0, guiLeft + 58, guiTop + 53, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
@@ -42,10 +42,10 @@ public class GuiMiniArmourer extends GuiContainer {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, this.tileEntity.getName());
+        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, this.tileEntity.getInventoryName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
         
-        String labelBuildingAccess = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.buildingAccess");
+        String labelBuildingAccess = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.buildingAccess");
         this.fontRendererObj.drawSplitString(labelBuildingAccess, 5, 21, 170, 4210752);
     }
 

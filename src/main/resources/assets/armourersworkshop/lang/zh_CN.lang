@@ -3,6 +3,7 @@ tile.armourersworkshop:armourerBrain.name=时装工坊
 tile.armourersworkshop:miniArmourer.name=迷你工坊 - (未完成)
 tile.armourersworkshop:armourLibrary0.name=资源库
 tile.armourersworkshop:armourLibrary1.name=资源库 - (创造模式)
+tile.armourersworkshop:globalSkinLibrary.name=全球资源库 - (未完成)
 tile.armourersworkshop:colourable.name=造型方块
 tile.armourersworkshop:colourableGlowing.name=造型方块 (发光的)
 tile.armourersworkshop:colourableGlass.name=玻璃造型方块
@@ -12,21 +13,21 @@ tile.armourersworkshop:mannequin.name=模特
 tile.armourersworkshop:doll.name=娃娃模特
 tile.armourersworkshop:skinningTable.name=镶嵌工作台
 tile.armourersworkshop:dyeTable.name=配色工作台
-tile.armourersworkshop:skinnable.name=Skinnable Block
+tile.armourersworkshop:skinnable.name=神秘方块
 
 # Block flavour text
-tile.armourersworkshop:armourerBrain.flavour=让你来设计皮肤外观.
+tile.armourersworkshop:armourerBrain.flavour=制作时装用%n使用工具潜行+右键可以编辑范围内所有造型方块.
 tile.armourersworkshop:miniArmourer.flavour=未完成的.
 tile.armourersworkshop:armourLibrary0.flavour=使用模板进行读取和保存时装.
-tile.armourersworkshop:armourLibrary1.flavour=可以不使用模板就可以读取和保存.%n创造模式下.
-tile.armourersworkshop:colourable.flavour=自定义时装的基础构成块.%n(可染色)
-tile.armourersworkshop:colourableGlowing.flavour=发光的基础构成块!%n(可染色)
+tile.armourersworkshop:armourLibrary1.flavour=不使用模板就可以读取.%n创造模式下获得.
+tile.armourersworkshop:colourable.flavour=时装基础构成块.%n(可染色)
+tile.armourersworkshop:colourableGlowing.flavour=发光的基础构成块%n(可染色)
 tile.armourersworkshop:colourableGlass.flavour=半透明的基础构成块.%n(可染色)
-tile.armourersworkshop:colourableGlassGlowing.flavour=发光的半透明基础构成块!%n(可染色)
-tile.armourersworkshop:colourMixer.flavour=可以调色的方块.%n潜行加右键可以快速取色.
-tile.armourersworkshop:mannequin.flavour=在模特上预览你的成果!“null”是自带透明的皮肤
+tile.armourersworkshop:colourableGlassGlowing.flavour=发光的半透明基础构成块%n(可染色)
+tile.armourersworkshop:colourMixer.flavour=用于调色.%n潜行加右键可以快速取色.
+tile.armourersworkshop:mannequin.flavour=在模特上预览你的成果!%n命名为“Null”可以使模特隐身
 tile.armourersworkshop:doll.flavour=迷你模特!
-tile.armourersworkshop:skinningTable.flavour=给装备上镶嵌或移除时装.%n（移除的时装消失）
+tile.armourersworkshop:skinningTable.flavour=给装备上镶嵌或移除时装.%n(移除的时装消失)
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=空白模板
@@ -40,7 +41,7 @@ item.armourersworkshop:dodgeTool.name=减淡工具
 item.armourersworkshop:colourNoiseTool.name=随机颜色工具
 item.armourersworkshop:shadeNoiseTool.name=随机阴影工具
 item.armourersworkshop:mannequinTool.name=人体模型的工具
-item.armourersworkshop:guideBook.name=指南书
+item.armourersworkshop:guideBook.name=时装工坊说明书
 item.armourersworkshop:armourContainer.name=时装容器(未镶嵌)
 item.armourersworkshop:armourContainerHead.name=时装容器(头部)
 item.armourersworkshop:armourContainerChest.name=时装容器(上身)
@@ -53,24 +54,25 @@ item.armourersworkshop:blockMarker.name=标记工具
 item.armourersworkshop:dyeBottle.name=染料瓶
 item.armourersworkshop:blendingTool.name=混合工具
 item.armourersworkshop:armourersHammer.name=方块旋转锤
+item.armourersworkshop:debugTool.name=调试工具
 
 # Item flavour text
-item.armourersworkshop:equipmentSkinTemplate.1000.flavour=RiskyKen（mod作者）的礼物
-item.armourersworkshop:paintbrush.flavour=给一个块上色.
-item.armourersworkshop:paintRoller.flavour=给 3*3*1 的块上色.
-item.armourersworkshop:colourPicker.flavour=复制一个方块的颜色.
-item.armourersworkshop:burnTool.flavour=使一个块颜色更暗.
-item.armourersworkshop:dodgeTool.flavour=使一个块颜色更亮.
-item.armourersworkshop:colourNoiseTool.flavour=给一个方块随机上色（前提是方块有颜色）.
-item.armourersworkshop:shadeNoiseTool.flavour=给一个方块随机阴影.
-item.armourersworkshop:mannequinTool.flavour=保存和加载模型.%n右击确定设置.%n潜行右击可保存设置.
-item.armourersworkshop:guideBook.flavour=时装工坊的使用向导.
-item.armourersworkshop:armourContainer.flavour=创造模式才能使用的物品.%n允许将时装穿到NPC身上.
-item.armourersworkshop:soap.flavour=通过镶嵌工作台来清除物品镶嵌的时装!
-item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱和度 亮度以及染色类型)%n不影响阴影.
-item.armourersworkshop:blockMarker.flavour=在弓的时装制作时添加一个箭尾位置的标记.%n注：弓的每个阶段上只能也必须有一个标记才算制作成功.
-item.armourersworkshop:dyeBottle.flavour=用来给时装改变配色.
-item.armourersworkshop:armourersHammer.flavour=用来旋转时装方块和模特。
+item.armourersworkshop:equipmentSkinTemplate.1000.flavour=RiskyKen(mod作者)的礼物
+item.armourersworkshop:paintbrush.flavour=给一个造型方块上色.
+item.armourersworkshop:paintRoller.flavour=默认给 3*3*1 的造型方块上色.
+item.armourersworkshop:colourPicker.flavour=从一个造型方块取色.
+item.armourersworkshop:burnTool.flavour=使一个造型方块明度更低.
+item.armourersworkshop:dodgeTool.flavour=使一个造型方块明度更高.
+item.armourersworkshop:colourNoiseTool.flavour=给一个造型方块随机色相.
+item.armourersworkshop:shadeNoiseTool.flavour=给一个造型方块随机明度.
+item.armourersworkshop:mannequinTool.flavour=保存和加载模型动作.%n右击加载动作.%n潜行右击保存动作.
+item.armourersworkshop:guideBook.flavour=各种使用方法说明.
+item.armourersworkshop:armourContainer.flavour=创造模式才能获得.%n允许将时装穿到NPC身上%n只作用于装备不包含武器.
+item.armourersworkshop:soap.flavour=通过镶嵌工作台来洗掉物品内镶嵌的时装!
+item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱和度 亮度以及染色类型).
+item.armourersworkshop:blockMarker.flavour=在弓,翅膀,方块的时装制作时需要用到.%n注：弓制作时标记箭尾的位置，每个阶段上只能也必须有一个标记.%n注：翅膀制作时标记左边翅膀和右边翅膀的旋转轴.%n注：方块制作时标记坐在哪个位置.
+item.armourersworkshop:dyeBottle.flavour=给时装改变配色.
+item.armourersworkshop:armourersHammer.flavour=旋转时装方块，模特和床。
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6强度:&7 %s
@@ -127,7 +129,7 @@ paintType.armourersworkshop:dye_5.name=类型5
 paintType.armourersworkshop:dye_6.name=类型6
 paintType.armourersworkshop:dye_7.name=类型7
 paintType.armourersworkshop:dye_8.name=类型8
-paintType.armourersworkshop:none.name=空
+paintType.armourersworkshop:none.name=透明
 paintType.armourersworkshop:skin.name=皮肤
 paintType.armourersworkshop:hair.name=头发
 
@@ -217,8 +219,10 @@ inventory.armourersworkshop:armourerBrain.set=设置
 inventory.armourersworkshop:armourerBrain.clear=清除
 inventory.armourersworkshop:armourerBrain.westToEast=西到东
 inventory.armourersworkshop:armourerBrain.eastToWest=东到西
-inventory.armourersworkshop:armourerBrain.glowing=是否发光?
-inventory.armourersworkshop:armourerBrain.ladder=是否为梯子?
+inventory.armourersworkshop:armourerBrain.glowing=是否发光
+inventory.armourersworkshop:armourerBrain.ladder=是否为梯子
+inventory.armourersworkshop:armourerBrain.noCollision=是否能被人穿过
+inventory.armourersworkshop:armourerBrain.seat=是否为椅子
 
 inventory.armourersworkshop:colourMixer.label.hue=色相
 inventory.armourersworkshop:colourMixer.label.saturation=饱和度
@@ -270,14 +274,14 @@ inventory.armourersworkshop:miniArmourer.label.buildingAccess=潜行右键迷你
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=没有更多步撤销
 chat.armourersworkshop:undo.undoing=正在撤销
-chat.armourersworkshop:inventoryFull=你的包满了
-chat.armourersworkshop:inventoryGiftFail=有人试图给你一份礼物,但你没有地方放!
+chat.armourersworkshop:inventoryFull=你的背包满了
+chat.armourersworkshop:inventoryGiftFail=你收到了一份礼物,但你没有地方放!
 chat.armourersworkshop:updateAvailable=时装工坊 %s 已经可以更新.
 chat.armourersworkshop:updateDownload=[下载]
 chat.armourersworkshop:updateDownloadRollover=点击打开下载页面
 
 # Death Messages
-death.attack.victorious=%1$s 被皇冠刺死了
+death.attack.victorious=%1$s mewo mewo mewo？？？
 
 # Commands
 commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setSkinColumnCount> <player> [skinName | value] 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模特数据| 设置皮肤栏数> <玩家名> [时装名 | 数值]
@@ -297,7 +301,7 @@ book.armourersworkshop:guideBook.contents.name=内容
 
 # Chapter 2
 book.armourersworkshop:guideBook.introduction.name=介绍
-book.armourersworkshop:guideBook.introduction.paragraph1=注: 这本书尚未完成.&p欢迎查看时装工坊指导大全.&p这本书将帮你学会使用时装制造.
+book.armourersworkshop:guideBook.introduction.paragraph1=注: 这本书尚未完成.&p欢迎查看时装工坊指导大全.&p这本书将帮你认识时装的正确食用方法.
 book.armourersworkshop:guideBook.introduction.paragraph2=时装制作会是你拥有独一无二的武器和衣服
 
 # Chapter 3
@@ -324,3 +328,10 @@ book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=未完成
 # Chapter 7
 book.armourersworkshop:guideBook.recipes.name=合成表
 
+# Chapter 8
+book.armourersworkshop:guideBook.credits.name=制作组
+book.armourersworkshop:guideBook.credits.programing=程序
+book.armourersworkshop:guideBook.credits.premade Skins=时装预制
+book.armourersworkshop:guideBook.credits.textures=材质
+book.armourersworkshop:guideBook.credits.sound=声音
+book.armourersworkshop:guideBook.credits.localisations=翻译

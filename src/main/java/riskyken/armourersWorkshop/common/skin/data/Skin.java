@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkin;
@@ -41,6 +41,10 @@ public class Skin implements ISkin {
     public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
     public static final String KEY_WINGS_IDLE_SPEED = "wingsIdleSpeed";
     public static final String KEY_WINGS_FLYING_SPEED = "wingsFlyingSpeed";
+
+    public static final String KEY_ARMOUR_OVERRIDE = "armourOverride";
+    
+    public static final String KEY_FILE_NAME = "fileName";
     
     private SkinProperties properties;
     private ISkinType equipmentSkinType;

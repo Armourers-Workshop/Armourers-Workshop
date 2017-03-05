@@ -2,41 +2,37 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import java.util.List;
 
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 
 public class BlockSkinLibrary extends AbstractModBlockContainer {
-    
-    public static final PropertyEnum<EnumType> TYPE = PropertyEnum.<EnumType>create("type", EnumType.class);
-    
+
     public BlockSkinLibrary() {
         super(LibBlockNames.ARMOUR_LIBRARY);
     }
     
     @Override
-    protected ItemBlock getItemBlock() {
-        return new ModItemBlockWithMetadata(this);
+    public Block setBlockName(String name) {
+        GameRegistry.registerBlock(this, ModItemBlockWithMetadata.class, "block." + name);
+        return super.setBlockName(name);
     }
     
     @Override
@@ -47,73 +43,68 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     }
     
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        UtilBlocks.dropInventoryBlocks(worldIn, pos);
-        super.breakBlock(worldIn, pos, state);
+    public int damageDropped(int meta) {
+        return meta;
     }
     
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote) {
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.ARMOUR_LIBRARY, worldIn, pos.getX(), pos.getY(), pos.getZ());
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        BlockUtils.dropInventoryBlocks(world, x, y, z);
+        super.breakBlock(world, x, y, z, block, meta);
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!world.isRemote) {
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ARMOUR_LIBRARY, world, x, y, z);
         }
         return true;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private IIcon[] sideIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon[] bottomIcon;
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerBlockIcons(IIconRegister register) {
+        blockIcon = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_TOP);
+        
+        sideIcon = new IIcon[2];
+        bottomIcon = new IIcon[2];
+        sideIcon[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_SIDE);
+        bottomIcon[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_BOTTOM);
+        sideIcon[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_SIDE);
+        bottomIcon[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_BOTTOM);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIcon(int side, int meta) {
+        if (side == 1) {
+            return blockIcon;
+        }
+        
+        if (side == 0 & meta == 0) {
+            return bottomIcon[0];
+        }
+        if (side == 0 & meta == 1) {
+            return bottomIcon[1];
+        }
+        
+        if (side > 1 & meta == 0) {
+            return sideIcon[0];
+        }
+        if (side > 1 & meta == 1) {
+            return sideIcon[1];
+        }
+        
+        return null;
     }
     
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinLibrary();
-    }
-    
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
-    
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {TYPE});
-    }
-    
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        if (state.getValue(TYPE) == EnumType.CREATIVE) {
-            return 1;
-        }
-        return 0;
-    }
-    
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        switch (meta) {
-        case 0:
-            return this.blockState.getBaseState().withProperty(TYPE, EnumType.NORMAL);
-        case 1:
-            return this.blockState.getBaseState().withProperty(TYPE, EnumType.CREATIVE);
-        default:
-            return getDefaultState();
-        }
-    }
-    
-    public static enum EnumType implements IStringSerializable {
-        NORMAL("normal"),
-        CREATIVE("creative");
-
-        private final String name;
-        
-        private EnumType(String name) {
-            this.name = name;
-        }
-        
-        @Override
-        public String toString() {
-            return this.name;
-        }
-        
-        @Override
-        public String getName() {
-            return this.name;
-        }
     }
 }

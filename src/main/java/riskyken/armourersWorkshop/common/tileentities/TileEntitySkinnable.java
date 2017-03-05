@@ -1,23 +1,27 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraft.block.state.IBlockState;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
-public class TileEntitySkinnable extends ModTileEntity {
+public class TileEntitySkinnable extends TileEntity {
 
     private static final String TAG_HAS_SKIN = "hasSkin";
 
@@ -41,7 +45,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     public void setSkinPointer(SkinPointer skinPointer) {
         this.skinPointer = skinPointer;
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
@@ -51,9 +55,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         
     }
 
-    public AxisAlignedBB getAABBForBlock(IBlockAccess world, IBlockState state) {
-        return state.getBlock().getBoundingBox(state, world, getPos());
-        /*
+    public void setBoundsOnBlock(Block block) {
         if (haveBlockBounds) {
             block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
             return;
@@ -88,11 +90,10 @@ public class TileEntitySkinnable extends ModTileEntity {
             }
         }
         block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
-        */
     }
 
     private void rotateBlockBounds() {
-        EnumFacing dir = null;
+        ForgeDirection dir = ForgeDirection.UNKNOWN;
         int meta = getBlockMetadata() % 4;
         
         float oldMinX = minX;
@@ -101,16 +102,16 @@ public class TileEntitySkinnable extends ModTileEntity {
         float oldMaxZ = maxZ;
         
         if (meta == 0) {
-            dir = EnumFacing.SOUTH;
+            dir = ForgeDirection.SOUTH;
         }
         if (meta == 1) {
-            dir = EnumFacing.WEST;
+            dir = ForgeDirection.WEST;
         }
         if (meta == 2) {
-            dir = EnumFacing.NORTH;
+            dir = ForgeDirection.NORTH;
         }
         if (meta == 3) {
-            dir = EnumFacing.EAST;
+            dir = ForgeDirection.EAST;
         }
         
         switch (dir) {
@@ -147,31 +148,30 @@ public class TileEntitySkinnable extends ModTileEntity {
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
+    public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return compound;
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, compound);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.func_148857_g();
+        readFromNBT(compound);
     }
     
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), getUpdateTag());
-    }
-
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        NBTTagCompound compound = pkt.getNbtCompound();
+    public boolean canUpdate() {
+        return false;
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setBoolean(TAG_HAS_SKIN, hasSkin());
         if (hasSkin()) {
             skinPointer.writeToCompound(compound);
         }
-        return compound;
     }
 
     @Override
@@ -188,7 +188,7 @@ public class TileEntitySkinnable extends ModTileEntity {
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos());
+        return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
     }
     
     @Override
@@ -198,11 +198,11 @@ public class TileEntitySkinnable extends ModTileEntity {
 
     public class SkinnableBlockData {
         
-        public final BlockPos blockPos;
+        public final BlockLocation blockLocation;
         public final SkinPointer skinPointer;
         
-        public SkinnableBlockData(BlockPos blockPos, SkinPointer skinPointer) {
-            this.blockPos = blockPos;
+        public SkinnableBlockData(BlockLocation blockLocation, SkinPointer skinPointer) {
+            this.blockLocation = blockLocation;
             this.skinPointer = skinPointer;
         }
     }

@@ -1,8 +1,22 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-public class RenderItemMannequin /*implements IItemRenderer*/ {/*
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.client.IItemRenderer;
+import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
+import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
+import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+
+public class RenderItemMannequin implements IItemRenderer {
     
-    private static final String TAG_OWNER = "owner";
     private final ModelMannequin modelMannequin;
     
     public RenderItemMannequin(ModelMannequin modelMannequin) {
@@ -78,28 +92,13 @@ public class RenderItemMannequin /*implements IItemRenderer*/ {/*
             break;
         }
         
-        EntityTextureInfo skinInfo = null;
-        
-        GameProfile gameProfile = null;
-        
-        if (item.hasTagCompound()) {
-            NBTTagCompound compound = item.getTagCompound();
-            if (compound.hasKey(TAG_OWNER, 10)) {
-                gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
-            }
-        }
+        ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(item);
+        Minecraft.getMinecraft().renderEngine.bindTexture(rl);
         
         if (item.getItem() == Item.getItemFromBlock(ModBlocks.doll)) {
             float dollScale = 0.5F;
             GL11.glScalef(dollScale, dollScale, dollScale);
         }
-        
-        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
-        if (gameProfile != null) {
-            rl = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
-            AbstractClientPlayer.getDownloadImageSkin(rl, gameProfile.getName());
-        }
-        Minecraft.getMinecraft().renderEngine.bindTexture(rl);
         
         float scale = 0.0625F;
         GL11.glColor3f(1F, 1F, 1F);
@@ -109,5 +108,5 @@ public class RenderItemMannequin /*implements IItemRenderer*/ {/*
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
-*/
+
 }

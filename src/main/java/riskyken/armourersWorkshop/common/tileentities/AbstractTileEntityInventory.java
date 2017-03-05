@@ -4,11 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 
-public abstract class AbstractTileEntityInventory extends ModTileEntity implements IInventory {
+public abstract class AbstractTileEntityInventory extends TileEntity implements IInventory {
 
     private static final String TAG_ITEMS = "items";
     protected final ItemStack[] items;
@@ -41,11 +40,11 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
         }
         return itemstack;
     }
-    
+
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack item = getStackInSlot(index);
-        setInventorySlotContents(index, null);
+    public ItemStack getStackInSlotOnClosing(int i) {
+        ItemStack item = getStackInSlot(i);
+        setInventorySlotContents(i, null);
         return item;
     }
 
@@ -59,13 +58,13 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     }
     
     @Override
-    public void openInventory(EntityPlayer player) {}
+    public void openInventory() {}
+
+    @Override
+    public void closeInventory() {}
     
     @Override
-    public void closeInventory(EntityPlayer player) {}
-    
-    @Override
-    public boolean hasCustomName() {
+    public boolean hasCustomInventoryName() {
         return false;
     }
 
@@ -76,7 +75,7 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     
     @Override
     public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-        return entityplayer.getDistanceSq(pos) <= 64;
+        return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) <= 64;
     }
 
     @Override
@@ -85,10 +84,9 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     }
     
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeItemsToNBT(compound);
-        return compound;
     }
     
     @Override
@@ -117,32 +115,5 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     
     public void readItemsFromNBT(NBTTagCompound compound) {
         NBTHelper.readStackArrayFromNBT(compound, TAG_ITEMS, items);
-    }
-    
-    @Override
-    public void clear() {
-    }
-    
-    @Override
-    public ITextComponent getDisplayName() {
-        return new TextComponentString(getName());
-    }
-    
-    @Override
-    public int getField(int id) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-    
-    @Override
-    public int getFieldCount() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-    
-    @Override
-    public void setField(int id, int value) {
-        // TODO Auto-generated method stub
-        
     }
 }

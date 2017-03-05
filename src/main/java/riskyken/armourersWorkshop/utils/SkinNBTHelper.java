@@ -6,6 +6,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
 public class SkinNBTHelper {
@@ -107,8 +108,13 @@ public class SkinNBTHelper {
         addSkinDataToStack(stack, skinData);
     }
     
-    public static void addSkinDataToStack(ItemStack stack, ISkinType skinType, int skinId, boolean lockSkin) {
-        SkinPointer skinData = new SkinPointer(skinType, skinId, lockSkin);
+    public static void addSkinDataToStack(ItemStack stack, ISkinType skinType, int skinId, boolean lockSkin, ISkinDye skinDye) {
+        SkinPointer skinData;
+        if (skinDye != null) {
+            skinData = new SkinPointer(skinType, skinId, skinDye, lockSkin);
+        } else {
+            skinData = new SkinPointer(skinType, skinId, lockSkin);
+        }
         addSkinDataToStack(stack, skinData);
     }
     
@@ -165,28 +171,28 @@ public class SkinNBTHelper {
     public static ItemStack makeEquipmentSkinStack(Skin equipmentItemData) {
         ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
+        addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false, null);
         return stack;
     }
     
     public static ItemStack makeEquipmentSkinStack(SkinPointer skinPointer) {
         ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, skinPointer.getSkinType(), skinPointer.getSkinId(), false);
+        addSkinDataToStack(stack, skinPointer.getSkinType(), skinPointer.getSkinId(), false, new SkinDye(skinPointer.getSkinDye()));
         return stack;
     }
     
     public static ItemStack makeArmouerContainerStack(Skin equipmentItemData) {
-        ItemStack stack = new ItemStack(ModItems.armourContainer[3 - equipmentItemData.getSkinType().getEntityEquipmentSlot().getIndex()], 1);
+        ItemStack stack = new ItemStack(ModItems.armourContainer[equipmentItemData.getSkinType().getVanillaArmourSlotId()], 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false);
+        addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false, null);
         return stack;
     }
     
     public static ItemStack makeArmouerContainerStack(SkinPointer skinPointer) {
-        ItemStack stack = new ItemStack(ModItems.armourContainer[3 - skinPointer.getSkinType().getEntityEquipmentSlot().getIndex()], 1);
+        ItemStack stack = new ItemStack(ModItems.armourContainer[skinPointer.getSkinType().getVanillaArmourSlotId()], 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, skinPointer.getSkinType(), skinPointer.skinId, false);
+        addSkinDataToStack(stack, skinPointer.getSkinType(), skinPointer.skinId, false, new SkinDye(skinPointer.getSkinDye()));
         return stack;
     }
     

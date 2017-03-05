@@ -15,13 +15,12 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public final class SkinHelper {
     /*
@@ -31,7 +30,7 @@ public final class SkinHelper {
     
     public static BufferedImage getBufferedImageSkin(AbstractClientPlayer player) {
         BufferedImage bufferedImage = null;
-        ResourceLocation skinloc = DefaultPlayerSkin.getDefaultSkinLegacy();
+        ResourceLocation skinloc = AbstractClientPlayer.locationStevePng;
         InputStream inputStream = null;
         Minecraft mc = Minecraft.getMinecraft();
         skinloc = player.getLocationSkin();
@@ -77,14 +76,14 @@ public final class SkinHelper {
     
     public static BufferedImage getBufferedImageSkin(GameProfile gameProfile) {
         BufferedImage bufferedImage = null;
-        ResourceLocation skinloc = DefaultPlayerSkin.getDefaultSkinLegacy();
+        ResourceLocation skinloc = AbstractClientPlayer.locationStevePng;
         InputStream inputStream = null;
         Minecraft mc = Minecraft.getMinecraft();
-        Map map = mc.getSkinManager().loadSkinFromCache(gameProfile);
+        Map map = mc.func_152342_ad().func_152788_a(gameProfile);
         
         try {
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                skinloc = mc.getSkinManager().loadSkin((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
+                skinloc = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
                 ITextureObject skintex = mc.getTextureManager().getTexture(skinloc);
                 
                 if (skintex instanceof ThreadDownloadImageData) {
@@ -109,7 +108,7 @@ public final class SkinHelper {
     
     public static BufferedImage getBufferedImageSkinNew(GameProfile gameProfile) {
         BufferedImage bufferedImage = null;
-        ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
+        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
         
         if (gameProfile != null) {
             rl = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
@@ -118,7 +117,7 @@ public final class SkinHelper {
         bufferedImage = getBuffFromResourceLocation(rl);
         
         if (bufferedImage == null) {
-            bufferedImage = getBuffFromResourceLocation(DefaultPlayerSkin.getDefaultSkinLegacy());
+            bufferedImage = getBuffFromResourceLocation(AbstractClientPlayer.locationStevePng);
         }
         return bufferedImage;
     }
@@ -144,7 +143,7 @@ public final class SkinHelper {
     }
     
     public static void bindPlayersNormalSkin(GameProfile gameProfile) {
-        ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
+        ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
         if (gameProfile != null) {
             resourcelocation = getSkinResourceLocation(gameProfile, MinecraftProfileTexture.Type.SKIN);
         }
@@ -152,12 +151,12 @@ public final class SkinHelper {
     }
     
     public static ResourceLocation getSkinResourceLocation(GameProfile gameProfile, MinecraftProfileTexture.Type type) {
-        ResourceLocation skin = DefaultPlayerSkin.getDefaultSkinLegacy();
+        ResourceLocation skin = AbstractClientPlayer.locationStevePng;
         if (gameProfile != null) {
             Minecraft mc = Minecraft.getMinecraft();
-            Map<?, ?> map = mc.getSkinManager().loadSkinFromCache(gameProfile);
+            Map<?, ?> map = mc.func_152342_ad().func_152788_a(gameProfile);
             if (map.containsKey(type)) {
-                skin = mc.getSkinManager().loadSkin((MinecraftProfileTexture)map.get(type), type);
+                skin = mc.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(type), type);
             }
         }
         return skin;

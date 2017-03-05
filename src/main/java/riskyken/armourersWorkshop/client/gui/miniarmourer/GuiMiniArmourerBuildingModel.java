@@ -1,19 +1,18 @@
 package riskyken.armourersWorkshop.client.gui.miniarmourer;
 
 import java.awt.Color;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -21,7 +20,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.bake.FaceRenderer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.MiniCube;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
@@ -33,6 +32,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
 
+@SideOnly(Side.CLIENT)
 public class GuiMiniArmourerBuildingModel {
 
     private final Minecraft mc;
@@ -117,8 +117,8 @@ public class GuiMiniArmourerBuildingModel {
         
         GL11.glScalef(-1, -1, 1);
         drawBuildingCubes(true);
-        Color c = getColourAtPos(Mouse.getX(), Mouse.getY());
-        hoverCubeId = getIdFromColour(c);
+        Color c = GuiMiniArmourerHelper.getColourAtPos(Mouse.getX(), Mouse.getY());
+        hoverCubeId = GuiMiniArmourerHelper.getIdFromColour(c);
         
         if (Mouse.isButtonDown(0)) {
             if (!mouseLeftIsDown) {
@@ -190,15 +190,15 @@ public class GuiMiniArmourerBuildingModel {
                 MiniCube tarCube = renderCubes.get(cubeId - 1);
                 
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
-                EnumFacing dir = getDirectionForCubeFace(cubeFace);
-                newCube.setX((byte) (tarCube.getX() + dir.getFrontOffsetX()));
-                newCube.setY((byte) (tarCube.getY() + dir.getFrontOffsetY()));
-                newCube.setZ((byte) (tarCube.getZ() + dir.getFrontOffsetZ()));
+                ForgeDirection dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
+                newCube.setX((byte) (tarCube.getX() + dir.offsetX));
+                newCube.setY((byte) (tarCube.getY() + dir.offsetY));
+                newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
                 IRenderBuffer buff = RenderBridge.INSTANCE;
-                buff.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+                buff.startDrawingQuads();
                 renderArmourBlock((byte)newCube.getX(), (byte)newCube.getY(), (byte)newCube.getZ(), newCube.getColour(), scale, true);
                 buff.draw();
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -243,8 +243,7 @@ public class GuiMiniArmourerBuildingModel {
     
     private void renderArmourBlock(byte x, byte y, byte z, ICubeColour colour, float scale, boolean b) {
         for (int i = 0; i < 6; i++) {
-            EnumFacing face = EnumFacing.values()[i];
-            FaceRenderer.renderFace(x, y, z, colour.getRed(face), colour.getGreen(face), colour.getBlue(face), (byte)255, (byte)i, false, (byte)1);
+            FaceRenderer.renderFace(x, y, z, colour.getRed(i), colour.getGreen(i), colour.getBlue(i), (byte)255, (byte)i, false, (byte)1);
         }
     }
 
@@ -255,10 +254,10 @@ public class GuiMiniArmourerBuildingModel {
             if (button == 0) {
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
                 newCube.setColour(0xFFFFFFFF);
-                EnumFacing dir = getDirectionForCubeFace(cubeFace);
-                newCube.setX((byte) (tarCube.getX() + dir.getFrontOffsetX()));
-                newCube.setY((byte) (tarCube.getY() + dir.getFrontOffsetY()));
-                newCube.setZ((byte) (tarCube.getZ() + dir.getFrontOffsetZ()));
+                ForgeDirection dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
+                newCube.setX((byte) (tarCube.getX() + dir.offsetX));
+                newCube.setY((byte) (tarCube.getY() + dir.offsetY));
+                newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
                 cubes.add(newCube);
                 //newCube.setId((byte) 0);
                 
@@ -333,7 +332,7 @@ public class GuiMiniArmourerBuildingModel {
         
         renderCubes.addAll(cubes);
         IRenderBuffer buff = RenderBridge.INSTANCE;
-        buff.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        buff.startDrawingQuads();
         for (int i = 0; i < renderCubes.size(); i++) {
             MiniCube cube = renderCubes.get(i);
             if (cube != null) {
@@ -343,12 +342,12 @@ public class GuiMiniArmourerBuildingModel {
                 }
                 ICubeColour colour = new CubeColour();
                 if (fake) {
-                    colour.setColour(getColourFromId(colourId).getRGB(), EnumFacing.values()[0]);
-                    colour.setColour(getColourFromId(colourId + 1).getRGB(), EnumFacing.values()[1]);
-                    colour.setColour(getColourFromId(colourId + 2).getRGB(), EnumFacing.values()[2]);
-                    colour.setColour(getColourFromId(colourId + 3).getRGB(), EnumFacing.values()[3]);
-                    colour.setColour(getColourFromId(colourId + 4).getRGB(), EnumFacing.values()[4]);
-                    colour.setColour(getColourFromId(colourId + 5).getRGB(), EnumFacing.values()[5]);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId).getRGB(), 0);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 1).getRGB(), 1);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 2).getRGB(), 2);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 3).getRGB(), 3);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 4).getRGB(), 4);
+                    colour.setColour(GuiMiniArmourerHelper.getColourFromId(colourId + 5).getRGB(), 5);
                 } else {
                     colour = cube.getCubeColour();
                 }
@@ -367,66 +366,5 @@ public class GuiMiniArmourerBuildingModel {
             GL11.glEnable(GL11.GL_LIGHTING);
         }
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-    }
-    
-    private Color getColourFromId(int id) {
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        while (id > 255 * 256) {
-            b += 1;
-            id -= 256 * 256;
-        }
-        while (id > 255) {
-            g += 1;
-            id -= 256;
-        }
-        while (id > 0) {
-            r += 1;
-            id -= 1;
-        }
-        return new Color(r, g, b);
-    }
-    
-    private Color getColourAtPos(int x, int y) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
-        GL11.glReadPixels(x, y, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, buffer);
-        int r = Math.round(buffer.get() * 255);
-        int g = Math.round(buffer.get() * 255);
-        int b = Math.round(buffer.get() * 255);
-        return new Color(r,g,b);
-    }
-    
-    private int getIdFromColour(Color colour) {
-        Color c = new Color(colour.getRGB());
-        int id = c.getRed();
-        id += c.getGreen() * 256;
-        id += c.getBlue() * 256 * 256;
-        return id;
-    }
-    
-    private EnumFacing getDirectionForCubeFace(int cubeFace) {
-        EnumFacing dir = null;
-        switch (cubeFace) {
-        case 1:
-            dir = EnumFacing.EAST;
-            break;
-        case 0:
-            dir = EnumFacing.WEST;
-            break;
-        case 4:
-            dir = EnumFacing.DOWN;
-            break;
-        case 5:
-            dir = EnumFacing.UP;
-            break;
-        case 3:
-            dir = EnumFacing.NORTH;
-            break;
-        case 2:
-            dir = EnumFacing.SOUTH;
-            break;
-        }
-        return dir;
     }
 }

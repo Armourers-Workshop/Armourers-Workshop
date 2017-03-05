@@ -4,10 +4,17 @@ import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.block.SoundType;
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.EntitySpellParticleFX;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -15,55 +22,49 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
 public class BlockDoll extends AbstractModBlockContainer {
-    
-    private static final AxisAlignedBB DOLL_AABB = new AxisAlignedBB(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
+
     private static final String TAG_OWNER = "owner";
     private final boolean isValentins;
     
     public BlockDoll() {
-        super(LibBlockNames.DOLL, Material.SAND, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
+        super(LibBlockNames.DOLL, Material.rock, soundTypeMetal, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
+        setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
     }
     
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return DOLL_AABB;
+    public Block setBlockName(String name) {
+        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
+        return super.setBlockName(name);
     }
     
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity te = worldIn.getTileEntity(pos);
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityMannequin) {
-            int l = MathHelper.floor_double((double)(placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
+            int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
             ((TileEntityMannequin)te).setRotation(l);
             
             if (stack.hasTagCompound()) {
                 NBTTagCompound compound = stack.getTagCompound();
                 GameProfile gameProfile = null;
                 if (compound.hasKey(TAG_OWNER, 10)) {
-                    gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
+                    gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
                     ((TileEntityMannequin)te).setGameProfile(gameProfile);
                 }
             }
@@ -71,43 +72,36 @@ public class BlockDoll extends AbstractModBlockContainer {
         }
     }
     
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-    
     @SideOnly(Side.CLIENT)
     @Override
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
         if (isValentins) {
-            if (rand.nextFloat() * 100 > 80) {
-                //world.spawnParticle("heart", x + 0.2D + rand.nextFloat() * 0.6F, y + 1D, z + 0.2D + rand.nextFloat() * 0.6F, 0, 0, 0);
+            if (random.nextFloat() * 100 > 80) {
+                world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
             }
         }
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity != null && tileEntity instanceof TileEntityMannequin) {
             TileEntityMannequin te = (TileEntityMannequin) tileEntity;
             if (te.isRenderExtras()) {
                 if (te.hasSpecialRender()) {
-                    /*
                     EntityFX entityfx = new EntitySpellParticleFX(world,  x + random.nextFloat() * 1F, y, z + random.nextFloat() * 1F, 0, 0, 0);
                     ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
                     float[] colour = te.getSpecialRenderColour();
                     entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
                     Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
-                    */
                 }
             }
         }
     }
     
     @Override
-    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
         if (world.isRemote) {
             return false;
         }
         
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityMannequin) {
             int rotation = ((TileEntityMannequin)te).getRotation();
             rotation++;
@@ -120,14 +114,19 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
     
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
         ItemStack stack = new ItemStack(ModBlocks.doll, 1);
-        TileEntity te = world.getTileEntity(pos);;
+        int meta = world.getBlockMetadata(x, y, z);
+        int yOffset = 0;
+        if (meta == 1) {
+            yOffset = -1;
+        }
+        TileEntity te = world.getTileEntity(x, y + yOffset, z);;
         if (te != null && te instanceof TileEntityMannequin) {
             TileEntityMannequin teMan = (TileEntityMannequin) te;
             if (teMan.getGameProfile() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, teMan.getGameProfile());
+                NBTUtil.func_152460_a(profileTag, teMan.getGameProfile());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
@@ -137,46 +136,51 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
+    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
         return true;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
+    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
         return true;
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!playerIn.canPlayerEdit(pos, side, heldItem)) {
+    public void registerBlockIcons(IIconRegister register) {
+        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
+    }
+    
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
             return false;
         }
-        if (!worldIn.isRemote) {
-            if (heldItem != null && heldItem.getItem() == ModItems.mannequinTool) {
+        if (!world.isRemote) {
+            ItemStack stack = player.getCurrentEquippedItem();
+            if (stack != null && stack.getItem() == ModItems.mannequinTool) {
                 return false;
             }
-            if (heldItem != null && heldItem.getItem() == Items.NAME_TAG) {
-                TileEntity te = worldIn.getTileEntity(pos);;
+            if (stack != null && stack.getItem() == Items.name_tag) {
+                TileEntity te = world.getTileEntity(x, y, z);;
                 if (te != null && te instanceof TileEntityMannequin) {
-                    if (heldItem.getItem() == Items.NAME_TAG) {
-                        ((TileEntityMannequin)te).setOwner(heldItem);
+                    if (stack.getItem() == Items.name_tag) {
+                        ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
                     }
                 }
             } else {
-                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN,
-                        worldIn, pos.getX(), pos.getY(), pos.getZ());
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y, z);
             }
         }
-        if (heldItem != null && heldItem.getItem() == ModItems.mannequinTool) {
+        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
             return false;
         }
         return true;
     }
     
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random) {
+    public int quantityDropped(int meta, int fortune, Random random) {
         return 0;
     }
 
@@ -186,7 +190,22 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
     
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+    
+    @Override
+    public boolean isNormalCube() {
+        return false;
+    }
+    
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+    
+    @Override
+    public int getRenderType() {
+        return -1;
     }
 }

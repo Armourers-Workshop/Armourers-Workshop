@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.Arrays;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 
 public class CubeColour implements ICubeColour {
@@ -57,23 +56,23 @@ public class CubeColour implements ICubeColour {
     }
     
     @Override
-    public byte getRed(EnumFacing side) {
-        return r[side.ordinal()];
+    public byte getRed(int side) {
+        return r[side];
     }
 
     @Override
-    public byte getGreen(EnumFacing side) {
-        return g[side.ordinal()];
+    public byte getGreen(int side) {
+        return g[side];
     }
 
     @Override
-    public byte getBlue(EnumFacing side) {
-        return b[side.ordinal()];
+    public byte getBlue(int side) {
+        return b[side];
     }
     
     @Override
-    public byte getPaintType(EnumFacing side) {
-        return t[side.ordinal()];
+    public byte getPaintType(int side) {
+        return t[side];
     }
 
     @Override
@@ -97,11 +96,11 @@ public class CubeColour implements ICubeColour {
     }
     
     @Override
-    public void setColour(int colour, EnumFacing side) {
+    public void setColour(int colour, int side) {
         //t[side] = (byte) 255;
-        r[side.ordinal()] = (byte) (colour >> 16 & 0xff);
-        g[side.ordinal()] = (byte) (colour >> 8 & 0xff);
-        b[side.ordinal()] = (byte) (colour & 0xff);
+        r[side] = (byte) (colour >> 16 & 0xff);
+        g[side] = (byte) (colour >> 8 & 0xff);
+        b[side] = (byte) (colour & 0xff);
     }
     
     public int getColour(int side) {
@@ -121,23 +120,23 @@ public class CubeColour implements ICubeColour {
     }
 
     @Override
-    public void setRed(byte red, EnumFacing side) {
-        r[side.ordinal()] = red;
+    public void setRed(byte red, int side) {
+        r[side] = red;
     }
 
     @Override
-    public void setGreen(byte green, EnumFacing side) {
-        g[side.ordinal()] = green;
+    public void setGreen(byte green, int side) {
+        g[side] = green;
     }
 
     @Override
-    public void setBlue(byte blue, EnumFacing side) {
-        b[side.ordinal()] = blue;
+    public void setBlue(byte blue, int side) {
+        b[side] = blue;
     }
     
     @Override
-    public void setPaintType(byte type, EnumFacing side) {
-        t[side.ordinal()] = type;
+    public void setPaintType(byte type, int side) {
+        t[side] = type;
     }
 
     @Override

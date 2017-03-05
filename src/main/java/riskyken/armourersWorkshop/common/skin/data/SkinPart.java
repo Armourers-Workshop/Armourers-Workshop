@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
@@ -28,8 +28,6 @@ public class SkinPart implements ISkinPart {
     private ISkinPartType skinPart;
     @SideOnly(Side.CLIENT)
     private ClientSkinPartData clientSkinPartData;
-    @SideOnly(Side.CLIENT)
-    public boolean isClippingGuide;
     
     public SkinPart(SkinCubeData cubeData, ISkinPartType skinPart, ArrayList<CubeMarkerData> markerBlocks) {
         this.cubeData = cubeData;
@@ -143,10 +141,10 @@ public class SkinPart implements ISkinPart {
     }
     
     @Override
-    public EnumFacing getMarkerSide(int index) {
+    public ForgeDirection getMarkerSide(int index) {
         if (index >= 0 & index < markerBlocks.size()) {
             CubeMarkerData cmd = markerBlocks.get(index);
-            return  EnumFacing.values()[cmd.meta - 1];
+            return  ForgeDirection.getOrientation(cmd.meta - 1);
         }
         return null;
     }

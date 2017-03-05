@@ -2,12 +2,13 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.data.MiniCube;
@@ -29,6 +30,13 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
 
     private ISkinType skinType;
     private ArrayList<SkinPart> skinParts;
+    
+    /*
+     * Around 1.65MB for the 20*62*56 sword skin, may want to change this if skins get any bigger.
+     * Thats around 4.96MB for the bow skin, the biggest skin so far.
+     * 
+     * Should have an array with each skin part then an array when each part layer.
+     */
     
     public TileEntityMiniArmourer() {
         super(INVENTORY_SIZE);
@@ -89,21 +97,21 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
         }
         if (update) {
             this.markDirty();
-            worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
     
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        readFromNBT(packet.getNbtCompound());
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+        readFromNBT(packet.func_148857_g());
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), compound);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
     
     @Override
@@ -132,7 +140,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     }
     
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         if (skinType != null) {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
@@ -145,16 +153,18 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
             }
             */
         }
-        return compound;
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos());
+        return AxisAlignedBB.getBoundingBox(
+                xCoord, yCoord, zCoord,
+                xCoord + 1, yCoord + 2, zCoord + 1
+                );
     }
 
     @Override
-    public String getName() {
+    public String getInventoryName() {
         return LibBlockNames.MINI_ARMOURER;
     }
 }

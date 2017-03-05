@@ -6,19 +6,18 @@ import com.mojang.authlib.GameProfile;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ItemBlockMannequin extends ModItemBlock {
     
     private static final String TAG_OWNER = "owner";
+    private static final String TAG_IMAGE_URL = "imageUrl";
     
     public ItemBlockMannequin(Block block) {
         super(block);
@@ -26,16 +25,17 @@ public class ItemBlockMannequin extends ModItemBlock {
     }
     
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn,
-            BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        /*
+    public boolean onItemUse(ItemStack stack, EntityPlayer player,
+            World world, int x, int y, int z, int side,
+            float hitX, float hitY, float hitZ) {
+        
         if (canPlaceBlockHere(stack, player, world, x, y, z, side, hitX, hitY, hitZ, false)) {
             if (canPlaceBlockHere(stack, player, world, x, y, z, side, hitX, hitY, hitZ, true)) {
-                return EnumActionResult.PASS;
+                return true;
             }
         }
-        */
-        return EnumActionResult.FAIL;
+        
+        return false;
     }
     
     @Override
@@ -44,25 +44,30 @@ public class ItemBlockMannequin extends ModItemBlock {
             NBTTagCompound compound = stack.getTagCompound();
             GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
-                gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
+                gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
                 String user = TranslateUtils.translate("item.armourersworkshop:rollover.user", gameProfile.getName());
                 list.add(user);
+            }
+            if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
+                String imageUrl = compound.getString(TAG_IMAGE_URL);
+                String urlLine = TranslateUtils.translate("item.armourersworkshop:rollover.url", imageUrl);
+                list.add(urlLine);
             }
         }
         super.addInformation(stack, player, list, par4);
     }
-    /*
+    
     private boolean canPlaceBlockHere(ItemStack stack, EntityPlayer player,
-            World world, BlockPos pos, int side,
+            World world, int x, int y, int z, int side,
             float hitX, float hitY, float hitZ, boolean place) {
         
         Block block = world.getBlock(x, y, z);
 
-        if (block == Blocks.SNOW_LAYER && (world.getBlockMetadata(x, y, z) & 7) < 1)
+        if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, z) & 7) < 1)
         {
             side = 1;
         }
-        else if (block != Blocks.VINE && block != Blocks.TALLGRASS && block != Blocks.DEADBUSH && !block.isReplaceable(world, pos))
+        else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, z))
         {
             if (side == 0)
             {
@@ -107,11 +112,11 @@ public class ItemBlockMannequin extends ModItemBlock {
         {
             return false;
         }
-        else if (y == 255 && this.block.getMaterial().isSolid())
+        else if (y == 255 && this.field_150939_a.getMaterial().isSolid())
         {
             return false;
         }
-        else if (world.canPlaceEntityOnSide(this.block, x, y, z, false, side, player, stack))
+        else if (world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, player, stack))
         {
             int i1 = this.getMetadata(stack.getItemDamage());
             int j1 = this.field_150939_a.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, i1);
@@ -131,5 +136,4 @@ public class ItemBlockMannequin extends ModItemBlock {
             return false;
         }
     }
-    */
 }

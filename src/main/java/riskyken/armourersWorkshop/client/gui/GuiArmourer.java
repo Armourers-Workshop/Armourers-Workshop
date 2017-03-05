@@ -1,10 +1,14 @@
 package riskyken.armourersWorkshop.client.gui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.client.config.GuiSlider;
+import cpw.mods.fml.client.config.GuiSlider.ISlider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -12,11 +16,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.client.config.GuiSlider;
-import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
@@ -55,10 +54,14 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     private GuiCustomSlider sliderWingFlyingSpeed;
     private GuiCustomSlider sliderWingMinAngle;
     private GuiCustomSlider sliderWingMaxAngle;
+    
+    private GuiCheckBox checkArmourOverrideBodyPart;
+    
     private GuiTextField textItemName;
     private GuiTextField textUserSkin;
     private boolean loadedArmourItem;
     private SkinProperties skinProps;
+    private final String DEGREE  = "\u00b0";
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourer armourerBrain) {
         super(new ContainerArmourer(invPlayer, armourerBrain));
@@ -71,7 +74,7 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     @Override
     public void initGui() {
         super.initGui();
-        String guiName = armourerBrain.getName();
+        String guiName = armourerBrain.getInventoryName();
         
         buttonList.clear();
         
@@ -102,9 +105,6 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         checkShowOverlay = new GuiCheckBox(9, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), armourerBrain.isShowOverlay());
         checkShowHelper = new GuiCheckBox(6, guiLeft + 64, guiTop + 134, GuiHelper.getLocalizedControlName(guiName, "showHelper"), armourerBrain.isShowHelper());
         
-        
-        textItemName = new GuiTextField(0, fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
-
         checkBlockGlowing = new GuiCheckBox(15, guiLeft + 177, guiTop + 45, GuiHelper.getLocalizedControlName(guiName, "glowing"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
         checkBlockLadder = new GuiCheckBox(15, guiLeft + 177, guiTop + 60, GuiHelper.getLocalizedControlName(guiName, "ladder"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
         checkBlockNoCollision = new GuiCheckBox(15, guiLeft + 177, guiTop + 75, GuiHelper.getLocalizedControlName(guiName, "noCollision"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
@@ -112,13 +112,16 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 45, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 65, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
-        sliderWingMinAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 85, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
-        sliderWingMaxAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 105, 70, 10, "", "°", -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
+        sliderWingMinAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 85, 70, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
+        sliderWingMaxAngle = new GuiCustomSlider(15, guiLeft + 177, guiTop + 105, 70, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
         
+        checkArmourOverrideBodyPart = new GuiCheckBox(15, guiLeft + 177, guiTop + 45, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
+        
+        textItemName = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 58, 103, 16);
         textItemName.setMaxStringLength(40);
         textItemName.setText(armourerBrain.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
         
-        textUserSkin = new GuiTextField(0, fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
+        textUserSkin = new GuiTextField(fontRendererObj, guiLeft + 64, guiTop + 88, 70, 16);
         textUserSkin.setMaxStringLength(30);
         buttonList.add(new GuiButtonExt(8, guiLeft + 138, guiTop + 88, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
         
@@ -141,20 +144,22 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         buttonList.add(sliderWingFlyingSpeed);
         buttonList.add(sliderWingMinAngle);
         buttonList.add(sliderWingMaxAngle);
+        
+        buttonList.add(checkArmourOverrideBodyPart);
         //buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
         //buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));
     }
     
     @Override
-    protected void mouseClicked(int x, int y, int button) throws IOException {
+    protected void mouseClicked(int x, int y, int button) {
         super.mouseClicked(x, y, button);
         textItemName.mouseClicked(x, y, button);
         textUserSkin.mouseClicked(x, y, button);
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) throws IOException {
+    protected void keyTyped(char key, int keyCode) {
         if (!textItemName.textboxKeyTyped(key, keyCode)) {
             if (!textUserSkin.textboxKeyTyped(key, keyCode)) {
                 super.keyTyped(key, keyCode);
@@ -180,6 +185,11 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
             skinProps.setProperty(Skin.KEY_BLOCK_SEAT, checkBlockSeat.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
+        if (button == checkArmourOverrideBodyPart) {
+            skinProps.setProperty(Skin.KEY_ARMOUR_OVERRIDE, checkArmourOverrideBodyPart.isChecked());
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
+        }
+        
         switch (button.id) {
         case 13:
             PacketHandler.networkWrapper.sendToServer(new MessageClientLoadArmour(textItemName.getText().trim(), ""));
@@ -205,22 +215,22 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourerBrain.getName());
+        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourerBrain.getInventoryName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
     
-        String itemNameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.itemName");
-        String usernameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.username");
-        String cloneLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.clone");
+        String itemNameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.itemName");
+        String usernameLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.username");
+        String cloneLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.clone");
         String versionLabel = "Alpha: " + LibModInfo.VERSION;
         
         this.fontRendererObj.drawString(itemNameLabel, 64, 48, 4210752);
         this.fontRendererObj.drawString(usernameLabel, 64, 78, 4210752);
         
         if (armourerBrain.getSkinType() == SkinTypeRegistry.skinWings) {
-            String idleSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.idleSpeed");
-            String flyingSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.flyingSpeed");
-            String minAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.minAngle");
-            String maxAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getName(), "label.maxAngle");
+            String idleSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.idleSpeed");
+            String flyingSpeedLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.flyingSpeed");
+            String minAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.minAngle");
+            String maxAngleLabel = GuiHelper.getLocalizedControlName(armourerBrain.getInventoryName(), "label.maxAngle");
             
             this.fontRendererObj.drawString(idleSpeedLabel, 177, 36, 4210752);
             this.fontRendererObj.drawString(flyingSpeedLabel, 177, 56, 4210752);
@@ -252,6 +262,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
             sliderWingIdleSpeed.updateSlider();
             sliderWingFlyingSpeed.setValue(skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D));
             sliderWingFlyingSpeed.updateSlider();
+            
+            checkArmourOverrideBodyPart.setIsChecked(skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
             
             armourerBrain.loadedArmourItem = false;
             loadedArmourItem = false;
@@ -289,6 +301,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         sliderWingFlyingSpeed.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingMinAngle.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingMaxAngle.visible = armourerBrain.getSkinType() == SkinTypeRegistry.skinWings;
+        
+        checkArmourOverrideBodyPart.visible = armourerBrain.getSkinType().getVanillaArmourSlotId() != -1;
         
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);

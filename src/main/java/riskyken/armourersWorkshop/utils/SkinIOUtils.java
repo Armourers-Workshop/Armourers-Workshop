@@ -151,6 +151,7 @@ public final class SkinIOUtils {
     public static void makeDatabaseDirectory() {
         File directory = getSkinDatabaseDirectory();
         ModLogger.log("Loading skin database at: " + directory.getAbsolutePath());
+        copyGlobalDatabase();
         if (!directory.exists()) {
             if (directory.mkdir()) {
                 copyOldDatabase();
@@ -188,12 +189,58 @@ public final class SkinIOUtils {
         }
     }
     
+    public static void copyGlobalDatabase() {
+        File dirGlobalDatabase = getGlobalSkinDatabaseDirectory();
+        if (dirGlobalDatabase.exists()) {
+            File dirWorldDatabase = getSkinDatabaseDirectory();
+            File[] globalFiles = dirGlobalDatabase.listFiles();
+            for (int i = 0; i < globalFiles.length; i++) {
+                File globalFile = globalFiles[i];
+                File worldFile = new File(dirWorldDatabase, globalFile.getName());
+                if (!globalFile.getName().equals("readme.txt") & !worldFile.exists()) {
+                    try {
+                        FileUtils.copyFile(globalFile, worldFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        createGlobalDatabaseReadme();
+    }
+    
+    private static void createGlobalDatabaseReadme() {
+        File globalDatabaseReadme = new File(getGlobalSkinDatabaseDirectory(), "readme.txt");
+        if (!getGlobalSkinDatabaseDirectory().exists()) {
+            getGlobalSkinDatabaseDirectory().mkdirs();
+        }
+        if (!globalDatabaseReadme.exists()) {
+            DataOutputStream outputStream = null;
+            try {
+                String crlf = "\r\n";
+                outputStream = new DataOutputStream(new FileOutputStream(globalDatabaseReadme));
+                outputStream.writeBytes("Any files placed in this directory will be copied into the skin-database folder of any worlds that are loaded." + crlf);
+                outputStream.writeBytes("Please read Info for Map & Mod Pack Makers on the main forum post if you want to know how to use this." + crlf);
+                outputStream.writeBytes("http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2309193-wip-alpha-armourers-workshop-weapon-armour-skins");
+                outputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(outputStream);
+            }
+        }
+    }
+    
     public static File getSkinDatabaseDirectory() {
         return new File(DimensionManager.getCurrentSaveRootDirectory(), "skin-database");
     }
     
     public static File getOldSkinDatabaseDirectory() {
         return new File(System.getProperty("user.dir"), "equipment-database");
+    }
+    
+    public static File getGlobalSkinDatabaseDirectory() {
+        return new File(System.getProperty("user.dir"), "global-skin-database");
     }
     
     public static File getSkinLibraryDirectory() {

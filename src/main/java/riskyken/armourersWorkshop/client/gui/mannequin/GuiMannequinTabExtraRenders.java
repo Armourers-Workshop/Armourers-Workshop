@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
+import cpw.mods.fml.client.config.GuiUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
@@ -16,6 +16,7 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel {
     private GuiCheckBox isChildCheck;
     public GuiCheckBox isExtraRenders;
     public GuiCheckBox isFlying;
+    public GuiCheckBox isVisible;
     
     public GuiMannequinTabExtraRenders(int tabId, GuiScreen parent, String inventoryName, TileEntityMannequin tileEntity) {
         super(tabId, parent);
@@ -29,12 +30,14 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel {
         isChildCheck = new GuiCheckBox(3, this.width / 2 - 78, 25, GuiHelper.getLocalizedControlName(inventoryName, "label.isChild"), false);
         isExtraRenders = new GuiCheckBox(0, this.width / 2 - 78, 40, GuiHelper.getLocalizedControlName(inventoryName, "label.isExtraRenders"), tileEntity.isRenderExtras());
         isFlying = new GuiCheckBox(0, this.width / 2 - 78, 55, GuiHelper.getLocalizedControlName(inventoryName, "label.isFlying"), tileEntity.isFlying());
+        isVisible = new GuiCheckBox(0, this.width / 2 - 78, 70, GuiHelper.getLocalizedControlName(inventoryName, "label.isVisible"), tileEntity.isVisible());
         if (((GuiMannequin)parent).tabRotations.getBipedRotations() != null) {
             isChildCheck.setIsChecked(((GuiMannequin)parent).tabRotations.getBipedRotations().isChild);
         }
         buttonList.add(isChildCheck);
         buttonList.add(isExtraRenders);
         buttonList.add(isFlying);
+        buttonList.add(isVisible);
     }
     
     @Override
@@ -49,11 +52,14 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel {
             ((GuiMannequin)parent).tabRotations.getBipedRotations().isChild = isChildCheck.isChecked();
             ((GuiMannequin)parent).tabRotations.checkAndSendRotationValues();
         }
+        if (button == isVisible) {
+            ((GuiMannequin)parent).tabOffset.sendData();
+        }
     }
 
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 176, 74);
+        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 176, 88);
         rec.x = width / 2 - rec.width / 2;
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
     }

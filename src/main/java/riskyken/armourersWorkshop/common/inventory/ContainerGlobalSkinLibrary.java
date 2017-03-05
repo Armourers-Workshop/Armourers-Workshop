@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
@@ -10,7 +11,7 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
     
     private TileEntityGlobalSkinLibrary tileEntity;
     
-    public ContainerGlobalSkinLibrary(TileEntityGlobalSkinLibrary tileEntity) {
+    public ContainerGlobalSkinLibrary(InventoryPlayer inventoryPlayer, TileEntityGlobalSkinLibrary tileEntity) {
         this.tileEntity = tileEntity;
     }
     
@@ -20,7 +21,7 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
 
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return entityPlayer.getDistanceSq(tileEntity.getPos()) <= 64 & !entityPlayer.isDead;
+        return entityPlayer.getDistanceSq(tileEntity.xCoord + 0.5, tileEntity.yCoord + 0.5, tileEntity.zCoord + 0.5) <= 64 & !entityPlayer.isDead;
     }
     
     @Override

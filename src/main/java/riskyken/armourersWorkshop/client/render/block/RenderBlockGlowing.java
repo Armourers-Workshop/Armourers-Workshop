@@ -1,11 +1,24 @@
 package riskyken.armourersWorkshop.client.render.block;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.world.IBlockAccess;
+import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.plushieWrapper.client.IRenderBuffer;
+import riskyken.plushieWrapper.client.RenderBridge;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockGlowing /*implements ISimpleBlockRenderingHandler*/ {
-    /*
+public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
+
     public static int renderId = 0;
     
     public RenderBlockGlowing() {
@@ -277,5 +290,4 @@ public class RenderBlockGlowing /*implements ISimpleBlockRenderingHandler*/ {
     public int getRenderId() {
         return renderId;
     }
-    */
 }

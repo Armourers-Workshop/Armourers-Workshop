@@ -23,11 +23,9 @@ public final class SkinUploader implements Runnable {
         this.player = player;
     }
     
-    
     public static void startUpload(EntityPlayer player) {
         (new Thread(new SkinUploader(player), LibModInfo.NAME + " upload thread.")).start();
     }
-    
     
     @Override
     public void run() {
@@ -50,6 +48,18 @@ public final class SkinUploader implements Runnable {
         if (player.getGameProfile().getId() == null) {
             return;
         }
+        
+        /*
+        HttpPost post = new HttpPost();
+        FileEntity s = new FileEntity(null);
+        //org.apache.http.entity.ContentType.MULTIPART_FORM_DATA
+        //org.apache.http.entity.ByteArrayEntity
+        post.setEntity(s);
+        
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response = client.execute(post);
+        */
+        
         
         //http://plushie.moe/armourers_workshop/skin-list.php
         //http://plushie.moe/armourers_workshop/skin-upload.php
@@ -80,7 +90,7 @@ public final class SkinUploader implements Runnable {
             writer.append("--" + boundary).append(CRLF);
             writer.append("Content-Disposition: form-data; name=\"fileToUpload\"; filename=\"" + fileName + "\"").append(CRLF);
             writer.append("Content-Type: application/octet-stream").append(CRLF);
-            writer.append("Content-Transfer-Encoding: binary").append(CRLF);
+            writer.append("Content-Transfer-.Encoding: binary").append(CRLF);
             writer.append(CRLF).flush();
             output.write(fileData.getBytes());
             //Files.copy(binaryFile.toPath(), output);

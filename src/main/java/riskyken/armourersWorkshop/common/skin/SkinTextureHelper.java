@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.skin;
 
 import java.awt.Point;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -16,11 +16,11 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
  */
 public class SkinTextureHelper {
     
-    public static Point getTextureLocationFromWorldBlock(TileEntityBoundingBox te, EnumFacing side) {
+    public static Point getTextureLocationFromWorldBlock(TileEntityBoundingBox te, int side) {
         ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
         Point textureLocation = skinPart.getTextureLocation();
         IPoint3D textureModelSize = skinPart.getTextureModelSize();
-        EnumFacing blockFace = side;
+        ForgeDirection blockFace = ForgeDirection.getOrientation(side);
         
         byte blockX = te.getGuideX();
         byte blockY = te.getGuideY();
@@ -33,7 +33,7 @@ public class SkinTextureHelper {
         int shiftY = 0;
         
         if (skinPart.isTextureMirrored()) {
-            if (blockFace == EnumFacing.EAST | blockFace == EnumFacing.WEST) {
+            if (blockFace == ForgeDirection.EAST | blockFace == ForgeDirection.WEST) {
                 blockFace = blockFace.getOpposite();
             }
         }

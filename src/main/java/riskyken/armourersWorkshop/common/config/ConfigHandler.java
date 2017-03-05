@@ -4,7 +4,7 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 
@@ -26,11 +26,11 @@ public class ConfigHandler {
     //server
     public static int serverModelCacheTime = 600000;
     public static int serverSkinSendRate = 4000;
+    public static boolean serverCompressesSkins = true;
     
     //general
     public static boolean extractOfficialSkins;
     public static boolean allowEquipmentWardrobe = true;
-    public static String[] disabledSkins = {};
     public static boolean allowClientsToDownloadSkins = false;
     public static boolean allowClientsToUploadSkins = true;
     public static boolean enableHolidayEvents = true;
@@ -78,21 +78,6 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "allowClientsToUploadSkins", true,
                 "Allows clients to load skins from their local computer onto the server using the library.")
                 .getBoolean(true);
-        
-        disabledSkins = config
-                .getStringList("disabledSkins", CATEGORY_GENERAL, new String[] {},
-                "List of skins that will be disabled.\n"
-                + "\n"
-                + "Here is a list of all the skins that come with the mod.\n" 
-                + "armourers:head\n"
-                + "armourers:chest\n"
-                + "armourers:legs\n"
-                + "armourers:skirt\n"
-                + "armourers:feet\n"
-                + "armourers:sword\n"
-                + "armourers:bow\n"
-                + "armourers:arrow\n"
-                + "\n");
         
         extractOfficialSkins = config
                 .get(CATEGORY_GENERAL, "extractOfficialSkins", true,
@@ -162,20 +147,20 @@ public class ConfigHandler {
                 "Allow other mods to register with the Armourer's Workshop API.")
                 .getBoolean(true);
         
-        Property prop = config.get(CATEGORY_COMPATIBILITY, "swordOverrides", Addons.overrideSwordsDefault);
-        prop.setLanguageKey("swordOverrides");
-        //prop.setValidValues(validValues);
-        prop.setComment("List of swords that can have skins applied.\n"
-                + "Format [mod id:item name]");
-        Addons.overrideSwordsActive =  prop.getStringList();
         
-        
-        prop = config.get(CATEGORY_COMPATIBILITY, "bowOverrides", Addons.overrideBowsDefault);
-        prop.setLanguageKey("bowOverrides");
-        //prop.setValidValues(validValues);
-        prop.setComment("List of bows that can have skins applied.\n"
-                + "Format [mod id:item name]");
-        Addons.overrideBowsActive =  prop.getStringList();
+        Property prop = config.get(CATEGORY_COMPATIBILITY, "itemOverrides", ModAddonManager.getDefaultOverrides());
+        prop.setLanguageKey("itemOverrides");
+        prop.comment = "List of items that can have skins applied.\n"
+                + "Format [override type:mod id:item name]\n"
+                + "Valid override types are:\n"
+                + "sword\n"
+                + "item\n"
+                + "pickaxe\n"
+                + "axe\n"
+                + "shovel\n"
+                + "hoe\n"
+                + "bow";
+        ModAddonManager.itemOverrides =  prop.getStringList();
     }
     
 
@@ -190,5 +175,9 @@ public class ConfigHandler {
         serverSkinSendRate = config.getInt("serverModelSendRate", CATEGORY_SERVER, 4000, 0, 8000,
                 "The maximum number of skins the server is allow to send every minute.\n"
                 + "Less that 1 equals unlimited. (not recommended may cause bandwidth and cpu spikes on the server)");
+        
+        serverCompressesSkins = config.getBoolean("serverCompressesSkins", CATEGORY_SERVER, true,
+                "If enabled the server will compress skins before sending them to clients.\n" +
+                "Highly recommended unless the server has a very slow CPU.");
     }
 }

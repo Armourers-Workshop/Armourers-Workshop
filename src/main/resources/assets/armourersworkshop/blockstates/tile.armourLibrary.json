@@ -1,7 +1,0 @@
-{
-    "forge_marker": 1,
-    "variants": {
-        "type=normal": { "model": "armourersworkshop:armourLibraryNormal" },
-        "type=creative": { "model": "armourersworkshop:armourLibraryCreative" }
-    }
-}

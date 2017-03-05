@@ -1,13 +1,17 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
@@ -18,33 +22,30 @@ repositories {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'forge'
 
 if (System.env.BUILD_NUMBER != null) {
-    version = "${minecraftVersion}-${modVersion}.$System.env.BUILD_NUMBER"
+    version = "$minecraftVersion-$modVersion.$System.env.BUILD_NUMBER"
 } else {
-    version = "${minecraftVersion}-${modVersion}"
+    version = "$minecraftVersion-$modVersion"
 }
 
 group= "riskyken.armourersWorkshop"
 archivesBaseName = "Armourers-Workshop"
 
 minecraft {
-    //version = "${minecraftVersion}-${forgeVersion}"
-	version = "1.9.4-12.17.0.1968"
-    runDir = "run"
+    version = "$minecraftVersion-$forgeVersion"
+    runDir = "eclipse"
 
     replaceIn "common/lib/LibModInfo.java"
     replace "@VERSION@", project.version
 
     replaceIn "api/common/lib/LibApi.java"
     replace "@API_VERSION@", apiVersion
-	
-	mappings = "snapshot_20160518"
 }
 
 dependencies {
-    //compile name: "buildcraft", version: "${buildcraftVersion}", classifier: "dev"
+    compile name: "buildcraft", version: "${buildcraftVersion}", classifier: "dev"
 }
 
 processResources {

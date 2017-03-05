@@ -2,22 +2,28 @@ package riskyken.armourersWorkshop.client.particles;
 
 import java.awt.Color;
 
-import net.minecraft.client.particle.Particle;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.utils.UtilRender;
+import riskyken.plushieWrapper.client.IRenderBuffer;
+import riskyken.plushieWrapper.client.RenderBridge;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntityFXPaintSplash extends Particle {
+public class EntityFXPaintSplash extends EntityFX {
     
     private static final ResourceLocation paintSplashTextures = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/particles/paintSplash.png");
-    //private static final ResourceLocation particleTextures = ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "field_110737_b", "b");
+    private static final ResourceLocation particleTextures = ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "field_110737_b", "b");
     
-    public EntityFXPaintSplash(World world, double x, double y, double z, int colour, EnumFacing dir) {
-        super(world, x + dir.getFrontOffsetX() * 0.5D, y + dir.getFrontOffsetY() * 0.5D, z + dir.getFrontOffsetZ() * 0.5D);
+    public EntityFXPaintSplash(World world, double x, double y, double z, int colour, ForgeDirection dir) {
+        super(world, x + dir.offsetX * 0.5D, y + dir.offsetY * 0.5D, z + dir.offsetZ * 0.5D);
         this.particleScale = 0.2F + world.rand.nextFloat() * 0.4F;
         particleMaxAge = 10;
         
@@ -52,9 +58,9 @@ public class EntityFXPaintSplash extends Particle {
             break;
         }
         
-        this.motionX = dir.getFrontOffsetX() * 0.08;
-        this.motionY = dir.getFrontOffsetY() * 0.08;
-        this.motionZ = dir.getFrontOffsetZ() * 0.08;
+        this.motionX = dir.offsetX * 0.08;
+        this.motionY = dir.offsetY * 0.08;
+        this.motionZ = dir.offsetZ * 0.08;
         
         this.motionX += (world.rand.nextFloat() - 0.5F) * 0.06;
         this.motionY += (world.rand.nextFloat() - 0.5F) * 0.06;
@@ -63,9 +69,9 @@ public class EntityFXPaintSplash extends Particle {
         this.particleTextureIndexX = (Math.round(world.rand.nextFloat())) * 8;
         this.particleTextureIndexY = (Math.round(world.rand.nextFloat())) * 8;
         
-        //this.noClip = false;
+        this.noClip = false;
     }
-    /*
+    
     @Override
     public void onUpdate() {
         super.onUpdate();
@@ -110,5 +116,4 @@ public class EntityFXPaintSplash extends Particle {
         UtilRender.bindTexture(particleTextures);
         renderBuffer.startDrawingQuads();
     }
-    */
 }

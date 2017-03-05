@@ -7,14 +7,14 @@ import java.util.HashMap;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.StringUtils;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
-import net.minecraftforge.fml.relauncher.Side;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -187,7 +187,7 @@ public final class CommonSkinCache implements Runnable {
                 PacketHandler.networkWrapper.sendTo(new MessageServerSkinDataSend(skin), player);
             } else {
                 ModLogger.log(Level.ERROR, "Equipment id:" + skinId +" was requested by "
-            + player.getName() + " but was not found.");
+            + player.getCommandSenderName() + " but was not found.");
             }
         }
     }
@@ -219,7 +219,7 @@ public final class CommonSkinCache implements Runnable {
                 }
             } else {
                 ModLogger.log(Level.ERROR, String.format("Player %s requested ID for file name %s but the file was not found.",
-                        player.getName(), fileName));
+                        player.getCommandSenderName(), fileName));
             }
         }
         

@@ -1,3 +1,66 @@
+Build 0.42.5
+Fixed:
+	Client crash when a doll is placed.
+
+Build 0.42.4
+Fixed:
+	Dedicated server crash when mannequin is loaded.
+
+Build 0.42.3
+Added:
+	File name skin property. (allow skins to update when the library file is changed - planned not implemented yet)
+Fixed:
+	Client NPE crash when a skinnable block is rotated.
+	Wings not getting cleared with the armourers clear command.
+	Wings and chest skins not rotation when the player is sneaking.
+	Frame drops when a client requests a large number of skins.
+	Frame drops when mannequins are first seen by the client.
+Changed:
+	Changed the way item overrides are formatted in the config file. (note: item, pickaxe, axe, shovel and hoe are not implemented)
+
+
+Build 0.42.0
+Added:
+	Added sword skin support for MapleCrafted
+	Added sword skin support for OreSpawn.
+	Add pt_PT and pt_BR lang files. (EzerArch)
+	Added global skin database directory. (for map makers, works like the old equipment-database directory)
+	Added slowModelBaking config option.
+	Allowed replacing body parts with skins.
+Fixed:
+	Stopped console spam when a player is sitting on a block skin.
+	Fixed chest skin on mannequins not using some rotation axes.
+	Fixed rare crash when trying to get a skin from the cache as it's being removed
+	Fixed global library spamming errors if it was unable to download the skins JSON list.
+	Fixed mannequin textures getting rebuilt every frame if they had not been downloaded.
+	Fixed z fighting on armourer building guide grid and model. (finally)
+	Fixed skirts on mannequin not rotation around their y axes.
+	Fixed mannequin game profiles not updating correctly when changed.
+Changed:
+	Updated Halloween event!
+	Added more build space below the chest
+	Improved client model baking speed.
+	Removed showArmourerDebugRender config option. (now on the debug tool)
+
+
+Build 0.41.0
+Added:
+	Added no collision option for block skins.
+	Added seat option for block skins.
+	Added compession for skins being sent from the server to the client. (skins are now around 10% the size)
+	Added serverCompressesSkins config option.
+	Added display list count to the F3 debug text.
+	Added credits chapter to the guide book.
+Fixed:
+	Fixed a bug that was causing skin textures to get rebuild when it was not required.
+	Fixed mannequins rotations sometimes getting changed by rendering armour.
+Changed:
+	Moved client configs into their own files and moved configs into their own directory.
+	Stopped model loading LODs showing in GUIs.
+	Removed disabledSkins config option.
+	Updated zh_CN. (Ethan)
+
+
 Build 0.40.1
 Added:
 	Added refresh button to the library.

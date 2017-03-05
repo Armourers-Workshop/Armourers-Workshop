@@ -2,21 +2,20 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.awt.Color;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiSlider;
-import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import cpw.mods.fml.client.config.GuiSlider;
+import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiHSBSlider extends GuiSlider {
@@ -41,9 +40,9 @@ public class GuiHSBSlider extends GuiSlider {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
             mouseCheck();
-            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            int k = this.getHoverState(this.hovered);
-            GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+            int k = this.getHoverState(this.field_146123_n);
+            GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
             mc.renderEngine.bindTexture(sliderTexture);
             
             if (type == HSBSliderType.SATURATION) {
@@ -103,7 +102,7 @@ public class GuiHSBSlider extends GuiSlider {
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             
-            ScaledResolution screenRes = new ScaledResolution(mc);
+            ScaledResolution screenRes = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
             double scaleWidth = (double)mc.displayWidth / screenRes.getScaledWidth_double();
             double scaleHeight = (double)mc.displayHeight / screenRes.getScaledHeight_double();
             
@@ -145,26 +144,13 @@ public class GuiHSBSlider extends GuiSlider {
     public void drawTexturedModalRectScaled (int x, int y, int u, int v, int srcWidth, int srcHeight, int tarWidth, int tarHeight) {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
-        Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buff = tess.getBuffer();
-        buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        
-        buff.pos((double)(x + 0), (double)(y + tarHeight), (double)this.zLevel);
-        buff.tex((double)((float)(u + 0) * f), (double)((float)(v + srcHeight) * f1));
-        buff.endVertex();
-        
-        buff.pos((double)(x + tarWidth), (double)(y + tarHeight), (double)this.zLevel);
-        buff.tex((double)((float)(u + srcWidth) * f), (double)((float)(v + srcHeight) * f1));
-        buff.endVertex();
-        
-        buff.pos((double)(x + tarWidth), (double)(y + 0), (double)this.zLevel);
-        buff.tex((double)((float)(u + srcWidth) * f), (double)((float)(v + 0) * f1));
-        buff.endVertex();
-        
-        buff.pos((double)(x + 0), (double)(y + 0), (double)this.zLevel);
-        buff.tex((double)((float)(u + 0) * f), (double)((float)(v + 0) * f1));
-        buff.endVertex();
-        tess.draw();
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV((double)(x + 0), (double)(y + tarHeight), (double)this.zLevel, (double)((float)(u + 0) * f), (double)((float)(v + srcHeight) * f1));
+        tessellator.addVertexWithUV((double)(x + tarWidth), (double)(y + tarHeight), (double)this.zLevel, (double)((float)(u + srcWidth) * f), (double)((float)(v + srcHeight) * f1));
+        tessellator.addVertexWithUV((double)(x + tarWidth), (double)(y + 0), (double)this.zLevel, (double)((float)(u + srcWidth) * f), (double)((float)(v + 0) * f1));
+        tessellator.addVertexWithUV((double)(x + 0), (double)(y + 0), (double)this.zLevel, (double)((float)(u + 0) * f), (double)((float)(v + 0) * f1));
+        tessellator.draw();
     }
     
     public enum HSBSliderType {

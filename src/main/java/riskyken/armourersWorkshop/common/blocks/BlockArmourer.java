@@ -1,37 +1,41 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.block.state.IBlockState;
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
-import riskyken.armourersWorkshop.utils.UtilBlocks;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 
 public class BlockArmourer extends AbstractModBlockContainer {
 
     public BlockArmourer() {
-        super(LibBlockNames.ARMOURER);
+        super(LibBlockNames.ARMOURER_BRAIN);
     }
     
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        if (placer instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)placer;
-            TileEntity te = worldIn.getTileEntity(pos);
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer)entity;
+            TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityArmourer) {
-                EnumFacing direction = EnumFacing.VALUES[(UtilBlocks.determineOrientationSide(worldIn, pos, placer))];
-                ((TileEntityArmourer)te).setDirection(EnumFacing.NORTH);
-                if (!worldIn.isRemote) {
+                ForgeDirection direction = ForgeDirection.getOrientation(BlockUtils.determineOrientationSide(world, x, y, z, entity));
+                ((TileEntityArmourer)te).setDirection(ForgeDirection.NORTH);
+                if (!world.isRemote) {
                     ((TileEntityArmourer)te).setGameProfile(player.getGameProfile());
                     ((TileEntityArmourer)te).onPlaced();
                 }
@@ -40,39 +44,63 @@ public class BlockArmourer extends AbstractModBlockContainer {
     }
     
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        UtilBlocks.dropInventoryBlocks(worldIn, pos);
-        super.breakBlock(worldIn, pos, state);
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        BlockUtils.dropInventoryBlocks(world, x, y, z);
+        super.breakBlock(world, x, y, z, block, meta);
     }
     
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        TileEntity te = world.getTileEntity(pos);
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof TileEntityArmourer) {
             ((TileEntityArmourer)te).preRemove();
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest);
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!playerIn.canPlayerEdit(pos, side, heldItem)) {
+    public Block setBlockName(String name) {
+        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
+        return super.setBlockName(name);
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
             return false;
         }
-        if (!worldIn.isRemote) {
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.ARMOURER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (!world.isRemote) {
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ARMOURER, world, x, y, z);
         }
         return true;
     }
+    
+    @SideOnly(Side.CLIENT)
+    private IIcon sideIcon;
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileEntityArmourer();
+    public void registerBlockIcons(IIconRegister register) {
+        blockIcon = register.registerIcon(LibBlockResources.ARMOURER_TOP_BOTTOM);
+        sideIcon = register.registerIcon(LibBlockResources.ARMOURER_SIDE);
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
+    public IIcon getIcon(int side, int meta) {
+        if (side < 2) {
+            return blockIcon;
+        }
+        return sideIcon;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+        return null;
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int metadata) {
+        return new TileEntityArmourer();
     }
 }

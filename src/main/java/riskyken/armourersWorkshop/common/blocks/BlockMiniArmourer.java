@@ -1,16 +1,14 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.block.state.IBlockState;
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -19,33 +17,31 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
 
     public BlockMiniArmourer() {
         super(LibBlockNames.MINI_ARMOURER);
-        setLightOpacity(0);
     }
     
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
+    public void registerBlockIcons(IIconRegister iconRegister) {
     }
     
     @Override
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
-    
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!playerIn.canPlayerEdit(pos, side, heldItem)) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
             return false;
         }
-        if (!worldIn.isRemote) {
-            if (!playerIn.isSneaking()) {
-                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.MINI_ARMOURER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (!world.isRemote) {
+            if (!player.isSneaking()) {
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MINI_ARMOURER, world, x, y, z);
             } else {
-                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.MINI_ARMOURER_BUILDING, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MINI_ARMOURER_BUILDING, world, x, y, z);
             }
         }
         return true;
+    }
+    
+    @Override
+    public Block setBlockName(String name) {
+        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
+        return super.setBlockName(name);
     }
 
     @Override
@@ -54,7 +50,22 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
     }
     
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+    
+    @Override
+    public boolean isNormalCube() {
+        return false;
+    }
+    
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+    
+    @Override
+    public int getRenderType() {
+        return -1;
     }
 }

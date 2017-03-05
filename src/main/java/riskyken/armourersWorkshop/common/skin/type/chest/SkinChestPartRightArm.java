@@ -4,8 +4,8 @@ import java.awt.Point;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -20,7 +20,7 @@ public class SkinChestPartRightArm extends AbstractSkinPartTypeBase implements I
         super(baseType);
         this.buildingSpace = new Rectangle3D(-3, -16, -14, 14, 32, 28);
         this.guideSpace = new Rectangle3D(-1, -10, -2, 4, 12, 4);
-        this.offset = new Point3D(-10, 0, 0);
+        this.offset = new Point3D(-10, -7, 0);
     }
     
     @Override

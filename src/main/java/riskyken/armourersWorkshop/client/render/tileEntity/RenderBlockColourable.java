@@ -2,19 +2,17 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -26,6 +24,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.plushieWrapper.client.IRenderBuffer;
 import riskyken.plushieWrapper.client.RenderBridge;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockColourable extends TileEntitySpecialRenderer {
@@ -42,9 +41,9 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
     }
     
     @Override
-    public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-        if (lastWorldTimeUpdate != te.getWorld().getTotalWorldTime()) {
-            lastWorldTimeUpdate = te.getWorld().getTotalWorldTime();
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
+        if (lastWorldTimeUpdate != tileEntity.getWorldObj().getTotalWorldTime()) {
+            lastWorldTimeUpdate = tileEntity.getWorldObj().getTotalWorldTime();
             if (isPlayerHoldingPaintingTool()) {
                 markerAlpha += 0.25F;
                 if (markerAlpha > 1F) {
@@ -61,10 +60,10 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
             return;
         }
         
-        if (te instanceof TileEntityColourable) {
-            renderTileEntityAt((TileEntityColourable)te, x, y, z, partialTicks);
-        } else if (te instanceof TileEntityBoundingBox) {
-            renderTileEntityAt((TileEntityBoundingBox)te, x, y, z, partialTicks);
+        if (tileEntity instanceof TileEntityColourable) {
+            renderTileEntityAt((TileEntityColourable)tileEntity, x, y, z, partialTickTime);
+        } else if (tileEntity instanceof TileEntityBoundingBox) {
+            renderTileEntityAt((TileEntityBoundingBox)tileEntity, x, y, z, partialTickTime);
         }
     }
     
@@ -73,12 +72,12 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         //ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         ModRenderHelper.enableAlphaBlend();
-        renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        renderer.startDrawingQuads();
         renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
-                EnumFacing dir = EnumFacing.values()[i];
-                int paintType = cubeColour.getPaintType(dir) & 0xFF;
+                ForgeDirection dir = ForgeDirection.getOrientation(i);
+                int paintType = cubeColour.getPaintType(i) & 0xFF;
                 if (paintType != 255) {
                     bindTexture(MARKERS);
                     GL11.glColor3f(0.77F, 0.77F, 0.77F);
@@ -100,13 +99,13 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         }
         GL11.glDisable(GL11.GL_LIGHTING);
         ModRenderHelper.enableAlphaBlend();
-        renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        renderer.startDrawingQuads();
         renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
-                EnumFacing dir = EnumFacing.values()[i];
-                if (tileEntity.isPaintableSide(dir)) {
-                    PaintType paintType = tileEntity.getPaintType(dir);
+                if (tileEntity.isPaintableSide(i)) {
+                    ForgeDirection dir = ForgeDirection.getOrientation(i);
+                    PaintType paintType = tileEntity.getPaintType(i);
                     if (paintType != PaintType.NONE) {
                         bindTexture(MARKERS);
                         GL11.glColor3f(0.77F, 0.77F, 0.77F);
@@ -122,7 +121,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         RenderHelper.enableStandardItemLighting();
     }
     
-    private void renderFaceWithMarker(double x, double y, double z, EnumFacing face, int marker) {
+    private void renderFaceWithMarker(double x, double y, double z, ForgeDirection face, int marker) {
         float tileScale = 0.25F;
         float ySrc = (float) Math.floor((double)marker / 4F);
         float xSrc = marker - (ySrc * 4);
@@ -186,24 +185,15 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
     }
     
     private boolean isPlayerHoldingPaintingTool() {
-        EntityPlayerSP player = mc.thePlayer;
-        if (isPaintingTool(player.getHeldItem(EnumHand.MAIN_HAND))) {
-            return true;
-        }
-        if (isPaintingTool(player.getHeldItem(EnumHand.OFF_HAND))) {
-            return true;
-        }
-        return false;
-    }
-    
-    private boolean isPaintingTool(ItemStack stack) {
+        EntityClientPlayerMP player = mc.thePlayer;
+        ItemStack stack = player.getCurrentEquippedItem();
         if (stack != null) {
             Item item = stack.getItem();
             if (item instanceof IBlockPainter) {
                 return true;
             } else if (item == ModItems.colourPicker) {
                 return true;
-            } else if (item == ModItems.blockMarker) {
+            } else if (item == ModRegistry.getMinecraftItem(ModItems.blockMarker)) {
                 return true;
             }
         }

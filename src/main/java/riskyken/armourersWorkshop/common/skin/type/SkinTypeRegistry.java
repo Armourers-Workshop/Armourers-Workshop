@@ -6,16 +6,15 @@ import java.util.LinkedHashMap;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraft.client.resources.I18n;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinTypeRegistry;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.type.arrow.SkinArrow;
 import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 import riskyken.armourersWorkshop.common.skin.type.bow.SkinBow;
@@ -110,15 +109,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         return true;
     }
     
-    public boolean isSkinDisabled(ISkinType skinType) {
-        for (int i = 0; i < ConfigHandler.disabledSkins.length; i++) {
-            if (skinType.getRegistryName().equals(ConfigHandler.disabledSkins[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     @Override
     public ISkinType getSkinTypeFromRegistryName(String registryName) {
         if (registryName == null | registryName.trim().isEmpty()) {
@@ -128,9 +118,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return skinLegs;
         }
         ISkinType skinType = skinTypeMap.get(registryName);
-        if (skinType != null && isSkinDisabled(skinType)) {
-            return null;
-        }
         return skinType;
     }
     
@@ -216,20 +203,19 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     @SideOnly(Side.CLIENT)
     public String getLocalizedSkinTypeName(ISkinType skinType) {
         String localizedName = "skinType." + skinType.getRegistryName() + ".name";
-        return I18n.format(localizedName);
+        return StatCollector.translateToLocal(localizedName);
     }
     
     @SideOnly(Side.CLIENT)
     public String getLocalizedSkinPartTypeName(ISkinPartType skinPartType) {
         String localizedName = "skinPartType." + skinPartType.getRegistryName() + ".name";
-        return I18n.format(localizedName);
+        return StatCollector.translateToLocal(localizedName);
     }
     
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-        /*
-        if (event.getMap().getTextureType() == 1) {
+        if (event.map.getTextureType() == 1) {
             for (int i = 0; i < skinTypeMap.size(); i++) {
                 String registryName = (String) skinTypeMap.keySet().toArray()[i];
                 ISkinType skinType = getSkinTypeFromRegistryName(registryName);
@@ -238,7 +224,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
                 }
             }
         }
-        */
     }
 
     @Override

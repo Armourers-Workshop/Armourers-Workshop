@@ -1,12 +1,13 @@
 package riskyken.armourersWorkshop.client.gui;
 
 import java.awt.Color;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -14,8 +15,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiColourSelector;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -54,7 +53,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     @Override
     public void initGui() {
         super.initGui();
-        colour = new Color(tileEntityColourMixer.getColour(null));
+        colour = new Color(tileEntityColourMixer.getColour(0));
         float[] hsbvals = Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null);
         slidersHSB = new GuiHSBSlider[3];
         slidersHSB[0] = new GuiHSBSlider(0, this.guiLeft + 5, this.guiTop + 30, 128, 10, this, HSBSliderType.HUE, hsbvals[0], hsbvals[0], hsbvals[2]);
@@ -63,7 +62,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         buttonList.add(slidersHSB[0]);
         buttonList.add(slidersHSB[1]);
         buttonList.add(slidersHSB[2]);
-        colourHex = new GuiTextField(0 ,fontRendererObj, this.guiLeft + 5, this.guiTop + 90, 50, 10);
+        colourHex = new GuiTextField(fontRendererObj, this.guiLeft + 5, this.guiTop + 90, 50, 10);
         colourHex.setMaxStringLength(7);
         updateHexTextbox();
         colourSelector = new GuiColourSelector(3, this.guiLeft + 5, this.guiTop + 110, 82, 22, 10, 10, 8, guiTexture);
@@ -85,7 +84,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     
     private void checkForColourUpdates() {
         if (tileEntityColourMixer.getHasItemUpdateAndReset()) {
-            this.colour = new Color(tileEntityColourMixer.getColour(null));
+            this.colour = new Color(tileEntityColourMixer.getColour(0));
             updateSliders();
             updatePaintTypeDropDown();
         }
@@ -98,7 +97,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
             PaintType paintType = PaintType.values()[i];
             if (i < 12) {
                 paintTypeDropDown.addListItem(paintType.getLocalizedName());
-                if (paintType == tileEntityColourMixer.getPaintType(null)) {
+                if (paintType == tileEntityColourMixer.getPaintType(0)) {
                     paintTypeDropDown.setListSelectedIndex(paintCount);
                 }
                 paintCount++;
@@ -133,32 +132,34 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         colourHex.mouseClicked(mouseX, mouseY, button);
     }
+    
     @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
-        if (state != 0) {
+    protected void mouseMovedOrUp(int mouseX, int mouseY, int which) {
+        super.mouseMovedOrUp(mouseX, mouseY, which);
+        if (which != 0) {
             return;
         }
         updateColour();
     }
     
     private void updateColour() {
-        Color colourOld = new Color(tileEntityColourMixer.getColour(null));
+        Color colourOld = new Color(tileEntityColourMixer.getColour(0));
         PaintType paintType = PaintType.values()[paintTypeDropDown.getListSelectedIndex()];
         if (this.colour.equals(colourOld)) {
-            if (paintType == tileEntityColourMixer.getPaintType(null))
+            if (paintType == tileEntityColourMixer.getPaintType(0))
             return;
         }
+        
         MessageClientGuiColourUpdate message = new MessageClientGuiColourUpdate(this.colour.getRGB(), false, paintType);
         PacketHandler.networkWrapper.sendToServer(message);
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) throws IOException {
+    protected void keyTyped(char key, int keyCode) {
         if (!colourHex.textboxKeyTyped(key, keyCode)) {
             super.keyTyped(key, keyCode);
         } else {
@@ -183,15 +184,15 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntityColourMixer.getName());
+        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntityColourMixer.getInventoryName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
         
-        String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.hue");
-        String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.saturation");
-        String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.brightness");
-        String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.hex");
-        String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.presets");
-        String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.paintType");
+        String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hue");
+        String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.saturation");
+        String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.brightness");
+        String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hex");
+        String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.presets");
+        String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.paintType");
         
         this.fontRendererObj.drawString(labelHue + ":", 5, 21, 4210752);
         this.fontRendererObj.drawString(labelSaturation + ":", 5, 41, 4210752);

@@ -2,7 +2,10 @@ package riskyken.armourersWorkshop.api.common.skin.type;
 
 import java.util.ArrayList;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
 
 /**
  * 
@@ -29,6 +32,16 @@ public interface ISkinType {
      */
     public String getName();
     
+    
+    @SideOnly(Side.CLIENT)
+    public void registerIcon(IIconRegister register);
+    
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon();
+    
+    @SideOnly(Side.CLIENT)
+    public IIcon getEmptySlotIcon();
+    
     /**
      * Should the show skin overlay check box be shown in the armourer and mini armourer.
      * @return
@@ -45,7 +58,7 @@ public interface ISkinType {
      * If this skin is for vanilla armour return the slot id here, otherwise return -1.
      * @return slotId
      */
-    public EntityEquipmentSlot getEntityEquipmentSlot();
+    public int getVanillaArmourSlotId();
     
     /**
      * Should this skin be hidden from the user?

@@ -14,9 +14,11 @@ public class GuiDebugTool extends GuiScreen {
     protected int guiTop;
     
     private GuiCheckBox checkWireframe;
+    private GuiCheckBox checkArmourerDebugRenders;
+    private GuiCheckBox checkShowLodLevel;
     
     public GuiDebugTool() {
-        this.guiWidth = 128;
+        this.guiWidth = 180;
         this.guiHeight = 128;
     }
     
@@ -26,14 +28,31 @@ public class GuiDebugTool extends GuiScreen {
         guiTop = height / 2 - guiHeight / 2;
         
         buttonList.clear();
+        
         checkWireframe = new GuiCheckBox(-1, guiLeft + 5, guiTop + 5, "wire frame", ConfigHandlerClient.wireframeRender);
+        checkWireframe.setTextColour(0xFFEEEEEE);
+        
+        checkArmourerDebugRenders = new GuiCheckBox(-1, guiLeft + 5, guiTop + 15, "armourer debug renders", ConfigHandlerClient.showArmourerDebugRender);
+        checkArmourerDebugRenders.setTextColour(0xFFEEEEEE);
+        
+        checkShowLodLevel = new GuiCheckBox(-1, guiLeft + 5, guiTop + 25, "show lod levels", ConfigHandlerClient.showLodLevels);
+        checkShowLodLevel.setTextColour(0xFFEEEEEE);
+        
         buttonList.add(checkWireframe);
+        buttonList.add(checkArmourerDebugRenders);
+        buttonList.add(checkShowLodLevel);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == checkWireframe) {
             ConfigHandlerClient.wireframeRender = checkWireframe.isChecked();
+        }
+        if (button == checkArmourerDebugRenders) {
+            ConfigHandlerClient.showArmourerDebugRender = checkArmourerDebugRenders.isChecked();
+        }
+        if (button == checkShowLodLevel) {
+            ConfigHandlerClient.showLodLevels = checkShowLodLevel.isChecked();
         }
     }
     

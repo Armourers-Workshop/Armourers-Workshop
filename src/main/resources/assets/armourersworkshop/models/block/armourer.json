@@ -1,8 +1,0 @@
-{
-    "parent": "block/cube_bottom_top",
-    "textures": {
-        "side": "armourersworkshop:blocks/armourerSide",
-        "top": "armourersworkshop:blocks/armourerTopBottom",
-        "bottom": "armourersworkshop:blocks/armourerTopBottom"
-    }
-}

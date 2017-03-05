@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.utils;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import net.minecraftforge.fml.common.FMLLog;
+import cpw.mods.fml.common.FMLLog;
 
 public class ModLogger {
     public static void log(Object object) {

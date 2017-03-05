@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 
 public final class HolidayHelper {
     
@@ -12,7 +17,7 @@ public final class HolidayHelper {
     
     //Spooky scary skeletons.
     public static final Holiday halloween = new Holiday(31, Calendar.OCTOBER, 0, 24);
-    public static final Holiday halloween_season = new Holiday(24, Calendar.OCTOBER, 14, 0);
+    public static final Holiday halloween_season = new Holiday(24, Calendar.OCTOBER, 8, 0);
     
     //Some guy was born or something.
     public static final Holiday christmas = new Holiday(25, Calendar.DECEMBER, 0, 24);
@@ -62,18 +67,15 @@ public final class HolidayHelper {
     
     public static void giftPlayer(EntityPlayerMP player) {
         if (christmas_season.isHolidayActive()) {
-            /*
             ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get(player);
             if (playerData.lastXmasYear < getYear()) {
                 ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);
                 if (!player.inventory.addItemStackToInventory(giftSack)) {
-                    TextComponentString message = new TextComponentString(I18n.format("chat.armourersworkshop:inventoryGiftFail"));
-                    player.addChatComponentMessage(message);
+                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("chat.armourersworkshop:inventoryGiftFail")));
                 } else {
                     playerData.lastXmasYear = getYear();
                 }
             }
-            */
         }
     }
     
@@ -106,7 +108,6 @@ public final class HolidayHelper {
                     return true;
                 }
             }
-            
             return false;
         }
 

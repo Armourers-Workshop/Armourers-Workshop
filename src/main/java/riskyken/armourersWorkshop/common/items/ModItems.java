@@ -2,9 +2,8 @@ package riskyken.armourersWorkshop.common.items;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import riskyken.armourersWorkshop.common.addons.AddonBuildCraft;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemBurnTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourNoiseTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourPicker;
@@ -15,6 +14,8 @@ import riskyken.armourersWorkshop.common.items.paintingtool.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemShadeNoiseTool;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.plushieWrapper.common.item.PlushieItem;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class ModItems {
     
@@ -30,13 +31,13 @@ public class ModItems {
     public static Item shadeNoiseTool;
     public static Item hueTool;
     public static Item blendingTool;
-    public static Item blockMarker;
+    public static PlushieItem blockMarker;
     
     public static Item mannequinTool;
-    public static Item wandOfStyle;
-    public static Item soap;
+    public static PlushieItem wandOfStyle;
+    public static PlushieItem soap;
     public static Item dyeBottle;
-    public static Item guideBook;
+    public static PlushieItem guideBook;
     public static Item armourersHammer;
     public static Item debugTool;
     
@@ -70,16 +71,21 @@ public class ModItems {
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];
-        armourContainer[0] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_HEAD, EntityEquipmentSlot.HEAD);
-        armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, EntityEquipmentSlot.CHEST);
-        armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, EntityEquipmentSlot.LEGS);
-        armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, EntityEquipmentSlot.FEET);
+        armourContainer[0] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_HEAD, 0);
+        armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, 1);
+        armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, 2);
+        armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, 3);
+        
+        ModRegistry.registerItem(guideBook);
+        ModRegistry.registerItem(wandOfStyle);
+        ModRegistry.registerItem(soap);
+        ModRegistry.registerItem(blockMarker);
     }
     
     private void setEquipmentSkinType() {
         boolean skinTypeSet = true;
         
-        if (AddonBuildCraft.isSkinCompatibleVersion()) {
+        if (ModAddonManager.addonBuildCraft.isSkinCompatibleVersion()) {
             try {
                 Class<?> c = Class.forName("riskyken.armourersWorkshop.common.items.ItemSkinRobotOverlay");
                 Object classObject = c.newInstance();

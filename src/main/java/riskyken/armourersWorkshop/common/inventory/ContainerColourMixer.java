@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
@@ -74,19 +74,19 @@ public class ContainerColourMixer extends Container {
     private ColourFamily lastColourFamily;
     
     @Override
-    public void addListener(IContainerListener listener) {
-        super.addListener(listener);
-        listener.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
+    public void addCraftingToCrafters(ICrafting crafter) {
+        super.addCraftingToCrafters(crafter);
+        crafter.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
         lastColourFamily = tileEntityColourMixer.getColourFamily();
     }
     
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (int i = 0; i < listeners.size(); i++) {
-            IContainerListener listener = (IContainerListener) listeners.get(i);
+        for (int i = 0; i < crafters.size(); i++) {
+            ICrafting crafter = (ICrafting) crafters.get(i);
             if (lastColourFamily != tileEntityColourMixer.getColourFamily()) {
-                listener.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
+                crafter.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
             }
         }
         lastColourFamily = tileEntityColourMixer.getColourFamily();

@@ -12,14 +12,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
@@ -60,7 +59,7 @@ public class SkinTexture {
     
     public void updateGameProfile(GameProfile gameProfile) {
         //TODO Look at RealmsScreen code.
-        ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
+        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
         if (gameProfile != null) {
             rl = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
             AbstractClientPlayer.getDownloadImageSkin(rl, gameProfile.getName());
@@ -68,7 +67,7 @@ public class SkinTexture {
         updateForResourceLocation(rl);
         
         if (bufferedPlayerImage == null) {
-            updateForResourceLocation(DefaultPlayerSkin.getDefaultSkinLegacy());
+            updateForResourceLocation(AbstractClientPlayer.locationStevePng);
         }
     }
     

@@ -1,12 +1,10 @@
 package riskyken.armourersWorkshop.common.items.paintingtool;
 
-import net.minecraft.client.renderer.color.IItemColor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
 import riskyken.armourersWorkshop.client.particles.ParticleManager;
@@ -15,7 +13,7 @@ import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 
-public abstract class AbstractPaintingTool extends AbstractModItem implements IPaintingTool, IBlockPainter, IItemColor {
+public abstract class AbstractPaintingTool extends AbstractModItem implements IPaintingTool, IBlockPainter {
 
     public AbstractPaintingTool(String name) {
         super(name);
@@ -23,7 +21,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean hasEffect(ItemStack stack, int pass) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
         if (paintType != PaintType.NORMAL) {
             return true;
@@ -32,12 +30,25 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     }
     
     @SideOnly(Side.CLIENT)
-    protected void spawnPaintParticles (World world, BlockPos pos, EnumFacing side, int colour) {
+    protected void spawnPaintParticles (World world, int x, int y, int z, int side, int colour) {
         for (int i = 0; i < 3; i++) {
-            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D,
-                    colour, side);
+            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
+                    colour, ForgeDirection.getOrientation(side));
             ParticleManager.INSTANCE.spawnParticle(world, particle);
         }
+    }
+    
+    @Override
+    public int getColorFromItemStack(ItemStack stack, int pass) {
+        if (pass == 0) {
+            return super.getColorFromItemStack(stack, pass);
+        }
+        return getToolColour(stack);
+    }
+    
+    @Override
+    public boolean requiresMultipleRenderPasses() {
+        return true;
     }
     
     @Override
@@ -63,14 +74,5 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     @Override
     public PaintType getToolPaintType(ItemStack stack) {
         return PaintingHelper.getToolPaintType(stack) ;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-        if (tintIndex == 1) {
-            return getToolColour(stack);
-        }
-        return 0xFFFFFFFF;
     }
 }

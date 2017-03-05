@@ -66,6 +66,7 @@ public class ContainerMannequin extends Container {
                             }
                         }
                     }
+                    
                 }
                 if (!slotted) {
                     return null;

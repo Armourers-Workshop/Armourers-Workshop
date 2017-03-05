@@ -4,16 +4,14 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -21,8 +19,8 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -39,10 +37,7 @@ import riskyken.armourersWorkshop.utils.SkinUtils;
  */
 @SideOnly(Side.CLIENT)
 public class ModelRendererAttachment extends ModelRenderer {
-    
-    @CapabilityInject(IWardrobeCapability.class)
-    private static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
-    
+
     private final ISkinType skinType;
     private final ISkinPartType skinPart;
     private final Minecraft mc;
@@ -82,14 +77,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             return;
         }
         
-        IWardrobeCapability wardrobe = player.getCapability(WARDROBE_CAP, null);
-        if (wardrobe == null) {
-            mc.mcProfiler.endSection();
-            return;
-        }
-        EquipmentWardrobeData ewd = wardrobe.getEquipmentWardrobeData();
-        
-        
+        EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
         byte[] extraColours = null;
         if (ewd != null) {
             Color skinColour = new Color(ewd.skinColour);
@@ -126,7 +114,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                         GL11.glTranslated(0, 0, scale * 2);
                         double angle = SkinUtils.getFlapAngleForWings(player, data);
                         Point3D point = new Point3D(0, 0, 0);
-                        EnumFacing axis = EnumFacing.DOWN;
+                        ForgeDirection axis = ForgeDirection.DOWN;
                         
                         if (partData.getMarkerCount() > 0) {
                             point = partData.getMarker(0);
@@ -155,6 +143,8 @@ public class ModelRendererAttachment extends ModelRenderer {
                             case WEST:
                                 GL11.glRotated(angle, 0, 0, 1);
                                 break;
+                            case UNKNOWN:
+                                break;
                             }
                         } else {
                             switch (axis) {
@@ -176,6 +166,8 @@ public class ModelRendererAttachment extends ModelRenderer {
                             case WEST:
                                 GL11.glRotated(angle, 1, 0, 0);
                                 break;
+                            case UNKNOWN:
+                                break;
                             }
                         }
                         GL11.glTranslated(scale * -point.getX(), scale * -point.getY(), scale * -point.getZ());
@@ -184,9 +176,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    
                     SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance, true);
-
                     GL11.glDisable(GL11.GL_CULL_FACE);
                     GL11.glPopMatrix();
                     break;

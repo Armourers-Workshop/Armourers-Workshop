@@ -2,8 +2,11 @@ package riskyken.armourersWorkshop.common.skin.type.chest;
 
 import java.util.ArrayList;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
 public class SkinChest extends AbstractSkinTypeBase {
@@ -32,8 +35,15 @@ public class SkinChest extends AbstractSkinTypeBase {
         return "Chest";
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public EntityEquipmentSlot getEntityEquipmentSlot() {
-        return EntityEquipmentSlot.CHEST;
+    public void registerIcon(IIconRegister register) {
+        this.icon = register.registerIcon(LibItemResources.TEMPLATE_CHEST);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_CHEST);
+    }
+
+    @Override
+    public int getVanillaArmourSlotId() {
+        return 1;
     }
 }

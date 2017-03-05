@@ -1,13 +1,12 @@
 package riskyken.armourersWorkshop.utils;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
+
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.StringUtils;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 public final class GameProfileUtils {
     
@@ -17,13 +16,12 @@ public final class GameProfileUtils {
         t.start();
     }
     
-    public static GameProfile getGameProfileForUserName(String username) {
+    public static GameProfile getGameProfileForUserName(String userName) {
         GameProfile gameProfile;
-        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-        gameProfile = server.getPlayerProfileCache().getGameProfileForUsername(username);
+        gameProfile = MinecraftServer.getServer().func_152358_ax().func_152655_a(userName);
         if (gameProfile == null) {
             ModLogger.log("profile was null");
-            gameProfile = new GameProfile(null, username);
+            gameProfile = new GameProfile(null, userName);
         }
         return gameProfile;
     }
@@ -42,12 +40,11 @@ public final class GameProfileUtils {
         public void run() {
             if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
                 if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
-                    MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-                    GameProfile newGameProfile = gameProfile = server.getPlayerProfileCache().getGameProfileForUsername(this.gameProfile.getName());
+                    GameProfile newGameProfile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.gameProfile.getName());
                     if (newGameProfile != null) {
                         Property property = (Property)Iterables.getFirst(newGameProfile.getProperties().get("textures"), (Object)null);
                         if (property == null) {
-                            newGameProfile = server.getMinecraftSessionService().fillProfileProperties(newGameProfile, true);
+                            newGameProfile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(newGameProfile, true);
                         }
                         if (callback != null) {
                             callback.profileUpdated(newGameProfile);

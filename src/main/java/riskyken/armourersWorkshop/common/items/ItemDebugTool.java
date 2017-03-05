@@ -2,14 +2,14 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 
@@ -20,14 +20,21 @@ public class ItemDebugTool extends AbstractModItem {
     }
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        if (worldIn.isRemote) {
-            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.DEBUG_TOOL, worldIn, 0, 0, 0);
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibItemResources.DEBUG_TOOL);
+    }
+    
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (world.isRemote) {
+            player.openGui(ArmourersWorkshop.instance, LibGuiIds.DEBUG_TOOL, world, 0, 0, 0);
         }
-        return new ActionResult(EnumActionResult.PASS, itemStackIn);
+        return stack;
     }
     
     public static interface IDebug {
-        public void getDebugHoverText(World world, BlockPos pos, ArrayList<String> textLines);
+        
+        public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines);
     }
 }

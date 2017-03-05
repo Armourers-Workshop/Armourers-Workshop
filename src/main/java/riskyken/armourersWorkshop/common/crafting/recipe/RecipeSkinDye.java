@@ -12,8 +12,8 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class RecipeSkinDye implements IRecipe {
 
@@ -79,12 +79,6 @@ public class RecipeSkinDye implements IRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return null;
-    }
-
-    @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -4,6 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -48,7 +49,7 @@ public class RecipeSkinCopy extends RecipeItemSkinning {
         if (skinStack != null && blackStack != null) {
             ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
-            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, false);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.skinId, false, new SkinDye(skinData.getSkinDye()));
             return returnStack;
         }
         return null;

@@ -2,16 +2,15 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class AbstractModItem extends Item {
 
@@ -20,11 +19,10 @@ public abstract class AbstractModItem extends Item {
     }
     
     public AbstractModItem(String name, boolean addCreativeTab) {
-        setUnlocalizedName(name);
         if (addCreativeTab) {
             setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         }
-        
+        setUnlocalizedName(name);
         setHasSubtypes(false);
         setMaxStackSize(1);
         setNoRepair();
@@ -37,7 +35,7 @@ public abstract class AbstractModItem extends Item {
         String localized;
 
         unlocalized = itemStack.getUnlocalizedName() + ".flavour";
-        localized = I18n.format(unlocalized);
+        localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");
@@ -54,10 +52,8 @@ public abstract class AbstractModItem extends Item {
 
     @Override
     public Item setUnlocalizedName(String name) {
-        super.setUnlocalizedName(name);
-        //setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + name));
-        GameRegistry.register(this, new ResourceLocation(LibModInfo.ID, "item." + name));
-        return this;
+        GameRegistry.registerItem(this, name);
+        return super.setUnlocalizedName(name);
     }
 
     @Override

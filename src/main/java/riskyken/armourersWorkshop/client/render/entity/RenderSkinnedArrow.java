@@ -2,37 +2,35 @@ package riskyken.armourersWorkshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.entity.RenderArrow;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 @SideOnly(Side.CLIENT)
-public abstract class RenderSkinnedArrow<T extends EntityArrow> extends RenderArrow<T> {
+public class RenderSkinnedArrow extends RenderArrow {
     
     private final SkinModelRenderer equipmentModelRenderer;
     
-    public RenderSkinnedArrow(RenderManager renderManagerIn) {
-        super(renderManagerIn);
+    public RenderSkinnedArrow() {
         this.equipmentModelRenderer = SkinModelRenderer.INSTANCE;
     }
     
     @Override
-    public void doRender(T entityArrow, double x, double y, double z, float yaw, float partialTickTime) {
-        if (entityArrow.shootingEntity != null && entityArrow.shootingEntity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entityArrow.shootingEntity;
+    public void doRender(EntityArrow entityArrow, double x, double y, double z, float yaw, float partialTickTime) {
+        if (entityArrow.shootingEntity != null && entityArrow.shootingEntity instanceof EntityClientPlayerMP) {
+            EntityClientPlayerMP player = (EntityClientPlayerMP) entityArrow.shootingEntity;
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
             if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
                 ISkinPointer skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinArrow, 0);

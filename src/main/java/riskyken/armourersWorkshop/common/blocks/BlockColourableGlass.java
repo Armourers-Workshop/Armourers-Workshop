@@ -1,10 +1,11 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.world.IBlockAccess;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 
 public class BlockColourableGlass extends BlockColourable {
 
@@ -12,26 +13,36 @@ public class BlockColourableGlass extends BlockColourable {
         super(name, glowing);
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public void registerBlockIcons(IIconRegister register) {
+        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE_GLASS);
+        markerOverlay = register.registerIcon(LibBlockResources.MARKER);
+        noTexture = register.registerIcon(LibBlockResources.NO_TEXTURE);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getRenderBlockPass() {
+        return 1;
+    }
+    
+    @Override
+    public boolean isOpaqueCube() {
         return false;
     }
     
     @Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        if (blockAccess.getBlockState(pos.offset(side)).getBlock() == this) {
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
+        Block sideBlock = world.getBlock(x, y, z);
+        if (sideBlock == this) {
             return false;
         }
-        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+        return true;
     }
     
     @Override
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-    
-    @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean renderAsNormalBlock() {
         return false;
     }
 }

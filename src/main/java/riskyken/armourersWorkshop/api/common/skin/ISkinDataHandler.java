@@ -11,22 +11,13 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public interface ISkinDataHandler {
     
-    public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack, int columnIndex);
-    
-    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType, int columnIndex);
-    
-    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType, int columnIndex);
-    
-    @Deprecated
     public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack);
     
-    @Deprecated
     public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType);
     
-    @Deprecated
     public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType);
     
-    public boolean isStackValidSkin(ItemStack stack);
+    public boolean isValidEquipmentSkin(ItemStack stack);
     
     public boolean stackHasSkinPointer(ItemStack stack);
     

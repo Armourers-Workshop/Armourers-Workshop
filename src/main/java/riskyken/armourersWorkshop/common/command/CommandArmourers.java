@@ -3,17 +3,16 @@ package riskyken.armourersWorkshop.common.command;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
@@ -37,21 +36,21 @@ public class CommandArmourers extends CommandBase {
     }
     
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
         String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache", "setSkinColumnCount"};
         
-        switch (args.length) {
+        switch (currentCommand.length) {
         case 1:
-            return getListOfStringsMatchingLastWord(args, commands);
+            return getListOfStringsMatchingLastWord(currentCommand, commands);
         case 2:
-            return getListOfStringsMatchingLastWord(args, getPlayers(server));
+            return getListOfStringsMatchingLastWord(currentCommand, getPlayers());
         default:
             return null;
         }
     }
-    
+
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender commandSender, String[] args) {
         if (args == null) {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }
@@ -60,7 +59,7 @@ public class CommandArmourers extends CommandBase {
         }
         String command = args[0];
         String playerName = args[1];
-        EntityPlayerMP player = getPlayer(server, sender, playerName);
+        EntityPlayerMP player = getPlayer(commandSender, playerName);
         if (player == null) {
             return;
         }
@@ -79,11 +78,11 @@ public class CommandArmourers extends CommandBase {
             }
             CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, skinName);
             ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
-            EntityItem entityItem = player.dropItem(skinStack, false);
-            entityItem.setNoPickupDelay();
-            entityItem.setOwner(player.getName());
+            EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
+            entityItem.delayBeforeCanPickup = 0;
+            entityItem.func_145797_a(player.getCommandSenderName());
         } else if (command.equals("clearSkins")) {
-            //ExPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
+            ExPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
         } else if (command.equals("setSkin")) {
             if (args.length < 3) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
@@ -98,7 +97,7 @@ public class CommandArmourers extends CommandBase {
             }
             CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, skinName);
             ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
-            //ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
+            ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {
             PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);
         } else if (command.equals("setSkinColumnCount")) {
@@ -113,13 +112,13 @@ public class CommandArmourers extends CommandBase {
             } catch (Exception e) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
             }
-            //ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(count);
+            ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(count);
         } else {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }
     }
     
-    private String[] getPlayers(MinecraftServer server) {
-        return server.getAllUsernames();
+    private String[] getPlayers() {
+        return MinecraftServer.getServer().getAllUsernames();
     }
 }

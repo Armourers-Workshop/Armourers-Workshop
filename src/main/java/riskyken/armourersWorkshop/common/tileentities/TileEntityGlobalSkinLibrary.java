@@ -13,6 +13,11 @@ public class TileEntityGlobalSkinLibrary extends TileEntity implements IButtonPr
     }
 
     @Override
+    public boolean canUpdate() {
+        return false;
+    }
+
+    @Override
     public void buttonPressed(byte buttonId) {
         // TODO Auto-generated method stub
     }

@@ -4,44 +4,54 @@ import java.awt.Point;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public class TileEntityBoundingBox extends TileEntity {
     
-    private static final String TAG_PARENT_POS = "parent";
+    private static final String TAG_PARENT_X = "parentX";
+    private static final String TAG_PARENT_Y = "parentY";
+    private static final String TAG_PARENT_Z = "parentZ";
     private static final String TAG_GUIDE_X = "guideX";
     private static final String TAG_GUIDE_Y = "guideY";
     private static final String TAG_GUIDE_Z = "guideZ";
     private static final String TAG_SKIN_PART = "skinPart";
     
-    private BlockPos parentPos;
+    private int parentX;
+    private int parentY;
+    private int parentZ;
     private byte guideX;
     private byte guideY;
     private byte guideZ;
     private ISkinPartType skinPart;
     
     public TileEntityBoundingBox() {
-        setParent(new BlockPos(0, 0, 0), (byte) 0, (byte) 0, (byte) 0, null);
+        setParent(0, 0, 0, (byte) 0, (byte) 0, (byte) 0, null);
     }
     
-    public TileEntityBoundingBox(BlockPos parentPos,
+    public TileEntityBoundingBox(int parentX, int parentY, int parentZ,
             byte guideX, byte guideY, byte guideZ, ISkinPartType skinPart) {
-        setParent(parentPos, guideX, guideY, guideZ, skinPart);
+        setParent(parentX, parentY, parentZ, guideX, guideY, guideZ, skinPart);
+    }
+    
+    @Override
+    public boolean canUpdate() {
+        return false;
     }
     
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        this.parentPos = NBTHelper.readBlockPos(compound, TAG_PARENT_POS);
+        this.parentX = compound.getInteger(TAG_PARENT_X);
+        this.parentY = compound.getInteger(TAG_PARENT_Y);
+        this.parentZ = compound.getInteger(TAG_PARENT_Z);
         this.guideX = compound.getByte(TAG_GUIDE_X);
         this.guideY = compound.getByte(TAG_GUIDE_Y);
         this.guideZ = compound.getByte(TAG_GUIDE_Z);
@@ -49,33 +59,34 @@ public class TileEntityBoundingBox extends TileEntity {
     }
     
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        NBTHelper.writeBlockPos(parentPos, compound, TAG_PARENT_POS);
+        compound.setInteger(TAG_PARENT_X, this.parentX);
+        compound.setInteger(TAG_PARENT_Y, this.parentY);
+        compound.setInteger(TAG_PARENT_Z, this.parentZ);
         compound.setByte(TAG_GUIDE_X, this.guideX);
         compound.setByte(TAG_GUIDE_Y, this.guideY);
         compound.setByte(TAG_GUIDE_Z, this.guideZ);
         if (this.skinPart != null) {
             compound.setString(TAG_SKIN_PART, this.skinPart.getRegistryName());
         }
-        return compound;
     }
     
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), compound);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        readFromNBT(packet.getNbtCompound());
-        worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+        readFromNBT(packet.func_148857_g());
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public TileEntityArmourer getParent() {
-        TileEntity te = worldObj.getTileEntity(parentPos);
+        TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
         if (te != null && te instanceof TileEntityArmourer) {
             return (TileEntityArmourer)te;
         }
@@ -83,7 +94,7 @@ public class TileEntityBoundingBox extends TileEntity {
     }
     
     public boolean isParentValid() {
-        TileEntity te = worldObj.getTileEntity(parentPos);
+        TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
         if (te != null && te instanceof TileEntityArmourer) {
             return true;
         }
@@ -94,9 +105,11 @@ public class TileEntityBoundingBox extends TileEntity {
         return this.skinPart;
     }
     
-    public void setParent(BlockPos parentPos, byte guideX, byte guideY, byte guideZ,
+    public void setParent(int x, int y, int z,byte guideX, byte guideY, byte guideZ,
             ISkinPartType skinPart) {
-        this.parentPos = parentPos;
+        this.parentX = x;
+        this.parentY = y;
+        this.parentZ = z;
         this.guideX = guideX;
         this.guideY = guideY;
         this.guideZ = guideZ;
@@ -116,14 +129,15 @@ public class TileEntityBoundingBox extends TileEntity {
         return this.guideZ;
     }
     
-    public boolean isPaintableSide(EnumFacing side) {
-        if (worldObj.getBlockState(getPos().offset(side)).getBlock() == getBlockType()) {
+    public boolean isPaintableSide(int side) {
+        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        if (worldObj.getBlock(xCoord + sideBlock.offsetX, yCoord + sideBlock.offsetY, zCoord + sideBlock.offsetZ) == getBlockType()) {
             return false;
         }
         return true;
     }
     
-    public PaintType getPaintType(EnumFacing side) {
+    public PaintType getPaintType(int side) {
         if (isParentValid() && skinPart instanceof ISkinPartTypeTextured) {
             Point texPoint = SkinTextureHelper.getTextureLocationFromWorldBlock(this, side);
             int colour = getParent().getPaintData(texPoint.x, texPoint.y);

@@ -2,22 +2,22 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemMannequinTool extends AbstractModItem {
     
@@ -26,13 +26,19 @@ public class ItemMannequinTool extends AbstractModItem {
     public ItemMannequinTool() {
         super(LibItemNames.MANNEQUIN_TOOL);
     }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibItemResources.MANNEQUIN_TOOL);
+    }
     
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-            EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        IBlockState block = worldIn.getBlockState(pos);
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
+            int side, float hitX, float hitY, float hitZ) {
+        
+        Block block = world.getBlock(x, y, z);
         if (block != null && (block == ModBlocks.mannequin | block == ModBlocks.doll)) {
-            /*
             TileEntity te;
             int meta = world.getBlockMetadata(x, y, z);
             if (meta == 0) {
@@ -42,7 +48,7 @@ public class ItemMannequinTool extends AbstractModItem {
             }
             if (te != null && te instanceof TileEntityMannequin) {
                 TileEntityMannequin teMan = (TileEntityMannequin) te;
-                if (playerIn.isSneaking()) {
+                if (player.isSneaking()) {
                     setRotationDataOnStack(stack, teMan.getBipedRotations());
                 } else {
                     BipedRotations bipedRotations = getRotationDataFromStack(stack);
@@ -50,11 +56,10 @@ public class ItemMannequinTool extends AbstractModItem {
                         teMan.setBipedRotations(bipedRotations);
                     }
                 }
-                return EnumActionResult.PASS;
+                return true;
             }
-            */
         }
-        return EnumActionResult.FAIL;
+        return false;
     }
     
     private BipedRotations getRotationDataFromStack(ItemStack stack) {

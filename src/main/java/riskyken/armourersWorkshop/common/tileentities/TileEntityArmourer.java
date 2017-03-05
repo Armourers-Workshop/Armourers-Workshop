@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,14 +15,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -41,6 +41,7 @@ import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class TileEntityArmourer extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -55,7 +56,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private static final int HEIGHT_OFFSET = 1;
     private static final int INVENTORY_SIZE = 2;
     
-    private EnumFacing direction;
+    private ForgeDirection direction;
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;
     private ISkinType skinType;
@@ -70,13 +71,18 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     
     public TileEntityArmourer() {
         super(INVENTORY_SIZE);
-        this.direction = EnumFacing.NORTH;
-        this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeHead();
+        this.direction = ForgeDirection.NORTH;
+        this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
         this.showOverlay = true;
         this.showGuides = true;
         this.showHelper = true;
         this.skinProps = new SkinProperties();
         clearPaintData(false);
+    }
+    
+    @Override
+    public boolean canUpdate() {
+        return false;
     }
     
     public int[] getPaintData() {
@@ -86,7 +92,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void updatePaintData(int x, int y, int colour) {
         paintData[x + (y * SkinTexture.TEXTURE_WIDTH)] = colour;
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public int getPaintData(int x, int y) {
@@ -119,7 +125,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         Skin armourItemData = null;
         
         SkinProperties skinProps = new SkinProperties();
-        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getName());
+        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getCommandSenderName());
         if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
             skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
         }
@@ -142,22 +148,26 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             skinProps.setProperty(Skin.KEY_WINGS_MAX_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D));
         }
         
+        if (skinType.getVanillaArmourSlotId() != -1) {
+            skinProps.setProperty(Skin.KEY_ARMOUR_OVERRIDE, this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
+        }
+        
         try {
             armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType,
-                    paintData, pos.add(0, HEIGHT_OFFSET, 0), direction);
+                    paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         } catch (InvalidCubeTypeException e) {
             ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
             e.printStackTrace();
         } catch (SkinSaveException e) {
             switch (e.getType()) {
             case NO_DATA:
-                player.addChatMessage(new TextComponentString(e.getMessage()));
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
             case MARKER_ERROR:
-                player.addChatMessage(new TextComponentString(e.getMessage()));
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
             case MISSING_PARTS:
-                player.addChatMessage(new TextComponentString(e.getMessage()));
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
             }
         }
@@ -216,16 +226,16 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         
         int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
         Skin equipmentData = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
-        skinProps = new SkinProperties(equipmentData.getProperties());
+        setSkinProps(new SkinProperties(equipmentData.getProperties()));
         
-        ArmourerWorldHelper.loadSkinIntoWorld(worldObj, pos.add(0, HEIGHT_OFFSET, 0), equipmentData, direction);
+        ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
         if (equipmentData.hasPaintData()) {
             this.paintData = equipmentData.getPaintData().clone();
         } else {
             clearPaintData(true);
         }
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
@@ -238,7 +248,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         if (update) {
             this.markDirty();
-            syncWithClients();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);   
         }
     }
     
@@ -250,14 +260,14 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     
     private void applyToolToBlocks(IBlockPainter tool, World world, ItemStack stack, EntityPlayer player) {
         if (skinType != null) {
-            ArrayList<BlockPos> paintableCubes = ArmourerWorldHelper.getListOfPaintableCubes(worldObj, pos.add(0, HEIGHT_OFFSET, 0), skinType);
+            ArrayList<BlockLocation> paintableCubes = ArmourerWorldHelper.getListOfPaintableCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
             for (int i = 0; i < paintableCubes.size(); i++) {
-                BlockPos bl = paintableCubes.get(i);
-                Block block = world.getBlockState(bl).getBlock();
+                BlockLocation bl = paintableCubes.get(i);
+                IPantableBlock pBlock = (IPantableBlock) worldObj.getBlock(bl.x, bl.y, bl.z);
+                Block block = world.getBlock(bl.x, bl.y, bl.z);
                 if (block instanceof IPantableBlock) {
                     for (int side = 0; side < 6; side++) {
-                        EnumFacing face = EnumFacing.values()[side];
-                        tool.usedOnBlockSide(stack, player, world, bl, block, face);
+                        tool.usedOnBlockSide(stack, player, world, bl, block, side);
                     }
                 }
             }
@@ -278,43 +288,46 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
 
     public void clearArmourCubes() {
         if (skinType != null) {
-            ArmourerWorldHelper.clearEquipmentCubes(worldObj, pos.add(0, HEIGHT_OFFSET, 0), skinType);
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
             clearPaintData(true);
-            skinProps = new SkinProperties();
+            setSkinProps(new SkinProperties());
             resyncData();
         }
     }
     
     protected void removeBoundingBoxes() {
         if (skinType != null) {
-            ArmourerWorldHelper.removeBoundingBoxes(worldObj, pos.add(0, HEIGHT_OFFSET, 0), skinType);
+            ArmourerWorldHelper.removeBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
         }
     }
     
     protected void createBoundingBoxes() {
         if (skinType != null) {
-            ArmourerWorldHelper.createBoundingBoxes(worldObj, pos.add(0, HEIGHT_OFFSET, 0), pos, skinType);
+            boolean hadBounds = !this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            if (hadBounds) {
+                ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType);
+            }
         }
     }
     
-    public void setDirection(EnumFacing direction) {
+    public void setDirection(ForgeDirection direction) {
         this.direction = direction;
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    public EnumFacing getDirection() {
+    public ForgeDirection getDirection() {
         return direction;
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = super.getRenderBoundingBox();
-        /*
+        
         bb = AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 18,
                 xCoord + 20, yCoord + 40 + 20, zCoord + 20);
-        */
-        return INFINITE_EXTENT_AABB;
+        
+        return bb;
     }
 
     public ISkinType getSkinType() {
@@ -347,32 +360,32 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         clearPaintData(true);
         createBoundingBoxes(); 
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
         updateProfileData();
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public void toggleOverlay() {
         this.showOverlay = !this.showOverlay;
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public void toggleHelper() {
         this.showHelper = !this.showHelper;
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public SkinProperties getSkinProps() {
@@ -380,13 +393,25 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     }
     
     public void setSkinProps(SkinProperties skinProps) {
+        boolean updateBounds = false;
+        if (skinType != null && skinType.getVanillaArmourSlotId() != -1) {
+            boolean hadBounds = !this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            boolean haveBounds = !skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            if (hadBounds != haveBounds) {
+                updateBounds = true;
+            }
+        }
         this.skinProps = skinProps;
+        if (updateBounds) {
+            removeBoundingBoxes();
+            createBoundingBoxes();
+        }
         resyncData();
     }
     
     public void resyncData() {
         this.markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     private void updateProfileData() {
@@ -394,8 +419,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     }
     
     @Override
-    public String getName() {
-        return LibBlockNames.ARMOURER;
+    public String getInventoryName() {
+        return LibBlockNames.ARMOURER_BRAIN;
     }
     
     @Override
@@ -403,28 +428,19 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         return super.getMaxRenderDistanceSquared() * 10;
     }
     
-    @Override
-    public NBTTagCompound getUpdateTag() {
+    public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         writeCommonToNBT(compound);
-        return compound;
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
     
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound compound = new NBTTagCompound();
-        writeBaseToNBT(compound);
-        writeCommonToNBT(compound);
-        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), getUpdateTag());
-    }
-    
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        NBTTagCompound compound = packet.getNbtCompound();
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.func_148857_g();
         readBaseFromNBT(compound);
         readCommonFromNBT(compound);
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         loadedArmourItem = true;
     }
     
@@ -435,16 +451,15 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     }
     
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeCommonToNBT(compound);
-        return compound;
     }
     
     @Override
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
-        direction = EnumFacing.VALUES[(compound.getByte(TAG_DIRECTION))];
+        direction = ForgeDirection.getOrientation(compound.getByte(TAG_DIRECTION));
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
         //Update code for old saves
         if (skinType == null && compound.hasKey(TAG_TYPE_OLD)) {
@@ -458,7 +473,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         skinProps = new SkinProperties();
         skinProps.readFromNBT(compound);
         if (compound.hasKey(TAG_OWNER, 10)) {
-            this.gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
+            this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
         }
         if (compound.hasKey(TAG_PAINT_DATA)) {
             paintData = compound.getIntArray(TAG_PAINT_DATA);
@@ -482,7 +497,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         if (this.gameProfile != null) {
             NBTTagCompound profileTag = new NBTTagCompound();
-            NBTUtil.writeGameProfile(profileTag, this.gameProfile);
+            NBTUtil.func_152460_a(profileTag, this.gameProfile);
             compound.setTag(TAG_OWNER, profileTag);
         }
         compound.setIntArray(TAG_PAINT_DATA, this.paintData);
@@ -492,6 +507,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void profileUpdated(GameProfile gameProfile) {
         newProfile = gameProfile;
         markDirty();
-        syncWithClients();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

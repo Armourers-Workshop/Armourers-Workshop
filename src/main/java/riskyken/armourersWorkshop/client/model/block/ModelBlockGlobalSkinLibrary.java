@@ -31,7 +31,7 @@ public class ModelBlockGlobalSkinLibrary extends ModelBase {
         GL11.glColor4f(1F, 1F, 1F, 0.5F);
         GL11.glEnable(GL11.GL_CULL_FACE);
         if (tileEntity != null) {
-            float angle = (((tileEntity.getWorld().getTotalWorldTime() + tileEntity.hashCode()) % 360) + partialTickTime);
+            float angle = (((tileEntity.getWorldObj().getTotalWorldTime() + tileEntity.hashCode()) % 360) + partialTickTime);
             setRotateAngle(this.globe, (float)Math.toRadians(angle * 4), (float)Math.toRadians(angle), (float)Math.toRadians(angle * 2));
         } else {
             setRotateAngle(this.globe, 0F, 0F, 0F);

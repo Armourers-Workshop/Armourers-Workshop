@@ -1,14 +1,16 @@
 package riskyken.armourersWorkshop.client.render;
 
-import com.mojang.authlib.GameProfile;
-
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
+import com.mojang.authlib.GameProfile;
 
 public class MannequinFakePlayer extends AbstractClientPlayer {
     
@@ -17,14 +19,18 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
     }
     
     @Override
-    public String getDisplayNameString() {
+    public String getCommandSenderName() {
+        return "[Mannequin]";
+    }
+    
+    @Override
+    public String getDisplayName() {
         return "[Mannequin]";
     }
 
     @Override
     public void onUpdate() {
         //super.onUpdate();
-        /*
         this.field_71091_bM = this.field_71094_bP;
         this.field_71096_bN = this.field_71095_bQ;
         this.field_71097_bO = this.field_71085_bR;
@@ -64,16 +70,27 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
         }
         this.field_71094_bP += d3 * 0.25D;
         this.field_71085_bR += d1 * 0.25D;
-        this.field_71095_bQ += d0 * 0.25D;*/
+        this.field_71095_bQ += d0 * 0.25D;
     }
     
     @Override public boolean canCommandSenderUseCommand(int i, String s){ return false; }
-    @Override public void addChatComponentMessage(ITextComponent chatComponent) {}
+    @Override public ChunkCoordinates getPlayerCoordinates()
+    {
+        return new ChunkCoordinates(0,0,0);
+    }
+
+    @Override public void addChatComponentMessage(IChatComponent chatmessagecomponent){}
     @Override public void addStat(StatBase par1StatBase, int par2){}
     @Override public void openGui(Object mod, int modGuiId, World world, int x, int y, int z){}
-    @Override public boolean isEntityInvulnerable(DamageSource source) { return true; }
+    @Override public boolean isEntityInvulnerable(){ return true; }
     @Override public boolean canAttackPlayer(EntityPlayer player){ return false; }
     @Override public void onDeath(DamageSource source){ return; }
-    @Override public Entity changeDimension(int dimensionIn) { return null; }
-    @Override public void addChatMessage(ITextComponent component) {}
+    @Override public void travelToDimension(int dim){ return; }
+    @Override public void addChatMessage(IChatComponent p_145747_1_) {}
+    @Override
+    public IIcon getItemIcon(ItemStack p_70620_1_, int p_70620_2_) {
+        IIcon icon = p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
+        //ModLogger.log(icon);
+        return p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
+    }
 }

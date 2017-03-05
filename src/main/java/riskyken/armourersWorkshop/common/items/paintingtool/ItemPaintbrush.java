@@ -4,22 +4,20 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.blocks.BlockMannequin;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -29,91 +27,122 @@ import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurableTool {
     
     public ItemPaintbrush() {
         super(LibItemNames.PAINTBRUSH);
     }
+
+    @SideOnly(Side.CLIENT)
+    private IIcon tipIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon faceModeIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon faceModeTipIcon;
     
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-            EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibItemResources.PAINTBRUSH);
+        tipIcon = register.registerIcon(LibItemResources.PAINTBRUSH_TIP);
+        faceModeIcon = register.registerIcon(LibItemResources.PAINTBRUSH_FACE_MODE);
+        faceModeTipIcon = register.registerIcon(LibItemResources.PAINTBRUSH_FACE_MODE_TIP);
+    }
+    
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
+            int side, float hitX, float hitY, float hitZ) {
+        Block block = world.getBlock(x, y, z);
         
-        IBlockState blockState = worldIn.getBlockState(pos);
-        
-        if (playerIn.isSneaking() & blockState.getBlock() == ModBlocks.colourMixer) {
-            TileEntity te = worldIn.getTileEntity(pos);
+        if (player.isSneaking() & block == ModBlocks.colourMixer) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof IPantable) {
-                if (!worldIn.isRemote) {
-                    int colour = ((IPantable)te).getColour(facing);
-                    PaintType paintType = ((IPantable)te).getPaintType(facing);
+                if (!world.isRemote) {
+                    int colour = ((IPantable)te).getColour(0);
+                    PaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }
             }
-            return EnumActionResult.SUCCESS;
+            return true;
         }
         
-        if (blockState.getBlock() instanceof IPantableBlock) {
+        if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
-            if (!worldIn.isRemote) {
-                UndoManager.begin(playerIn);
+            if (!world.isRemote) {
+                UndoManager.begin(player);
                 if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
                     for (int i = 0; i < 6; i++) {
-                        usedOnBlockSide(stack, playerIn, worldIn, pos, blockState.getBlock(), EnumFacing.values()[i]);
+                        usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
                     }
                 } else {
-                    usedOnBlockSide(stack, playerIn, worldIn, pos, blockState.getBlock(), facing);
+                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
                 }
-                UndoManager.end(playerIn);
-                SoundEvent sound = new SoundEvent(LibSounds.PAINT);
+                UndoManager.end(player);
                 if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
-                    worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, sound, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F, false);
+                    world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F); 
                 } else {
-                    worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, sound, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 1.5F, false);
+                    world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 1.5F);
                 }
             } else {
-                spawnPaintParticles(worldIn, pos, facing, newColour);
+                spawnPaintParticles(world, x, y, z, side, newColour);
             }
-            return EnumActionResult.SUCCESS;
+            return true;
         }
         
-        if (blockState.getBlock() == ModBlocks.armourerBrain & playerIn.isSneaking()) {
-            if (!worldIn.isRemote) {
-                TileEntity te = worldIn.getTileEntity(pos);
+        if (block == ModBlocks.armourerBrain & player.isSneaking()) {
+            if (!world.isRemote) {
+                TileEntity te = world.getTileEntity(x, y, z);
                 if (te != null && te instanceof TileEntityArmourer) {
-                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, playerIn);
+                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, world, stack, player);
                 }
             }
             ModLogger.log("armourer");
-            return EnumActionResult.SUCCESS;
+            return true;
         }
         
-        return EnumActionResult.FAIL;
+        if (block == ModBlocks.mannequin) {
+            if (!world.isRemote) {
+                TileEntity te = ((BlockMannequin)block).getMannequinTileEntity(world, x, y, z);
+                if (te != null && te instanceof TileEntityMannequin) {
+                    int newColour = getToolColour(stack);
+                    if (player.isSneaking()) {
+                        ((TileEntityMannequin)te).setHairColour(newColour);
+                    } else {
+                        ((TileEntityMannequin)te).setSkinColour(newColour);
+                    }
+                }
+            }
+            return true;
+        }
+        
+        return false;
     }
     
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int colour = getToolColour(stack);
         PaintType paintType = getToolPaintType(stack);
         IPantableBlock worldColourable = (IPantableBlock) block;
-        int oldColour = worldColourable.getColour(world, pos, side);
-        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, side).getKey();
-        UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, side);
-        ((IPantableBlock)block).setColour(world, pos, colour, side);
-        ((IPantableBlock)block).setPaintType(world, pos, paintType, side);
+        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
+        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
+        ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, colour, side);
+        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
     }
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        if (worldIn.isRemote & playerIn.isSneaking()) {
-            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (world.isRemote & player.isSneaking()) {
+            player.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, world, 0, 0, 0);
         }
-        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+        return stack;
     }
     
     @Override
@@ -130,6 +159,21 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
         list.add(hexText);
         list.add(paintText);
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
+    }
+    
+    @Override
+    public IIcon getIcon(ItemStack stack, int pass) {
+        if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+            if (pass == 0) {
+                return itemIcon;
+            }
+            return tipIcon;
+        } else {
+            if (pass == 0) {
+                return faceModeIcon;
+            }
+            return faceModeTipIcon;
+        }
     }
     
     @Override

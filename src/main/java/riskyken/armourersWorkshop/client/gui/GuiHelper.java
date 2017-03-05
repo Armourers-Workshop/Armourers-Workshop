@@ -6,10 +6,12 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
@@ -29,7 +31,7 @@ public class GuiHelper {
     
     public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name, String append, int colour) {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + name + ".name";
-        String localizedName = I18n.format(unlocalizedName);
+        String localizedName = StatCollector.translateToLocal(unlocalizedName);
         String renderText = unlocalizedName;
         if (!unlocalizedName.equals(localizedName)){
             renderText = localizedName;
@@ -43,7 +45,7 @@ public class GuiHelper {
     
     public static String getLocalizedControlName(String guiName, String controlName) {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + controlName;
-        String localizedName = I18n.format(unlocalizedName);
+        String localizedName = StatCollector.translateToLocal(unlocalizedName);
         if (!unlocalizedName.equals(localizedName)){
             return localizedName;
         }
@@ -89,7 +91,6 @@ public class GuiHelper {
 
             zLevel = 300.0F;
             int j1 = -267386864;
-            /*
             drawGradientRect(renderX - 3, renderY - 4, renderX + k + 3, renderY - 3, j1, j1, zLevel);
             drawGradientRect(renderX - 3, renderY + i1 + 3, renderX + k + 3, renderY + i1 + 4, j1, j1, zLevel);
             drawGradientRect(renderX - 3, renderY - 3, renderX + k + 3, renderY + i1 + 3, j1, j1, zLevel);
@@ -101,7 +102,7 @@ public class GuiHelper {
             drawGradientRect(renderX + k + 2, renderY - 3 + 1, renderX + k + 3, renderY + i1 + 3 - 1, k1, l1, zLevel);
             drawGradientRect(renderX - 3, renderY - 3, renderX + k + 3, renderY - 3 + 1, k1, k1, zLevel);
             drawGradientRect(renderX - 3, renderY + i1 + 2, renderX + k + 3, renderY + i1 + 3, l1, l1, zLevel);
-             */
+
             for (int i2 = 0; i2 < textList.size(); ++i2) {
                 String s1 = (String)textList.get(i2);
                 font.drawStringWithShadow(s1, renderX, renderY, -1);
@@ -118,8 +119,9 @@ public class GuiHelper {
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         }
     }
-    /*
-    private static void drawGradientRect(int p_73733_1_, int p_73733_2_, int p_73733_3_, int p_73733_4_, int p_73733_5_, int p_73733_6_, float zLevel) {
+    
+    private static void drawGradientRect(int p_73733_1_, int p_73733_2_, int p_73733_3_, int p_73733_4_, int p_73733_5_, int p_73733_6_, float zLevel)
+    {
         float f = (float)(p_73733_5_ >> 24 & 255) / 255.0F;
         float f1 = (float)(p_73733_5_ >> 16 & 255) / 255.0F;
         float f2 = (float)(p_73733_5_ >> 8 & 255) / 255.0F;
@@ -146,5 +148,5 @@ public class GuiHelper {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-    }*/
+    }
 }

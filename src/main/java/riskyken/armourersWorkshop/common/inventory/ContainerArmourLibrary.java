@@ -1,5 +1,8 @@
 package riskyken.armourersWorkshop.common.inventory;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,12 +12,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.inventory.slot.ISlotChanged;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
@@ -131,7 +131,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (Object player : listeners) {
+        for (Object player : crafters) {
             if (player instanceof EntityPlayerMP) {
                 EntityPlayerMP playerMp = (EntityPlayerMP) player;
                 ArmourersWorkshop.proxy.libraryManager.syncLibraryWithPlayer(playerMp);

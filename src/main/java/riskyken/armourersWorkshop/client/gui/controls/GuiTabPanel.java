@@ -26,7 +26,7 @@ public abstract class GuiTabPanel extends Gui {
         this.tabId = tabId;
         this.parent = parent;
         this.mc = Minecraft.getMinecraft();
-        this.fontRenderer = mc.fontRendererObj;
+        this.fontRenderer = mc.fontRenderer;
         
         buttonList = new ArrayList<GuiButton>();
     }
@@ -54,11 +54,11 @@ public abstract class GuiTabPanel extends Gui {
                     if (MinecraftForge.EVENT_BUS.post(event)) {
                         break;
                     }
-                    this.selectedButton = event.getButton();
-                    event.getButton().playPressSound(this.mc.getSoundHandler());
-                    this.actionPerformed(event.getButton());
+                    this.selectedButton = event.button;
+                    event.button.func_146113_a(this.mc.getSoundHandler());
+                    this.actionPerformed(event.button);
                     if (parent.equals(this.mc.currentScreen)) {
-                        MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(parent, event.getButton(), this.buttonList));
+                        MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(parent, event.button, this.buttonList));
                     }
                 }
             }

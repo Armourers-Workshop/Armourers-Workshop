@@ -1,48 +1,50 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 
 public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<MessageClientToolPaintBlock, IMessage> {
 
-    private BlockPos pos;
     private int x;
     private int y;
     private int z;
-    private EnumFacing side;
+    private byte side;
     private byte[] rgbt = new byte[4];
     
     public MessageClientToolPaintBlock() {
     }
     
-    public MessageClientToolPaintBlock(BlockPos pos, EnumFacing side, byte[] rgbt) {
-        this.pos = pos;
+    public MessageClientToolPaintBlock(int x, int y, int z, byte side, byte[] rgbt) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
         this.side = side;
         this.rgbt = rgbt;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufHelper.writeBlockPos(buf, pos);
-        buf.writeByte(side.ordinal());
+        buf.writeInt(x);
+        buf.writeInt(y);
+        buf.writeInt(z);
+        buf.writeByte(side);
         buf.writeBytes(rgbt);
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        pos = ByteBufHelper.readBlockPos(buf);
-        side = EnumFacing.values()[buf.readByte()];
+        x = buf.readInt();
+        y = buf.readInt();
+        z = buf.readInt();
+        side = buf.readByte();
         buf.readBytes(rgbt);
     }
     
@@ -51,15 +53,15 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         if (player != null && player.getEntityWorld() != null) {
             World world = player.getEntityWorld();
-            IBlockState blockState = world.getBlockState(message.pos);
-            if (blockState.getBlock() instanceof IPantableBlock) {
+            Block block = world.getBlock(message.x, message.y, message.z);
+            if (block instanceof IPantableBlock) {
                 UndoManager.begin(player);
-                IPantableBlock paintable = (IPantableBlock) blockState.getBlock();
-                int oldColour = paintable.getColour(world, message.pos, message.side);
-                PaintType oldPaintType = paintable.getPaintType(world, message.pos, message.side);
-                UndoManager.blockPainted(player, world, message.pos, oldColour, (byte)oldPaintType.getKey(), message.side);
-                paintable.setColour(world, message.pos, message.rgbt, message.side);
-                paintable.setPaintType(world, message.pos, PaintType.getPaintTypeFormSKey(message.rgbt[3]), message.side);
+                IPantableBlock paintable = (IPantableBlock) block;
+                int oldColour = paintable.getColour(world, message.x, message.y, message.z, message.side);
+                PaintType oldPaintType = paintable.getPaintType(world, message.x, message.y, message.z, message.side);
+                UndoManager.blockPainted(player, world, message.x, message.y, message.z, oldColour, (byte)oldPaintType.getKey(), message.side);
+                paintable.setColour(world, message.x, message.y, message.z, message.rgbt, message.side);
+                paintable.setPaintType(world, message.x, message.y, message.z, PaintType.getPaintTypeFormSKey(message.rgbt[3]), message.side);
                 UndoManager.end(player);
             }
         }

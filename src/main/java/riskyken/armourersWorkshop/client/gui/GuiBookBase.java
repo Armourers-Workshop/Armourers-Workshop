@@ -1,19 +1,18 @@
 package riskyken.armourersWorkshop.client.gui;
 
-import java.io.IOException;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiBookButton;
 import riskyken.armourersWorkshop.client.guidebook.BookPage;
 import riskyken.armourersWorkshop.client.guidebook.BookPageBase;
@@ -79,7 +78,7 @@ public abstract class GuiBookBase extends GuiScreen {
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) throws IOException {
+    protected void keyTyped(char key, int keyCode) {
         super.keyTyped(key, keyCode);
         if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
             this.mc.thePlayer.closeScreen();
@@ -178,7 +177,7 @@ public abstract class GuiBookBase extends GuiScreen {
     protected void enablePageFramebuffer() {
         mc.getFramebuffer().unbindFramebuffer();
         
-        ScaledResolution reso = new ScaledResolution(mc);
+        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         
         double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
         double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
@@ -196,7 +195,7 @@ public abstract class GuiBookBase extends GuiScreen {
             ModLogger.log("resizing fbo to scale: " + scaleHeight);
         }
         
-        //OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
+        OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
         GL11.glClearColor(0F, 0F, 0F, 0F);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearDepth(1.0D);
@@ -239,12 +238,11 @@ public abstract class GuiBookBase extends GuiScreen {
     
     private void drawFboRec(int x, int y, int width, int height) {
         double zLevel = 1D;
-        Tessellator tess = Tessellator.getInstance();
+        Tessellator tess = new Tessellator().instance;
         //ModRenderHelper.enableAlphaBlend();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         //GL11.glColorMask(true, true, true, false);
         //OpenGlHelper.glBlendFunc(0, 0, 0, 0);
-        /*
         tess.startDrawingQuads();
         tess.setColorRGBA_F(1F, 1F, 1F, 1F);
         tess.setColorOpaque_I(-1);
@@ -258,6 +256,5 @@ public abstract class GuiBookBase extends GuiScreen {
         tess.addVertexWithUV(x, y, zLevel, 0, 1);
         
         tess.draw();
-        */
     }
 }

@@ -2,8 +2,11 @@ package riskyken.armourersWorkshop.common.skin.type.feet;
 
 import java.util.ArrayList;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
 public class SkinFeet extends AbstractSkinTypeBase {
@@ -30,9 +33,16 @@ public class SkinFeet extends AbstractSkinTypeBase {
     public String getName() {
         return "Feet";
     }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcon(IIconRegister register) {
+        this.icon = register.registerIcon(LibItemResources.TEMPLATE_FEET);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_FEET);
+    }
 
     @Override
-    public EntityEquipmentSlot getEntityEquipmentSlot() {
-        return EntityEquipmentSlot.FEET;
+    public int getVanillaArmourSlotId() {
+        return 3;
     }
 }

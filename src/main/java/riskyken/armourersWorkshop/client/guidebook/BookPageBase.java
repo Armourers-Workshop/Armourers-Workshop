@@ -1,10 +1,15 @@
 package riskyken.armourersWorkshop.client.guidebook;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.StatCollector;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
@@ -42,7 +47,7 @@ public abstract class BookPageBase implements IBookPage {
     
     protected void drawPageTitleAndNumber(FontRenderer fontRenderer, int pageNumber) {
         String chapterTitle = parentBook.getChapterFromPageNumber(pageNumber).getUnlocalizedName();
-        chapterTitle = I18n.format(chapterTitle + ".name");
+        chapterTitle = StatCollector.translateToLocal(chapterTitle + ".name");
         
         //Title
         renderStringCenter(fontRenderer, chapterTitle, PAGE_PADDING_TOP);
@@ -50,7 +55,7 @@ public abstract class BookPageBase implements IBookPage {
         //Page number
         renderStringCenter(fontRenderer, pageNumber + " - " + parentBook.getTotalNumberOfPages(), PAGE_TEXTURE_HEIGHT - PAGE_PADDING_TOP - fontRenderer.FONT_HEIGHT);
     }
-    /*
+    
     protected void drawTestRec(int x, int y, int width, int height) {
         double zLevel = 0D;
         GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -135,5 +140,4 @@ public abstract class BookPageBase implements IBookPage {
         tess.addVertexWithUV(x, y, zLevel, 0, 0);
         tess.draw();
     }
-    */
 }

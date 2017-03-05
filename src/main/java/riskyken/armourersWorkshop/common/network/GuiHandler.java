@@ -2,21 +2,19 @@ package riskyken.armourersWorkshop.common.network;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiDebugTool;
 import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
+import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
@@ -25,11 +23,11 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
-import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
+import riskyken.armourersWorkshop.common.inventory.ContainerEntityEquipment;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
@@ -39,6 +37,8 @@ import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
@@ -48,12 +48,10 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class GuiHandler implements IGuiHandler {
-    
-    @CapabilityInject(IWardrobeCapability.class)
-    private static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
-    
+
     public GuiHandler() {
         NetworkRegistry.INSTANCE.registerGuiHandler(ArmourersWorkshop.instance, this);
     }
@@ -62,7 +60,7 @@ public class GuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = null;
         if (ID != LibGuiIds.ENTITY_SKIN_INVENTORY) {
-            te = world.getTileEntity(new BlockPos(x, y, z));
+            te = world.getTileEntity(x, y, z);
         }
         
         switch (ID)
@@ -83,11 +81,8 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                IWardrobeCapability wardrobe = player.getCapability(WARDROBE_CAP, null);
-                if (wardrobe != null) {
-                    return new ContainerSkinWardrobe(player.inventory, wardrobe);
-                }
-                break;
+                ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
+                return new ContainerSkinWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.MANNEQUIN:
                 if (te instanceof TileEntityMannequin) {
                     return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
@@ -104,7 +99,6 @@ public class GuiHandler implements IGuiHandler {
                 }
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
                 Entity entity = player.worldObj.getEntityByID(x);
-                /*
                 if (entity != null) {
                     ExPropsEntityEquipmentData entityProps = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
                     if (entityProps == null) {
@@ -114,7 +108,6 @@ public class GuiHandler implements IGuiHandler {
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
                 }
-                */
                 break;
             case LibGuiIds.SKNNING_TABLE:
                 if (te instanceof TileEntitySkinningTable) {
@@ -128,7 +121,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.GLOBAL_SKIN_LIBRARY:
                 if (te instanceof TileEntityGlobalSkinLibrary) {
-                    return new ContainerGlobalSkinLibrary((TileEntityGlobalSkinLibrary)te);
+                    return new ContainerGlobalSkinLibrary(player.inventory, (TileEntityGlobalSkinLibrary)te);
                 }
                 break;
         }
@@ -139,7 +132,7 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = null;
         if (ID != LibGuiIds.ENTITY_SKIN_INVENTORY) {
-            te = world.getTileEntity(new BlockPos(x, y, z));
+            te = world.getTileEntity(x, y, z);
         }
         
         switch (ID)
@@ -155,8 +148,8 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.GUIDE_BOOK:
-                if (player.getHeldItemMainhand().getItem() == ModItems.guideBook) {
-                    return new GuiGuideBook(player.getHeldItemMainhand());
+                if (player.getCurrentEquippedItem().getItem() == ModRegistry.getMinecraftItem(ModItems.guideBook)) {
+                    return new GuiGuideBook(player.getCurrentEquippedItem());
                 }
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
@@ -165,14 +158,11 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                IWardrobeCapability wardrobe = player.getCapability(WARDROBE_CAP, null);
-                if (wardrobe != null) {
-                    return new GuiSkinWardrobe(player.inventory, wardrobe);
-                }
-                break;
+                ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
+                return new GuiSkinWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.TOOL_OPTIONS:
-                if (player.getHeldItemMainhand().getItem() instanceof IConfigurableTool) {
-                    return new GuiToolOptions(player.getHeldItemMainhand());
+                if (player.getCurrentEquippedItem().getItem() instanceof IConfigurableTool) {
+                    return new GuiToolOptions(player.getCurrentEquippedItem());
                 }
                 break;
             case LibGuiIds.MANNEQUIN:
@@ -192,13 +182,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
                 Entity entity = player.worldObj.getEntityByID(x);
                 if (entity != null) {
-                    /*
                     ExPropsEntityEquipmentData entityProps = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
                     if (entityProps == null) {
                         break;
                     }
                     return new GuiEntityEquipment(player.inventory, entityProps.getSkinInventory());
-                    */
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
                 }
@@ -215,7 +203,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.GLOBAL_SKIN_LIBRARY:
                 if (te instanceof TileEntityGlobalSkinLibrary) {
-                    return new GuiGlobalLibrary((TileEntityGlobalSkinLibrary)te);
+                    return new GuiGlobalLibrary((TileEntityGlobalSkinLibrary)te, player.inventory);
                 }
                 break;
             case LibGuiIds.DEBUG_TOOL:

@@ -5,15 +5,18 @@ import java.util.Random;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.EntitySpellParticleFX;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -21,128 +24,110 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StringUtils;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
-public class BlockMannequin extends AbstractModBlockContainer implements IDebug  {
-    
-    public static final PropertyEnum<EnumPartType> PART = PropertyEnum.<EnumPartType>create("part", EnumPartType.class);
-    public static final PropertyInteger ROTATION = PropertyInteger.create("rotation", 0, 15);
-    private static final AxisAlignedBB MANNEQUIN_AABB = new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
-    private static DamageSource victoriousDamage = new DamageSource("victorious");
-    
+public class BlockMannequin extends AbstractModBlockContainer implements IDebug {
+
+    public static DamageSource victoriousDamage = new DamageSource("victorious");
     private static final String TAG_OWNER = "owner";
+    private static final String TAG_IMAGE_URL = "imageUrl";
     private final boolean isValentins;
     
     public BlockMannequin() {
-        super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
+        super(LibBlockNames.MANNEQUIN, Material.rock, soundTypeMetal, true);
         setLightOpacity(0);
+        setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
-        setDefaultState(this.blockState.getBaseState().withProperty(PART, EnumPartType.BOTTOM));
-        translucent = true;
     }
     
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        if (state.getValue(PART) == EnumPartType.BOTTOM) {
-            return new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 1.9F, 0.9F);
-        }
-        if (state.getValue(PART) == EnumPartType.TOP) {
-            return new AxisAlignedBB(0.1F, -1, 0.1F, 0.9F, 0.9F, 0.9F);
-        }
-        return MANNEQUIN_AABB;
+    public Block setBlockName(String name) {
+        GameRegistry.registerBlock(this, ItemBlockMannequin.class, "block." + name);
+        return super.setBlockName(name);
     }
     
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity te = worldIn.getTileEntity(pos);
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntityMannequin) {
-            int l = MathHelper.floor_double((double)(placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
+            int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
             ((TileEntityMannequin)te).setRotation(l);
-            if (!worldIn.isRemote) {
+            if (!world.isRemote) {
                 if (stack.hasTagCompound()) {
                     NBTTagCompound compound = stack.getTagCompound();
                     GameProfile gameProfile = null;
                     if (compound.hasKey(TAG_OWNER, 10)) {
-                        gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
+                        gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
                         ((TileEntityMannequin)te).setGameProfile(gameProfile);
+                    }
+                    if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
+                        ((TileEntityMannequin)te).setImageUrl(compound.getString(TAG_IMAGE_URL));
                     }
                 }
             }
         }
-        worldIn.setBlockState(pos.offset(EnumFacing.UP), blockState.getBaseState().withProperty(PART, EnumPartType.TOP), 2);
-        //world.setBlock(x, y + 1, z, this, 1, 2);
+        world.setBlock(x, y + 1, z, this, 1, 2);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (isTopOfMannequin(worldIn, pos)) {
+    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+        if (isTopOfMannequin(world, x, y, z)) {
             if (isValentins) {
-                if (rand.nextFloat() * 100 > 75) {
-                    //worldIn.spawnParticle(EnumParticleTypes.HEART, pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY() - 1D, pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0, new int[0]);
-                    //worldIn.spawnParticle("heart", x + 0.2D + rand.nextFloat() * 0.6F, y + 1D, z + 0.2D + rand.nextFloat() * 0.6F, 0, 0, 0);
+                if (random.nextFloat() * 100 > 75) {
+                    world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
                 }
             }
-            TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
+            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
             if (te != null && te.isRenderExtras()) {
                 if (te.hasSpecialRender()) {
                     for (int i = 0; i < 4; i++) {
-                        /*
-                        //ParticleSpell.AmbientMobFactory.
-                        Particle entityfx = new ParticleSpell(worldIn, pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY() - 1D, pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0);
-                        ((ParticleSpell)entityfx).setBaseSpellTextureIndex(144);
+                        EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
+                        ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
                         float[] colour = te.getSpecialRenderColour();
                         entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
                         Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
-                        */
                     }
                 }
             }
         }
     }
     
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-    
-    public void convertToDoll(World world, BlockPos pos) {
-        if (isTopOfMannequin(world, pos)) {
-            convertToDoll(world, pos.add(0, -1, 0));
+    public void convertToDoll(World world, int x, int y, int z) {
+        if (isTopOfMannequin(world, x, y, z)) {
+            Block block = world.getBlock(x, y - 1, z);
+            if (block == this) {
+                ((BlockMannequin)block).convertToDoll(world, x, y - 1, z);
+            }
             return;
         }
         
-        if (world.getBlockState(pos).getBlock() == this) {
-            TileEntityMannequin te = getMannequinTileEntity(world, pos);
+        if (world.getBlock(x, y + 1, z) == this) {
+            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
             if (te != null) {
                 te.setDropItems(false);
                 NBTTagCompound compound = new NBTTagCompound();
                 te.writeCommonToNBT(compound);
                 te.writeItemsToNBT(compound);
-                world.setBlockToAir(pos.add(0, 1, 0));
-                world.setBlockState(pos, ModBlocks.doll.getDefaultState(), 3);
-                TileEntity newTe = world.getTileEntity(pos);
+                world.setBlockToAir(x, y + 1, z);
+                world.setBlock(x, y, z, ModBlocks.doll, 0, 3);
+                TileEntity newTe = world.getTileEntity(x, y, z);
                 if (newTe != null && newTe instanceof TileEntityMannequin) {
                     ((TileEntityMannequin)newTe).readCommonFromNBT(compound);
                     ((TileEntityMannequin)newTe).readItemsFromNBT(compound);
@@ -152,33 +137,39 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         }
     }
     
-    public TileEntityMannequin getMannequinTileEntity(IBlockAccess world, BlockPos pos) {
-        if (isTopOfMannequin(world, pos)) {
-            pos = pos.add(0, -1, 0);
+    public TileEntityMannequin getMannequinTileEntity(World world, int x, int y, int z) {
+        int offset = 0;
+        if (isTopOfMannequin(world, x, y, z)) {
+            offset = -1;
         }
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getTileEntity(x, y + offset, z);
         if (te != null && te instanceof TileEntityMannequin) {
             return (TileEntityMannequin) te;
         }
         return null;
     }
     
-    public boolean isTopOfMannequin(IBlockAccess world, BlockPos pos) {
-        return isTopOfMannequin(world.getBlockState(pos));
+    public boolean isTopOfMannequin(World world, int x, int y, int z) {
+        return isTopOfMannequin(world.getBlockMetadata(x, y, z));
     }
     
-    public boolean isTopOfMannequin(IBlockState blockState) {
-        return blockState.getValue(PART) == EnumPartType.TOP;
+    public boolean isTopOfMannequin(int meta) {
+        return meta == 1;
     }
     
     @Override
-    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
         if (world.isRemote) {
             return false;
         }
         
-        TileEntityMannequin te = getMannequinTileEntity(world, pos);
-        if (te != null) {
+        int meta = world.getBlockMetadata(x, y, z);
+        int yOffset = 0;
+        if (meta == 1) {
+            yOffset = -1;
+        }
+        TileEntity te = world.getTileEntity(x, y + yOffset, z);
+        if (te != null && te instanceof TileEntityMannequin) {
             int rotation = ((TileEntityMannequin)te).getRotation();
             rotation++;
             if (rotation > 15) {
@@ -188,7 +179,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         }
         return true;
     }
-    /*
+    
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
         super.onEntityCollidedWithBlock(world, x, y, z, entity);
@@ -227,18 +218,27 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
         }
     }
-    */
     
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
         ItemStack stack = new ItemStack(ModBlocks.mannequin, 1);
-        TileEntityMannequin te = getMannequinTileEntity(world, pos);
-        if (te != null) {
-            if (te.getGameProfile() != null) {
+        int meta = world.getBlockMetadata(x, y, z);
+        int yOffset = 0;
+        if (meta == 1) {
+            yOffset = -1;
+        }
+        TileEntity te = world.getTileEntity(x, y + yOffset, z);
+        if (te != null && te instanceof TileEntityMannequin) {
+            TileEntityMannequin teMan = (TileEntityMannequin) te;
+            if (teMan.getGameProfile() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, te.getGameProfile());
+                NBTUtil.func_152460_a(profileTag, teMan.getGameProfile());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
+            }
+            if (!StringUtils.isNullOrEmpty(teMan.getImageUrl())) {
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setString(TAG_IMAGE_URL, teMan.getImageUrl());
             }
         }
         return stack;
@@ -246,156 +246,124 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
+    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
         return true;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
+    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
         return true;
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-            EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!playerIn.canPlayerEdit(pos, side, heldItem)) {
+    public void registerBlockIcons(IIconRegister register) {
+        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
+    }
+    
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+        int meta = world.getBlockMetadata(x, y, z);
+        if (meta == 0) {
+            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
+        } else {
+            setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
+        }
+    }
+    
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
+        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
             return false;
         }
-        if (!worldIn.isRemote) {
-            if (playerIn.inventory.getCurrentItem() != null) {
-                if (playerIn.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+        if (!world.isRemote) {
+            if (player.inventory.getCurrentItem() != null) {
+                if (player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
+                    return false;
+                }
+                if (player.inventory.getCurrentItem().getItem() == ModItems.paintbrush) {
                     return false;
                 }
             }
-            
-            if (heldItem != null && heldItem.getItem() == Items.NAME_TAG) {
-                TileEntity te = getMannequinTileEntity(worldIn, pos);
+            int meta = world.getBlockMetadata(x, y, z);
+            int yOffset = 0;
+            if (meta == 1) {
+                yOffset = -1;
+            }
+            ItemStack stack = player.getCurrentEquippedItem();
+            if (stack != null && stack.getItem() == Items.name_tag) {
+                TileEntity te = world.getTileEntity(x, y + yOffset, z);;
                 if (te != null && te instanceof TileEntityMannequin) {
-                    if (heldItem.getItem() == Items.NAME_TAG) {
-                        ((TileEntityMannequin)te).setOwner(heldItem);
+                    if (stack.getItem() == Items.name_tag) {
+                        ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
                     }
                 }
             } else {
-                if (isTopOfMannequin(state)) {
-                    pos = pos.offset(EnumFacing.DOWN);
-                }
-                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y + yOffset, z);
             }
         }
-        if (heldItem != null && heldItem.getItem() == ModItems.mannequinTool) {
+        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
             return false;
         }
         return true;
     }
     
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
-        if (blockIn == this) {
-            switch (state.getValue(PART)) {
-            case TOP:
-                if (worldIn.getBlockState(pos.up()).getBlock() != this) {
-                    worldIn.setBlockToAir(pos);
-                }
-                break;
-            case BOTTOM:
-                if (worldIn.getBlockState(pos.down()).getBlock() != this) {
-                    worldIn.setBlockToAir(pos);
-                }
-                break;
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        int meta = world.getBlockMetadata(x, y, z);
+        if (meta == 0) {
+            if (world.getBlock(x, y + 1, z) != ModBlocks.mannequin) {
+                world.setBlockToAir(x, y, z);
+            }
+        } else {
+            if (world.getBlock(x, y - 1, z) != ModBlocks.mannequin) {
+                world.setBlockToAir(x, y, z);
             }
         }
     }
     
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random) {
+    public int quantityDropped(int meta, int fortune, Random random) {
         return 0;
     }
     
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        if (state.getValue(PART) == EnumPartType.BOTTOM) {
+    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+        return null;
+    }
+    
+    @Override
+    public TileEntity createTileEntity(World world, int metadata) {
+        if (metadata == 0) {
             return new TileEntityMannequin(false);
-        }
-        return null;
-    }
-    
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        if (meta == 0) {
-            
-        }
-        return null;
-    }
-    
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-    
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {PART, ROTATION});
-    }
-    
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        if (state.getValue(PART) == EnumPartType.TOP) {
-            return 1;
-        }
-        return 0;
-    }
-    
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        switch (meta) {
-        case 0:
-            return this.blockState.getBaseState().withProperty(PART, EnumPartType.BOTTOM);
-        case 1:
-            return this.blockState.getBaseState().withProperty(PART, EnumPartType.TOP);
-        default:
-            return getDefaultState();
+        } else {
+            return null;
         }
     }
     
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
-        if (te != null) {
-            state = state.withProperty(ROTATION, te.getRotation());
-        }
-        return state;
+    public boolean renderAsNormalBlock() {
+        return false;
     }
     
-    public static enum EnumPartType implements IStringSerializable {
-        TOP("top"),
-        BOTTOM("bottom");
-
-        private final String name;
-        
-        private EnumPartType(String name) {
-            this.name = name;
-        }
-        
-        @Override
-        public String toString() {
-            return this.name;
-        }
-        
-        @Override
-        public String getName() {
-            return this.name;
-        }
+    @Override
+    public boolean isNormalCube() {
+        return false;
+    }
+    
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+    
+    @Override
+    public int getRenderType() {
+        return -1;
     }
 
     @Override
-    public void getDebugHoverText(World world, BlockPos pos, ArrayList<String> textLines) {
-        textLines.add("top=" + isTopOfMannequin(world, pos));
+    public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines) {
+        textLines.add("top=" + isTopOfMannequin(world, x, y, z));
     }
 }

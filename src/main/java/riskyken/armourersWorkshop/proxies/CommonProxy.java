@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.proxies;
 
+import net.minecraft.block.Block;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.library.CommonLibraryManager;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
@@ -57,5 +58,9 @@ public class CommonProxy {
     
     public void receivedSkinFromLibrary(String fileName, Skin skin) {
         
+    }
+    
+    public int getBlockRenderType(Block block) {
+        return 0;
     }
 }

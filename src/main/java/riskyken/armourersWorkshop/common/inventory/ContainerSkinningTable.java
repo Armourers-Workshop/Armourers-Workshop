@@ -46,7 +46,7 @@ public class ContainerSkinningTable extends Container {
     
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return player.getDistanceSq(tileEntity.getPos()) <= 64;
+        return player.getDistanceSq(tileEntity.xCoord + 0.5, tileEntity.yCoord + 0.5, tileEntity.zCoord + 0.5) <= 64;
     }
 
     @Override

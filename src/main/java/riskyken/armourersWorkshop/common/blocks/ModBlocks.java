@@ -1,8 +1,8 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
@@ -55,7 +55,7 @@ public class ModBlocks {
     }
 
     public void registerTileEntities() {
-        registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER);
+        registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER_BRAIN);
         registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityGlobalSkinLibrary.class, LibBlockNames.GLOBAL_SKIN_LIBRARY);

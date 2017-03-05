@@ -85,18 +85,18 @@ public class PlayerUndoData {
             return;
         }
         UndoData undoData = undos.get(undos.size() - 1);
-        if (world.provider.getDimension() != undoData.dimensionId) {
+        if (world.provider.dimensionId != undoData.dimensionId) {
             return;
         }
         
-        Block block = world.getBlockState(undoData.pos).getBlock();
+        Block block = world.getBlock(undoData.blockX, undoData.blockY, undoData.blockZ);
         if (block instanceof IPantableBlock) {
             Color c = new Color(undoData.rgb[0] & 0xFF, undoData.rgb[1] & 0xFF, undoData.rgb[2] & 0xFF);
             int rgb = c.getRGB();
             
             IPantableBlock worldColourable = (IPantableBlock) block;
-            worldColourable.setColour(world, undoData.pos, rgb, undoData.side);
-            worldColourable.setPaintType(world, undoData.pos, PaintType.getPaintTypeFormSKey(undoData.paintType), undoData.side);
+            worldColourable.setColour(world, undoData.blockX, undoData.blockY, undoData.blockZ, rgb, undoData.side);
+            worldColourable.setPaintType(world, undoData.blockX, undoData.blockY, undoData.blockZ, PaintType.getPaintTypeFormSKey(undoData.paintType), undoData.side);
         }
         undos.remove(undos.size() - 1);
     }

@@ -1,11 +1,8 @@
 package riskyken.plushieWrapper.client;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBridge implements IRenderBuffer {
@@ -18,8 +15,8 @@ public class RenderBridge implements IRenderBuffer {
         INSTANCE = new RenderBridge();
     }
     
-    private RenderBridge() {
-        tessellator = Tessellator.getInstance();
+    public RenderBridge() {
+        tessellator = Tessellator.instance;
     }
     
     @Override
@@ -28,53 +25,62 @@ public class RenderBridge implements IRenderBuffer {
     }
 
     @Override
-    public void startDrawingQuads(VertexFormat vertexFormat) {
-        tessellator.getBuffer().begin(GL11.GL_QUADS, vertexFormat);
+    public void startDrawingQuads() {
+        tessellator.startDrawingQuads();
     }
 
     @Override
-    public void startDrawing(int glMode, VertexFormat vertexFormat) {
-        tessellator.getBuffer().begin(glMode, vertexFormat);
+    public void startDrawing(int drawMode) {
+        tessellator.startDrawing(drawMode);
+    }
+
+    @Override
+    public void setBrightness(int brightness) {
+        tessellator.setBrightness(brightness);
     }
     
     @Override
     public void setColourRGBA_F(float r, float g, float b, float a) {
-        tessellator.getBuffer().color(r, g, b, a);
+        tessellator.setColorRGBA_F(r, g, b, a);
     }
     
     @Override
     public void setColourRGBA_B(byte r, byte g, byte b, byte a) {
-        tessellator.getBuffer().color((r & 0xFF) / 255F, (g & 0xFF) / 255F, (b & 0xFF) / 255F, (a & 0xFF) / 255F);
+        tessellator.setColorRGBA(r & 0xFF, g & 0xFF, b & 0xFF, a & 0xFF);
+    }
+    
+    @Override
+    public void setColorOpaque_F(float r, float g, float b) {
+        tessellator.setColorOpaque_F(r, g, b);
+    }
+    
+    @Override
+    public void setColorOpaque_I(int r, int g, int b) {
+        tessellator.setColorOpaque(r, g, b);
+    }
+    
+    @Override
+    public void setColorOpaque_B(byte r, byte g, byte b) {
+        tessellator.setColorOpaque(r & 0xFF, g & 0xFF, b & 0xFF);
     }
 
     @Override
     public void setNormal(float x, float y, float z) {
-        tessellator.getBuffer().normal(x, y, z);
+        tessellator.setNormal(x, y, z);
     }
 
     @Override
     public void setTextureUV(double u, double v) {
-        tessellator.getBuffer().tex(u, v);
+        tessellator.setTextureUV(u, v);
     }
 
     @Override
     public void addVertex(double x, double y, double z) {
-        tessellator.getBuffer().pos(x, y, z);
+        tessellator.addVertex(x, y, z);
     }
 
     @Override
     public void addVertexWithUV(double x, double y, double z, double u, double v) {
-        tessellator.getBuffer().pos(x, y, z);
-        tessellator.getBuffer().tex(u, v);
-    }
-    
-    @Override
-    public void lightmap(int x, int y) {
-        tessellator.getBuffer().lightmap(x, y);
-    }
-    
-    @Override
-    public void endVertex() {
-        tessellator.getBuffer().endVertex();
+        tessellator.addVertexWithUV(x, y, z, u, v);
     }
 }

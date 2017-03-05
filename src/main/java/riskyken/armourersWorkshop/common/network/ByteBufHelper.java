@@ -12,26 +12,13 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ByteBufHelper {
-    
-    public static void writeBlockPos(ByteBuf buf, BlockPos pos) {
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
-    }
-    
-    public static BlockPos readBlockPos(ByteBuf buf) {
-        int x = buf.readInt();
-        int y = buf.readInt();
-        int z = buf.readInt();
-        return new BlockPos(x, y, z);
-    }
     
     public static void writeUUID(ByteBuf buf, UUID uuid) {
         buf.writeLong(uuid.getMostSignificantBits());
@@ -63,14 +50,17 @@ public final class ByteBufHelper {
     public static void writeSkinToByteBuf(ByteBuf buf, Skin skin) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(baos);
-        
+        boolean compress = ConfigHandler.serverCompressesSkins;
+        buf.writeBoolean(compress);
         try {
             skin.writeToStream(dataOutputStream);
             dataOutputStream.writeInt(skin.requestId);
             dataOutputStream.flush();
             
             byte[] skinData = baos.toByteArray();
-            //skinData = compressedByteArray(skinData);
+            if (compress) {
+                skinData = compressedByteArray(skinData);
+            }
             if (skinData == null) {
                 ModLogger.log(Level.ERROR, "Failed to compress skin data.");
                 return;
@@ -88,9 +78,13 @@ public final class ByteBufHelper {
     }
     
     public static Skin readSkinFromByteBuf(ByteBuf buf) {
+        boolean compressed = buf.readBoolean();
         byte[] skinData = readByteArrayFromByteBuf(buf);
         
-        //skinData = decompressByteArray(skinData);
+        if (compressed) {
+            skinData = decompressByteArray(skinData);
+        }
+        
         if (skinData == null) {
             ModLogger.log(Level.ERROR, "Failed to decompress skin data.");
             return null;
@@ -150,52 +144,45 @@ public final class ByteBufHelper {
     private static byte[] compressedByteArray(byte[] data) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
-        DataOutputStream dataOutputStream = null;
         
         try {
             gzos = new GZIPOutputStream(baos);
-            dataOutputStream = new DataOutputStream(gzos);
-            writeByteArrayToStream(dataOutputStream, data);
-            dataOutputStream.flush();
+            gzos.write(data);
+            gzos.close();
         } catch (IOException e) {
             e.printStackTrace();
-            IOUtils.closeQuietly(dataOutputStream);
             IOUtils.closeQuietly(gzos);
             IOUtils.closeQuietly(baos);
             return null;
         } finally {
-            IOUtils.closeQuietly(dataOutputStream);
             IOUtils.closeQuietly(gzos);
+            IOUtils.closeQuietly(baos);
         }
         
         byte[] compressedData = baos.toByteArray();
-        IOUtils.closeQuietly(baos);
         
-        ModLogger.log("compress - old size:" + data.length + " new size:" + compressedData.length);
+        //ModLogger.log("compress - old size:" + data.length + " new size:" + compressedData.length);
+        //ModLogger.log("compression ratio:" + String.format("%.2f", ((float)compressedData.length / (float)data.length) * 100F) + "%%");
         return compressedData;
     }
     
     private static byte[] decompressByteArray(byte[] compressedData) {
-        ByteArrayInputStream bais = new ByteArrayInputStream(compressedData);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPInputStream gzis = null;
-        DataInputStream dataInputStream = null;
         
         byte[] data;
         try {
-            gzis = new GZIPInputStream(bais);
-            dataInputStream = new DataInputStream(gzis);
-            data = readByteArrayFromStream(dataInputStream);
+            IOUtils.copy(new GZIPInputStream(new ByteArrayInputStream(compressedData)), baos);
         } catch (IOException e) {
             e.printStackTrace();
             data = null;
         } finally {
-            IOUtils.closeQuietly(dataInputStream);
             IOUtils.closeQuietly(gzis);
-            IOUtils.closeQuietly(bais);
+            IOUtils.closeQuietly(baos);
         }
         
-        ModLogger.log("decompress - old size:" + data.length + " new size:" + compressedData.length);
-        return data;
+        //ModLogger.log("decompress - old size:" + baos.size() + " new size:" + compressedData.length);
+        return baos.toByteArray();
     }
     
     public static void writeByteArrayToByteBuf(ByteBuf buf, byte[] data) {

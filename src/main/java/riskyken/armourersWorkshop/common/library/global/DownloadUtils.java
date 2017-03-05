@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.library.global;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.io.IOUtils;
 
@@ -14,7 +15,7 @@ public final class DownloadUtils {
     private DownloadUtils() {
     }
     
-    public static String downloadString(String url) {
+    private static String downloadString(String url) {
         InputStream in = null;
         String data = null;
         try {
@@ -29,7 +30,7 @@ public final class DownloadUtils {
         return data;
     }
     
-    public static JsonArray downloadJsonArray(String url) {
+    private static JsonArray downloadJsonArray(String url) {
         String data = downloadString(url);
         if (data == null) {
             return null;
@@ -42,5 +43,35 @@ public final class DownloadUtils {
             return null;
         }
         return json;
+    }
+    
+    public static class DownloadJsonCallable implements Callable<JsonArray> {
+
+        private final String url;
+        
+        public DownloadJsonCallable(String url) {
+            this.url = url;
+        }
+        
+        @Override
+        public JsonArray call() throws Exception {
+            JsonArray array = downloadJsonArray(url);
+            return array;
+        }
+    }
+    
+    public static class DownloadStringCallable implements Callable<String> {
+
+        private final String url;
+        
+        public DownloadStringCallable(String url) {
+            this.url = url;
+        }
+        
+        @Override
+        public String call() throws Exception {
+            String download = downloadString(url);
+            return download;
+        }
     }
 }

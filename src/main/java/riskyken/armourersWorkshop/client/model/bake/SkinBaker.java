@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EnumFacing;
-import riskyken.armourersWorkshop.api.common.IPoint3D;
-import riskyken.armourersWorkshop.api.common.IRectangle3D;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -25,7 +22,7 @@ public final class SkinBaker {
     }
     
     public static boolean withinMaxRenderDistance(double x, double y, double z) {
-        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         if (player.getDistance(x, y, z) > ConfigHandlerClient.maxSkinRenderDistance) {
             return false;
         }
@@ -40,6 +37,8 @@ public final class SkinBaker {
         Rectangle3D pb = skinPart.getPartBounds();
         int[][][] cubeArray = new int[pb.getWidth()][pb.getHeight()][pb.getDepth()];
         
+        int updates = 0;
+        
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             int cubeId = cubeData.getCubeId(i);
             byte[] cubeLoc = cubeData.getCubeLocation(i);
@@ -48,8 +47,19 @@ public final class SkinBaker {
             int y = (int)cubeLoc[1] - pb.getY();
             int z = (int)cubeLoc[2] - pb.getZ();
             cubeArray[x][y][z] = i + 1;
+            if (ConfigHandlerClient.slowModelBaking) {
+                updates++;
+                if (updates > 40) {
+                    try {
+                        Thread.sleep(1);
+                        updates = 0;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-        
+
         ArrayList<CubeLocation> openList = new ArrayList<CubeLocation>();
         HashSet<Integer> closedSet = new HashSet<Integer>();
         CubeLocation startCube = new CubeLocation(-1, -1, -1);
@@ -69,15 +79,26 @@ public final class SkinBaker {
                     }
                 }
             }
+            if (ConfigHandlerClient.slowModelBaking) {
+                updates++;
+                if (updates > 40) {
+                    try {
+                        Thread.sleep(1);
+                        updates = 0;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
         return cubeArray;
     }
     
     private static ArrayList<CubeLocation> checkCubesAroundLocation(SkinCubeData cubeData, CubeLocation cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
         ArrayList<CubeLocation> openList = new ArrayList<SkinBaker.CubeLocation>();
-        EnumFacing[] dirs = {EnumFacing.DOWN, EnumFacing.UP,
-                EnumFacing.SOUTH, EnumFacing.NORTH,
-                EnumFacing.WEST, EnumFacing.EAST };
+        ForgeDirection[] dirs = {ForgeDirection.DOWN, ForgeDirection.UP,
+                ForgeDirection.SOUTH, ForgeDirection.NORTH,
+                ForgeDirection.WEST, ForgeDirection.EAST };
         
         int index = getIndexForLocation(cubeLocation, partBounds, cubeArray);
         
@@ -88,10 +109,10 @@ public final class SkinBaker {
         }
         
         for (int i = 0; i < dirs.length; i++) {
-            EnumFacing dir = dirs[i];
-            int x = cubeLocation.x + dir.getFrontOffsetX();
-            int y = cubeLocation.y + dir.getFrontOffsetY();
-            int z = cubeLocation.z + dir.getFrontOffsetZ();
+            ForgeDirection dir = dirs[i];
+            int x = cubeLocation.x + dir.offsetX;
+            int y = cubeLocation.y + dir.offsetY;
+            int z = cubeLocation.z + dir.offsetZ;
             int tarIndex = getIndexForLocation(x, y, z, partBounds, cubeArray);
             
             
@@ -177,12 +198,6 @@ public final class SkinBaker {
         float scale = 0.0625F;
         
         SkinCubeData cubeData = partData.getCubeData();
-        ISkinPartType partType = partData.getPartType();
-        IRectangle3D gs = partType.getGuideSpace();
-        IRectangle3D bs = partType.getBuildingSpace();
-        IPoint3D offset = partType.getOffset();
-        
-        partData.isClippingGuide = false;
         Rectangle3D pb = partData.getPartBounds();
         
         for (int ix = 0; ix < pb.getWidth(); ix++) {
@@ -193,17 +208,6 @@ public final class SkinBaker {
                         byte[] loc = cubeData.getCubeLocation(i);
                         byte[] paintType = cubeData.getCubePaintType(i);
                         ICube cube = partData.getCubeData().getCube(i);
-                        
-                        if (loc[0] >= gs.getX() & loc [0] < gs.getX() + gs.getWidth()) {
-                            int y = -loc[1] - 1;
-                            if (y >= gs.getY()) {
-                                if (y < gs.getHeight()) {
-                                    if (loc[2] >= gs.getZ() & loc [2] < gs.getZ() + gs.getDepth()) {
-                                        partData.isClippingGuide = true;
-                                    }
-                                }
-                            }
-                        }
                         
                         
                         byte a = (byte) 255;
@@ -405,6 +409,8 @@ public final class SkinBaker {
             this.z = z;
         }
 
+
+
         @Override
         public int hashCode() {
             return toString().hashCode();
@@ -432,6 +438,5 @@ public final class SkinBaker {
         public String toString() {
             return "CubeLocation [x=" + x + ", y=" + y + ", z=" + z + "]";
         }
-        
     }
 }

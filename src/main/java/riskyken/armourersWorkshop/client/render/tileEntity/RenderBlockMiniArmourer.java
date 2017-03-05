@@ -2,11 +2,11 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockArmourer;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
@@ -44,9 +44,9 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
     }
-
+    
     @Override
-    public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-        renderTileEntityAt((TileEntityMiniArmourer)te, x, y, z, partialTicks);
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tickTime) {
+        renderTileEntityAt((TileEntityMiniArmourer)tileEntity, x, y, z, tickTime);
     }
 }

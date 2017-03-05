@@ -18,6 +18,11 @@ public class TileEntitySkinningTable extends TileEntity implements IInventorySlo
         outputInventory = new ModInventory("skinningTableOutput", 1, this, this);
     }
     
+    @Override
+    public boolean canUpdate() {
+        return false;
+    }
+    
     public ModInventory getCraftingInventory() {
         return craftingInventory;
     }
@@ -40,11 +45,10 @@ public class TileEntitySkinningTable extends TileEntity implements IInventorySlo
     }
     
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         craftingInventory.saveItemsToNBT(compound);
         outputInventory.saveItemsToNBT(compound);
-        return compound;
     }
     
     @Override

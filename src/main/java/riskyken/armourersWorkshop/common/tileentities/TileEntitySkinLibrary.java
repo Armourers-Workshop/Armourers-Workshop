@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common.tileentities;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
@@ -30,8 +29,13 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     }
     
     @Override
-    public String getName() {
+    public String getInventoryName() {
         return LibBlockNames.ARMOUR_LIBRARY;
+    }
+    
+    @Override
+    public boolean canUpdate() {
+        return false;
     }
     
     public boolean isCreativeLibrary() {
@@ -90,7 +94,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         ItemStack stackOutput = getStackInSlot(1);
         if (fileName.contains("/") | fileName.contains("\\")) {
             ModLogger.log(String.format("Player %s tried to save a file with invalid characters in the file name.",
-                    player.getName()));
+                    player.getCommandSenderName()));
             ModLogger.log(String.format("The file name was: %s", fileName));
             return;
         }
@@ -155,7 +159,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         ItemStack stackOutput = getStackInSlot(1);
         if (fileName.contains("/") | fileName.contains("\\")) {
             ModLogger.log(String.format("Player %s tried to load a file with invalid characters in the file name.",
-                    player.getName()));
+                    player.getCommandSenderName()));
             ModLogger.log(String.format("The file name was: %s", fileName));
             return;
         }
@@ -177,21 +181,22 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         
         Skin skin = null;
+        String fullFileName = fileName;
+        
         if (publicFiles) {
             skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
         } else {
             skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour", player);
+            fullFileName = player.getUniqueID().toString() + "\\" + fullFileName;
         }
         
         if (skin == null) {
             return;
         }
         
-        if (publicFiles) {
-            CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, fileName);
-        } else {
-            CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  fileName);
-        }
+        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, fullFileName + ".armour");
+        
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, fullFileName);
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
         
@@ -236,9 +241,9 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, inputItem);
     }
-
+    
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
+    public int[] getAccessibleSlotsFromSide(int side) {
         if (isCreativeLibrary()) {
             int[] slots = new int[1];
             slots[0] = 1;
@@ -250,26 +255,26 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return slots;
         }
     }
-    
+
     @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+    public boolean canInsertItem(int slot, ItemStack stack, int side) {
         if (isCreativeLibrary()) {
             return false;
         }
-        if (index != 0) {
+        if (slot != 0) {
             return false;
         }
-        if (itemStackIn.getItem() instanceof ItemSkinTemplate && itemStackIn.getItemDamage() == 0) {
+        if (stack.getItem() instanceof ItemSkinTemplate && stack.getItemDamage() == 0) {
             return true;
         }
-        if (itemStackIn.getItem() instanceof ItemSkin) {
+        if (stack.getItem() instanceof ItemSkin) {
             return true;
         }
         return false;
     }
-    
+
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+    public boolean canExtractItem(int slot, ItemStack stack, int side) {
         return true;
     }
 }

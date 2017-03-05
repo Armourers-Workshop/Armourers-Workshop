@@ -5,15 +5,15 @@ import java.awt.image.BufferedImage;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.client.config.GuiUtils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
+import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -44,14 +44,14 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         hairColour = tileEntity.getHairColour();
         
         selectSkinButton = new GuiButtonExt(0, width / 2 - 90, 25, 80, 14, 
-                GuiHelper.getLocalizedControlName(tileEntity.getName(), "selectSkin"));
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "selectSkin"));
         selectHairButton = new GuiButtonExt(0, width / 2 - 90, 40, 80, 14, 
-                GuiHelper.getLocalizedControlName(tileEntity.getName(), "selectHair"));
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "selectHair"));
         
         autoSkinButton = new GuiButtonExt(0, width / 2 + 10, 25, 80, 14,
-                GuiHelper.getLocalizedControlName(tileEntity.getName(), "autoSkin"));
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "autoSkin"));
         autoHairButton = new GuiButtonExt(0, width / 2 + 10, 40, 80, 14,
-                GuiHelper.getLocalizedControlName(tileEntity.getName(), "autoHair"));
+                GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "autoHair"));
         
         buttonList.add(selectSkinButton);
         buttonList.add(selectHairButton);
@@ -111,11 +111,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingSkinColour = true;
         }
         if (button == autoSkinButton) {
-            ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
-            if (tileEntity.getGameProfile() != null) {
-                rl = AbstractClientPlayer.getLocationSkin(tileEntity.getGameProfile().getName());
-                AbstractClientPlayer.getDownloadImageSkin(rl, tileEntity.getGameProfile().getName());
-            }
+            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
             skinColour = autoColourSkin(rl);
             ((GuiMannequin)parent).tabOffset.sendData();
         }
@@ -123,11 +119,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingHairColour = true;
         }
         if (button == autoHairButton) {
-            ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
-            if (tileEntity.getGameProfile() != null) {
-                rl = AbstractClientPlayer.getLocationSkin(tileEntity.getGameProfile().getName());
-                AbstractClientPlayer.getDownloadImageSkin(rl, tileEntity.getGameProfile().getName());
-            }
+            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
             hairColour = autoColourHair(rl);
             ((GuiMannequin)parent).tabOffset.sendData();
         }
@@ -136,7 +128,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     private BufferedImage getBufferedImage(ResourceLocation rl) {
         BufferedImage buff = SkinHelper.getBufferedImageSkin(rl);
         if (buff == null) {
-            buff = SkinHelper.getBufferedImageSkin(DefaultPlayerSkin.getDefaultSkinLegacy());
+            buff = SkinHelper.getBufferedImageSkin(AbstractClientPlayer.locationStevePng);
         }
         return buff;
     }

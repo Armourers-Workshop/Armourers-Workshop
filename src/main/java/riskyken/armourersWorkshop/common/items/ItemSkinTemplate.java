@@ -1,19 +1,22 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
     
@@ -25,23 +28,41 @@ public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
         setHasSubtypes(true);
     }
     
+    @SideOnly(Side.CLIENT)
+    IIcon giftIcon;
+    
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        if (!worldIn.isRemote) {
-            if (itemStackIn.getItemDamage() == 1000) {
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibItemResources.TEMPLATE_BLANK);
+        giftIcon = register.registerIcon(LibItemResources.GIFT_SACK);
+    }
+    
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (!world.isRemote) {
+            if (stack.getItemDamage() == 1000) {
                 ItemStack giftStack = new ItemStack(ModBlocks.doll, 1);
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, playerIn.getGameProfile());
+                NBTUtil.func_152460_a(profileTag, player.getGameProfile());
                 giftStack.setTagCompound(new NBTTagCompound());
                 giftStack.getTagCompound().setTag(TAG_OWNER, profileTag);
-                if (playerIn.inventory.addItemStackToInventory(giftStack)) {
-                    itemStackIn.stackSize--;
+                if (player.inventory.addItemStackToInventory(giftStack)) {
+                    stack.stackSize--;
                 } else {
-                    playerIn.addChatMessage(new TextComponentString(I18n.format("chat.armourersworkshop:inventoryFull")));
+                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("chat.armourersworkshop:inventoryFull")));
                 }
             }
         }
-        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+        return super.onItemRightClick(stack, world, player);
+    }
+    
+    @Override
+    public IIcon getIconFromDamage(int damage) {
+        if (damage == 1000) {
+            return giftIcon;
+        }
+        return super.getIconFromDamage(damage);
     }
 
     @Override

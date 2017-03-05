@@ -5,28 +5,30 @@ import java.util.List;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -40,18 +42,13 @@ public class BlockSkinnable extends AbstractModBlockContainer {
 
     public BlockSkinnable() {
         this(LibBlockNames.SKINNABLE);
-        
     }
     
     public BlockSkinnable(String name) {
-        super(name, Material.IRON, SoundType.METAL, false);
-        setLightOpacity(0);
+        super(name, Material.iron, soundTypeMetal, false);
     }
     
-    /*
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
@@ -61,26 +58,29 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
-            Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
-            if (skin != null) {
-                if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
-                    List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
-                    if (seats.size() == 0) {
-                        Point3D point = null;
-                        if (skin.getParts().get(0).getMarkerCount() > 0) {
-                            point = skin.getParts().get(0).getMarker(0);
-                        } else {
-                            point = new Point3D(0, 0, 0);
+            SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
+            if (skinPointer != null) {
+                Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
+                if (skin != null) {
+                    if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
+                        List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
+                        if (seats.size() == 0) {
+                            Point3D point = null;
+                            if (skin.getParts().get(0).getMarkerCount() > 0) {
+                                point = skin.getParts().get(0).getMarker(0);
+                            } else {
+                                point = new Point3D(0, 0, 0);
+                            }
+                            int rotation = world.getBlockMetadata(x, y, z);
+                            skin.getParts().get(0).getMarker(0);
+                            Seat seat = new Seat(world, x, y, z, point, rotation);
+                            world.spawnEntityInWorld(seat);
+                            player.mountEntity(seat);
+                                                  
+                            return true;
                         }
-                        int rotation = world.getBlockMetadata(x, y, z);
-                        skin.getParts().get(0).getMarker(0);
-                        Seat seat = new Seat(world, x, y, z, point, rotation);
-                        world.spawnEntityInWorld(seat);
-                        player.mountEntity(seat);
-                                              
-                        return true;
+                        
                     }
-                    
                 }
             }
         }
@@ -99,10 +99,12 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
-            Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
-            if (skin != null) {
-                if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false)) {
-                    return null;
+            if (((TileEntitySkinnable)te).getSkinPointer() != null) {
+                Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
+                if (skin != null) {
+                    if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false)) {
+                        return null;
+                    }
                 }
             }
         }
@@ -112,7 +114,6 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
->>>>>>> 1.7.10/develop
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             TileEntitySkinnable tes = (TileEntitySkinnable) te;
@@ -120,14 +121,30 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             return;
         }
         setBlockBounds(0, 0, 0, 1, 1, 1);
-        
-        return super.getBoundingBox(state, source, pos);
     }
-    */
+    
+    @SideOnly(Side.CLIENT)
+    private IIcon cubeIcon;
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity) {
-        TileEntity te = world.getTileEntity(pos);
+    public void registerBlockIcons(IIconRegister register) {
+        blockIcon = register.registerIcon(LibBlockResources.SKINNABLE);
+        cubeIcon = register.registerIcon(LibBlockResources.CUBE);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIcon(int side, int meta) {
+        if (meta == 4) {
+            return cubeIcon;
+        }
+        return blockIcon;
+    }
+    
+    @Override
+    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             if (skinPointer != null) {
@@ -136,15 +153,15 @@ public class BlockSkinnable extends AbstractModBlockContainer {
                     return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false);
                 }
             } else {
-                ModLogger.log(Level.WARN, String.format("Block skin at %s had no skin data.", pos.toString()));
+                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
             }
         }
         return false;
     }
     
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        TileEntity te = world.getTileEntity(pos);
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             if (skinPointer != null) {
@@ -152,35 +169,35 @@ public class BlockSkinnable extends AbstractModBlockContainer {
                 SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
                 return returnStack;
             } else {
-                ModLogger.log(Level.WARN, String.format("Block skin at %s had no skin data.", pos.toString()));
+                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
             }
         }
         return null;
     }
     
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        return  new ArrayList<ItemStack>();
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        return new ArrayList<ItemStack>();
     }
     
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
         if (!player.capabilities.isCreativeMode) {
-            dropSkin(world, pos);
+            dropSkin(world, x, y, z);
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest);
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
     
-    private void dropSkin(World world, BlockPos pos) {
-        TileEntity te = world.getTileEntity(pos);
+    private void dropSkin(World world, int x, int y, int z) {
+        TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             if (skinPointer != null) {
                 ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
                 SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
-                UtilItems.spawnItemInWorld(world, pos, skinStack);
+                UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
             } else {
-                ModLogger.log(Level.WARN, String.format("Block skin at %s had no skin data.", pos.toString()));
+                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
             }
         }
     }
@@ -191,44 +208,27 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     }
     
     @Override
-    public boolean isBlockNormalCube(IBlockState state) {
+    public boolean renderAsNormalBlock() {
         return false;
     }
     
     @Override
-    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isNormalCube() {
         return false;
     }
     
     @Override
-    public boolean isFullBlock(IBlockState state) {
+    public boolean isOpaqueCube() {
         return false;
     }
     
     @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
+    public int getRenderType() {
+        return -1;
     }
     
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
-    }
-    
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
-    }
-    
-    @Override
-    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-        /*
+    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
         if (world.isRemote) {
             return false;
         }
@@ -238,7 +238,6 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             rotation = 0;
         }
         world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
-        */
         return true;
     }
     
@@ -267,20 +266,20 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         }
         
         @Override
-        public void updatePassenger(Entity passenger) {
-            if (this.isPassenger(passenger)) {
-                EnumFacing[] rotMatrix =  {EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.EAST};
+        public void updateRiderPosition() {
+            if (this.riddenByEntity != null) {
+                ForgeDirection[] rotMatrix =  {ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.EAST};
                 float scale = 0.0625F;
                 
-                EnumFacing dir = rotMatrix[rotation];
+                ForgeDirection dir = rotMatrix[rotation];
                 
-                float offsetX = (offset.getX() * scale) * dir.getFrontOffsetZ() + (-offset.getZ() * scale) * dir.getFrontOffsetX();
+                float offsetX = (offset.getX() * scale) * dir.offsetZ + (-offset.getZ() * scale) * dir.offsetX;
                 float offsetY = offset.getY() * scale;
-                float offsetZ = (-offset.getZ() * scale) * dir.getFrontOffsetZ() + (-offset.getX() * scale) * dir.getFrontOffsetX();
+                float offsetZ = (-offset.getZ() * scale) * dir.offsetZ + (-offset.getX() * scale) * dir.offsetX;
                 
-                passenger.setPosition(
+                this.riddenByEntity.setPosition(
                         this.posX + 0.5 - offsetX,
-                        this.posY + passenger.getYOffset() + 0.5F - offsetY,
+                        this.posY + this.riddenByEntity.getYOffset() + 0.5F - offsetY,
                         this.posZ + 0.5F - offsetZ);
             }
         }
@@ -289,24 +288,27 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         public void onUpdate() {
             super.onUpdate();
             
-            if (!(worldObj.getBlockState(getPosition()).getBlock() instanceof BlockSkinnable)) {
+            if (!(worldObj.getBlock((int)posX, (int)posY, (int)posZ) instanceof BlockSkinnable)) {
                 setDead();
                 return;
             }
-            
-            
-            if (getPassengers().size() == 0) {
+            if (riddenByEntity == null) {
                 noRiderTime++;
                 if (noRiderTime > 1) {
                     setDead();
                 }
             } else {
-                List<Entity> passengers = getPassengers();
-                for (int i = 0; i < passengers.size(); i++) {
-                    if (passengers.get(i).isSneaking()) {
-                        passengers.get(i).dismountRidingEntity();
-                    }
+                if (riddenByEntity.isSneaking()) {
+                    riddenByEntity.setPosition(posX + 0.5F, posY + 2, posZ + 0.5F);
+                    setDead();
                 }
+            }
+        }
+        
+        @Override
+        public void onCollideWithPlayer(EntityPlayer player) {
+            if (player.ridingEntity != this) {
+                super.onCollideWithPlayer(player);
             }
         }
         

@@ -59,7 +59,7 @@ public class RecipeSkinArmourContainer extends RecipeItemSkinning {
         SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(skinStack);
         ISkinType skinType = sp.getSkinType();
         Item armourItem = armourStack.getItem();
-        if (armourItem.isValidArmor(armourStack, skinType.getEntityEquipmentSlot(), null)) {
+        if (armourItem.isValidArmor(armourStack, skinType.getVanillaArmourSlotId(), null)) {
             return true;
         }
         return false;

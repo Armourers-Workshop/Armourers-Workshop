@@ -2,9 +2,11 @@ package riskyken.armourersWorkshop.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public final class ModRenderHelper {
@@ -22,12 +24,11 @@ public final class ModRenderHelper {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
     }
     
-    public static void setLightingForBlock(World world, BlockPos pos) {
-        int i = world.getCombinedLight(pos, 0);
+    public static void setLightingForBlock(World world, int x, int y, int z) {
+        int i = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
         int j = i % 65536;
         int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
-        //GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
     }
     
     public static void enableAlphaBlend() {
@@ -44,7 +45,7 @@ public final class ModRenderHelper {
     }
     
     public static void renderItemStack(ItemStack stack) {
-        //IIcon icon = stack.getItem().getIcon(stack, 0);
-        //ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
+        IIcon icon = stack.getItem().getIcon(stack, 0);
+        ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
     }
 }

@@ -9,6 +9,11 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,11 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -36,7 +36,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
 import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
@@ -93,11 +93,11 @@ public class GuiArmourLibrary extends GuiContainer {
     
     @Override
     public void initGui() {
-        ScaledResolution reso = new ScaledResolution(mc);
+        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         this.xSize = reso.getScaledWidth();
         this.ySize = reso.getScaledHeight();
         super.initGui();
-        String guiName = armourLibrary.getName();
+        String guiName = armourLibrary.getInventoryName();
         
         int slotSize = 18;
         
@@ -176,11 +176,11 @@ public class GuiArmourLibrary extends GuiContainer {
         int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
         int typeSwitchWidth = 80;
         
-        filenameTextbox = new GuiLabeledTextField(0, fontRendererObj, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
+        filenameTextbox = new GuiLabeledTextField(fontRendererObj, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
         filenameTextbox.setMaxStringLength(30);
         filenameTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.enterFileName"));
         
-        searchTextbox = new GuiLabeledTextField(0, fontRendererObj, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
+        searchTextbox = new GuiLabeledTextField(fontRendererObj, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
         searchTextbox.setMaxStringLength(30);
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
@@ -228,7 +228,7 @@ public class GuiArmourLibrary extends GuiContainer {
     
     private boolean isPlayerOp(EntityPlayer player) {
         MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
-        return minecraftServer.getPlayerList().canSendCommands(player.getGameProfile());
+        return minecraftServer.getConfigurationManager().func_152596_g(player.getGameProfile());
     }
     
     private void setFileSwitchType(LibraryFileType type) {
@@ -375,9 +375,9 @@ public class GuiArmourLibrary extends GuiContainer {
         loadSaveButton.enabled = true;
         
         if (isLoading()) {
-            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "load");
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "load");
         } else {
-            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "save");
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "save");
         }
         if (!((Slot) inventorySlots.inventorySlots.get(36)).getHasStack() & !armourLibrary.isCreativeLibrary()) {
             loadSaveButton.displayString = "";
@@ -477,7 +477,7 @@ public class GuiArmourLibrary extends GuiContainer {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         
         
@@ -502,16 +502,16 @@ public class GuiArmourLibrary extends GuiContainer {
     }
     
     @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
+    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+        super.mouseMovedOrUp(mouseX, mouseY, button);
         if (!dropDownList.getIsDroppedDown()) {
-            fileList.mouseMovedOrUp(mouseX, mouseY, state);
+            fileList.mouseMovedOrUp(mouseX, mouseY, button);
         }
         scrollbar.mouseReleased(mouseX, mouseY);
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) throws IOException {
+    protected void keyTyped(char key, int keyCode) {
         if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
             if (keyCode == 200) {
                 //Up
@@ -549,14 +549,14 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (armourLibrary.isCreativeLibrary()) {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getName() + "1", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "1", 0xCCCCCC);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getName() + "0", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "0", 0xCCCCCC);
         }
         
-        String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.files");
-        String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.filename");
-        String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.search");
+        String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");
+        String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.filename");
+        String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.search");
         /*
         this.fontRendererObj.drawString(filesLabel, 7, 55, 4210752);
         this.fontRendererObj.drawString(filenameLabel, 152, 27, 4210752);

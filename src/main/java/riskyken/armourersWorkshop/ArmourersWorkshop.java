@@ -2,25 +2,21 @@ package riskyken.armourersWorkshop;
 
 import java.io.File;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.capability.IWardrobeCapability;
-import riskyken.armourersWorkshop.common.capability.WardrobeProvider;
-import riskyken.armourersWorkshop.common.capability.WardrobeStorage;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
@@ -35,6 +31,7 @@ import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.skin.SkinExtractor;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
@@ -100,15 +97,14 @@ public class ArmourersWorkshop {
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
+        
+        ModAddonManager.preInit();
         ConfigHandler.init(new File(configDir, "common.cfg"));
         ConfigHandlerClient.init(new File(configDir, "client.cfg"));
         
-        SkinTypeRegistry.init();
-        CapabilityManager.INSTANCE.register(IWardrobeCapability.class, new WardrobeStorage(), WardrobeProvider.class);
-
         EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
         
-        Addons.preInit();
+        
         proxy.preInit();
         
         SkinIOUtils.makeLibraryDirectory();
@@ -118,6 +114,7 @@ public class ArmourersWorkshop {
         modItems = new ModItems();
         modBlocks = new ModBlocks();
         
+        SkinTypeRegistry.init();
         CubeRegistry.init();
         proxy.initLibraryManager();
     }
@@ -133,18 +130,19 @@ public class ArmourersWorkshop {
         
         PacketHandler.init();
         EntityEquipmentDataManager.init();
+        EntitySkinHandler.init();
         
         proxy.init();
         proxy.registerKeyBindings();
         proxy.initRenderers();
         
-        Addons.init();
+        ModAddonManager.init();
     }
     
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
-        Addons.postInit();
+        ModAddonManager.postInit();
         proxy.libraryManager.reloadLibrary();
     }
     

@@ -7,8 +7,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
@@ -53,12 +51,10 @@ public class InventoryEntitySkin implements IInventory {
         }
         return itemstack;
     }
-    
+
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack stack = getStackInSlot(index);
-        setInventorySlotContents(index, null);
-        return stack;
+    public ItemStack getStackInSlotOnClosing(int slotId) {
+        return getStackInSlot(slotId);
     }
 
     @Override
@@ -72,19 +68,14 @@ public class InventoryEntitySkin implements IInventory {
             callback.setInventorySlotContents(this, slotId, stack);
         }
     }
-    
+
     @Override
-    public String getName() {
+    public String getInventoryName() {
         return "skinInventory";
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new TextComponentString(getName());
-    }
-
-    @Override
-    public boolean hasCustomName() {
+    public boolean hasCustomInventoryName() {
         return false;
     }
 
@@ -103,11 +94,11 @@ public class InventoryEntitySkin implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory() {
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory() {
     }
 
     @Override
@@ -138,27 +129,5 @@ public class InventoryEntitySkin implements IInventory {
                 setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(item));
             }
         }
-    }
-    
-    @Override
-    public int getField(int id) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public int getFieldCount() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-        // TODO Auto-generated method stub
     }
 }

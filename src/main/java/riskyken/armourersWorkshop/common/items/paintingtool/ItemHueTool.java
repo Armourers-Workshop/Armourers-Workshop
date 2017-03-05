@@ -4,23 +4,23 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientToolPaintBlock;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -30,71 +30,81 @@ import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTool {
+    
+    @SideOnly(Side.CLIENT)
+    private IIcon tipIcon;
     
     public ItemHueTool() {
         super(LibItemNames.HUE_TOOL);
     }
     
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-            EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibItemResources.HUE_TOOL);
+        tipIcon = register.registerIcon(LibItemResources.HUE_TOOL_TIP);
+    }
+    
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
+            int side, float hitX, float hitY, float hitZ) {
+        Block block = world.getBlock(x, y, z);
         
-        IBlockState blockState = worldIn.getBlockState(pos);
-        
-        if (playerIn.isSneaking() & blockState.getBlock() == ModBlocks.colourMixer) {
-            TileEntity te = worldIn.getTileEntity(pos);
+        if (player.isSneaking() & block == ModBlocks.colourMixer) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof IPantable) {
-                if (!worldIn.isRemote) {
-                    int colour = ((IPantable)te).getColour(facing);
-                    PaintType paintType = ((IPantable)te).getPaintType(facing);
+                if (!world.isRemote) {
+                    int colour = ((IPantable)te).getColour(0);
+                    PaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }
             }
-            return EnumActionResult.SUCCESS;
+            return true;
         }
         
-        if (blockState.getBlock() instanceof IPantableBlock) {
-            if (!worldIn.isRemote) {
-                UndoManager.begin(playerIn);
+        if (block instanceof IPantableBlock) {
+            if (!world.isRemote) {
+                UndoManager.begin(player);
             }
             
             if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
                 for (int i = 0; i < 6; i++) {
-                    usedOnBlockSide(stack, playerIn, worldIn, pos, blockState.getBlock(), EnumFacing.values()[i]);
+                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
                 }
             } else {
-                usedOnBlockSide(stack, playerIn, worldIn, pos, blockState.getBlock(), facing);
+                usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
             }
-            if (!worldIn.isRemote) {
-                UndoManager.end(playerIn);
-                //worldIn.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
+            if (!world.isRemote) {
+                UndoManager.end(player);
+                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
             }
             
-            return EnumActionResult.SUCCESS;
+            return true;
         }
         
-        if (blockState.getBlock() == ModBlocks.armourerBrain & playerIn.isSneaking()) {
-            if (!worldIn.isRemote) {
-                TileEntity te = worldIn.getTileEntity(pos);
+        if (block == ModBlocks.armourerBrain & player.isSneaking()) {
+            if (!world.isRemote) {
+                TileEntity te = world.getTileEntity(x, y, z);
                 if (te != null && te instanceof TileEntityArmourer) {
-                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, playerIn);
+                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, world, stack, player);
                 }
             }
-            return EnumActionResult.SUCCESS;
+            return true;
         }
         
-        return EnumActionResult.FAIL;
+        return false;
     }
     
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
-        boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBTBool(stack.getTagCompound());
-        boolean changeSaturation = (boolean) ToolOptions.CHANGE_SATURATION.readFromNBTBool(stack.getTagCompound());
-        boolean changeBrightness = (boolean) ToolOptions.CHANGE_BRIGHTNESS.readFromNBTBool(stack.getTagCompound());
-        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBTBool(stack.getTagCompound());
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+        boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBTBool(stack.stackTagCompound);
+        boolean changeSaturation = (boolean) ToolOptions.CHANGE_SATURATION.readFromNBTBool(stack.stackTagCompound);
+        boolean changeBrightness = (boolean) ToolOptions.CHANGE_BRIGHTNESS.readFromNBTBool(stack.stackTagCompound);
+        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBTBool(stack.stackTagCompound);
         
         Color toolColour = new Color(getToolColour(stack));
         PaintType paintType = getToolPaintType(stack);
@@ -103,9 +113,9 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         IPantableBlock worldColourable = (IPantableBlock) block;
         
         
-        if (worldColourable.isRemoteOnly(world, pos, side) & world.isRemote) {
-            int oldColour = worldColourable.getColour(world, pos, side);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, side).getKey();
+        if (worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & world.isRemote) {
+            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
@@ -131,11 +141,11 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             if (changePaintType) {
                 rgbt[3] = (byte)paintType.getKey();
             }
-            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, side, rgbt);
+            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(bl.x, bl.y, bl.z, (byte)side, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);
-        } else if(!worldColourable.isRemoteOnly(world, pos, side) & !world.isRemote) {
-            int oldColour = worldColourable.getColour(world, pos, side);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, side).getKey();
+        } else if(!worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & !world.isRemote) {
+            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
@@ -153,21 +163,21 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             
             int newColour = Color.HSBtoRGB(recolour[0], recolour[1], recolour[2]);
             
-            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, side);
+            UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
             
-            ((IPantableBlock)block).setColour(world, pos, newColour, side);
+            ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
             if (changePaintType) {
-                ((IPantableBlock)block).setPaintType(world, pos, paintType, side);
+                ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
             }
         }
     }
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        if (worldIn.isRemote & playerIn.isSneaking()) {
-            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (world.isRemote & player.isSneaking()) {
+            player.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, world, 0, 0, 0);
         }
-        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+        return stack;
     }
     
     @Override
@@ -184,6 +194,14 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         list.add(hexText);
         list.add(paintText);
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
+    }
+    
+    @Override
+    public IIcon getIcon(ItemStack stack, int pass) {
+        if (pass == 0) {
+            return itemIcon;
+        }
+        return tipIcon;
     }
 
     @Override

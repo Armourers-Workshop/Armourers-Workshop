@@ -1,18 +1,19 @@
 package riskyken.armourersWorkshop.common.undo;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-
 public class UndoData {
 
-    public final BlockPos pos;
+    public final int blockX;
+    public final int blockY;
+    public final int blockZ;
     public final int dimensionId;
     public final byte[] rgb;
     public final byte paintType;
-    public final EnumFacing side;
+    public final int side;
 
-    public UndoData(BlockPos pos, int dimensionId, byte[] rgb, byte paintType, EnumFacing side) {
-        this.pos = pos;
+    public UndoData(int blockX, int blockY, int blockZ, int dimensionId, byte[] rgb, byte paintType, int side) {
+        this.blockX = blockX;
+        this.blockY = blockY;
+        this.blockZ = blockZ;
         this.dimensionId = dimensionId;
         this.rgb = rgb;
         this.paintType = paintType;

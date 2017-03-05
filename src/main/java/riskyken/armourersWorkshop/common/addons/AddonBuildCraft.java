@@ -1,38 +1,18 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class AddonBuildCraft extends AbstractAddon {
+public class AddonBuildCraft extends ModAddon {
     
-    private static final String MOD_ID = "BuildCraft|Core";
-    
-    @Override
-    public void preInit() {
+    public AddonBuildCraft() {
+        super("BuildCraft|Core", "BuildCraft");
     }
     
-    @Override
-    public void init() {
-    }
-    
-    @Override
-    public void postInit() {
-    }
-    
-    @Override
-    public String getModId() {
-        return MOD_ID;
-    }
-
-    @Override
-    public String getModName() {
-        return "BuildCraft";
-    }
-    
-    public static boolean isSkinCompatibleVersion() {
-        if (Loader.isModLoaded(MOD_ID)) {
-            ModContainer mc = Loader.instance().getIndexedModList().get(MOD_ID);
+    public boolean isSkinCompatibleVersion() {
+        if (isModLoaded()) {
+            ModContainer mc = Loader.instance().getIndexedModList().get(getModId());
             if (mc != null) {
                 String version = mc.getVersion();
                 String[] versionSplit = version.split("\\.");

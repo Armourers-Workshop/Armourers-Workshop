@@ -1,15 +1,16 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiScrollbar  extends GuiButton {
@@ -53,7 +54,7 @@ public class GuiScrollbar  extends GuiButton {
         if (this.visible)
         {
             updateMouse();
-            FontRenderer fontRendererObj = minecraft.fontRendererObj;
+            FontRenderer fontRendererObj = minecraft.fontRenderer;
             minecraft.getTextureManager().bindTexture(texture);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             //this.field_82253_i = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;

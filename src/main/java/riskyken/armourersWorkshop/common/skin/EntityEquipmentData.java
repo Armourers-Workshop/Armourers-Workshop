@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.skin;
 
 import java.util.HashMap;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

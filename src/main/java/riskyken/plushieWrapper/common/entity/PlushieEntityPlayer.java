@@ -1,8 +1,8 @@
 package riskyken.plushieWrapper.common.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.plushieWrapper.common.world.WorldPointer;
 
 public class PlushieEntityPlayer extends PlushieEntityLivingBase {
 
@@ -14,7 +14,7 @@ public class PlushieEntityPlayer extends PlushieEntityLivingBase {
         return (EntityPlayer) entity;
     }
     
-    public void openGui(Object mod, int modGuiId, World world, BlockPos bl) {
-        ((EntityPlayer)entity).openGui(mod, modGuiId, world, bl.getX(), bl.getY(), bl.getZ());
+    public void openGui(Object mod, int modGuiId, WorldPointer world, BlockLocation bl) {
+        ((EntityPlayer)entity).openGui(mod, modGuiId, world.getMinecraftWorld(), bl.x, bl.y, bl.z);
     }
 }

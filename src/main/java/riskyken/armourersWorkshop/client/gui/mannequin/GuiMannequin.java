@@ -1,15 +1,14 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabController;
@@ -36,28 +35,28 @@ public class GuiMannequin extends GuiContainer {
     public GuiMannequinTabInventory tabInventory;
     public GuiMannequinTabOffset tabOffset;
     public GuiMannequinTabSkinHair tabSkinAndHair;
-    public GuiMannequinTabName tabName;
+    public GuiMannequinTabTexture tabTexture;
     public GuiMannequinTabExtraRenders tabExtraRenders;
     
     public GuiMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
         super(new ContainerMannequin(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.player = invPlayer.player;
-        this.inventoryName = tileEntity.getName();
+        this.inventoryName = tileEntity.getInventoryName();
         tabList = new ArrayList<GuiTabPanel>();
         
         tabInventory = new GuiMannequinTabInventory(0, this);
         tabRotations = new GuiMannequinTabRotations(1, this, inventoryName, tileEntity.getBipedRotations());
         tabOffset = new GuiMannequinTabOffset(2, this, inventoryName, tileEntity);
         tabSkinAndHair = new GuiMannequinTabSkinHair(3, this, tileEntity);
-        tabName = new GuiMannequinTabName(4, this, tileEntity);
+        tabTexture = new GuiMannequinTabTexture(4, this, tileEntity);
         tabExtraRenders = new GuiMannequinTabExtraRenders(5, this, inventoryName, tileEntity);
         
         tabList.add(tabInventory);
         tabList.add(tabRotations);
         tabList.add(tabOffset);
         tabList.add(tabSkinAndHair);
-        tabList.add(tabName);
+        tabList.add(tabTexture);
         tabList.add(tabExtraRenders);
     }
     
@@ -96,7 +95,7 @@ public class GuiMannequin extends GuiContainer {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
@@ -107,12 +106,12 @@ public class GuiMannequin extends GuiContainer {
     }
     
     @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
+    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+        super.mouseMovedOrUp(mouseX, mouseY, button);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.mouseMovedOrUp(mouseX, mouseY, state);
+                tab.mouseMovedOrUp(mouseX, mouseY, button);
             }
         }
     }
@@ -125,7 +124,7 @@ public class GuiMannequin extends GuiContainer {
     }
     
     @Override
-    protected void keyTyped(char c, int keycode) throws IOException {
+    protected void keyTyped(char c, int keycode) {
         boolean keyTyped = false;
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
@@ -150,7 +149,7 @@ public class GuiMannequin extends GuiContainer {
         if (tileEntity.getIsDoll()) {
             GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, "doll", append, 4210752);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getName(), append, 4210752);
+            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName(), append, 4210752);
         }
         
         for (int i = 0; i < tabList.size(); i++) {

@@ -2,18 +2,16 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
@@ -24,7 +22,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class AbstractModItemArmour extends ItemArmor {
 
-    public AbstractModItemArmour(String name, ArmorMaterial armorMaterial, EntityEquipmentSlot armorType, boolean addCreativeTab) {
+    public AbstractModItemArmour(String name, ArmorMaterial armorMaterial, int armorType, boolean addCreativeTab) {
         super(armorMaterial, 2, armorType);
         if (addCreativeTab) {
             setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
@@ -38,7 +36,7 @@ public class AbstractModItemArmour extends ItemArmor {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
         String unlocalized = stack.getUnlocalizedName() + ".flavour";
-        String localized = I18n.format(unlocalized);
+        String localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");
@@ -54,10 +52,8 @@ public class AbstractModItemArmour extends ItemArmor {
 
     @Override
     public Item setUnlocalizedName(String name) {
-        super.setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(LibModInfo.ID, name));
-        GameRegistry.register(this);
-        return this;
+        GameRegistry.registerItem(this, name);
+        return super.setUnlocalizedName(name);
     }
 
     @Override
@@ -90,13 +86,13 @@ public class AbstractModItemArmour extends ItemArmor {
     
     @Override
     @SideOnly(Side.CLIENT)
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot,
-            ModelBiped _default) {
-        if (!SkinNBTHelper.stackHasSkinData(itemStack)) {
+    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack stack, int armorSlot) {
+        
+        if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return null;
         }
         
-        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(itemStack);
+        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
         
         AbstractModelSkin targetModel = null;
         SkinModelRenderer emr = SkinModelRenderer.INSTANCE;

@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.plushieWrapper.client.IRenderBuffer;

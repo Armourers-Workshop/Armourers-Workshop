@@ -6,8 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
@@ -30,13 +29,9 @@ public class ModelSkinWings extends AbstractModelSkin  {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
-            this.rightArmPose = ArmPose.EMPTY;
-            this.leftArmPose = ArmPose.EMPTY;
-            if (player.getHeldItem(EnumHand.MAIN_HAND) != null) {
-                this.rightArmPose = ArmPose.ITEM;
-            }
-            if (player.getHeldItem(EnumHand.OFF_HAND) != null) {
-                this.leftArmPose = ArmPose.ITEM;
+            this.heldItemRight = 0;
+            if (player.getHeldItem() != null) {
+                this.heldItemRight = 1;
             }
         }
         
@@ -57,6 +52,10 @@ public class ModelSkinWings extends AbstractModelSkin  {
             
             angle = SkinUtils.getFlapAngleForWings(entity, skin);
             
+            if (isSneak) {
+                GL11.glRotated(28F, 1F, 0, 0);
+            }
+            
             if (part.getPartType().getPartName().equals("leftWing")) {
                 renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading);
             }
@@ -73,7 +72,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
-        EnumFacing axis = EnumFacing.DOWN;
+        ForgeDirection axis = ForgeDirection.DOWN;
         
         if (part.getMarkerCount() > 0) {
             point = part.getMarker(0);
@@ -81,7 +80,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
+        //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
@@ -105,6 +104,8 @@ public class ModelSkinWings extends AbstractModelSkin  {
         case WEST:
             GL11.glRotated(angle, 0, 0, 1);
             break;
+        case UNKNOWN:
+            break;
         }
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
@@ -116,21 +117,18 @@ public class ModelSkinWings extends AbstractModelSkin  {
     private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
-        EnumFacing axis = EnumFacing.DOWN;
+        ForgeDirection axis = ForgeDirection.DOWN;
         
         if (part.getMarkerCount() > 0) {
             point = part.getMarker(0);
             axis = part.getMarkerSide(0);
         }
-        
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
+        //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
-
-        
         switch (axis) {
         case UP:
             GL11.glRotated(angle, 0, 1, 0);
@@ -149,6 +147,8 @@ public class ModelSkinWings extends AbstractModelSkin  {
             break;
         case WEST:
             GL11.glRotated(-angle, 1, 0, 0);
+            break;
+        case UNKNOWN:
             break;
         }
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());

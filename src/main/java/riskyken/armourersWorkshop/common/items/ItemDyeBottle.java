@@ -3,20 +3,19 @@ package riskyken.armourersWorkshop.common.items;
 import java.awt.Color;
 import java.util.List;
 
-import net.minecraft.block.state.IBlockState;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -29,32 +28,45 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
         super(LibItemNames.DYE_BOTTLE);
     }
     
+    private IIcon paintIcon;
+    
     @Override
-    public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-            BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        IBlockState blockState = world.getBlockState(pos);
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister register) {
+        itemIcon = register.registerIcon(LibItemResources.DYE_BOTTLE);
+        paintIcon = register.registerIcon(LibItemResources.DYE_BOTTLE_PAINT);
+    }
+    
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
+            int side, float hitX, float hitY, float hitZ) {
+        Block block = world.getBlock(x, y, z);
         
-        if (player.isSneaking() & blockState.getBlock() == ModBlocks.colourMixer) {
-            TileEntity te = world.getTileEntity(pos);
+        if (player.isSneaking() & block == ModBlocks.colourMixer) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
-                    int colour = ((IPantable)te).getColour(side);
-                    PaintType paintType = ((IPantable)te).getPaintType(side);
+                    int colour = ((IPantable)te).getColour(0);
+                    PaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }
             }
-            return EnumActionResult.PASS;
+            return true;
         }
         
-        return EnumActionResult.FAIL;
+        return false;
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
+    public boolean hasEffect(ItemStack stack, int pass) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
         return paintType != PaintType.NORMAL;
+    }
+    
+    @Override
+    public boolean requiresMultipleRenderPasses() {
+        return true;
     }
     
     @Override
@@ -75,6 +87,26 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
             String emptyText = TranslateUtils.translate("item.armourersworkshop:rollover.empty");
             list.add(emptyText);
         }
+    }
+    
+    @Override
+    public int getColorFromItemStack(ItemStack stack, int pass) {
+        if (pass == 0) {
+            return PaintingHelper.getToolPaintColourRGB(stack);
+        }
+        return super.getColorFromItemStack(stack, pass);
+    }
+    
+    @Override
+    public IIcon getIcon(ItemStack stack, int pass) {
+        if (pass == 0) {
+            if (PaintingHelper.getToolHasPaint(stack)) {
+                return paintIcon;
+            } else {
+                return itemIcon;
+            }
+        }
+        return itemIcon;
     }
 
     @Override

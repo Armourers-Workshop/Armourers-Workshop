@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.common.painting.tool;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
@@ -47,7 +47,12 @@ public class ToolOptionCheck extends AbstractToolOption {
     
     @Override
     public Object readFromNBT(NBTTagCompound compound) {
-        boolean checked = defaultCheck;
+        return readFromNBT(compound, defaultCheck);
+    }
+    
+    @Override
+    public Object readFromNBT(NBTTagCompound compound, Object value) {
+        boolean checked = (Boolean) value;
         if (compound != null && compound.hasKey(optionName)) {
             checked = compound.getBoolean(optionName);
         }

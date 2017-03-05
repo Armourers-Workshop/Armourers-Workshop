@@ -1,6 +1,35 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-public class RenderItemBowSkin /*implements IItemRenderer*/ {/*
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
+import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
+import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+
+public class RenderItemBowSkin implements IItemRenderer {
     
     private final RenderItem renderItem;
     private final Minecraft mc;
@@ -12,7 +41,7 @@ public class RenderItemBowSkin /*implements IItemRenderer*/ {/*
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -34,7 +63,7 @@ public class RenderItemBowSkin /*implements IItemRenderer*/ {/*
     
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-        IItemRenderer render = Addons.getItemRenderer(stack, type);
+        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (render != null) {
@@ -76,7 +105,7 @@ public class RenderItemBowSkin /*implements IItemRenderer*/ {/*
                     RenderBlocks renderBlocks = (RenderBlocks) data[0];
                     player = (AbstractClientPlayer) data[1];
                     useCount = player.getItemInUseDuration();
-                    hasArrow = player.inventory.hasItem(Items.ARROW);
+                    hasArrow = player.inventory.hasItem(Items.arrow);
                     IEntityEquipment entityEquipment = SkinModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
                     if (entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
                         skinPointerArrow = entityEquipment.getSkinPointer(SkinTypeRegistry.skinArrow, 0);
@@ -176,7 +205,7 @@ public class RenderItemBowSkin /*implements IItemRenderer*/ {/*
             }
 
         } else {
-            IItemRenderer render = Addons.getItemRenderer(stack, type);
+            IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
             if (render != null) {
                 render.renderItem(type, stack, data);
             } else {
@@ -214,5 +243,5 @@ public class RenderItemBowSkin /*implements IItemRenderer*/ {/*
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
         icon = stack.getItem().getIcon(stack, 1);
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
-    }*/
+    }
 }

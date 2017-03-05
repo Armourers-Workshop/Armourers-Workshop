@@ -6,8 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class ModInventory implements IInventory {
@@ -65,10 +63,8 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack stack = getStackInSlot(index);
-        setInventorySlotContents(index, stack);
-        return stack;
+    public ItemStack getStackInSlotOnClosing(int slotId) {
+        return getStackInSlot(slotId);
     }
 
     @Override
@@ -84,17 +80,12 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public String getName() {
+    public String getInventoryName() {
         return this.name;
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new TextComponentString(getName());
-    }
-    
-    @Override
-    public boolean hasCustomName() {
+    public boolean hasCustomInventoryName() {
         return false;
     }
 
@@ -116,11 +107,11 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory() {
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory() {
     }
 
     @Override
@@ -151,29 +142,5 @@ public class ModInventory implements IInventory {
                 slots[slot] = ItemStack.loadItemStackFromNBT(item);
             }
         }
-    }
-    
-    @Override
-    public int getField(int id) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public int getFieldCount() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-        // TODO Auto-generated method stub
-        
     }
 }

@@ -1,29 +1,45 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-import com.google.gson.JsonArray;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
-import riskyken.armourersWorkshop.common.library.global.SkinSearch;
-import riskyken.armourersWorkshop.common.library.global.SkinSearch.ISearchResultsCallback;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelCreateAccount;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelLogin;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelRecentlyUploaded;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
+import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 
-public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallback {
+@SideOnly(Side.CLIENT)
+public class GuiGlobalLibrary extends GuiContainer {
     
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
     
+    public Executor jsonDownloadExecutor = Executors.newFixedThreadPool(1);
+    public Executor skinDownloadExecutor = Executors.newFixedThreadPool(1);
+    
     private static final int PADDING = 5;
-    private GuiPanel panelHeader;
-    private GuiPanel panelSearchBox;
-    private GuiPanel panelRecentlyUploaded;
-    private GuiPanel panelSearchResults;
+    
+    public GuiGlobalLibraryPanelHeader panelHeader;
+    public GuiGlobalLibraryPanelSearchBox panelSearchBox;
+    public GuiGlobalLibraryPanelRecentlyUploaded panelRecentlyUploaded;
+    public GuiGlobalLibraryPanelSearchResults panelSearchResults;
+    public GuiGlobalLibraryPanelSkinInfo panelSkinInfo;
+    public GuiGlobalLibraryPanelLogin panelLogin;
+    public GuiGlobalLibraryPanelCreateAccount panelCreateAccount;
     
     private Screen screen;
     
@@ -33,10 +49,13 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
         UPLOAD,
         SKIN_INFO,
         FRIENDS,
-        FAVOURITES
+        FAVOURITES,
+        LOGON,
+        CREATE_ACCOUNT
     }
     
-    public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity) {
+    public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
+        super(new ContainerGlobalSkinLibrary(inventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.player = Minecraft.getMinecraft().thePlayer;
         this.panelList = new ArrayList<GuiPanel>();
@@ -53,7 +72,16 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
         panelSearchResults = new GuiGlobalLibraryPanelSearchResults(this, 5, 5, 100, 100);
         panelList.add(panelSearchResults);
         
-        switchScreen(Screen.HOME);
+        panelSkinInfo = new GuiGlobalLibraryPanelSkinInfo(this, 5, 5, 100, 100);
+        panelList.add(panelSkinInfo);
+        
+        panelLogin = new GuiGlobalLibraryPanelLogin(this, 5, 5, 500, 500);
+        panelList.add(panelLogin);
+        
+        panelCreateAccount = new GuiGlobalLibraryPanelCreateAccount(this, 5, 5, 100, 100);
+        panelList.add(panelCreateAccount);
+        
+        screen = Screen.HOME;
     }
     
     @Override
@@ -62,6 +90,9 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
         setupPanels();
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).initGui();
+        }
+        if (screen == Screen.HOME) {
+            ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkins();
         }
     }
     
@@ -89,16 +120,30 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
             panelSearchResults.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
             panelSearchResults.setVisible(true);
             break;
+        case SKIN_INFO:
+            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setVisible(true);
+            yOffset += PADDING + 23;
+            panelSkinInfo.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelSkinInfo.setVisible(true);
+            break;
+        case LOGON:
+            panelLogin.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelLogin.setVisible(true);
+            break;
         default:
             break;
         }
     }
     
-    public void switchScreen(Screen screen) {
-        if (screen == Screen.HOME) {
-            
-            ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkin();
+    @Override
+    public void updateScreen() {
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).update();
         }
+    }
+    
+    public void switchScreen(Screen screen) {
         this.screen = screen;
         setupPanels();
         for (int i = 0; i < panelList.size(); i++) {
@@ -107,7 +152,7 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).mouseClicked(mouseX, mouseY, button);
@@ -115,15 +160,15 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
     }
     
     @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+        super.mouseMovedOrUp(mouseX, mouseY, button);
         for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).mouseMovedOrUp(mouseX, mouseY, clickedMouseButton);
+            panelList.get(i).mouseMovedOrUp(mouseX, mouseY, button);
         }
     }
     
     @Override
-    protected void keyTyped(char c, int keycode) throws IOException {
+    protected void keyTyped(char c, int keycode) {
         boolean keyTyped = false;
         for (int i = 0; i < panelList.size(); i++) {
             if (panelList.get(i).keyTyped(c, keycode)) {
@@ -136,27 +181,14 @@ public class GuiGlobalLibrary extends GuiScreen implements ISearchResultsCallbac
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTickTime);
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).drawScreen(mouseX, mouseY, partialTickTime);
-        }
-    }
-    
-    @Override
     public boolean doesGuiPauseGame() {
         return false;
     }
 
-    public void preformSearch(String searchText) {
-        SkinSearch.downloadSearchResults(searchText, this);
-    }
-
     @Override
-    public void downloadSearchResultsFinished(JsonArray json) {
-        switchScreen(Screen.SEARCH);
-        ((GuiGlobalLibraryPanelSearchResults)panelSearchResults).clearSkin();
-        ((GuiGlobalLibraryPanelSearchResults)panelSearchResults).listDownloadFinished(json);
+    protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).draw(mouseX, mouseY, partialTickTime);
+        }
     }
 }

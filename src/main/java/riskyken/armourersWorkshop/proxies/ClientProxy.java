@@ -4,34 +4,44 @@ import java.lang.reflect.Field;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
 import riskyken.armourersWorkshop.client.handler.EquipmentWardrobeHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.library.ClientLibraryManager;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.client.render.entity.layers.LayerSkin;
+import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
+import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
+import riskyken.armourersWorkshop.client.render.entity.EntitySkinRenderHandler;
+import riskyken.armourersWorkshop.client.render.entity.RenderSkinnedArrow;
+import riskyken.armourersWorkshop.client.render.item.RenderItemBlockMiniArmourer;
+import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
+import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockColourable;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
@@ -39,8 +49,10 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
-import riskyken.armourersWorkshop.client.skin.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.Addons;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
+import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
+import riskyken.armourersWorkshop.common.blocks.BlockColourable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -51,6 +63,7 @@ import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -72,7 +85,10 @@ public class ClientProxy extends CommonProxy {
     private static boolean moreplayermodelsLoaded;
     private static boolean coloredLightsLoaded;
     private static boolean smartMovingLoaded;
+    private static boolean jrbaClientLoaded;
+    
     public static int renderPass;
+    public static IIcon dyeBottleSlotIcon;
     
     public ClientProxy() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -92,10 +108,12 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void initRenderers() {
         SkinModelRenderer.init();
+        EntitySkinRenderHandler.init();
+        new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
-        //Render arrowRender = new RenderSkinnedArrow();
-        //arrowRender.setRenderManager(RenderManager.instance);
-        //RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
+        Render arrowRender = new RenderSkinnedArrow();
+        arrowRender.setRenderManager(RenderManager.instance);
+        RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
         
         //Register tile entity renderers.
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourer.class, new RenderBlockArmourer());
@@ -108,7 +126,6 @@ public class ClientProxy extends CommonProxy {
         
         //Register item renderers.
         ModelMannequin modelMannequin = new ModelMannequin();
-        /*
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelMannequin));
@@ -117,100 +134,6 @@ public class ClientProxy extends CommonProxy {
         //Register block renderers.
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
-        */
-        
-        String[] skinTypes = {"default", "slim"};
-        for (int i = 0; i < skinTypes.length; i++) {
-            RenderPlayer playerRenderer = Minecraft.getMinecraft().getRenderManager().getSkinMap().get(skinTypes[i]);
-            playerRenderer.addLayer(new LayerSkin(playerRenderer));
-        }
-        
-        registerRender(ModItems.equipmentSkinTemplate);
-        registerRender(ModItems.equipmentSkin);
-        
-        registerRender(ModItems.paintbrush);
-        registerRender(ModItems.paintRoller);
-        registerRender(ModItems.colourPicker);
-        registerRender(ModItems.burnTool);
-        registerRender(ModItems.dodgeTool);
-        registerRender(ModItems.colourNoiseTool);
-        registerRender(ModItems.shadeNoiseTool);
-        registerRender(ModItems.hueTool);
-        //registerRender(ModItems.blendingTool);
-        registerRender(ModItems.blockMarker);
-        
-        registerRender(ModItems.mannequinTool);
-        registerRender(ModItems.wandOfStyle);
-        registerRender(ModItems.soap);
-        registerRender(ModItems.dyeBottle);
-        registerRender(ModItems.guideBook);
-        registerRender(ModItems.armourersHammer);
-        registerRender(ModItems.armourContainerItem);
-        registerRender(ModItems.armourContainer[0]);
-        registerRender(ModItems.armourContainer[1]);
-        registerRender(ModItems.armourContainer[2]);
-        registerRender(ModItems.armourContainer[3]);
-        
-        registerRender(ModBlocks.armourerBrain);
-        registerRender(ModBlocks.miniArmourer);
-        registerRender(ModBlocks.armourLibrary, 0);
-        registerRender(ModBlocks.armourLibrary, 1);
-        registerRender(ModBlocks.colourable);
-        registerRender(ModBlocks.colourableGlowing);
-        registerRender(ModBlocks.colourableGlass);
-        registerRender(ModBlocks.colourableGlassGlowing);
-        registerRender(ModBlocks.colourMixer);
-        registerRender(ModBlocks.skinningTable);
-        registerRender(ModBlocks.dyeTable);
-        registerRender(ModBlocks.mannequin);
-        
-        registerItemColorHandler(ModItems.paintbrush);
-        registerItemColorHandler(ModItems.paintRoller);
-        registerItemColorHandler(ModItems.colourPicker);
-        registerItemColorHandler(ModItems.hueTool);
-        
-        registerBlockColorHandler(ModBlocks.colourMixer);
-        registerBlockColorHandler(ModBlocks.colourable);
-        registerBlockColorHandler(ModBlocks.colourableGlowing);
-        registerBlockColorHandler(ModBlocks.colourableGlass);
-        registerBlockColorHandler(ModBlocks.colourableGlassGlowing);
-    }
-    
-    private void registerBlockColorHandler(Block block) {
-        if (block instanceof IBlockColor) {
-            Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((IBlockColor)block, block);
-        } else {
-            ModLogger.log(Level.ERROR, String.format(
-                    "Tried to register block %s as colourable but it has no IBlockColor interface.",
-                    block.getRegistryName().toString()));
-        }
-    }
-    
-    private void registerItemColorHandler(Item item) {
-        if (item instanceof IItemColor) {
-            Minecraft.getMinecraft().getItemColors().registerItemColorHandler((IItemColor)item, item);
-        } else {
-            ModLogger.log(Level.ERROR, String.format(
-                    "Tried to register item %s as colourable but it has no IItemColor interface.",
-                    item.getRegistryName().toString()));
-        }
-    }
-    
-    private void registerRender(Block block) {
-        registerRender(block, 0);
-    }
-    
-    private void registerRender(Block block, int meta) {
-        registerRender(Item.getItemFromBlock(block), meta);
-    }
-    
-    private void registerRender(Item item) {
-        registerRender(item, 0);
-    }
-    
-    private void registerRender(Item item, int meta) {
-        ItemModelMesher imm = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-        imm.register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
     
     @Override
@@ -224,9 +147,17 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void postInit() {
-        Addons.initRenderers();
+        ModAddonManager.initRenderers();
+        EntitySkinRenderHandler.INSTANCE.initRenderer();
         if (HolidayHelper.valentins.isHolidayActive()) {
             enableValentinsClouds();
+        }
+    }
+    
+    @SubscribeEvent
+    public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
+        if (event.map.getTextureType() == 1) {
+            dyeBottleSlotIcon = event.map.registerIcon(LibItemResources.SLOT_DYE_BOTTLE);
         }
     }
     
@@ -261,6 +192,10 @@ public class ClientProxy extends CommonProxy {
             smartMovingLoaded = true;
             ModLogger.log("Smart Moving support active");
         }
+        if(Loader.isModLoaded("jinryuufamilyc")) {
+            jrbaClientLoaded = true;
+            ModLogger.log("JRBA Client support active");
+        }
         if (moreplayermodelsLoaded & smartMovingLoaded) {
             ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop cannot support this.");
         }
@@ -287,6 +222,9 @@ public class ClientProxy extends CommonProxy {
                 return SkinRenderType.RENDER_EVENT;
             }
             if (coloredLightsLoaded & !smartMovingLoaded) {
+                return SkinRenderType.RENDER_EVENT;
+            }
+            if (jrbaClientLoaded) {
                 return SkinRenderType.RENDER_EVENT;
             }
             return SkinRenderType.MODEL_ATTACHMENT;
@@ -368,13 +306,24 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
-        //EntitySkinHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
+        EntitySkinHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
     }
     
     @Override
     public void receivedSkinFromLibrary(String fileName, Skin skin) {
         SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin);
         ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, skin.getSkinType()), LibraryFileType.LOCAL, null);
+    }
+    
+    @Override
+    public int getBlockRenderType(Block block) {
+        if (block instanceof BlockColourable) {
+            return RenderBlockGlowing.renderId;
+        }
+        if (block instanceof BlockColourMixer) {
+            return RenderBlockColourMixer.renderId;
+        }
+        return super.getBlockRenderType(block);
     }
     
     public static enum SkinRenderType {
