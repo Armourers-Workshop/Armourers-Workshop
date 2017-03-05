@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -31,6 +30,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.SkinUtils;
@@ -169,12 +169,9 @@ public class ItemSkin extends AbstractModItem {
     }
     
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
-            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
-        
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-        
         if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
             Skin skin = SkinUtils.getSkinDetectSide(skinPointer, false, true);
             if (skin != null) {
@@ -215,7 +212,9 @@ public class ItemSkin extends AbstractModItem {
             return false;
         }
         
-        int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        ForgeDirection dir = BlockUtils.determineDirectionSide(player).getOpposite();
+        int meta = dir.ordinal();
+        
         Skin skin = SkinUtils.getSkinDetectSide(stack, false, true);
         if (skin == null) {
             return false;
@@ -234,11 +233,12 @@ public class ItemSkin extends AbstractModItem {
             placeChildren(world, player, side, stack, x, y, z, skin, skinPointer);
         }
         
-        world.setBlock(x, y, z, targetBlock, rotation, 2);
+        world.setBlock(x, y, z, targetBlock, meta, 2);
         world.setTileEntity(x, y, z, ((ITileEntityProvider)targetBlock).createNewTileEntity(world, 0));
-        
         TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x, y, z);
         te.setSkinPointer(skinPointer);
+        targetBlock.onBlockPlacedBy(world, x, y, z, player, stack);
+        targetBlock.onPostBlockPlaced(world, x, y, z, meta);
         stack.stackSize--;
         world.playSoundEffect((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, "dig.stone", 1, 1);
         return true;
@@ -255,16 +255,17 @@ public class ItemSkin extends AbstractModItem {
     }
     
     private void placeChild(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, int ix, int iy, int iz, Skin skin, SkinPointer skinPointer) {
-        int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        ForgeDirection dir = TileEntitySkinnable.getDirectionFromMeta(rotation);
-        float[] bounds = TileEntitySkinnable.getBlockBounds(skin, ix, iy, -iz + 2, dir);
+        ForgeDirection dir = BlockUtils.determineDirectionSide(player).getOpposite();
+        int meta = dir.ordinal();
+        
+        float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, -iz + 2, dir);
         if (bounds != null) {
-            int childX = x + ix;
+            int childX = x + -ix * dir.offsetX + (iz - 1) * dir.offsetZ;
             int childY = y + iy;
-            int childZ = z + iz - 1;
-            ModLogger.log(String.format("Adding child block to %d %d %d", childX, childY, childZ));
-            world.setBlock(childX, childY, childZ, ModBlocks.skinnableChild, rotation, 2);
-            world.setTileEntity(childX, childY, childZ, ModBlocks.skinnableChild.createTileEntity(world, rotation));
+            int childZ = z + (iz - 1) * dir.offsetX + -ix * dir.offsetZ;
+            ModLogger.log(String.format("Adding child block for X:%d Y:%d Z:%d at X:%d Y:%d Z:%d", x, y, z, childX, childY, childZ));
+            world.setBlock(childX, childY, childZ, ModBlocks.skinnableChild, meta, 2);
+            world.setTileEntity(childX, childY, childZ, ModBlocks.skinnableChild.createTileEntity(world, meta));
             
             TileEntitySkinnableChild te = (TileEntitySkinnableChild) world.getTileEntity(childX, childY, childZ);
             te.setSkinPointer(skinPointer);

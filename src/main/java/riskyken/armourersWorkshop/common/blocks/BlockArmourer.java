@@ -33,7 +33,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
             EntityPlayer player = (EntityPlayer)entity;
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityArmourer) {
-                ForgeDirection direction = ForgeDirection.getOrientation(BlockUtils.determineOrientationSide(world, x, y, z, entity));
+                ForgeDirection direction = BlockUtils.determineDirectionSide(entity).getOpposite();
                 ((TileEntityArmourer)te).setDirection(ForgeDirection.NORTH);
                 if (!world.isRemote) {
                     ((TileEntityArmourer)te).setGameProfile(player.getGameProfile());

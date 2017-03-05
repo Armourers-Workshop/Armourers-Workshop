@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
@@ -31,6 +30,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
@@ -156,7 +156,7 @@ public class BlockHighlightRenderHandler {
     }
     
     private void drawSkinnableBlockHelper(World world, int x, int y, int z, EntityPlayer player, float partialTicks, ISkinPointer skinPointer) {
-        int meta = world.getBlockMetadata(x, y, z);
+        //int meta = world.getBlockMetadata(x, y, z);
         
         //Rectangle3D[][][] blockGrid;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
@@ -173,13 +173,12 @@ public class BlockHighlightRenderHandler {
         float f1 = 0.002F;
         float scale = 0.0625F;
         
+        ForgeDirection dir = BlockUtils.determineDirectionSide(player).getOpposite();
+        
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
-                    ForgeDirection dir = ForgeDirection.NORTH;
-                    int rotation = MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-                    dir = TileEntitySkinnable.getDirectionFromMeta(rotation);
-                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, ix, iy, -iz + 2, dir);
+                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, -iz + 2, dir);
                     if (bounds != null) {
                         double minX = bounds[0];
                         double minY = bounds[1];
@@ -189,13 +188,13 @@ public class BlockHighlightRenderHandler {
                         double maxZ = bounds[5];
                         
                         AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-                        aabb.offset(-xOff + dir.offsetX, -yOff, -zOff + 1 + dir.offsetZ);
+                        aabb.offset(-xOff - 1 - dir.offsetX, -yOff, -zOff - 1 - dir.offsetZ);
                         aabb.offset(x, y, z);
-                        aabb.offset(ix - 1, 1D + iy, iz - 2);
+                        aabb.offset(ix, 1D + iy, iz);
                         GL11.glEnable(GL11.GL_BLEND);
                         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
                         GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.4F);
-                        if (!world.isAirBlock(x + ix - 1, y + 1 + iy, z + iz - 2)) {
+                        if (!world.isAirBlock(x + ix - 1 - dir.offsetX, y + 1 + iy, z + iz - 1 - dir.offsetZ)) {
                             GL11.glColor4f(1.0F, 0.0F, 0.0F, 0.4F);
                         }
                         GL11.glLineWidth(2.0F);

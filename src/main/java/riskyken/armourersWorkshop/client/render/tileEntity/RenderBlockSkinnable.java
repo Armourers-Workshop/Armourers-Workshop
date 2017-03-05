@@ -18,6 +18,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
@@ -79,6 +80,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     }
     
     private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, Skin skin) {
+        ForgeDirection dir = tileEntity.getRotation();
         int rotation = tileEntity.getBlockMetadata();
         double distance = Minecraft.getMinecraft().thePlayer.getDistance(
                 tileEntity.xCoord + 0.5F,
@@ -108,20 +110,37 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             GL11.glColor4f(1F, 1F, 1F, 1F);
         }
         
+        GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         GL11.glScalef(-1, -1, 1);
-        if (rotation != 0) {
-          GL11.glRotatef((90F * rotation), 0, 1, 0);
+        
+        if (dir == ForgeDirection.EAST) {
+            GL11.glRotatef(90F, 0F, 1F, 0F);
         }
+        
+        if (dir == ForgeDirection.SOUTH) {
+            GL11.glRotatef(180F, 0F, 1F, 0F);
+        }
+        
+        if (dir == ForgeDirection.WEST) {
+            GL11.glRotatef(270F, 0F, 1F, 0F);
+        }
+        
+        
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true);
         }
+        
+        GL11.glPopMatrix();
+        /*
         if (rotation != 0) {
             GL11.glRotatef((90F * -rotation), 0, 1, 0);
-          }
+        }
+        
         GL11.glScalef(-1, -1, 1);
         GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
+        */
     }
     
     @Override
