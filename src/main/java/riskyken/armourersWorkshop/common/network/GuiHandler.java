@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.gui.GuiAdminPanel;
 import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
@@ -208,6 +209,8 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.DEBUG_TOOL:
                 return new GuiDebugTool();
+            case LibGuiIds.ADMIN_PANEL:
+                return new GuiAdminPanel();
         }
         return null;
     }

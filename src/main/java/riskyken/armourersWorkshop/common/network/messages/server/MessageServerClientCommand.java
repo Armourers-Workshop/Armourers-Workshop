@@ -34,6 +34,7 @@ public class MessageServerClientCommand implements IMessage, IMessageHandler<Mes
     }
     
     public enum CommandType {
-        CLEAR_MODEL_CACHE;
+        CLEAR_MODEL_CACHE,
+        OPEN_ADMIN_PANEL
     }
 }

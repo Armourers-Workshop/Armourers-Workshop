@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
+import riskyken.armourersWorkshop.common.command.CommandArmourersAdminPanel;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.config.ConfigSynchronizeHandler;
@@ -149,6 +150,7 @@ public class ArmourersWorkshop {
     @Mod.EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandArmourers());
+        event.registerServerCommand(new CommandArmourersAdminPanel());
         CommonSkinCache.INSTANCE.serverStarted();
     }
     
