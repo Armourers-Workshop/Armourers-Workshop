@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
 public class ModelSkinFeet extends AbstractModelSkin {
@@ -35,7 +36,11 @@ public class ModelSkinFeet extends AbstractModelSkin {
                 this.heldItemRight = 1;
             }
         }
-
+        
+        if (ClientProxy.isJrbaClientLoaded()) {
+            this.isChild = false;
+        }
+        
         ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinFeet);
         RenderHelper.enableGUIStandardItemLighting();
         

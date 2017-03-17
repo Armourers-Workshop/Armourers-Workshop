@@ -90,6 +90,10 @@ public class ClientProxy extends CommonProxy {
     public static int renderPass;
     public static IIcon dyeBottleSlotIcon;
     
+    public static boolean isJrbaClientLoaded() {
+        return jrbaClientLoaded;
+    }
+    
     public ClientProxy() {
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -192,9 +196,11 @@ public class ClientProxy extends CommonProxy {
             smartMovingLoaded = true;
             ModLogger.log("Smart Moving support active");
         }
-        if(Loader.isModLoaded("jinryuufamilyc")) {
+        try {
+            Class.forName("JinRyuu.JBRA.JBRA");
             jrbaClientLoaded = true;
             ModLogger.log("JRBA Client support active");
+        } catch (Exception e) {
         }
         if (moreplayermodelsLoaded & smartMovingLoaded) {
             ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop cannot support this.");
