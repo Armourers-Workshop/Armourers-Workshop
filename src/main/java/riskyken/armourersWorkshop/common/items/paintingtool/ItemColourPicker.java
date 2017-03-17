@@ -14,12 +14,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
+import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.lib.LibSounds;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -28,6 +30,7 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.painting.tool.AbstractToolOption;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
+import riskyken.armourersWorkshop.common.painting.tool.ToolOptions;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ItemColourPicker extends AbstractModItem implements IPaintingTool, IConfigurableTool {
@@ -61,12 +64,14 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         
+        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBTBool(stack.stackTagCompound);
+        PaintType paintType = getToolPaintType(stack);
+        
         if (player.isSneaking() & block == ModBlocks.colourMixer & getToolHasColour(stack)) {
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof IPantable) {
                 if (!world.isRemote) {
-                    int colour = getToolColour(stack);
-                    PaintType paintType = getToolPaintType(stack);
+                    int colour = getToolColour(stack);;
                     ((IPantable)te).setColour(colour);
                     ((IPantable)te).setPaintType(paintType, 0);
                 }
@@ -76,7 +81,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         
         if (block instanceof IPantableBlock) {
             IPantableBlock paintable = (IPantableBlock) block;
-            PaintType paintType = paintable.getPaintType(world, x, y, z, side);
+            PaintType targetPaintType = paintable.getPaintType(world, x, y, z, side);
             
             if (paintable.isRemoteOnly(world, x, y, z, side) & world.isRemote) {
                 int colour = paintable.getColour(world, x, y, z, side);
@@ -86,12 +91,21 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                 paintData[0] = (byte) c.getRed();
                 paintData[1] = (byte) c.getGreen();
                 paintData[2] = (byte) c.getBlue();
-                paintData[3] = (byte) paintType.getKey();
+                if (changePaintType) {
+                    paintData[3] = (byte) targetPaintType.getKey();
+                } else {
+                    paintData[3] = (byte) paintType.getKey();
+                }
+                
                 PaintingHelper.setPaintData(compound, paintData);
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
             } else if (!paintable.isRemoteOnly(world, x, y, z, side) & !world.isRemote) {
                 setToolColour(stack, ((IPantableBlock)block).getColour(world, x, y, z, side));
-                setToolPaintType(stack, paintType);
+                if (changePaintType) {
+                    setToolPaintType(stack, targetPaintType);
+                } else {
+                    setToolPaintType(stack, paintType);
+                }
             }
             
             if (!world.isRemote) {
@@ -170,10 +184,18 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     public void setToolColour(ItemStack stack, int colour) {
         PaintingHelper.setToolPaintColour(stack, colour);
     }
-
+    
+    @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if (world.isRemote & player.isSneaking()) {
+            player.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, world, 0, 0, 0);
+        }
+        return stack;
+    }
+    
     @Override
     public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
-        //Only here to allow colour updates
+        toolOptionList.add(ToolOptions.CHANGE_PAINT_TYPE);
     }
     
     @Override
