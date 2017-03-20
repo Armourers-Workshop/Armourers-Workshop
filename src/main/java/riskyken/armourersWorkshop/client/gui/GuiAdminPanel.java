@@ -3,7 +3,9 @@ package riskyken.armourersWorkshop.client.gui;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel.AdminPanelCommand;
 
 public class GuiAdminPanel extends GuiScreen {
     
@@ -48,7 +50,8 @@ public class GuiAdminPanel extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == recoverSkins) {
-            ModLogger.log("wooooooooot");
+            MessageClientGuiAdminPanel message = new MessageClientGuiAdminPanel(AdminPanelCommand.RECOVER_SKINS);
+            PacketHandler.networkWrapper.sendToServer(message);
         }
     }
     

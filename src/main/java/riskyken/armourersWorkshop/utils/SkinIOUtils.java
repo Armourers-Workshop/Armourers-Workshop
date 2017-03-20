@@ -15,7 +15,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.DimensionManager;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -252,5 +255,74 @@ public final class SkinIOUtils {
             return file.mkdirs();
         }
         return true;
+    }
+    
+    public static void recoverSkins(EntityPlayer player) {
+        player.addChatComponentMessage(new ChatComponentText("Starting skin recovery."));
+        File skinDir = getSkinDatabaseDirectory();
+        if (skinDir.exists() & skinDir.isDirectory()) {
+            File recoverDir = new File(System.getProperty("user.dir"), "recovered-skins");
+            if (!recoverDir.exists()) {
+                recoverDir.mkdirs();
+            }
+            File[] skinFiles = skinDir.listFiles();
+            player.addChatComponentMessage(new ChatComponentText(String.format("Found %d skins to be recovered.", skinFiles.length)));
+            player.addChatComponentMessage(new ChatComponentText("Working..."));
+            int unnamedSkinCount = 0;
+            int successCount = 0;
+            int failCount = 0;
+            
+            for (int i = 0; i < skinFiles.length; i++) {
+                File skinFile = skinFiles[i];
+                Skin skin = loadSkinFromFile(skinFile);
+                if (skin != null) {
+                    String fileName = skin.getProperties().getPropertyString(Skin.KEY_FILE_NAME, null);
+                    String customName = skin.getProperties().getPropertyString(Skin.KEY_CUSTOM_NAME, null);
+                    if (!StringUtils.isNullOrEmpty(fileName)) {
+                        fileName = fileName.replaceAll("[^a-zA-Z0-9.-]", "_");
+                        File newSkinFile = new File(recoverDir, fileName);
+                        if (newSkinFile.exists()) {
+                            int nameCount = 0;
+                            while (true) {
+                                nameCount++;
+                                newSkinFile = new File(recoverDir, fileName + "-" + nameCount);
+                                if (!newSkinFile.exists()) {
+                                    break;
+                                }
+                            }
+                        }
+                        saveSkinToFile(newSkinFile, skin);
+                        successCount++;
+                        continue;
+                    }
+                    if (!StringUtils.isNullOrEmpty(customName)) {
+                        customName = customName.replaceAll("[^a-zA-Z0-9.-]", "_");
+                        File newSkinFile = new File(recoverDir, customName);
+                        if (newSkinFile.exists()) {
+                            int nameCount = 0;
+                            while (true) {
+                                nameCount++;
+                                newSkinFile = new File(recoverDir, customName + "-" + nameCount);
+                                if (!newSkinFile.exists()) {
+                                    break;
+                                }
+                            }
+                        }
+                        saveSkinToFile(newSkinFile, skin);
+                        successCount++;
+                        continue;
+                    }
+                    unnamedSkinCount++;
+                    saveSkinToFile(new File(recoverDir,"unnamed-skin-" + unnamedSkinCount), skin);
+                    successCount++;
+                } else {
+                    failCount++;
+                }
+            }
+            player.addChatComponentMessage(new ChatComponentText("Finished skin recovery."));
+            player.addChatComponentMessage(new ChatComponentText(String.format("%d skins were recovered and %d fail recovery.", successCount, failCount)));
+        } else {
+            player.addChatComponentMessage(new ChatComponentText("No skins found to recover."));
+        }
     }
 }

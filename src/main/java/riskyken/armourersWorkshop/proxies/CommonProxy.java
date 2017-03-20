@@ -1,12 +1,15 @@
 package riskyken.armourersWorkshop.proxies;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.library.CommonLibraryManager;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel.AdminPanelCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 public class CommonProxy {
     
@@ -50,6 +53,14 @@ public class CommonProxy {
     
     public void receivedCommandFromSever(CommandType command) {
         
+    }
+    
+    public void receivedAdminPanelCommand(EntityPlayer player, AdminPanelCommand command) {
+        switch (command) {
+        case RECOVER_SKINS:
+            SkinIOUtils.recoverSkins(player);
+            break;
+        }
     }
     
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {

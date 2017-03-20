@@ -161,6 +161,10 @@ public class SkinPart implements ISkinPart {
     private void readFromStream(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         if (version < 6) {
             skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromLegacyId(stream.readByte());
+            if (skinPart == null) {
+                ModLogger.log(Level.ERROR,"Skin part was null");
+                throw new IOException("Skin part was null");
+            }
         } else {
             String regName = stream.readUTF();
             if (regName.equals("armourers:skirt.base")) {
@@ -173,8 +177,10 @@ public class SkinPart implements ISkinPart {
             
             if (skinPart == null) {
                 ModLogger.log(Level.ERROR,"Skin part was null - reg name: " + regName);
+                throw new IOException("Skin part was null - reg name: " + regName);
             }
         }
+        
         cubeData = new SkinCubeData();
         cubeData.readFromStream(stream, version, this);
         markerBlocks = new ArrayList<CubeMarkerData>();
