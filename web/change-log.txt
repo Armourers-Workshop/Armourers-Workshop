@@ -1,3 +1,17 @@
+Build 0.43.0
+Added:
+	Invisible option to mannequins.
+	Allowed setting a mannequins texture using a URL.
+	Ability to use colour picker tool without selecting paint type.
+	Added admin panel.
+	Added skin recovery system.
+Fixed:
+	Armour container's not saving skin dyes.
+	Skins not rendering when Dragon Block C is installed.
+Changed:
+	Update pt_PT and pt_BR lang files. (EzerArch) 
+
+
 Build 0.42.5
 Fixed:
 	Client crash when a doll is placed.
