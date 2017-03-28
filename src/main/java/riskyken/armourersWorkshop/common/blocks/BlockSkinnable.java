@@ -202,6 +202,22 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         }
     }
     
+    public ForgeDirection getFacingDirection(World world, int x, int y, int z) {
+        return getFacingDirection(world.getBlockMetadata(x, y, z));
+    }
+    
+    public ForgeDirection getFacingDirection(int metadata) {
+        return ForgeDirection.values()[metadata % 3];
+    }
+    
+    public void setFacingDirection(World world, int x, int y, int z, ForgeDirection direction) {
+        setFacingDirection(world, x, y, z, direction.ordinal());
+    }
+    
+    public void setFacingDirection(World world, int x, int y, int z, int metadata) {
+        world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+    }
+    
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinnable();

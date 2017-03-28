@@ -63,23 +63,28 @@ public class SkinProperties {
         int count = stream.readInt();
         for (int i = 0; i < count; i++) {
             String key = stream.readUTF();
-            DataTypes type = DataTypes.values()[stream.readByte()];
-            Object value = null;
-            switch (type) {
-            case STRING:
-                value = stream.readUTF();
-                break;
-            case INT:
-                value = stream.readInt();
-                break;
-            case DOUBLE:
-                value = stream.readDouble();
-                break;
-            case BOOLEAN:
-                value = stream.readBoolean();
-                break;
+            byte typeByte = stream.readByte();
+            if (typeByte >= 0 & typeByte < DataTypes.values().length) {
+                DataTypes type = DataTypes.values()[typeByte];
+                Object value = null;
+                switch (type) {
+                case STRING:
+                    value = stream.readUTF();
+                    break;
+                case INT:
+                    value = stream.readInt();
+                    break;
+                case DOUBLE:
+                    value = stream.readDouble();
+                    break;
+                case BOOLEAN:
+                    value = stream.readBoolean();
+                    break;
+                }
+                properties.put(key, value);
+            } else {
+                throw new IOException("Error loading skin properties.");
             }
-            properties.put(key, value);
         }
     }
     

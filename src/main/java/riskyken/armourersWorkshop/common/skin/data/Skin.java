@@ -35,7 +35,7 @@ public class Skin implements ISkin {
     public static final String KEY_BLOCK_GLOWING = "blockGlowing";
     public static final String KEY_BLOCK_LADDER = "blockLadder";
     public static final String KEY_BLOCK_NO_COLLISION = "blockNoCollision";
-    public static final String KEY_BLOCK_SEAT= "blockSeat";
+    public static final String KEY_BLOCK_SEAT = "blockSeat";
     public static final String KEY_BLOCK_MULTIBLOCK = "blockMultiblock";
     
     public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
