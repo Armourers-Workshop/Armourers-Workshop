@@ -1,10 +1,38 @@
 package riskyken.armourersWorkshop.utils;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public final class UtilPlayer {
+    
+    public static ForgeDirection getDirection(int x, int y, int z, EntityPlayer player) {
+        return ForgeDirection.getOrientation(getOrientation(x, y, z, player));
+    }
+    
+    public static int getOrientation(int x, int y, int z, EntityLivingBase entity) {
+        if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
+            double d0 = entity.posY + entity.getEyeHeight() - (double) entity.yOffset;
+
+            if (d0 - (double) y > 2.0D) { return 1; }
+            if ((double) y - d0 > 0.0D) { return 0; }
+        }
+
+        int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        return l == 0 ? 3 : (l == 1 ? 4 : (l == 2 ? 2 : (l == 3 ? 5 : 0)));
+    }
+    
+    public static ForgeDirection getDirectionSide(EntityPlayer player) {
+        return ForgeDirection.getOrientation(getOrientationSide(player));
+    }
+    
+    public static int getOrientationSide(EntityLivingBase entity) {
+        int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        return l == 0 ? 3 : (l == 1 ? 4 : (l == 2 ? 2 : (l == 3 ? 5 : 0)));
+    }
     
     public static int getNumberOfItemInInventory(EntityPlayer player, Item item) {
         int itemCount = 0;

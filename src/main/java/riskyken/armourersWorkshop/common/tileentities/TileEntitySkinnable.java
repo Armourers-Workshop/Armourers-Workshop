@@ -17,12 +17,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.ModConstants;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -73,11 +73,15 @@ public class TileEntitySkinnable extends TileEntity {
             //return;
         }
         if (hasSkin()) {
+            BlockSkinnable blockSkinnable = (BlockSkinnable) block;
             Skin skin = null;
             skin = getSkin(skinPointer);
             if (skin != null) {
-                ForgeDirection dir = BlockUtils.determineDirectionSideMeta(getBlockMetadata());
+                ForgeDirection dir = blockSkinnable.getFacingDirection(getBlockMetadata());
+                //ModLogger.log(dir);
+                //dir = ForgeDirection.EAST;
                 float[] bounds = getBlockBounds(skin, xOffset, yOffset, zOffset, dir);
+                
                 if (bounds != null) {
                     minX = bounds[0];
                     minY = bounds[1];
@@ -87,7 +91,7 @@ public class TileEntitySkinnable extends TileEntity {
                     maxZ = bounds[5];
                     haveBlockBounds = true;
                     block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
-                    block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
+                    //block.setBlockBounds(0F, 0F, 0F, 1F, 0.5F, 1F);
                 }
                 return;
             }
@@ -108,25 +112,28 @@ public class TileEntitySkinnable extends TileEntity {
         gridY = MathHelper.clamp_int(gridY, 0, 2);
         gridZ = MathHelper.clamp_int(gridZ, 0, 2);
         
+        
+        
         Rectangle3D rec = skinPart.getBlockBounds(gridX, gridY, gridZ);
         switch (dir) {
         case NORTH:
-            rec = skinPart.getBlockBounds(gridX, gridY, 2 - gridZ);
+            //rec = skinPart.getBlockBounds(gridX, gridY, 2 - gridZ);
             break;
         case EAST:
-            rec = skinPart.getBlockBounds(gridZ, gridY, gridX);
+            rec = skinPart.getBlockBounds(2 - gridZ, gridY, gridX);
             break;
         case SOUTH:
-            rec = skinPart.getBlockBounds(2 - gridX, gridY, gridZ);
+            rec = skinPart.getBlockBounds(2 - gridX, gridY, 2 - gridZ);
             break; 
         case WEST:
-            rec = skinPart.getBlockBounds(2 - gridZ, gridY, 2 - gridX);
+            rec = skinPart.getBlockBounds(gridZ, gridY, 2 - gridX);
             break;
         default:
             break;
         }
         
         if (rec != null) {
+            
             int x = 8 + rec.getX();
             int y = 8 - rec.getHeight() - rec.getY();
             int z = 8 - rec.getDepth() - rec.getZ();
@@ -138,6 +145,7 @@ public class TileEntitySkinnable extends TileEntity {
             bounds[5] = (z + rec.getDepth()) * scale;
             bounds = rotateBlockBounds(bounds, dir);
         } else {
+            //ModLogger.log(dir);
             return null;
         }
         
@@ -151,26 +159,59 @@ public class TileEntitySkinnable extends TileEntity {
         }
         switch (dir) {
         case NORTH:
-            rotatedBounds[0] = 1 - bounds[0]; //oldMaxZ - minX
-            rotatedBounds[2] = 1 - bounds[2]; //oldMinX - minZ
-            rotatedBounds[3] = 1 - bounds[3]; //oldMinZ - maxX
-            rotatedBounds[5] = 1 - bounds[5]; //oldMaxX - maxZ
+            
+            rotatedBounds[0] = 1 - bounds[3]; //oldMaxZ - minX
+            rotatedBounds[2] = 1 - bounds[5]; //oldMinX - minZ
+            rotatedBounds[3] = 1 - bounds[0]; //oldMinZ - maxX
+            rotatedBounds[5] = 1 - bounds[2]; //oldMaxX - maxZ
+            
             break;
         case EAST:
-            rotatedBounds[0] = bounds[2];     //oldMinZ - minX
-            rotatedBounds[2] = 1 - bounds[3]; //oldMaxX - minZ
-            rotatedBounds[3] = bounds[5];     //oldMaxZ - maxX
-            rotatedBounds[5] = 1 - bounds[0]; //oldMinX - maxZ
+            
+            rotatedBounds[0] = bounds[2];       //oldMinZ - minX
+            rotatedBounds[2] = 1 - bounds[3];       //oldMaxX - minZ
+            rotatedBounds[3] = bounds[5];       //oldMaxZ - maxX
+            rotatedBounds[5] = 1 - bounds[0];       //oldMinX - maxZ
+            
             break;
+            
         case WEST:
+            
             rotatedBounds[0] = 1 - bounds[5]; //oldMaxZ - minX
             rotatedBounds[2] = bounds[0];     //oldMinX - minZ
             rotatedBounds[3] = 1 - bounds[2]; //oldMinZ - maxX
             rotatedBounds[5] = bounds[3];     //oldMaxX - maxZ
+            
             break; 
         default:
             break;
         }
+        
+        /*
+          switch (dir) {
+            case SOUTH:
+            minZ = 1 - oldMaxZ;
+            maxZ = 1 - oldMinZ;
+            minX = 1 - oldMaxX;
+            maxX = 1 - oldMinX;
+            break;
+            case EAST:
+            maxX = 1 - oldMinZ;
+            minX = 1 - oldMaxZ;
+            maxZ = oldMaxX;
+            minZ = oldMinX;
+            break;
+            case WEST:
+            maxX = oldMaxZ;
+            minX = oldMinZ;
+            maxZ = 1 - oldMinX;
+            minZ = 1 - oldMaxX;
+            break;
+            default:
+            break;
+        }
+         */
+        
         return rotatedBounds;
     }
     

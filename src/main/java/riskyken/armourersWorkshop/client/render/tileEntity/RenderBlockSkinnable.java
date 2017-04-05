@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -23,6 +24,7 @@ import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -110,21 +112,13 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             GL11.glColor4f(1F, 1F, 1F, 1F);
         }
         
-        GL11.glPushMatrix();
         GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         GL11.glScalef(-1, -1, 1);
         
-        if (dir == ForgeDirection.EAST) {
-            GL11.glRotatef(90F, 0F, 1F, 0F);
+        if (rotation != 0) {
+            GL11.glRotatef((90F * rotation), 0, 1, 0);
         }
-        
-        if (dir == ForgeDirection.SOUTH) {
-            GL11.glRotatef(180F, 0F, 1F, 0F);
-        }
-        
-        if (dir == ForgeDirection.WEST) {
-            GL11.glRotatef(270F, 0F, 1F, 0F);
-        }
+
         
         
         for (int i = 0; i < skin.getParts().size(); i++) {
@@ -132,15 +126,14 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true);
         }
         
-        GL11.glPopMatrix();
-        /*
+        
         if (rotation != 0) {
             GL11.glRotatef((90F * -rotation), 0, 1, 0);
         }
         
         GL11.glScalef(-1, -1, 1);
         GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
-        */
+        
     }
     
     @Override
@@ -148,7 +141,35 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         if (!(tileEntity instanceof TileEntitySkinnableChild)) {
             renderList.add(new RenderLast(tileEntity, x, y, z));
         }
+        BlockSkinnable block = (BlockSkinnable) tileEntity.getBlockType();
+        block.setBlockBoundsBasedOnState(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         
+        
+        double minX = block.getBlockBoundsMinX();
+        double minY = block.getBlockBoundsMinY();
+        double minZ = block.getBlockBoundsMinZ();
+        double maxX = block.getBlockBoundsMaxX();
+        double maxY = block.getBlockBoundsMaxY();
+        double maxZ = block.getBlockBoundsMaxZ();
+        
+        float f1 = 0.002F;
+        float scale = 0.0625F;
+        
+        
+        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+        aabb.offset(x, y, z);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.4F);
+        GL11.glLineWidth(2.0F);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDepthMask(false);
+        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_BLEND);
     }
     
     private class RenderLast implements Comparable<RenderLast> {

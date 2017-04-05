@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -38,7 +39,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.SkinUtils;
 import riskyken.armourersWorkshop.utils.UtilItems;
 
-public class BlockSkinnable extends AbstractModBlockContainer {
+public class BlockSkinnable extends AbstractModBlockContainer implements IDebug {
 
     public BlockSkinnable() {
         this(LibBlockNames.SKINNABLE);
@@ -117,8 +118,23 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             TileEntitySkinnable tes = (TileEntitySkinnable) te;
-            tes.setBoundsOnBlock(this, 1, 0 ,0);
-            return;
+            ForgeDirection dir = getFacingDirection(world, x, y, z);
+            if (dir == ForgeDirection.NORTH) {
+                tes.setBoundsOnBlock(this, 1, 0, 0);
+                return;
+            }
+            if (dir == ForgeDirection.EAST) {
+                tes.setBoundsOnBlock(this, 0, 0, 1);
+                return;
+            }
+            if (dir == ForgeDirection.SOUTH) {
+                tes.setBoundsOnBlock(this, 1, 0, 2);
+                return;
+            }
+            if (dir == ForgeDirection.WEST) {
+                tes.setBoundsOnBlock(this, 2, 0, 1);
+                return;
+            }
         }
         setBlockBounds(0, 0, 0, 1, 1, 1);
     }
@@ -202,12 +218,12 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         }
     }
     
-    public ForgeDirection getFacingDirection(World world, int x, int y, int z) {
+    public ForgeDirection getFacingDirection(IBlockAccess world, int x, int y, int z) {
         return getFacingDirection(world.getBlockMetadata(x, y, z));
     }
     
     public ForgeDirection getFacingDirection(int metadata) {
-        return ForgeDirection.values()[metadata % 3];
+        return convertMetadataToDirection(metadata);
     }
     
     public void setFacingDirection(World world, int x, int y, int z, ForgeDirection direction) {
@@ -216,6 +232,27 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     
     public void setFacingDirection(World world, int x, int y, int z, int metadata) {
         world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+    }
+    
+    public int convertDirectionToMetadata(ForgeDirection direction) {
+        int meta = direction.ordinal();
+        return meta == 2 ? 4 : (meta == 3 ? 2 : (meta == 4 ? 3 : (meta == 5 ? 5 : 2)));
+    }
+    
+    public ForgeDirection convertMetadataToDirection(int metadata) {
+        if (metadata == 5) {
+            return ForgeDirection.EAST;
+        }
+        if (metadata == 4) {
+            return ForgeDirection.NORTH;
+        }
+        if (metadata == 3) {
+            return ForgeDirection.WEST;
+        }
+        if (metadata == 2) {
+            return ForgeDirection.SOUTH;
+        }
+        return ForgeDirection.EAST;
     }
     
     @Override
@@ -255,6 +292,12 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         }
         world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
         return true;
+    }
+    
+
+    @Override
+    public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines) {
+        textLines.add("Direction: " + getFacingDirection(world, x, y, z));
     }
     
     public static class Seat extends Entity implements IEntityAdditionalSpawnData {

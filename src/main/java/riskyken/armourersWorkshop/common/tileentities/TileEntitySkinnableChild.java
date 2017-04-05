@@ -3,6 +3,8 @@ package riskyken.armourersWorkshop.common.tileentities;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.common.blocks.BlockSkinnableChild;
 
 public class TileEntitySkinnableChild extends TileEntitySkinnable {
     
@@ -28,7 +30,44 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
     
     @Override
     public void setBoundsOnBlock(Block block, int xOffset, int yOffset, int zOffset) {
-        super.setBoundsOnBlock(block, 1, 0, 0);
+        
+        int x = xCoord - parentX;
+        int y = yCoord - parentY;
+        int z = zCoord - parentZ;
+        
+        int widthOffset = x;
+        int heightOffset = y;
+        int depthOffset = z;
+        
+        BlockSkinnableChild child = (BlockSkinnableChild) getBlockType();
+        ForgeDirection dir = child.getFacingDirection(getWorldObj(), xCoord, yCoord, zCoord);
+        
+        
+        switch (dir) {
+        case NORTH:
+            widthOffset = 1 - x;
+            depthOffset = z;
+            break;
+        case EAST:
+            widthOffset = -x;
+            depthOffset = z + 1;
+            break;
+        case SOUTH:
+            widthOffset = 1 - x;
+            depthOffset = 2 + z;
+            break;
+        case WEST:
+            widthOffset = 2 - x;
+            depthOffset = z + 1;
+            break;
+        default:
+            break;
+        }
+        
+        //ModLogger.log(depthOffset);
+        
+        
+        super.setBoundsOnBlock(block, widthOffset, heightOffset, depthOffset);
     }
     
     public TileEntitySkinnable getParent() {

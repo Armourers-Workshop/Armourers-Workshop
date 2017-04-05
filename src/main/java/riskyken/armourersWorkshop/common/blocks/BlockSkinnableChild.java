@@ -22,6 +22,7 @@ public class BlockSkinnableChild extends BlockSkinnable implements IDebug  {
     @Override
     public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines) {
         TileEntitySkinnableChild te = (TileEntitySkinnableChild)world.getTileEntity(x, y, z);
+        super.getDebugHoverText(world, x, y, z, textLines);
         textLines.add("parent X=" + te.parentX);
         textLines.add("parent Y=" + te.parentY);
         textLines.add("parent Z=" + te.parentZ);

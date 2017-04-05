@@ -30,8 +30,8 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
-import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.UtilPlayer;
 
 @SideOnly(Side.CLIENT)
 public class BlockHighlightRenderHandler {
@@ -173,12 +173,12 @@ public class BlockHighlightRenderHandler {
         float f1 = 0.002F;
         float scale = 0.0625F;
         
-        ForgeDirection dir = BlockUtils.determineDirectionSide(player).getOpposite();
+        ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
         
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
-                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, -iz + 2, dir);
+                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, iz, dir);
                     if (bounds != null) {
                         double minX = bounds[0];
                         double minY = bounds[1];
@@ -188,13 +188,15 @@ public class BlockHighlightRenderHandler {
                         double maxZ = bounds[5];
                         
                         AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-                        aabb.offset(-xOff - 1 - dir.offsetX, -yOff, -zOff - 1 - dir.offsetZ);
+                        aabb.offset(-xOff - 1, -yOff, -zOff - 1);
+                        aabb.offset(dir.offsetX * -1, 0, dir.offsetZ * -1);
                         aabb.offset(x, y, z);
                         aabb.offset(ix, 1D + iy, iz);
                         GL11.glEnable(GL11.GL_BLEND);
                         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
                         GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.4F);
-                        if (!world.isAirBlock(x + ix - 1 - dir.offsetX, y + 1 + iy, z + iz - 1 - dir.offsetZ)) {
+                        //TODO Change to work with facing direction
+                        if (!world.isAirBlock(x + ix - 2, y + 1 + iy, z + iz - 1)) {
                             GL11.glColor4f(1.0F, 0.0F, 0.0F, 0.4F);
                         }
                         GL11.glLineWidth(2.0F);
