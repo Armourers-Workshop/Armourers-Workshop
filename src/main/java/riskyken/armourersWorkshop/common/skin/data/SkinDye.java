@@ -2,9 +2,13 @@ package riskyken.armourersWorkshop.common.skin.data;
 
 import java.util.Arrays;
 
+import org.apache.logging.log4j.Level;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.Constants;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class SkinDye implements ISkinDye {
     
@@ -41,6 +45,11 @@ public class SkinDye implements ISkinDye {
     
     @Override
     public void addDye(byte[] rgbt) {
+        if (rgbt.length != 4) {
+            ModLogger.log(Level.WARN, "Something tried to set an invalid dye colour.");
+            Thread.dumpStack();
+            return;
+        }
         for (int i = 0; i < hasDye.length; i++) {
             if (!hasDye[i]) {
                 dyes[i] = rgbt;
@@ -52,6 +61,11 @@ public class SkinDye implements ISkinDye {
     
     @Override
     public void addDye(int index, byte[] rgbt) {
+        if (rgbt.length != 4) {
+            ModLogger.log(Level.WARN, "Something tried to set an invalid dye colour.");
+            Thread.dumpStack();
+            return;
+        }
         dyes[index] = rgbt;
         hasDye[index] = true;
     }
@@ -106,9 +120,13 @@ public class SkinDye implements ISkinDye {
     public void readFromCompound(NBTTagCompound compound) {
         NBTTagCompound dyeCompound = compound.getCompoundTag(TAG_SKIN_DYE);
         for (int i = 0; i < MAX_SKIN_DYES; i++) {
-            if (dyeCompound.hasKey(TAG_DYE + i, 7)) {
+            if (dyeCompound.hasKey(TAG_DYE + i, Constants.NBT.TAG_BYTE_ARRAY)) {
                 dyes[i] = dyeCompound.getByteArray(TAG_DYE + i);
-                hasDye[i] = true;
+                if (dyes[i].length == 4) {
+                    hasDye[i] = true;
+                } else {
+                    dyes[i] = new byte[] {0,0,0,0};
+                }
             }
         }
     }
