@@ -17,7 +17,9 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 @SideOnly(Side.CLIENT)
 public abstract class AbstractModelSkin extends ModelBiped implements IEquipmentModel {
 
-    public Skin npcEquipmentData = null;
+    public Skin npcSkinData = null;
+    public ISkinDye npcDyeData = null;
+    
     protected static float SCALE = 0.0625F;
     
     protected void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -47,7 +49,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
     
     @Override
     public void render(Entity entity, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_) {
-        if (npcEquipmentData != null) {
+        if (npcSkinData != null) {
             this.isRiding = false;
             this.isSneak = false;
             this.aimedBow = false;
@@ -77,11 +79,12 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glEnable(GL11.GL_CULL_FACE);
             ModRenderHelper.enableAlphaBlend();
-            render(entity, npcEquipmentData, false, null, null, false, 0, true);
+            render(entity, npcSkinData, false, npcDyeData, null, false, 0, true);
             ModRenderHelper.disableAlphaBlend();
             GL11.glPopAttrib();
             
-            npcEquipmentData = null;
+            npcSkinData = null;
+            npcDyeData = null;
         }
     }
     
