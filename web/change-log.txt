@@ -1,3 +1,9 @@
+Build 0.43.1
+Fixed:
+	Crafting table dyed skins causes disconnect.
+	Skin dyes not showing on entities using the armour container.
+
+
 Build 0.43.0
 Added:
 	Invisible option to mannequins.
@@ -16,9 +22,11 @@ Build 0.42.5
 Fixed:
 	Client crash when a doll is placed.
 
+
 Build 0.42.4
 Fixed:
 	Dedicated server crash when mannequin is loaded.
+
 
 Build 0.42.3
 Added:
