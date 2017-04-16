@@ -13,6 +13,6 @@ public class SlotArmour extends Slot {
     
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack.getItem() instanceof ItemArmor;
+        return (stack.getItem() instanceof ItemArmor || stack.getItem() == Items.skull);
     }
 }
