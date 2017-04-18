@@ -25,7 +25,7 @@ import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ModClientFMLEventHandler {
     
-    private static final String DOWNLOAD_URL = "http://minecraft.curseforge.com/mc-mods/229523-armourers-workshop/files";
+    private static final String DOWNLOAD_URL = "https://minecraft.curseforge.com/projects/armourers-workshop/files";
     private boolean shownUpdateInfo = false;
     private boolean showmDevWarning;
     public static float renderTickTime;
