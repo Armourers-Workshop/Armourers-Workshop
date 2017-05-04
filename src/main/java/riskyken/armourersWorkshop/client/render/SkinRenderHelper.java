@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 
 @SideOnly(Side.CLIENT)
 public final class SkinRenderHelper {
@@ -40,11 +41,17 @@ public final class SkinRenderHelper {
             GL11.glTranslated(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
             if (skinType == SkinTypeRegistry.skinBlock) {
                 if (skinPartType.getPartName().equals("multiblock") & multiblock) {
+                    GL11.glColor4f(1F, 1F, 0.0F, 0.2F);
+                    renderBuildingGrid(((SkinBlock)SkinTypeRegistry.skinBlock).partBase, scale, showGuides, hidden);
+                    GL11.glPolygonOffset(6F, 6F);
+                    GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
                     renderBuildingGrid(skinPartType, scale, showGuides, hidden);
                 } else if (skinPartType.getPartName().equals("base") & !multiblock) {
+                    GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
                     renderBuildingGrid(skinPartType, scale, showGuides, hidden);
                 }
             } else {
+                GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
                 renderBuildingGrid(skinPartType, scale, showGuides, hidden);
             }
             GL11.glTranslated(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
@@ -61,25 +68,25 @@ public final class SkinRenderHelper {
     
     private static void renderGuidePart(ISkinPartType part, float scale, boolean showGuides, boolean hidden) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
-        GL11.glColor3f(1F, 1F, 1F);
-        GL11.glPushMatrix();
         
         IRectangle3D buildRec = part.getBuildingSpace();
         IRectangle3D guideRec = part.getGuideSpace();
         
+        GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_LIGHTING);
         
         if (showGuides) {
-            GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
+            //render building grid
+            //
             renderGuideBox(buildRec.getX(), buildRec.getY(), buildRec.getZ(), buildRec.getWidth(), buildRec.getHeight(), buildRec.getDepth(), scale);
-            
+            //render origin
             GL11.glColor4f(0F, 1F, 0F, 0.5F);
-            //renderGuideBox(0.0F, 0.0F, 0.0F, 1, 1, 1, scale);
             renderGuideBox(-0.5F, -0.5F, -0.5F, 1, 1, 1, scale);
         }
 
         
         if (ConfigHandlerClient.showArmourerDebugRender) {
+            //render debug box
             GL11.glColor4f(1F, 0F, 0F, 0.25F);
             renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(), guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale);
         }
