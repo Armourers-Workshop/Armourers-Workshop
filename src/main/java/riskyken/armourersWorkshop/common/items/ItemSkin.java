@@ -31,11 +31,11 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.SkinUtils;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemSkin extends AbstractModItem {
 
@@ -204,7 +204,31 @@ public class ItemSkin extends AbstractModItem {
         return true;
     }
     
-    private boolean canPlaceChildren(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, Skin skin, SkinPointer skinPointer) {
+    private boolean canPlaceChildren(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, Skin skin, SkinPointer skinPointer, ArrayList<BlockLocation> relatedBlocks) {
+        ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
+        for (int ix = 0; ix < 3; ix++) {
+            for (int iy = 0; iy < 3; iy++) {
+                for (int iz = 0; iz < 3; iz++) {
+                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, iz, dir);
+                    if (bounds != null) {
+                        int childX = x;
+                        int childY = y;
+                        int childZ = z;
+                        
+                        childX += ix - 1 - dir.offsetX * 1;
+                        childY += iy;
+                        childZ += iz - 1 - dir.offsetZ * 1;
+                        
+                        relatedBlocks.add(new BlockLocation(childX, childY, childZ));
+                        
+                        Block replaceBlock = world.getBlock(childX, childY, childZ);
+                        if (!replaceBlock.isReplaceable(world, childX, childY, childZ)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
         return true;
     }
     
@@ -229,11 +253,12 @@ public class ItemSkin extends AbstractModItem {
         int meta = targetBlock.convertDirectionToMetadata(dir);
         
         boolean multiblock = skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+        ArrayList<BlockLocation> relatedBlocks = new ArrayList<>();
         if (multiblock) {
-            if (!canPlaceChildren(world, player, side, stack, x, y, z, skin, skinPointer)) {
+            if (!canPlaceChildren(world, player, side, stack, x, y, z, skin, skinPointer, relatedBlocks)) {
                 return false;
             }
-            placeChildren(world, player, side, x, y, z, skin, skinPointer);
+            placeChildren(world, player, side, x, y, z, skin, skinPointer, relatedBlocks);
         }
         
         world.setBlock(x, y, z, targetBlock, meta, 2);
@@ -242,23 +267,24 @@ public class ItemSkin extends AbstractModItem {
         te.setSkinPointer(skinPointer);
         targetBlock.onBlockPlacedBy(world, x, y, z, player, stack);
         targetBlock.onPostBlockPlaced(world, x, y, z, meta);
+        te.setRelatedBlocks(relatedBlocks);
         //targetBlock.setFacingDirection(world, x, y, z, dir);
         stack.stackSize--;
         world.playSoundEffect((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F, "dig.stone", 1, 1);
         return true;
     }
     
-    private void placeChildren(World world, EntityPlayer player, int side, int x, int y, int z, Skin skin, SkinPointer skinPointer) {
+    private void placeChildren(World world, EntityPlayer player, int side, int x, int y, int z, Skin skin, SkinPointer skinPointer, ArrayList<BlockLocation> relatedBlocks) {
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
-                    placeChild(world, player, side, x, y, z, ix, iy, iz, skin, skinPointer);
+                    placeChild(world, player, side, x, y, z, ix, iy, iz, skin, skinPointer, relatedBlocks);
                 }
             }
         }
     }
     
-    private void placeChild(World world, EntityPlayer player, int side, int x, int y, int z, int ix, int iy, int iz, Skin skin, SkinPointer skinPointer) {
+    private void placeChild(World world, EntityPlayer player, int side, int x, int y, int z, int ix, int iy, int iz, Skin skin, SkinPointer skinPointer, ArrayList<BlockLocation> relatedBlocks) {
         ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
         
         BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnableChild;
@@ -278,13 +304,13 @@ public class ItemSkin extends AbstractModItem {
             childY += iy;
             childZ += iz - 1 - dir.offsetZ * 1;
             
-            ModLogger.log(String.format("Adding child block for X:%d Y:%d Z:%d at X:%d Y:%d Z:%d", x, y, z, childX, childY, childZ));
             world.setBlock(childX, childY, childZ, targetBlock, meta, 2);
             world.setTileEntity(childX, childY, childZ, targetBlock.createTileEntity(world, meta));
             
             TileEntitySkinnableChild te = (TileEntitySkinnableChild) world.getTileEntity(childX, childY, childZ);
             te.setSkinPointer(skinPointer);
             te.setParentLocation(x, y, z);
+            te.setRelatedBlocks(relatedBlocks);
         }
     }
 }

@@ -198,20 +198,21 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-        if (!player.capabilities.isCreativeMode) {
-            dropSkin(world, x, y, z);
-        }
+        dropSkin(world, x, y, z, player.capabilities.isCreativeMode);
         return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
     
-    private void dropSkin(World world, int x, int y, int z) {
+    private void dropSkin(World world, int x, int y, int z, boolean isCreativeMode) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
             SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
             if (skinPointer != null) {
-                ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
-                SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
-                UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
+                if (!isCreativeMode) {
+                    ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
+                    SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
+                    UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
+                }
+                ((TileEntitySkinnable)te).killChildren(world);
             } else {
                 ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
             }

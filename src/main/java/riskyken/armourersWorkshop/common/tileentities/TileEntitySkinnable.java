@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.relauncher.Side;
@@ -12,6 +14,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -25,6 +28,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModConstants;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class TileEntitySkinnable extends TileEntity {
 
@@ -34,6 +38,7 @@ public class TileEntitySkinnable extends TileEntity {
     private int nbtVersion;
     private SkinPointer skinPointer;
     private boolean haveBlockBounds = false;
+    private ArrayList<BlockLocation> relatedBlocks;
     
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderBounds;
@@ -112,8 +117,6 @@ public class TileEntitySkinnable extends TileEntity {
         gridY = MathHelper.clamp_int(gridY, 0, 2);
         gridZ = MathHelper.clamp_int(gridZ, 0, 2);
         
-        
-        
         Rectangle3D rec = skinPart.getBlockBounds(gridX, gridY, gridZ);
         switch (dir) {
         case NORTH:
@@ -187,31 +190,6 @@ public class TileEntitySkinnable extends TileEntity {
             break;
         }
         
-        /*
-          switch (dir) {
-            case SOUTH:
-            minZ = 1 - oldMaxZ;
-            maxZ = 1 - oldMinZ;
-            minX = 1 - oldMaxX;
-            maxX = 1 - oldMinX;
-            break;
-            case EAST:
-            maxX = 1 - oldMinZ;
-            minX = 1 - oldMaxZ;
-            maxZ = oldMaxX;
-            minZ = oldMinX;
-            break;
-            case WEST:
-            maxX = oldMaxZ;
-            minX = oldMinZ;
-            maxZ = 1 - oldMinX;
-            minZ = 1 - oldMaxX;
-            break;
-            default:
-            break;
-        }
-         */
-        
         return rotatedBounds;
     }
     
@@ -230,6 +208,14 @@ public class TileEntitySkinnable extends TileEntity {
 
     private Skin getSkinServer(ISkinPointer skinPointer) {
         return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
+    }
+    
+    public void setRelatedBlocks(ArrayList<BlockLocation> relatedBlocks) {
+        this.relatedBlocks = relatedBlocks;
+    }
+    
+    public ArrayList<BlockLocation> getRelatedBlocks() {
+        return relatedBlocks;
     }
 
     @Override
@@ -303,4 +289,19 @@ public class TileEntitySkinnable extends TileEntity {
     public double getMaxRenderDistanceSquared() {
         return ConfigHandlerClient.blockSkinMaxRenderDistance;
     }
+
+    public void killChildren(World world) {
+        if (relatedBlocks != null) {
+            for (int i = 0; i < relatedBlocks.size(); i++) {
+                BlockLocation loc = relatedBlocks.get(i);
+                if (!(xCoord == loc.x & yCoord == loc.y & zCoord == loc.z)) {
+                    ModLogger.log("Removing child: " + loc.toString());
+                    world.setBlockToAir(loc.x, loc.y, loc.z);
+                    world.removeTileEntity(loc.x, loc.y, loc.z);
+                } else {
+                    ModLogger.log("Skipping child: " + loc.toString());
+                }
+            }
+        }
+    } 
 }
