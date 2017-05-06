@@ -57,32 +57,26 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof TileEntitySkinnable) {
-            SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
-            if (skinPointer != null) {
-                Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
-                if (skin != null) {
-                    if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
-                        List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
-                        if (seats.size() == 0) {
-                            Point3D point = null;
-                            if (skin.getParts().get(0).getMarkerCount() > 0) {
-                                point = skin.getParts().get(0).getMarker(0);
-                            } else {
-                                point = new Point3D(0, 0, 0);
-                            }
-                            int rotation = world.getBlockMetadata(x, y, z);
-                            skin.getParts().get(0).getMarker(0);
-                            Seat seat = new Seat(world, x, y, z, point, rotation);
-                            world.spawnEntityInWorld(seat);
-                            player.mountEntity(seat);
-                                                  
-                            return true;
-                        }
-                        
+        Skin skin = getSkin(world, x, y, z);
+        if (skin != null) {
+            if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
+                List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
+                if (seats.size() == 0) {
+                    Point3D point = null;
+                    if (skin.getParts().get(0).getMarkerCount() > 0) {
+                        point = skin.getParts().get(0).getMarker(0);
+                    } else {
+                        point = new Point3D(0, 0, 0);
                     }
+                    int rotation = world.getBlockMetadata(x, y, z);
+                    skin.getParts().get(0).getMarker(0);
+                    Seat seat = new Seat(world, x, y, z, point, rotation);
+                    world.spawnEntityInWorld(seat);
+                    player.mountEntity(seat);
+                                          
+                    return true;
                 }
+                
             }
         }
         return false;
@@ -98,15 +92,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof TileEntitySkinnable) {
-            if (((TileEntitySkinnable)te).getSkinPointer() != null) {
-                Skin skin = SkinUtils.getSkinDetectSide(((TileEntitySkinnable)te).getSkinPointer(), true, true);
-                if (skin != null) {
-                    if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false)) {
-                        return null;
-                    }
-                }
+        Skin skin = getSkin(world, x, y, z);
+        if (skin != null) {
+            if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false)) {
+                return null;
             }
         }
         setBlockBoundsBasedOnState(world, x, y, z);
@@ -115,24 +104,23 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof TileEntitySkinnable) {
-            TileEntitySkinnable tes = (TileEntitySkinnable) te;
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null) {
             ForgeDirection dir = getFacingDirection(world, x, y, z);
             if (dir == ForgeDirection.NORTH) {
-                tes.setBoundsOnBlock(this, 1, 0, 0);
+                te.setBoundsOnBlock(this, 1, 0, 0);
                 return;
             }
             if (dir == ForgeDirection.EAST) {
-                tes.setBoundsOnBlock(this, 0, 0, 1);
+                te.setBoundsOnBlock(this, 0, 0, 1);
                 return;
             }
             if (dir == ForgeDirection.SOUTH) {
-                tes.setBoundsOnBlock(this, 1, 0, 2);
+                te.setBoundsOnBlock(this, 1, 0, 2);
                 return;
             }
             if (dir == ForgeDirection.WEST) {
-                tes.setBoundsOnBlock(this, 2, 0, 1);
+                te.setBoundsOnBlock(this, 2, 0, 1);
                 return;
             }
         }
@@ -158,35 +146,50 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         return blockIcon;
     }
     
-    @Override
-    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
+    private TileEntitySkinnable getTileEntity(IBlockAccess world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
-            SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
-            if (skinPointer != null) {
-                Skin skin = SkinUtils.getSkinDetectSide(skinPointer, true, true);
-                if (skin != null) {
-                    return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false);
-                }
-            } else {
-                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
-            }
+            return (TileEntitySkinnable) te;
+        } else {
+            ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d has no tile entity.", x, y, z));
+        }
+        return null;
+    }
+    
+    private SkinPointer getSkinPointer(IBlockAccess world, int x, int y, int z) {
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null) {
+            return te.getSkinPointer();
+        } else {
+            ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d has no skin data.", x, y, z));
+        }
+        return null;
+    }
+    
+    private Skin getSkin(IBlockAccess world, int x, int y, int z) {
+        SkinPointer skinPointer = getSkinPointer(world, x, y, z);
+        if (skinPointer != null) {
+            return SkinUtils.getSkinDetectSide(skinPointer, true, true);
+        }
+        return null;
+    }
+    
+    @Override
+    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
+        Skin skin = getSkin(world, x, y, z);
+        if (skin != null) {
+            return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false);
         }
         return false;
     }
     
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof TileEntitySkinnable) {
-            SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
-            if (skinPointer != null) {
-                ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
-                SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
-                return returnStack;
-            } else {
-                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
-            }
+        SkinPointer skinPointer = getSkinPointer(world, x, y, z);
+        if (skinPointer != null) {
+            ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
+            return returnStack;
         }
         return null;
     }
@@ -203,16 +206,16 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     private void dropSkin(World world, int x, int y, int z, boolean isCreativeMode) {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof TileEntitySkinnable) {
-            SkinPointer skinPointer = ((TileEntitySkinnable)te).getSkinPointer();
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null) {
+            SkinPointer skinPointer = te.getSkinPointer();
             if (skinPointer != null) {
                 if (!isCreativeMode) {
                     ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
                     SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
                     UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
                 }
-                ((TileEntitySkinnable)te).killChildren(world);
+                te.killChildren(world);
             } else {
                 ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
             }
