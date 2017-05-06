@@ -53,6 +53,7 @@ public class BlockHighlightRenderHandler {
         int x = target.blockX;
         int y = target.blockY;
         int z = target.blockZ;
+        int side = target.sideHit;
         
         Block block = world.getBlock(x, y, z);
         
@@ -63,8 +64,13 @@ public class BlockHighlightRenderHandler {
         
         if (event.currentItem != null && event.currentItem.getItem() == ModItems.equipmentSkin) {
             ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(event.currentItem);
+            ForgeDirection sideDir = ForgeDirection.getOrientation(side);
+            
             if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
-                drawSkinnableBlockHelper(world, x, y, z, player, event.partialTicks, skinPointer);
+                x += sideDir.offsetX;
+                y += sideDir.offsetY;
+                z += sideDir.offsetZ;
+                drawSkinnableBlockHelper(world, x, y, z, side, player, event.partialTicks, skinPointer);
             }
         }
     }
@@ -155,7 +161,7 @@ public class BlockHighlightRenderHandler {
         GL11.glDisable(GL11.GL_BLEND);
     }
     
-    private void drawSkinnableBlockHelper(World world, int x, int y, int z, EntityPlayer player, float partialTicks, ISkinPointer skinPointer) {
+    private void drawSkinnableBlockHelper(World world, int x, int y, int z, int side, EntityPlayer player, float partialTicks, ISkinPointer skinPointer) {
         //int meta = world.getBlockMetadata(x, y, z);
         
         //Rectangle3D[][][] blockGrid;
@@ -191,18 +197,19 @@ public class BlockHighlightRenderHandler {
                         aabb.offset(-xOff - 1, -yOff, -zOff - 1);
                         aabb.offset(dir.offsetX * -1, 0, dir.offsetZ * -1);
                         aabb.offset(x, y, z);
-                        aabb.offset(ix, 1D + iy, iz);
+                        aabb.offset(ix, iy, iz);
                         GL11.glEnable(GL11.GL_BLEND);
                         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-                        GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.4F);
-                        //TODO Change to work with facing direction
-                        if (!world.isAirBlock(x + ix - 2, y + 1 + iy, z + iz - 1)) {
-                            GL11.glColor4f(1.0F, 0.0F, 0.0F, 0.4F);
+                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.75F);
+                        if (!world.isAirBlock(x + ix - 1 - dir.offsetX, y + iy, z + iz - 1 - dir.offsetZ)) {
+                            GL11.glColor4f(1.0F, 0.0F, 0.0F, 0.75F);
                         }
-                        GL11.glLineWidth(2.0F);
+                        GL11.glLineWidth(1F);
                         GL11.glDisable(GL11.GL_TEXTURE_2D);
                         GL11.glDepthMask(false);
+                        GL11.glDisable(GL11.GL_DEPTH_TEST);
                         RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+                        GL11.glEnable(GL11.GL_DEPTH_TEST);
                         GL11.glDepthMask(true);
                         GL11.glEnable(GL11.GL_TEXTURE_2D);
                         GL11.glDisable(GL11.GL_BLEND);
