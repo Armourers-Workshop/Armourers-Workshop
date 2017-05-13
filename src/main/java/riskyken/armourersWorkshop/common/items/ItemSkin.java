@@ -253,7 +253,7 @@ public class ItemSkin extends AbstractModItem {
         int meta = targetBlock.convertDirectionToMetadata(dir);
         
         boolean multiblock = skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
-        ArrayList<BlockLocation> relatedBlocks = new ArrayList<>();
+        ArrayList<BlockLocation> relatedBlocks = new ArrayList<BlockLocation>();
         if (multiblock) {
             if (!canPlaceChildren(world, player, side, stack, x, y, z, skin, skinPointer, relatedBlocks)) {
                 return false;
