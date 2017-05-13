@@ -304,6 +304,41 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         textLines.add("Direction: " + getFacingDirection(world, x, y, z));
     }
     
+    @Override
+    public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player) {
+        Skin skin = getSkin(world, x, y, z);
+        if (skin != null) {
+            return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false);
+        }
+        return false;
+    }
+    
+    @Override
+    public void setBedOccupied(IBlockAccess world, int x, int y, int z, EntityPlayer player, boolean occupied) {
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null) {
+            te.setBedOccupied(occupied);
+        }
+    }
+    
+    @Override
+    public int getBedDirection(IBlockAccess world, int x, int y, int z) {
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null) {
+            te.getRotation().ordinal();
+        }
+        return 0;
+    }
+    
+    @Override
+    public boolean isBedFoot(IBlockAccess world, int x, int y, int z) {
+        Skin skin = getSkin(world, x, y, z);
+        if (skin != null) {
+            
+        }
+        return false;
+    }
+    
     public static class Seat extends Entity implements IEntityAdditionalSpawnData {
 
         private int noRiderTime = 0;
@@ -334,7 +369,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
                 ForgeDirection[] rotMatrix =  {ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.EAST};
                 float scale = 0.0625F;
                 
-                ForgeDirection dir = rotMatrix[rotation];
+                ForgeDirection dir = rotMatrix[rotation & 3];
                 
                 float offsetX = (offset.getX() * scale) * dir.offsetZ + (-offset.getZ() * scale) * dir.offsetX;
                 float offsetY = offset.getY() * scale;

@@ -266,6 +266,7 @@ inventory.armourersworkshop:armourerBrain.ladder=Ladder?
 inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
 inventory.armourersworkshop:armourerBrain.seat=Seat?
 inventory.armourersworkshop:armourerBrain.multiblock=Multiblock?
+inventory.armourersworkshop:armourerBrain.bed=Bed?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Override?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue

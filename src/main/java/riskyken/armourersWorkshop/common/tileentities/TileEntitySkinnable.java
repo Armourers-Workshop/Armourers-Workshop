@@ -39,6 +39,7 @@ public class TileEntitySkinnable extends TileEntity {
     private SkinPointer skinPointer;
     private boolean haveBlockBounds = false;
     private ArrayList<BlockLocation> relatedBlocks;
+    private boolean bedOccupied;
     
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderBounds;
@@ -191,6 +192,14 @@ public class TileEntitySkinnable extends TileEntity {
         }
         
         return rotatedBounds;
+    }
+    
+    public boolean isBedOccupied() {
+        return bedOccupied;
+    }
+    
+    public void setBedOccupied(boolean bedOccupied) {
+        this.bedOccupied = bedOccupied;
     }
     
     private Skin getSkin(ISkinPointer skinPointer) {
