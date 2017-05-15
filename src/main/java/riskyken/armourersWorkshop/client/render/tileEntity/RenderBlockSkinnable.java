@@ -142,6 +142,10 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             renderList.add(new RenderLast(tileEntity, x, y, z));
         }
         if (ConfigHandlerClient.showSkinBlockBounds) {
+            if (!(tileEntity.getBlockType() instanceof BlockSkinnable)) {
+                return;
+            }
+            
             BlockSkinnable block = (BlockSkinnable) tileEntity.getBlockType();
             block.setBlockBoundsBasedOnState(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
             

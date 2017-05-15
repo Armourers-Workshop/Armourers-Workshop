@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -33,6 +34,10 @@ import riskyken.plushieWrapper.common.world.BlockLocation;
 public class TileEntitySkinnable extends TileEntity {
 
     private static final String TAG_HAS_SKIN = "hasSkin";
+    private static final String TAG_RELATED_BLOCKS = "relatedBlocks";
+    private static final String TAG_X = "x";
+    private static final String TAG_Y = "y";
+    private static final String TAG_Z = "z";
     private static final int NBT_VERSION = 1;
 
     private int nbtVersion;
@@ -44,7 +49,7 @@ public class TileEntitySkinnable extends TileEntity {
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderBounds;
     
-    // Bounds
+    //Bounds
     public float minX;
     public float minY;
     public float minZ;
@@ -74,7 +79,7 @@ public class TileEntitySkinnable extends TileEntity {
 
     public void setBoundsOnBlock(Block block, int xOffset, int yOffset, int zOffset) {
         if (haveBlockBounds) {
-            // TODO change before release!!!
+            //TODO change before release!!!
             //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
             //return;
         }
@@ -84,10 +89,7 @@ public class TileEntitySkinnable extends TileEntity {
             skin = getSkin(skinPointer);
             if (skin != null) {
                 ForgeDirection dir = blockSkinnable.getFacingDirection(getBlockMetadata());
-                //ModLogger.log(dir);
-                //dir = ForgeDirection.EAST;
                 float[] bounds = getBlockBounds(skin, xOffset, yOffset, zOffset, dir);
-                
                 if (bounds != null) {
                     minX = bounds[0];
                     minY = bounds[1];
@@ -97,7 +99,6 @@ public class TileEntitySkinnable extends TileEntity {
                     maxZ = bounds[5];
                     haveBlockBounds = true;
                     block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
-                    //block.setBlockBounds(0F, 0F, 0F, 1F, 0.5F, 1F);
                 }
                 return;
             }
@@ -137,7 +138,6 @@ public class TileEntitySkinnable extends TileEntity {
         }
         
         if (rec != null) {
-            
             int x = 8 + rec.getX();
             int y = 8 - rec.getHeight() - rec.getY();
             int z = 8 - rec.getDepth() - rec.getZ();
@@ -149,7 +149,6 @@ public class TileEntitySkinnable extends TileEntity {
             bounds[5] = (z + rec.getDepth()) * scale;
             bounds = rotateBlockBounds(bounds, dir);
         } else {
-            //ModLogger.log(dir);
             return null;
         }
         
@@ -163,29 +162,22 @@ public class TileEntitySkinnable extends TileEntity {
         }
         switch (dir) {
         case NORTH:
-            
-            rotatedBounds[0] = 1 - bounds[3]; //oldMaxZ - minX
-            rotatedBounds[2] = 1 - bounds[5]; //oldMinX - minZ
-            rotatedBounds[3] = 1 - bounds[0]; //oldMinZ - maxX
-            rotatedBounds[5] = 1 - bounds[2]; //oldMaxX - maxZ
-            
+            rotatedBounds[0] = 1 - bounds[3];   //oldMaxZ - minX
+            rotatedBounds[2] = 1 - bounds[5];   //oldMinX - minZ
+            rotatedBounds[3] = 1 - bounds[0];   //oldMinZ - maxX
+            rotatedBounds[5] = 1 - bounds[2];   //oldMaxX - maxZ
             break;
         case EAST:
-            
             rotatedBounds[0] = bounds[2];       //oldMinZ - minX
-            rotatedBounds[2] = 1 - bounds[3];       //oldMaxX - minZ
+            rotatedBounds[2] = 1 - bounds[3];   //oldMaxX - minZ
             rotatedBounds[3] = bounds[5];       //oldMaxZ - maxX
-            rotatedBounds[5] = 1 - bounds[0];       //oldMinX - maxZ
-            
+            rotatedBounds[5] = 1 - bounds[0];   //oldMinX - maxZ
             break;
-            
         case WEST:
-            
-            rotatedBounds[0] = 1 - bounds[5]; //oldMaxZ - minX
-            rotatedBounds[2] = bounds[0];     //oldMinX - minZ
-            rotatedBounds[3] = 1 - bounds[2]; //oldMinZ - maxX
-            rotatedBounds[5] = bounds[3];     //oldMaxX - maxZ
-            
+            rotatedBounds[0] = 1 - bounds[5];   //oldMaxZ - minX
+            rotatedBounds[2] = bounds[0];       //oldMinX - minZ
+            rotatedBounds[3] = 1 - bounds[2];   //oldMinZ - maxX
+            rotatedBounds[5] = bounds[3];       //oldMaxX - maxZ
             break; 
         default:
             break;
@@ -264,6 +256,18 @@ public class TileEntitySkinnable extends TileEntity {
         compound.setInteger(ModConstants.Tags.TAG_NBT_VERSION, NBT_VERSION);
         if (hasSkin()) {
             skinPointer.writeToCompound(compound);
+            if (relatedBlocks != null) {
+                NBTTagList list = new NBTTagList();
+                for (int i = 0; i < relatedBlocks.size(); i++) {
+                    NBTTagCompound blockCompound = new NBTTagCompound();
+                    BlockLocation blockLoc = relatedBlocks.get(i);
+                    blockCompound.setInteger(TAG_X, blockLoc.x);
+                    blockCompound.setInteger(TAG_Y, blockLoc.y);
+                    blockCompound.setInteger(TAG_Z, blockLoc.z);
+                    list.appendTag(blockCompound);
+                }
+                compound.setTag(TAG_RELATED_BLOCKS, list);
+            }
         }
     }
     
@@ -278,8 +282,23 @@ public class TileEntitySkinnable extends TileEntity {
         if (hasSkin) {
             skinPointer = new SkinPointer();
             skinPointer.readFromCompound(compound);
+            if (compound.hasKey(TAG_RELATED_BLOCKS, Constants.NBT.TAG_LIST)) {
+                NBTTagList list = compound.getTagList(TAG_RELATED_BLOCKS, Constants.NBT.TAG_COMPOUND);
+                relatedBlocks = new ArrayList<BlockLocation>();
+                for (int i = 0; i < list.tagCount(); i++) {
+                    NBTTagCompound blockCompound = (NBTTagCompound)list.getCompoundTagAt(i);
+                    int x = blockCompound.getInteger(TAG_X);
+                    int y = blockCompound.getInteger(TAG_Y);
+                    int z = blockCompound.getInteger(TAG_Z);
+                    BlockLocation blockLoc = new BlockLocation(x, y, z);
+                    relatedBlocks.add(blockLoc);
+                }
+            } else {
+                relatedBlocks = null;
+            }
         } else {
             skinPointer = null;
+            relatedBlocks = null;
             ModLogger.log(Level.WARN, String.format("Skinnable tile at X:%d Y:%d Z:%d has no skin data.", xCoord, yCoord, zCoord));
         }
     }
@@ -287,6 +306,7 @@ public class TileEntitySkinnable extends TileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
+        //TODO Stuff and things
         if (renderBounds == null) {
             renderBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
         }
