@@ -20,10 +20,11 @@ public class GuiDebugTool extends GuiScreen {
     private GuiCheckBox checkArmourerDebugRenders;
     private GuiCheckBox checkShowLodLevel;
     private GuiCheckBox checkShowSkinBlockBounds;
+    private GuiCheckBox checkShowSkinRenderBounds;
     
     public GuiDebugTool() {
         this.guiWidth = 180;
-        this.guiHeight = 128;
+        this.guiHeight = 138;
     }
     
     @Override
@@ -45,11 +46,14 @@ public class GuiDebugTool extends GuiScreen {
         checkShowSkinBlockBounds = new GuiCheckBox(-1, guiLeft + 5, guiTop + 35, "show skin block bounds", ConfigHandlerClient.showSkinBlockBounds);
         checkShowSkinBlockBounds.setTextColour(0xFFEEEEEE);
         
+        checkShowSkinRenderBounds = new GuiCheckBox(-1, guiLeft + 5, guiTop + 45, "show skin render bounds", ConfigHandlerClient.showSkinRenderBounds);
+        checkShowSkinRenderBounds.setTextColour(0xFFEEEEEE);
         
         buttonList.add(checkWireframe);
         buttonList.add(checkArmourerDebugRenders);
         buttonList.add(checkShowLodLevel);
         buttonList.add(checkShowSkinBlockBounds);
+        buttonList.add(checkShowSkinRenderBounds);
     }
     
     @Override
@@ -65,6 +69,9 @@ public class GuiDebugTool extends GuiScreen {
         }
         if (button == checkShowSkinBlockBounds) {
             ConfigHandlerClient.showSkinBlockBounds = checkShowSkinBlockBounds.isChecked();
+        }
+        if (button == checkShowSkinRenderBounds) {
+            ConfigHandlerClient.showSkinRenderBounds = checkShowSkinRenderBounds.isChecked();
         }
     }
     

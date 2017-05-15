@@ -31,6 +31,7 @@ public class ConfigHandlerClient {
     public static boolean disableTexturePainting;
     public static boolean showLodLevels;
     public static boolean showSkinBlockBounds;
+    public static boolean showSkinRenderBounds;
     
     public static String globalLibraryUsername = "";
     public static String globalLibraryPassword = "";
