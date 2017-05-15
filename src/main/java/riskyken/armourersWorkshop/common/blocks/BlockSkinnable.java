@@ -32,6 +32,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -334,7 +335,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public boolean isBedFoot(IBlockAccess world, int x, int y, int z) {
         Skin skin = getSkin(world, x, y, z);
         if (skin != null) {
-            
+            for (int i = 0; i <skin.getPartCount(); i++) {
+                SkinPart part = skin.getParts().get(i);
+                part.getMarkerCount();
+            }
         }
         return false;
     }

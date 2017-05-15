@@ -290,9 +290,11 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
 
     public void clearArmourCubes() {
         if (skinType != null) {
-            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps);
             clearPaintData(true);
-            setSkinProps(new SkinProperties());
+            SkinProperties newSkinProps = new SkinProperties();
+            newSkinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+            setSkinProps(newSkinProps);
             resyncData();
         }
     }
