@@ -316,6 +316,8 @@ public class TileEntitySkinnable extends TileEntity {
                 } else {
                     return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
                 } 
+            } else {
+                return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
             }
         }
         return renderBounds;
