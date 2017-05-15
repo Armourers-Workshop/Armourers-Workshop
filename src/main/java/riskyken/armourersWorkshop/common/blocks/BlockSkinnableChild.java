@@ -13,6 +13,9 @@ public class BlockSkinnableChild extends BlockSkinnable implements IDebug  {
     public BlockSkinnableChild() {
         super(LibBlockNames.SKINNABLE_CHILD);
     }
+    public BlockSkinnableChild(String name) {
+        super(name);
+    }
     
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {

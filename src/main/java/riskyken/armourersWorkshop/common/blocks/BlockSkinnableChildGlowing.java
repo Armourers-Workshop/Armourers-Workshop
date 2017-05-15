@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
 
-public class BlockSkinnableChildGlowing extends BlockSkinnable {
+public class BlockSkinnableChildGlowing extends BlockSkinnableChild {
 
     public BlockSkinnableChildGlowing() {
         super(LibBlockNames.SKINNABLE_CHILD_GLOWING);
