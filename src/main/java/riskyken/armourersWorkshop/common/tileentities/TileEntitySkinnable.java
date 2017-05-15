@@ -303,17 +303,19 @@ public class TileEntitySkinnable extends TileEntity {
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         if (renderBounds == null) {
-            Skin skin = getSkin(getSkinPointer());
-            if (skin != null) {
-                if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
-                    renderBounds = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
-                    ForgeDirection dir = getRotation().getOpposite();
-                    renderBounds.offset(dir.offsetX, 0, dir.offsetZ);
+            if (hasSkin()) {
+                Skin skin = getSkin(getSkinPointer());
+                if (skin != null) {
+                    if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+                        renderBounds = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
+                        ForgeDirection dir = getRotation().getOpposite();
+                        renderBounds.offset(dir.offsetX, 0, dir.offsetZ);
+                    } else {
+                        renderBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                    }
                 } else {
-                    renderBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
-                }
-            } else {
-                return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                    return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                } 
             }
         }
         return renderBounds;
