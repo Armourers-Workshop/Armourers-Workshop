@@ -242,11 +242,7 @@ public class TileEntitySkinnable extends TileEntity {
     }
     
     public ForgeDirection getRotation() {
-        int meta = getBlockMetadata();
-        if (meta > 1 & meta < 6) {
-            return ForgeDirection.values()[meta];
-        }
-        return ForgeDirection.EAST;
+        return ((BlockSkinnable)getBlockType()).getFacingDirection(getWorldObj(), xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -306,9 +302,19 @@ public class TileEntitySkinnable extends TileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        //TODO Stuff and things
         if (renderBounds == null) {
-            renderBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+            Skin skin = getSkin(getSkinPointer());
+            if (skin != null) {
+                if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+                    renderBounds = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
+                    ForgeDirection dir = getRotation().getOpposite();
+                    renderBounds.offset(dir.offsetX, 0, dir.offsetZ);
+                } else {
+                    renderBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                }
+            } else {
+                return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+            }
         }
         return renderBounds;
     }
