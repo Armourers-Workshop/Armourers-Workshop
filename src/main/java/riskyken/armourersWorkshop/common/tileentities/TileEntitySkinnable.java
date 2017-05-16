@@ -242,7 +242,10 @@ public class TileEntitySkinnable extends TileEntity {
     }
     
     public ForgeDirection getRotation() {
-        return ((BlockSkinnable)getBlockType()).getFacingDirection(getWorldObj(), xCoord, yCoord, zCoord);
+        if (getBlockType() instanceof BlockSkinnable) {
+            return ((BlockSkinnable)getBlockType()).getFacingDirection(getWorldObj(), xCoord, yCoord, zCoord);
+        }
+        return ForgeDirection.UNKNOWN;
     }
 
     @Override
