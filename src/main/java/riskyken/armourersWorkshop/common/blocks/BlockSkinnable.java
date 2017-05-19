@@ -20,7 +20,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -71,7 +73,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
         }
         if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false)) {
-            return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
+            return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation());
         }
         return false;
     }
@@ -95,14 +97,56 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         return false;
     }
     
-    private boolean sleepInBed(World world, int x, int y, int z, EntityPlayer player, Skin skin) {
-        return false;
+    private boolean sleepInBed(World world, int x, int y, int z, EntityPlayer player, Skin skin, ForgeDirection direction) {
+        if (world.isRemote) {
+            return true;
+        }
+        
+        Point3D point = null;
+        if (skin.getParts().get(0).getMarkerCount() > 0) {
+            point = skin.getParts().get(0).getMarker(0);
+        } else {
+            point = new Point3D(0, 0, 16);
+        }
+        
+        int xBlockOffset = MathHelper.floor_double((double)point.getX() / 16D);
+        int zBlockOffset = MathHelper.floor_double((double)point.getZ() / 16D);
+        
+        x -= xBlockOffset * direction.offsetZ + zBlockOffset * direction.offsetX;;
+        z -= zBlockOffset * direction.offsetZ + xBlockOffset * direction.offsetX;
+        
+        EntityPlayer.EnumStatus enumstatus = player.sleepInBedAt(x, y, z);
+
+        if (enumstatus == EntityPlayer.EnumStatus.OK) {
+            //func_149979_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, true);
+            return true;
+        }
+        else
+        {
+            if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW)
+            {
+                player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]));
+            }
+            else if (enumstatus == EntityPlayer.EnumStatus.NOT_SAFE)
+            {
+                player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.notSafe", new Object[0]));
+            }
+
+            return true;
+        }
     }
     
     @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
         if (entity instanceof Seat) {
             return;
+        }
+        if (entity != null && entity instanceof EntityPlayer) {
+            if (((EntityPlayer)entity).isPlayerSleeping()) {
+                list.add(AxisAlignedBB.getBoundingBox(x, y, z, x + 1F, y + 0.5F, z + 1F));
+                //TODO add marker y height
+                return;
+            }
         }
         super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
     }
@@ -342,7 +386,18 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public int getBedDirection(IBlockAccess world, int x, int y, int z) {
         TileEntitySkinnable te = getTileEntity(world, x, y, z);
         if (te != null) {
-            te.getRotation().ordinal();
+            switch (te.getRotation()) {
+            case NORTH:
+                return 0;
+            case EAST:
+                return 1;
+            case SOUTH:
+                return 2;
+            case WEST:
+                return 3;
+            default:
+                break;
+            }
         }
         return 0;
     }
