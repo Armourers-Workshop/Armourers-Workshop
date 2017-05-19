@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -19,10 +20,12 @@ import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class SkinPart implements ISkinPart {
     
     private Rectangle3D partBounds;
+    private Rectangle3D[][][] blockGrid;
     private SkinCubeData cubeData;
     private ArrayList<CubeMarkerData> markerBlocks;
     private ISkinPartType skinPart;
@@ -33,12 +36,12 @@ public class SkinPart implements ISkinPart {
         this.cubeData = cubeData;
         this.skinPart = skinPart;
         this.markerBlocks = markerBlocks;
-        setupPartBounds();
+        partBounds = setupPartBounds();
     }
     
     public SkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         readFromStream(stream, version);
-        setupPartBounds();
+        partBounds = setupPartBounds();
     }
     
     @SideOnly(Side.CLIENT)
@@ -56,7 +59,11 @@ public class SkinPart implements ISkinPart {
         return clientSkinPartData.getModelCount();
     }
     
-    private void setupPartBounds() {
+    private Rectangle3D setupPartBounds() {
+        if (skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.base") |
+            skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.multiblock")) {
+            setupBlockBounds();
+        }
         int minX = 127;
         int maxX = -127;
         
@@ -71,38 +78,65 @@ public class SkinPart implements ISkinPart {
             int x = loc[0];
             int y = loc[1];
             int z = loc[2];
-            
-            if (x < minX) {
-                minX = x;
-            }
-            if (x > maxX) {
-                maxX = x;
-            }
-            
-            if (y < minY) {
-                minY = y;
-            }
-            if (y > maxY) {
-                maxY = y;
-            }
-            
-            if (z < minZ) {
-                minZ = z;
-            }
-            if (z > maxZ) {
-                maxZ = z;
-            }
+            minX = Math.min(x, minX);
+            maxX = Math.max(x, maxX);
+            minY = Math.min(y, minY);
+            maxY = Math.max(y, maxY);
+            minZ = Math.min(z, minZ);
+            maxZ = Math.max(z, maxZ);
         }
         
         int xSize = maxX - minX;
         int ySize = maxY - minY;
         int zSize = maxZ - minZ;
         
-        int xOffset = minX;
-        int yOffset = minY;
-        int zOffset = minZ;
-        
-        partBounds = new Rectangle3D(xOffset, yOffset, zOffset, xSize + 1, ySize + 1, zSize + 1);
+        return new Rectangle3D(minX, minY, minZ, xSize + 1, ySize + 1, zSize + 1);
+    }
+    
+    public Rectangle3D getBlockBounds(int x, int y, int z) {
+        return blockGrid[x][y][z];
+    }
+    
+    public Rectangle3D[][][] getBlockGrid() {
+        return blockGrid;
+    }
+    
+    private void setupBlockBounds() {
+        blockGrid = new Rectangle3D[3][3][3];
+        for (int i = 0; i < cubeData.getCubeCount(); i++) {
+            byte[] loc = cubeData.getCubeLocation(i);
+            int x = MathHelper.floor_float((float)(loc[0] + 8) / 16F);
+            int y = MathHelper.floor_float((float)(loc[1] + 8) / 16F);
+            int z = MathHelper.floor_float((float)(loc[2] + 8) / 16F);
+            setupBlockBounds(x, y, z, loc[0] - x * 16, loc[1] - y * 16, loc[2] - z * 16);
+        }
+        for (int ix = 0; ix < 3; ix++) {
+            for (int iy = 0; iy < 3; iy++) {
+                for (int iz = 0; iz < 3; iz++) {
+                    Rectangle3D rec = blockGrid[ix][iy][iz];
+                    if (rec != null) {
+                        rec.setWidth(rec.getWidth() - rec.getX() + 1);
+                        rec.setHeight(rec.getHeight() - rec.getY() + 1);
+                        rec.setDepth(rec.getDepth() - rec.getZ() + 1);
+                    }
+                }
+            }
+        }
+    }
+    
+    private void setupBlockBounds(int blockX, int blockY, int blockZ, int x, int y, int z) {
+        BlockLocation loc = new BlockLocation(blockX + 1, -blockY, blockZ);
+        if (blockGrid[loc.x][loc.y][loc.z] == null) {
+            blockGrid[loc.x][loc.y][loc.z] = new Rectangle3D(127, 127, 127, -127, -127, -127);
+        }
+        Rectangle3D rec = blockGrid[loc.x][loc.y][loc.z];
+        rec.setX(Math.min(rec.getX(), x));
+        rec.setY(Math.min(rec.getY(), y));
+        rec.setZ(Math.min(rec.getZ(), z));
+        rec.setWidth(Math.max(rec.getWidth(), x));
+        rec.setHeight(Math.max(rec.getHeight(), y));
+        rec.setDepth(Math.max(rec.getDepth(), z));
+        //blockGrid[loc.x][loc.y][loc.z] = rec;
     }
     
     public SkinCubeData getCubeData() {

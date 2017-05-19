@@ -64,9 +64,7 @@ public class SkinProperties {
         for (int i = 0; i < count; i++) {
             String key = stream.readUTF();
             int byteType = stream.readByte();
-            
             DataTypes type = DataTypes.STRING;
-            
             if (byteType >= 0 & byteType < DataTypes.values().length) {
                 type = DataTypes.values()[byteType];
             } else {
@@ -88,7 +86,6 @@ public class SkinProperties {
                 value = stream.readBoolean();
                 break;
             }
-            properties.put(key, value);
         }
     }
     

@@ -23,6 +23,8 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.BlockUtils;
@@ -59,9 +61,17 @@ public final class ArmourerWorldHelper {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
-        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-            ISkinPartType partType = skinType.getSkinParts().get(i);
+        if (skinType == SkinTypeRegistry.skinBlock) {
+            ISkinPartType partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partBase;
+            if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+                partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
+            }
             saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+        } else {
+            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+                ISkinPartType partType = skinType.getSkinParts().get(i);
+                saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+            }
         }
         
         if (paintData != null) {
@@ -336,11 +346,21 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType) {
+    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+            if (skinType == SkinTypeRegistry.skinBlock) {
+                boolean multiblock = skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
+                    blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+                }
+                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock & multiblock) {
+                    blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+                }
+            } else {
+                blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+            }
         }
         return blockCount;
     }

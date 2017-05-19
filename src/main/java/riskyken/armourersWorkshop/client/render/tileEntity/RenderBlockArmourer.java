@@ -78,7 +78,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             GL11.glPolygonOffset(-3F, -3F);
             mc.mcProfiler.endSection();
             mc.mcProfiler.startSection("renderGuideGrid");
-            SkinRenderHelper.renderBuildingGrid(skinType, scale, te.isShowGuides(), hidden);
+            SkinRenderHelper.renderBuildingGrid(skinType, scale, te.isShowGuides(), hidden, te.getSkinProps().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
             mc.mcProfiler.endSection();
             GL11.glPolygonOffset(0F, 0F);
             GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);

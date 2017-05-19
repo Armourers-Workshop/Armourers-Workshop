@@ -140,10 +140,13 @@ public final class SkinIOUtils {
             skinType = Skin.readSkinTypeNameFromStream(stream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            ModLogger.log(Level.ERROR, "File name: " + file.getName());
         } catch (IOException e) {
             e.printStackTrace();
+            ModLogger.log(Level.ERROR, "File name: " + file.getName());
         } catch (NewerFileVersionException e) {
             e.printStackTrace();
+            ModLogger.log(Level.ERROR, "File name: " + file.getName());
         } finally {
             IOUtils.closeQuietly(stream);
         }

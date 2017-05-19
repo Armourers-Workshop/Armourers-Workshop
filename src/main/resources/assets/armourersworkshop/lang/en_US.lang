@@ -91,7 +91,7 @@ item.armourersworkshop:soap.name=Soap
 item.armourersworkshop:hueTool.name=Hue Tool
 item.armourersworkshop:blockMarker.name=Block Marker
 item.armourersworkshop:dyeBottle.name=Dye Bottle
-item.armourersworkshop:blendingTool.name=Blending Tool
+item.armourersworkshop:blendingTool.name=Blending Tool - (WIP)
 item.armourersworkshop:armourersHammer.name=Armourers Hammer
 item.armourersworkshop:debugTool.name=Debug Tool
 
@@ -265,6 +265,8 @@ inventory.armourersworkshop:armourerBrain.glowing=Glowing?
 inventory.armourersworkshop:armourerBrain.ladder=Ladder?
 inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
 inventory.armourersworkshop:armourerBrain.seat=Seat?
+inventory.armourersworkshop:armourerBrain.multiblock=Multiblock?
+inventory.armourersworkshop:armourerBrain.bed=Bed?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Override?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue

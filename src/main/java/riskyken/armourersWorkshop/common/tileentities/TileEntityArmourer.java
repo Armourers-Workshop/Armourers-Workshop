@@ -139,6 +139,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             skinProps.setProperty(Skin.KEY_BLOCK_LADDER, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
             skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
             skinProps.setProperty(Skin.KEY_BLOCK_SEAT, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_BED, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
         }
         
         if (skinType == SkinTypeRegistry.skinWings) {
@@ -288,9 +290,11 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
 
     public void clearArmourCubes() {
         if (skinType != null) {
-            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps);
             clearPaintData(true);
-            setSkinProps(new SkinProperties());
+            SkinProperties newSkinProps = new SkinProperties();
+            newSkinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+            setSkinProps(newSkinProps);
             resyncData();
         }
     }

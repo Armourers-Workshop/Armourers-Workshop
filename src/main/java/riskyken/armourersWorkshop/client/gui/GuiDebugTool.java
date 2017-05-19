@@ -1,10 +1,13 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 
+@SideOnly(Side.CLIENT)
 public class GuiDebugTool extends GuiScreen {
     
     protected final int guiWidth;
@@ -16,10 +19,12 @@ public class GuiDebugTool extends GuiScreen {
     private GuiCheckBox checkWireframe;
     private GuiCheckBox checkArmourerDebugRenders;
     private GuiCheckBox checkShowLodLevel;
+    private GuiCheckBox checkShowSkinBlockBounds;
+    private GuiCheckBox checkShowSkinRenderBounds;
     
     public GuiDebugTool() {
         this.guiWidth = 180;
-        this.guiHeight = 128;
+        this.guiHeight = 138;
     }
     
     @Override
@@ -38,9 +43,17 @@ public class GuiDebugTool extends GuiScreen {
         checkShowLodLevel = new GuiCheckBox(-1, guiLeft + 5, guiTop + 25, "show lod levels", ConfigHandlerClient.showLodLevels);
         checkShowLodLevel.setTextColour(0xFFEEEEEE);
         
+        checkShowSkinBlockBounds = new GuiCheckBox(-1, guiLeft + 5, guiTop + 35, "show skin block bounds", ConfigHandlerClient.showSkinBlockBounds);
+        checkShowSkinBlockBounds.setTextColour(0xFFEEEEEE);
+        
+        checkShowSkinRenderBounds = new GuiCheckBox(-1, guiLeft + 5, guiTop + 45, "show skin render bounds", ConfigHandlerClient.showSkinRenderBounds);
+        checkShowSkinRenderBounds.setTextColour(0xFFEEEEEE);
+        
         buttonList.add(checkWireframe);
         buttonList.add(checkArmourerDebugRenders);
         buttonList.add(checkShowLodLevel);
+        buttonList.add(checkShowSkinBlockBounds);
+        buttonList.add(checkShowSkinRenderBounds);
     }
     
     @Override
@@ -53,6 +66,12 @@ public class GuiDebugTool extends GuiScreen {
         }
         if (button == checkShowLodLevel) {
             ConfigHandlerClient.showLodLevels = checkShowLodLevel.isChecked();
+        }
+        if (button == checkShowSkinBlockBounds) {
+            ConfigHandlerClient.showSkinBlockBounds = checkShowSkinBlockBounds.isChecked();
+        }
+        if (button == checkShowSkinRenderBounds) {
+            ConfigHandlerClient.showSkinRenderBounds = checkShowSkinRenderBounds.isChecked();
         }
     }
     
