@@ -61,6 +61,9 @@ public final class CraftingManager {
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1));
                 ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnable, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableGlowing, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableChild, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableChildGlowing, 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
