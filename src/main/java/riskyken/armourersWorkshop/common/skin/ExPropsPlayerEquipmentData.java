@@ -27,7 +27,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
 
-    public static final int MAX_SLOTS_PER_SKIN_TYPE = 5;
+    public static final int MAX_SLOTS_PER_SKIN_TYPE = 8;
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_LAST_XMAS_YEAR = "lastXmasYear";
     private final ISkinType[] validSkins = {
@@ -161,7 +161,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     public void setSkinColumnCount(int count) {
-        if (count > 0 & count < 6) {
+        if (count > 0 & count <= MAX_SLOTS_PER_SKIN_TYPE) {
             ModLogger.log("Setting slot count to " + count);
             equipmentWardrobeData.slotsUnlocked = count;
             sendNakedData((EntityPlayerMP) this.player);

@@ -109,7 +109,7 @@ public class ConfigHandler {
                 .getBoolean(true);
         
         startingWardrobeSlots = config
-                .getInt("startingWardrobeSlots", CATEGORY_GENERAL, 3, 1, 5,
+                .getInt("startingWardrobeSlots", CATEGORY_GENERAL, 3, 1, 8,
                 "Number of slot columns the player starts with for skins.");
         
         libraryShowsModelPreviews = config
