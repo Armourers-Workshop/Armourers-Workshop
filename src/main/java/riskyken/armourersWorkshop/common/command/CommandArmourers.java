@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.command;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
@@ -9,12 +10,16 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -37,13 +42,21 @@ public class CommandArmourers extends CommandBase {
     
     @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
-        String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache", "setSkinColumnCount"};
+        String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache", "setUnlockedWardrobeSlots"};
         
         switch (currentCommand.length) {
         case 1:
             return getListOfStringsMatchingLastWord(currentCommand, commands);
         case 2:
             return getListOfStringsMatchingLastWord(currentCommand, getPlayers());
+        case 4:
+            ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+            String[] skinTypesNames = new String[skinTypes.size()];
+            for (int i = 0; i < skinTypes.size(); i++) {
+                skinTypesNames[i] = skinTypes.get(i).getRegistryName();
+            }
+            
+            return getListOfStringsMatchingLastWord(currentCommand, skinTypesNames);
         default:
             return null;
         }
@@ -100,19 +113,29 @@ public class CommandArmourers extends CommandBase {
             ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
         } else if (command.equals("clearModelCache")) {
             PacketHandler.networkWrapper.sendTo(new MessageServerClientCommand(CommandType.CLEAR_MODEL_CACHE), player);
-        } else if (command.equals("setSkinColumnCount")) {
+        } else if (command.equals("setUnlockedWardrobeSlots")) {
+            ModLogger.log("setUnlockedWardrobeSlots");
             if (args.length < 3) {
-                
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
-                
             }
             int count = 3;
+            
             try {
                 count = Integer.parseInt(args[2]);
             } catch (Exception e) {
                 throw new WrongUsageException("commands.armourers.usage", (Object)args);
             }
-            ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(count);
+            String skinTypeName = args[3];
+            if (StringUtils.isNullOrEmpty(skinTypeName)) {
+                throw new WrongUsageException("commands.armourers.usage", (Object)args);
+            }
+            ModLogger.log("skinTypeName" + skinTypeName);
+            ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinTypeName);
+            if (skinType == null) {
+                throw new WrongUsageException("commands.armourers.usage", (Object)args);
+            }
+            
+            ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(skinType, count);
         } else {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }

@@ -3,10 +3,15 @@ package riskyken.armourersWorkshop.common.skin;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.BitSet;
+import java.util.HashMap;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 
@@ -18,6 +23,8 @@ public class EquipmentWardrobeData {
     private static final String TAG_HEAD_OVERLAY = "headOverlay";
     private static final String TAG_LIMIT_LIMBS = "limitLimbs";
     private static final String TAG_SLOTS_UNLOCKED = "slotsUnlocked";
+    private static final String TAG_SLOT_KEY = "slotKey";
+    private static final String TAG_SLOT_VALUE = "slotValue";
     
     /** Colour of the players skin */
     public int skinColour;
@@ -30,7 +37,7 @@ public class EquipmentWardrobeData {
     /** Should limb movement be limited when the player has a skin on? */
     public boolean limitLimbs;
     /** Number of slots the player has unlocked in the wardrobe */
-    public int slotsUnlocked;
+    public HashMap<String, Integer> slotsUnlocked;
     
     public EquipmentWardrobeData() {
         skinColour = Color.decode("#F9DFD2").getRGB();
@@ -38,7 +45,24 @@ public class EquipmentWardrobeData {
         armourOverride = new BitSet(4);
         headOverlay = false;
         limitLimbs = true;
-        slotsUnlocked = ConfigHandler.startingWardrobeSlots;
+        slotsUnlocked = new HashMap<String, Integer>();
+        ISkinType[] validSkins = ExPropsPlayerEquipmentData.validSkins;
+        for (int i = 0; i < validSkins.length; i++) {
+            ISkinType skinType = validSkins[i];
+            slotsUnlocked.put(skinType.getRegistryName(), getUnlockedSlotsForSkinType(skinType));
+        }
+    }
+    
+    public int getUnlockedSlotsForSkinType(ISkinType skinType) {
+        if (slotsUnlocked.containsKey(skinType.getRegistryName())) {
+            return slotsUnlocked.get(skinType.getRegistryName());
+        } else {
+            return ConfigHandler.startingWardrobeSlots;
+        }
+    }
+    
+    public void setUnlockedSlotsForSkinType(ISkinType skinType, int value) {
+        slotsUnlocked.put(skinType.getRegistryName(), value);
     }
     
     public EquipmentWardrobeData(EquipmentWardrobeData ewd) {
@@ -58,7 +82,17 @@ public class EquipmentWardrobeData {
         }
         compound.setBoolean(TAG_HEAD_OVERLAY, this.headOverlay);
         compound.setBoolean(TAG_LIMIT_LIMBS, this.limitLimbs);
-        compound.setInteger(TAG_SLOTS_UNLOCKED, slotsUnlocked);
+        
+        NBTTagList slotsList = new NBTTagList();
+        ISkinType[] validSkins = ExPropsPlayerEquipmentData.validSkins;
+        for (int i = 0; i < validSkins.length; i++) {
+            ISkinType skinType = validSkins[i];
+            NBTTagCompound slotCount = new NBTTagCompound();
+            slotCount.setString(TAG_SLOT_KEY, skinType.getRegistryName());
+            slotCount.setInteger(TAG_SLOT_VALUE, getUnlockedSlotsForSkinType(skinType));
+            slotsList.appendTag(slotCount);
+        }
+        compound.setTag(TAG_SLOTS_UNLOCKED, slotsList);
     }
     
     public void loadNBTData(NBTTagCompound compound) {
@@ -77,8 +111,17 @@ public class EquipmentWardrobeData {
         if (compound.hasKey(TAG_LIMIT_LIMBS)) {
             this.limitLimbs = compound.getBoolean(TAG_LIMIT_LIMBS);
         }
-        if (compound.hasKey(TAG_SLOTS_UNLOCKED)) {
-            this.slotsUnlocked = compound.getInteger(TAG_SLOTS_UNLOCKED);
+        if (compound.hasKey(TAG_SLOTS_UNLOCKED, NBT.TAG_LIST)) {
+            NBTTagList slotsList = compound.getTagList(TAG_SLOTS_UNLOCKED, NBT.TAG_COMPOUND);
+            this.slotsUnlocked.clear();
+            for (int i = 0; i < slotsList.tagCount(); i++) {
+                NBTTagCompound slotCount = slotsList.getCompoundTagAt(i);
+                if (slotCount.hasKey(TAG_SLOT_KEY, NBT.TAG_STRING) & slotCount.hasKey(TAG_SLOT_VALUE, NBT.TAG_INT)) {
+                    String key = slotCount.getString(TAG_SLOT_KEY);
+                    int value = slotCount.getInteger(TAG_SLOT_VALUE);
+                    slotsUnlocked.put(key, value);
+                }
+            }
         }
     }
     
@@ -91,7 +134,11 @@ public class EquipmentWardrobeData {
         }
         this.headOverlay = buf.readBoolean();
         this.limitLimbs = buf.readBoolean();
-        this.slotsUnlocked = buf.readInt();
+        for (int i = 0; i < ExPropsPlayerEquipmentData.validSkins.length; i++) {
+            String key = ByteBufUtils.readUTF8String(buf);
+            int value = buf.readInt();
+            slotsUnlocked.put(key, value);
+        }
     }
 
     public void toBytes(ByteBuf buf) {
@@ -102,7 +149,13 @@ public class EquipmentWardrobeData {
         }
         buf.writeBoolean(this.headOverlay);
         buf.writeBoolean(this.limitLimbs);
-        buf.writeInt(this.slotsUnlocked);
+        
+        ISkinType[] validSkins = ExPropsPlayerEquipmentData.validSkins;
+        for (int i = 0; i < validSkins.length; i++) {
+            ISkinType skinType = validSkins[i];
+            ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());
+            buf.writeInt(getUnlockedSlotsForSkinType(skinType));
+        }
     }
     
     public int autoColourHair(AbstractClientPlayer player) {
