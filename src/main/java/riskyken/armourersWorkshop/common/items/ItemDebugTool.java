@@ -16,7 +16,7 @@ import riskyken.armourersWorkshop.common.lib.LibItemNames;
 public class ItemDebugTool extends AbstractModItem {
 
     public ItemDebugTool() {
-        super(LibItemNames.DEBUG_TOOL, false);
+        super(LibItemNames.DEBUG_TOOL, true);
     }
     
     @Override
