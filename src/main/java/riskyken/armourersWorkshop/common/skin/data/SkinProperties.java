@@ -86,6 +86,7 @@ public class SkinProperties {
                 value = stream.readBoolean();
                 break;
             }
+            properties.put(key, value);
         }
     }
     
