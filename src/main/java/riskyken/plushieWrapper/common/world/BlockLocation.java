@@ -36,6 +36,11 @@ public class BlockLocation {
     }
     
     @Override
+    public BlockLocation clone() {
+        return new BlockLocation(x, y, z);
+    }
+    
+    @Override
     public int hashCode() {
         return x ^ y * 137 ^ z * 11317;
     }

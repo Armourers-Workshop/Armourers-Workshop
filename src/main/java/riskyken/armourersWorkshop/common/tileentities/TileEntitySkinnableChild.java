@@ -70,6 +70,7 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
         super.setBoundsOnBlock(block, widthOffset, heightOffset, depthOffset);
     }
     
+    @Override
     public TileEntitySkinnable getParent() {
         TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
         if (te != null && te instanceof TileEntitySkinnable) {

@@ -218,7 +218,11 @@ public class TileEntitySkinnable extends TileEntity {
     public ArrayList<BlockLocation> getRelatedBlocks() {
         return relatedBlocks;
     }
-
+    
+    public TileEntitySkinnable getParent() {
+        return this;
+    }
+    
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();

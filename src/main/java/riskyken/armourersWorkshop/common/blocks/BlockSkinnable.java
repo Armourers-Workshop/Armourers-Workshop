@@ -59,27 +59,43 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         Skin skin = getSkin(world, x, y, z);
-        if (skin != null) {
-            if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
-                List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
-                if (seats.size() == 0) {
-                    Point3D point = null;
-                    if (skin.getParts().get(0).getMarkerCount() > 0) {
-                        point = skin.getParts().get(0).getMarker(0);
-                    } else {
-                        point = new Point3D(0, 0, 0);
-                    }
-                    int rotation = world.getBlockMetadata(x, y, z);
-                    skin.getParts().get(0).getMarker(0);
-                    Seat seat = new Seat(world, x, y, z, point, rotation);
-                    world.spawnEntityInWorld(seat);
-                    player.mountEntity(seat);
-                                          
-                    return true;
-                }
-                
-            }
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te == null | skin == null) {
+            return false;
         }
+        TileEntitySkinnable parentTe = te.getParent();
+        if (parentTe == null) {
+            return false;
+        }
+        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
+            return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
+        }
+        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false)) {
+            return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
+        }
+        return false;
+    }
+    
+    private boolean sitOnSeat(World world, int x, int y, int z, EntityPlayer player, Skin skin) {
+        List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
+        if (seats.size() == 0) {
+            Point3D point = null;
+            if (skin.getParts().get(0).getMarkerCount() > 0) {
+                point = skin.getParts().get(0).getMarker(0);
+            } else {
+                point = new Point3D(0, 0, 0);
+            }
+            int rotation = world.getBlockMetadata(x, y, z);
+            skin.getParts().get(0).getMarker(0);
+            Seat seat = new Seat(world, x, y, z, point, rotation);
+            world.spawnEntityInWorld(seat);
+            player.mountEntity(seat);                   
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean sleepInBed(World world, int x, int y, int z, EntityPlayer player, Skin skin) {
         return false;
     }
     
