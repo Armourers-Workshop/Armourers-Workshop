@@ -350,6 +350,15 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         if (world.isRemote) {
             return false;
         }
+        Skin skin = getSkin(world, x, y, z);
+        if (skin == null) {
+            return false;
+        }
+        
+        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+            return false;
+        }
+        
         int rotation = world.getBlockMetadata(x, y, z);
         rotation++;
         if (rotation > 3) {
