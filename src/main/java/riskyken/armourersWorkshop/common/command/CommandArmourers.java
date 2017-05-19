@@ -42,7 +42,7 @@ public class CommandArmourers extends CommandBase {
     
     @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
-        String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache", "setUnlockedWardrobeSlots"};
+        String[] commands = {"giveSkin", "clearSkins", "setSkin", "clearModelCache", "setUnlockedWardrobeSlots", "resyncWardrobe"};
         
         switch (currentCommand.length) {
         case 1:
@@ -136,6 +136,9 @@ public class CommandArmourers extends CommandBase {
             }
             
             ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(skinType, count);
+        } else if (command.equals("resyncWardrobe")) {
+            ExPropsPlayerEquipmentData.get(player).updateEquipmentDataToPlayersAround();
+            ModLogger.log("wardrobe synced");
         } else {
             throw new WrongUsageException("commands.armourers.usage", (Object)args);
         }

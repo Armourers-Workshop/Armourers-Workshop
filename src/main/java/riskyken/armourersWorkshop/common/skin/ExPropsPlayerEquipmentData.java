@@ -124,7 +124,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         updateEquipmentDataToPlayersAround();
     }
     
-    private void updateEquipmentDataToPlayersAround() {
+    public void updateEquipmentDataToPlayersAround() {
         if (!allowNetworkUpdates) {
             return;
         }
