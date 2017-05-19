@@ -52,14 +52,6 @@ public class ContainerSkinWardrobe extends Container {
                 addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinFeet, feetInv, i, 88 + i * 19, 75));
                 skinSlots += 1;
             }
-            
-            
-            
-            
-            
-            
-            
-            //skinSlots += 4;
         }
         
         

@@ -112,11 +112,14 @@ public class ArmourersWorkshop {
         UpdateCheck.checkForUpdates();
         SkinExtractor.extractSkins();
         
-        modItems = new ModItems();
-        modBlocks = new ModBlocks();
+
         
         SkinTypeRegistry.init();
         CubeRegistry.init();
+        
+        modItems = new ModItems();
+        modBlocks = new ModBlocks();
+        
         proxy.initLibraryManager();
     }
 

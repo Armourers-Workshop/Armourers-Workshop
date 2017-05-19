@@ -41,6 +41,7 @@ public class ModItems {
     public static PlushieItem guideBook;
     public static Item armourersHammer;
     public static Item debugTool;
+    public static Item skinUnlock;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -69,6 +70,7 @@ public class ModItems {
         guideBook = new ItemGuideBook();
         armourersHammer = new ItemArmourersHammer();
         debugTool = new ItemDebugTool();
+        skinUnlock = new ItemSkinUnlock();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];
