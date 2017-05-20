@@ -40,6 +40,8 @@ public final class LibItemResources {
     public static final String PAINTBRUSH_FACE_MODE_TIP = PREFIX_RESOURCE + "paintbrushFaceMode-tip";
     public static final String PAINT_ROLLER = PREFIX_RESOURCE + "paintRoller";
     public static final String PAINT_ROLLER_TIP = PREFIX_RESOURCE + "paintRollerTip";
+    public static final String PAINT_ROLLER_FACE_MODE = PREFIX_RESOURCE + "paintRollerFaceMode";
+    public static final String PAINT_ROLLER_FACE_MODE_TIP = PREFIX_RESOURCE + "paintRollerFaceMode-tip";
     public static final String COLOUR_PICKER = PREFIX_RESOURCE + "colour-picker";
     public static final String COLOUR_PICKER_TIP = PREFIX_RESOURCE + "colour-picker-tip";
     public static final String DODGE_TOOL = PREFIX_RESOURCE + "dodgeTool";

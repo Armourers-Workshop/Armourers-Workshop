@@ -38,12 +38,18 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     @SideOnly(Side.CLIENT)
     private IIcon tipIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon faceModeIcon;
+    @SideOnly(Side.CLIENT)
+    private IIcon faceModeTipIcon;
     
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
         itemIcon = register.registerIcon(LibItemResources.PAINT_ROLLER);
         tipIcon = register.registerIcon(LibItemResources.PAINT_ROLLER_TIP);
+        faceModeIcon = register.registerIcon(LibItemResources.PAINT_ROLLER_FACE_MODE);
+        faceModeTipIcon = register.registerIcon(LibItemResources.PAINT_ROLLER_FACE_MODE_TIP);
     }
     
     @Override
@@ -185,10 +191,17 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     @Override
     public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 0) {
-            return itemIcon;
+        if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+            if (pass == 0) {
+                return itemIcon;
+            }
+            return tipIcon;
+        } else {
+            if (pass == 0) {
+                return faceModeIcon;
+            }
+            return faceModeTipIcon;
         }
-        return tipIcon;
     }
     
     @Override
