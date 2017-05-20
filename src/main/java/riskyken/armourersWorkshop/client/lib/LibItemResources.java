@@ -14,6 +14,10 @@ public final class LibItemResources {
     public static final String BLOCK_MARKER = PREFIX_RESOURCE + "blockMarker";
     public static final String ARMOURERs_HAMMER = PREFIX_RESOURCE + "armourersHammer";
     public static final String DEBUG_TOOL = PREFIX_RESOURCE + "debugTool";
+    public static final String SKIN_UNLOCK_HEAD = PREFIX_RESOURCE + "scrollHead";
+    public static final String SKIN_UNLOCK_CHEST = PREFIX_RESOURCE + "scrollChest";
+    public static final String SKIN_UNLOCK_LEGS = PREFIX_RESOURCE + "scrollPants";
+    public static final String SKIN_UNLOCK_FEET = PREFIX_RESOURCE + "scrollFeet";
     
     public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "templateHead";
     public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "templateChest";

@@ -9,13 +9,14 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class ItemSkinUnlock extends AbstractModItem {
 
@@ -38,10 +39,36 @@ public class ItemSkinUnlock extends AbstractModItem {
         }
     }
     
+    @SideOnly(Side.CLIENT)
+    IIcon iconChest;
+    @SideOnly(Side.CLIENT)
+    IIcon iconLegs;
+    @SideOnly(Side.CLIENT)
+    IIcon iconFeet;
+    
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        //itemIcon = register.registerIcon(LibItemResources.SKIN_UNLOCK);
+        itemIcon = register.registerIcon(LibItemResources.SKIN_UNLOCK_HEAD);
+        iconChest = register.registerIcon(LibItemResources.SKIN_UNLOCK_CHEST);
+        iconLegs = register.registerIcon(LibItemResources.SKIN_UNLOCK_LEGS);
+        iconFeet = register.registerIcon(LibItemResources.SKIN_UNLOCK_FEET);
+    }
+    
+    @Override
+    public IIcon getIconFromDamage(int damage) {
+        switch (damage) {
+        case 0:
+            return itemIcon;
+        case 1:
+            return iconChest;
+        case 2:
+            return iconLegs;
+        case 3:
+            return iconFeet;
+        default:
+            return itemIcon;
+        }
     }
     
     @Override
@@ -55,15 +82,15 @@ public class ItemSkinUnlock extends AbstractModItem {
         int count = equipmentData.getEquipmentWardrobeData().getUnlockedSlotsForSkinType(skinType);
         count++;
         
+        String localizedSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
+        
         if (count <= ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE) {
             equipmentData.setSkinColumnCount(skinType, count);
-            ModLogger.log(skinType);
-            player.addChatComponentMessage(new ChatComponentText("DEBUG: unlocked slot for " + skinType.getRegistryName()));
+            player.addChatComponentMessage(new ChatComponentTranslation("chat.armourersworkshop:slotUnlocked", localizedSkinName.toLowerCase(), Integer.toString(count)));
+            itemStack.stackSize--;
         } else {
-            player.addChatComponentMessage(new ChatComponentText("DEBUG: slots already at max"));
+            player.addChatComponentMessage(new ChatComponentTranslation("chat.armourersworkshop:slotUnlockedFailed", localizedSkinName));
         }
-        
-
         
         return itemStack;
     }

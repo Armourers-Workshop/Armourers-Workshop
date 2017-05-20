@@ -94,6 +94,10 @@ item.armourersworkshop:dyeBottle.name=Dye Bottle
 item.armourersworkshop:blendingTool.name=Blending Tool - (WIP)
 item.armourersworkshop:armourersHammer.name=Armourers Hammer
 item.armourersworkshop:debugTool.name=Debug Tool
+item.armourersworkshop:skinUnlock.0.name=Head Skin Slot Unlock
+item.armourersworkshop:skinUnlock.1.name=Chest Skin Slot Unlock
+item.armourersworkshop:skinUnlock.2.name=Legs Skin Slot Unlock
+item.armourersworkshop:skinUnlock.3.name=Feet Skin Slot Unlock
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -112,6 +116,10 @@ item.armourersworkshop:hueTool.flavour=Changes the colour of a block%nwithout af
 item.armourersworkshop:blockMarker.flavour=Creates a marker on an equipment cube.%nOnly use with skins that need marker blocks.
 item.armourersworkshop:dyeBottle.flavour=Used in the dye table to dye skins.
 item.armourersworkshop:armourersHammer.flavour=Used to rotate blocks.
+item.armourersworkshop:skinUnlock.0.flavour=Unlocks 1 additional head skin slot in the wardrobe.
+item.armourersworkshop:skinUnlock.1.flavour=Unlocks 1 additional chest skin slot in the wardrobe.
+item.armourersworkshop:skinUnlock.2.flavour=Unlocks 1 additional leg skin slot in the wardrobe.
+item.armourersworkshop:skinUnlock.3.flavour=Unlocks 1 additional feet skin slot in the wardrobe.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s
@@ -328,6 +336,8 @@ chat.armourersworkshop:updateAvailable=Armourer's Workshop update %s is availabl
 chat.armourersworkshop:updateDownload=[Download]
 chat.armourersworkshop:updateDownloadRollover=Click to goto the download page
 chat.armourersworkshop:devWarning=Warning you are using a development version of the Armourer's Workshop. Development versions are for testing only and not recommended for public use.
+chat.armourersworkshop:slotUnlocked=Unlocked %s skin slot. You now have %s slots.
+chat.armourersworkshop:slotUnlockedFailed=%s skin slots are at maximum.
 
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
