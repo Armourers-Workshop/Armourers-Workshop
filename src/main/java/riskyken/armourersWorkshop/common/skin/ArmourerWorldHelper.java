@@ -379,13 +379,7 @@ public final class ArmourerWorldHelper {
                     
                     if (world.blockExists(xTar, yTar, zTar)) {
                         Block block = world.getBlock(xTar, yTar, zTar);
-                        //TODO use CubeFactory to check cube.
-                        if (
-                            block == ModBlocks.colourable |
-                            block == ModBlocks.colourableGlowing |
-                            block == ModBlocks.colourableGlass |
-                            block == ModBlocks.colourableGlassGlowing
-                            ) {
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
                             world.setBlockToAir(xTar, yTar, zTar);
                             world.removeTileEntity(xTar, yTar, zTar);
                             blockCount++;
