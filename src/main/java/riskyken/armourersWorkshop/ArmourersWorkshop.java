@@ -105,7 +105,6 @@ public class ArmourersWorkshop {
         
         EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
         
-        
         proxy.preInit();
         
         SkinIOUtils.makeLibraryDirectory();

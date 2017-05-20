@@ -49,13 +49,14 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
         if (equipmentData.haveEquipment(skinType, 0)) {
             ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+            if (skin == null) {
+                return;
+            }
             GL11.glEnable(GL11.GL_NORMALIZE);
             float scale = 1F / 16F;
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, null, null, false);
             }
-            
-            //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
             GL11.glDisable(GL11.GL_NORMALIZE);
         }
     }
