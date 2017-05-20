@@ -44,17 +44,16 @@ public final class ArmourerWorldHelper {
     /**
      * Converts blocks in the world into a skin class.
      * @param world The world.
+     * @param skinProps The skin properties for this skin.
      * @param skinType The type of skin to save.
-     * @param authorName Author name for this skin.
-     * @param customName Custom display name for this skin.
-     * @param tags Custom search tags for this skin.
+     * @param paintData Paint data for this skin.
      * @param xCoord Armourers x location.
      * @param yCoord Armourers y location.
      * @param zCoord Armourers z location.
-     * @param direction Direction the armourer is facing.
+     * @param directionDirection the armourer is facing.
      * @return
      * @throws InvalidCubeTypeException
-     * @throws SkinSaveException 
+     * @throws SkinSaveException
      */
     public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData,
             int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
