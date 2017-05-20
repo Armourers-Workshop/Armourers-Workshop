@@ -186,7 +186,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             "b9e99f95-09fe-497a-8a77-1ccc839ab0f4", //VermillionX
             "0d98df01-26da-496c-ba7c-744a20a7b2c2", //Servantfly
             "eda5e4cb-3b09-4b2c-b56c-d27d658d2e5d", //Gray_Mooo
-            "3e6a5f19-bb37-4f9a-94e0-7ccd67ef1d61"  //Flummie2000
+            "3e6a5f19-bb37-4f9a-94e0-7ccd67ef1d61", //Flummie2000
+            "e10ebd90-7922-4777-9cf6-76ecc70848ec", //LordPhrozen
+            "3683eab5-5a23-4cdb-b1f5-38090f1ba4a8"  //TheEpicJames
             };
   
     private static float[][] specialColours = {
@@ -196,7 +198,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
             {45F / 255, 45F / 255, 45F / 255},
             {0F, 247F / 255, 141F / 255},
             {1F, 0F, 0F},
-            {92F / 255, 32F / 255, 102F / 255}
+            {92F / 255, 32F / 255, 102F / 255},
+            {66F / 255, 244F / 255, 110F / 255},
+            {1F, 153F / 255, 0F}
             };
     
     public boolean hasSpecialRender() {
