@@ -137,5 +137,25 @@ public final class ModItemRecipes {
             new ItemStack(Items.water_bucket, 1),
             new ItemStack(Items.rotten_flesh, 1),
             "slimeball"});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.skinUnlock, 1, 0), new Object[] {
+                new ItemStack(Items.diamond_helmet, 1),
+                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(Items.nether_star, 1)});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.skinUnlock, 1, 1), new Object[] {
+                new ItemStack(Items.diamond_chestplate, 1),
+                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(Items.nether_star, 1)});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.skinUnlock, 1, 2), new Object[] {
+                new ItemStack(Items.diamond_leggings, 1),
+                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(Items.nether_star, 1)});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.skinUnlock, 1, 3), new Object[] {
+                new ItemStack(Items.diamond_boots, 1),
+                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(Items.nether_star, 1)});
     }
 }
