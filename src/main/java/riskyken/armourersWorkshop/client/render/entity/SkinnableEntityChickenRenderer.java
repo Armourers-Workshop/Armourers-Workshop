@@ -8,6 +8,7 @@ import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRende
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -40,9 +41,7 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
         
         float headScale = 0.5F;
         GL11.glScalef(headScale, headScale * 1.5F, headScale);
-        
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
-        
         GL11.glPopMatrix();
     }
     
@@ -51,6 +50,11 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
             ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             GL11.glEnable(GL11.GL_NORMALIZE);
+            float scale = 1F / 16F;
+            for (int i = 0; i < skin.getParts().size(); i++) {
+                SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, null, null, false);
+            }
+            
             //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
             GL11.glDisable(GL11.GL_NORMALIZE);
         }
