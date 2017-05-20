@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
 
-import org.apache.logging.log4j.Level;
-
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
@@ -23,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -39,7 +36,6 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 
@@ -157,9 +153,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         try {
             armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType,
                     paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
-        } catch (InvalidCubeTypeException e) {
-            ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
-            e.printStackTrace();
         } catch (SkinSaveException e) {
             switch (e.getType()) {
             case NO_DATA:
@@ -169,6 +162,12 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
                 player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
             case MISSING_PARTS:
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
+                break;
+            case BED_AND_SEAT:
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
+                break;
+            case INVALID_MULTIBLOCK:
                 player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
             }

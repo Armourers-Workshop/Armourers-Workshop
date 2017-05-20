@@ -56,7 +56,7 @@ public final class ArmourerWorldHelper {
      * @throws SkinSaveException
      */
     public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData,
-            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
+            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
@@ -101,11 +101,25 @@ public final class ArmourerWorldHelper {
             }
         }
         
+        //Check if the skin is not a seat and a bed.
+        if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false) & skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
+            throw new SkinSaveException("Skin can not be a bed and a seat.", SkinSaveExceptionType.BED_AND_SEAT);
+        }
+        
+        //Check if multiblock is valid.
+        if (skinType == SkinTypeRegistry.skinBlock & skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+            ArrayList<SkinPart> testPart = new ArrayList<SkinPart>();
+            saveArmourPart(world, testPart, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, xCoord, yCoord, zCoord, direction); 
+            if (testPart.isEmpty()) {
+                throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveExceptionType.INVALID_MULTIBLOCK);
+            }
+        }
+        
         return skin;
     }
     
     private static void saveArmourPart(World world, ArrayList<SkinPart> armourData,
-            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
+            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws SkinSaveException {
         
         int cubeCount = getNumberOfCubesInPart(world, xCoord, yCoord, zCoord, skinPart);
         if (cubeCount < 1) {
