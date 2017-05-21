@@ -36,6 +36,7 @@ public class ConfigHandler {
     public static boolean enableHolidayEvents = true;
     public static int startingWardrobeSlots = 3;
     public static boolean libraryShowsModelPreviews = true;
+    public static boolean lockDyesOnSkins = false;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
@@ -117,6 +118,10 @@ public class ConfigHandler {
                         "Shows model previews in the library.\n"
                         + "Causes a lot of extra load on servers.\n"
                         + "Best to turn off on high population servers");
+        
+        lockDyesOnSkins = config
+                .getBoolean("lockDyesOnSkins", CATEGORY_GENERAL, false,
+                        "When enabled players will not be able to remove dyes from skins in the dye table.");
     }
     
     private static void loadCategoryRecipe() {

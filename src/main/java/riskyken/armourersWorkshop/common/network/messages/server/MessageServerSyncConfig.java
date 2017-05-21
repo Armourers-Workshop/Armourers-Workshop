@@ -21,12 +21,14 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private boolean allowClientsToUploadSkins;
     private String[] itemOverrides;
     private boolean libraryShowsModelPreviews;
+    private boolean lockDyesOnSkins;
     
     public MessageServerSyncConfig() {
         this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
         this.allowClientsToUploadSkins = ConfigHandler.allowClientsToUploadSkins;
         this.itemOverrides = ModAddonManager.itemOverrides;
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
+        this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
     }
     
     @Override
@@ -35,6 +37,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         buf.writeBoolean(allowClientsToUploadSkins);
         ByteBufHelper.writeStringArrayToBuf(buf, itemOverrides);
         buf.writeBoolean(libraryShowsModelPreviews);
+        buf.writeBoolean(lockDyesOnSkins);
     }
     
     
@@ -44,6 +47,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         allowClientsToUploadSkins = buf.readBoolean();
         itemOverrides = ByteBufHelper.readStringArrayFromBuf(buf);
         libraryShowsModelPreviews = buf.readBoolean();
+        lockDyesOnSkins = buf.readBoolean();
     }
 
     @Override
@@ -58,5 +62,6 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ConfigHandler.allowClientsToUploadSkins = message.allowClientsToUploadSkins;
         ModAddonManager.itemOverrides = message.itemOverrides;
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
+        ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;
     }
 }

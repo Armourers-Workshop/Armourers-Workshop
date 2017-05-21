@@ -5,7 +5,7 @@ import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 public class TileEntityDyeTable extends AbstractTileEntityInventory {
     
-    private static final int INVENTORY_SIZE = 9;
+    private static final int INVENTORY_SIZE = 10;
     
     public TileEntityDyeTable() {
         super(INVENTORY_SIZE);

@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -60,6 +61,17 @@ public final class UtilPlayer {
             }
             if (removeCount < 1) {
                 return;
+            }
+        }
+    }
+
+    public static void giveItem(EntityPlayer player, ItemStack stack) {
+        if (stack == null) {
+            return;
+        }
+        if (!player.inventory.addItemStackToInventory(stack)) {
+            if (!player.getEntityWorld().isRemote) {
+                UtilItems.spawnItemInWorld(player.getEntityWorld(), player.posX, player.posY, player.posZ, stack);
             }
         }
     }
