@@ -118,7 +118,6 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
-        
         //Move library inventory slots.
         if (armourLibrary.isCreativeLibrary()) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
@@ -132,7 +131,6 @@ public class GuiArmourLibrary extends GuiContainer {
             slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
             slot.xDisplayPosition = PADDING + INVENTORY_WIDTH - slotSize - 3;
         }
-        
         
         buttonList.clear();
         
@@ -188,7 +186,7 @@ public class GuiArmourLibrary extends GuiContainer {
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
 
-        fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 12);
+        fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
         
         scrollbar = new GuiScrollbar(2, INVENTORY_WIDTH + 10 + listWidth, TITLE_HEIGHT + 14 + PADDING * 2, 10, listHeight, "", false);
         scrollbar.setValue(scrollAmount);
@@ -211,6 +209,7 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         buttonList.add(dropDownList);
+        currentFolder = "/";
     }
     
     /**
@@ -428,8 +427,8 @@ public class GuiArmourLibrary extends GuiContainer {
         fileList.setSelectedIndex(-1);
         
         fileList.clearList();
-        if (!currentFolder.equals("\\")) {
-            fileList.addListItem(new GuiFileListItem(new LibraryFile("/..", "", null, true)));
+        if (!currentFolder.equals("/")) {
+            fileList.addListItem(new GuiFileListItem(new LibraryFile("../", "", null, true)));
         }
         
         if (files!= null) {
@@ -515,15 +514,23 @@ public class GuiArmourLibrary extends GuiContainer {
                 if (!item.getFile().isDirectory()) {
                     filenameTextbox.setText(item.getDisplayName());
                 } else {
-                    if (item.getFile().fileName.equals("/..")) {
-                        currentFolder = "/";
+                    if (item.getFile().fileName.equals("../")) {
+                        //TODO go back one folder
+                        String[] folderSplit = currentFolder.split("/");
+                        currentFolder = "";
+                        for (int i = 0; i < folderSplit.length - 1; i++) {
+                            currentFolder += folderSplit[i] + "/";
+                        }
+                        
+                        scrollAmount = 0;
                     } else {
                         currentFolder = item.getFile().getFullName() + "/";
+                        scrollAmount = 0;
                     }
                 }
             }
         }
-        
+        scrollbar.setValue(scrollAmount);
         scrollbar.mousePressed(mc, mouseX, mouseY);
     }
     

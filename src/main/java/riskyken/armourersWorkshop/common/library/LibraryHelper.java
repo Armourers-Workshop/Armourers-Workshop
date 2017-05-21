@@ -50,7 +50,6 @@ public final class LibraryHelper {
                     String path = templateFiles[i].getPath().replace(templateFiles[i].getName(), "");
                     path = path.replace(libraryDir.getPath(), "");
                     fileList.add(new LibraryFile(templateFiles[i].getName(), path, null, true));
-                    ModLogger.log("name: " + templateFiles[i].getName() + " path: " + path);
                 }
             }
         }

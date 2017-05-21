@@ -85,10 +85,10 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
             GL11.glColor4f(1, 1, 1, 1);
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             if (file.fileName.equals("private")) {
-                drawTexturedModalRect(x + 1, y + 1, 32, 0, 10, 10);
+                drawTexturedModalRect(x, y, 32, 0, 12, 12);
                 fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, 0xFF8888FF);
             } else {
-                drawTexturedModalRect(x + 1, y + 1, 16, 0, 10, 10);
+                drawTexturedModalRect(x, y, 16, 0, 10, 10);
                 fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, 0xFF88FF88);
             }
             
