@@ -15,7 +15,6 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
 
@@ -56,7 +55,6 @@ public class ContainerDyeTable extends Container {
         if (stack != null) {
             updateLockedSlots(stack);
         }
-        ModLogger.log(getSlot(36).getStack());
     }
     
     
