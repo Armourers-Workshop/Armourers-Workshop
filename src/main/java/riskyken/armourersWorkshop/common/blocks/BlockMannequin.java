@@ -96,7 +96,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
             TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
             if (te != null && te.isRenderExtras()) {
-                if (te.hasSpecialRender()  & te.isVisible()) {
+                if (te.hasSpecialRender() & te.isVisible()) {
                     for (int i = 0; i < 4; i++) {
                         EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
                         ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
