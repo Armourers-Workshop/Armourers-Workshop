@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.proxies;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.library.CommonLibraryManager;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
@@ -60,6 +61,11 @@ public class CommonProxy {
         case RECOVER_SKINS:
             SkinIOUtils.recoverSkins(player);
             break;
+        case RELOAD_LIBRARY:
+            ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
+            break;
+        default:
+            break;
         }
     }
     
@@ -67,7 +73,7 @@ public class CommonProxy {
         
     }
     
-    public void receivedSkinFromLibrary(String fileName, Skin skin) {
+    public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin) {
         
     }
     

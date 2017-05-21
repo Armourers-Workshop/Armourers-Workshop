@@ -135,7 +135,7 @@ public class ClientLibraryManager implements ILibraryManager {
             long startTime = System.currentTimeMillis();
             ModLogger.log("Loading library skins");
             File directory = SkinIOUtils.getSkinLibraryDirectory();
-            ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory);
+            ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory, true);
             libraryManager.setFileList(fileList, LibraryFileType.LOCAL);
             ModLogger.log(String.format("Finished loading %d client library skins in %d ms", libraryManager.clientFiles.getFileCount(), System.currentTimeMillis() - startTime));
             libraryManager.finishedLoading();

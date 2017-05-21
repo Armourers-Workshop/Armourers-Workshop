@@ -16,7 +16,6 @@ import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -46,7 +45,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         return false;
     }
     
-    public void sendArmourToClient(String filename, EntityPlayerMP player) {
+    public void sendArmourToClient(String filename, String filePath, EntityPlayerMP player) {
         if (!ConfigHandler.allowClientsToDownloadSkins) {
             return;
         }
@@ -76,7 +75,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, skin);
+        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, "/", skin);
         PacketHandler.networkWrapper.sendTo(message, player);
         
         this.decrStackSize(0, 1);
@@ -85,19 +84,24 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
 
     /**
      * Save armour data from an items NBT data into a file on the disk.
+     * @param filePath 
      * @param filename The name of the file to save to.
      * @param player The player that pressed the save button.
      * @param publicFiles If true save to the public file list or false for the players private files.
      */
-    public void saveArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
+    public void saveArmour(String fileName, String filePath, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
+        
+        //TODO Check if in lib folder
+        /*
         if (fileName.contains("/") | fileName.contains("\\")) {
             ModLogger.log(String.format("Player %s tried to save a file with invalid characters in the file name.",
                     player.getCommandSenderName()));
             ModLogger.log(String.format("The file name was: %s", fileName));
             return;
         }
+        */
         
         if (stackInput == null) {
             return;
@@ -124,9 +128,9 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         boolean saved = false;
         if (publicFiles) {
-            saved = SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin);
+            saved = SkinIOUtils.saveSkinFromFileName(filePath + fileName + ".armour", skin);
         } else {
-            saved = SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin, player);
+            saved = SkinIOUtils.saveSkinFromFileName(filePath + fileName + ".armour", skin, player);
         }
         if (!saved) {
             return;
@@ -134,12 +138,12 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         if (ArmourersWorkshop.isDedicated()) {
             if (publicFiles) {
-                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, skin.getSkinType()), LibraryFileType.SERVER_PUBLIC, player);
+                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PUBLIC, player);
             } else {
-                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, skin.getSkinType()), LibraryFileType.SERVER_PRIVATE, player);
+                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PRIVATE, player);
             }
         } else {
-            ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, skin.getSkinType()), LibraryFileType.LOCAL, player);
+            ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, player);
         }
 
         
@@ -150,19 +154,25 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     
     /**
      * Loads an armour file from the disk and adds it to an items NBT data.
+     * @param filePath 
      * @param filename The name of the file to load.
      * @param player The player that pressed the load button.
      * @param publicFiles If true load from the public file list or false for the players private files.
      */
-    public void loadArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
+    public void loadArmour(String fileName, String filePath, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
+        
+        //TODO check if in lib folder
+        /*
         if (fileName.contains("/") | fileName.contains("\\")) {
             ModLogger.log(String.format("Player %s tried to load a file with invalid characters in the file name.",
                     player.getCommandSenderName()));
             ModLogger.log(String.format("The file name was: %s", fileName));
             return;
         }
+        */
+        
         if (!isCreativeLibrary()) {
             if (stackInput == null) {
                 return;
@@ -184,9 +194,9 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         String fullFileName = fileName;
         
         if (publicFiles) {
-            skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
+            skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + ".armour");
         } else {
-            skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour", player);
+            skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + ".armour", player);
             fullFileName = player.getUniqueID().toString() + "\\" + fullFileName;
         }
         
@@ -194,9 +204,9 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, fullFileName + ".armour");
+        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + ".armour");
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, fullFileName);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, filePath + fileName);
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
         

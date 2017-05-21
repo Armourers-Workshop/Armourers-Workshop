@@ -46,7 +46,7 @@ public class CommonLibraryManager implements ILibraryManager {
     
     private int loadPublicFiles() {
         File directory = SkinIOUtils.getSkinLibraryDirectory();
-        ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory);
+        ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory, true);
         setFileList(fileList, LibraryFileType.SERVER_PUBLIC);
         return fileList.size();
     }
@@ -65,7 +65,7 @@ public class CommonLibraryManager implements ILibraryManager {
                 try {
                     UUID playerId = UUID.fromString(file.getName());
                     LibraryFileList fileList = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
-                    ArrayList<LibraryFile> privateFileList = LibraryHelper.getSkinFilesInDirectory(file);
+                    ArrayList<LibraryFile> privateFileList = LibraryHelper.getSkinFilesInDirectory(file, false);
                     fileList.setFileList(privateFileList);
                     serverPrivateFiles.put(playerId, fileList);
                     count += fileList.getFileCount();

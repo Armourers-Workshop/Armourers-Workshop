@@ -16,15 +16,17 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
     
     private LibraryPacketType packetType;
     private String filename;
+    private String filePath;
     private boolean publicList;
     private Skin skin;
     
     public MessageClientGuiLoadSaveArmour() {
     }
     
-    public MessageClientGuiLoadSaveArmour(String filename, LibraryPacketType packetType, boolean publicList) {
+    public MessageClientGuiLoadSaveArmour(String filename, String filePath, LibraryPacketType packetType, boolean publicList) {
         this.packetType = packetType;
         this.filename = filename;
+        this.filePath = filePath;
         this.publicList = publicList;
     }
     
@@ -38,12 +40,15 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
             break;
         case CLIENT_SAVE:
             this.filename = ByteBufUtils.readUTF8String(buf);
+            this.filePath = ByteBufUtils.readUTF8String(buf);
             break;
         case SERVER_LOAD:
             this.filename = ByteBufUtils.readUTF8String(buf);
+            this.filePath = ByteBufUtils.readUTF8String(buf);
             break;
         case SERVER_SAVE:
             this.filename = ByteBufUtils.readUTF8String(buf);
+            this.filePath = ByteBufUtils.readUTF8String(buf);
             break;
         default:
             break;
@@ -60,12 +65,15 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
             break;
         case CLIENT_SAVE:
             ByteBufUtils.writeUTF8String(buf, this.filename);
+            ByteBufUtils.writeUTF8String(buf, this.filePath);
             break;
         case SERVER_LOAD:
             ByteBufUtils.writeUTF8String(buf, this.filename);
+            ByteBufUtils.writeUTF8String(buf, this.filePath);
             break;
         case SERVER_SAVE:
             ByteBufUtils.writeUTF8String(buf, this.filename);
+            ByteBufUtils.writeUTF8String(buf, this.filePath);
             break;
         default:
             break;
@@ -87,13 +95,13 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
                 te.loadArmour(message.skin, player);
                 break;
             case CLIENT_SAVE:
-                te.sendArmourToClient(message.filename, player);
+                te.sendArmourToClient(message.filename, message.filePath, player);
                 break;
             case SERVER_LOAD:
-                te.loadArmour(message.filename, player, message.publicList);
+                te.loadArmour(message.filename, message.filePath, player, message.publicList);
                 break;
             case SERVER_SAVE:
-                te.saveArmour(message.filename, player, message.publicList);
+                te.saveArmour(message.filename, message.filePath, player, message.publicList);
                 break;
             default:
                 break;

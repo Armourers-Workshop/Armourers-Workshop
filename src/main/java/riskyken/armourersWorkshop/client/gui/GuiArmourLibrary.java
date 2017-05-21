@@ -69,6 +69,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private static int scrollAmount = 0;
     private static ISkinType lastSkinType;
     private static String lastSearchText = "";
+    private static String currentFolder = "\\";
     
     private TileEntitySkinLibrary armourLibrary;
     private GuiIconButton fileSwitchlocal;
@@ -279,22 +280,26 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
-        if (!filename.equals("")) {
-            MessageClientGuiLoadSaveArmour message;
+        GuiFileListItem fileItem = (GuiFileListItem) fileList.getSelectedListEntry();
+        
+        boolean clientLoad = false;
+        boolean publicList = true;
+        MessageClientGuiLoadSaveArmour message;
+        
+        if (fileSwitchType == LibraryFileType.LOCAL && !mc.isIntegratedServerRunning()) {
+            //Is playing on a server.
+            clientLoad = true;
+        }
+        
+        if (fileItem != null && !fileItem.getFile().isDirectory()) {
+            LibraryFile file = fileItem.getFile();
+            
             switch (button.id) {
             case BUTTON_ID_LOAD_SAVE:
-                boolean clientLoad = false;
-                boolean publicList = true;
-                
-                if (fileSwitchType == LibraryFileType.LOCAL && !mc.isIntegratedServerRunning()) {
-                    //Is playing on a server.
-                    clientLoad = true;
-                }
-                
+
                 if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
                     publicList = false;
                 }
-                
                 if (isLoading()) {
                     if (clientLoad) {
                         Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + ".armour");
@@ -302,22 +307,26 @@ public class GuiArmourLibrary extends GuiContainer {
                             SkinUploadHelper.uploadSkinToServer(itemData);
                         }
                     } else {
-                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_LOAD, publicList);
+                        message = new MessageClientGuiLoadSaveArmour(file.fileName, file.filePath, LibraryPacketType.SERVER_LOAD, publicList);
                         PacketHandler.networkWrapper.sendToServer(message);
                     }
                     filenameTextbox.setText("");
-                } else {
-                    if (clientLoad) {
-                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.CLIENT_SAVE, false);
-                        PacketHandler.networkWrapper.sendToServer(message);
-                    } else {
-                        message = new MessageClientGuiLoadSaveArmour(filename, LibraryPacketType.SERVER_SAVE, publicList);
-                        PacketHandler.networkWrapper.sendToServer(message);
-                    }
-                    
-                    filenameTextbox.setText("");
-                }
+                } 
                 break;
+            }
+        }
+        
+        if (!filename.isEmpty()) {
+            if (!isLoading()) {
+                if (clientLoad) {
+                    message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.CLIENT_SAVE, false);
+                    PacketHandler.networkWrapper.sendToServer(message);
+                } else {
+                    message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
+                    PacketHandler.networkWrapper.sendToServer(message);
+                }
+                
+                //filenameTextbox.setText("");
             }
         }
     }
@@ -417,21 +426,27 @@ public class GuiArmourLibrary extends GuiContainer {
         fileList.setSelectedIndex(-1);
         
         fileList.clearList();
+        if (!currentFolder.equals("\\")) {
+            fileList.addListItem(new GuiFileListItem(new LibraryFile("\\..", "", null, true)));
+        }
+        
         if (files!= null) {
             for (int i = 0; i < files.size(); i++) {
                 LibraryFile file = files.get(i);
                 if (skinTypeFilter == null | skinTypeFilter == file.skinType) {
-                    if (!searchTextbox.getText().equals("")) {
-                        if (file.fileName.toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
+                    if (file.filePath.equals(currentFolder)) {
+                        if (!searchTextbox.getText().equals("")) {
+                            if (file.fileName.toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
+                                fileList.addListItem(new GuiFileListItem(file));
+                                if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile() == file) {
+                                    fileList.setSelectedIndex(fileList.getSize() - 1);
+                                }
+                            }
+                        } else {
                             fileList.addListItem(new GuiFileListItem(file));
                             if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile() == file) {
                                 fileList.setSelectedIndex(fileList.getSize() - 1);
                             }
-                        }
-                    } else {
-                        fileList.addListItem(new GuiFileListItem(file));
-                        if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile() == file) {
-                            fileList.setSelectedIndex(fileList.getSize() - 1);
                         }
                     }
                 }
@@ -449,9 +464,9 @@ public class GuiArmourLibrary extends GuiContainer {
         }
         
         if (ConfigHandler.libraryShowsModelPreviews) {
-            IGuiListItem item = fileList.getSelectedListEntry();
-            if (item != null) {
-                Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getDisplayName(), true);
+            GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
+            if (item != null && !item.getFile().isDirectory()) {
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getFile().getFullName(), true);
                 if (skin != null) {
                     SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
                     float x = 100;
@@ -492,12 +507,22 @@ public class GuiArmourLibrary extends GuiContainer {
                 filenameTextbox.setText("");
             }
         }
-
+        
         if (!dropDownList.getIsDroppedDown()) {
             if (fileList.mouseClicked(mouseX, mouseY, button)) {
-                filenameTextbox.setText(fileList.getSelectedListEntry().getDisplayName());
+                GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
+                if (!item.getFile().isDirectory()) {
+                    filenameTextbox.setText(item.getDisplayName());
+                } else {
+                    if (item.getFile().fileName.equals("\\..")) {
+                        currentFolder = "\\";
+                    } else {
+                        currentFolder = item.getFile().getFullName() + "\\";
+                    }
+                }
             }
         }
+        
         scrollbar.mousePressed(mc, mouseX, mouseY);
     }
     

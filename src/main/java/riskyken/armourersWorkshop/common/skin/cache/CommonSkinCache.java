@@ -197,13 +197,13 @@ public final class CommonSkinCache implements Runnable {
             boolean publicFiles = true;
             
             String basicFileName = fileName;
-            
+            /*
             if (fileName.contains("\\")) {
                 String[] splitName = fileName.split("\\");
                 basicFileName = splitName[splitName.length - 1];
                 publicFiles = false;
             }
-            
+            */
             Skin skin = null;
             if (publicFiles) {
                 skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour");

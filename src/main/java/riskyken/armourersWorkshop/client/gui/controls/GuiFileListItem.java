@@ -4,13 +4,16 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -20,6 +23,8 @@ import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
 @SideOnly(Side.CLIENT)
 public class GuiFileListItem extends Gui implements IGuiListItem {
 
+    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/list.png");
+    
     private final LibraryFile file;
     
     public GuiFileListItem(LibraryFile file) {
@@ -47,36 +52,43 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
             Gui.drawRect(x, y, x + width - 3, y + 12, 0xFFFFFF88);
             fontColour = UtilColour.getMinecraftColor(15, ColourFamily.MINECRAFT);
         }
-        
-        fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
-        
-        if (ConfigHandler.libraryShowsModelPreviews) {
-            IGuiListItem item = this;
-            if (item != null) {
-                Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getDisplayName(), true);
-                if (skin != null) {
-                    SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
-                    float scale = 8F;
-                    GL11.glPushMatrix();
-                    GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-                    GL11.glTranslatef((float)x + 5, (float)y + 6, 50.0F);
-                    GL11.glScalef((float)(-scale), (float)scale, (float)scale);
-                    GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-                    GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
-                    float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
-                    GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                    RenderHelper.enableStandardItemLighting();
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    GL11.glEnable(GL11.GL_NORMALIZE);
-                    GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-                    ModRenderHelper.enableAlphaBlend();
-                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    GL11.glPopAttrib();
-                    GL11.glPopMatrix();
+        if (!file.isDirectory()) {
+            fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
+            if (ConfigHandler.libraryShowsModelPreviews) {
+                IGuiListItem item = this;
+                if (item != null) {
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(file.getFullName(), true);
+                    if (skin != null) {
+                        SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
+                        float scale = 8F;
+                        GL11.glPushMatrix();
+                        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                        GL11.glTranslatef((float)x + 5, (float)y + 6, 50.0F);
+                        GL11.glScalef((float)(-scale), (float)scale, (float)scale);
+                        GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+                        GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+                        float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
+                        GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
+                        RenderHelper.enableStandardItemLighting();
+                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                        GL11.glEnable(GL11.GL_NORMALIZE);
+                        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                        ModRenderHelper.enableAlphaBlend();
+                        ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                        GL11.glPopAttrib();
+                        GL11.glPopMatrix();
+                    }
                 }
             }
+        } else {
+            fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
+            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+            drawTexturedModalRect(x + 1, y + 1, 16, 0, 10, 10);
         }
+        
+
+        
     }
 
     @Override
