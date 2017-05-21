@@ -61,9 +61,9 @@ public class ContainerDyeTable extends Container {
     public void skinAdded(ItemStack stack) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
+        skinRemoved();
         updateLockedSlots(stack);
         putStackInSlot(45, stack.copy());
-        
     }
     
     private void updateLockedSlots(ItemStack stack) {
