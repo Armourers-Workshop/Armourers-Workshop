@@ -157,6 +157,8 @@ public class GuiArmourLibrary extends GuiContainer {
             setFileSwitchType(LibraryFileType.SERVER_PUBLIC);
         }
         
+        fileSwitchRemotePrivate.enabled = false;
+        
         buttonList.add(fileSwitchlocal);
         buttonList.add(fileSwitchRemotePublic);
         buttonList.add(fileSwitchRemotePrivate);

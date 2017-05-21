@@ -30,8 +30,8 @@ public class GuiAdminPanel extends GuiScreen {
         
         buttonList.clear();
         
-        recoverSkins = new GuiButtonExt(0, guiLeft + 5, guiTop + 5, 80, 20, "Recover Skins");
-        reloadLibrary = new GuiButtonExt(0, guiLeft + 5, guiTop + 20, 80, 20, "Reload Library");
+        recoverSkins = new GuiButtonExt(0, guiLeft + 5, guiTop + 5, 100, 15, "Recover Skins");
+        reloadLibrary = new GuiButtonExt(0, guiLeft + 5, guiTop + 20, 100, 15, "Reload Library");
                 
         buttonList.add(recoverSkins);
         buttonList.add(reloadLibrary);

@@ -82,9 +82,17 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                 }
             }
         } else {
-            fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
+            GL11.glColor4f(1, 1, 1, 1);
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-            drawTexturedModalRect(x + 1, y + 1, 16, 0, 10, 10);
+            if (file.fileName.equals("private")) {
+                drawTexturedModalRect(x + 1, y + 1, 32, 0, 10, 10);
+                fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, 0xFF8888FF);
+            } else {
+                drawTexturedModalRect(x + 1, y + 1, 16, 0, 10, 10);
+                fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, 0xFF88FF88);
+            }
+            
+            GL11.glColor4f(1, 1, 1, 1);
         }
         
 
