@@ -117,7 +117,7 @@ public class ContainerDyeTable extends Container {
                     if (!this.mergeItemStack(stack, 36, 37, false)) {
                         return null;
                     }
-                } else if (stack.getItem() == ModItems.dyeBottle && getSlot(36).getHasStack()) {
+                } else if (stack.getItem() == ModItems.dyeBottle && getSlot(36).getHasStack() & PaintingHelper.getToolHasPaint(stack)) {
                     if (!this.mergeItemStack(stack, 37, 45, false)) {
                         return null;
                     }

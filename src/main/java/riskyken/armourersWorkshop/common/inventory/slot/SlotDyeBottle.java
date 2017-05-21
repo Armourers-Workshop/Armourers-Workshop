@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class SlotDyeBottle extends Slot {
@@ -22,7 +23,9 @@ public class SlotDyeBottle extends Slot {
         ItemStack skinStack = inventory.getStackInSlot(0);
         if (skinStack != null && skinStack.getItem() == ModItems.equipmentSkin) {
             if (stack.getItem() == ModItems.dyeBottle) {
-                return true;
+                if (PaintingHelper.getToolHasPaint(stack)) {
+                    return true;
+                }
             }
         }
         return false;
