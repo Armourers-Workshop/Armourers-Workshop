@@ -17,11 +17,15 @@ public abstract class ModAddon {
     public ModAddon(String modId, String modName) {
         this.modId = modId;
         this.modName = modName;
-        this.isModLoaded = Loader.isModLoaded(modId);
+        this.isModLoaded = setIsModLoaded();
         if (isModLoaded) {
             String.format("Loading %s Compatibility Addon", getModName());
         }
         this.overrrides = new ArrayList<String>();
+    }
+    
+    protected boolean setIsModLoaded() {
+        return Loader.isModLoaded(modId);
     }
     
     public void preInit() {}
