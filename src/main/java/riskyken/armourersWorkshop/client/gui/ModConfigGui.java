@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
@@ -27,13 +28,25 @@ public class ModConfigGui extends GuiConfig {
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandler.config
+                .getCategory(ConfigHandler.CATEGORY_RECIPE))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandler.config
+                .getCategory(ConfigHandler.CATEGORY_SERVER))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandler.config
                 .getCategory(ConfigHandler.CATEGORY_COMPATIBILITY))
                 .getChildElements());
-        /*
-        configs.addAll(new ConfigElement(ConfigHandler.config
+        
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config
                 .getCategory(ConfigHandlerClient.CATEGORY_CLIENT))
                 .getChildElements());
-        */
+        
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config
+                .getCategory(ConfigHandlerClient.CATEGORY_DEBUG))
+                .getChildElements());
+        
         return configs;
     }
 }

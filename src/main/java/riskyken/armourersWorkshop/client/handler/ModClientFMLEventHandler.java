@@ -35,6 +35,7 @@ public class ModClientFMLEventHandler {
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
         if (eventArgs.modID.equals(LibModInfo.ID)) {
+            ConfigHandler.loadConfigFile();
             ConfigHandlerClient.loadConfigFile();
         }
     }
