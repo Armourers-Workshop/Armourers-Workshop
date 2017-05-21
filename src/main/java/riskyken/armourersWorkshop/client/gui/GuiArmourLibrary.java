@@ -69,7 +69,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private static int scrollAmount = 0;
     private static ISkinType lastSkinType;
     private static String lastSearchText = "";
-    private static String currentFolder = "\\";
+    private static String currentFolder = "/";
     
     private TileEntitySkinLibrary armourLibrary;
     private GuiIconButton fileSwitchlocal;
@@ -429,7 +429,7 @@ public class GuiArmourLibrary extends GuiContainer {
         
         fileList.clearList();
         if (!currentFolder.equals("\\")) {
-            fileList.addListItem(new GuiFileListItem(new LibraryFile("\\..", "", null, true)));
+            fileList.addListItem(new GuiFileListItem(new LibraryFile("/..", "", null, true)));
         }
         
         if (files!= null) {
@@ -509,17 +509,16 @@ public class GuiArmourLibrary extends GuiContainer {
                 filenameTextbox.setText("");
             }
         }
-        
         if (!dropDownList.getIsDroppedDown()) {
             if (fileList.mouseClicked(mouseX, mouseY, button)) {
                 GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
                 if (!item.getFile().isDirectory()) {
                     filenameTextbox.setText(item.getDisplayName());
                 } else {
-                    if (item.getFile().fileName.equals("\\..")) {
-                        currentFolder = "\\";
+                    if (item.getFile().fileName.equals("/..")) {
+                        currentFolder = "/";
                     } else {
-                        currentFolder = item.getFile().getFullName() + "\\";
+                        currentFolder = item.getFile().getFullName() + "/";
                     }
                 }
             }

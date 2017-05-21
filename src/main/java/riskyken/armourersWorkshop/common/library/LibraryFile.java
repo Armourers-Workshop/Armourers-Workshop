@@ -17,8 +17,8 @@ public class LibraryFile implements Comparable<LibraryFile> {
     }
     
     public LibraryFile(String fileName, String filePath, ISkinType skinType, boolean directory) {
-        this.fileName = fileName;
-        this.filePath = filePath;
+        this.fileName = fileName.replace("\\", "/");
+        this.filePath = filePath.replace("\\", "/");
         this.skinType = skinType;
         this.directory = directory;
     }
@@ -26,16 +26,21 @@ public class LibraryFile implements Comparable<LibraryFile> {
     public void writeToByteBuf(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, fileName);
         ByteBufUtils.writeUTF8String(buf, filePath);
-        ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());
         buf.writeBoolean(directory);
+        if (!directory) {
+            ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());
+        }
     }
     
     public static LibraryFile readFromByteBuf(ByteBuf buf) {
         String fileName = ByteBufUtils.readUTF8String(buf);
         String filePath = ByteBufUtils.readUTF8String(buf);
-        String regName = ByteBufUtils.readUTF8String(buf);
-        ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
         boolean directory = buf.readBoolean();
+        ISkinType skinType = null;
+        if (!directory) {
+            String regName = ByteBufUtils.readUTF8String(buf);
+            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+        }
         return new LibraryFile(fileName, filePath, skinType, directory);
     }
     
