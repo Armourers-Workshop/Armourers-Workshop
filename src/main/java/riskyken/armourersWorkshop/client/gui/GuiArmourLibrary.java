@@ -454,9 +454,9 @@ public class GuiArmourLibrary extends GuiContainer {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getDisplayName(), true);
                 if (skin != null) {
                     SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
-                    float x = 80;
-                    float y = 90;
-                    float scale = 30F;
+                    float x = 100;
+                    float y = 110;
+                    float scale = 50F;
                     GL11.glPushMatrix();
                     GL11.glTranslatef((float)x, (float)y, 50.0F);
                     GL11.glScalef((float)(-scale), (float)scale, (float)scale);
