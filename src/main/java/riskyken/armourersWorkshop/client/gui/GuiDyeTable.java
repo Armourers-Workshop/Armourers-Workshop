@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
@@ -82,7 +83,7 @@ public class GuiDyeTable extends GuiContainer {
             //GL11.glEnable(GL11.GL_ALPHA_TEST);
             //GL11.glEnable(GL11.GL_DEPTH_TEST);
             //ModRenderHelper.enableAlphaBlend();
-            GL11.glDisable(GL11.GL_CULL_FACE);
+            //GL11.glDisable(GL11.GL_CULL_FACE);
             //GL11.glDisable(GL11.GL_DEPTH_TEST);
             drawRect(guiLeft, guiTop, guiLeft + 50, guiTop + 50, 0xFFFFFFFF);
             int dyeSlot = mouseOverDyeSlot(mouseX, mouseY);
@@ -114,6 +115,7 @@ public class GuiDyeTable extends GuiContainer {
                 GL11.glColor3f(1F, 1F, 1F);
                 ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
             } else {
+                ModRenderHelper.enableAlphaBlend();
                 ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
             }
             
