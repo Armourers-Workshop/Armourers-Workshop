@@ -37,7 +37,7 @@ public class SkinnableEntityZombie implements ISkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinHead);
         skinTypes.add(SkinTypeRegistry.skinChest);
         skinTypes.add(SkinTypeRegistry.skinLegs);
-        skinTypes.add(SkinTypeRegistry.skinSkirt);
         skinTypes.add(SkinTypeRegistry.skinFeet);
+        skinTypes.add(SkinTypeRegistry.skinWings);
     }
 }

@@ -37,6 +37,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinLegs, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinSkirt, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinFeet, entityEquipment);
+        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinWings, entityEquipment);
         
         GL11.glPopMatrix();
     }
