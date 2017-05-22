@@ -47,8 +47,16 @@ public final class LibraryHelper {
             }
             else {
                 if (templateFiles[i].isDirectory()) {
-                    String path = templateFiles[i].getPath().replace(templateFiles[i].getName(), "");
-                    path = path.replace(libraryDir.getPath(), "");
+                    
+                    String name = templateFiles[i].getName();
+                    String path = templateFiles[i].getParent() + "/";
+                    path = path.replace(SkinIOUtils.getSkinLibraryDirectory().getPath(), "");
+                    path = path.replace("\\", "/");
+                    
+                    ModLogger.log("name: " + name.replace("%", ""));
+                    ModLogger.log("parent: " + path.replace("%", ""));
+                    ModLogger.log("");
+                    
                     fileList.add(new LibraryFile(templateFiles[i].getName(), path, null, true));
                 }
             }
@@ -58,9 +66,7 @@ public final class LibraryHelper {
         if (subDirectories) {
             for (int i = 0; i < templateFiles.length; i++) {
                 if (templateFiles[i].isDirectory()) {
-                    //if (!templateFiles[i].getName().equals("private")) {
-                        fileList.addAll(getSkinFilesInDirectory(templateFiles[i], true));
-                    //}
+                    fileList.addAll(getSkinFilesInDirectory(templateFiles[i], true));
                 }
             }
         }
