@@ -33,9 +33,7 @@ public class SkinnableEntityChicken implements ISkinnableEntity {
     }
 
     @Override
-    public ArrayList<ISkinType> getValidSkinTypes() {
-        ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
+    public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
         skinTypes.add(SkinTypeRegistry.skinHead);
-        return skinTypes;
     }
 }

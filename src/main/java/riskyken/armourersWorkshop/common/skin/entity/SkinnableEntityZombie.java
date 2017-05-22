@@ -33,13 +33,11 @@ public class SkinnableEntityZombie implements ISkinnableEntity {
     }
     
     @Override
-    public ArrayList<ISkinType> getValidSkinTypes() {
-        ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
+    public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
         skinTypes.add(SkinTypeRegistry.skinHead);
         skinTypes.add(SkinTypeRegistry.skinChest);
         skinTypes.add(SkinTypeRegistry.skinLegs);
         skinTypes.add(SkinTypeRegistry.skinSkirt);
         skinTypes.add(SkinTypeRegistry.skinFeet);
-        return skinTypes;
     }
 }

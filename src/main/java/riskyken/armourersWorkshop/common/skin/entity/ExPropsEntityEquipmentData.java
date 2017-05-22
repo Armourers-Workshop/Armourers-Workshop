@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.skin.entity;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,7 +31,10 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     public ExPropsEntityEquipmentData(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;
         this.equipmentData = new EntityEquipmentData(1);
-        this.skinInventory = new InventoryEntitySkin(this, skinnableEntity.getValidSkinTypes());
+        
+        ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
+        skinnableEntity.getValidSkinTypes(skinTypes);
+        this.skinInventory = new InventoryEntitySkin(this, skinTypes);
     }
     
     @Override
