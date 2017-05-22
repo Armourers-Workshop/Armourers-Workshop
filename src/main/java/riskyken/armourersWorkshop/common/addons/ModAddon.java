@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import cpw.mods.fml.common.Loader;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import riskyken.armourersWorkshop.utils.EventState;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 
 public abstract class ModAddon {
@@ -19,7 +20,7 @@ public abstract class ModAddon {
         this.modName = modName;
         this.isModLoaded = setIsModLoaded();
         if (isModLoaded) {
-            String.format("Loading %s Compatibility Addon", getModName());
+            ModLogger.log(String.format("Loading %s Compatibility Addon", getModName()));
         }
         this.overrrides = new ArrayList<String>();
     }

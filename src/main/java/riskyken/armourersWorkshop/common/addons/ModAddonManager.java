@@ -33,6 +33,7 @@ public final class ModAddonManager {
     public static AddonBetterStorage addonBetterStorage;
     public static AddonBotania addonBotania;
     public static AddonBuildCraft addonBuildCraft;
+    public static AddonCustomNPCS addonCustomNPCS;
     public static AddonGlassShards addonGlassShards;
     public static AddonMaplecrafted addonMaplecrafted;
     public static AddonMekanismTools addonMekanismTools;
@@ -53,12 +54,14 @@ public final class ModAddonManager {
     }
     
     private static void loadAddons() {
+        ModLogger.log("Loading addons");
         addonAquaTweaks = new AddonAquaTweaks();
         addonBalkonsWeaponMod = new AddonBalkonsWeaponMod();
         addonBattlegear2 = new AddonBattlegear2();
         addonBetterStorage = new AddonBetterStorage();
         addonBotania = new AddonBotania();
         addonBuildCraft = new AddonBuildCraft();
+        addonCustomNPCS = new AddonCustomNPCS();
         addonGlassShards = new AddonGlassShards();
         addonMaplecrafted = new AddonMaplecrafted();
         addonMekanismTools = new AddonMekanismTools();
@@ -74,6 +77,7 @@ public final class ModAddonManager {
         loadedAddons.add(addonAquaTweaks);
         loadedAddons.add(addonBalkonsWeaponMod);
         loadedAddons.add(addonBattlegear2);
+        loadedAddons.add(addonCustomNPCS);
         loadedAddons.add(addonBetterStorage);
         loadedAddons.add(addonBotania);
         loadedAddons.add(addonBuildCraft);

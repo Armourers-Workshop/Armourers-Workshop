@@ -17,6 +17,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.api.common.skin.entity.IEntitySkinHandler;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class EntitySkinHandler implements IEntitySkinHandler {
     
@@ -47,6 +48,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         if (skinnableEntity.getEntityClass() == null) {
             return;
         }
+        ModLogger.log(String.format("Registering %s as a skinnable entity.", skinnableEntity.getClass().getName()));
         entityMap.put(skinnableEntity.getEntityClass(), skinnableEntity);
     }
     

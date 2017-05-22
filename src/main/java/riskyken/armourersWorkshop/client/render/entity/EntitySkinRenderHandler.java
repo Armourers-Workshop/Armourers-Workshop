@@ -3,6 +3,9 @@ package riskyken.armourersWorkshop.client.render.entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -11,9 +14,6 @@ import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRende
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class EntitySkinRenderHandler {
