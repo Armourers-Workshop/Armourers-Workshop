@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -73,7 +74,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
         }
         if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false)) {
-            return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
+            //return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
         }
         return false;
     }
@@ -109,33 +110,115 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             point = new Point3D(0, 0, 16);
         }
         
-        int xBlockOffset = MathHelper.floor_double((double)point.getX() / 16D);
-        int zBlockOffset = MathHelper.floor_double((double)point.getZ() / 16D);
+        int xBlockOffset = MathHelper.floor_double(((double)point.getX() + 8) / 16D);
+        int zBlockOffset = MathHelper.floor_double(((double)point.getZ() + 8) / 16D);
+        
+        int xOffset = (point.getX() + 8) - x * 16;
+        int zOffset = (point.getY() + 8) - y * 16;
         
         x -= xBlockOffset * direction.offsetZ + zBlockOffset * direction.offsetX;;
         z -= zBlockOffset * direction.offsetZ + xBlockOffset * direction.offsetX;
+        
+        float scale = 1F / 16F;
         
         EntityPlayer.EnumStatus enumstatus = player.sleepInBedAt(x, y, z);
 
         if (enumstatus == EntityPlayer.EnumStatus.OK) {
             tileEntity.setBedOccupied(true);
+            ModLogger.log("sleeping!");
+            
+            player.field_71079_bU = 0.0F;
+            player.field_71089_bV = 0.0F;
+            
+            player.setPosition(x + 10, y - 0.5F, z + 1);
+            
+            player.playerLocation = new ChunkCoordinates(x, y, z);
+            world.updateAllPlayersSleepingFlag();
+            
             return true;
-        }
-        else
-        {
-            if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW)
-            {
+        } else {
+            if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
                 player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]));
-            }
-            else if (enumstatus == EntityPlayer.EnumStatus.NOT_SAFE)
-            {
+            } else if (enumstatus == EntityPlayer.EnumStatus.NOT_SAFE) {
                 player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.notSafe", new Object[0]));
             }
-
             return true;
         }
     }
-    
+    /*
+    private EntityPlayer.EnumStatus putPlayerToSleep(EntityPlayer player, int x, int y, int z) {
+        PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(player, x, y, z);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.result != null) {
+            return event.result;
+        }
+        
+        if (!player.getEntityWorld().isRemote) {
+            if (player.isPlayerSleeping() || !player.isEntityAlive()) {
+                return EntityPlayer.EnumStatus.OTHER_PROBLEM;
+            }
+            if (!player.getEntityWorld().provider.isSurfaceWorld()) {
+                return EntityPlayer.EnumStatus.NOT_POSSIBLE_HERE;
+            }
+            if (player.getEntityWorld().isDaytime()) {
+                return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
+            }
+            if (Math.abs(player.posX - (double)x) > 3.0D || Math.abs(player.posY - (double)y) > 2.0D || Math.abs(player.posZ - (double)z) > 3.0D) {
+                return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
+            }
+            double d0 = 8.0D;
+            double d1 = 5.0D;
+            List list = player.getEntityWorld().getEntitiesWithinAABB(EntityMob.class, AxisAlignedBB.getBoundingBox((double)x - d0, (double)y - d1, (double)z - d0, (double)x + d0, (double)y + d1, (double)z + d0));
+            if (!list.isEmpty()) {
+                return EntityPlayer.EnumStatus.NOT_SAFE;
+            }
+        }
+        
+        if (player.isRiding()) {
+            player.mountEntity((Entity)null);
+        }
+
+        player.width = 0.2F;
+        player.height = 0.2F;
+        player.yOffset = 0.2F;
+        
+        if (player.getEntityWorld().blockExists(x, y, z)) {
+            int l = player.getEntityWorld().getBlock(x, y, z).getBedDirection(player.getEntityWorld(), x, y, z);
+            float f1 = 0.5F;
+            float f = 0.5F;
+
+            switch (l) {
+                case 0:
+                    f = 0.9F;
+                    break;
+                case 1:
+                    f1 = 0.1F;
+                    break;
+                case 2:
+                    f = 0.1F;
+                    break;
+                case 3:
+                    f1 = 0.9F;
+            }
+
+            //player.func_71013_b(l);
+            player.setPosition((double)((float)x + f1), (double)((float)y + 0.9375F), (double)((float)z + f));
+        } else {
+            player.setPosition((double)((float)x + 0.5F), (double)((float)y + 0.9375F), (double)((float)z + 0.5F));
+        }
+
+        //player.sleeping = true;
+        //player.sleepTimer = 0;
+        player.playerLocation = new ChunkCoordinates(x, y, z);
+        player.motionX = player.motionZ = player.motionY = 0.0D;
+
+        if (!player.getEntityWorld().isRemote) {
+            player.getEntityWorld().updateAllPlayersSleepingFlag();
+        }
+
+        return EntityPlayer.EnumStatus.OK;
+    }
+    */
     @Override
     public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player) {
         Skin skin = getSkin(world, x, y, z);
@@ -192,8 +275,22 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
         if (entity != null && entity instanceof EntityPlayer) {
             if (((EntityPlayer)entity).isPlayerSleeping()) {
+                
+                Skin skin = getSkin(world, x, y, z);
+                if (skin != null) {
+                    Point3D point = null;
+                    if (skin.getParts().get(0).getMarkerCount() > 0) {
+                        point = skin.getParts().get(0).getMarker(0);
+                    } else {
+                        point = new Point3D(0, 0, 16);
+                    }
+                    float scale = 1F / 16F;
+                    //list.add(AxisAlignedBB.getBoundingBox(x, y, z, x + 1F, y + 0.5F + -point.getY() * scale, z + 1F));
+                    //ModLogger.log(-point.getY() * scale);
+                } else {
+                    //list.add(AxisAlignedBB.getBoundingBox(x, y, z, x + 1F, y + 0.5F, z + 1F));
+                }
                 list.add(AxisAlignedBB.getBoundingBox(x, y, z, x + 1F, y + 0.5F, z + 1F));
-                //TODO add marker y height
                 return;
             }
         }

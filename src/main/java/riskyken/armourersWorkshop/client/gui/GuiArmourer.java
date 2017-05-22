@@ -119,6 +119,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         } else {
             checkBlockBed.enabled = true;
         }
+        //TODO remove to re-enable beds
+        checkBlockBed.enabled = false;
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 45, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, guiLeft + 177, guiTop + 65, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
@@ -197,6 +199,8 @@ public class GuiArmourer extends GuiContainer implements IDropDownListCallback, 
         } else {
             checkBlockBed.enabled = true;
         }
+        //TODO remove to re-enable beds
+        checkBlockBed.enabled = false;
         
         if (button == checkBlockGlowing | button == checkBlockLadder | button == checkBlockNoCollision |
                 button == checkBlockSeat | button == checkBlockMultiblock | button == checkBlockBed) {
