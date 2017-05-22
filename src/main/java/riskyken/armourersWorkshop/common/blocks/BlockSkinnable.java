@@ -73,7 +73,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
         }
         if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false)) {
-            return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation());
+            return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
         }
         return false;
     }
@@ -97,7 +97,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         return false;
     }
     
-    private boolean sleepInBed(World world, int x, int y, int z, EntityPlayer player, Skin skin, ForgeDirection direction) {
+    private boolean sleepInBed(World world, int x, int y, int z, EntityPlayer player, Skin skin, ForgeDirection direction, TileEntitySkinnable tileEntity) {
         if (world.isRemote) {
             return true;
         }
@@ -118,7 +118,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         EntityPlayer.EnumStatus enumstatus = player.sleepInBedAt(x, y, z);
 
         if (enumstatus == EntityPlayer.EnumStatus.OK) {
-            //func_149979_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, true);
+            tileEntity.setBedOccupied(true);
             return true;
         }
         else
@@ -134,6 +134,55 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
 
             return true;
         }
+    }
+    
+    @Override
+    public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player) {
+        Skin skin = getSkin(world, x, y, z);
+        if (skin != null) {
+            return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false);
+        }
+        return false;
+    }
+    
+    @Override
+    public void setBedOccupied(IBlockAccess world, int x, int y, int z, EntityPlayer player, boolean occupied) {
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null) {
+            te.setBedOccupied(occupied);
+        }
+    }
+    
+    @Override
+    public int getBedDirection(IBlockAccess world, int x, int y, int z) {
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null) {
+            switch (te.getRotation()) {
+            case NORTH:
+                return 0;
+            case EAST:
+                return 1;
+            case SOUTH:
+                return 2;
+            case WEST:
+                return 3;
+            default:
+                break;
+            }
+        }
+        return 0;
+    }
+    
+    @Override
+    public boolean isBedFoot(IBlockAccess world, int x, int y, int z) {
+        Skin skin = getSkin(world, x, y, z);
+        if (skin != null) {
+            for (int i = 0; i <skin.getPartCount(); i++) {
+                SkinPart part = skin.getParts().get(i);
+                part.getMarkerCount();
+            }
+        }
+        return false;
     }
     
     @Override
@@ -372,55 +421,6 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     @Override
     public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines) {
         textLines.add("Direction: " + getFacingDirection(world, x, y, z));
-    }
-    
-    @Override
-    public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player) {
-        Skin skin = getSkin(world, x, y, z);
-        if (skin != null) {
-            return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false);
-        }
-        return false;
-    }
-    
-    @Override
-    public void setBedOccupied(IBlockAccess world, int x, int y, int z, EntityPlayer player, boolean occupied) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
-        if (te != null) {
-            te.setBedOccupied(occupied);
-        }
-    }
-    
-    @Override
-    public int getBedDirection(IBlockAccess world, int x, int y, int z) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
-        if (te != null) {
-            switch (te.getRotation()) {
-            case NORTH:
-                return 0;
-            case EAST:
-                return 1;
-            case SOUTH:
-                return 2;
-            case WEST:
-                return 3;
-            default:
-                break;
-            }
-        }
-        return 0;
-    }
-    
-    @Override
-    public boolean isBedFoot(IBlockAccess world, int x, int y, int z) {
-        Skin skin = getSkin(world, x, y, z);
-        if (skin != null) {
-            for (int i = 0; i <skin.getPartCount(); i++) {
-                SkinPart part = skin.getParts().get(i);
-                part.getMarkerCount();
-            }
-        }
-        return false;
     }
     
     public static class Seat extends Entity implements IEntityAdditionalSpawnData {

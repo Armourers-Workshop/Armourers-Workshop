@@ -90,7 +90,7 @@ public class ArmourersWorkshop {
     
     @Mod.EventHandler
     public void perInit(FMLPreInitializationEvent event) {
-        ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
+        ModLogger.log(String.format("Loading %s version %s", LibModInfo.NAME, LibModInfo.VERSION));
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
         
         File configDir = event.getSuggestedConfigurationFile().getParentFile();
@@ -110,8 +110,6 @@ public class ArmourersWorkshop {
         SkinIOUtils.makeLibraryDirectory();
         UpdateCheck.checkForUpdates();
         SkinExtractor.extractSkins();
-        
-
         
         SkinTypeRegistry.init();
         CubeRegistry.init();

@@ -16,6 +16,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.serialize.SkinSerializer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ByteBufHelper {
@@ -53,7 +54,7 @@ public final class ByteBufHelper {
         boolean compress = ConfigHandler.serverCompressesSkins;
         buf.writeBoolean(compress);
         try {
-            skin.writeToStream(dataOutputStream);
+            SkinSerializer.writeToStream(skin, dataOutputStream);
             dataOutputStream.writeInt(skin.requestId);
             dataOutputStream.flush();
             
@@ -95,7 +96,7 @@ public final class ByteBufHelper {
         Skin skin = null;
         
         try {
-            skin = new Skin(dataInputStream);
+            skin = SkinSerializer.loadSkin(dataInputStream);
             skin.requestId = dataInputStream.readInt();
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +113,7 @@ public final class ByteBufHelper {
         DataOutputStream dataOutputStream = new DataOutputStream(baos);
         byte[] skinData = null;
         try {
-            skin.writeToStream(dataOutputStream);
+            SkinSerializer.writeToStream(skin, dataOutputStream);
             dataOutputStream.writeInt(skin.requestId);
             dataOutputStream.flush();
             skinData = baos.toByteArray();
@@ -130,7 +131,7 @@ public final class ByteBufHelper {
         DataInputStream dataInputStream = new DataInputStream(bais);
         Skin skin = null;
         try {
-            skin = new Skin(dataInputStream);
+            skin = SkinSerializer.loadSkin(dataInputStream);
             skin.requestId = dataInputStream.readInt();
         } catch (Exception e) {
             e.printStackTrace();
