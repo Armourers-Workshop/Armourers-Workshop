@@ -75,7 +75,7 @@ public class GuiArmourLibrary extends GuiContainer {
     private GuiIconButton fileSwitchlocal;
     private GuiIconButton fileSwitchRemotePublic;
     private GuiIconButton fileSwitchRemotePrivate;
-    private LibraryFileType fileSwitchType;
+    public static LibraryFileType fileSwitchType;
     private GuiList fileList;
     private GuiButtonExt loadSaveButton;
     private GuiIconButton openFolderButton;
@@ -464,7 +464,7 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
-        if (ConfigHandler.libraryShowsModelPreviews) {
+        if (ConfigHandler.libraryShowsModelPreviews & fileSwitchType != LibraryFileType.LOCAL) {
             GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
             if (item != null && !item.getFile().isDirectory()) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getFile().getFullName(), true);
