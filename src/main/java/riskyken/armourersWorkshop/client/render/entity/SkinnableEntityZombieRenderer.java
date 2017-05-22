@@ -10,6 +10,9 @@ import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRende
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
+import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
+import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -24,11 +27,11 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
         
-        //-24.0F * f5 - 0.0078125F
         GL11.glTranslated(0, -entity.height + 4.7F * scale, 0);
         
-        GL11.glRotatef(entity.renderYawOffset, 0, 1, 0);
-
+        double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
+        GL11.glRotated(rot, 0, 1, 0);
+        
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinChest, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinLegs, entityEquipment);
@@ -39,32 +42,28 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
     }
     
     private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
-        if (equipmentData.haveEquipment(skinType, 0)) {
+        float scale = 0.0625F;
+        if (renderer instanceof RenderZombie) {
+            RenderZombie rz = (RenderZombie) renderer;
+            boolean isZombieVillager = false;
+            isZombieVillager = rz.modelBipedMain instanceof ModelZombieVillager;
+            if (!equipmentData.haveEquipment(skinType, 0)) {
+                return;
+            }
             ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-            
-            if (renderer instanceof RenderZombie) {
-                RenderZombie rz = (RenderZombie) renderer;
-                boolean isZombieVillager = false;
-                float scale = 0.0625F;
-                
-                isZombieVillager = skinType == SkinTypeRegistry.skinHead & rz.modelBipedMain instanceof ModelZombieVillager;
-                if (isZombieVillager) {
-                    GL11.glTranslated(0, -2.0F * scale, 0);
-                }
-                if (rz.modelBipedMain.isChild) {
-                    GL11.glEnable(GL11.GL_NORMALIZE);
-                }
-                //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, rz.modelBipedMain, skin);
-                if (rz.modelBipedMain.isChild) {
-                    GL11.glDisable(GL11.GL_NORMALIZE);
-                }
-                if (isZombieVillager) {
-                    GL11.glTranslated(0, 2.0F * scale, 0);
-                }
-            } else {
-                //EquipmentModelRenderer.INSTANCE.renderEquipmentPart(entity, null, skin);
+            if (skin == null) {
+                return;
             }
+            
+            AbstractModelSkin model = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
+            
+            GL11.glPushMatrix();
+            if (isZombieVillager & skinType == SkinTypeRegistry.skinHead) {
+                GL11.glTranslated(0, -2.0F * scale, 0);
+            }
+            model.render(entity, rz.modelBipedMain, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
+            GL11.glPopMatrix();
         }
     }
 }

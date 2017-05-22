@@ -99,7 +99,7 @@ public class AddonCustomNPCS extends ModAddon {
             GL11.glScalef(1, -1, -1);
             GL11.glScalef(0.94F, 0.94F, 0.94F);
             
-            GL11.glTranslated(0, -18 * scale + entity.height * scale, 0);
+            GL11.glTranslated(0, -24 * scale, 0);
             entity.getEyeHeight();
             //renderTarget.prevPosX + (renderTarget.posX - renderTarget.prevPosX) * partialRenderTick;
             
