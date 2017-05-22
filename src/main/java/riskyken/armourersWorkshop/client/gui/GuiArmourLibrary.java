@@ -14,6 +14,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -464,7 +465,7 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
-        if (ConfigHandler.libraryShowsModelPreviews & fileSwitchType != LibraryFileType.LOCAL) {
+        if (showModelPreviews()) {
             GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
             if (item != null && !item.getFile().isDirectory()) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getFile().getFullName(), true);
@@ -489,6 +490,18 @@ public class GuiArmourLibrary extends GuiContainer {
                     GL11.glPopMatrix();
                 }
             }
+        }
+    }
+    
+    public static boolean showModelPreviews() {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (!ConfigHandler.libraryShowsModelPreviews) {
+            return false;
+        }
+        if (mc.isIntegratedServerRunning()) {
+            return true;
+        } else {
+            return fileSwitchType != LibraryFileType.LOCAL;
         }
     }
     

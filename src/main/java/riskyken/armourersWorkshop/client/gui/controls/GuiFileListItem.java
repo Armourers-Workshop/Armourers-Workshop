@@ -13,10 +13,8 @@ import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
-import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.UtilColour;
@@ -41,7 +39,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
     public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected, int width) {
         int iconOffset = 0;
         
-        if (ConfigHandler.libraryShowsModelPreviews & GuiArmourLibrary.fileSwitchType != LibraryFileType.LOCAL) {
+        if (GuiArmourLibrary.showModelPreviews() | file.isDirectory()) {
             iconOffset = 10;
         }
         
@@ -56,7 +54,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
         }
         if (!file.isDirectory()) {
             fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
-            if (ConfigHandler.libraryShowsModelPreviews & GuiArmourLibrary.fileSwitchType != LibraryFileType.LOCAL) {
+            if (GuiArmourLibrary.showModelPreviews() | file.isDirectory()) {
                 IGuiListItem item = this;
                 if (item != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(file.getFullName(), true);
