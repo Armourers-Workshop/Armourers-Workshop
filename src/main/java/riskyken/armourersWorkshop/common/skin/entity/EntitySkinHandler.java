@@ -49,7 +49,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         if (skinnableEntity.getEntityClass() == null) {
             return;
         }
-        ModLogger.log(String.format("Registering %s as a skinnable entity.", skinnableEntity.getClass().getName()));
+        ModLogger.log(String.format("Registering %s as a skinnable entity.", skinnableEntity.getEntityClass()));
         entityMap.put(skinnableEntity.getEntityClass(), skinnableEntity);
     }
     
