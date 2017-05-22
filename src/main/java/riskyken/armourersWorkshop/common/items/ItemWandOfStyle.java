@@ -1,20 +1,21 @@
 package riskyken.armourersWorkshop.common.items;
 
-import java.util.ArrayList;
-
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
-import riskyken.plushieWrapper.common.entity.PlushieEntityLivingBase;
-import riskyken.plushieWrapper.common.entity.PlushieEntityPlayer;
-import riskyken.plushieWrapper.common.item.PlushieItemStack;
-import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class ItemWandOfStyle extends AbstractModItemNew {
+public class ItemWandOfStyle extends AbstractModItem {
 
     public ItemWandOfStyle() {
         super(LibItemNames.WAND_OF_STYLE);
@@ -22,22 +23,36 @@ public class ItemWandOfStyle extends AbstractModItemNew {
     
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(ArrayList<String> iconList) {
-        iconList.add(LibItemResources.WAND_OF_STYLE);
+    public void registerIcons(IIconRegister iconRegister) {
+        itemIcon = iconRegister.registerIcon(LibItemResources.WAND_OF_STYLE);
     }
     
     @Override
-    public boolean itemInteractionForEntity(PlushieItemStack itemStackPointer,
-            PlushieEntityPlayer player,
-            PlushieEntityLivingBase entity) {
-        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entity.getEntityLivingBase())) {
-            if (entity.getEntityLivingBase().worldObj.isRemote) {
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entity)) {
+            if (entity.worldObj.isRemote) {
                 return true;
             }
-            FMLNetworkHandler.openGui(player.getEntityPlayer(), ArmourersWorkshop.instance,
-                    LibGuiIds.ENTITY_SKIN_INVENTORY, entity.getEntityLivingBase().worldObj,
-                    entity.getEntityLivingBase().getEntityId(), 0, 0);
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance,
+                    LibGuiIds.ENTITY_SKIN_INVENTORY, entity.worldObj,
+                    entity.getEntityId(), 0, 0);
         }
+        
+        return super.onLeftClickEntity(stack, player, entity);
+    }
+    
+    @Override
+    public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer entityPlayer, EntityLivingBase entityLivingBase) {
+        ModLogger.log(entityLivingBase.getClass());
+        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entityLivingBase)) {
+            if (entityLivingBase.worldObj.isRemote) {
+                return true;
+            }
+            FMLNetworkHandler.openGui(entityPlayer, ArmourersWorkshop.instance,
+                    LibGuiIds.ENTITY_SKIN_INVENTORY, entityLivingBase.worldObj,
+                    entityLivingBase.getEntityId(), 0, 0);
+        }
+        
         return false;
     }
 }

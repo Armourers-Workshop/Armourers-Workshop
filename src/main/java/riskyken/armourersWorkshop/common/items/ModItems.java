@@ -35,7 +35,7 @@ public class ModItems {
     public static PlushieItem blockMarker;
     
     public static Item mannequinTool;
-    public static PlushieItem wandOfStyle;
+    public static Item wandOfStyle;
     public static PlushieItem soap;
     public static Item dyeBottle;
     public static PlushieItem guideBook;
@@ -80,7 +80,6 @@ public class ModItems {
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, 3);
         
         ModRegistry.registerItem(guideBook);
-        ModRegistry.registerItem(wandOfStyle);
         ModRegistry.registerItem(soap);
         ModRegistry.registerItem(blockMarker);
     }
