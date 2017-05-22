@@ -8,6 +8,7 @@ import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRende
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -24,7 +25,8 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
         
-        GL11.glRotatef(entity.renderYawOffset, 0, 1, 0);
+        double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
+        GL11.glRotated(rot, 0, 1, 0);
         
         //-24.0F * f5 - 0.0078125F
         
@@ -32,7 +34,10 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
         //GL11.glTranslated(-1.7F * scale, 0 , 0);
         GL11.glTranslated(0, 0, -4.0F * scale);
         
-        GL11.glRotatef(entity.rotationYawHead - entity.renderYawOffset, 0, 1, 0);
+        
+        
+        double headRot = entity.prevRotationYawHead + (entity.rotationYawHead - entity.prevRotationYawHead) * ModClientFMLEventHandler.renderTickTime;
+        GL11.glRotated(headRot - rot, 0, 1, 0);
         
         
         GL11.glRotatef(entity.rotationPitch, 1, 0, 0);
