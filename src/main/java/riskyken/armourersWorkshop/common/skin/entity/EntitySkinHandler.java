@@ -36,8 +36,9 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     }
     
     private void registerEntities() {
-        registerEntity(new SkinnableEntityZombie());
         registerEntity(new SkinnableEntityChicken());
+        registerEntity(new SkinnableEntityZombie());
+        registerEntity(new SkinnableEntitySkeleton());
     }
     
     @Override
