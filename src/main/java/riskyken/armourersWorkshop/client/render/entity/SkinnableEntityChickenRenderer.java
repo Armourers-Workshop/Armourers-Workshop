@@ -25,13 +25,19 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
         
+
+        
         double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
         GL11.glRotated(rot, 0, 1, 0);
         
-        //-24.0F * f5 - 0.0078125F
+        
+        if (entity.isChild()) {
+            GL11.glTranslated(0, scale * 5, scale * 1.5F);
+            //GL11.glScalef(0.9F, 0.9F, 0.9F);
+        }
+        
         
         GL11.glTranslated(0, -9F * scale, 0);
-        //GL11.glTranslated(-1.7F * scale, 0 , 0);
         GL11.glTranslated(0, 0, -4.0F * scale);
         
         
@@ -42,8 +48,7 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
         
         GL11.glRotatef(entity.rotationPitch, 1, 0, 0);
         
-        
-        
+
         float headScale = 0.5F;
         GL11.glScalef(headScale, headScale * 1.5F, headScale);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
