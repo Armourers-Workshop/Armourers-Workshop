@@ -79,7 +79,7 @@ item.armourersworkshop:burnTool.name=加深工具
 item.armourersworkshop:dodgeTool.name=减淡工具
 item.armourersworkshop:colourNoiseTool.name=随机颜色工具
 item.armourersworkshop:shadeNoiseTool.name=随机阴影工具
-item.armourersworkshop:mannequinTool.name=人体模型的工具
+item.armourersworkshop:mannequinTool.name=模特工具
 item.armourersworkshop:guideBook.name=时装工坊说明书
 item.armourersworkshop:armourContainer.name=时装容器(未镶嵌)
 item.armourersworkshop:armourContainerHead.name=时装容器(头部)
@@ -94,10 +94,10 @@ item.armourersworkshop:dyeBottle.name=染料瓶
 item.armourersworkshop:blendingTool.name=混合工具
 item.armourersworkshop:armourersHammer.name=方块旋转锤
 item.armourersworkshop:debugTool.name=调试工具
-item.armourersworkshop:skinUnlock.0.name=头部额外时装栏解锁器
-item.armourersworkshop:skinUnlock.1.name=上身额外时装栏解锁器
-item.armourersworkshop:skinUnlock.2.name=腿部额外时装栏解锁器
-item.armourersworkshop:skinUnlock.3.name=脚部额外时装栏解锁器
+item.armourersworkshop:skinUnlock.0.name=时装栏解锁器-头
+item.armourersworkshop:skinUnlock.1.name=时装栏解锁器-身
+item.armourersworkshop:skinUnlock.2.name=时装栏解锁器-腿
+item.armourersworkshop:skinUnlock.3.name=时装栏解锁器-脚
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=RiskyKen(mod作者)的礼物
@@ -116,10 +116,10 @@ item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱�
 item.armourersworkshop:blockMarker.flavour=在弓,翅膀,方块的时装制作时需要用到.%n注：弓制作时标记箭尾的位置，每个阶段上只能也必须有一个标记.%n注：翅膀制作时标记左边翅膀和右边翅膀的旋转轴.%n注：方块制作时标记坐在哪个位置.
 item.armourersworkshop:dyeBottle.flavour=给时装改变配色.
 item.armourersworkshop:armourersHammer.flavour=旋转时装方块。
-item.armourersworkshop:skinUnlock.0.flavour=解锁了1个额外的头部时装栏.
-item.armourersworkshop:skinUnlock.1.flavour=解锁了1个额外的上身时装栏.
-item.armourersworkshop:skinUnlock.2.flavour=解锁了1个额外的腿部时装栏.
-item.armourersworkshop:skinUnlock.3.flavour=解锁了1个额外的脚部时装栏.
+item.armourersworkshop:skinUnlock.0.flavour=右键使用解锁1个额外的头部时装栏.
+item.armourersworkshop:skinUnlock.1.flavour=右键使用解锁1个额外的上身时装栏.
+item.armourersworkshop:skinUnlock.2.flavour=右键使用解锁1个额外的腿部时装栏.
+item.armourersworkshop:skinUnlock.3.flavour=右键使用解锁1个额外的脚部时装栏.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6强度:&7 %s
@@ -336,8 +336,8 @@ chat.armourersworkshop:updateAvailable=时装工坊 %s 已经可以更新.
 chat.armourersworkshop:updateDownload=[下载]
 chat.armourersworkshop:updateDownloadRollover=点击打开下载页面
 chat.armourersworkshop:devWarning=警告，你正在使用时装工坊的开发版. 开发版仅用于测试，不推荐公开使用.
-chat.armourersworkshop:slotUnlocked=解锁 %s 时装栏. 你现在有 %s 个栏位.
-chat.armourersworkshop:slotUnlockedFailed=%s 时装栏到达最大.
+chat.armourersworkshop:slotUnlocked=解锁了一个 %s 时装栏. 你现在有 %s 个栏位.
+chat.armourersworkshop:slotUnlockedFailed=%s 时装栏栏位达到最大数量.
 
 # Death Messages
 death.attack.victorious=%1$s mewo mewo mewo？？？
