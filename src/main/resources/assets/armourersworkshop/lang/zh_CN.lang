@@ -1,3 +1,42 @@
+# Notes for translators.
+#
+# Thank you for considering localising Armourer's Workshop.
+# Before you start consider getting the newest localisation file from GitHub development branch.
+# https://github.com/RiskyKen/Armourers-Workshop/tree/develop/src/main/resources/assets/armourersworkshop/lang
+# This file will often have localisations for the next version of the mod.
+#
+# When the localisation file is done send it to me in whatever way you feel comfortable with.
+# Email:   riskyken.web@gmail.com
+# Twitter: @RiskyKen
+# GitHub:  https://github.com/RiskyKen please send pull request to the development branch.
+#
+# Please also send your Minecraft username/uuid so I can add you to the credits.
+#
+# The following colour codes can be added to the start of text to colour it.
+# &0 Black
+# &1 Dark Blue
+# &2 Dark Green
+# &3 Dark Aqua
+# &4 Dark Red
+# &5 Dark Purple
+# &6 Gold
+# &7 Gray
+# &8 Dark Gray
+# &9 Blue
+# &a Green
+# &b Aqua
+# &c Red
+# &d Light Purple
+# &e Yellow
+# &f White
+#
+# A new line can be inserted with %n. Please add/remove new lines to fit the localisations you are writing.
+#
+# The text %s will be replace with text. Example: "Author: %s" could become "Author: RiskyKen".  
+# The text %d will be replace with a number. Example: "Radius: %d*%d*%d" could become "Radius: 3*3*3"
+#
+# That's all have "fun" translating!
+
 # Block names
 tile.armourersworkshop:armourerBrain.name=时装工坊
 tile.armourersworkshop:miniArmourer.name=迷你工坊 - (未完成)
@@ -55,6 +94,10 @@ item.armourersworkshop:dyeBottle.name=染料瓶
 item.armourersworkshop:blendingTool.name=混合工具
 item.armourersworkshop:armourersHammer.name=方块旋转锤
 item.armourersworkshop:debugTool.name=调试工具
+item.armourersworkshop:skinUnlock.0.name=头部额外时装栏解锁器
+item.armourersworkshop:skinUnlock.1.name=上身额外时装栏解锁器
+item.armourersworkshop:skinUnlock.2.name=腿部额外时装栏解锁器
+item.armourersworkshop:skinUnlock.3.name=脚部额外时装栏解锁器
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=RiskyKen(mod作者)的礼物
@@ -72,7 +115,11 @@ item.armourersworkshop:soap.flavour=通过镶嵌工作台来洗掉物品内镶�
 item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱和度 亮度以及染色类型).
 item.armourersworkshop:blockMarker.flavour=在弓,翅膀,方块的时装制作时需要用到.%n注：弓制作时标记箭尾的位置，每个阶段上只能也必须有一个标记.%n注：翅膀制作时标记左边翅膀和右边翅膀的旋转轴.%n注：方块制作时标记坐在哪个位置.
 item.armourersworkshop:dyeBottle.flavour=给时装改变配色.
-item.armourersworkshop:armourersHammer.flavour=旋转时装方块，模特和床。
+item.armourersworkshop:armourersHammer.flavour=旋转时装方块。
+item.armourersworkshop:skinUnlock.0.flavour=解锁了1个额外的头部时装栏.
+item.armourersworkshop:skinUnlock.1.flavour=解锁了1个额外的上身时装栏.
+item.armourersworkshop:skinUnlock.2.flavour=解锁了1个额外的腿部时装栏.
+item.armourersworkshop:skinUnlock.3.flavour=解锁了1个额外的脚部时装栏.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6强度:&7 %s
@@ -84,6 +131,7 @@ item.armourersworkshop:rollover.nopaint=&6没有染色.
 item.armourersworkshop:rollover.settingsSaved=&6设置已保存.
 item.armourersworkshop:rollover.noSettingsSaved=&c未保存.
 item.armourersworkshop:rollover.user=&6使用者:&7 %s
+item.armourersworkshop:rollover.url=&6链接地址:&7 %s
 item.armourersworkshop:rollover.empty=&6空的.
 item.armourersworkshop:rollover.openSettings=潜行加右键来打开设置.
 
@@ -118,6 +166,8 @@ tooloption.armourersworkshop:changeBrightness=改变亮度
 tooloption.armourersworkshop:changePaintType=改变染色数据类型
 tooloption.armourersworkshop:intensity=强度
 tooloption.armourersworkshop:radius=半径
+tooloption.armourersworkshop:radius.sample=取样半径
+tooloption.armourersworkshop:radius.effect=影响半径
 
 # Paint Types 染料数据
 paintType.armourersworkshop:normal.name=普通
@@ -223,6 +273,9 @@ inventory.armourersworkshop:armourerBrain.glowing=是否发光
 inventory.armourersworkshop:armourerBrain.ladder=是否为梯子
 inventory.armourersworkshop:armourerBrain.noCollision=是否能被人穿过
 inventory.armourersworkshop:armourerBrain.seat=是否为椅子
+inventory.armourersworkshop:armourerBrain.multiblock=多方块?
+inventory.armourersworkshop:armourerBrain.bed=是否为床
+inventory.armourersworkshop:armourerBrain.overrideBodyPart=隐藏皮肤层?
 
 inventory.armourersworkshop:colourMixer.label.hue=色相
 inventory.armourersworkshop:colourMixer.label.saturation=饱和度
@@ -253,9 +306,12 @@ inventory.armourersworkshop:mannequin.label.rightLegRotation=转动右腿
 inventory.armourersworkshop:mannequin.label.isChild=小孩子模型？
 inventory.armourersworkshop:mannequin.label.isExtraRenders=Duang？
 inventory.armourersworkshop:mannequin.label.isFlying=起飞?
+inventory.armourersworkshop:mannequin.label.isVisible=可视的?
 inventory.armourersworkshop:mannequin.random=随机
 inventory.armourersworkshop:mannequin.reset=重置
+inventory.armourersworkshop:mannequin.dropdown.user=用户名
 inventory.armourersworkshop:mannequin.set=设置
+inventory.armourersworkshop:mannequin.dropdown.url=链接地址
 inventory.armourersworkshop:mannequin.selectSkin=选择皮肤颜色
 inventory.armourersworkshop:mannequin.selectHair=选择头发颜色
 inventory.armourersworkshop:mannequin.autoSkin=自动皮肤颜色
@@ -279,6 +335,9 @@ chat.armourersworkshop:inventoryGiftFail=你收到了一份礼物,但你没有�
 chat.armourersworkshop:updateAvailable=时装工坊 %s 已经可以更新.
 chat.armourersworkshop:updateDownload=[下载]
 chat.armourersworkshop:updateDownloadRollover=点击打开下载页面
+chat.armourersworkshop:devWarning=警告，你正在使用时装工坊的开发版. 开发版仅用于测试，不推荐公开使用.
+chat.armourersworkshop:slotUnlocked=解锁 %s 时装栏. 你现在有 %s 个栏位.
+chat.armourersworkshop:slotUnlockedFailed=%s 时装栏到达最大.
 
 # Death Messages
 death.attack.victorious=%1$s mewo mewo mewo？？？
