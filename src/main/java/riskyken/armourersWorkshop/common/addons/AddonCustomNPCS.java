@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.ReflectionHelper.UnableToAccessFieldException;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
@@ -31,7 +32,9 @@ public class AddonCustomNPCS extends ModAddon {
     
     @Override
     public void init() {
-        EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomNPC());
+        if (isModLoaded()) {
+            EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomNPC());
+        }
     }
     
     public static class SkinnableEntityCustomNPC implements ISkinnableEntity {
@@ -90,7 +93,6 @@ public class AddonCustomNPCS extends ModAddon {
                 return;
             }
             
-            Object object = ReflectionHelper.getPrivateValue(RendererLivingEntity.class, renderer, "mainModel");
             float scale = 0.0625F;
             
             GL11.glPushMatrix();
@@ -128,10 +130,15 @@ public class AddonCustomNPCS extends ModAddon {
                 return;
             }
             
-            Object object = ReflectionHelper.getPrivateValue(RendererLivingEntity.class, renderer, "mainModel");
+            Object object = null;
+            try {
+                object = ReflectionHelper.getPrivateValue(RendererLivingEntity.class, renderer, "field_77045_g", "mainModel");
+            } catch (UnableToAccessFieldException e) {
+                e.printStackTrace();
+            }
 
             AbstractModelSkin model = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
-            if (object instanceof ModelBiped) {
+            if (object != null && object instanceof ModelBiped) {
                 model.render(entity, (ModelBiped) object, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
             } else {
                 model.render(entity, null, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
