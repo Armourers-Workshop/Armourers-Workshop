@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.config;
 
 import java.io.File;
+import java.util.UUID;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -40,6 +41,8 @@ public class ConfigHandler {
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
+    
+    public static UUID remotePlayerId;
     
     //Register
     /** Should skins be dropped on player death.<br/>

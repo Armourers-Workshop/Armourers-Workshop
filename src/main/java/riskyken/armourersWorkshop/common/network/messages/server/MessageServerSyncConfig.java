@@ -1,11 +1,14 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
+import java.util.UUID;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.network.ByteBufHelper;
@@ -22,6 +25,12 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private String[] itemOverrides;
     private boolean libraryShowsModelPreviews;
     private boolean lockDyesOnSkins;
+    private UUID playerId;
+    
+    public MessageServerSyncConfig(EntityPlayer player) {
+        this();
+        playerId = player.getUniqueID();
+    }
     
     public MessageServerSyncConfig() {
         this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
@@ -38,6 +47,12 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ByteBufHelper.writeStringArrayToBuf(buf, itemOverrides);
         buf.writeBoolean(libraryShowsModelPreviews);
         buf.writeBoolean(lockDyesOnSkins);
+        if (playerId == null) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+            ByteBufHelper.writeUUID(buf, playerId);
+        }
     }
     
     
@@ -48,6 +63,9 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         itemOverrides = ByteBufHelper.readStringArrayFromBuf(buf);
         libraryShowsModelPreviews = buf.readBoolean();
         lockDyesOnSkins = buf.readBoolean();
+        if (buf.readBoolean()) {
+            playerId = ByteBufHelper.readUUID(buf);
+        }
     }
 
     @Override
@@ -63,5 +81,6 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ModAddonManager.itemOverrides = message.itemOverrides;
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;
+        ConfigHandler.remotePlayerId = message.playerId;
     }
 }

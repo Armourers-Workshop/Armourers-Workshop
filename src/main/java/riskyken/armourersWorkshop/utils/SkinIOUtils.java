@@ -16,7 +16,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.DimensionManager;
@@ -31,13 +30,6 @@ public final class SkinIOUtils {
     
     public static boolean saveSkinFromFileName(String fileName, Skin skin) {
         File file = new File(getSkinLibraryDirectory(), fileName);
-        return saveSkinToFile(file, skin);
-    }
-    
-    public static boolean saveSkinFromFileName(String fileName, Skin skin, EntityPlayerMP player) {
-        File file = new File(getSkinLibraryDirectory(), "private");
-        file = new File(file, player.getUniqueID().toString());
-        file = new File(file, fileName);
         return saveSkinToFile(file, skin);
     }
     
@@ -67,15 +59,13 @@ public final class SkinIOUtils {
         return true;
     }
     
-    public static Skin loadSkinFromFileName(String fileName, EntityPlayerMP player) {
-        File file = new File(getSkinLibraryDirectory(), "private");
-        file = new File(file, player.getUniqueID().toString());
-        file = new File(file, fileName);
-        return loadSkinFromFile(file);
-    }
-    
     public static Skin loadSkinFromFileName(String fileName) {
         File file = new File(getSkinLibraryDirectory(), fileName);
+        if (!isInSubDirectory(getSkinLibraryDirectory(), file)) {
+            ModLogger.log(Level.WARN, "Player tried to load a file in a invalid location.");
+            ModLogger.log(Level.WARN, String.format("The file was: %s", file.getAbsolutePath().replace("%", "")));
+            return null;
+        }
         return loadSkinFromFile(file);
     }
     
@@ -328,5 +318,18 @@ public final class SkinIOUtils {
         } else {
             player.addChatComponentMessage(new ChatComponentText("No skins found to recover."));
         }
+    }
+    
+    public static boolean isInSubDirectory(File dir, File file) {
+        if (file == null) {
+            return false;
+        }
+        if (file.isDirectory()) {
+            //return true;
+        }
+        if (file.getParentFile().equals(dir)) {
+            return true;
+        }
+        return isInSubDirectory(dir, file.getParentFile());
     }
 }

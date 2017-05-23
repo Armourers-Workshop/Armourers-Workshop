@@ -15,6 +15,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -194,29 +195,10 @@ public final class CommonSkinCache implements Runnable {
     
     private void sendSkinIdToClient(String fileName, EntityPlayerMP player) {
         if (!fileNameIdLinkMap.containsKey(fileName)) {
-            boolean publicFiles = true;
-            
             String basicFileName = fileName;
-            /*
-            if (fileName.contains("\\")) {
-                String[] splitName = fileName.split("\\");
-                basicFileName = splitName[splitName.length - 1];
-                publicFiles = false;
-            }
-            */
-            Skin skin = null;
-            if (publicFiles) {
-                skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour");
-            } else {
-                skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour", player);
-            }
-            
+            Skin skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour");
             if (skin != null) {
-                if (publicFiles) {
-                    addEquipmentDataToCache(skin, basicFileName);
-                } else {
-                    addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  basicFileName);
-                }
+                addEquipmentDataToCache(skin, basicFileName);
             } else {
                 ModLogger.log(Level.ERROR, String.format("Player %s requested ID for file name %s but the file was not found.",
                         player.getCommandSenderName(), fileName));
@@ -254,6 +236,10 @@ public final class CommonSkinCache implements Runnable {
                 }
             }
         }
+    }
+    
+    public Skin getSkin(ISkinPointer skinPointer) {
+        return getEquipmentData(skinPointer.getSkinId());
     }
     
     public Skin getEquipmentData(int equipmentId) {

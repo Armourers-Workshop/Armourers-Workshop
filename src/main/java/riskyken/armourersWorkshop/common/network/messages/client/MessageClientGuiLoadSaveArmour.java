@@ -98,7 +98,7 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
                 te.sendArmourToClient(message.filename, message.filePath, player);
                 break;
             case SERVER_LOAD:
-                te.loadArmour(message.filename, message.filePath, player, message.publicList);
+                te.loadArmour(message.filename, message.filePath, player);
                 break;
             case SERVER_SAVE:
                 te.saveArmour(message.filename, message.filePath, player, message.publicList);

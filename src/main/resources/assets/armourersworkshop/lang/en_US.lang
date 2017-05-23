@@ -250,6 +250,7 @@ inventory.armourersworkshop:armourLibrary.rollover.notOnServer=You must be conne
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Open library folder on your computer.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Delete skin.
 inventory.armourersworkshop:armourLibrary.rollover.refresh=Refresh library files.
+inventory.armourersworkshop:armourLibrary.rollover.newFolder=Create new folder.
 inventory.armourersworkshop:armourLibrary.label.enterFileName=Enter file name.
 inventory.armourersworkshop:armourLibrary.label.typeToSearch=Type to search...
 

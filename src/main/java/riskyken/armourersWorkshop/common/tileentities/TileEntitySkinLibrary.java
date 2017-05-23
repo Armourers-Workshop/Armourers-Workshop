@@ -93,46 +93,34 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        //TODO Check if in lib folder
-        /*
-        if (fileName.contains("/") | fileName.contains("\\")) {
-            ModLogger.log(String.format("Player %s tried to save a file with invalid characters in the file name.",
-                    player.getCommandSenderName()));
-            ModLogger.log(String.format("The file name was: %s", fileName));
-            return;
-        }
-        */
-        
         if (stackInput == null) {
             return;
         }
-        
         if (stackOutput != null) {
             return;
         }
-        
         if (!(stackInput.getItem() instanceof ItemSkin)) {
             return;
         }
-        
         if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
         
-        int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
+        if (skinPointer == null) {
+            return;
+        }
         
-        Skin skin = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
+        Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
         }
         
-        boolean saved = false;
-        if (publicFiles) {
-            saved = SkinIOUtils.saveSkinFromFileName(filePath + fileName + ".armour", skin);
-        } else {
-            saved = SkinIOUtils.saveSkinFromFileName(filePath + fileName + ".armour", skin, player);
+        if (!publicFiles) {
+            filePath = "/private/" + player.getUniqueID().toString() + filePath;
         }
-        if (!saved) {
+        
+        if (!SkinIOUtils.saveSkinFromFileName(filePath + fileName + ".armour", skin)) {
             return;
         }
         
@@ -145,8 +133,6 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         } else {
             ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, player);
         }
-
-        
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, stackInput);
@@ -157,21 +143,10 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
      * @param filePath 
      * @param filename The name of the file to load.
      * @param player The player that pressed the load button.
-     * @param publicFiles If true load from the public file list or false for the players private files.
      */
-    public void loadArmour(String fileName, String filePath, EntityPlayerMP player, boolean publicFiles) {
+    public void loadArmour(String fileName, String filePath, EntityPlayerMP player) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        
-        //TODO check if in lib folder
-        /*
-        if (fileName.contains("/") | fileName.contains("\\")) {
-            ModLogger.log(String.format("Player %s tried to load a file with invalid characters in the file name.",
-                    player.getCommandSenderName()));
-            ModLogger.log(String.format("The file name was: %s", fileName));
-            return;
-        }
-        */
         
         if (!isCreativeLibrary()) {
             if (stackInput == null) {
@@ -193,12 +168,8 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         Skin skin = null;
         String fullFileName = fileName;
         
-        if (publicFiles) {
-            skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + ".armour");
-        } else {
-            skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + ".armour", player);
-            fullFileName = player.getUniqueID().toString() + "\\" + fullFileName;
-        }
+        
+        skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + ".armour");
         
         if (skin == null) {
             return;

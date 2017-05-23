@@ -53,11 +53,9 @@ public final class LibraryHelper {
                     path = path.replace(SkinIOUtils.getSkinLibraryDirectory().getPath(), "");
                     path = path.replace("\\", "/");
                     
-                    ModLogger.log("name: " + name.replace("%", ""));
-                    ModLogger.log("parent: " + path.replace("%", ""));
-                    ModLogger.log("");
-                    
-                    fileList.add(new LibraryFile(templateFiles[i].getName(), path, null, true));
+                    if (!name.equals("private")) {
+                        fileList.add(new LibraryFile(templateFiles[i].getName(), path, null, true));
+                    }
                 }
             }
         }

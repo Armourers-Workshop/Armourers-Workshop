@@ -65,7 +65,7 @@ public class CommonLibraryManager implements ILibraryManager {
                 try {
                     UUID playerId = UUID.fromString(file.getName());
                     LibraryFileList fileList = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
-                    ArrayList<LibraryFile> privateFileList = LibraryHelper.getSkinFilesInDirectory(file, false);
+                    ArrayList<LibraryFile> privateFileList = LibraryHelper.getSkinFilesInDirectory(file, true);
                     fileList.setFileList(privateFileList);
                     serverPrivateFiles.put(playerId, fileList);
                     count += fileList.getFileCount();
