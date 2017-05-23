@@ -54,24 +54,12 @@ public final class ModItemRecipes {
             's', "stickWood"});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.blockMarker), 1, 0), new Object[] {
-            " wc",
-            " ib",
-            "s  ",
+            "  b",
+            " c ",
+            "b  ",
             'c', ModBlocks.colourable,
-            'i', "ingotIron",
-            'w', "dyeWhite",
-            'b', "dyeBlack",
-            's', "stickWood"});
+            'b', "dyeBlack"});
         
-        CraftingManager.addShapedRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.blockMarker), 1, 0), new Object[] {
-                " bc",
-                " iw",
-                "s  ",
-                'c', ModBlocks.colourable,
-                'i', "ingotIron",
-                'w', "dyeWhite",
-                'b', "dyeBlack",
-                's', "stickWood"});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModItems.shadeNoiseTool, 1, 0), new Object[] {
             " wd",
