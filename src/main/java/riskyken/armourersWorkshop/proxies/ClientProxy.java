@@ -297,7 +297,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin) {
-        SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin);
+        SkinIOUtils.saveSkinFromFileName(filePath + fileName + ".armour", skin);
         ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, null);
     }
     

@@ -75,7 +75,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, "/", skin);
+        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, filePath, skin);
         PacketHandler.networkWrapper.sendTo(message, player);
         
         this.decrStackSize(0, 1);
