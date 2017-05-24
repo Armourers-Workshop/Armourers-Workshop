@@ -104,6 +104,7 @@ public class GuiArmourLibrary extends GuiContainer {
         this.xSize = reso.getScaledWidth();
         this.ySize = reso.getScaledHeight();
         super.initGui();
+        
         String guiName = armourLibrary.getInventoryName();
         
         int slotSize = 18;
@@ -152,7 +153,7 @@ public class GuiArmourLibrary extends GuiContainer {
         buttonList.add(openFolderButton);
         
         reloadButton = new GuiIconButton(this, -1, PADDING * 2 + 20, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.refresh"), texture);
-        reloadButton.setIconLocation(50, 93, 24, 24);
+        reloadButton.setIconLocation(75, 93, 24, 24);
         buttonList.add(reloadButton);
         
         deleteButton = new GuiIconButton(this, -1, PADDING * 3 + 40, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
@@ -160,8 +161,14 @@ public class GuiArmourLibrary extends GuiContainer {
         buttonList.add(deleteButton);
         
         newFolderButton = new GuiIconButton(this, -1, PADDING * 4 + 60, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.newFolder"), texture);
-        newFolderButton.setIconLocation(50, 118, 24, 24);
+        newFolderButton.setIconLocation(75, 118, 24, 24);
         buttonList.add(newFolderButton);
+        
+        int listWidth = this.width - INVENTORY_WIDTH - 10 - PADDING * 3;
+        int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
+        int typeSwitchWidth = 80;
+        
+        fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
         
         if (mc.isSingleplayer()) {
             fileSwitchRemotePublic.enabled = false;
@@ -173,18 +180,12 @@ public class GuiArmourLibrary extends GuiContainer {
             setFileSwitchType(LibraryFileType.SERVER_PUBLIC);
         }
         
-        //fileSwitchRemotePrivate.enabled = false;
-        
         buttonList.add(fileSwitchlocal);
         buttonList.add(fileSwitchRemotePublic);
         buttonList.add(fileSwitchRemotePrivate);
         
         loadSaveButton = new GuiButtonExt(BUTTON_ID_LOAD_SAVE, PADDING * 2 + 18, this.height - INVENTORY_HEIGHT - PADDING * 2 - 2 - 20 - neiBump, 108, 20, "----LS--->");
         buttonList.add(loadSaveButton);
-        
-        int listWidth = this.width - INVENTORY_WIDTH - 10 - PADDING * 3;
-        int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
-        int typeSwitchWidth = 80;
         
         filenameTextbox = new GuiLabeledTextField(fontRendererObj, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
         filenameTextbox.setMaxStringLength(30);
@@ -194,8 +195,6 @@ public class GuiArmourLibrary extends GuiContainer {
         searchTextbox.setMaxStringLength(30);
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
-
-        fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
         
         scrollbar = new GuiScrollbar(2, INVENTORY_WIDTH + 10 + listWidth, TITLE_HEIGHT + 14 + PADDING * 2, 10, listHeight, "", false);
         scrollbar.setValue(scrollAmount);
@@ -218,7 +217,6 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         buttonList.add(dropDownList);
-        currentFolder = "/";
     }
     
     /**
@@ -250,20 +248,35 @@ public class GuiArmourLibrary extends GuiContainer {
         case LOCAL:
             fileSwitchlocal.setPressed(true);
             currentFolder = "/";
-            reloadButton.visible = true;
+            setupLibraryEditButtons();
             break;
         case SERVER_PUBLIC:
             fileSwitchRemotePublic.setPressed(true);
             currentFolder = "/";
-            reloadButton.visible = false;
+            setupLibraryEditButtons();
             break;
         case SERVER_PRIVATE:
             fileSwitchRemotePrivate.setPressed(true);
             currentFolder = getPrivateRoot(player);
-            reloadButton.visible = false;
+            setupLibraryEditButtons();
             break;
         }
         fileSwitchType = type;
+    }
+    
+    private void setupLibraryEditButtons() {
+        IGuiListItem listItem = fileList.getSelectedListEntry();
+        reloadButton.enabled = newFolderButton.enabled = openFolderButton.enabled = deleteButton.enabled = false;
+        reloadButton.setDisableText("Not enabled yet!");
+        newFolderButton.setDisableText("Not enabled yet!");
+        if (mc.isIntegratedServerRunning()) {
+            reloadButton.enabled = openFolderButton.enabled = true;
+            //reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
+            if (listItem != null) {
+                deleteButton.enabled = true;
+            }
+        }
+        
     }
     
     @Override
@@ -283,22 +296,24 @@ public class GuiArmourLibrary extends GuiContainer {
         }
         
         if (button == reloadButton) {
-            openEquipmentFolder();
-        }
-        
-        if (button == reloadButton) {
             if (fileSwitchType == LibraryFileType.LOCAL) {
                 ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
                 libraryManager.reloadLibrary();
+            } else {
+                //TODO reload server library
             }
         }
         
+        if (button == openFolderButton) {
+            openEquipmentFolder();
+        }
+        
         if (button == deleteButton) {
-            //showDeleteDialog();
+            //TODO showDeleteDialog();
         }
         
         if (button == newFolderButton) {
-            //showNewFolderDialog();
+            //TODO showNewFolderDialog();
         }
         
         GuiFileListItem fileItem = (GuiFileListItem) fileList.getSelectedListEntry();
@@ -343,7 +358,7 @@ public class GuiArmourLibrary extends GuiContainer {
                     message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.CLIENT_SAVE, false);
                     PacketHandler.networkWrapper.sendToServer(message);
                 } else {
-                    //TODO show override skin confirmation dialog
+                    //TODO show overwrite skin confirmation dialog
                     message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
                     PacketHandler.networkWrapper.sendToServer(message);
                 }
@@ -351,6 +366,8 @@ public class GuiArmourLibrary extends GuiContainer {
                 //filenameTextbox.setText("");
             }
         }
+        
+        setupLibraryEditButtons();
     }
     
     public void setFileName(String text) {
@@ -486,17 +503,17 @@ public class GuiArmourLibrary extends GuiContainer {
             }
         }
         
-        if (showModelPreviews()) {
+        if (showModelPreviews() & height > 340) {
             GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
             if (item != null && !item.getFile().isDirectory()) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getFile().getFullName(), true);
                 if (skin != null) {
                     SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
-                    float x = 100;
-                    float y = 110;
-                    float scale = 50F;
+                    float x = 90;
+                    float y = 170;
+                    float scale = 80F;
                     GL11.glPushMatrix();
-                    GL11.glTranslatef((float)x, (float)y, 50.0F);
+                    GL11.glTranslatef((float)x, (float)y, 80.0F);
                     GL11.glScalef((float)(-scale), (float)scale, (float)scale);
                     GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
@@ -559,21 +576,32 @@ public class GuiArmourLibrary extends GuiContainer {
                     filenameTextbox.setText(item.getDisplayName());
                 } else {
                     if (item.getFile().fileName.equals("../")) {
-                        String[] folderSplit = currentFolder.split("/");
-                        currentFolder = "";
-                        for (int i = 0; i < folderSplit.length - 1; i++) {
-                            currentFolder += folderSplit[i] + "/";
-                        }
-                        scrollAmount = 0;
+                        goBackFolder();
                     } else {
-                        currentFolder = item.getFile().getFullName() + "/";
-                        scrollAmount = 0;
+                        setCurrentFolder(item.getFile().getFullName() + "/");
                     }
                 }
             }
         }
         scrollbar.setValue(scrollAmount);
         scrollbar.mousePressed(mc, mouseX, mouseY);
+        
+        setupLibraryEditButtons();
+    }
+    
+    private void setCurrentFolder(String currentFolder) {
+        this.currentFolder = currentFolder;
+        fileList.setSelectedIndex(-1);
+        scrollAmount = 0;
+    }
+    
+    private void goBackFolder() {
+        String[] folderSplit = currentFolder.split("/");
+        String currentFolder = "";
+        for (int i = 0; i < folderSplit.length - 1; i++) {
+            currentFolder += folderSplit[i] + "/";
+        }
+        setCurrentFolder(currentFolder);
     }
     
     @Override
