@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -339,6 +340,14 @@ public class ClientProxy extends CommonProxy {
             return RenderBlockColourMixer.renderId;
         }
         return super.getBlockRenderType(block);
+    }
+    
+    @Override
+    public MinecraftServer getServer() {
+        if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
+            return Minecraft.getMinecraft().getIntegratedServer();
+        }
+        return super.getServer();
     }
     
     public static enum SkinRenderType {

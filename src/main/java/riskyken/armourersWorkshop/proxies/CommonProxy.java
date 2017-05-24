@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.proxies;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.library.CommonLibraryManager;
@@ -79,5 +80,9 @@ public class CommonProxy {
     
     public int getBlockRenderType(Block block) {
         return 0;
+    }
+    
+    public MinecraftServer getServer() {
+        return MinecraftServer.getServer();
     }
 }

@@ -5,8 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 
 public final class UtilPlayer {
     
@@ -74,5 +76,17 @@ public final class UtilPlayer {
                 UtilItems.spawnItemInWorld(player.getEntityWorld(), player.posX, player.posY, player.posZ, stack);
             }
         }
+    }
+    
+    public static boolean isPlayerOp(EntityPlayer player) {
+        MinecraftServer server = ArmourersWorkshop.proxy.getServer();
+        if (player == null || player.getGameProfile() == null) {
+            return false;
+        }
+        return server.getConfigurationManager().func_152596_g(player.getGameProfile());
+    }
+    
+    private static MinecraftServer getIntegratedServer() {
+        return null;
     }
 }
