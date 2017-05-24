@@ -63,9 +63,11 @@ public class GuiIconButton extends GuiButtonExt {
         int hoverState = this.getHoverState(this.field_146123_n);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         int xPos = iconPosX;
+        //disabled
         if (hoverState == 0) {
-            xPos += (iconWidth + 1) * 4;
+            xPos += (iconWidth + 1) * 2;
         }
+        //hovering
         if (hoverState == 2) {
             xPos += iconWidth + 1;
         }
