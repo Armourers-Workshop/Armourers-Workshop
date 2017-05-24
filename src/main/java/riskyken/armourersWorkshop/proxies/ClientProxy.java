@@ -85,17 +85,11 @@ public class ClientProxy extends CommonProxy {
     public static EquipmentWardrobeHandler equipmentWardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
     
-    private static boolean shadersModLoaded;
-    private static boolean moreplayermodelsLoaded;
-    private static boolean coloredLightsLoaded;
-    private static boolean smartMovingLoaded;
-    private static boolean jrbaClientLoaded;
-    
     public static int renderPass;
     public static IIcon dyeBottleSlotIcon;
     
     public static boolean isJrbaClientLoaded() {
-        return jrbaClientLoaded;
+        return ModAddonManager.addonJBRAClient.isModLoaded();
     }
     
     public ClientProxy() {
@@ -182,35 +176,11 @@ public class ClientProxy extends CommonProxy {
     }
     
     private void enableCrossModSupport() {
-        try {
-            Class.forName("shadersmodcore.client.Shaders");
-            ModLogger.log("Shaders mod support active");
-            shadersModLoaded = true;
-        } catch (Exception e) {
+        if (ModAddonManager.addonMorePlayerModels.isModLoaded() & ModAddonManager.addonSmartMoving.isModLoaded()) {
+            ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop can not support this.");
         }
-        if (Loader.isModLoaded("moreplayermodels")) {
-            moreplayermodelsLoaded = true;
-            ModLogger.log("More Player Models support active");
-        }
-        if (Loader.isModLoaded("easycoloredlights")) {
-            coloredLightsLoaded = true;
-            ModLogger.log("Colored Lights support active");
-        }
-        if (Loader.isModLoaded("SmartMoving")) {
-            smartMovingLoaded = true;
-            ModLogger.log("Smart Moving support active");
-        }
-        try {
-            Class.forName("JinRyuu.JBRA.JBRA");
-            jrbaClientLoaded = true;
-            ModLogger.log("JRBA Client support active");
-        } catch (Exception e) {
-        }
-        if (moreplayermodelsLoaded & smartMovingLoaded) {
-            ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop cannot support this.");
-        }
-        if (coloredLightsLoaded & smartMovingLoaded) {
-            ModLogger.log(Level.WARN, "Colored Lights and Smart Moving are both installed. Armourer's Workshop cannot support this.");
+        if (ModAddonManager.addonColoredLights.isModLoaded() & ModAddonManager.addonSmartMoving.isModLoaded()) {
+            ModLogger.log(Level.WARN, "Colored Lights and Smart Moving are both installed. Armourer's Workshop can not support this.");
         }
         
         ModLogger.log("Skin render type set to: " + getSkinRenderType().toString().toLowerCase());
@@ -225,16 +195,16 @@ public class ClientProxy extends CommonProxy {
         case 3: //Force render layer
             return SkinRenderType.RENDER_LAYER;
         default: //Auto
-            if (moreplayermodelsLoaded) {
+            if (ModAddonManager.addonMorePlayerModels.isModLoaded()) {
                 return SkinRenderType.RENDER_EVENT;
             }
-            if (shadersModLoaded & !smartMovingLoaded) {
+            if (ModAddonManager.addonShaders.isModLoaded() & !ModAddonManager.addonSmartMoving.isModLoaded()) {
                 return SkinRenderType.RENDER_EVENT;
             }
-            if (coloredLightsLoaded & !smartMovingLoaded) {
+            if (ModAddonManager.addonColoredLights.isModLoaded() & !ModAddonManager.addonSmartMoving.isModLoaded()) {
                 return SkinRenderType.RENDER_EVENT;
             }
-            if (jrbaClientLoaded) {
+            if (ModAddonManager.addonJBRAClient.isModLoaded()) {
                 return SkinRenderType.RENDER_EVENT;
             }
             return SkinRenderType.MODEL_ATTACHMENT;
@@ -242,13 +212,13 @@ public class ClientProxy extends CommonProxy {
     }
     
     public static boolean useSafeTextureRender() {
-        if (shadersModLoaded) {
+        if (ModAddonManager.addonShaders.isModLoaded()) {
             return true;
         }
         if (ConfigHandlerClient.skinTextureRenderOverride) {
             return true;
         }
-        if (coloredLightsLoaded) {
+        if (ModAddonManager.addonColoredLights.isModLoaded()) {
             return true;
         }
         return false;
