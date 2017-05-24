@@ -171,8 +171,8 @@ public class GuiArmourLibrary extends GuiContainer {
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
         
         if (mc.isSingleplayer()) {
-            fileSwitchRemotePublic.enabled = false;
-            fileSwitchRemotePrivate.enabled = false;
+            //fileSwitchRemotePublic.enabled = false;
+            //fileSwitchRemotePrivate.enabled = false;
             fileSwitchRemotePublic.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
             fileSwitchRemotePrivate.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
             setFileSwitchType(LibraryFileType.LOCAL);
@@ -267,16 +267,35 @@ public class GuiArmourLibrary extends GuiContainer {
     private void setupLibraryEditButtons() {
         IGuiListItem listItem = fileList.getSelectedListEntry();
         reloadButton.enabled = newFolderButton.enabled = openFolderButton.enabled = deleteButton.enabled = false;
-        reloadButton.setDisableText("Not enabled yet!");
-        newFolderButton.setDisableText("Not enabled yet!");
-        if (mc.isIntegratedServerRunning()) {
+
+
+        
+        if (fileSwitchType == LibraryFileType.LOCAL) {
             reloadButton.enabled = openFolderButton.enabled = true;
-            //reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
-            if (listItem != null) {
-                deleteButton.enabled = true;
+            if (mc.isIntegratedServerRunning()) {
+                newFolderButton.setDisableText("Not enabled yet!");
+                deleteButton.setDisableText("Not enabled yet!");
+                //reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
+                if (listItem != null) {
+                    //deleteButton.enabled = true;
+                }
+            } else {
+                newFolderButton.setDisableText("Not enabled yet!");
+                deleteButton.setDisableText("Not enabled yet!");
             }
         }
+        if (fileSwitchType == LibraryFileType.SERVER_PUBLIC) {
+            openFolderButton.setDisableText("");
+            reloadButton.setDisableText("");
+        }
+        if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
+            openFolderButton.setDisableText("");
+            reloadButton.setDisableText("");
+        }
         
+        newFolderButton.enabled  = deleteButton.enabled = false;
+        newFolderButton.setDisableText("Not enabled yet!");
+        deleteButton.setDisableText("Not enabled yet!");
     }
     
     @Override
