@@ -55,9 +55,9 @@ public class LibraryFile implements Comparable<LibraryFile> {
     @Override
     public int compareTo(LibraryFile o) {
         if (isDirectory() & !o.isDirectory()) {
-            return -1;
+            return getFullName().compareTo(o.getFullName()) - 1000;
         } else if (!isDirectory() & o.isDirectory()) {
-            return 1;
+            return getFullName().compareTo(o.getFullName()) + 1000;
         }
         return getFullName().compareTo(o.getFullName());
     }
