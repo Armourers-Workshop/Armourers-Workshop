@@ -1,3 +1,59 @@
+Build 0.44.0
+Added:
+	multi-blocks
+	folders to the library
+	blending tool
+	added skin unlock item
+	enabled wand of style for chickens, zombies, skeletons and custom npcs (!!UNFINISHED!!)
+	debug render to show block render bounds
+	added resyncWardrobe command
+	added lock dyes config option to the skinning table
+	added clear skin dye recipe with (soap + skin in crafting grid)
+Fixed:
+	crash rendering block skin on the same tick it is removed
+	being able to place empty dye bottles in the dye table
+	transparent skins not showing correctly in the dye table
+	configs not getting updated when changed in game
+	missing in game config options
+	library private folder syncing issues on offline mode servers
+	Fixed update check chat link point to the wrong location.
+Changed:
+	updated guild book credits
+	allowed setting different values for each wardrobe slot limit
+	allowed for up to 8 slots in the wardrobe
+	show debug tool in creative tab
+	added face mode image to paint roller
+	changed dye table recipe to match new texture
+	change block marker recipe to match new texture
+	incressed the size of the library model preview
+	library model preview is hidden if the window is to small
+	local file view in the library will no longer try to load files from the server
+	changed mannequin to not render extra renders if mannequin is not visible
+	changed setSkinColumnCount command to setUnlockedWardrobeSlots (usage /armourers @p setUnlockedWardrobeSlots [value:1-8] [skintype])
+	updated de_DE lang file (Flummie2000)
+	updated zh_CH lang file (Ethan)
+Art:
+	added new item textures by TheEpicJames for;
+		armourers hammer
+		blend tool
+		block marker
+		burn tool
+		dodge tool
+		colour picker
+		noise tool
+		colour noise tool
+		debug tool
+		dye bottle
+		gift sack
+		hue tool
+		mannequin tool
+		paint roller
+		paintbrush
+		soap
+	added new dye table textures (LordPhrozen)
+	added skin unlock texture by LordPhrozen
+
+
 Build 0.43.1
 Fixed:
 	Crafting table dyed skins causes disconnect.
