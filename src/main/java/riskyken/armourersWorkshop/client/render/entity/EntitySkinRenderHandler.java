@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
 
@@ -67,7 +68,9 @@ public final class EntitySkinRenderHandler {
             if (props == null) {
                 return;
             }
+            ModRenderHelper.enableAlphaBlend();
             renderer.render(entity, event.renderer, event.x, event.y, event.z, props.getEquipmentData());
+            ModRenderHelper.disableAlphaBlend();
         }
     }
 }
