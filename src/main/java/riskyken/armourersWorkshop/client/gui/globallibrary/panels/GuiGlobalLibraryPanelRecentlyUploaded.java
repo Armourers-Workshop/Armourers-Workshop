@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
@@ -10,12 +12,15 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -29,12 +34,15 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     
     private static final String RECENTLY_UPLOADED_URL = "http://plushie.moe/armourers_workshop/recently-uploaded.php";
+    private static final String SEARCH_URL = "http://plushie.moe/armourers_workshop/skin-search.php";
     
     private JsonArray json = null;
     private int displayLimit = 1;
     
     private FutureTask<JsonArray> downloadListTask;
     private CompletionService<Skin> skinCompletion;
+    
+    private GuiButtonExt buttonShowAll;
     
     public GuiGlobalLibraryPanelRecentlyUploaded(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -91,6 +99,25 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
         int rowSize = (int) Math.floor(boxW / iconSize);
         int colSize = (int) Math.floor(boxH / iconSize);
         displayLimit = colSize * rowSize;
+        
+        buttonList.clear();
+        buttonShowAll = new GuiButtonExt(-1, x + boxW + 15, y, 80, 20, "Show All");
+        buttonList.add(buttonShowAll);
+    }
+    
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        if (button == buttonShowAll) {
+            try {
+                String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode("", "UTF-8");
+                FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
+                ((GuiGlobalLibrary)parent).panelSearchResults.setDownloadSearchResultsTask(futureTask);
+                ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(futureTask);
+                ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     @Override
