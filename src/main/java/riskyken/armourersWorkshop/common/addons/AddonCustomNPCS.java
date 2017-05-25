@@ -80,19 +80,6 @@ public class AddonCustomNPCS extends ModAddon {
 
         @Override
         public void render(EntityLivingBase entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
-            
-            AbstractModelSkin model = SkinModelRenderer.INSTANCE.getModelForEquipmentType(SkinTypeRegistry.skinWings);
-            
-            ISkinPointer skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinWings, 0);
-            
-            if (!entityEquipment.haveEquipment(SkinTypeRegistry.skinWings, 0)) {
-                return;
-            }
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-            if (skin == null) {
-                return;
-            }
-            
             float scale = 0.0625F;
             
             GL11.glPushMatrix();
