@@ -224,6 +224,13 @@ public class ClientProxy extends CommonProxy {
         return false;
     }
     
+    public static boolean useTexturePainting() {
+        if (ModAddonManager.addonJBRAClient.isModLoaded()) {
+            return false;
+        }
+        return !ConfigHandlerClient.disableTexturePainting;
+    }
+    
     public static boolean useMultipassSkinRendering() {
         return ConfigHandlerClient.multipassSkinRendering;
     }

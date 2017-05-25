@@ -18,7 +18,6 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
@@ -38,7 +37,7 @@ public class PlayerTextureHandler {
     
     private HashMap<PlayerPointer, EntityTextureInfo> playerTextureMap = new HashMap<PlayerPointer, EntityTextureInfo>();
     private final Profiler profiler;
-    private boolean disableTexturePainting;
+    private boolean useTexturePainting;
     
     public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -47,8 +46,8 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRender(RenderPlayerEvent.Pre event) {
-        disableTexturePainting = ConfigHandlerClient.disableTexturePainting;
-        if(disableTexturePainting) {
+        useTexturePainting = ClientProxy.useTexturePainting();
+        if(!useTexturePainting) {
             return;
         }
         if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
@@ -99,7 +98,7 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.Post event) {
-        if(disableTexturePainting) {
+        if(!useTexturePainting) {
             return;
         }
         if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
