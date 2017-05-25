@@ -171,8 +171,8 @@ public class GuiArmourLibrary extends GuiContainer {
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
         
         if (mc.isSingleplayer()) {
-            //fileSwitchRemotePublic.enabled = false;
-            //fileSwitchRemotePrivate.enabled = false;
+            fileSwitchRemotePublic.enabled = false;
+            fileSwitchRemotePrivate.enabled = false;
             fileSwitchRemotePublic.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
             fileSwitchRemotePrivate.setDisableText(GuiHelper.getLocalizedControlName(guiName, "rollover.notOnServer"));
             setFileSwitchType(LibraryFileType.LOCAL);
@@ -274,6 +274,7 @@ public class GuiArmourLibrary extends GuiContainer {
             reloadButton.enabled = openFolderButton.enabled = true;
             if (mc.isIntegratedServerRunning()) {
                 newFolderButton.setDisableText("Not enabled yet!");
+                reloadButton.enabled = true;
                 deleteButton.setDisableText("Not enabled yet!");
                 //reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
                 if (listItem != null) {
