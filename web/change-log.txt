@@ -1,14 +1,27 @@
 Build 0.44.0
+
+To be finished for 0.44
+deleting files and folders from library
+	private and local library
+	basic version of server library (OPs only will do permissions in next version)
+	delete confirmation dialog
+	file overwrite confirmation dialog
+confirmation dialog when pressing armourer clear button
+fix wand of style sync bugs
+globel library download button (all the code is already in..... i think) files can be saved in a download folder in the library
+	downloads folder icon would be nice
+
+
 Added:
 	multi-blocks
 	folders to the library
 	blending tool
-	added skin unlock item
+	skin slot unlock item
 	enabled wand of style for chickens, zombies, skeletons and custom npcs (!!UNFINISHED!!)
 	debug render to show block render bounds
-	added resyncWardrobe command
-	added lock dyes config option to the skinning table
-	added clear skin dye recipe with (soap + skin in crafting grid)
+	resyncWardrobe command
+	lock dyes config option to the skinning table
+	clear skin dye recipe (soap + skin in crafting grid)
 Fixed:
 	crash rendering block skin on the same tick it is removed
 	being able to place empty dye bottles in the dye table
@@ -23,13 +36,13 @@ Changed:
 	allowed for up to 8 slots in the wardrobe
 	show debug tool in creative tab
 	added face mode image to paint roller
-	changed dye table recipe to match new texture
-	change block marker recipe to match new texture
+	dye table recipe to match new texture
+	block marker recipe to match new texture
 	incressed the size of the library model preview
 	library model preview is hidden if the window is to small
 	local file view in the library will no longer try to load files from the server
-	changed mannequin to not render extra renders if mannequin is not visible
-	changed setSkinColumnCount command to setUnlockedWardrobeSlots (usage /armourers @p setUnlockedWardrobeSlots [value:1-8] [skintype])
+	mannequin to not render extra renders if mannequin is not visible
+	setSkinColumnCount command to setUnlockedWardrobeSlots (usage /armourers @p setUnlockedWardrobeSlots [value:1-8] [skintype])
 	updated de_DE lang file (Flummie2000)
 	updated zh_CH lang file (Ethan)
 Art:
@@ -50,7 +63,7 @@ Art:
 		paint roller
 		paintbrush
 		soap
-	added new dye table textures (LordPhrozen)
+	added new dye table textures by LordPhrozen
 	added skin unlock texture by LordPhrozen
 
 
