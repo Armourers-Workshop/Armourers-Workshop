@@ -18,7 +18,6 @@ import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkinData;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
@@ -43,13 +42,17 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
             return;
         }
         if (stack == null) {
-            ISkinType skinType = SkinTypeHelper.getSkinTypeForSlot(slotId);
+            ISkinType skinType = getSkinTypeForSlot(slotId);
             equipmentData.removeEquipment(skinType, 0);
         } else {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
             equipmentData.addEquipment(skinData.skinType, 0, skinData);
         }
         sendEquipmentDataToPlayerToAllPlayersAround();
+    }
+    
+    private ISkinType getSkinTypeForSlot(int slotId) {
+        return skinInventory.getSkinTypes().get(slotId);
     }
     
     private void sendEquipmentDataToPlayerToAllPlayersAround() {
