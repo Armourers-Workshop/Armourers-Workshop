@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui;
+package riskyken.armourersWorkshop.client.gui.skinlibrary;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
@@ -271,14 +272,14 @@ public class GuiArmourLibrary extends GuiContainer {
 
         
         if (fileSwitchType == LibraryFileType.LOCAL) {
-            reloadButton.enabled = openFolderButton.enabled = true;
+            reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
             if (mc.isIntegratedServerRunning()) {
                 newFolderButton.setDisableText("Not enabled yet!");
                 reloadButton.enabled = true;
                 deleteButton.setDisableText("Not enabled yet!");
-                //reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
+                
                 if (listItem != null) {
-                    //deleteButton.enabled = true;
+                    deleteButton.enabled = true;
                 }
             } else {
                 newFolderButton.setDisableText("Not enabled yet!");
