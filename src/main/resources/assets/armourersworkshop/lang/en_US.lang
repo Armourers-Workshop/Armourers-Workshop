@@ -344,7 +344,13 @@ chat.armourersworkshop:slotUnlockedFailed=%s skin slots are at maximum.
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe> <player> [skinName | value | value]
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe>
+commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
+commands.armourers.clearSkins.usage=/armourers clearSkins <player>
+commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>
+commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
+commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
+commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=The file %1$s was not found.
 
 # Creative tab
