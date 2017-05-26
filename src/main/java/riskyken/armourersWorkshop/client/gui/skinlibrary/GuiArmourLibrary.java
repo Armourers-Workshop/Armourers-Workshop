@@ -404,7 +404,19 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
         if (result == DialogResult.OK) {
             if (dialog instanceof GuiDialogNewFolder) {
                 GuiDialogNewFolder newFolderDialog = (GuiDialogNewFolder) dialog;
-                ModLogger.log(String.format("making folder call %s in %s", newFolderDialog.getFolderName(), currentFolder));
+                
+                if (fileSwitchType == LibraryFileType.LOCAL) {
+                    File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), currentFolder);
+                    dir = new File(dir, newFolderDialog.getFolderName());
+                    if (!dir.exists()) {
+                        dir.mkdir();
+                    }
+                    ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
+                    ModLogger.log(String.format("making folder call %s in %s", newFolderDialog.getFolderName(), currentFolder));
+                    ModLogger.log("full path: " + dir.getAbsolutePath());
+                }
+                
+
             }
         }
         super.dialogResult(dialog, result);
