@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
@@ -20,6 +21,7 @@ public class CommandArmourers extends CommandBase {
         subCommands.add(new CommandResyncWardrobe());
         subCommands.add(new CommandSetSkin());
         subCommands.add(new CommandSetUnlockedWardrobeSlots());
+        subCommands.add(new CommandAdminPanel());
     }
     
     @Override
