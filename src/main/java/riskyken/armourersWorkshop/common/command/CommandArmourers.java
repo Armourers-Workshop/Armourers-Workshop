@@ -44,6 +44,7 @@ public class CommandArmourers extends CommandBase {
         for (int i = 0; i < subCommandNames.length; i++) {
             subCommandNames[i] = subCommands.get(i).getCommandName();
         }
+        Arrays.sort(subCommandNames);
         return subCommandNames;
     }
     
