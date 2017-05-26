@@ -274,25 +274,31 @@ public class GuiArmourLibrary extends GuiContainer {
         if (fileSwitchType == LibraryFileType.LOCAL) {
             reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
             if (mc.isIntegratedServerRunning()) {
-                newFolderButton.setDisableText("Not enabled yet!");
                 reloadButton.enabled = true;
-                deleteButton.setDisableText("Not enabled yet!");
-                
                 if (listItem != null) {
                     deleteButton.enabled = true;
+                } else {
+                    deleteButton.setDisableText("Select item to delete.");
                 }
-            } else {
-                newFolderButton.setDisableText("Not enabled yet!");
-                deleteButton.setDisableText("Not enabled yet!");
             }
         }
+        
         if (fileSwitchType == LibraryFileType.SERVER_PUBLIC) {
             openFolderButton.setDisableText("");
             reloadButton.setDisableText("");
+            deleteButton.setDisableText("");
+            newFolderButton.setDisableText("");
         }
+        
         if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
             openFolderButton.setDisableText("");
             reloadButton.setDisableText("");
+            newFolderButton.enabled = true;
+            if (listItem != null) {
+                deleteButton.enabled = true;
+            } else {
+                deleteButton.setDisableText("Select item to delete.");
+            }
         }
         
         newFolderButton.enabled  = deleteButton.enabled = false;
