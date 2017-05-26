@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.config.GuiUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -12,10 +13,14 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
 public abstract class AbstractGuiDialog extends Gui {
+    
+    protected static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/dialog.png");
     
     protected final GuiScreen parent;
     protected final IDialogCallback callback;
@@ -116,6 +121,11 @@ public abstract class AbstractGuiDialog extends Gui {
     
     public void drawBackground(int mouseX, int mouseY, float partialTickTime) {
         drawParentCoverBackground();
+        int textureWidth = 176;
+        int textureHeight = 62;
+        int borderSize = 4;
+        mc.renderEngine.bindTexture(texture);
+        GuiUtils.drawContinuousTexturedBox(x, y, 0, 0, width, height, textureWidth, textureHeight, borderSize, zLevel);
     }
     
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {

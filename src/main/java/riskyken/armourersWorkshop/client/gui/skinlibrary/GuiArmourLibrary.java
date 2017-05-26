@@ -27,6 +27,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
+import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.DialogResult;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialogContainer;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -245,6 +247,7 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
         fileSwitchlocal.setPressed(false);
         fileSwitchRemotePublic.setPressed(false);
         fileSwitchRemotePrivate.setPressed(false);
+        fileSwitchType = type;
         switch (type) {
         case LOCAL:
             fileSwitchlocal.setPressed(true);
@@ -262,7 +265,6 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
             setupLibraryEditButtons();
             break;
         }
-        fileSwitchType = type;
     }
     
     private void setupLibraryEditButtons() {
@@ -331,14 +333,14 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
         
         if (button == deleteButton) {
             if (fileSwitchType == LibraryFileType.LOCAL) {
-                
+                openDialog(new GuiDialogDelete(this, this, 180, 100));
             }
             //TODO showDeleteDialog();
         }
         
         if (button == newFolderButton) {
             if (fileSwitchType == LibraryFileType.LOCAL) {
-                openDialog(new GuiDialogNewFolder(this, this, 180, 100));
+                openDialog(new GuiDialogNewFolder(this, this, 190, 80));
             }
             //TODO showNewFolderDialog();
         }
@@ -395,6 +397,17 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
         }
         
         setupLibraryEditButtons();
+    }
+    
+    @Override
+    public void dialogResult(AbstractGuiDialog dialog, DialogResult result) {
+        if (result == DialogResult.OK) {
+            if (dialog instanceof GuiDialogNewFolder) {
+                GuiDialogNewFolder newFolderDialog = (GuiDialogNewFolder) dialog;
+                ModLogger.log(String.format("making folder call %s in %s", newFolderDialog.getFolderName(), currentFolder));
+            }
+        }
+        super.dialogResult(dialog, result);
     }
     
     public void setFileName(String text) {
