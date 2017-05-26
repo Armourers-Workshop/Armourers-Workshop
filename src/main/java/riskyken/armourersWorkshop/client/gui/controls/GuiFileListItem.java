@@ -62,7 +62,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                         SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
                         float scale = 8F;
                         GL11.glPushMatrix();
-                        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
                         GL11.glTranslatef((float)x + 5, (float)y + 6, 50.0F);
                         GL11.glScalef((float)(-scale), (float)scale, (float)scale);
                         GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);

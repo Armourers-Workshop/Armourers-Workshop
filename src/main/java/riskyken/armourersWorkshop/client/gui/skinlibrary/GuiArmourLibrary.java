@@ -17,7 +17,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -28,6 +27,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.gui.AbstractGuiDialogContainer;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
@@ -58,7 +58,7 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 @SideOnly(Side.CLIENT)
-public class GuiArmourLibrary extends GuiContainer {
+public class GuiArmourLibrary extends AbstractGuiDialogContainer {
 
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourLibrary.png");
     private static final int BUTTON_ID_LOAD_SAVE = 0;
@@ -269,8 +269,6 @@ public class GuiArmourLibrary extends GuiContainer {
         IGuiListItem listItem = fileList.getSelectedListEntry();
         reloadButton.enabled = newFolderButton.enabled = openFolderButton.enabled = deleteButton.enabled = false;
 
-
-        
         if (fileSwitchType == LibraryFileType.LOCAL) {
             reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
             if (mc.isIntegratedServerRunning()) {
@@ -300,10 +298,6 @@ public class GuiArmourLibrary extends GuiContainer {
                 deleteButton.setDisableText("Select item to delete.");
             }
         }
-        
-        newFolderButton.enabled  = deleteButton.enabled = false;
-        newFolderButton.setDisableText("Not enabled yet!");
-        deleteButton.setDisableText("Not enabled yet!");
     }
     
     @Override
@@ -336,10 +330,16 @@ public class GuiArmourLibrary extends GuiContainer {
         }
         
         if (button == deleteButton) {
+            if (fileSwitchType == LibraryFileType.LOCAL) {
+                
+            }
             //TODO showDeleteDialog();
         }
         
         if (button == newFolderButton) {
+            if (fileSwitchType == LibraryFileType.LOCAL) {
+                openDialog(new GuiDialogNewFolder(this, this, 180, 100));
+            }
             //TODO showNewFolderDialog();
         }
         
@@ -441,8 +441,13 @@ public class GuiArmourLibrary extends GuiContainer {
     }
     
     @Override
-    public void drawScreen(int mouseX, int mouseY, float tickTime) {
-        super.drawScreen(mouseX, mouseY, tickTime);
+    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+        int oldMouseX = mouseX;
+        int oldMouseY = mouseY;
+        if (isDialogOpen()) {
+            mouseX = mouseY = 0;
+        }
+        super.drawScreen(mouseX, mouseY, partialTickTime);
         
         ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
         ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
@@ -548,13 +553,19 @@ public class GuiArmourLibrary extends GuiContainer {
                     GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
                     RenderHelper.enableStandardItemLighting();
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
                     GL11.glEnable(GL11.GL_NORMALIZE);
                     GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                     ModRenderHelper.enableAlphaBlend();
                     ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                    GL11.glPopAttrib();
                     GL11.glPopMatrix();
                 }
             }
+        }
+        GL11.glColor4f(1, 1, 1, 1);
+        if (isDialogOpen()) {
+            this.dialog.draw(oldMouseX, oldMouseY, partialTickTime);
         }
     }
     
@@ -582,38 +593,38 @@ public class GuiArmourLibrary extends GuiContainer {
     
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
-        
-        
-        searchTextbox.mouseClicked(mouseX, mouseY, button);
-        filenameTextbox.mouseClicked(mouseX, mouseY, button);
-        
-        if (button == 1) {
-            if (searchTextbox.isFocused()) {
-                searchTextbox.setText("");
+        if (!isDialogOpen()) {
+            searchTextbox.mouseClicked(mouseX, mouseY, button);
+            filenameTextbox.mouseClicked(mouseX, mouseY, button);
+            
+            if (button == 1) {
+                if (searchTextbox.isFocused()) {
+                    searchTextbox.setText("");
+                }
+                if (filenameTextbox.isFocused()) {
+                    filenameTextbox.setText("");
+                }
             }
-            if (filenameTextbox.isFocused()) {
-                filenameTextbox.setText("");
-            }
-        }
-        if (!dropDownList.getIsDroppedDown()) {
-            if (fileList.mouseClicked(mouseX, mouseY, button)) {
-                GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
-                if (!item.getFile().isDirectory()) {
-                    filenameTextbox.setText(item.getDisplayName());
-                } else {
-                    if (item.getFile().fileName.equals("../")) {
-                        goBackFolder();
+            if (!dropDownList.getIsDroppedDown()) {
+                if (fileList.mouseClicked(mouseX, mouseY, button)) {
+                    GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
+                    if (!item.getFile().isDirectory()) {
+                        filenameTextbox.setText(item.getDisplayName());
                     } else {
-                        setCurrentFolder(item.getFile().getFullName() + "/");
+                        if (item.getFile().fileName.equals("../")) {
+                            goBackFolder();
+                        } else {
+                            setCurrentFolder(item.getFile().getFullName() + "/");
+                        }
                     }
                 }
             }
+            scrollbar.setValue(scrollAmount);
+            scrollbar.mousePressed(mc, mouseX, mouseY);
+            
+            setupLibraryEditButtons();
         }
-        scrollbar.setValue(scrollAmount);
-        scrollbar.mousePressed(mc, mouseX, mouseY);
-        
-        setupLibraryEditButtons();
+        super.mouseClicked(mouseX, mouseY, button);
     }
     
     private void setCurrentFolder(String currentFolder) {
@@ -634,29 +645,39 @@ public class GuiArmourLibrary extends GuiContainer {
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         super.mouseMovedOrUp(mouseX, mouseY, button);
-        if (!dropDownList.getIsDroppedDown()) {
-            fileList.mouseMovedOrUp(mouseX, mouseY, button);
+        if (!isDialogOpen()) {
+            if (!dropDownList.getIsDroppedDown()) {
+                fileList.mouseMovedOrUp(mouseX, mouseY, button);
+            }
+            scrollbar.mouseReleased(mouseX, mouseY);
         }
-        scrollbar.mouseReleased(mouseX, mouseY);
     }
     
     @Override
     protected void keyTyped(char key, int keyCode) {
-        if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
-            if (keyCode == 200) {
-                //Up
-                fileList.setSelectedIndex(fileList.getSelectedIndex() - 1);
+        if (!isDialogOpen()) {
+            if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
+                if (keyCode == 200) {
+                    //Up
+                    fileList.setSelectedIndex(fileList.getSelectedIndex() - 1);
+                }
+                if (keyCode == 208) {
+                    //Down
+                    fileList.setSelectedIndex(fileList.getSelectedIndex() + 1);
+                }
+                super.keyTyped(key, keyCode);
             }
-            if (keyCode == 208) {
-                //Down
-                fileList.setSelectedIndex(fileList.getSelectedIndex() + 1);
-            }
+        } else {
             super.keyTyped(key, keyCode);
         }
     }
+    
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float someFloat,int mouseX, int mouseY) {
+        if (isDialogOpen()) {
+            mouseX = mouseY = 0;
+        }
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         
