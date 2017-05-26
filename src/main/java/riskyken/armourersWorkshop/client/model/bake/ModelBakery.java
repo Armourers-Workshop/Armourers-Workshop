@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -29,13 +30,16 @@ public final class ModelBakery {
 
     public static final ModelBakery INSTANCE = new ModelBakery();
     
-    public Executor skinDownloadExecutor = Executors.newFixedThreadPool(1);
-    private CompletionService<Skin> skinCompletion;
-    private AtomicInteger bakingQueue = new AtomicInteger(0);
+    private final Executor skinBakeExecutor;
+    private final CompletionService<Skin> skinCompletion;
+    private final AtomicInteger bakingQueue = new AtomicInteger(0);
+    
+    private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(100);
+    private final AtomicInteger bakeTimesIndex = new AtomicInteger(0);
     
     public ModelBakery() {
-        skinDownloadExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.maxModelBakingThreads);
-        skinCompletion = new ExecutorCompletionService<Skin>(skinDownloadExecutor);
+        skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.maxModelBakingThreads);
+        skinCompletion = new ExecutorCompletionService<Skin>(skinBakeExecutor);
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -44,6 +48,19 @@ public final class ModelBakery {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
             checkBakery();
         }
+    }
+    
+    public int getAverageBakeTime() {
+        int totalItems = 0;
+        int totalTime = 0;
+        for (int i = 0; i < 100; i++) {
+            int time = bakeTimes.get(i);
+            if (time != 0) {
+                totalItems++;
+                totalTime += time;
+            }
+        }
+        return (int) ((double)totalTime / (double)totalItems);
     }
     
     public void receivedUnbakedModel(Skin skin) {
@@ -82,6 +99,7 @@ public final class ModelBakery {
         @Override
         public Skin call() throws Exception {
             Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+            long startTime = System.currentTimeMillis();
             skin.lightHash();
             
             int[][] dyeColour;
@@ -150,7 +168,13 @@ public final class ModelBakery {
             if (skin.hasPaintData()) {
                 skin.skinModelTexture.createTextureForColours(skin, null);
             }
-            
+            long totalTime = System.currentTimeMillis() - startTime;
+            int index = bakeTimesIndex.getAndIncrement();
+            if (index > 99) {
+                index = 0;
+                bakeTimesIndex.set(0);
+            }
+            bakeTimes.set(index, (int)totalTime);
             return skin;
         }
     }

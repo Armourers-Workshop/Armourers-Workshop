@@ -21,7 +21,6 @@ import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.armourersWorkshop.utils.UtilPlayer;
 
 @SideOnly(Side.CLIENT)
 public class DebugTextHandler {
@@ -53,7 +52,7 @@ public class DebugTextHandler {
                 event.left.add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
                 event.left.add("Texture Render: " + ClientProxy.useSafeTextureRender());
                 event.left.add("Display Lists: " + DisplayList.getListCount());
-                event.left.add("Facing: " + UtilPlayer.getDirectionSide(localPlayer));
+                event.left.add("Average Bake Time: " + ModelBakery.INSTANCE.getAverageBakeTime() + "ms");
                 if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     for (int i = 0; i < playerList.size(); i++) {
                         GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);
