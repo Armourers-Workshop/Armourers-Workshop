@@ -284,15 +284,13 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void receivedCommandFromSever(CommandType command) {
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         switch (command) {
         case CLEAR_MODEL_CACHE:
             ClientSkinCache.INSTANCE.clearCache();
             break;
         case OPEN_ADMIN_PANEL:
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             player.openGui(ArmourersWorkshop.instance, LibGuiIds.ADMIN_PANEL, player.getEntityWorld(), 0, 0, 0);
-            break;
-        default:
             break;
         }
     }

@@ -344,7 +344,7 @@ chat.armourersworkshop:slotUnlockedFailed=%s skin slots are at maximum.
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel>
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>

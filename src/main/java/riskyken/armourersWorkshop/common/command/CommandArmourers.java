@@ -22,6 +22,7 @@ public class CommandArmourers extends CommandBase {
         subCommands.add(new CommandSetSkin());
         subCommands.add(new CommandSetUnlockedWardrobeSlots());
         subCommands.add(new CommandAdminPanel());
+        subCommands.add(new CommandSetItemAsSkinnable());
     }
     
     @Override

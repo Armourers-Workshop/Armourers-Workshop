@@ -65,8 +65,6 @@ public class CommonProxy {
         case RELOAD_LIBRARY:
             ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
             break;
-        default:
-            break;
         }
     }
     
