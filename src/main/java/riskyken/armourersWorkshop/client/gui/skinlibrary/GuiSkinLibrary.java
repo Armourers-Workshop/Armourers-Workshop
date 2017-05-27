@@ -363,7 +363,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 LibraryFile file = fileItem.getFile();
                 if (isLoading()) {
                     if (clientLoad) {
-                        Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + SkinIOUtils.SKIN_FILE_EXTENSION);
+                        Skin itemData = SkinIOUtils.loadSkinFromFileName(file.filePath + filename + SkinIOUtils.SKIN_FILE_EXTENSION);
                         if (itemData != null) {
                             SkinUploadHelper.uploadSkinToServer(itemData);
                         }
