@@ -9,7 +9,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
-import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiArmourLibrary;
+import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
@@ -39,7 +39,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
     public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected, int width) {
         int iconOffset = 0;
         
-        if (GuiArmourLibrary.showModelPreviews() | file.isDirectory()) {
+        if (GuiSkinLibrary.showModelPreviews() | file.isDirectory()) {
             iconOffset = 10;
         }
         
@@ -54,7 +54,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
         }
         if (!file.isDirectory()) {
             fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
-            if (GuiArmourLibrary.showModelPreviews() | file.isDirectory()) {
+            if (GuiSkinLibrary.showModelPreviews() | file.isDirectory()) {
                 IGuiListItem item = this;
                 if (item != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(file.getFullName(), true);

@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinProps;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
@@ -73,6 +74,7 @@ public class PacketHandler {
         registerMessage(MessageClientGuiMannequinData.class, MessageClientGuiMannequinData.class, Side.SERVER);
         registerMessage(MessageClientToolPaintBlock.class, MessageClientToolPaintBlock.class, Side.SERVER);
         registerMessage(MessageClientGuiAdminPanel.class, MessageClientGuiAdminPanel.class, Side.SERVER);
+        registerMessage(MessageClientGuiSkinLibraryCommand.class, MessageClientGuiSkinLibraryCommand.class, Side.SERVER);
     }
     
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {

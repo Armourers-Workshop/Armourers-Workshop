@@ -23,7 +23,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
-import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiArmourLibrary;
+import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
@@ -155,7 +155,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
                 if (te instanceof TileEntitySkinLibrary) {
-                    return new GuiArmourLibrary(player.inventory, (TileEntitySkinLibrary)te);
+                    return new GuiSkinLibrary(player.inventory, (TileEntitySkinLibrary)te);
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:

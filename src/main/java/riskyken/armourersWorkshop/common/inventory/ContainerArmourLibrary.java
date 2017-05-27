@@ -13,7 +13,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiArmourLibrary;
+import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.inventory.slot.ISlotChanged;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
@@ -99,8 +99,8 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
     public void updateSkinName(int slotId) {
         Minecraft mc = Minecraft.getMinecraft();
         GuiScreen screen = mc.currentScreen;
-        if (screen != null && screen instanceof GuiArmourLibrary) {
-            GuiArmourLibrary libScreen = (GuiArmourLibrary) screen;
+        if (screen != null && screen instanceof GuiSkinLibrary) {
+            GuiSkinLibrary libScreen = (GuiSkinLibrary) screen;
             ItemStack stack = getSlot(36).getStack();
             if (stack == null) {
                 libScreen.setFileName("");

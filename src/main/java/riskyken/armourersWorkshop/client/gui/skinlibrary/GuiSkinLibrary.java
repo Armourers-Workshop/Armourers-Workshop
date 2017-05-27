@@ -54,6 +54,7 @@ import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.SkinUploadHelper;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -62,7 +63,7 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 @SideOnly(Side.CLIENT)
-public class GuiArmourLibrary extends AbstractGuiDialogContainer {
+public class GuiSkinLibrary extends AbstractGuiDialogContainer {
 
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourLibrary.png");
     private static final int BUTTON_ID_LOAD_SAVE = 0;
@@ -97,7 +98,7 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
     private GuiDropDownList dropDownList;
     private int neiBump = 18;
     
-    public GuiArmourLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary armourLibrary) {
+    public GuiSkinLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary armourLibrary) {
         super(new ContainerArmourLibrary(invPlayer, armourLibrary));
         player = invPlayer.player;
         this.armourLibrary = armourLibrary;
@@ -272,16 +273,14 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
     private void setupLibraryEditButtons() {
         IGuiListItem listItem = fileList.getSelectedListEntry();
         reloadButton.enabled = newFolderButton.enabled = openFolderButton.enabled = deleteButton.enabled = false;
-
+        
         if (fileSwitchType == LibraryFileType.LOCAL) {
             reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
-            if (mc.isIntegratedServerRunning()) {
-                reloadButton.enabled = true;
-                if (listItem != null) {
-                    deleteButton.enabled = true;
-                } else {
-                    deleteButton.setDisableText("Select item to delete.");
-                }
+            reloadButton.enabled = true;
+            if (listItem != null && !listItem.getDisplayName().equals("../")) {
+                deleteButton.enabled = true;
+            } else {
+                deleteButton.setDisableText("Select item to delete.");
             }
         }
         
@@ -296,7 +295,7 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
             openFolderButton.setDisableText("");
             reloadButton.setDisableText("");
             newFolderButton.enabled = true;
-            if (listItem != null) {
+            if (listItem != null && !listItem.getDisplayName().equals("../")) {
                 deleteButton.enabled = true;
             } else {
                 deleteButton.setDisableText("Select item to delete.");
@@ -442,16 +441,18 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
                     ModLogger.log(String.format("making folder call %s in %s", newFolderDialog.getFolderName(), currentFolder));
                     ModLogger.log("full path: " + dir.getAbsolutePath());
                 } else {
-                    // TODO crate folder on the server
+                    MessageClientGuiSkinLibraryCommand message = new MessageClientGuiSkinLibraryCommand();
+                    message.newFolder(new LibraryFile(newFolderDialog.getFolderName(), currentFolder, null, true), fileSwitchType == LibraryFileType.SERVER_PUBLIC);
+                    PacketHandler.networkWrapper.sendToServer(message);
                 }
             }
             
             if (dialog instanceof GuiDialogDelete) {
                 GuiDialogDelete deleteDialog = (GuiDialogDelete) dialog;
+                boolean isFolder = deleteDialog.isFolder();
+                String name = deleteDialog.getName();
+                
                 if (fileSwitchType == LibraryFileType.LOCAL) {
-                    boolean isFolder = deleteDialog.isFolder();
-                    String name = deleteDialog.getName();
-                    
                     File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), currentFolder);
                     
                     if (deleteDialog.isFolder()) {
@@ -477,7 +478,9 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
                         }
                     }
                 } else {
-                 // TODO delete on the server
+                    MessageClientGuiSkinLibraryCommand message = new MessageClientGuiSkinLibraryCommand();
+                    message.delete(new LibraryFile(deleteDialog.getName(), currentFolder, null, isFolder), fileSwitchType == LibraryFileType.SERVER_PUBLIC);
+                    PacketHandler.networkWrapper.sendToServer(message);
                 }
             }
             
@@ -612,6 +615,9 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
         
         if (!(currentFolder.equals("/") | currentFolder.equals(getPrivateRoot(player)))) {
             fileList.addListItem(new GuiFileListItem(new LibraryFile("../", "", null, true)));
+            if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile().fileName.equals("../")) {
+                fileList.setSelectedIndex(0);
+            }
         }
         
         if (files!= null) {
@@ -718,14 +724,17 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
                 }
             }
             if (!dropDownList.getIsDroppedDown()) {
+                
+                GuiFileListItem oldItem = (GuiFileListItem) fileList.getSelectedListEntry();
+                
                 if (fileList.mouseClicked(mouseX, mouseY, button)) {
                     GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
                     if (!item.getFile().isDirectory()) {
                         filenameTextbox.setText(item.getDisplayName());
                     } else {
-                        if (item.getFile().fileName.equals("../")) {
+                        if (item.getFile().fileName.equals("../") & oldItem == item) {
                             goBackFolder();
-                        } else {
+                        } else if (oldItem == item) {
                             setCurrentFolder(item.getFile().getFullName() + "/");
                         }
                     }
