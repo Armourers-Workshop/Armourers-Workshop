@@ -99,6 +99,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         return false;
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBTBool(stack.stackTagCompound);

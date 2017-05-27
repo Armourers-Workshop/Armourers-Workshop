@@ -115,13 +115,16 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             filePath = "/private/" + player.getUniqueID().toString() + filePath;
         }
         
-        //if the file was overwritten remove it's old id link
-        CommonSkinCache.INSTANCE.clearFileNameIdLink(filePath + fileName);
-        
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
         }
+        
+        LibraryFile file = new LibraryFile(fileName, filePath, skin.getSkinType());
+        
+        //if the file was overwritten remove it's old id link
+        CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
+
         
         if (!SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin)) {
             return;
@@ -180,7 +183,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, filePath + fileName);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, new LibraryFile(filePath, fileName, skin.getSkinType()));
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
         
@@ -220,7 +223,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, inputItem);

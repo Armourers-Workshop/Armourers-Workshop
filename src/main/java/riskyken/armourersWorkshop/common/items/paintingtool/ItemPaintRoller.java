@@ -133,6 +133,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         }
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         if (block instanceof IPantableBlock) {

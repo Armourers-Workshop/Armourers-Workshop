@@ -59,6 +59,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         return false;
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
             int side, float hitX, float hitY, float hitZ) {

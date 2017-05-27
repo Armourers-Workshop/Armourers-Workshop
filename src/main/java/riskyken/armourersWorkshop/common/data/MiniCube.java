@@ -27,6 +27,7 @@ public class MiniCube implements IPantable {
         readFromBuf(buf);
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public void setColour(int colour) {
         cc.setColour(colour);

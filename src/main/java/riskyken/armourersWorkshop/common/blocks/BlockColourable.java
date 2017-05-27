@@ -83,6 +83,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
         return new TileEntityColourable();
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
         TileEntity te = world.getTileEntity(x, y, z);

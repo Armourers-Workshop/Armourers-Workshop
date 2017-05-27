@@ -84,6 +84,7 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
         return false;
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int intensity = (Integer) ToolOptions.INTENSITY.readFromNBT(stack.getTagCompound());
