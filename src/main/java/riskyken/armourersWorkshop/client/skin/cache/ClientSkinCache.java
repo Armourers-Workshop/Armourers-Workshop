@@ -127,8 +127,6 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         synchronized (skinNameMap) {
             if (skinNameMap.containsKey(fileName)) {
                 ModLogger.log("removing name map for " + fileName);
-            } else {
-                ModLogger.log("name map for " + fileName + " not found");
             }
             skinNameMap.remove(fileName);
         }

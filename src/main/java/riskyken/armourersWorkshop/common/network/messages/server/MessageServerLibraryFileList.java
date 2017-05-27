@@ -12,6 +12,7 @@ import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileType;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 /**
  * Sent from the server to a client when they have the library GUI open
@@ -55,6 +56,7 @@ public class MessageServerLibraryFileList implements IMessage, IMessageHandler<M
     public IMessage onMessage(MessageServerLibraryFileList message, MessageContext ctx) {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         Container container = player.openContainer;
+        ModLogger.log("got file list type " + message.listType);
         ArmourersWorkshop.proxy.libraryManager.setFileList(message.fileList, message.listType);
         return null;
     }

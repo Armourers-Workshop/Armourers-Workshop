@@ -75,6 +75,13 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
+        LibraryFile file = new LibraryFile(filename, filePath, skin.getSkinType());
+        
+        //if the file was overwritten remove it's old id link
+        CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
+        
+        //ModLogger.log(file.getFullName());
+        
         MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, filePath, skin);
         PacketHandler.networkWrapper.sendTo(message, player);
         
@@ -112,7 +119,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         }
         
         if (!publicFiles) {
-            filePath = "/private/" + player.getUniqueID().toString() + filePath;
+            //filePath = "/private/" + player.getUniqueID().toString() + filePath;
         }
         
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);

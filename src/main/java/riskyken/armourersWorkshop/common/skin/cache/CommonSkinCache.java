@@ -230,7 +230,7 @@ public final class CommonSkinCache implements Runnable {
         }
         
         if (fileNameIdLinkMap.containsKey(fileName)) {
-            MessageServerSkinIdSend message = new MessageServerSkinIdSend(fileName, fileNameIdLinkMap.get(fileName));
+            MessageServerSkinIdSend message = new MessageServerSkinIdSend(fileName, fileNameIdLinkMap.get(fileName), false);
             PacketHandler.networkWrapper.sendTo(message, player);
         }
     }
@@ -259,12 +259,15 @@ public final class CommonSkinCache implements Runnable {
     
     public void clearFileNameIdLink(LibraryFile file) {
         fileNameIdLinkMap.remove(file.getFullName());
+        MessageServerSkinIdSend message = new MessageServerSkinIdSend(file.getFullName(), 0, true);
+        PacketHandler.networkWrapper.sendToAll(message);
     }
     
     @Deprecated
     public void clearFileNameIdLink(String fileName) {
-        // TODO send this to clients
         fileNameIdLinkMap.remove(fileName);
+        MessageServerSkinIdSend message = new MessageServerSkinIdSend(fileName, 0, true);
+        PacketHandler.networkWrapper.sendToAll(message);
     }
     
     private void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {

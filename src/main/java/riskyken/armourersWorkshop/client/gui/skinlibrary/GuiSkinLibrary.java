@@ -481,6 +481,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     MessageClientGuiSkinLibraryCommand message = new MessageClientGuiSkinLibraryCommand();
                     message.delete(new LibraryFile(deleteDialog.getName(), currentFolder, null, isFolder), fileSwitchType == LibraryFileType.SERVER_PUBLIC);
                     PacketHandler.networkWrapper.sendToServer(message);
+                    //ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + deleteDialog.getName());
                 }
             }
             

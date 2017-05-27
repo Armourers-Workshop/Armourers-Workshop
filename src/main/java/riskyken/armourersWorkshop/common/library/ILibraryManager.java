@@ -9,6 +9,8 @@ public interface ILibraryManager {
     
     public void reloadLibrary();
     
+    public void reloadLibrary(ILibraryCallback callback);
+    
     public LibraryFileList getClientPublicFileList();
     
     public LibraryFileList getServerPublicFileList();

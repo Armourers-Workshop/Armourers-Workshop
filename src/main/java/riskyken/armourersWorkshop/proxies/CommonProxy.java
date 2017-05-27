@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.proxies;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
@@ -12,8 +13,10 @@ import net.minecraft.server.MinecraftServer;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.library.CommonLibraryManager;
+import riskyken.armourersWorkshop.common.library.ILibraryCallback;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
+import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel.AdminPanelCommand;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
@@ -23,7 +26,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
-public class CommonProxy {
+public class CommonProxy implements ILibraryCallback {
     
     public ILibraryManager libraryManager;
     
@@ -117,9 +120,11 @@ public class CommonProxy {
                                 e.printStackTrace();
                             }
                         } else {
-                            CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
+                            clearFiles.add(file);
+                            ModLogger.log("deleting skin " + dir.getAbsolutePath());
                             dir.delete();
-                            libraryManager.reloadLibrary();
+                            libraryManager.removeFileFromListType(file, LibraryFileType.SERVER_PRIVATE, player);
+                            libraryManager.reloadLibrary(this);
                         }
                     }
                 }
@@ -136,6 +141,7 @@ public class CommonProxy {
                 if (!dir.exists()) {
                     dir.mkdir();
                 }
+                //TODO don't reload the library just add the folder
                 libraryManager.reloadLibrary();
                 ModLogger.log(String.format("making folder call %s in %s", file.fileName, file.filePath));
                 ModLogger.log("full path: " + dir.getAbsolutePath());
@@ -143,6 +149,15 @@ public class CommonProxy {
                 ModLogger.log("public new folder");
             }
             break;
+        }
+    }
+    
+    private ArrayList<LibraryFile> clearFiles = new ArrayList<LibraryFile>();
+
+    @Override
+    public void libraryReloaded(ILibraryManager libraryManager) {
+        for (int i = 0; i < clearFiles.size(); i++) {
+            CommonSkinCache.INSTANCE.clearFileNameIdLink(clearFiles.get(i));
         }
     }
 }

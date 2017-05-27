@@ -27,7 +27,8 @@ public class LibraryFile implements Comparable<LibraryFile> {
         ByteBufUtils.writeUTF8String(buf, fileName);
         ByteBufUtils.writeUTF8String(buf, filePath);
         buf.writeBoolean(directory);
-        if (!directory) {
+        buf.writeBoolean(skinType != null);
+        if (skinType != null) {
             ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());
         }
     }
@@ -37,7 +38,7 @@ public class LibraryFile implements Comparable<LibraryFile> {
         String filePath = ByteBufUtils.readUTF8String(buf);
         boolean directory = buf.readBoolean();
         ISkinType skinType = null;
-        if (!directory) {
+        if (buf.readBoolean()) {
             String regName = ByteBufUtils.readUTF8String(buf);
             skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
         }
