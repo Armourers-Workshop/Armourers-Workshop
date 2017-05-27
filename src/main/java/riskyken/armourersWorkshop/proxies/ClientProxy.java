@@ -225,10 +225,16 @@ public class ClientProxy extends CommonProxy {
     }
     
     public static boolean useTexturePainting() {
+        if (ConfigHandlerClient.texturePainting == 1) {
+            return true;
+        }
+        if (ConfigHandlerClient.texturePainting == 2) {
+            return false;
+        }
         if (ModAddonManager.addonJBRAClient.isModLoaded()) {
             return false;
         }
-        return !ConfigHandlerClient.disableTexturePainting;
+        return true;
     }
     
     public static boolean useMultipassSkinRendering() {
