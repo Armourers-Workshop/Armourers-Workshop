@@ -38,12 +38,12 @@ public final class SkinIOUtils {
     }
     
     public static String makeFileNameValid(String fileName) {
-        return fileName.replaceAll("[^a-zA-Z0-9_ \\-\\.]", "_");
+        return fileName.replaceAll("[^a-zA-Z0-9_() \\-\\.]", "_");
     }
     
     public static String makeFilePathValid(String filePath) {
         filePath = filePath.replace("\\", "/");
-        return filePath.replaceAll("[^a-zA-Z0-9_/ \\-\\.]", "_");
+        return filePath.replaceAll("[^a-zA-Z0-9_()/ \\-\\.]", "_");
     }
     
     public static boolean saveSkinToFile(File file, Skin skin) {
@@ -51,7 +51,6 @@ public final class SkinIOUtils {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        ModLogger.log("Saving skin to " + file.getAbsolutePath());
         DataOutputStream stream = null;
         
         try {

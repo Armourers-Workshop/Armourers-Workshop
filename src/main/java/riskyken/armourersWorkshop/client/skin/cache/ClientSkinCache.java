@@ -123,6 +123,17 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         }
     }
     
+    public void clearIdForFileName(String fileName) {
+        synchronized (skinNameMap) {
+            if (skinNameMap.containsKey(fileName)) {
+                ModLogger.log("removing name map for " + fileName);
+            } else {
+                ModLogger.log("name map for " + fileName + " not found");
+            }
+            skinNameMap.remove(fileName);
+        }
+    }
+    
     private int getIdForFileName(String fileName) {
         synchronized (skinNameMap) {
             return skinNameMap.get(fileName);

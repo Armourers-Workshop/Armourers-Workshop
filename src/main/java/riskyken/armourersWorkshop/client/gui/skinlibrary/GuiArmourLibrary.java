@@ -461,14 +461,18 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
                     }
                     
                     if (dir.isDirectory() == isFolder) {
-                        ModLogger.log("deleting 1 " + dir.getAbsolutePath());
                         if (dir.exists()) {
-                            ModLogger.log("deleting 2 " + dir.getAbsolutePath());
-                            try {
-                                FileUtils.deleteDirectory(dir);
+                            if (isFolder) {
+                                try {
+                                    FileUtils.deleteDirectory(dir);
+                                    reloadLocalLibrary();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + deleteDialog.getName());
+                                dir.delete();
                                 reloadLocalLibrary();
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
                         }
                     }
@@ -496,7 +500,8 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
                     message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
                     PacketHandler.networkWrapper.sendToServer(message);
                 }
-                
+                ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + overwriteDialog.getFileName());
+                // reloadLocalLibrary();
                 // TODO clear name lookup list on clients or just removed this one name
             }
         }

@@ -111,13 +111,16 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
+        if (!publicFiles) {
+            filePath = "/private/" + player.getUniqueID().toString() + filePath;
+        }
+        
+        //if the file was overwritten remove it's old id link
+        CommonSkinCache.INSTANCE.clearFileNameIdLink(filePath + fileName);
+        
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
-        }
-        
-        if (!publicFiles) {
-            filePath = "/private/" + player.getUniqueID().toString() + filePath;
         }
         
         if (!SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin)) {

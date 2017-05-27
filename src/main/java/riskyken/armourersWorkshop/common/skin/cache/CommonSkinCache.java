@@ -224,6 +224,11 @@ public final class CommonSkinCache implements Runnable {
         }
     }
     
+    public void clearFileNameIdLink(String fileName) {
+        // TODO send this to clients
+        fileNameIdLinkMap.remove(fileName);
+    }
+    
     private void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {
         if (equipmentData == null) {
             return;
