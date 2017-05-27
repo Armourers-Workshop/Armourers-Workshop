@@ -28,9 +28,22 @@ import riskyken.armourersWorkshop.common.skin.data.serialize.SkinSerializer;
 
 public final class SkinIOUtils {
     
-    public static boolean saveSkinFromFileName(String fileName, Skin skin) {
-        File file = new File(getSkinLibraryDirectory(), fileName);
+    public static final String SKIN_FILE_EXTENSION = ".armour";
+    
+    public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
+        filePath = makeFilePathValid(filePath);
+        fileName = makeFileNameValid(fileName);
+        File file = new File(getSkinLibraryDirectory(), filePath + fileName);
         return saveSkinToFile(file, skin);
+    }
+    
+    public static String makeFileNameValid(String fileName) {
+        return fileName.replaceAll("[^a-zA-Z0-9_ \\-\\.]", "_");
+    }
+    
+    public static String makeFilePathValid(String filePath) {
+        filePath = filePath.replace("\\", "/");
+        return filePath.replaceAll("[^a-zA-Z0-9_/ \\-\\.]", "_");
     }
     
     public static boolean saveSkinToFile(File file, Skin skin) {
@@ -38,6 +51,7 @@ public final class SkinIOUtils {
         if (!dir.exists()) {
             dir.mkdirs();
         }
+        ModLogger.log("Saving skin to " + file.getAbsolutePath());
         DataOutputStream stream = null;
         
         try {
@@ -273,7 +287,7 @@ public final class SkinIOUtils {
                     String fileName = skin.getProperties().getPropertyString(Skin.KEY_FILE_NAME, null);
                     String customName = skin.getProperties().getPropertyString(Skin.KEY_CUSTOM_NAME, null);
                     if (!StringUtils.isNullOrEmpty(fileName)) {
-                        fileName = fileName.replaceAll("[^a-zA-Z0-9.-]", "_");
+                        fileName = makeFileNameValid(fileName);
                         File newSkinFile = new File(recoverDir, fileName);
                         if (newSkinFile.exists()) {
                             int nameCount = 0;
@@ -290,7 +304,7 @@ public final class SkinIOUtils {
                         continue;
                     }
                     if (!StringUtils.isNullOrEmpty(customName)) {
-                        customName = customName.replaceAll("[^a-zA-Z0-9.-]", "_");
+                        customName = makeFileNameValid(customName);
                         File newSkinFile = new File(recoverDir, customName);
                         if (newSkinFile.exists()) {
                             int nameCount = 0;

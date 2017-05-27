@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
@@ -47,6 +48,7 @@ import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
+import riskyken.armourersWorkshop.common.library.LibraryFileList;
 import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.SkinUploadHelper;
@@ -332,17 +334,14 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
         }
         
         if (button == deleteButton) {
-            if (fileSwitchType == LibraryFileType.LOCAL) {
-                openDialog(new GuiDialogDelete(this, this, 180, 100));
+            if (fileList.getSelectedListEntry() != null) {
+                GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
+                openDialog(new GuiDialogDelete(this, this, 190, 100, item.getFile().isDirectory(), item.getDisplayName()));
             }
-            //TODO showDeleteDialog();
         }
         
         if (button == newFolderButton) {
-            if (fileSwitchType == LibraryFileType.LOCAL) {
-                openDialog(new GuiDialogNewFolder(this, this, 190, 80));
-            }
-            //TODO showNewFolderDialog();
+            openDialog(new GuiDialogNewFolder(this, this, 190, 100));
         }
         
         GuiFileListItem fileItem = (GuiFileListItem) fileList.getSelectedListEntry();
@@ -360,14 +359,12 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
             publicList = false;
         }
         
-        if (fileItem != null && !fileItem.getFile().isDirectory()) {
-            LibraryFile file = fileItem.getFile();
-            
-            switch (button.id) {
-            case BUTTON_ID_LOAD_SAVE:
+        if (button == loadSaveButton) {
+            if (fileItem != null && !fileItem.getFile().isDirectory()) {
+                LibraryFile file = fileItem.getFile();
                 if (isLoading()) {
                     if (clientLoad) {
-                        Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + ".armour");
+                        Skin itemData = SkinIOUtils.loadSkinFromFileName(filename + SkinIOUtils.SKIN_FILE_EXTENSION);
                         if (itemData != null) {
                             SkinUploadHelper.uploadSkinToServer(itemData);
                         }
@@ -377,26 +374,56 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
                     }
                     filenameTextbox.setText("");
                 } 
-                break;
             }
-        }
-        
-        if (!filename.isEmpty()) {
-            if (!isLoading()) {
-                if (clientLoad) {
-                    message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.CLIENT_SAVE, false);
-                    PacketHandler.networkWrapper.sendToServer(message);
-                } else {
-                    //TODO show overwrite skin confirmation dialog
-                    message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
-                    PacketHandler.networkWrapper.sendToServer(message);
+            if (!filename.isEmpty()) {
+                if (!isLoading()) {
+                    if (fileExists(currentFolder, filename)) {
+                        openDialog(new GuiDialogOverwrite(this, this, 190, 100, filename));
+                        return;
+                    }
+                    if (clientLoad) {
+                        message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.CLIENT_SAVE, false);
+                        PacketHandler.networkWrapper.sendToServer(message);
+                    } else {
+                        message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
+                        PacketHandler.networkWrapper.sendToServer(message);
+                    }
+                    
+                    //filenameTextbox.setText("");
                 }
-                
-                //filenameTextbox.setText("");
             }
         }
         
         setupLibraryEditButtons();
+    }
+    
+    private boolean fileExists(String path, String name) {
+        LibraryFileList fileList = getFileList(fileSwitchType);
+        ArrayList<LibraryFile> files = fileList.getFileList();
+        for (int i = 0; i < files.size(); i++) {
+            LibraryFile file = files.get(i);
+            if (file.getFullName().equalsIgnoreCase(path + name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private LibraryFileList getFileList(LibraryFileType libraryFileType) {
+        ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+        switch (libraryFileType) {
+        case LOCAL:
+            return libraryManager.getClientPublicFileList();
+        case SERVER_PUBLIC:
+            return libraryManager.getServerPublicFileList();
+        case SERVER_PRIVATE:
+            return libraryManager.getServerPrivateFileList(mc.thePlayer);
+        }
+        return null;
+    }
+    
+    private void reloadLocalLibrary() {
+        ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
     }
     
     @Override
@@ -411,12 +438,66 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
                     if (!dir.exists()) {
                         dir.mkdir();
                     }
-                    ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
+                    reloadLocalLibrary();
                     ModLogger.log(String.format("making folder call %s in %s", newFolderDialog.getFolderName(), currentFolder));
                     ModLogger.log("full path: " + dir.getAbsolutePath());
+                } else {
+                    // TODO crate folder on the server
+                }
+            }
+            
+            if (dialog instanceof GuiDialogDelete) {
+                GuiDialogDelete deleteDialog = (GuiDialogDelete) dialog;
+                if (fileSwitchType == LibraryFileType.LOCAL) {
+                    boolean isFolder = deleteDialog.isFolder();
+                    String name = deleteDialog.getName();
+                    
+                    File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), currentFolder);
+                    
+                    if (deleteDialog.isFolder()) {
+                        dir = new File(dir, name + "/");
+                    } else {
+                        dir = new File(dir, name + SkinIOUtils.SKIN_FILE_EXTENSION);
+                    }
+                    
+                    if (dir.isDirectory() == isFolder) {
+                        ModLogger.log("deleting 1 " + dir.getAbsolutePath());
+                        if (dir.exists()) {
+                            ModLogger.log("deleting 2 " + dir.getAbsolutePath());
+                            try {
+                                FileUtils.deleteDirectory(dir);
+                                reloadLocalLibrary();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } else {
+                 // TODO delete on the server
+                }
+            }
+            
+            if (dialog instanceof GuiDialogOverwrite) {
+                GuiDialogOverwrite overwriteDialog = (GuiDialogOverwrite) dialog;
+                MessageClientGuiLoadSaveArmour message;
+                boolean clientLoad = false;
+                boolean publicList = true;
+                if (fileSwitchType == LibraryFileType.LOCAL && !mc.isIntegratedServerRunning()) {
+                    //Is playing on a server.
+                    clientLoad = true;
+                }
+                if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
+                    publicList = false;
+                }
+                if (clientLoad) {
+                    message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.CLIENT_SAVE, false);
+                    PacketHandler.networkWrapper.sendToServer(message);
+                } else {
+                    message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
+                    PacketHandler.networkWrapper.sendToServer(message);
                 }
                 
-
+                // TODO clear name lookup list on clients or just removed this one name
             }
         }
         super.dialogResult(dialog, result);
@@ -472,8 +553,9 @@ public class GuiArmourLibrary extends AbstractGuiDialogContainer {
         if (isDialogOpen()) {
             mouseX = mouseY = 0;
         }
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         super.drawScreen(mouseX, mouseY, partialTickTime);
-        
+        GL11.glPopAttrib();
         ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
         ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
         

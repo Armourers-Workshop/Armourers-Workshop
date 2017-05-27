@@ -88,8 +88,6 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
         
         if (container != null && container instanceof ContainerArmourLibrary) {
             TileEntitySkinLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
-            
-            
             switch (message.packetType) {
             case CLIENT_LOAD:
                 te.loadArmour(message.skin, player);

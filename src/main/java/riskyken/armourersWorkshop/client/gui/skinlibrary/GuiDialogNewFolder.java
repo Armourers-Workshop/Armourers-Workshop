@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiDialogNewFolder extends AbstractGuiDialog {
@@ -14,6 +15,7 @@ public class GuiDialogNewFolder extends AbstractGuiDialog {
     private GuiLabeledTextField textFolderName;
     private GuiButtonExt buttonClose;
     private GuiButtonExt buttonCreate;
+    private boolean invalidFolderName;
     
     public GuiDialogNewFolder(GuiScreen parent, IDialogCallback callback, int width, int height) {
         super(parent, callback, width, height);
@@ -62,6 +64,9 @@ public class GuiDialogNewFolder extends AbstractGuiDialog {
         int titleWidth = fontRenderer.getStringWidth(title);
         
         fontRenderer.drawString(title, x + width / 2 - titleWidth / 2, y + 6, 4210752);
+        if (invalidFolderName) {
+            fontRenderer.drawSplitString("Folder name contains invalid characters.", x + 10, y + 45, width - 20, 0xFFFF6666);
+        }
     }
     
     @Override
@@ -70,6 +75,7 @@ public class GuiDialogNewFolder extends AbstractGuiDialog {
         if (button == 1) {
             if (textFolderName.isFocused()) {
                 textFolderName.setText("");
+                checkFolderName();
             }
         }
         super.mouseClicked(mouseX, mouseY, button);
@@ -78,14 +84,20 @@ public class GuiDialogNewFolder extends AbstractGuiDialog {
     @Override
     public boolean keyTyped(char c, int keycode) {
         if (textFolderName.textboxKeyTyped(c, keycode)) {
+            checkFolderName();
             return true;
         }
         if (keycode == 28) {
-            if (!getFolderName().equals("")) {
+            if (!getFolderName().equals("") & !invalidFolderName) {
                 returnDialogResult(DialogResult.OK);
             }
         }
         return super.keyTyped(c, keycode);
+    }
+    
+    private void checkFolderName() {
+        invalidFolderName = !SkinIOUtils.makeFileNameValid(getFolderName()).equals(getFolderName());
+        buttonCreate.enabled = !invalidFolderName;
     }
     
     public String getFolderName() {

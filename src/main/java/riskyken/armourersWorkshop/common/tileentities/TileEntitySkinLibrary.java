@@ -120,7 +120,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             filePath = "/private/" + player.getUniqueID().toString() + filePath;
         }
         
-        if (!SkinIOUtils.saveSkinFromFileName(filePath + fileName + ".armour", skin)) {
+        if (!SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin)) {
             return;
         }
         
@@ -169,13 +169,13 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         String fullFileName = fileName;
         
         
-        skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + ".armour");
+        skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         
         if (skin == null) {
             return;
         }
         
-        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + ".armour");
+        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, filePath + fileName);
         
