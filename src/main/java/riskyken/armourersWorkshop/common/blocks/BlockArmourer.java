@@ -76,22 +76,28 @@ public class BlockArmourer extends AbstractModBlockContainer {
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon sideIcon;
+    private IIcon iconTop;
+    @SideOnly(Side.CLIENT)
+    private IIcon iconBottom;
 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.ARMOURER_TOP_BOTTOM);
-        sideIcon = register.registerIcon(LibBlockResources.ARMOURER_SIDE);
+        blockIcon = register.registerIcon(LibBlockResources.ARMOURER_SIDE);
+        iconTop = register.registerIcon(LibBlockResources.ARMOURER_TOP);
+        iconBottom = register.registerIcon(LibBlockResources.ARMOURER_BOTTOM);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        if (side < 2) {
-            return blockIcon;
+        if (side == 0) {
+            return iconBottom;
         }
-        return sideIcon;
+        if (side == 1) {
+            return iconTop;
+        }
+        return blockIcon;
     }
 
     @Override

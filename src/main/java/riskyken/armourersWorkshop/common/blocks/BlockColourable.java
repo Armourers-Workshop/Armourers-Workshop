@@ -50,8 +50,8 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
-        markerOverlay = register.registerIcon(LibBlockResources.MARKER);
-        noTexture = register.registerIcon(LibBlockResources.NO_TEXTURE);
+        markerOverlay = register.registerIcon(LibBlockResources.COLOURABLE_MARKER);
+        noTexture = register.registerIcon(LibBlockResources.COLOURABLE_NO_TEXTURE);
     }
     
     @Override
