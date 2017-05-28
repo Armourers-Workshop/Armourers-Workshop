@@ -229,6 +229,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         buttonList.add(dropDownList);
     }
     
+    public TileEntitySkinLibrary getArmourLibrary() {
+        return armourLibrary;
+    }
+    
     /**
      * Returns true if the player is trying to load and item
      * or false if they are trying to save.
@@ -284,7 +288,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (listItem != null && !listItem.getDisplayName().equals("../")) {
                 deleteButton.enabled = true;
             } else {
-                deleteButton.setDisableText("Select item to delete.");
+                deleteButton.setDisableText(GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "rollover.deleteSkinSelect"));
             }
         }
         
@@ -302,7 +306,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (listItem != null && !listItem.getDisplayName().equals("../")) {
                 deleteButton.enabled = true;
             } else {
-                deleteButton.setDisableText("Select item to delete.");
+                deleteButton.setDisableText(GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "rollover.deleteSkinSelect"));
             }
         }
     }
@@ -339,12 +343,12 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         if (button == deleteButton) {
             if (fileList.getSelectedListEntry() != null) {
                 GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
-                openDialog(new GuiDialogDelete(this, this, 190, 100, item.getFile().isDirectory(), item.getDisplayName()));
+                openDialog(new GuiDialogDelete(this, armourLibrary.getInventoryName() + ".dialog.delete", this, 190, 100, item.getFile().isDirectory(), item.getDisplayName()));
             }
         }
         
         if (button == newFolderButton) {
-            openDialog(new GuiDialogNewFolder(this, this, 190, 100));
+            openDialog(new GuiDialogNewFolder(this, armourLibrary.getInventoryName() + ".dialog.newFolder", this, 190, 120));
         }
         
         GuiFileListItem fileItem = (GuiFileListItem) fileList.getSelectedListEntry();
@@ -381,7 +385,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (!filename.isEmpty()) {
                 if (!isLoading()) {
                     if (fileExists(currentFolder, filename)) {
-                        openDialog(new GuiDialogOverwrite(this, this, 190, 100, filename));
+                        openDialog(new GuiDialogOverwrite(this, armourLibrary.getInventoryName() + ".dialog.overwrite", this, 190, 100, filename));
                         return;
                     }
                     if (clientLoad) {
@@ -454,7 +458,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (dialog instanceof GuiDialogDelete) {
                 GuiDialogDelete deleteDialog = (GuiDialogDelete) dialog;
                 boolean isFolder = deleteDialog.isFolder();
-                String name = deleteDialog.getName();
+                String name = deleteDialog.getFileName();
                 
                 if (fileSwitchType == LibraryFileType.LOCAL) {
                     File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), currentFolder);
@@ -475,7 +479,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                                     e.printStackTrace();
                                 }
                             } else {
-                                ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + deleteDialog.getName());
+                                ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + deleteDialog.getFileName());
                                 dir.delete();
                                 reloadLocalLibrary();
                             }
@@ -483,7 +487,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     }
                 } else {
                     MessageClientGuiSkinLibraryCommand message = new MessageClientGuiSkinLibraryCommand();
-                    message.delete(new LibraryFile(deleteDialog.getName(), currentFolder, null, isFolder), fileSwitchType == LibraryFileType.SERVER_PUBLIC);
+                    message.delete(new LibraryFile(deleteDialog.getFileName(), currentFolder, null, isFolder), fileSwitchType == LibraryFileType.SERVER_PUBLIC);
                     PacketHandler.networkWrapper.sendToServer(message);
                     //ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + deleteDialog.getName());
                 }

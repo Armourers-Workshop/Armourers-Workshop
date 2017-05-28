@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
@@ -17,8 +18,8 @@ public class GuiDialogNewFolder extends AbstractGuiDialog {
     private GuiButtonExt buttonCreate;
     private boolean invalidFolderName;
     
-    public GuiDialogNewFolder(GuiScreen parent, IDialogCallback callback, int width, int height) {
-        super(parent, callback, width, height);
+    public GuiDialogNewFolder(GuiScreen parent, String name, IDialogCallback callback, int width, int height) {
+        super(parent, name, callback, width, height);
     }
     
     @Override
@@ -28,10 +29,10 @@ public class GuiDialogNewFolder extends AbstractGuiDialog {
         
         textFolderName = new GuiLabeledTextField(fontRenderer, x + 10, y + 26, width - 20, 12);
         textFolderName.setMaxStringLength(30);
-        textFolderName.setEmptyLabel("Enter folder name");
+        textFolderName.setEmptyLabel(GuiHelper.getLocalizedControlName(name, "enterFolderName"));
         
-        buttonClose = new GuiButtonExt(-1, x + width - 80 - 10, y + height - 30, 80, 20, "Close");
-        buttonCreate = new GuiButtonExt(-1, x + width - 160 - 20, y + height - 30, 80, 20, "Create");
+        buttonClose = new GuiButtonExt(-1, x + width - 80 - 10, y + height - 30, 80, 20, GuiHelper.getLocalizedControlName(name, "close"));
+        buttonCreate = new GuiButtonExt(-1, x + width - 160 - 20, y + height - 30, 80, 20, GuiHelper.getLocalizedControlName(name, "create"));
         
         buttonList.add(buttonClose);
         buttonList.add(buttonCreate);
@@ -60,12 +61,15 @@ public class GuiDialogNewFolder extends AbstractGuiDialog {
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
         super.drawForeground(mouseX, mouseY, partialTickTime);
         textFolderName.drawTextBox();
+        drawTitle();
+        /*
         String title = "Create New Folder";
         int titleWidth = fontRenderer.getStringWidth(title);
         
         fontRenderer.drawString(title, x + width / 2 - titleWidth / 2, y + 6, 4210752);
+        */
         if (invalidFolderName) {
-            fontRenderer.drawSplitString("Folder name contains invalid characters.", x + 10, y + 45, width - 20, 0xFFFF6666);
+            fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(name, "invalidFolderName"), x + 10, y + 45, width - 20, 0xFFFF6666);
         }
     }
     

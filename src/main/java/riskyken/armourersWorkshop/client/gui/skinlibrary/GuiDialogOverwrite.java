@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 
 @SideOnly(Side.CLIENT)
 public class GuiDialogOverwrite extends AbstractGuiDialog {
@@ -14,8 +15,8 @@ public class GuiDialogOverwrite extends AbstractGuiDialog {
     private GuiButtonExt buttonClose;
     private GuiButtonExt buttonOK;
     
-    public GuiDialogOverwrite(GuiScreen parent, IDialogCallback callback, int width, int height, String fileName) {
-        super(parent, callback, width, height);
+    public GuiDialogOverwrite(GuiScreen parent, String name, IDialogCallback callback, int width, int height, String fileName) {
+        super(parent, name, callback, width, height);
         this.fileName = fileName;
     }
     
@@ -24,8 +25,8 @@ public class GuiDialogOverwrite extends AbstractGuiDialog {
         super.initGui();
         buttonList.clear();
         
-        buttonClose = new GuiButtonExt(-1, x + width - 80 - 10, y + height - 30, 80, 20, "Close");
-        buttonOK = new GuiButtonExt(-1, x + width - 160 - 20, y + height - 30, 80, 20, "OK");
+        buttonClose = new GuiButtonExt(-1, x + width - 80 - 10, y + height - 30, 80, 20, GuiHelper.getLocalizedControlName(name, "close"));
+        buttonOK = new GuiButtonExt(-1, x + width - 160 - 20, y + height - 30, 80, 20, GuiHelper.getLocalizedControlName(name, "ok"));
         
         buttonList.add(buttonClose);
         buttonList.add(buttonOK);
@@ -49,10 +50,8 @@ public class GuiDialogOverwrite extends AbstractGuiDialog {
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
         super.drawForeground(mouseX, mouseY, partialTickTime);
-        String title = "Overwrite File";
-        int titleWidth = fontRenderer.getStringWidth(title);
-        fontRenderer.drawString(title, x + width / 2 - titleWidth / 2, y + 6, 4210752);
-        fontRenderer.drawSplitString(String.format("Overwrite file %s.", fileName), x + 10, y + 45, width - 20, 0xFFFF6666);
+        drawTitle();
+        fontRenderer.drawSplitString(String.format(GuiHelper.getLocalizedControlName(name, "overwriteFile"), fileName), x + 10, y + 45, width - 20, 0xFFFF6666);
     }
     
     public String getFileName() {

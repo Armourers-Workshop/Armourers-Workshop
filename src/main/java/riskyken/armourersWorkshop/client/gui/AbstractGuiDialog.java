@@ -23,6 +23,7 @@ public abstract class AbstractGuiDialog extends Gui {
     protected static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/dialog.png");
     
     protected final GuiScreen parent;
+    protected final String name;
     protected final IDialogCallback callback;
     protected final Minecraft mc;
     protected final FontRenderer fontRenderer;
@@ -35,8 +36,9 @@ public abstract class AbstractGuiDialog extends Gui {
     protected ArrayList<GuiButton> buttonList;
     private GuiButton selectedButton;
     
-    public AbstractGuiDialog(GuiScreen parent, IDialogCallback callback, int width, int height) {
+    public AbstractGuiDialog(GuiScreen parent, String name, IDialogCallback callback, int width, int height) {
         this.parent = parent;
+        this.name = name;
         this.callback = callback;
         this.mc = Minecraft.getMinecraft();
         this.fontRenderer = mc.fontRenderer;
@@ -130,6 +132,12 @@ public abstract class AbstractGuiDialog extends Gui {
     
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
         drawbuttons(mouseX, mouseY);
+    }
+    
+    protected void drawTitle() {
+        String title = GuiHelper.getLocalizedControlName(name, "title");
+        int titleWidth = fontRenderer.getStringWidth(title);
+        fontRenderer.drawString(title, x + width / 2 - titleWidth / 2, y + 6, 4210752);
     }
     
     public void update() {}
