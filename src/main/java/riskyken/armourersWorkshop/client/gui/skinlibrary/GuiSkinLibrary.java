@@ -24,7 +24,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.Util;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -170,9 +172,11 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         newFolderButton.setIconLocation(75, 118, 24, 24);
         buttonList.add(newFolderButton);
         
-        int listWidth = this.width - INVENTORY_WIDTH - 10 - PADDING * 3;
+        int listWidth = this.width - INVENTORY_WIDTH - PADDING * 5;
         int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
         int typeSwitchWidth = 80;
+        
+        listWidth = MathHelper.clamp_int(listWidth, 0, 200);
         
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
         
@@ -206,7 +210,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         scrollbar.setValue(scrollAmount);
         buttonList.add(scrollbar);
         
-        dropDownList = new GuiDropDownList(5, this.width - typeSwitchWidth - PADDING, TITLE_HEIGHT + PADDING, typeSwitchWidth, "", null);
+        dropDownList = new GuiDropDownList(5, INVENTORY_WIDTH + PADDING * 5 + listWidth - typeSwitchWidth - PADDING, TITLE_HEIGHT + PADDING, typeSwitchWidth, "", null);
         ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         dropDownList.addListItem("*");
         dropDownList.setListSelectedIndex(0);
@@ -654,31 +658,46 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             }
         }
         
-        if (showModelPreviews() & height > 340) {
+        if (showModelPreviews()) {
             GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
             if (item != null && !item.getFile().isDirectory()) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getFile().getFullName(), true);
                 if (skin != null) {
                     SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
-                    float x = 90;
-                    float y = 170;
-                    float scale = 80F;
-                    GL11.glPushMatrix();
-                    GL11.glTranslatef((float)x, (float)y, 80.0F);
-                    GL11.glScalef((float)(-scale), (float)scale, (float)scale);
-                    GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-                    GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
-                    float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
-                    GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                    RenderHelper.enableStandardItemLighting();
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-                    GL11.glEnable(GL11.GL_NORMALIZE);
-                    GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-                    ModRenderHelper.enableAlphaBlend();
-                    ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
-                    GL11.glPopAttrib();
-                    GL11.glPopMatrix();
+                    
+                    int listRight = this.width - INVENTORY_WIDTH - PADDING * 5;
+                    listRight = MathHelper.clamp_int(listRight, 0, 200);
+                    listRight += INVENTORY_WIDTH + PADDING * 2 + 10;
+                    
+                    int listTop = TITLE_HEIGHT + 14 + PADDING * 2;
+                    
+                    int xSize = (this.width - listRight - PADDING) / 2;
+                    int ySize = (this.height - listTop - PADDING) / 2;
+                    
+                    float x = listRight + xSize;
+                    float y = listTop + ySize;
+                    
+                    float scale = 1F;
+                    scale = 1 * Math.min(xSize, ySize);
+                    
+                    if (scale > 8) {
+                        GL11.glPushMatrix();
+                        GL11.glTranslatef((float)x, (float)y, 500.0F);
+                        GL11.glScalef((float)(-scale), (float)scale, (float)scale);
+                        GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+                        GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+                        float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
+                        GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
+                        RenderHelper.enableStandardItemLighting();
+                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+                        GL11.glEnable(GL11.GL_NORMALIZE);
+                        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                        ModRenderHelper.enableAlphaBlend();
+                        ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                        GL11.glPopAttrib();
+                        GL11.glPopMatrix();
+                    }
                 }
             }
         }
@@ -777,6 +796,9 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     
     @Override
     protected void keyTyped(char key, int keyCode) {
+        if (keyCode == mc.gameSettings.keyBindScreenshot.getKeyCode()) {
+            mc.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(mc.mcDataDir, mc.displayWidth, mc.displayHeight, mc.getFramebuffer()));
+        }
         if (!isDialogOpen()) {
             if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
                 if (keyCode == 200) {
