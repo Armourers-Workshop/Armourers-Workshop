@@ -250,6 +250,7 @@ inventory.armourersworkshop:armourLibrary.rollover.notOnServer=你必须连接�
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=打开你电脑上的资源文件夹.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=删除时装.
 inventory.armourersworkshop:armourLibrary.rollover.refresh=刷新资源库文件.
+inventory.armourersworkshop:armourLibrary.rollover.newFolder=创建一个新文件夹.
 inventory.armourersworkshop:armourLibrary.label.enterFileName=输入文件名.
 inventory.armourersworkshop:armourLibrary.label.typeToSearch=输入搜索内容...
 
@@ -343,7 +344,13 @@ chat.armourersworkshop:slotUnlockedFailed=%s 时装栏栏位达到最大数量.
 death.attack.victorious=%1$s mewo mewo mewo？？？
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setSkinColumnCount> <player> [skinName | value] 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模特数据| 设置皮肤栏数> <玩家名> [时装名 | 数值]
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable> 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模型数据| 设置皮肤栏数|重新同步衣柜|管理员面板|设置物品可加载时装> 
+commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
+commands.armourers.clearSkins.usage=/armourers clearSkins <player>
+commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>
+commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
+commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
+commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=文件 %1$s 没有找到.
 
 # Creative tab
