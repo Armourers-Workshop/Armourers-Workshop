@@ -1,24 +1,18 @@
 Build 0.44.0
 
-To be finished for 0.44
-deleting files and folders and creating folders in library
-	private and local library
-	basic version of server library (OPs only will do permissions in next version)
-	delete confirmation dialog
-	file overwrite confirmation dialog
-confirmation dialog when pressing armourer clear button
-
-
 Added:
 	multi-blocks
 	folders to the library
 	blending tool
 	skin slot unlock item
 	enabled wand of style for chickens, zombies, skeletons and custom npcs (!!UNFINISHED!!)
-	debug render to show block render bounds
-	resyncWardrobe command
+	new folder, overwrite file and delete dialogs in the library
 	lock dyes config option to the skinning table
+	resyncWardrobe command
+	setItemAsSkinnable command (/armourers setItemAsSkinnable will effect currently held item)
 	clear skin dye recipe (soap + skin in crafting grid)
+	debug render to show block render bounds
+	average model bake time to the debug text
 Fixed:
 	crash rendering block skin on the same tick it is removed
 	being able to place empty dye bottles in the dye table
@@ -26,7 +20,8 @@ Fixed:
 	configs not getting updated when changed in game
 	missing in game config options
 	library private folder syncing issues on offline mode servers
-	Fixed update check chat link point to the wrong location.
+	update check chat link point to the wrong location.
+	syncing issues library when overwriting a file
 Changed:
 	updated guild book credits
 	allowed setting different values for each wardrobe slot limit
@@ -40,7 +35,13 @@ Changed:
 	local file view in the library will no longer try to load files from the server
 	mannequin to not render extra renders if mannequin is not visible
 	setSkinColumnCount command to setUnlockedWardrobeSlots (usage /armourers @p setUnlockedWardrobeSlots [value:1-8] [skintype])
-	changed skins can now be downloaded from the global library
+	skins can now be downloaded from the global library (will be saved into downloads folder in the library)
+	texture painting config option to have auto, on and off settings
+	turned off texture painting if JBRA client is installed
+	added show all button to the global library
+	changed command system to use sub commands
+	change admin panel command to a sub command
+	sorted sub commands tab completion alphabetically
 	updated de_DE lang file (Flummie2000)
 	updated zh_CH lang file (Ethan)
 Art:
@@ -63,6 +64,10 @@ Art:
 		soap
 	added new dye table textures by LordPhrozen
 	added skin unlock texture by LordPhrozen
+	added new armourer textures by TheEpicJames
+	added new global library textures by TheEpicJames
+	added new skin library textures by TheEpicJames
+	added new icons for the armour container
 
 
 Build 0.43.1
