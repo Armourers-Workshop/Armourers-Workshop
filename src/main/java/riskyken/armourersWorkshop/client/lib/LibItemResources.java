@@ -9,6 +9,10 @@ public final class LibItemResources {
     public static final String GUIDE_BOOK = PREFIX_RESOURCE + "guideBook";
     public static final String MANNEQUIN_TOOL = PREFIX_RESOURCE + "mannequinTool";
     public static final String ARMOUR_CONTAINER = PREFIX_RESOURCE + "armourContainer";
+    public static final String ARMOUR_CONTAINER_HEAD = PREFIX_RESOURCE + "armourContainerHead";
+    public static final String ARMOUR_CONTAINER_CHEST = PREFIX_RESOURCE + "armourContainerChest";
+    public static final String ARMOUR_CONTAINER_LEGS = PREFIX_RESOURCE + "armourContainerLegs";
+    public static final String ARMOUR_CONTAINER_FEET = PREFIX_RESOURCE + "armourContainerFeet";
     public static final String WAND_OF_STYLE = PREFIX_RESOURCE + "wandOfStyle";
     public static final String SOAP = PREFIX_RESOURCE + "soap";
     public static final String BLOCK_MARKER = PREFIX_RESOURCE + "blockMarker";
