@@ -127,12 +127,14 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
+        filePath = SkinIOUtils.makeFilePathValid(filePath);
+        fileName = SkinIOUtils.makeFileNameValid(fileName);
+        
         LibraryFile file = new LibraryFile(fileName, filePath, skin.getSkinType());
         
         //if the file was overwritten remove it's old id link
         CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
 
-        
         if (!SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin)) {
             return;
         }
