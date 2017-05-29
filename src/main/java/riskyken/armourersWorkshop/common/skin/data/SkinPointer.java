@@ -18,6 +18,14 @@ public class SkinPointer implements ISkinPointer {
     public boolean lockSkin;
     public SkinDye skinDye;
     
+    
+    /**
+     * TODO add more skin tracking info here
+     * 
+     * library file name
+     * global library id
+     */
+    
     public SkinPointer() {
         this.skinDye = new SkinDye();
     }
