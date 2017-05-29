@@ -34,17 +34,17 @@ public final class SkinDownloader {
      * @param serverId
      * @return
      */
-    public static Skin downloadSkin(String name, int serverId) {
+    public static Skin downloadSkin(String fileName, int serverId) {
         Skin skin = null;
         
         long startTime = System.currentTimeMillis();
         long maxRate = 100;
         
-        ModLogger.log(String.format("Downloading skin: %s", name));
+        ModLogger.log(String.format("Downloading skin: %s", fileName));
         InputStream in = null;
         String data = null;
         try {
-            in = new URL("http://plushie.moe/armourers_workshop/skins/" + name).openStream();
+            in = new URL(String.format("http://plushie.moe/armourers_workshop/download-skin.php?skinid=%d&skinFileName=%s", serverId, fileName)).openStream();
             skin = SkinIOUtils.loadSkinFromStream(new BufferedInputStream(in));
         } catch (IOException e) {
             e.printStackTrace();

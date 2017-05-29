@@ -117,9 +117,10 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         public DownloadSkin(JsonObject skinJson) {
             this.skinJson = skinJson;
             int skinId = skinJson.get("id").getAsInt();
+            String idString = String.format ("%04d", skinId);
             String skinName = skinJson.get("name").getAsString();
             File path = new File(SkinIOUtils.getSkinLibraryDirectory(), "downloads/");
-            target = new File(path, skinId + " - " + skinName + ".armour");
+            target = new File(path, idString + " - " + skinName + ".armour");
             if (!path.exists()) {
                 path.mkdirs();
             }
@@ -128,9 +129,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         
         @Override
         public void run() {
-            String name = skinJson.get("file_name").getAsString();
+            String fileName = skinJson.get("file_name").getAsString();
             int serverId = skinJson.get("id").getAsInt();
-            Skin skin = SkinDownloader.downloadSkin(name, serverId);
+            Skin skin = SkinDownloader.downloadSkin(fileName, serverId);
             if (skin != null) {
                 if (SkinIOUtils.saveSkinToFile(target, skin)) {
                     ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
