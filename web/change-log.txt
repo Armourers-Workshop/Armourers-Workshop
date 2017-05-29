@@ -1,5 +1,19 @@
-Build 0.44.0
+Build 0.44.1
+Added:
+	added ghasts to the wand of style
+	added creepers to the wand of style
+Changed:
+	allowed saving skins with the creative library
+	allowed library files and folders to have ' ` + in their name
+	library skin download location so downloads counts can be tracked
+	library layout to make skin preview bigger
+Fixed:
+	library sync issue if a skin was saved with an invalid name
+	library dialogs sometimes not having the correct lighting
+	added missing localisations to the skin library
 
+
+Build 0.44.0
 Added:
 	multi-blocks
 	folders to the library
