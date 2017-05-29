@@ -42,9 +42,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             }
         }
         
-        if (!tileEntity.isCreativeLibrary()) {
-            addSlotToContainer(new SlotSkinTemplate(tileEntity, 0, 226, 101, this));
-        }
+        addSlotToContainer(new SlotSkinTemplate(tileEntity, 0, 226, 101, this));
         addSlotToContainer(new SlotOutput(tileEntity, 1, 226, 137));
     }
     

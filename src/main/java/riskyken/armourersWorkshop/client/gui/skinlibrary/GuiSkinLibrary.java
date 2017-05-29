@@ -134,18 +134,12 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         
         //Move library inventory slots.
-        if (armourLibrary.isCreativeLibrary()) {
-            Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
-            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
-            slot.xDisplayPosition = PADDING + INVENTORY_WIDTH - slotSize - 3;
-        } else {
-            Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
-            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
-            slot.xDisplayPosition = PADDING + 1;
-            slot = (Slot) inventorySlots.inventorySlots.get(37);
-            slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
-            slot.xDisplayPosition = PADDING + INVENTORY_WIDTH - slotSize - 3;
-        }
+        Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
+        slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
+        slot.xDisplayPosition = PADDING + 1;
+        slot = (Slot) inventorySlots.inventorySlots.get(37);
+        slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
+        slot.xDisplayPosition = PADDING + INVENTORY_WIDTH - slotSize - 3;
         
         buttonList.clear();
         
@@ -239,12 +233,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
      * @return true = loading, false = saving
      */
     private boolean isLoading() {
-        if (!armourLibrary.isCreativeLibrary()) {
-            Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
-            ItemStack stack = slot.getStack();
-            if (stack != null && !(stack.getItem() instanceof ItemSkinTemplate)) {
-                return false;
-            }
+        Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
+        ItemStack stack = slot.getStack();
+        if (stack != null && !(stack.getItem() instanceof ItemSkinTemplate)) {
+            return false;
         }
         return true;
     }
@@ -580,6 +572,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         
         if (isLoading()) {
             loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "load");
+            if (fileList.getSelectedListEntry() == null || ((GuiFileListItem)fileList.getSelectedListEntry()).getFile().directory) {
+                loadSaveButton.displayString = "";
+                loadSaveButton.enabled = false;
+            }
         } else {
             loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "save");
         }
@@ -832,9 +828,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         ModRenderHelper.enableAlphaBlend();
         drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - PADDING - neiBump, 0, 180, INVENTORY_WIDTH, INVENTORY_HEIGHT);
         //Input slot
-        if (!armourLibrary.isCreativeLibrary()) {
-            drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - 18 - PADDING * 2 - 4 - neiBump, 0, 162, 18, 18);
-        }
+        drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - 18 - PADDING * 2 - 4 - neiBump, 0, 162, 18, 18);
         //Output slot
         drawTexturedModalRect(PADDING + INVENTORY_WIDTH - 26, this.height - INVENTORY_HEIGHT - 26 - PADDING * 2 - neiBump, 18, 154, 26, 26);
         

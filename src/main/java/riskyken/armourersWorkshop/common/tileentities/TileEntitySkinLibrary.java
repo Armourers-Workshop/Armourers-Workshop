@@ -240,23 +240,14 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     
     @Override
     public int[] getAccessibleSlotsFromSide(int side) {
-        if (isCreativeLibrary()) {
-            int[] slots = new int[1];
-            slots[0] = 1;
-            return slots;
-        } else {
-            int[] slots = new int[2];
-            slots[0] = 0;
-            slots[1] = 1;
-            return slots;
-        }
+        int[] slots = new int[2];
+        slots[0] = 0;
+        slots[1] = 1;
+        return slots;
     }
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, int side) {
-        if (isCreativeLibrary()) {
-            return false;
-        }
         if (slot != 0) {
             return false;
         }
