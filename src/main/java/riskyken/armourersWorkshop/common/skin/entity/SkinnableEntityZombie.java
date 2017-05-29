@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.skin.entity;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityZombie;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
@@ -17,6 +19,7 @@ public class SkinnableEntityZombie implements ISkinnableEntity {
         return EntityZombie.class;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public Class<? extends ISkinnableEntityRenderer> getRendererClass() {
         return SkinnableEntityZombieRenderer.class;

@@ -17,7 +17,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 @SideOnly(Side.CLIENT)
-public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer {
+public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer {
 
     @Override
     public void render(EntityLivingBase entity, RendererLivingEntity renderer,
@@ -28,32 +28,18 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
         
-
-        
         double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
         GL11.glRotated(rot, 0, 1, 0);
         
-        
-        if (entity.isChild()) {
-            GL11.glTranslated(0, scale * 5, scale * 1.5F);
-            //GL11.glScalef(0.9F, 0.9F, 0.9F);
-        }
-        
-        
-        GL11.glTranslated(0, -9F * scale, 0);
-        GL11.glTranslated(0, 0, -4.0F * scale);
-        
-        
+        GL11.glTranslated(0, 6.65F * scale, 0);
+        //GL11.glTranslated(0, 0, -4.0F * scale);
         
         double headRot = entity.prevRotationYawHead + (entity.rotationYawHead - entity.prevRotationYawHead) * ModClientFMLEventHandler.renderTickTime;
-        GL11.glRotated(headRot - rot, 0, 1, 0);
-        
-        
+        //GL11.glRotated(headRot - rot, 0, 1, 0);
         GL11.glRotatef(entity.rotationPitch, 1, 0, 0);
         
-
-        float headScale = 0.5F;
-        GL11.glScalef(headScale, headScale * 1.5F, headScale);
+        float headScale = 9.01F;
+        GL11.glScalef(headScale, headScale, headScale);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         GL11.glPopMatrix();
     }
