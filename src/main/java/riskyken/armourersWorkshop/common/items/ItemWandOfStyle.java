@@ -38,7 +38,7 @@ public class ItemWandOfStyle extends AbstractModItem {
                     entity.getEntityId(), 0, 0);
         }
         
-        return super.onLeftClickEntity(stack, player, entity);
+        return true;
     }
     
     @Override

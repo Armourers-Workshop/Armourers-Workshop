@@ -58,6 +58,8 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         
         super.draw(mouseX, mouseY, partialTickTime);
         
+        // TODO look in YggdrasilMinecraftSessionService
+        
         String username = "player";
         GameProfile gameProfile = mc.thePlayer.getGameProfile();
         if (gameProfile != null) {
