@@ -72,6 +72,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), this.x + 5, this.y + 5 + 12 * 1, 0xFFEEEEEE);
             drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), this.x + 5, this.y + 5 + 12 * 2, 0xFFEEEEEE);
             drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), this.x + 5, this.y + 5 + 12 * 3, 0xFFEEEEEE);
+            drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), this.x + 5, this.y + 5 + 12 * 4, 0xFFEEEEEE);
             
             int iconSize = 200;
             float scale = iconSize / 2;
