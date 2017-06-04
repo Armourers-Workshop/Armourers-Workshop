@@ -264,7 +264,7 @@ public class ItemSkin extends AbstractModItem {
         world.setBlock(x, y, z, targetBlock, meta, 2);
         world.setTileEntity(x, y, z, ((ITileEntityProvider)targetBlock).createNewTileEntity(world, 0));
         TileEntitySkinnable te = (TileEntitySkinnable) world.getTileEntity(x, y, z);
-        te.setSkinPointer(skinPointer);
+        te.setSkinPointer(skin, skinPointer);
         targetBlock.onBlockPlacedBy(world, x, y, z, player, stack);
         targetBlock.onPostBlockPlaced(world, x, y, z, meta);
         te.setRelatedBlocks(relatedBlocks);
@@ -308,7 +308,7 @@ public class ItemSkin extends AbstractModItem {
             world.setTileEntity(childX, childY, childZ, targetBlock.createTileEntity(world, meta));
             
             TileEntitySkinnableChild te = (TileEntitySkinnableChild) world.getTileEntity(childX, childY, childZ);
-            te.setSkinPointer(skinPointer);
+            te.setSkinPointer(skin, skinPointer);
             te.setParentLocation(x, y, z);
             te.setRelatedBlocks(relatedBlocks);
         }

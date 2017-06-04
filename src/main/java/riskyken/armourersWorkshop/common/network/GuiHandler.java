@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
 import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
+import riskyken.armourersWorkshop.client.gui.GuiSkinnable;
 import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -34,6 +35,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinWardrobe;
+import riskyken.armourersWorkshop.common.inventory.ContainerSkinnable;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -47,6 +49,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrar
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.plushieWrapper.common.registry.ModRegistry;
@@ -123,6 +126,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.GLOBAL_SKIN_LIBRARY:
                 if (te instanceof TileEntityGlobalSkinLibrary) {
                     return new ContainerGlobalSkinLibrary(player.inventory, (TileEntityGlobalSkinLibrary)te);
+                }
+                break;
+            case LibGuiIds.SKINNABLE:
+                if (te instanceof TileEntitySkinnable) {
+                    return new ContainerSkinnable(player.inventory, (TileEntitySkinnable)te);
                 }
                 break;
         }
@@ -211,6 +219,11 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiDebugTool();
             case LibGuiIds.ADMIN_PANEL:
                 return new GuiAdminPanel();
+            case LibGuiIds.SKINNABLE:
+                if (te instanceof TileEntitySkinnable) {
+                    return new GuiSkinnable(player.inventory, (TileEntitySkinnable)te);
+                }
+                break;
         }
         return null;
     }

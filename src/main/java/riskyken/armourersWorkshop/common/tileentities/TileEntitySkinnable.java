@@ -15,6 +15,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -23,6 +24,8 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
+import riskyken.armourersWorkshop.common.inventory.ModInventory;
+import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -38,6 +41,7 @@ public class TileEntitySkinnable extends TileEntity {
     private static final String TAG_X = "x";
     private static final String TAG_Y = "y";
     private static final String TAG_Z = "z";
+    private static final String TAG_BLOCK_INVENTORY = "blockInventory";
     private static final int NBT_VERSION = 1;
 
     private int nbtVersion;
@@ -45,6 +49,8 @@ public class TileEntitySkinnable extends TileEntity {
     private boolean haveBlockBounds = false;
     private ArrayList<BlockLocation> relatedBlocks;
     private boolean bedOccupied;
+    private ModInventory inventory;
+    private boolean blockInventory;
     
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderBounds;
@@ -65,8 +71,14 @@ public class TileEntitySkinnable extends TileEntity {
         return skinPointer;
     }
 
-    public void setSkinPointer(SkinPointer skinPointer) {
+    public void setSkinPointer(Skin skin, SkinPointer skinPointer) {
         this.skinPointer = skinPointer;
+        if (skin != null & isParent()) {
+            if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false)) {
+                blockInventory = true;
+                inventory = new ModInventory(LibBlockNames.SKINNABLE, 36, this);
+            }
+        }
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -223,6 +235,14 @@ public class TileEntitySkinnable extends TileEntity {
         return this;
     }
     
+    public boolean isParent() {
+        return this.getClass() == TileEntitySkinnable.class;
+    }
+    
+    public ModInventory getInventory() {
+        return inventory;
+    }
+    
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
@@ -271,6 +291,12 @@ public class TileEntitySkinnable extends TileEntity {
                 }
                 compound.setTag(TAG_RELATED_BLOCKS, list);
             }
+            if (isParent() & blockInventory & inventory != null) {
+                compound.setBoolean(TAG_BLOCK_INVENTORY, true);
+                inventory.saveItemsToNBT(compound);
+            } else {
+                compound.setBoolean(TAG_BLOCK_INVENTORY, false);
+            }
         }
     }
     
@@ -298,6 +324,13 @@ public class TileEntitySkinnable extends TileEntity {
                 }
             } else {
                 relatedBlocks = null;
+            }
+            if (compound.hasKey(TAG_BLOCK_INVENTORY, Constants.NBT.TAG_BYTE) & isParent()) {
+                blockInventory = true;
+                inventory = new ModInventory(LibBlockNames.SKINNABLE, 36, this);
+            } else {
+                blockInventory = false;
+                inventory = null;
             }
         } else {
             skinPointer = null;
@@ -349,5 +382,25 @@ public class TileEntitySkinnable extends TileEntity {
                 }
             }
         }
+    }
+
+    public boolean hasCustomName() {
+        if (hasSkin()) {
+            Skin skin = getSkin(getSkinPointer());
+            if (skin != null) {
+                return !StringUtils.isNullOrEmpty(skin.getCustomName());
+            }
+        }
+        return false;
+    }
+
+    public String getCustomName() {
+        if (hasSkin()) {
+            Skin skin = getSkin(getSkinPointer());
+            if (skin != null) {
+                return skin.getCustomName();
+            }
+        }
+        return "";
     } 
 }

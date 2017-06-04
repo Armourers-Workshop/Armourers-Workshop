@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
@@ -28,12 +29,14 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -75,6 +78,12 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
         if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false)) {
             //return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
+        }
+        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false)) {
+            if (!world.isRemote) {
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.SKINNABLE, world, x, y, z);
+            }
+            return true;
         }
         return false;
     }
