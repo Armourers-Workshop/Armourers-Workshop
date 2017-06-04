@@ -94,7 +94,7 @@ public final class SkinDownloader {
             }
             
             long startTime = System.currentTimeMillis();
-            long maxRate = 100;
+            long maxRate = 50;
             
             ModLogger.log(String.format("Downloading skin: %s", name));
             InputStream in = null;
