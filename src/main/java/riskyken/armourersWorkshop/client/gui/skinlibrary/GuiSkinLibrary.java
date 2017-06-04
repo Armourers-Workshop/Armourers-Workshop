@@ -192,11 +192,11 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         buttonList.add(loadSaveButton);
         
         filenameTextbox = new GuiLabeledTextField(fontRendererObj, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
-        filenameTextbox.setMaxStringLength(30);
+        filenameTextbox.setMaxStringLength(100);
         filenameTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.enterFileName"));
         
         searchTextbox = new GuiLabeledTextField(fontRendererObj, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
-        searchTextbox.setMaxStringLength(30);
+        searchTextbox.setMaxStringLength(100);
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
         
