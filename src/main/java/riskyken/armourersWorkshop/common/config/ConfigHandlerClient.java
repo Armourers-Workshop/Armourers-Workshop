@@ -33,11 +33,6 @@ public class ConfigHandlerClient {
     public static boolean showSkinBlockBounds;
     public static boolean showSkinRenderBounds;
     
-    public static String globalLibraryUsername = "";
-    public static String globalLibraryPassword = "";
-    public static String globalLibraryAccessKey = "";
-    public static boolean globalLibraryLoggedIn = false;
-    
     public static Configuration config;
     
     public static void init(File file) {
