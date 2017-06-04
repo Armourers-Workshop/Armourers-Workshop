@@ -84,8 +84,8 @@ public class ArmourersWorkshop {
     public static ModCreativeTab creativeTabArmorersWorkshop = new ModCreativeTab(LibModInfo.ID);
     public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
 
-    public static ModItems modItems;
-    public static ModBlocks modBlocks;
+    private static ModItems modItems;
+    private static ModBlocks modBlocks;
     
     @Mod.EventHandler
     public void perInit(FMLPreInitializationEvent event) {
@@ -170,5 +170,9 @@ public class ArmourersWorkshop {
     
     public static boolean isDedicated() {
         return proxy.getClass() == CommonProxy.class;
+    }
+    
+    public static CommonProxy getProxy() {
+        return proxy;
     }
 }
