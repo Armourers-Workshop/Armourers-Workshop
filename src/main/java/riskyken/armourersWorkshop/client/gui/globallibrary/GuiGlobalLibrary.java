@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelCreateAccount;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
@@ -19,6 +20,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibra
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 
 @SideOnly(Side.CLIENT)
@@ -86,6 +88,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     
     @Override
     public void initGui() {
+        super.initGui();
         buttonList.clear();
         setupPanels();
         for (int i = 0; i < panelList.size(); i++) {
@@ -93,6 +96,21 @@ public class GuiGlobalLibrary extends GuiContainer {
         }
         if (screen == Screen.HOME) {
             ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkins();
+        }
+        //Move player inventory slots.
+        for (int x = 0; x < 9; x++) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
+            if (slot instanceof SlotHidable) {
+                ((SlotHidable)slot).setVisible(false);
+            }
+        }
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
+                if (slot instanceof SlotHidable) {
+                    ((SlotHidable)slot).setVisible(false);
+                }
+            }
         }
     }
     
@@ -138,6 +156,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     
     @Override
     public void updateScreen() {
+        super.updateScreen();
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).update();
         }
