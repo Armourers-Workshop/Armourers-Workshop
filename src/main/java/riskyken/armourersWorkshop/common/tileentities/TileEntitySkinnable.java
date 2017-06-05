@@ -325,12 +325,14 @@ public class TileEntitySkinnable extends TileEntity {
             } else {
                 relatedBlocks = null;
             }
-            if (compound.hasKey(TAG_BLOCK_INVENTORY, Constants.NBT.TAG_BYTE) & isParent()) {
-                blockInventory = true;
-                inventory = new ModInventory(LibBlockNames.SKINNABLE, 36, this);
-            } else {
-                blockInventory = false;
-                inventory = null;
+            blockInventory = false;
+            inventory = null;
+            if (isParent()) {
+                if (compound.hasKey(TAG_BLOCK_INVENTORY, Constants.NBT.TAG_BYTE) && compound.getBoolean(TAG_BLOCK_INVENTORY)) {
+                    blockInventory = true;
+                    inventory = new ModInventory(LibBlockNames.SKINNABLE, 36, this);
+                    inventory.loadItemsFromNBT(compound);
+                }
             }
         } else {
             skinPointer = null;

@@ -6,7 +6,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class ContainerSkinnable extends Container {
 
@@ -41,7 +40,6 @@ public class ContainerSkinnable extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
         Slot slot = getSlot(slotId);
-        ModLogger.log(slot.slotNumber);
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();

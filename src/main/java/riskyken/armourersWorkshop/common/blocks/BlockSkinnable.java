@@ -41,6 +41,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.SkinUtils;
@@ -63,6 +64,15 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+        if (te != null && te.getInventory() != null) {
+            BlockUtils.dropInventoryBlocks(world, te.getInventory(), x, y, z);
+        }
+        super.breakBlock(world, x, y, z, block, meta);
+    }
+    
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         Skin skin = getSkin(world, x, y, z);
         TileEntitySkinnable te = getTileEntity(world, x, y, z);
@@ -81,7 +91,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
         if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false)) {
             if (!world.isRemote) {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.SKINNABLE, world, x, y, z);
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.SKINNABLE, world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord);
             }
             return true;
         }

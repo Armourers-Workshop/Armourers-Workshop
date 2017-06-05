@@ -233,6 +233,7 @@ inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
 inventory.armourersworkshop:entityEquipment.name=Entity Equipment
 inventory.armourersworkshop:skinningTable.name=Skinning Table
 inventory.armourersworkshop:dyeTable.name=Dye Table
+inventory.armourersworkshop:skinnable.name=Skinnable Block
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:
@@ -291,6 +292,7 @@ inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
 inventory.armourersworkshop:armourerBrain.seat=Seat?
 inventory.armourersworkshop:armourerBrain.multiblock=Multiblock?
 inventory.armourersworkshop:armourerBrain.bed=Bed?
+inventory.armourersworkshop:armourerBrain.inventory=Inventory?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Override?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
