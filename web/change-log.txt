@@ -1,3 +1,20 @@
+Build 0.45.0
+Added:
+	block skin inventory option
+	added most downloaded skins to the global library
+	added missing localizations for the global library
+Changed:
+	updated zh_CN lang file (Ethan)
+	changed wing slot icon (Ethan)
+	show download count in the global library
+	increased global library download speed
+Fixed:
+	stop wand of style from hurting entities when left clicking
+	fixed players inventory becoming de-synced after using the global library
+	fixed some skin name going outside of the preview box in the global library
+	fixed "secret" doll recipe working with any block
+
+
 Build 0.44.1
 Added:
 	added ghasts to the wand of style
