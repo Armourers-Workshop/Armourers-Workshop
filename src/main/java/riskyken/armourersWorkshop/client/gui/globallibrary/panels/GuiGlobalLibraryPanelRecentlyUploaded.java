@@ -18,6 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
@@ -113,6 +114,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         int boxW = width - 5;
         int boxH = height - 5 - 12;
         int iconSize = 50;
@@ -121,7 +123,7 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
         displayLimit = colSize * rowSize;
         
         buttonList.clear();
-        buttonShowAll = new GuiButtonExt(-1, x + 5, y + 5, 80, 20, "Show All");
+        buttonShowAll = new GuiButtonExt(-1, x + 5, y + 5, 80, 20, GuiHelper.getLocalizedControlName(guiName, "home.showAllSkins"));
         buttonList.add(buttonShowAll);
     }
     
@@ -153,11 +155,13 @@ public class GuiGlobalLibraryPanelRecentlyUploaded extends GuiPanel {
         int boxW = (width - 15) / 2;
         int boxH = height - 10 - 30;
         int iconSize = 50;
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
+        
         if (jsonRecentlyUploaded != null) {
-            drawJsonSkinBox("Recently Uploaded", jsonRecentlyUploaded, iconSize, x + 5, y + 5 + 30, boxW, boxH, mouseX, mouseY);
+            drawJsonSkinBox(GuiHelper.getLocalizedControlName(guiName, "home.recentlyUploaded"), jsonRecentlyUploaded, iconSize, x + 5, y + 5 + 30, boxW, boxH, mouseX, mouseY);
         }
         if (jsonMostDownloaded != null) {
-            drawJsonSkinBox("Most Downloaded", jsonMostDownloaded, iconSize, x + boxW + 10, y + 5 + 30, boxW, boxH, mouseX, mouseY);
+            drawJsonSkinBox(GuiHelper.getLocalizedControlName(guiName, "home.mostDownloaded"), jsonMostDownloaded, iconSize, x + boxW + 10, y + 5 + 30, boxW, boxH, mouseX, mouseY);
         }
         
     }

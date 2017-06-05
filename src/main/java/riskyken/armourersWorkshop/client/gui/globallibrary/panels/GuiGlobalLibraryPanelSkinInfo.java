@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
@@ -39,11 +40,12 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         buttonList.clear();
         int panelCenter = this.x + this.width / 2;
-        buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, "Back");
+        buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.back"));
         buttonList.add(buttonBack);
-        buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, "Download Skin");
+        buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.downloadSkin"));
         buttonList.add(buttonDownload);
     }
     

@@ -8,6 +8,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -26,11 +27,12 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         buttonList.clear();
-        buttonList.add(new GuiIconButton(parent, 0, this.x + this.width - 21, this.y + 5, 16, 16, "Home", BUTTON_TEXTURES).setIconLocation(0, 0, 16, 16));
-        buttonList.add(new GuiIconButton(parent, 1, this.x + this.width - 42, this.y + 5, 16, 16, "Favourites", BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16));
-        buttonList.add(new GuiIconButton(parent, 2, this.x + this.width - 62, this.y + 5, 16, 16, "Friends", BUTTON_TEXTURES).setIconLocation(0, 34, 16, 16));
-        buttonList.add(new GuiIconButton(parent, 3, this.x + this.width - 84, this.y + 5, 16, 16, "Upload Skin", BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16));
+        buttonList.add(new GuiIconButton(parent, 0, this.x + this.width - 21, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.home"), BUTTON_TEXTURES).setIconLocation(0, 0, 16, 16));
+        buttonList.add(new GuiIconButton(parent, 1, this.x + this.width - 42, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.favourites"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16));
+        buttonList.add(new GuiIconButton(parent, 2, this.x + this.width - 62, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.friends"), BUTTON_TEXTURES).setIconLocation(0, 34, 16, 16));
+        buttonList.add(new GuiIconButton(parent, 3, this.x + this.width - 84, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.uploadSkin"), BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16));
     }
     
     @Override

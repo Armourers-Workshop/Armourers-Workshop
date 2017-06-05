@@ -210,4 +210,8 @@ public class GuiGlobalLibrary extends GuiContainer {
             panelList.get(i).draw(mouseX, mouseY, partialTickTime);
         }
     }
+    
+    public String getGuiName() {
+        return "globalSkinLibrary";
+    }
 }

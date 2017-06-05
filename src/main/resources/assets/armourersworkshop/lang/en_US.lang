@@ -345,6 +345,20 @@ inventory.armourersworkshop:miniArmourer.save=Save
 inventory.armourersworkshop:miniArmourer.load=Load
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=Sneak right click the mini armourer to access the building interface.
 
+inventory.armourersworkshop:globalSkinLibrary.header.home=Home
+inventory.armourersworkshop:globalSkinLibrary.header.favourites=Favourites
+inventory.armourersworkshop:globalSkinLibrary.header.friends=Friends
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Upload Skin
+inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Type to search...
+inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Search
+inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Show All Skins
+inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Recently Uploaded
+inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Most Downloaded
+inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Search Results:  Page %d of %d - Total of %d results.
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
+
+
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=No more undos
 chat.armourersworkshop:undo.undoing=Undoing

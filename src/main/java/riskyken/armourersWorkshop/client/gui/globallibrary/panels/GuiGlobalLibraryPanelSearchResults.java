@@ -24,9 +24,11 @@ import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader.DownloadSkinCallable;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
@@ -186,7 +188,12 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             totalSkins = json.size();
         }
         
-        fontRenderer.drawString("Search Results:  Page " + (page + 1) + " of " + (maxPages) + " - Total of " + totalSkins + " Results", x + 5, y + 6, 0xFFEEEEEE);
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
+        String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + "searchResults.results";
+        
+        String resultsText = TranslateUtils.translate(unlocalizedName, page + 1, maxPages, totalSkins);
+        //"Search Results:  Page " + (page + 1) + " of " + (maxPages) + " - Total of " + totalSkins + " Results"
+        fontRenderer.drawString(resultsText, x + 5, y + 6, 0xFFEEEEEE);
         
         if (json != null) {
             for (int i = page * displayCount; i < json.size(); i++) {
