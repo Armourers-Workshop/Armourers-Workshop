@@ -213,15 +213,18 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                     Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
                     if (!downloadedSkins.contains(skinJson)) {
                         downloadedSkins.add(skinJson);
-                        String name = skinJson.get("file_name").getAsString();
+                        String fileName = skinJson.get("file_name").getAsString();
+                        
                         int serverId = skinJson.get("id").getAsInt();
-                        skinCompletion.submit(new DownloadSkinCallable(name, serverId));
+                        skinCompletion.submit(new DownloadSkinCallable(fileName, serverId));
                     }
                     drawGradientRect(iconX, iconY, iconW, iconH, hoverColour, 0xD0101010);
                     
                     if (skin != null) {
+                        String name = skinJson.get("name").getAsString();
                         int size = fontRenderer.getStringWidth(skin.getCustomName());
-                        fontRenderer.drawString(skin.getCustomName(), (int) (this.x + x * iconSize + iconSize / 2 - size / 2), this.y + y * iconSize + iconSize, 0xFFEEEEEE);
+                        
+                        fontRenderer.drawSplitString(name, (int) (this.x + x * iconSize + 10), this.y + y * iconSize + iconSize, iconSize - 10, 0xFFEEEEEE);
                         GL11.glPushMatrix();
                         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
                         GL11.glTranslatef(iconX + iconSize / 2, iconY + iconSize / 2 - 12, 200.0F);
