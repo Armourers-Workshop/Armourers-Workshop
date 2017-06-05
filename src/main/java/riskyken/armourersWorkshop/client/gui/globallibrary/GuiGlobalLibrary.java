@@ -128,7 +128,7 @@ public class GuiGlobalLibrary extends GuiContainer {
             panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
             panelSearchBox.setVisible(true);
             yOffset += PADDING + 23;
-            panelRecentlyUploaded.setPosition(5, yOffset).setSize(width / 2, height - yOffset - PADDING);
+            panelRecentlyUploaded.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
             panelRecentlyUploaded.setVisible(true);
             break;
         case SEARCH:
