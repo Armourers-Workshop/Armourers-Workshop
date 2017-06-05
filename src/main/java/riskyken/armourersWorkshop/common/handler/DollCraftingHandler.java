@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IWorldAccess;
 import net.minecraft.world.World;
@@ -59,12 +60,14 @@ public class DollCraftingHandler implements IWorldAccess {
         World world = entity.worldObj;
         if (!world.isRemote) {
             if (entity instanceof EntityFallingBlock) {
-                int x = MathHelper.floor_double(entity.posX);
-                int y = MathHelper.floor_double(entity.posY) - 1;
-                int z = MathHelper.floor_double(entity.posZ);
-                Block block = world.getBlock(x, y, z);
-                if (block == ModBlocks.mannequin) {
-                    ((BlockMannequin)block).convertToDoll(world, x, y, z);
+                if (((EntityFallingBlock)entity).func_145805_f() == Blocks.anvil) {
+                    int x = MathHelper.floor_double(entity.posX);
+                    int y = MathHelper.floor_double(entity.posY) - 1;
+                    int z = MathHelper.floor_double(entity.posZ);
+                    Block block = world.getBlock(x, y, z);
+                    if (block == ModBlocks.mannequin) {
+                        ((BlockMannequin)block).convertToDoll(world, x, y, z);
+                    }
                 }
             }
         }
