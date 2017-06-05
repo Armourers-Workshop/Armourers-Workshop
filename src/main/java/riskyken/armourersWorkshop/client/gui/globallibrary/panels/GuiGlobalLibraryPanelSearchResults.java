@@ -192,7 +192,6 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + "searchResults.results";
         
         String resultsText = TranslateUtils.translate(unlocalizedName, page + 1, maxPages, totalSkins);
-        //"Search Results:  Page " + (page + 1) + " of " + (maxPages) + " - Total of " + totalSkins + " Results"
         fontRenderer.drawString(resultsText, x + 5, y + 6, 0xFFEEEEEE);
         
         if (json != null) {
