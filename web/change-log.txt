@@ -13,6 +13,7 @@ Fixed:
 	fixed players inventory becoming de-synced after using the global library
 	fixed some skin name going outside of the preview box in the global library
 	fixed "secret" doll recipe working with any block
+	fixed not being able to load skins if the filename was too long
 
 
 Build 0.44.1
