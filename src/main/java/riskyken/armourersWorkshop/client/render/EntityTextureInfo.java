@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -59,8 +60,8 @@ public class EntityTextureInfo {
     
     public EntityTextureInfo() {
         lastEntityTextureHash = -1;
-        lastSkinHashs = new int[4 * 5];
-        lastDyeHashs = new int[4 * 5];
+        lastSkinHashs = new int[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
+        lastDyeHashs = new int[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
         normalTexture = null;
         replacementTexture = null;
         for (int i = 0; i < lastSkinHashs.length; i++) {

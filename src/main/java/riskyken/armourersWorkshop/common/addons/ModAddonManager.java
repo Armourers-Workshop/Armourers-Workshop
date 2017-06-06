@@ -33,13 +33,19 @@ public final class ModAddonManager {
     public static AddonBetterStorage addonBetterStorage;
     public static AddonBotania addonBotania;
     public static AddonBuildCraft addonBuildCraft;
+    public static AddonColoredLights addonColoredLights;
+    public static AddonCustomNPCS addonCustomNPCS;
     public static AddonGlassShards addonGlassShards;
+    public static AddonJBRAClient addonJBRAClient;
     public static AddonMaplecrafted addonMaplecrafted;
     public static AddonMekanismTools addonMekanismTools;
     public static AddonMetallurgy addonMetallurgy;
     public static AddonMinecraft addonMinecraft;
+    public static AddonMorePlayerModels addonMorePlayerModels;
     public static AddonMoreSwordsMod addonMoreSwordsMod;
     public static AddonOreSpawn addonOreSpawn;
+    public static AddonShaders addonShaders;
+    public static AddonSmartMoving addonSmartMoving;
     public static AddonThaumcraft addonThaumcraft;
     public static AddonTinkersConstruct addonTinkersConstruct;
     public static AddonTwilightForest addonTwilightForest;
@@ -53,19 +59,26 @@ public final class ModAddonManager {
     }
     
     private static void loadAddons() {
+        ModLogger.log("Loading addons");
         addonAquaTweaks = new AddonAquaTweaks();
         addonBalkonsWeaponMod = new AddonBalkonsWeaponMod();
         addonBattlegear2 = new AddonBattlegear2();
         addonBetterStorage = new AddonBetterStorage();
         addonBotania = new AddonBotania();
         addonBuildCraft = new AddonBuildCraft();
+        addonColoredLights = new AddonColoredLights();
+        addonCustomNPCS = new AddonCustomNPCS();
         addonGlassShards = new AddonGlassShards();
+        addonJBRAClient = new AddonJBRAClient();
         addonMaplecrafted = new AddonMaplecrafted();
         addonMekanismTools = new AddonMekanismTools();
         addonMetallurgy = new AddonMetallurgy();
         addonMinecraft = new AddonMinecraft();
+        addonMorePlayerModels = new AddonMorePlayerModels();
         addonMoreSwordsMod = new AddonMoreSwordsMod();
         addonOreSpawn = new AddonOreSpawn();
+        addonShaders = new AddonShaders();
+        addonSmartMoving = new AddonSmartMoving();
         addonThaumcraft = new AddonThaumcraft();
         addonTinkersConstruct = new AddonTinkersConstruct();
         addonTwilightForest = new AddonTwilightForest();
@@ -74,6 +87,7 @@ public final class ModAddonManager {
         loadedAddons.add(addonAquaTweaks);
         loadedAddons.add(addonBalkonsWeaponMod);
         loadedAddons.add(addonBattlegear2);
+        loadedAddons.add(addonCustomNPCS);
         loadedAddons.add(addonBetterStorage);
         loadedAddons.add(addonBotania);
         loadedAddons.add(addonBuildCraft);

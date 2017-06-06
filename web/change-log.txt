@@ -1,10 +1,135 @@
+Build 0.45.0
+Added:
+	block skin inventory option
+	added most downloaded skins to the global library
+	added missing localizations for the global library
+Changed:
+	updated zh_CN lang file (Ethan)
+	changed wing slot icon (Ethan)
+	show download count in the global library
+	increased global library download speed
+Fixed:
+	stop wand of style from hurting entities when left clicking
+	fixed players inventory becoming de-synced after using the global library
+	fixed some skin name going outside of the preview box in the global library
+	fixed "secret" doll recipe working with any block
+
+
+Build 0.44.1
+Added:
+	added ghasts to the wand of style
+	added creepers to the wand of style
+Changed:
+	allowed saving skins with the creative library
+	allowed library files and folders to have ' ` + in their name
+	library skin download location so downloads counts can be tracked
+	library layout to make skin preview bigger
+Fixed:
+	library sync issue if a skin was saved with an invalid name
+	library dialogs sometimes not having the correct lighting
+	added missing localisations to the skin library
+
+
+Build 0.44.0
+Added:
+	multi-blocks
+	folders to the library
+	blending tool
+	skin slot unlock item
+	enabled wand of style for chickens, zombies, skeletons and custom npcs (!!UNFINISHED!!)
+	new folder, overwrite file and delete dialogs in the library
+	lock dyes config option to the skinning table
+	resyncWardrobe command
+	setItemAsSkinnable command (/armourers setItemAsSkinnable will effect currently held item)
+	clear skin dye recipe (soap + skin in crafting grid)
+	debug render to show block render bounds
+	average model bake time to the debug text
+Fixed:
+	crash rendering block skin on the same tick it is removed
+	being able to place empty dye bottles in the dye table
+	transparent skins not showing correctly in the dye table
+	configs not getting updated when changed in game
+	missing in game config options
+	library private folder syncing issues on offline mode servers
+	update check chat link point to the wrong location.
+	syncing issues library when overwriting a file
+Changed:
+	updated guild book credits
+	allowed setting different values for each wardrobe slot limit
+	allowed for up to 8 slots in the wardrobe
+	show debug tool in creative tab
+	added face mode image to paint roller
+	dye table recipe to match new texture
+	block marker recipe to match new texture
+	incressed the size of the library model preview
+	library model preview is hidden if the window is to small
+	local file view in the library will no longer try to load files from the server
+	mannequin to not render extra renders if mannequin is not visible
+	setSkinColumnCount command to setUnlockedWardrobeSlots (usage /armourers @p setUnlockedWardrobeSlots [value:1-8] [skintype])
+	skins can now be downloaded from the global library (will be saved into downloads folder in the library)
+	texture painting config option to have auto, on and off settings
+	turned off texture painting if JBRA client is installed
+	added show all button to the global library
+	changed command system to use sub commands
+	change admin panel command to a sub command
+	sorted sub commands tab completion alphabetically
+	updated de_DE lang file (Flummie2000)
+	updated zh_CH lang file (Ethan)
+Art:
+	added new item textures by TheEpicJames for;
+		armourers hammer
+		blend tool
+		block marker
+		burn tool
+		dodge tool
+		colour picker
+		noise tool
+		colour noise tool
+		debug tool
+		dye bottle
+		gift sack
+		hue tool
+		mannequin tool
+		paint roller
+		paintbrush
+		soap
+	added new dye table textures by LordPhrozen
+	added skin unlock texture by LordPhrozen
+	added new armourer textures by TheEpicJames
+	added new global library textures by TheEpicJames
+	added new skin library textures by TheEpicJames
+	added new icons for the armour container
+
+
+Build 0.43.1
+Fixed:
+	Crafting table dyed skins causes disconnect.
+	Skin dyes not showing on entities using the armour container.
+
+
+Build 0.43.0
+Added:
+	Invisible option to mannequins.
+	Allowed setting a mannequins texture using a URL.
+	Ability to use colour picker tool without selecting paint type.
+	Added admin panel.
+	Added skin recovery system.
+Fixed:
+	Armour container's not saving skin dyes.
+	Skins not rendering when Dragon Block C is installed.
+Changed:
+	Update pt_PT and pt_BR lang files. (EzerArch) 
+
+
 Build 0.42.5
 Fixed:
 	Client crash when a doll is placed.
 
+
 Build 0.42.4
 Fixed:
 	Dedicated server crash when mannequin is loaded.
+
 
 Build 0.42.3
 Added:

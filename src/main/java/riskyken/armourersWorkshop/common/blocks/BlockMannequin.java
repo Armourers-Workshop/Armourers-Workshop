@@ -33,12 +33,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 
@@ -96,7 +96,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
             TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
             if (te != null && te.isRenderExtras()) {
-                if (te.hasSpecialRender()) {
+                if (te.hasSpecialRender() & te.isVisible()) {
                     for (int i = 0; i < 4; i++) {
                         EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
                         ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
@@ -259,7 +259,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
+        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
     }
     
     @Override

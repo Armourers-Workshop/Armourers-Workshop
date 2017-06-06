@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeClearDye;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinDye;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinUpdate;
 import riskyken.armourersWorkshop.common.handler.DollCraftingHandler;
@@ -23,8 +24,10 @@ public final class CraftingManager {
     public static void init() {
         GameRegistry.addRecipe(new RecipeSkinUpdate());
         GameRegistry.addRecipe(new RecipeSkinDye());
+        GameRegistry.addRecipe(new RecipeClearDye());
         RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinUpdate.class, Category.SHAPELESS, "after:minecraft:shapeless");
         RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeSkinDye.class, Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeClearDye.class, Category.SHAPELESS, "after:minecraft:shapeless");
         hideItemsInNEI();
         if (!ConfigHandler.disableSkinningRecipes) {
             ItemSkinningRecipes.init();
@@ -61,6 +64,9 @@ public final class CraftingManager {
                 ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
                 ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1));
                 ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnable, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableGlowing, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableChild, 1));
+                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableChildGlowing, 1));
             } catch (Exception e) {
                 e.printStackTrace();
             }

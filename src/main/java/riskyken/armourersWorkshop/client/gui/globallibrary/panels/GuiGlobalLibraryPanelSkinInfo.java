@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
+import java.io.File;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
@@ -10,15 +12,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
-import riskyken.armourersWorkshop.client.gui.globallibrary.dialogs.GuiGlobalLibraryDialogDownloadSkin;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.library.ILibraryManager;
+import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
@@ -34,11 +40,12 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         buttonList.clear();
         int panelCenter = this.x + this.width / 2;
-        buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, "Back");
+        buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.back"));
         buttonList.add(buttonBack);
-        buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, "Download Skin");
+        buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.downloadSkin"));
         buttonList.add(buttonDownload);
     }
     
@@ -48,7 +55,10 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
         }
         if (button == buttonDownload) {
-            setDialog(new GuiGlobalLibraryDialogDownloadSkin(this, 320, 220));
+            if (skinJson != null) {
+                buttonDownload.enabled = false;
+                new DownloadSkin(skinJson);
+            }
         }
     }
     
@@ -64,6 +74,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), this.x + 5, this.y + 5 + 12 * 1, 0xFFEEEEEE);
             drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), this.x + 5, this.y + 5 + 12 * 2, 0xFFEEEEEE);
             drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), this.x + 5, this.y + 5 + 12 * 3, 0xFFEEEEEE);
+            drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), this.x + 5, this.y + 5 + 12 * 4, 0xFFEEEEEE);
             
             int iconSize = 200;
             float scale = iconSize / 2;
@@ -99,5 +110,37 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     public void displaySkinInfo(JsonObject jsonObject) {
         skinJson = jsonObject;
         ((GuiGlobalLibrary)parent).switchScreen(Screen.SKIN_INFO);
+    }
+    
+    private static class DownloadSkin implements Runnable {
+        
+        private final JsonObject skinJson;
+        private final File target;
+        
+        public DownloadSkin(JsonObject skinJson) {
+            this.skinJson = skinJson;
+            int skinId = skinJson.get("id").getAsInt();
+            String idString = String.format ("%04d", skinId);
+            String skinName = skinJson.get("name").getAsString();
+            File path = new File(SkinIOUtils.getSkinLibraryDirectory(), "downloads/");
+            target = new File(path, idString + " - " + skinName + ".armour");
+            if (!path.exists()) {
+                path.mkdirs();
+            }
+            new Thread(this).start();
+        }
+        
+        @Override
+        public void run() {
+            String fileName = skinJson.get("file_name").getAsString();
+            int serverId = skinJson.get("id").getAsInt();
+            Skin skin = SkinDownloader.downloadSkin(fileName, serverId);
+            if (skin != null) {
+                if (SkinIOUtils.saveSkinToFile(target, skin)) {
+                    ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+                    libraryManager.reloadLibrary();
+                }
+            }
+        }
     }
 }

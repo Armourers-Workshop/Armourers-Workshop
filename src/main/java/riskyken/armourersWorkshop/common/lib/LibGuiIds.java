@@ -15,4 +15,6 @@ public class LibGuiIds {
     public static final int DYE_TABLE = 11;
     public static final int DEBUG_TOOL = 12;
     public static final int GLOBAL_SKIN_LIBRARY = 13;
+    public static final int ADMIN_PANEL = 14;
+    public static final int SKINNABLE = 15;
 }

@@ -52,7 +52,7 @@ public class DebugTextHandler {
                 event.left.add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
                 event.left.add("Texture Render: " + ClientProxy.useSafeTextureRender());
                 event.left.add("Display Lists: " + DisplayList.getListCount());
-                
+                event.left.add("Average Bake Time: " + ModelBakery.INSTANCE.getAverageBakeTime() + "ms");
                 if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     for (int i = 0; i < playerList.size(); i++) {
                         GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);

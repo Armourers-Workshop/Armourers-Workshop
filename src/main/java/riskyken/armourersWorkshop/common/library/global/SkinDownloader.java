@@ -28,6 +28,47 @@ public final class SkinDownloader {
         }
     }
     
+    /**
+     * Downloads a fresh skins from the server.
+     * @param name
+     * @param serverId
+     * @return
+     */
+    public static Skin downloadSkin(String fileName, int serverId) {
+        Skin skin = null;
+        
+        long startTime = System.currentTimeMillis();
+        long maxRate = 100;
+        
+        ModLogger.log(String.format("Downloading skin: %s", fileName));
+        InputStream in = null;
+        String data = null;
+        try {
+            in = new URL(String.format("http://plushie.moe/armourers_workshop/download-skin.php?skinid=%d&skinFileName=%s", serverId, fileName)).openStream();
+            skin = SkinIOUtils.loadSkinFromStream(new BufferedInputStream(in));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
+        
+        long waitTime = maxRate - (System.currentTimeMillis() - startTime);
+        if (waitTime > 0) {
+            try {
+                Thread.sleep(waitTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        if (skin != null) {
+            skin.serverId = serverId;
+        } else {
+            ModLogger.log("Failed to download skin.");
+        }
+        return skin;
+    }
+    
     public static class DownloadSkinCallable implements Callable<Skin> {
         
         private final String name;
@@ -53,7 +94,7 @@ public final class SkinDownloader {
             }
             
             long startTime = System.currentTimeMillis();
-            long maxRate = 100;
+            long maxRate = 50;
             
             ModLogger.log(String.format("Downloading skin: %s", name));
             InputStream in = null;

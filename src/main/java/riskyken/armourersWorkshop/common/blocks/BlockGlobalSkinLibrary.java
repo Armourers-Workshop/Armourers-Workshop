@@ -39,31 +39,28 @@ public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEnt
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon sideIcon;
+    private IIcon iconTop;
     @SideOnly(Side.CLIENT)
-    private IIcon bottomIcon;
+    private IIcon iconBottom;
     
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.GLOBAL_SKIN_LIBRARY_TOP);
-        sideIcon = register.registerIcon(LibBlockResources.GLOBAL_SKIN_LIBRARY_SIDE);
-        bottomIcon = register.registerIcon(LibBlockResources.GLOBAL_SKIN_LIBRARY_BOTTOM);
+        blockIcon = register.registerIcon(LibBlockResources.GLOBAL_SKIN_LIBRARY_SIDE);
+        iconTop = register.registerIcon(LibBlockResources.GLOBAL_SKIN_LIBRARY_TOP);
+        iconBottom = register.registerIcon(LibBlockResources.GLOBAL_SKIN_LIBRARY_BOTTOM);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
         if (side == 1) {
-            return blockIcon;
+            return iconTop;
         }
         if (side == 0) {
-            return bottomIcon;
+            return iconBottom;
         }
-        if (side > 1) {
-            return sideIcon;
-        }
-        return null;
+        return blockIcon;
     }
 
     @Override

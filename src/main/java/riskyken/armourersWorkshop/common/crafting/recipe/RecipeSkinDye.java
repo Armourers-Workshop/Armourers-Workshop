@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.crafting.recipe;
 
-import java.util.Arrays;
-
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -13,7 +11,6 @@ import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class RecipeSkinDye implements IRecipe {
 
@@ -60,12 +57,10 @@ public class RecipeSkinDye implements IRecipe {
         
         if (skinStack != null && dyeStack != null) {
             ItemStack returnStack = skinStack.copy();
-            byte[] dyeColour = PaintingHelper.getToolPaintColourArray(dyeStack);
-            ModLogger.log("dye size: " + dyeColour.length);
-            ModLogger.log(Arrays.toString(dyeColour));
+            byte[] rgbt = PaintingHelper.getToolPaintData(dyeStack);
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(returnStack);
             ISkinDye dye = skinPointer.getSkinDye();
-            dye.addDye(dyeColour);
+            dye.addDye(rgbt);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
             return returnStack;
         }

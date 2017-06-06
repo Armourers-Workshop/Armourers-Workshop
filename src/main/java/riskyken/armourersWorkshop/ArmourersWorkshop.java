@@ -84,12 +84,12 @@ public class ArmourersWorkshop {
     public static ModCreativeTab creativeTabArmorersWorkshop = new ModCreativeTab(LibModInfo.ID);
     public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
 
-    public static ModItems modItems;
-    public static ModBlocks modBlocks;
+    private static ModItems modItems;
+    private static ModBlocks modBlocks;
     
     @Mod.EventHandler
     public void perInit(FMLPreInitializationEvent event) {
-        ModLogger.log("Loading " + LibModInfo.NAME + " " + LibModInfo.VERSION);
+        ModLogger.log(String.format("Loading %s version %s", LibModInfo.NAME, LibModInfo.VERSION));
         creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
         
         File configDir = event.getSuggestedConfigurationFile().getParentFile();
@@ -104,18 +104,18 @@ public class ArmourersWorkshop {
         
         EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
         
-        
         proxy.preInit();
         
         SkinIOUtils.makeLibraryDirectory();
         UpdateCheck.checkForUpdates();
         SkinExtractor.extractSkins();
         
+        SkinTypeRegistry.init();
+        CubeRegistry.init();
+        
         modItems = new ModItems();
         modBlocks = new ModBlocks();
         
-        SkinTypeRegistry.init();
-        CubeRegistry.init();
         proxy.initLibraryManager();
     }
 
@@ -170,5 +170,9 @@ public class ArmourersWorkshop {
     
     public static boolean isDedicated() {
         return proxy.getClass() == CommonProxy.class;
+    }
+    
+    public static CommonProxy getProxy() {
+        return proxy;
     }
 }

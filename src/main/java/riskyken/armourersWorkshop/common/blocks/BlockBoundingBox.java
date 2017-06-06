@@ -30,6 +30,7 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -102,7 +103,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibModInfo.ID + ":" + "colourable");
+        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
     }
     
     @Override

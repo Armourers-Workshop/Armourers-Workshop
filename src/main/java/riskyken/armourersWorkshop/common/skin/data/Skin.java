@@ -1,7 +1,6 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +16,6 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
@@ -35,7 +33,10 @@ public class Skin implements ISkin {
     public static final String KEY_BLOCK_GLOWING = "blockGlowing";
     public static final String KEY_BLOCK_LADDER = "blockLadder";
     public static final String KEY_BLOCK_NO_COLLISION = "blockNoCollision";
-    public static final String KEY_BLOCK_SEAT= "blockSeat";
+    public static final String KEY_BLOCK_SEAT = "blockSeat";
+    public static final String KEY_BLOCK_MULTIBLOCK = "blockMultiblock";
+    public static final String KEY_BLOCK_BED = "blockBed";
+    public static final String KEY_BLOCK_INVENTORY = "blockInventory";
     
     public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
     public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
@@ -193,85 +194,6 @@ public class Skin implements ISkin {
             lightHash = this.hashCode();
         }
         return lightHash;
-    }
-    
-    public Skin(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
-        this.properties = new SkinProperties();
-        readFromStream(stream);
-    }
-    
-    public void writeToStream(DataOutputStream stream) throws IOException {
-        stream.writeInt(FILE_VERSION);
-        properties.writeToStream(stream);
-        stream.writeUTF(this.equipmentSkinType.getRegistryName());
-        if (this.paintData != null) {
-            stream.writeBoolean(true);
-            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
-                stream.writeInt(paintData[i]);
-            }
-        } else {
-            stream.writeBoolean(false);
-        }
-        stream.writeByte(parts.size());
-        for (int i = 0; i < parts.size(); i++) {
-            parts.get(i).writeToStream(stream);
-        }
-    }
-    
-    private void readFromStream(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
-        int fileVersion = stream.readInt();
-        if (fileVersion > FILE_VERSION) {
-            throw new NewerFileVersionException();
-        }
-        
-        if (fileVersion < 12) {
-            String authorName = stream.readUTF();
-            String customName = stream.readUTF();
-            String tags = "";
-            if (!(fileVersion < 4)) {
-                tags = stream.readUTF(); 
-            } else {
-                tags = "";
-            }
-            properties.setProperty(KEY_AUTHOR_NAME, authorName);
-            properties.setProperty(KEY_CUSTOM_NAME, customName);
-            if (tags != null && !tags.equalsIgnoreCase("")) {
-                properties.setProperty(KEY_TAGS, tags);
-            }
-        } else {
-            properties.readFromStream(stream);
-        }
-
-        if (fileVersion < 5) {
-            equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
-        } else {
-            String regName = stream.readUTF();
-            if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
-                regName = SkinTypeRegistry.skinLegs.getRegistryName();
-            }
-            equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
-        }
-        
-        if (equipmentSkinType == null) {
-            throw new InvalidCubeTypeException();
-        }
-        
-        this.paintData = null;
-        if (fileVersion > 7) {
-            boolean hasPaintData = stream.readBoolean();
-            if (hasPaintData) {
-                this.paintData = new int[SkinTexture.TEXTURE_SIZE];
-                for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
-                    this.paintData[i] = stream.readInt();
-                }
-            }
-        }
-        
-        int size = stream.readByte();
-        parts = new ArrayList<SkinPart>();
-        for (int i = 0; i < size; i++) {
-            parts.add(new SkinPart(stream, fileVersion));
-        }
     }
     
     public static ISkinType readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {

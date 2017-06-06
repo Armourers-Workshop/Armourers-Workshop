@@ -32,9 +32,14 @@ public class CommonLibraryManager implements ILibraryManager {
     
     @Override
     public void reloadLibrary() {
+        reloadLibrary(null);
+    }
+    
+    @Override
+    public void reloadLibrary(ILibraryCallback callback) {
         if (!loadingLibaray) {
             loadingLibaray = true;
-            (new Thread(new LibraryLoader(this),LibModInfo.NAME + " library thread.")).start();
+            (new Thread(new LibraryLoader(this, callback),LibModInfo.NAME + " library thread.")).start();
         } else {
             ModLogger.log("Library is already loading.");
         }
@@ -46,7 +51,7 @@ public class CommonLibraryManager implements ILibraryManager {
     
     private int loadPublicFiles() {
         File directory = SkinIOUtils.getSkinLibraryDirectory();
-        ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory);
+        ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory, true);
         setFileList(fileList, LibraryFileType.SERVER_PUBLIC);
         return fileList.size();
     }
@@ -65,7 +70,7 @@ public class CommonLibraryManager implements ILibraryManager {
                 try {
                     UUID playerId = UUID.fromString(file.getName());
                     LibraryFileList fileList = new LibraryFileList(LibraryFileType.SERVER_PRIVATE);
-                    ArrayList<LibraryFile> privateFileList = LibraryHelper.getSkinFilesInDirectory(file);
+                    ArrayList<LibraryFile> privateFileList = LibraryHelper.getSkinFilesInDirectory(file, true);
                     fileList.setFileList(privateFileList);
                     serverPrivateFiles.put(playerId, fileList);
                     count += fileList.getFileCount();
@@ -163,9 +168,11 @@ public class CommonLibraryManager implements ILibraryManager {
     private static class LibraryLoader implements Runnable {
 
         private CommonLibraryManager libraryManager;
+        private ILibraryCallback callback;
         
-        public LibraryLoader(CommonLibraryManager libraryManager) {
+        public LibraryLoader(CommonLibraryManager libraryManager, ILibraryCallback callback) {
             this.libraryManager = libraryManager;
+            this.callback = callback;
         }
         
         @Override
@@ -182,6 +189,9 @@ public class CommonLibraryManager implements ILibraryManager {
             endTime = (int) (System.currentTimeMillis() - startTime);
             ModLogger.log(String.format("Finished loading %d server private library skins in %d ms", privateFileCount, endTime));
             libraryManager.finishedLoading();
+            if (callback != null) {
+                callback.libraryReloaded(libraryManager);
+            }
         }
     }
 }

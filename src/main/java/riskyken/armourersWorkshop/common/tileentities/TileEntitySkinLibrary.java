@@ -16,7 +16,6 @@ import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -46,7 +45,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         return false;
     }
     
-    public void sendArmourToClient(String filename, EntityPlayerMP player) {
+    public void sendArmourToClient(String filename, String filePath, EntityPlayerMP player) {
         if (!ConfigHandler.allowClientsToDownloadSkins) {
             return;
         }
@@ -76,7 +75,14 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, skin);
+        LibraryFile file = new LibraryFile(filename, filePath, skin.getSkinType());
+        
+        //if the file was overwritten remove it's old id link
+        CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
+        
+        //ModLogger.log(file.getFullName());
+        
+        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, filePath, skin);
         PacketHandler.networkWrapper.sendTo(message, player);
         
         this.decrStackSize(0, 1);
@@ -85,64 +91,63 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
 
     /**
      * Save armour data from an items NBT data into a file on the disk.
+     * @param filePath 
      * @param filename The name of the file to save to.
      * @param player The player that pressed the save button.
      * @param publicFiles If true save to the public file list or false for the players private files.
      */
-    public void saveArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
+    public void saveArmour(String fileName, String filePath, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        if (fileName.contains("/") | fileName.contains("\\")) {
-            ModLogger.log(String.format("Player %s tried to save a file with invalid characters in the file name.",
-                    player.getCommandSenderName()));
-            ModLogger.log(String.format("The file name was: %s", fileName));
-            return;
-        }
         
         if (stackInput == null) {
             return;
         }
-        
         if (stackOutput != null) {
             return;
         }
-        
         if (!(stackInput.getItem() instanceof ItemSkin)) {
             return;
         }
-        
         if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
             return;
         }
         
-        int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
+        if (skinPointer == null) {
+            return;
+        }
         
-        Skin skin = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
+        if (!publicFiles) {
+            //filePath = "/private/" + player.getUniqueID().toString() + filePath;
+        }
+        
+        Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
         }
         
-        boolean saved = false;
-        if (publicFiles) {
-            saved = SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin);
-        } else {
-            saved = SkinIOUtils.saveSkinFromFileName(fileName + ".armour", skin, player);
-        }
-        if (!saved) {
+        filePath = SkinIOUtils.makeFilePathValid(filePath);
+        fileName = SkinIOUtils.makeFileNameValid(fileName);
+        
+        LibraryFile file = new LibraryFile(fileName, filePath, skin.getSkinType());
+        
+        //if the file was overwritten remove it's old id link
+        CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
+
+        if (!SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin)) {
             return;
         }
         
         if (ArmourersWorkshop.isDedicated()) {
             if (publicFiles) {
-                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, skin.getSkinType()), LibraryFileType.SERVER_PUBLIC, player);
+                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PUBLIC, player);
             } else {
-                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, skin.getSkinType()), LibraryFileType.SERVER_PRIVATE, player);
+                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PRIVATE, player);
             }
         } else {
-            ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, skin.getSkinType()), LibraryFileType.LOCAL, player);
+            ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, player);
         }
-
-        
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, stackInput);
@@ -150,19 +155,14 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     
     /**
      * Loads an armour file from the disk and adds it to an items NBT data.
+     * @param filePath 
      * @param filename The name of the file to load.
      * @param player The player that pressed the load button.
-     * @param publicFiles If true load from the public file list or false for the players private files.
      */
-    public void loadArmour(String fileName, EntityPlayerMP player, boolean publicFiles) {
+    public void loadArmour(String fileName, String filePath, EntityPlayerMP player) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        if (fileName.contains("/") | fileName.contains("\\")) {
-            ModLogger.log(String.format("Player %s tried to load a file with invalid characters in the file name.",
-                    player.getCommandSenderName()));
-            ModLogger.log(String.format("The file name was: %s", fileName));
-            return;
-        }
+        
         if (!isCreativeLibrary()) {
             if (stackInput == null) {
                 return;
@@ -183,20 +183,16 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         Skin skin = null;
         String fullFileName = fileName;
         
-        if (publicFiles) {
-            skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour");
-        } else {
-            skin = SkinIOUtils.loadSkinFromFileName(fileName + ".armour", player);
-            fullFileName = player.getUniqueID().toString() + "\\" + fullFileName;
-        }
+        
+        skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         
         if (skin == null) {
             return;
         }
         
-        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, fullFileName + ".armour");
+        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, fullFileName);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, new LibraryFile(filePath, fileName, skin.getSkinType()));
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
         
@@ -236,7 +232,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
         
         this.decrStackSize(0, 1);
         this.setInventorySlotContents(1, inputItem);
@@ -244,23 +240,14 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     
     @Override
     public int[] getAccessibleSlotsFromSide(int side) {
-        if (isCreativeLibrary()) {
-            int[] slots = new int[1];
-            slots[0] = 1;
-            return slots;
-        } else {
-            int[] slots = new int[2];
-            slots[0] = 0;
-            slots[1] = 1;
-            return slots;
-        }
+        int[] slots = new int[2];
+        slots[0] = 0;
+        slots[1] = 1;
+        return slots;
     }
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, int side) {
-        if (isCreativeLibrary()) {
-            return false;
-        }
         if (slot != 0) {
             return false;
         }

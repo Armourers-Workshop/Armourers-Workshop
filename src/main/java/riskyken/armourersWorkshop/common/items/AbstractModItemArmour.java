@@ -107,7 +107,8 @@ public class AbstractModItemArmour extends ItemArmor {
             return null;
         }
         
-        targetModel.npcEquipmentData = data;
+        targetModel.npcSkinData = data;
+        targetModel.npcDyeData = skinData.getSkinDye();
         return targetModel;
     }
 }

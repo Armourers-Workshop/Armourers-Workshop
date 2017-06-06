@@ -200,7 +200,6 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         return skinTypeMap.size();
     }
     
-    @SideOnly(Side.CLIENT)
     public String getLocalizedSkinTypeName(ISkinType skinType) {
         String localizedName = "skinType." + skinType.getRegistryName() + ".name";
         return StatCollector.translateToLocal(localizedName);

@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 
@@ -11,8 +12,18 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
     
     private TileEntityGlobalSkinLibrary tileEntity;
     
-    public ContainerGlobalSkinLibrary(InventoryPlayer inventoryPlayer, TileEntityGlobalSkinLibrary tileEntity) {
+    public ContainerGlobalSkinLibrary(InventoryPlayer invPlayer, TileEntityGlobalSkinLibrary tileEntity) {
         this.tileEntity = tileEntity;
+        int playerInvY = 20;
+        int hotBarY = playerInvY + 58;
+        for (int x = 0; x < 9; x++) {
+            addSlotToContainer(new SlotHidable(invPlayer, x, 5 + 18 * x, hotBarY));
+        }
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, 5 + 18 * x, playerInvY + y * 18));
+            }
+        }
     }
     
     public TileEntityGlobalSkinLibrary getTileEntity() {

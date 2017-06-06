@@ -66,7 +66,7 @@ public final class ModBlockRecipes {
             "srs",
             "dcd",
             "sss",
-            'r', new ItemStack(Blocks.wool, 1, 14),
+            'r', "plankWood",
             's', "stone",
             'c', ModBlocks.colourable,
             'd', ModItems.dyeBottle});

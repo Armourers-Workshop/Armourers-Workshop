@@ -28,19 +28,19 @@ public class ConfigHandlerClient {
     public static boolean showSkinTooltipDebugInfo;
     public static boolean showArmourerDebugRender;
     public static boolean wireframeRender;
-    public static boolean disableTexturePainting;
+    public static int texturePainting;
     public static boolean showLodLevels;
-    
-    public static String globalLibraryUsername = "";
-    public static String globalLibraryPassword = "";
-    public static String globalLibraryAccessKey = "";
-    public static boolean globalLibraryLoggedIn = false;
+    public static boolean showSkinBlockBounds;
+    public static boolean showSkinRenderBounds;
     
     public static Configuration config;
     
     public static void init(File file) {
         if (config == null) {
-            config = new Configuration(file, "1");
+            config = new Configuration(file, "2");
+            if (config.getLoadedConfigVersion().equals("1")) {
+                config.getCategory(CATEGORY_DEBUG).remove("disableTexturePainting");
+            }
             loadConfigFile();
         }
     }
@@ -123,9 +123,14 @@ public class ConfigHandlerClient {
                 "Shows extra debug info on skin tooltips.")
                 .getBoolean(true);
         
-        disableTexturePainting = config.getBoolean("disableTexturePainting", CATEGORY_DEBUG, false,
-                "Disables replacing the players texture with a painted version.\n"
-                + "Disabling this may fix issues with the players texture rendering\n"
-                + "incorrectly or showing the steve skin.");
+        texturePainting = config
+                .getInt("texturePainting", CATEGORY_DEBUG, 0, 0, 2,
+                "Texture painting replacing the players texture with a painted version.\n" + 
+                "Turning this off may fix issues with the players texture rendering\n" + 
+                "incorrectly or showing the steve skin.\n" +
+                "\n" +
+                "0 = auto\n" +
+                "1 = on\n" +
+                "2 = off\n");
     }
 }

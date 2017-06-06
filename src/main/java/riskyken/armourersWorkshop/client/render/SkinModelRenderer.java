@@ -40,6 +40,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -212,7 +213,7 @@ public final class SkinModelRenderer {
     public boolean playerHasCustomHead(EntityPlayer player) {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         if (equipmentData != null) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
                 ISkinPointer sp = equipmentData.getSkinPointer(SkinTypeRegistry.skinHead, i);
                 if (sp != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(sp, false);
@@ -319,7 +320,7 @@ public final class SkinModelRenderer {
         GL11.glEnable(GL11.GL_BLEND);
         for (int slot = 0; slot < 4; slot++) {
 
-            for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
+            for (int skinIndex = 0; skinIndex < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
                 if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);

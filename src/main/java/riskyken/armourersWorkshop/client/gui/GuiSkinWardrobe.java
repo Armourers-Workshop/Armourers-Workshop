@@ -212,12 +212,6 @@ public class GuiSkinWardrobe extends GuiContainer {
             if (slot instanceof SlotHidable) {
                 ((SlotHidable)slot).setVisible(tabNumber == TAB_MAIN);
             }
-            //SlotHidable slot = (SlotHidable) inventorySlots.inventorySlots.get(i);
-            //slot.setVisible(tabNumber == TAB_MAIN);
-        }
-        for (int i = 7; i < 9; i++) {
-            SlotHidable slot = (SlotHidable) inventorySlots.inventorySlots.get(i);
-            //slot.setVisible(tabNumber == TAB_SKIN);
         }
     }
 

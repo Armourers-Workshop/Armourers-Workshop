@@ -4,14 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.Constants.NBT;
+import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public class ModInventory implements IInventory {
 
     private static final String TAG_ITEMS = "items";
-    private static final String TAG_SLOT = "slot";
     
     private final String name;
     private final ItemStack[] slots;
@@ -120,27 +118,10 @@ public class ModInventory implements IInventory {
     }
     
     public void saveItemsToNBT(NBTTagCompound compound) {
-        NBTTagList items = new NBTTagList();
-        for (int i = 0; i < getSizeInventory(); i++) {
-            ItemStack stack = getStackInSlot(i);
-            if (stack != null) {
-                NBTTagCompound item = new NBTTagCompound();
-                item.setByte(TAG_SLOT, (byte)i);
-                stack.writeToNBT(item);
-                items.appendTag(item);
-            }
-        }
-        compound.setTag(this.name + ":" + TAG_ITEMS, items);
+        NBTHelper.writeStackArrayToNBT(compound, TAG_ITEMS, slots);
     }
     
     public void loadItemsFromNBT(NBTTagCompound compound) {
-        NBTTagList items = compound.getTagList(this.name + ":" + TAG_ITEMS, NBT.TAG_COMPOUND);
-        for (int i = 0; i < items.tagCount(); i++) {
-            NBTTagCompound item = (NBTTagCompound)items.getCompoundTagAt(i);
-            int slot = item.getByte(TAG_SLOT);
-            if (slot >= 0 && slot < getSizeInventory()) {
-                slots[slot] = ItemStack.loadItemStackFromNBT(item);
-            }
-        }
+        NBTHelper.readStackArrayFromNBT(compound, TAG_ITEMS, slots);
     }
 }

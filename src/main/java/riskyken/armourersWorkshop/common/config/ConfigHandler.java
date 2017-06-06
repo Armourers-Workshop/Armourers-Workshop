@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.config;
 
 import java.io.File;
+import java.util.UUID;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -36,9 +37,12 @@ public class ConfigHandler {
     public static boolean enableHolidayEvents = true;
     public static int startingWardrobeSlots = 3;
     public static boolean libraryShowsModelPreviews = true;
+    public static boolean lockDyesOnSkins = false;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
+    
+    public static UUID remotePlayerId;
     
     //Register
     /** Should skins be dropped on player death.<br/>
@@ -109,7 +113,7 @@ public class ConfigHandler {
                 .getBoolean(true);
         
         startingWardrobeSlots = config
-                .getInt("startingWardrobeSlots", CATEGORY_GENERAL, 3, 1, 5,
+                .getInt("startingWardrobeSlots", CATEGORY_GENERAL, 3, 1, 8,
                 "Number of slot columns the player starts with for skins.");
         
         libraryShowsModelPreviews = config
@@ -117,6 +121,10 @@ public class ConfigHandler {
                         "Shows model previews in the library.\n"
                         + "Causes a lot of extra load on servers.\n"
                         + "Best to turn off on high population servers");
+        
+        lockDyesOnSkins = config
+                .getBoolean("lockDyesOnSkins", CATEGORY_GENERAL, false,
+                        "When enabled players will not be able to remove dyes from skins in the dye table.");
     }
     
     private static void loadCategoryRecipe() {

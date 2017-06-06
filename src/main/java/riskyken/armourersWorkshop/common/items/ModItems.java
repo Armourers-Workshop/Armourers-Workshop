@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 
 import net.minecraft.item.Item;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemBlendingTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemBurnTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourNoiseTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourPicker;
@@ -34,12 +35,13 @@ public class ModItems {
     public static PlushieItem blockMarker;
     
     public static Item mannequinTool;
-    public static PlushieItem wandOfStyle;
+    public static Item wandOfStyle;
     public static PlushieItem soap;
     public static Item dyeBottle;
     public static PlushieItem guideBook;
     public static Item armourersHammer;
     public static Item debugTool;
+    public static Item skinUnlock;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -59,7 +61,7 @@ public class ModItems {
         shadeNoiseTool = new ItemShadeNoiseTool();
         hueTool = new ItemHueTool();
         blockMarker = new ItemBlockMarker();
-        //blendingTool = new ItemBlendingTool();
+        blendingTool = new ItemBlendingTool();
         
         mannequinTool = new ItemMannequinTool();
         wandOfStyle = new ItemWandOfStyle();
@@ -68,6 +70,7 @@ public class ModItems {
         guideBook = new ItemGuideBook();
         armourersHammer = new ItemArmourersHammer();
         debugTool = new ItemDebugTool();
+        skinUnlock = new ItemSkinUnlock();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];
@@ -77,7 +80,6 @@ public class ModItems {
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, 3);
         
         ModRegistry.registerItem(guideBook);
-        ModRegistry.registerItem(wandOfStyle);
         ModRegistry.registerItem(soap);
         ModRegistry.registerItem(blockMarker);
     }

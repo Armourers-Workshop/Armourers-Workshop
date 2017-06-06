@@ -13,7 +13,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
+import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.inventory.slot.ISlotChanged;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
@@ -42,9 +42,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             }
         }
         
-        if (!tileEntity.isCreativeLibrary()) {
-            addSlotToContainer(new SlotSkinTemplate(tileEntity, 0, 226, 101, this));
-        }
+        addSlotToContainer(new SlotSkinTemplate(tileEntity, 0, 226, 101, this));
         addSlotToContainer(new SlotOutput(tileEntity, 1, 226, 137));
     }
     
@@ -99,8 +97,8 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
     public void updateSkinName(int slotId) {
         Minecraft mc = Minecraft.getMinecraft();
         GuiScreen screen = mc.currentScreen;
-        if (screen != null && screen instanceof GuiArmourLibrary) {
-            GuiArmourLibrary libScreen = (GuiArmourLibrary) screen;
+        if (screen != null && screen instanceof GuiSkinLibrary) {
+            GuiSkinLibrary libScreen = (GuiSkinLibrary) screen;
             ItemStack stack = getSlot(36).getStack();
             if (stack == null) {
                 libScreen.setFileName("");

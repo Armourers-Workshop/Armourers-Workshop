@@ -23,6 +23,8 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.BlockUtils;
@@ -42,26 +44,33 @@ public final class ArmourerWorldHelper {
     /**
      * Converts blocks in the world into a skin class.
      * @param world The world.
+     * @param skinProps The skin properties for this skin.
      * @param skinType The type of skin to save.
-     * @param authorName Author name for this skin.
-     * @param customName Custom display name for this skin.
-     * @param tags Custom search tags for this skin.
+     * @param paintData Paint data for this skin.
      * @param xCoord Armourers x location.
      * @param yCoord Armourers y location.
      * @param zCoord Armourers z location.
-     * @param direction Direction the armourer is facing.
+     * @param directionDirection the armourer is facing.
      * @return
      * @throws InvalidCubeTypeException
-     * @throws SkinSaveException 
+     * @throws SkinSaveException
      */
     public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData,
-            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
+            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
-        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-            ISkinPartType partType = skinType.getSkinParts().get(i);
+        if (skinType == SkinTypeRegistry.skinBlock) {
+            ISkinPartType partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partBase;
+            if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+                partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
+            }
             saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+        } else {
+            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+                ISkinPartType partType = skinType.getSkinParts().get(i);
+                saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+            }
         }
         
         if (paintData != null) {
@@ -92,11 +101,25 @@ public final class ArmourerWorldHelper {
             }
         }
         
+        //Check if the skin is not a seat and a bed.
+        if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false) & skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
+            throw new SkinSaveException("Skin can not be a bed and a seat.", SkinSaveExceptionType.BED_AND_SEAT);
+        }
+        
+        //Check if multiblock is valid.
+        if (skinType == SkinTypeRegistry.skinBlock & skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+            ArrayList<SkinPart> testPart = new ArrayList<SkinPart>();
+            saveArmourPart(world, testPart, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, xCoord, yCoord, zCoord, direction); 
+            if (testPart.isEmpty()) {
+                throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveExceptionType.INVALID_MULTIBLOCK);
+            }
+        }
+        
         return skin;
     }
     
     private static void saveArmourPart(World world, ArrayList<SkinPart> armourData,
-            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws InvalidCubeTypeException, SkinSaveException {
+            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws SkinSaveException {
         
         int cubeCount = getNumberOfCubesInPart(world, xCoord, yCoord, zCoord, skinPart);
         if (cubeCount < 1) {
@@ -336,11 +359,21 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType) {
+    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+            if (skinType == SkinTypeRegistry.skinBlock) {
+                boolean multiblock = skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
+                    blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+                }
+                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock & multiblock) {
+                    blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+                }
+            } else {
+                blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+            }
         }
         return blockCount;
     }
@@ -359,13 +392,7 @@ public final class ArmourerWorldHelper {
                     
                     if (world.blockExists(xTar, yTar, zTar)) {
                         Block block = world.getBlock(xTar, yTar, zTar);
-                        //TODO use CubeFactory to check cube.
-                        if (
-                            block == ModBlocks.colourable |
-                            block == ModBlocks.colourableGlowing |
-                            block == ModBlocks.colourableGlass |
-                            block == ModBlocks.colourableGlassGlowing
-                            ) {
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
                             world.setBlockToAir(xTar, yTar, zTar);
                             world.removeTileEntity(xTar, yTar, zTar);
                             blockCount++;

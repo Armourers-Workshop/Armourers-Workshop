@@ -50,8 +50,8 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
-        markerOverlay = register.registerIcon(LibBlockResources.MARKER);
-        noTexture = register.registerIcon(LibBlockResources.NO_TEXTURE);
+        markerOverlay = register.registerIcon(LibBlockResources.COLOURABLE_MARKER);
+        noTexture = register.registerIcon(LibBlockResources.COLOURABLE_NO_TEXTURE);
     }
     
     @Override
@@ -83,6 +83,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
         return new TileEntityColourable();
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
         TileEntity te = world.getTileEntity(x, y, z);

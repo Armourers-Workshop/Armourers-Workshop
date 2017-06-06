@@ -69,7 +69,7 @@ public class LibraryFileList {
     public void removeFileFromList(LibraryFile file) {
         synchronized (this.fileList) {
             for (int i = 0; i < this.fileList.size(); i++) {
-                if (this.fileList.get(i).fileName.equals(file.fileName)) {
+                if (this.fileList.get(i).getFullName().equals(file.getFullName())) {
                     this.fileList.remove(i);
                     markDirty();
                     break;

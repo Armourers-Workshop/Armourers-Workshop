@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.gui.GuiArmourLibrary;
+import riskyken.armourersWorkshop.client.gui.GuiAdminPanel;
 import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiDebugTool;
@@ -17,12 +17,14 @@ import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
 import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
 import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
+import riskyken.armourersWorkshop.client.gui.GuiSkinnable;
 import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
+import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
@@ -33,6 +35,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinWardrobe;
+import riskyken.armourersWorkshop.common.inventory.ContainerSkinnable;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -46,6 +49,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrar
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.plushieWrapper.common.registry.ModRegistry;
@@ -124,6 +128,11 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerGlobalSkinLibrary(player.inventory, (TileEntityGlobalSkinLibrary)te);
                 }
                 break;
+            case LibGuiIds.SKINNABLE:
+                if (te instanceof TileEntitySkinnable) {
+                    return new ContainerSkinnable(player.inventory, (TileEntitySkinnable)te);
+                }
+                break;
         }
         return null;
     }
@@ -154,7 +163,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
                 if (te instanceof TileEntitySkinLibrary) {
-                    return new GuiArmourLibrary(player.inventory, (TileEntitySkinLibrary)te);
+                    return new GuiSkinLibrary(player.inventory, (TileEntitySkinLibrary)te);
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
@@ -208,6 +217,13 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.DEBUG_TOOL:
                 return new GuiDebugTool();
+            case LibGuiIds.ADMIN_PANEL:
+                return new GuiAdminPanel();
+            case LibGuiIds.SKINNABLE:
+                if (te instanceof TileEntitySkinnable) {
+                    return new GuiSkinnable(player.inventory, (TileEntitySkinnable)te);
+                }
+                break;
         }
         return null;
     }

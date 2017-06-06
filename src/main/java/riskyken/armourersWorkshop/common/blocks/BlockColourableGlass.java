@@ -17,8 +17,8 @@ public class BlockColourableGlass extends BlockColourable {
     @Override
     public void registerBlockIcons(IIconRegister register) {
         blockIcon = register.registerIcon(LibBlockResources.COLOURABLE_GLASS);
-        markerOverlay = register.registerIcon(LibBlockResources.MARKER);
-        noTexture = register.registerIcon(LibBlockResources.NO_TEXTURE);
+        markerOverlay = register.registerIcon(LibBlockResources.COLOURABLE_MARKER);
+        noTexture = register.registerIcon(LibBlockResources.COLOURABLE_NO_TEXTURE);
     }
     
     @SideOnly(Side.CLIENT)

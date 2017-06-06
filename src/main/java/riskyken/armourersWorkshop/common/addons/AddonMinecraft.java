@@ -7,6 +7,11 @@ public class AddonMinecraft extends ModAddon {
     }
     
     @Override
+    protected boolean setIsModLoaded() {
+        return true;
+    }
+    
+    @Override
     public void preInit() {
         addItemOverride(ItemOverrideType.SWORD, "wooden_sword");
         addItemOverride(ItemOverrideType.SWORD, "stone_sword");

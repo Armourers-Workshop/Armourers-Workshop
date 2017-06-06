@@ -10,6 +10,7 @@ import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -30,10 +31,11 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         buttonList.clear();
         searchTextbox = new GuiLabeledTextField(fontRenderer, x + 5, y + 5, width - 10 - 85, 12);
-        searchTextbox.setEmptyLabel("Type to search...");
-        buttonList.add(new GuiButtonExt(0, x + width - 85, y + 3, 80, 16, "Search"));
+        searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "searchBox.typeToSearch"));
+        buttonList.add(new GuiButtonExt(0, x + width - 85, y + 3, 80, 16, GuiHelper.getLocalizedControlName(guiName, "searchBox.search")));
     }
     
     @Override

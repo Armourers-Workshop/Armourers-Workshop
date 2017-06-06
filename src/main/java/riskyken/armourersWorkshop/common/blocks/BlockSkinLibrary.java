@@ -62,42 +62,50 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     }
     
     @SideOnly(Side.CLIENT)
-    private IIcon[] sideIcon;
+    private IIcon blockIcon2;
     @SideOnly(Side.CLIENT)
-    private IIcon[] bottomIcon;
+    private IIcon[] iconTop;
+    @SideOnly(Side.CLIENT)
+    private IIcon[] iconBottom;
     
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_TOP);
+        blockIcon = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_SIDE);
+        blockIcon2 = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_SIDE);
         
-        sideIcon = new IIcon[2];
-        bottomIcon = new IIcon[2];
-        sideIcon[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_SIDE);
-        bottomIcon[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_BOTTOM);
-        sideIcon[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_SIDE);
-        bottomIcon[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_BOTTOM);
+        iconTop = new IIcon[2];
+        iconBottom = new IIcon[2];
+        
+        iconTop[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_TOP);
+        iconBottom[0] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_0_BOTTOM);
+        iconTop[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_TOP);
+        iconBottom[1] = register.registerIcon(LibBlockResources.EQUIPMENT_LIBRARY_1_BOTTOM);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(int side, int meta) {
-        if (side == 1) {
-            return blockIcon;
+        if (side > 1) {
+            if (meta == 0) {
+                return blockIcon;
+            } else {
+                return blockIcon2;
+            }
         }
         
         if (side == 0 & meta == 0) {
-            return bottomIcon[0];
+            return iconBottom[0];
         }
         if (side == 0 & meta == 1) {
-            return bottomIcon[1];
+            return iconBottom[1];
         }
         
-        if (side > 1 & meta == 0) {
-            return sideIcon[0];
+        if (side == 1 & meta == 0) {
+            return iconTop[0];
         }
-        if (side > 1 & meta == 1) {
-            return sideIcon[1];
+        if (side == 1 & meta == 1) {
+            return iconTop[1];
         }
         
         return null;
