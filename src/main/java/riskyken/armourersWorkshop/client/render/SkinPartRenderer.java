@@ -69,8 +69,8 @@ public class SkinPartRenderer extends ModelBase {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
         }
         
-        int startIndex = 0;;
-        int endIndex = 0;;
+        int startIndex = 0;
+        int endIndex = 0;
         
         int loadingLod = skinModel.getLoadingLod();
         if (!doLodLoading) {

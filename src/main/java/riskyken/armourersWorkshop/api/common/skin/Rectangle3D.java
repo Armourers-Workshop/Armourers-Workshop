@@ -4,12 +4,12 @@ import riskyken.armourersWorkshop.api.common.IRectangle3D;
 
 public class Rectangle3D implements IRectangle3D {
 
-    private final int x;
-    private final int y;
-    private final int z;
-    private final int width;
-    private final int height;
-    private final int depth;
+    private int x;
+    private int y;
+    private int z;
+    private int width;
+    private int height;
+    private int depth;
     
     public Rectangle3D(int x, int y, int z, int width, int height, int depth) {
         this.x = x;
@@ -19,30 +19,54 @@ public class Rectangle3D implements IRectangle3D {
         this.height = height;
         this.depth = depth;
     }
+    
+    public void setX(int x) {
+        this.x = x;
+    }
 
     @Override
     public int getX() {
         return this.x;
+    }
+    
+    public void setY(int y) {
+        this.y = y;
     }
 
     @Override
     public int getY() {
         return this.y;
     }
+    
+    public void setZ(int z) {
+        this.z = z;
+    }
 
     @Override
     public int getZ() {
         return this.z;
+    }
+    
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     @Override
     public int getWidth() {
         return this.width;
     }
+    
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
     @Override
     public int getHeight() {
         return this.height;
+    }
+    
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     @Override

@@ -13,7 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeBottle;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
@@ -51,13 +54,22 @@ public class GuiDyeTable extends GuiContainer {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        if (ConfigHandler.lockDyesOnSkins) {
+            ModRenderHelper.enableAlphaBlend();
+            for (int i = 0; i < 8; i++) {
+                SlotDyeBottle dyeSlot = (SlotDyeBottle) inventorySlots.getSlot(37 + i);
+                if (dyeSlot.isLocked()) {
+                    drawRect(this.guiLeft + dyeSlot.xDisplayPosition, this.guiTop + dyeSlot.yDisplayPosition, this.guiLeft + dyeSlot.xDisplayPosition + 16, this.guiTop + dyeSlot.yDisplayPosition + 16, 0x88FF0000);
+                }
+            }
+        }
     }
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 46, this.ySize - 96 + 2, 4210752);
-        Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
+        Slot slot = (Slot) inventorySlots.inventorySlots.get(45);
         ItemStack skinStack = slot.getStack();
         ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
         
@@ -82,7 +94,7 @@ public class GuiDyeTable extends GuiContainer {
             //GL11.glEnable(GL11.GL_ALPHA_TEST);
             //GL11.glEnable(GL11.GL_DEPTH_TEST);
             //ModRenderHelper.enableAlphaBlend();
-            GL11.glDisable(GL11.GL_CULL_FACE);
+            //GL11.glDisable(GL11.GL_CULL_FACE);
             //GL11.glDisable(GL11.GL_DEPTH_TEST);
             drawRect(guiLeft, guiTop, guiLeft + 50, guiTop + 50, 0xFFFFFFFF);
             int dyeSlot = mouseOverDyeSlot(mouseX, mouseY);
@@ -93,7 +105,7 @@ public class GuiDyeTable extends GuiContainer {
                 ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
                 GL11.glPopMatrix();
                 GL11.glPopMatrix();
-                Color c = new Color(198,198,198, (int)(200 + alpha));
+                Color c = new Color(198,198,198, (int)(240));
                 RenderHelper.disableStandardItemLighting();
                 
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -114,12 +126,16 @@ public class GuiDyeTable extends GuiContainer {
                 GL11.glColor3f(1F, 1F, 1F);
                 ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
             } else {
+                ModRenderHelper.enableAlphaBlend();
                 ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
             }
             
             
             GL11.glPopMatrix();
         }
+        
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
     }
     
     private int mouseOverDyeSlot(int mouseX, int mouseY) {

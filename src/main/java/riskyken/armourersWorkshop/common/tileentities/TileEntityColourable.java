@@ -30,6 +30,7 @@ public class TileEntityColourable extends TileEntity implements IPantable {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -59,6 +60,7 @@ public class TileEntityColourable extends TileEntity implements IPantable {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setColour(int colour) {
         this.colour.setColour(colour);

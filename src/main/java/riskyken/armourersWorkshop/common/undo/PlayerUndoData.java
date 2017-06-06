@@ -80,6 +80,7 @@ public class PlayerUndoData {
         }
     }
     
+    @SuppressWarnings("deprecation")
     private void undoLast(World world) {
         if (undos.size() < 1) {
             return;

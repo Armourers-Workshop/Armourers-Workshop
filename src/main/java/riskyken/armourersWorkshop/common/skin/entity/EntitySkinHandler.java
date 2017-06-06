@@ -3,6 +3,9 @@ package riskyken.armourersWorkshop.common.skin.entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,9 +17,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.api.common.skin.entity.IEntitySkinHandler;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class EntitySkinHandler implements IEntitySkinHandler {
     
@@ -35,8 +36,11 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     }
     
     private void registerEntities() {
-        //registerEntity(new SkinnableEntityZombie());
-        //registerEntity(new SkinnableEntityChicken());
+        registerEntity(new SkinnableEntityChicken());
+        registerEntity(new SkinnableEntityCreeper());
+        registerEntity(new SkinnableEntityGhast());
+        registerEntity(new SkinnableEntitySkeleton());
+        registerEntity(new SkinnableEntityZombie());
     }
     
     @Override
@@ -47,6 +51,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         if (skinnableEntity.getEntityClass() == null) {
             return;
         }
+        ModLogger.log(String.format("Registering %s as a skinnable entity.", skinnableEntity.getEntityClass()));
         entityMap.put(skinnableEntity.getEntityClass(), skinnableEntity);
     }
     

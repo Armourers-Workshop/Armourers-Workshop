@@ -10,6 +10,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 
 @SideOnly(Side.CLIENT)
@@ -63,9 +64,11 @@ public class GuiIconButton extends GuiButtonExt {
         int hoverState = this.getHoverState(this.field_146123_n);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         int xPos = iconPosX;
+        //disabled
         if (hoverState == 0) {
-            xPos += (iconWidth + 1) * 4;
+            xPos += (iconWidth + 1) * 2;
         }
+        //hovering
         if (hoverState == 2) {
             xPos += iconWidth + 1;
         }
@@ -80,14 +83,18 @@ public class GuiIconButton extends GuiButtonExt {
     public void drawRollover(Minecraft mc, int mouseX, int mouseY) {
         int hoverState = this.getHoverState(this.field_146123_n);
         if (hoverState == 0 & this.field_146123_n) {
-            ArrayList<String> textList = new ArrayList<String>();
-            textList.add(disableText);
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+            if (!StringUtils.isNullOrEmpty(disableText)) {
+                ArrayList<String> textList = new ArrayList<String>();
+                textList.add(disableText);
+                GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+            }
         }
         if (hoverState == 2) {
-            ArrayList<String> textList = new ArrayList<String>();
-            textList.add(hoverText);
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+            if (!StringUtils.isNullOrEmpty(hoverText)) {
+                ArrayList<String> textList = new ArrayList<String>();
+                textList.add(hoverText);
+                GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ public final class BlockUtils {
     
     private BlockUtils() {}
     
-    public static int determineOrientation(World world, int x, int y, int z, EntityLivingBase entity) {
+    public static int determineOrientation(int x, int y, int z, EntityLivingBase entity) {
         if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
             double d0 = entity.posY + entity.getEyeHeight() - (double) entity.yOffset;
 
@@ -33,12 +33,28 @@ public final class BlockUtils {
         return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
     }
     
-    public static int determineOrientationSide(World world, int x, int y, int z, EntityLivingBase entity) {
-        if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
-        }
-
-        int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
+    public static int determineOrientationSide(EntityLivingBase entity) {
+        int rotation = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        rotation = determineOrientationSideMeta(rotation);
+        return rotation;
+    }
+    
+    public static int determineOrientationSideMeta(int metadata) {
+        // up = 1
+        // down = 0
+        // north = 2 
+        // south = 3
+        // east = 5
+        // west = 4
+        return metadata == 0 ? 3 : (metadata == 3 ? 5 : (metadata == 1 ? 4 : 2));
+    }
+    
+    public static ForgeDirection determineDirectionSideMeta(int metadata) {
+        return ForgeDirection.getOrientation(determineOrientationSideMeta(metadata));
+    }
+    
+    public static ForgeDirection determineDirectionSide(EntityLivingBase entity) {
+        return ForgeDirection.getOrientation(determineOrientationSide(entity));
     }
     
     public static int getColourFromTileEntity(World world, int x, int y, int z, int side) {

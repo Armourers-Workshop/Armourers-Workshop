@@ -21,9 +21,17 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.ForgeDirection;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.UtilPlayer;
 
 @SideOnly(Side.CLIENT)
 public class BlockHighlightRenderHandler {
@@ -45,12 +53,25 @@ public class BlockHighlightRenderHandler {
         int x = target.blockX;
         int y = target.blockY;
         int z = target.blockZ;
+        int side = target.sideHit;
         
         Block block = world.getBlock(x, y, z);
         
         if (block == ModBlocks.mannequin) {
             drawMannequinBlockBounds(world, x, y, z, player, block, event.partialTicks);
             event.setCanceled(true);
+        }
+        
+        if (event.currentItem != null && event.currentItem.getItem() == ModItems.equipmentSkin) {
+            ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(event.currentItem);
+            ForgeDirection sideDir = ForgeDirection.getOrientation(side);
+            
+            if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
+                x += sideDir.offsetX;
+                y += sideDir.offsetY;
+                z += sideDir.offsetZ;
+                drawSkinnableBlockHelper(world, x, y, z, side, player, event.partialTicks, skinPointer);
+            }
         }
     }
     
@@ -138,5 +159,63 @@ public class BlockHighlightRenderHandler {
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
+    }
+    
+    private void drawSkinnableBlockHelper(World world, int x, int y, int z, int side, EntityPlayer player, float partialTicks, ISkinPointer skinPointer) {
+        //int meta = world.getBlockMetadata(x, y, z);
+        
+        //Rectangle3D[][][] blockGrid;
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
+        if (skin != null) {
+            //blockGrid = skin.getParts().get(0).getBlockGrid();
+        } else {
+            return;
+        }
+        
+        double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+        double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+        double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+        
+        float f1 = 0.002F;
+        float scale = 0.0625F;
+        
+        ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
+        
+        for (int ix = 0; ix < 3; ix++) {
+            for (int iy = 0; iy < 3; iy++) {
+                for (int iz = 0; iz < 3; iz++) {
+                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, iz, dir);
+                    if (bounds != null) {
+                        double minX = bounds[0];
+                        double minY = bounds[1];
+                        double minZ = bounds[2];
+                        double maxX = bounds[3];
+                        double maxY = bounds[4];
+                        double maxZ = bounds[5];
+                        
+                        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+                        aabb.offset(-xOff - 1, -yOff, -zOff - 1);
+                        aabb.offset(dir.offsetX * -1, 0, dir.offsetZ * -1);
+                        aabb.offset(x, y, z);
+                        aabb.offset(ix, iy, iz);
+                        GL11.glEnable(GL11.GL_BLEND);
+                        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.75F);
+                        if (!world.isAirBlock(x + ix - 1 - dir.offsetX, y + iy, z + iz - 1 - dir.offsetZ)) {
+                            GL11.glColor4f(1.0F, 0.0F, 0.0F, 0.75F);
+                        }
+                        GL11.glLineWidth(1F);
+                        GL11.glDisable(GL11.GL_TEXTURE_2D);
+                        GL11.glDepthMask(false);
+                        GL11.glDisable(GL11.GL_DEPTH_TEST);
+                        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+                        GL11.glEnable(GL11.GL_DEPTH_TEST);
+                        GL11.glDepthMask(true);
+                        GL11.glEnable(GL11.GL_TEXTURE_2D);
+                        GL11.glDisable(GL11.GL_BLEND);
+                    }
+                }
+            }
+        }
     }
 }

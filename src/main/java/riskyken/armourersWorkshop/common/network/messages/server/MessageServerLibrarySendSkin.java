@@ -18,31 +18,35 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 public class MessageServerLibrarySendSkin implements IMessage, IMessageHandler<MessageServerLibrarySendSkin, IMessage> {
 
     private String fileName;
+    private String filePath;
     private Skin skin;
     
     public MessageServerLibrarySendSkin() {
     }
     
-    public MessageServerLibrarySendSkin(String fileName, Skin skin) {
+    public MessageServerLibrarySendSkin(String fileName, String filePath, Skin skin) {
         this.fileName = fileName;
+        this.filePath = filePath;
         this.skin = skin;
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
         this.fileName = ByteBufUtils.readUTF8String(buf);
+        this.filePath = ByteBufUtils.readUTF8String(buf);
         this.skin = ByteBufHelper.readSkinFromByteBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, this.fileName);
+        ByteBufUtils.writeUTF8String(buf, this.filePath);
         ByteBufHelper.writeSkinToByteBuf(buf, skin);
     }
     
     @Override
     public IMessage onMessage(MessageServerLibrarySendSkin message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.receivedSkinFromLibrary(message.fileName, message.skin);
+        ArmourersWorkshop.proxy.receivedSkinFromLibrary(message.fileName, message.filePath, message.skin);
         return null;
     }
 }

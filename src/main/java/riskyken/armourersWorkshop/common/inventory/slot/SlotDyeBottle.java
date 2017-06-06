@@ -1,20 +1,33 @@
 package riskyken.armourersWorkshop.common.inventory.slot;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public class SlotDyeBottle extends Slot {
     
     private final ContainerDyeTable container;
+    private boolean locked;
     
     public SlotDyeBottle(IInventory inventory, int slotIndex, int xPosition, int yPosition, ContainerDyeTable container) {
         super(inventory, slotIndex, xPosition, yPosition);
         this.container = container;
+        this.locked = false;
+    }
+    
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+    
+    public boolean isLocked() {
+        return locked;
     }
     
     @Override
@@ -22,10 +35,20 @@ public class SlotDyeBottle extends Slot {
         ItemStack skinStack = inventory.getStackInSlot(0);
         if (skinStack != null && skinStack.getItem() == ModItems.equipmentSkin) {
             if (stack.getItem() == ModItems.dyeBottle) {
-                return true;
+                if (PaintingHelper.getToolHasPaint(stack)) {
+                    return true;
+                }
             }
         }
         return false;
+    }
+    
+    @Override
+    public boolean canTakeStack(EntityPlayer player) {
+        if (!ConfigHandler.lockDyesOnSkins) {
+            return true;
+        }
+        return !locked;
     }
     
     @Override

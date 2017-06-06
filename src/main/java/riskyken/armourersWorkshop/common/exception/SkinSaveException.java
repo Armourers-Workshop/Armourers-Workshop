@@ -16,6 +16,8 @@ public class SkinSaveException extends Exception {
     public enum SkinSaveExceptionType {
         MARKER_ERROR,
         NO_DATA,
-        MISSING_PARTS;
+        MISSING_PARTS,
+        BED_AND_SEAT,
+        INVALID_MULTIBLOCK;
     }
 }

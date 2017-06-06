@@ -160,6 +160,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int intensity = UtilItems.getIntensityFromStack(stack, 16);

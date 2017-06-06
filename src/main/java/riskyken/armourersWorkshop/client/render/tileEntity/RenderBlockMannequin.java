@@ -268,7 +268,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         }
         
         //Magic circle.
-        if (te.isRenderExtras()) {
+        if (te.isRenderExtras() & te.isVisible()) {
             if (te.hasSpecialRender()) {
                 float[] colour = te.getSpecialRenderColour();
                 int offset = te.xCoord * te.yCoord * te.zCoord;

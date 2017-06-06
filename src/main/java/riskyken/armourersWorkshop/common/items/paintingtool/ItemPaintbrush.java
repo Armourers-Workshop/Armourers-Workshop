@@ -125,6 +125,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
         return false;
     }
     
+    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
         int colour = getToolColour(stack);

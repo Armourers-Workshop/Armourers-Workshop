@@ -9,14 +9,18 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotSkin;
+import riskyken.armourersWorkshop.common.items.ItemSkin;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerEntityEquipment extends Container {
 
+    private int skinSlots = 0;
+    
     public ContainerEntityEquipment(InventoryPlayer invPlayer, InventoryEntitySkin skinInventory) {
-        
         ArrayList<ISkinType> skinTypes = skinInventory.getSkinTypes();
         for (int i = 0; i < skinTypes.size(); i++) {
             addSlotToContainer(new SlotSkin(skinTypes.get(i), skinInventory, i, 8 + i * 18, 21));
+            skinSlots++;
         }
         
         int hotBarY = 124;
@@ -38,6 +42,49 @@ public class ContainerEntityEquipment extends Container {
     
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotId) {
+        Slot slot = getSlot(slotId);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack = slot.getStack();
+            ItemStack result = stack.copy();
+
+            if (slotId < skinSlots) {
+                //Moving item to main inv
+                if (!this.mergeItemStack(stack, skinSlots + 9, skinSlots + 36, false)) {
+                    //Moving item to hotbar
+                    if (!this.mergeItemStack(stack, skinSlots, skinSlots + 9, false)) {
+                        return null;
+                    }
+                }
+            } else {
+                if (stack.getItem() instanceof ItemSkin & SkinNBTHelper.stackHasSkinData(stack)) {
+                    boolean slotted = false;
+                    for (int i = 0; i < skinSlots; i++) {
+                        Slot targetSlot = getSlot(i);
+                        if (targetSlot.isItemValid(stack)) {
+                            if (this.mergeItemStack(stack, i, i + 1, false)) {
+                                slotted = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!slotted) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
+
+            if (stack.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            slot.onPickupFromSlot(entityPlayer, stack);
+
+            return result;
+        }
         return null;
     }
 }

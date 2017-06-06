@@ -115,6 +115,7 @@ public class EntityEquipmentData implements IEntityEquipment {
     public void loadNBTData(NBTTagCompound compound) {
         NBTTagList itemsList = compound.getTagList(TAG_SKIN_LIST, NBT.TAG_COMPOUND);
         skinId.clear();
+        skinDye.clear();
         for (int i = 0; i < itemsList.tagCount(); i++) {
             NBTTagCompound item = (NBTTagCompound)itemsList.getCompoundTagAt(i);
             String skinName = item.getString(TAG_SKIN_TYPE);
@@ -132,20 +133,28 @@ public class EntityEquipmentData implements IEntityEquipment {
             ISkinDye dye = skinDye.get(skinName);
             ByteBufUtils.writeUTF8String(buf, skinName);
             buf.writeInt(equipmentId);
-            dye.writeToBuf(buf);
+            if (dye == null) {
+                buf.writeBoolean(false);
+            } else {
+                buf.writeBoolean(true);
+                dye.writeToBuf(buf);
+            }
         }
     }
     
     private void fromBytes(ByteBuf buf) {
         int itemCount = buf.readByte();
         skinId.clear();
+        skinDye.clear();
         for (int i = 0; i < itemCount; i++) {
             String skinName = ByteBufUtils.readUTF8String(buf);
             int equipmentId = buf.readInt();
             skinId.put(skinName, equipmentId);
-            SkinDye dye = new SkinDye();
-            dye.readFromBuf(buf);
-            skinDye.put(skinName, dye);
+            if (buf.readBoolean()) {
+                SkinDye dye = new SkinDye();
+                dye.readFromBuf(buf);
+                skinDye.put(skinName, dye);
+            }
         }
     }
 

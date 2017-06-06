@@ -18,9 +18,9 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -37,7 +37,7 @@ public class PlayerTextureHandler {
     
     private HashMap<PlayerPointer, EntityTextureInfo> playerTextureMap = new HashMap<PlayerPointer, EntityTextureInfo>();
     private final Profiler profiler;
-    private boolean disableTexturePainting;
+    private boolean useTexturePainting;
     
     public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -46,8 +46,8 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRender(RenderPlayerEvent.Pre event) {
-        disableTexturePainting = ConfigHandlerClient.disableTexturePainting;
-        if(disableTexturePainting) {
+        useTexturePainting = ClientProxy.useTexturePainting();
+        if(!useTexturePainting) {
             return;
         }
         if (!(event.entityPlayer instanceof AbstractClientPlayer)) {
@@ -71,16 +71,16 @@ public class PlayerTextureHandler {
             textureInfo.updateTexture(player.getLocationSkin());
             textureInfo.updateHairColour(ewd.hairColour);
             textureInfo.updateSkinColour(ewd.skinColour);
-            Skin[] skins = new Skin[4 * 5];
+            Skin[] skins = new Skin[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
             
-            for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
+            for (int skinIndex = 0; skinIndex < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
                 skins[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                 skins[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                 skins[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                 skins[3 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
             }
-            ISkinDye[] dyes = new ISkinDye[4 * 5];
-            for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
+            ISkinDye[] dyes = new ISkinDye[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
+            for (int skinIndex = 0; skinIndex < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
                 dyes[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                 dyes[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                 dyes[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
@@ -98,7 +98,7 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.Post event) {
-        if(disableTexturePainting) {
+        if(!useTexturePainting) {
             return;
         }
         if (!(event.entityPlayer instanceof AbstractClientPlayer)) {

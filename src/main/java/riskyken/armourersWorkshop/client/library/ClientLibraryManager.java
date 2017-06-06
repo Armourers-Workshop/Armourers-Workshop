@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.library.ILibraryCallback;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileList;
@@ -44,9 +45,14 @@ public class ClientLibraryManager implements ILibraryManager {
     
     @Override
     public void reloadLibrary() {
+        reloadLibrary(null);
+    }
+    
+    @Override
+    public void reloadLibrary(ILibraryCallback callback) {
         if (!loadingLibaray) {
             loadingLibaray = true;
-            (new Thread(new LibraryLoader(this),LibModInfo.NAME + " library thread.")).start();
+            (new Thread(new LibraryLoader(this, callback),LibModInfo.NAME + " library thread.")).start();
         } else {
             ModLogger.log("Library is already loading client.");
         }
@@ -125,9 +131,11 @@ public class ClientLibraryManager implements ILibraryManager {
     private static class LibraryLoader implements Runnable {
 
         private ClientLibraryManager libraryManager;
+        private ILibraryCallback callback;
         
-        public LibraryLoader(ClientLibraryManager libraryManager) {
+        public LibraryLoader(ClientLibraryManager libraryManager, ILibraryCallback callback) {
             this.libraryManager = libraryManager;
+            this.callback = callback;
         }
         
         @Override
@@ -135,10 +143,13 @@ public class ClientLibraryManager implements ILibraryManager {
             long startTime = System.currentTimeMillis();
             ModLogger.log("Loading library skins");
             File directory = SkinIOUtils.getSkinLibraryDirectory();
-            ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory);
+            ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory, true);
             libraryManager.setFileList(fileList, LibraryFileType.LOCAL);
             ModLogger.log(String.format("Finished loading %d client library skins in %d ms", libraryManager.clientFiles.getFileCount(), System.currentTimeMillis() - startTime));
             libraryManager.finishedLoading();
+            if (callback != null) {
+                callback.libraryReloaded(libraryManager);
+            }
         }
     }
 }

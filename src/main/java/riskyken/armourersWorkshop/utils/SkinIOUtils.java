@@ -15,26 +15,35 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.DimensionManager;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.serialize.SkinSerializer;
 
 public final class SkinIOUtils {
     
-    public static boolean saveSkinFromFileName(String fileName, Skin skin) {
-        File file = new File(getSkinLibraryDirectory(), fileName);
+    public static final String SKIN_FILE_EXTENSION = ".armour";
+    
+    public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
+        filePath = makeFilePathValid(filePath);
+        fileName = makeFileNameValid(fileName);
+        File file = new File(getSkinLibraryDirectory(), filePath + fileName);
         return saveSkinToFile(file, skin);
     }
     
-    public static boolean saveSkinFromFileName(String fileName, Skin skin, EntityPlayerMP player) {
-        File file = new File(getSkinLibraryDirectory(), "private");
-        file = new File(file, player.getUniqueID().toString());
-        file = new File(file, fileName);
-        return saveSkinToFile(file, skin);
+    public static String makeFileNameValid(String fileName) {
+        return fileName.replaceAll("[^a-zA-Z0-9_()'`+ \\-\\.]", "_");
+    }
+    
+    public static String makeFilePathValid(String filePath) {
+        filePath = filePath.replace("\\", "/");
+        return filePath.replaceAll("[^a-zA-Z0-9_()'`+/ \\-\\.]", "_");
     }
     
     public static boolean saveSkinToFile(File file, Skin skin) {
@@ -46,7 +55,7 @@ public final class SkinIOUtils {
         
         try {
             stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-            skin.writeToStream(stream);
+            SkinSerializer.writeToStream(skin, stream);
             stream.flush();
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
@@ -63,15 +72,13 @@ public final class SkinIOUtils {
         return true;
     }
     
-    public static Skin loadSkinFromFileName(String fileName, EntityPlayerMP player) {
-        File file = new File(getSkinLibraryDirectory(), "private");
-        file = new File(file, player.getUniqueID().toString());
-        file = new File(file, fileName);
-        return loadSkinFromFile(file);
-    }
-    
     public static Skin loadSkinFromFileName(String fileName) {
         File file = new File(getSkinLibraryDirectory(), fileName);
+        if (!isInSubDirectory(getSkinLibraryDirectory(), file)) {
+            ModLogger.log(Level.WARN, "Player tried to load a file in a invalid location.");
+            ModLogger.log(Level.WARN, String.format("The file was: %s", file.getAbsolutePath().replace("%", "")));
+            return null;
+        }
         return loadSkinFromFile(file);
     }
     
@@ -81,7 +88,7 @@ public final class SkinIOUtils {
         
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-            skin = new Skin(stream);
+            skin = SkinSerializer.loadSkin(stream);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
             ModLogger.log(Level.WARN, file);
@@ -108,7 +115,7 @@ public final class SkinIOUtils {
         
         try {
             stream = new DataInputStream(new BufferedInputStream(inputStream));
-            skin = new Skin(stream);
+            skin = SkinSerializer.loadSkin(stream);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
             e.printStackTrace();
@@ -137,10 +144,13 @@ public final class SkinIOUtils {
             skinType = Skin.readSkinTypeNameFromStream(stream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            ModLogger.log(Level.ERROR, "File name: " + file.getName());
         } catch (IOException e) {
             e.printStackTrace();
+            ModLogger.log(Level.ERROR, "File name: " + file.getName());
         } catch (NewerFileVersionException e) {
             e.printStackTrace();
+            ModLogger.log(Level.ERROR, "File name: " + file.getName());
         } finally {
             IOUtils.closeQuietly(stream);
         }
@@ -252,5 +262,87 @@ public final class SkinIOUtils {
             return file.mkdirs();
         }
         return true;
+    }
+    
+    public static void recoverSkins(EntityPlayer player) {
+        player.addChatComponentMessage(new ChatComponentText("Starting skin recovery."));
+        File skinDir = getSkinDatabaseDirectory();
+        if (skinDir.exists() & skinDir.isDirectory()) {
+            File recoverDir = new File(System.getProperty("user.dir"), "recovered-skins");
+            if (!recoverDir.exists()) {
+                recoverDir.mkdirs();
+            }
+            File[] skinFiles = skinDir.listFiles();
+            player.addChatComponentMessage(new ChatComponentText(String.format("Found %d skins to be recovered.", skinFiles.length)));
+            player.addChatComponentMessage(new ChatComponentText("Working..."));
+            int unnamedSkinCount = 0;
+            int successCount = 0;
+            int failCount = 0;
+            
+            for (int i = 0; i < skinFiles.length; i++) {
+                File skinFile = skinFiles[i];
+                Skin skin = loadSkinFromFile(skinFile);
+                if (skin != null) {
+                    String fileName = skin.getProperties().getPropertyString(Skin.KEY_FILE_NAME, null);
+                    String customName = skin.getProperties().getPropertyString(Skin.KEY_CUSTOM_NAME, null);
+                    if (!StringUtils.isNullOrEmpty(fileName)) {
+                        fileName = makeFileNameValid(fileName);
+                        File newSkinFile = new File(recoverDir, fileName);
+                        if (newSkinFile.exists()) {
+                            int nameCount = 0;
+                            while (true) {
+                                nameCount++;
+                                newSkinFile = new File(recoverDir, fileName + "-" + nameCount);
+                                if (!newSkinFile.exists()) {
+                                    break;
+                                }
+                            }
+                        }
+                        saveSkinToFile(newSkinFile, skin);
+                        successCount++;
+                        continue;
+                    }
+                    if (!StringUtils.isNullOrEmpty(customName)) {
+                        customName = makeFileNameValid(customName);
+                        File newSkinFile = new File(recoverDir, customName);
+                        if (newSkinFile.exists()) {
+                            int nameCount = 0;
+                            while (true) {
+                                nameCount++;
+                                newSkinFile = new File(recoverDir, customName + "-" + nameCount);
+                                if (!newSkinFile.exists()) {
+                                    break;
+                                }
+                            }
+                        }
+                        saveSkinToFile(newSkinFile, skin);
+                        successCount++;
+                        continue;
+                    }
+                    unnamedSkinCount++;
+                    saveSkinToFile(new File(recoverDir,"unnamed-skin-" + unnamedSkinCount), skin);
+                    successCount++;
+                } else {
+                    failCount++;
+                }
+            }
+            player.addChatComponentMessage(new ChatComponentText("Finished skin recovery."));
+            player.addChatComponentMessage(new ChatComponentText(String.format("%d skins were recovered and %d fail recovery.", successCount, failCount)));
+        } else {
+            player.addChatComponentMessage(new ChatComponentText("No skins found to recover."));
+        }
+    }
+    
+    public static boolean isInSubDirectory(File dir, File file) {
+        if (file == null) {
+            return false;
+        }
+        if (file.isDirectory()) {
+            //return true;
+        }
+        if (file.getParentFile().equals(dir)) {
+            return true;
+        }
+        return isInSubDirectory(dir, file.getParentFile());
     }
 }

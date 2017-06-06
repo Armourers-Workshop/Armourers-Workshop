@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
 
-import org.apache.logging.log4j.Level;
-
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
@@ -23,10 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
+import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.skin.ArmourerWorldHelper;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
@@ -39,7 +37,6 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 
@@ -139,6 +136,9 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             skinProps.setProperty(Skin.KEY_BLOCK_LADDER, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
             skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
             skinProps.setProperty(Skin.KEY_BLOCK_SEAT, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_BED, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false));
         }
         
         if (skinType == SkinTypeRegistry.skinWings) {
@@ -155,9 +155,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         try {
             armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType,
                     paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
-        } catch (InvalidCubeTypeException e) {
-            ModLogger.log(Level.ERROR, "Unable to save skin. Unknown cube types found.");
-            e.printStackTrace();
         } catch (SkinSaveException e) {
             switch (e.getType()) {
             case NO_DATA:
@@ -169,6 +166,12 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             case MISSING_PARTS:
                 player.addChatMessage(new ChatComponentText(e.getMessage()));
                 break;
+            case BED_AND_SEAT:
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
+                break;
+            case INVALID_MULTIBLOCK:
+                player.addChatMessage(new ChatComponentText(e.getMessage()));
+                break;
             }
         }
         
@@ -176,7 +179,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             return;
         }
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, (LibraryFile)null);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
@@ -288,9 +291,11 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
 
     public void clearArmourCubes() {
         if (skinType != null) {
-            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps);
             clearPaintData(true);
-            setSkinProps(new SkinProperties());
+            SkinProperties newSkinProps = new SkinProperties();
+            newSkinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+            setSkinProps(newSkinProps);
             resyncData();
         }
     }

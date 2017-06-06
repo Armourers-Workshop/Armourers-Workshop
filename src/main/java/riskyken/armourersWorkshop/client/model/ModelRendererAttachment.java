@@ -22,6 +22,7 @@ import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -87,7 +88,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
         }
         
-        for (int skinIndex = 0; skinIndex < 5; skinIndex++) {
+        for (int skinIndex = 0; skinIndex < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
             Skin data = modelRenderer.getPlayerCustomArmour(player, skinType, skinIndex);
             if (data == null) {
                 continue;

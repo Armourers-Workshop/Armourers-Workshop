@@ -3,23 +3,28 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeBottle;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeableSkin;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.UtilPlayer;
 
 public class ContainerDyeTable extends Container {
 
+    private final InventoryPlayer invPlayer;
     private final TileEntityDyeTable tileEntity;
     
     public ContainerDyeTable(InventoryPlayer invPlayer, TileEntityDyeTable tileEntity) {
+        this.invPlayer = invPlayer;
         this.tileEntity = tileEntity;
         
         int playerInvY = 108;
@@ -33,7 +38,7 @@ public class ContainerDyeTable extends Container {
             }
         }
         
-        addSlotToContainer(new SlotDyeableSkin(tileEntity, 0, 26, 47, this));
+        addSlotToContainer(new SlotDyeableSkin(tileEntity, 0, 26, 23, this));
         
         addSlotToContainer(new SlotDyeBottle(tileEntity, 1, 68, 36, this));
         addSlotToContainer(new SlotDyeBottle(tileEntity, 2, 90, 36, this));
@@ -43,10 +48,25 @@ public class ContainerDyeTable extends Container {
         addSlotToContainer(new SlotDyeBottle(tileEntity, 6, 90, 58, this));
         addSlotToContainer(new SlotDyeBottle(tileEntity, 7, 112, 58, this));
         addSlotToContainer(new SlotDyeBottle(tileEntity, 8, 134, 58, this));
+        
+        addSlotToContainer(new SlotOutput(tileEntity, 9, 26, 69, this));
+        
+        ItemStack stack = getSlot(36).getStack();
+        if (stack != null) {
+            updateLockedSlots(stack);
+        }
     }
     
+    
     public void skinAdded(ItemStack stack) {
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        ISkinDye dye = skinPointer.getSkinDye();
         skinRemoved();
+        updateLockedSlots(stack);
+        putStackInSlot(45, stack.copy());
+    }
+    
+    private void updateLockedSlots(ItemStack stack) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
         for (int i = 0; i < 8; i++) {
@@ -55,19 +75,38 @@ public class ContainerDyeTable extends Container {
                 ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
                 PaintingHelper.setToolPaintColour(bottle, rgbt);
                 PaintingHelper.setToolPaint(bottle, PaintType.getPaintTypeFormSKey(rgbt[3]));
-                tileEntity.setInventorySlotContents(i + 1, bottle);
+                putStackInSlot(37 + i, bottle);
+                ((SlotDyeBottle)getSlot(37 + i)).setLocked(true);
+            } else {
+                ((SlotDyeBottle)getSlot(37 + i)).setLocked(false);
             }
         }
     }
     
     public void skinRemoved() {
         for (int i = 0; i < 8; i++) {
-            tileEntity.setInventorySlotContents(i + 1, null);
+            SlotDyeBottle slot = (SlotDyeBottle) getSlot(37 + i);
+            if (!slot.isLocked()) {
+                UtilPlayer.giveItem(invPlayer.player, getSlot(37 + i).getStack());
+            } else {
+                slot.setLocked(false);
+            }
+            putStackInSlot(37 + i, null);
         }
+        putStackInSlot(45, null);
+    }
+    
+    @Override
+    public void onCraftMatrixChanged(IInventory inventory) {
+        for (int i = 0; i < 9; i++) {
+            putStackInSlot(37 + i, null);
+        }
+        putStackInSlot(36, null);
+        super.onCraftMatrixChanged(inventory);
     }
     
     public void dyeAdded(ItemStack dyeStack, int slotId) {
-        ItemStack skinStack = tileEntity.getStackInSlot(0);
+        ItemStack skinStack = getSlot(45).getStack();
         if (skinStack == null) {
             return;
         }
@@ -82,7 +121,7 @@ public class ContainerDyeTable extends Container {
     }
     
     public void dyeRemoved(int slotId) {
-        ItemStack skinStack = tileEntity.getStackInSlot(0);
+        ItemStack skinStack = tileEntity.getStackInSlot(9);
         if (skinStack == null) {
             return;
         }
@@ -117,7 +156,7 @@ public class ContainerDyeTable extends Container {
                     if (!this.mergeItemStack(stack, 36, 37, false)) {
                         return null;
                     }
-                } else if (stack.getItem() == ModItems.dyeBottle && getSlot(36).getHasStack()) {
+                } else if (stack.getItem() == ModItems.dyeBottle && getSlot(36).getHasStack() & PaintingHelper.getToolHasPaint(stack)) {
                     if (!this.mergeItemStack(stack, 37, 45, false)) {
                         return null;
                     }

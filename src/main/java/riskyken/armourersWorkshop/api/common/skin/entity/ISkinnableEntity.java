@@ -2,11 +2,11 @@ package riskyken.armourersWorkshop.api.common.skin.entity;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public interface ISkinnableEntity {
     
@@ -19,5 +19,5 @@ public interface ISkinnableEntity {
     
     public boolean canUseSkinsOnEntity();
     
-    public ArrayList<ISkinType> getValidSkinTypes();
+    public void getValidSkinTypes(ArrayList<ISkinType> skinTypes);
 }

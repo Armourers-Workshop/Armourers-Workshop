@@ -27,6 +27,7 @@ public class GuiGlobalLibraryPanelLogin extends GuiPanel {
         textboxUsername = new GuiTextField(fontRenderer, this.x + 5, this.y + 15, 120, 16);
         textboxPassword = new GuiTextField(fontRenderer, this.x + 5, this.y + 45, 120, 16);
         buttonLogin = new GuiButtonExt(0, this.x + 5, this.y + 65, 80, 16, "Login");
+        buttonLogin.enabled = false;
         buttonList.add(buttonLogin);
     }
     
@@ -64,6 +65,7 @@ public class GuiGlobalLibraryPanelLogin extends GuiPanel {
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         super.draw(mouseX, mouseY, partialTickTime);
+        fontRenderer.drawString("This block is unfinished. Please check back later.", this.x + 5, this.y + 85, 0xEE0000);
         fontRenderer.drawString("Username:", this.x + 5, this.y + 5, 0xEEEEEE);
         fontRenderer.drawString("Password:", this.x + 5, this.y + 35, 0xEEEEEE);
         textboxUsername.drawTextBox();

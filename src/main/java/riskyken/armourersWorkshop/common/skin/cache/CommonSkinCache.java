@@ -15,8 +15,10 @@ import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
+import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinIdSend;
@@ -104,11 +106,21 @@ public final class CommonSkinCache implements Runnable {
         }
     }
     
+    @Deprecated
     public void clientRequestSkinId(String fileName, EntityPlayerMP player) {
         QueueMessage queueMessage = new QueueMessage(fileName, player);
         synchronized (messageQueue) {
             messageQueue.add(queueMessage);
         }
+    }
+    
+    public void clientRequestSkinId(LibraryFile file, EntityPlayerMP player) {
+        /*
+        QueueMessage queueMessage = new QueueMessage(fileName, player);
+        synchronized (messageQueue) {
+            messageQueue.add(queueMessage);
+        }
+        */
     }
     
     private void processMessageQueue() {
@@ -150,7 +162,7 @@ public final class CommonSkinCache implements Runnable {
     public Skin addSkinToCache(InputStream inputStream) {
         Skin skin = SkinIOUtils.loadSkinFromStream(inputStream);
         if (skin != null) {
-            addEquipmentDataToCache(skin, null);
+            addEquipmentDataToCache(skin, (LibraryFile)null);
             return skin;
         }
         return null;
@@ -192,31 +204,25 @@ public final class CommonSkinCache implements Runnable {
         }
     }
     
+    private void sendSkinIdToClient(LibraryFile file, EntityPlayerMP player) {
+        if (!fileNameIdLinkMap.containsKey(file.getFullName())) {
+            Skin skin = SkinIOUtils.loadSkinFromFileName(file.getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION);
+            if (skin != null) {
+                addEquipmentDataToCache(skin, file);
+            } else {
+                ModLogger.log(Level.ERROR, String.format("Player %s requested ID for file name %s but the file was not found.",
+                        player.getCommandSenderName(), file.getFullName()));
+            }
+        }
+    }
+    
+    @Deprecated
     private void sendSkinIdToClient(String fileName, EntityPlayerMP player) {
         if (!fileNameIdLinkMap.containsKey(fileName)) {
-            boolean publicFiles = true;
-            
             String basicFileName = fileName;
-            
-            if (fileName.contains("\\")) {
-                String[] splitName = fileName.split("\\");
-                basicFileName = splitName[splitName.length - 1];
-                publicFiles = false;
-            }
-            
-            Skin skin = null;
-            if (publicFiles) {
-                skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour");
-            } else {
-                skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour", player);
-            }
-            
+            Skin skin = SkinIOUtils.loadSkinFromFileName(basicFileName + ".armour");
             if (skin != null) {
-                if (publicFiles) {
-                    addEquipmentDataToCache(skin, basicFileName);
-                } else {
-                    addEquipmentDataToCache(skin, player.getUniqueID().toString() + "\\" +  basicFileName);
-                }
+                addEquipmentDataToCache(skin, basicFileName);
             } else {
                 ModLogger.log(Level.ERROR, String.format("Player %s requested ID for file name %s but the file was not found.",
                         player.getCommandSenderName(), fileName));
@@ -224,11 +230,20 @@ public final class CommonSkinCache implements Runnable {
         }
         
         if (fileNameIdLinkMap.containsKey(fileName)) {
-            MessageServerSkinIdSend message = new MessageServerSkinIdSend(fileName, fileNameIdLinkMap.get(fileName));
+            MessageServerSkinIdSend message = new MessageServerSkinIdSend(fileName, fileNameIdLinkMap.get(fileName), false);
             PacketHandler.networkWrapper.sendTo(message, player);
         }
     }
     
+    public void addEquipmentDataToCache(Skin skin, LibraryFile file) {
+        skin.lightHash();
+        addEquipmentDataToCache(skin, skin.lightHash());
+        if (file != null) {
+            fileNameIdLinkMap.put(file.getFullName(), skin.lightHash());
+        }
+    }
+    
+    @Deprecated
     public void addEquipmentDataToCache(Skin skin, String fileName) {
         try {
             skin.lightHash();
@@ -240,6 +255,19 @@ public final class CommonSkinCache implements Runnable {
         if (!StringUtils.isNullOrEmpty(fileName)) {
             fileNameIdLinkMap.put(fileName, skin.lightHash());
         }
+    }
+    
+    public void clearFileNameIdLink(LibraryFile file) {
+        fileNameIdLinkMap.remove(file.getFullName());
+        MessageServerSkinIdSend message = new MessageServerSkinIdSend(file.getFullName(), 0, true);
+        PacketHandler.networkWrapper.sendToAll(message);
+    }
+    
+    @Deprecated
+    public void clearFileNameIdLink(String fileName) {
+        fileNameIdLinkMap.remove(fileName);
+        MessageServerSkinIdSend message = new MessageServerSkinIdSend(fileName, 0, true);
+        PacketHandler.networkWrapper.sendToAll(message);
     }
     
     private void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {
@@ -254,6 +282,10 @@ public final class CommonSkinCache implements Runnable {
                 }
             }
         }
+    }
+    
+    public Skin getSkin(ISkinPointer skinPointer) {
+        return getEquipmentData(skinPointer.getSkinId());
     }
     
     public Skin getEquipmentData(int equipmentId) {

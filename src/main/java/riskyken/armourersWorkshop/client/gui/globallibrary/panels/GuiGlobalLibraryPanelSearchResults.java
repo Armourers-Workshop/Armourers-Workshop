@@ -24,9 +24,11 @@ import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader.DownloadSkinCallable;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
@@ -186,7 +188,11 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             totalSkins = json.size();
         }
         
-        fontRenderer.drawString("Search Results:  Page " + (page + 1) + " of " + (maxPages) + " - Total of " + totalSkins + " Results", x + 5, y + 6, 0xFFEEEEEE);
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
+        String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + "searchResults.results";
+        
+        String resultsText = TranslateUtils.translate(unlocalizedName, page + 1, maxPages, totalSkins);
+        fontRenderer.drawString(resultsText, x + 5, y + 6, 0xFFEEEEEE);
         
         if (json != null) {
             for (int i = page * displayCount; i < json.size(); i++) {
@@ -213,15 +219,18 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                     Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
                     if (!downloadedSkins.contains(skinJson)) {
                         downloadedSkins.add(skinJson);
-                        String name = skinJson.get("file_name").getAsString();
+                        String fileName = skinJson.get("file_name").getAsString();
+                        
                         int serverId = skinJson.get("id").getAsInt();
-                        skinCompletion.submit(new DownloadSkinCallable(name, serverId));
+                        skinCompletion.submit(new DownloadSkinCallable(fileName, serverId));
                     }
                     drawGradientRect(iconX, iconY, iconW, iconH, hoverColour, 0xD0101010);
                     
                     if (skin != null) {
+                        String name = skinJson.get("name").getAsString();
                         int size = fontRenderer.getStringWidth(skin.getCustomName());
-                        fontRenderer.drawString(skin.getCustomName(), (int) (this.x + x * iconSize + iconSize / 2 - size / 2), this.y + y * iconSize + iconSize, 0xFFEEEEEE);
+                        
+                        fontRenderer.drawSplitString(name, (int) (this.x + x * iconSize + 10), this.y + y * iconSize + iconSize, iconSize - 10, 0xFFEEEEEE);
                         GL11.glPushMatrix();
                         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
                         GL11.glTranslatef(iconX + iconSize / 2, iconY + iconSize / 2 - 12, 200.0F);

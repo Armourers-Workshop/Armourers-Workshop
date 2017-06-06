@@ -82,7 +82,17 @@ public final class SkinExtractor {
     private static void extractSkin(String fileName) {
         InputStream input = null;
         FileOutputStream output = null;
-        File outputFile = new File(SkinIOUtils.getSkinLibraryDirectory(), fileName + ".armour");
+        
+        File outputDir = new File(SkinIOUtils.getSkinLibraryDirectory(), "official");
+        
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        
+        File outputFile = new File(outputDir, fileName + ".armour");
+        
+        
+        
         if (outputFile.exists()) {
             if (getFileSize(outputFile) > 0) {
                 return;
