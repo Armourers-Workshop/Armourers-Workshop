@@ -95,6 +95,12 @@ public class TileEntitySkinnable extends TileEntity {
             //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
             //return;
         }
+        
+        if (block != null && block instanceof BlockSkinnable) {
+            ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", xOffset, yOffset, zOffset));
+            return;
+        }
+        
         if (hasSkin()) {
             BlockSkinnable blockSkinnable = (BlockSkinnable) block;
             Skin skin = null;
