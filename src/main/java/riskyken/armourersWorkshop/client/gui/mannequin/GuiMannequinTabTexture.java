@@ -21,13 +21,13 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     private GuiButtonExt setNameButton;
     
     public GuiMannequinTabTexture(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
-        super(tabId, parent);
+        super(tabId, parent, true);
         this.tileEntity = tileEntity;
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         textureTypeList = new GuiDropDownList(0, width / 2 - 110, 25, 50, "", this);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.user"), TextureType.USER.toString(), true);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.url"), TextureType.URL.toString(), true);

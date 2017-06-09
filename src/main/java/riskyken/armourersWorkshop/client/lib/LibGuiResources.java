@@ -9,5 +9,5 @@ public class LibGuiResources {
     
     private static final String PREFIX_RESOURCE = LibModInfo.ID.toLowerCase() + ":textures/gui/";
     
-
+    public static final String ARMOURER = PREFIX_RESOURCE + "armourerNew.png";
 }

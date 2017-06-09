@@ -17,16 +17,32 @@ public class GuiTabController extends GuiButtonExt {
     protected static final ResourceLocation tabTextures = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinTabs.png");
     
     private GuiScreen parent;
+    private boolean fullscreen;
     private int activeTab = -1;
     private ArrayList<GuiTab> tabs = new ArrayList<GuiTab>();
     
-    public GuiTabController(GuiScreen parent, int xPos, int yPos, int width, int height) {
-        super(0, 0 , 0, parent.width, parent.height, "");
+    public GuiTabController(GuiScreen parent, boolean fullscreen, int xPos, int yPos, int width, int height) {
+        super(0, xPos, yPos, width, height, "");
         this.parent = parent;
+        this.fullscreen = fullscreen;
     }
     
-    public GuiTabController(GuiScreen parent) {
-        this(parent, 0, 0, 0, 0);
+    public GuiTabController(GuiScreen parent, boolean fullscreen) {
+        this(parent, fullscreen, 0, 0, 0, 0);
+    }
+    
+    public void initGui(int xPos, int yPos, int width, int height) {
+        if (fullscreen) {
+            this.xPosition = 0;
+            this.yPosition = 0;
+            this.width = parent.width;
+            this.height = parent.height;
+        } else {
+            this.xPosition = xPos;
+            this.yPosition = yPos;
+            this.width = width;
+            this.height = height;
+        }
     }
     
     public void setActiveTabIndex(int index) {
@@ -93,6 +109,11 @@ public class GuiTabController extends GuiButtonExt {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         mc.renderEngine.bindTexture(tabTextures);
         int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * 27F) / 2F);
+        
+        if (!fullscreen) {
+            yOffset = 0;
+        }
+        
         GuiTab hoverTab = null;
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
