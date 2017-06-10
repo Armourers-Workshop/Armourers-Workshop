@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiTabbed extends GuiContainer {
@@ -15,9 +16,9 @@ public abstract class GuiTabbed extends GuiContainer {
     protected ArrayList<GuiTabPanel> tabList;
     protected static int activeTab = 0;
     
-    public GuiTabbed(Container container, boolean fullscreen) {
+    public GuiTabbed(Container container, boolean fullscreen, ResourceLocation texture) {
         super(container);
-        tabController = new GuiTabController(this, fullscreen);
+        tabController = new GuiTabController(this, fullscreen, texture);
         tabList = new ArrayList<GuiTabPanel>();
     }
     

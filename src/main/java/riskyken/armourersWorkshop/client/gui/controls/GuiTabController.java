@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,26 +11,29 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
 public class GuiTabController extends GuiButtonExt {
-
-    protected static final ResourceLocation tabTextures = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinTabs.png");
     
+    private final ResourceLocation texture;
     private GuiScreen parent;
     private boolean fullscreen;
     private int activeTab = -1;
     private ArrayList<GuiTab> tabs = new ArrayList<GuiTab>();
+    private int tabSpacing = 27;
     
-    public GuiTabController(GuiScreen parent, boolean fullscreen, int xPos, int yPos, int width, int height) {
+    public GuiTabController(GuiScreen parent, boolean fullscreen, int xPos, int yPos, int width, int height, ResourceLocation texture) {
         super(0, xPos, yPos, width, height, "");
         this.parent = parent;
         this.fullscreen = fullscreen;
+        this.texture = texture;
+        if (!fullscreen) {
+            tabSpacing = 25;
+        }
     }
     
-    public GuiTabController(GuiScreen parent, boolean fullscreen) {
-        this(parent, fullscreen, 0, 0, 0, 0);
+    public GuiTabController(GuiScreen parent, boolean fullscreen, ResourceLocation texture) {
+        this(parent, fullscreen, 0, 0, 0, 0, texture);
     }
     
     public void initGui(int xPos, int yPos, int width, int height) {
@@ -92,13 +97,13 @@ public class GuiTabController extends GuiButtonExt {
     
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * 27F) / 2F);
+        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * tabSpacing) / 2F);
         if (!fullscreen) {
-            yOffset = 0;
+            yOffset = 5;
         }
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
-            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * 27  + yOffset, mouseX, mouseY)) {
+            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * tabSpacing  + yOffset, mouseX, mouseY)) {
                 if (tab.enabled) {
                     activeTab = i;
                     return true;
@@ -110,20 +115,21 @@ public class GuiTabController extends GuiButtonExt {
     
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(tabTextures);
-        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * 27F) / 2F);
+        mc.renderEngine.bindTexture(texture);
+        GL11.glColor4f(1, 1, 1, 1);
+        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * tabSpacing) / 2F);
         
         if (!fullscreen) {
-            yOffset = 0;
+            yOffset = 5;
         }
         
         GuiTab hoverTab = null;
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
-            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * 27 + yOffset, mouseX, mouseY)) {
+            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * tabSpacing + yOffset, mouseX, mouseY)) {
                 hoverTab = tab;
             }
-            tab.render(this.xPosition - 4, this.yPosition + i * 27 + yOffset, mouseX, mouseY, activeTab == i);
+            tab.render(this.xPosition - 4, this.yPosition + i * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
         }
         
         if (hoverTab != null) {

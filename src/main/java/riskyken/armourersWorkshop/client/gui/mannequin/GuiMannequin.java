@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 public class GuiMannequin extends GuiTabbed {
     
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinNew.png");
+    private static final ResourceLocation textureTabs = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinTabs.png");
     
     public final TileEntityMannequin tileEntity;
     private final EntityPlayer player;
@@ -30,7 +31,7 @@ public class GuiMannequin extends GuiTabbed {
     public GuiMannequinTabExtraRenders tabExtraRenders;
     
     public GuiMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
-        super(new ContainerMannequin(invPlayer, tileEntity), true);
+        super(new ContainerMannequin(invPlayer, tileEntity), true, textureTabs);
         this.tileEntity = tileEntity;
         this.player = invPlayer.player;
         this.inventoryName = tileEntity.getInventoryName();

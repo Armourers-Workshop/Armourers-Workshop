@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 public class GuiArmourer extends GuiTabbed {
 
     private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.ARMOURER);
+    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.ARMOURER_TABS);
     
     public final TileEntityArmourer tileEntity;
     private final String inventoryName;
@@ -28,7 +29,7 @@ public class GuiArmourer extends GuiTabbed {
     
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourer tileEntity) {
-        super(new ContainerArmourer(invPlayer, tileEntity), false);
+        super(new ContainerArmourer(invPlayer, tileEntity), false, textureTabs);
         this.tileEntity = tileEntity;
         this.inventoryName = tileEntity.getInventoryName();
         
@@ -43,9 +44,9 @@ public class GuiArmourer extends GuiTabbed {
         tabList.add(tabBlockUtils);
         
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.main")).setIconLocation(0, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.displaySettings")).setIconLocation(0, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinSettings")).setIconLocation(0, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.BlockUtils")).setIconLocation(0, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.displaySettings")).setIconLocation(16, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinSettings")).setIconLocation(32, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.BlockUtils")).setIconLocation(48, 52));
         
         tabController.setActiveTabIndex(activeTab);
         
