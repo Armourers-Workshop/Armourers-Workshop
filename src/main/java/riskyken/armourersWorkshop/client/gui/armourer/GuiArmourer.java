@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabbed;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 @SideOnly(Side.CLIENT)
@@ -17,21 +18,35 @@ public class GuiArmourer extends GuiTabbed {
 
     private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.ARMOURER);
     
-    public TileEntityArmourer tileEntity;
+    public final TileEntityArmourer tileEntity;
     private final String inventoryName;
     
-    public GuiTabArmourerMain tabArmourerMain;
+    public GuiTabArmourerMain tabMain;
+    public GuiTabArmourerDisplaySettings tabDisplaySettings;
+    public GuiTabArmourerSkinSettings tabSkinSettings;
+    public GuiTabArmourerBlockUtils tabBlockUtils;
+    
     
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourer tileEntity) {
         super(new ContainerArmourer(invPlayer, tileEntity), false);
         this.tileEntity = tileEntity;
         this.inventoryName = tileEntity.getInventoryName();
         
-        tabArmourerMain = new GuiTabArmourerMain(0, this);
+        tabMain = new GuiTabArmourerMain(0, this);
+        tabDisplaySettings = new GuiTabArmourerDisplaySettings(1, this);
+        tabSkinSettings = new GuiTabArmourerSkinSettings(2, this);
+        tabBlockUtils = new GuiTabArmourerBlockUtils(3, this);
         
-        tabList.add(tabArmourerMain);
+        tabList.add(tabMain);
+        tabList.add(tabDisplaySettings);
+        tabList.add(tabSkinSettings);
+        tabList.add(tabBlockUtils);
         
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.main")).setIconLocation(0, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.displaySettings")).setIconLocation(0, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinSettings")).setIconLocation(0, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.BlockUtils")).setIconLocation(0, 52));
+        
         tabController.setActiveTabIndex(activeTab);
         
         tabChanged();
@@ -39,11 +54,23 @@ public class GuiArmourer extends GuiTabbed {
     
     @Override
     public void initGui() {
-        this.xSize = 256;
-        this.ySize = 256;
+        this.xSize = 176;
+        this.ySize = 178;
         super.initGui();
         buttonList.clear();
         buttonList.add(tabController);
+    }
+    
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+        if (tileEntity.loadedArmourItem) {
+            // got new settings from the server, update the tabs
+            tileEntity.loadedArmourItem = false;
+            SkinProperties skinProperties = tileEntity.getSkinProps();
+            tabMain.resetValues(skinProperties);
+            tabSkinSettings.resetValues(skinProperties);
+        }
     }
     
     @Override
