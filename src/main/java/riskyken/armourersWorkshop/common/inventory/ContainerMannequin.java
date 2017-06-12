@@ -5,8 +5,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotMannequin;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -39,17 +41,22 @@ public class ContainerMannequin extends Container {
             ItemStack result = stack.copy();
 
             if (slotId < 7) {
+                // Moving from mannequin to player.
                 if (!this.mergeItemStack(stack, 16, 43, false)) {
                     if (!this.mergeItemStack(stack, 7, 16, false)) {
                         return null;
                     }
                 }
             } else {
+                // Moving from player to mannequin.
                 boolean slotted = false;
                 for (int i = 0; i < 7; i++) {
                     Slot targetSlot = getSlot(i);
                     
-                    if (SkinNBTHelper.getSkinTypeFromStack(stack) != null) {
+                    ISkinType skinType = SkinNBTHelper.getSkinTypeFromStack(stack);
+                    
+                    if (skinType != null && skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
+                        
                         if (i != 4 & i != 5) {
                             if (targetSlot.isItemValid(stack)) {
                                 if (this.mergeItemStack(stack, i, i + 1, false)) {
@@ -66,7 +73,6 @@ public class ContainerMannequin extends Container {
                             }
                         }
                     }
-                    
                 }
                 if (!slotted) {
                     return null;
