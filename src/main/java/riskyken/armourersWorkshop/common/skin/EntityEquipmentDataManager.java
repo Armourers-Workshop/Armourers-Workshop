@@ -44,8 +44,8 @@ public final class EntityEquipmentDataManager {
     public boolean isSwordRenderItem(Item item) {
         String itemName = item.itemRegistry.getNameForObject(item);
         if (itemName != null && !itemName.equals("")) {
-            for (int i = 0; i < ModAddonManager.itemOverrides.length; i++) {
-                if (ModAddonManager.itemOverrides[i].equals("sword:" + itemName)) {
+            for (int i = 0; i < ModAddonManager.itemOverrides.size(); i++) {
+                if (ModAddonManager.itemOverrides.get(i).equals("sword:" + itemName)) {
                     return true;
                 }
             }
@@ -56,8 +56,8 @@ public final class EntityEquipmentDataManager {
     public boolean isBowRenderItem(Item item) {
         String itemName = item.itemRegistry.getNameForObject(item);
         if (itemName != null && !itemName.equals("")) {
-            for (int i = 0; i < ModAddonManager.itemOverrides.length; i++) {
-                if (ModAddonManager.itemOverrides[i].equals("bow:" + itemName)) {
+            for (int i = 0; i < ModAddonManager.itemOverrides.size(); i++) {
+                if (ModAddonManager.itemOverrides.get(i).equals("bow:" + itemName)) {
                     return true;
                 }
             }

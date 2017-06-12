@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.config;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.UUID;
 
 import net.minecraftforge.common.config.Configuration;
@@ -168,7 +169,8 @@ public class ConfigHandler {
                 + "shovel\n"
                 + "hoe\n"
                 + "bow";
-        ModAddonManager.itemOverrides =  prop.getStringList();
+        ModAddonManager.itemOverrides.clear();
+        ModAddonManager.itemOverrides.addAll(Arrays.asList(prop.getStringList()));
     }
     
 
