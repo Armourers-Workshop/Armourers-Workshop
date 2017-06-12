@@ -247,6 +247,9 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     }
     
     private void setFileSwitchType(LibraryFileType type) {
+        if (fileSwitchType == type) {
+            return;
+        }
         fileSwitchlocal.setPressed(false);
         fileSwitchRemotePublic.setPressed(false);
         fileSwitchRemotePrivate.setPressed(false);
