@@ -15,7 +15,6 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
 
@@ -101,10 +100,8 @@ public class ContainerDyeTable extends Container {
         ISkinDye dye = skinPointer.getSkinDye();
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
-                ModLogger.log("locking slot " + i);
                 ((SlotDyeBottle)getSlot(37 + i)).setLocked(true);
             } else {
-                ModLogger.log("unlocking slot " + i);
                 ((SlotDyeBottle)getSlot(37 + i)).setLocked(false);
             }
         }
