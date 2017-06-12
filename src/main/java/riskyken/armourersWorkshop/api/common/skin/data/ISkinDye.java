@@ -6,9 +6,17 @@ public interface ISkinDye {
     
     public byte[] getDyeColour(int index);
     
+    public String getDyeName(int index);
+    
     public boolean haveDyeInSlot(int index);
     
+    public boolean hasName(int index);
+    
+    public void addDye(byte[] rgbt, String name);
+    
     public void addDye(byte[] rgbt);
+    
+    public void addDye(int index, byte[] rgbt, String name);
     
     public void addDye(int index, byte[] rgbt);
     

@@ -129,6 +129,9 @@ public class ContainerDyeTable extends Container {
                 ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
                 PaintingHelper.setToolPaintColour(bottle, rgbt);
                 PaintingHelper.setToolPaint(bottle, PaintType.getPaintTypeFormSKey(rgbt[3]));
+                if (dye.hasName(i)) {
+                    bottle.setStackDisplayName(dye.getDyeName(i));
+                }
                 putStackInSlot(37 + i, bottle);
             } else {
                 putStackInSlot(37 + i, null);
@@ -155,7 +158,11 @@ public class ContainerDyeTable extends Container {
         ISkinDye skinDye = skinPointer.getSkinDye();
         
         byte[] rgbt = PaintingHelper.getToolPaintData(dyeStack);
-        skinDye.addDye(slotId, rgbt);
+        String name = null;
+        if (dyeStack.hasDisplayName()) {
+            name = dyeStack.getDisplayName();
+        }
+        skinDye.addDye(slotId, rgbt, name);
         
         SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
     }

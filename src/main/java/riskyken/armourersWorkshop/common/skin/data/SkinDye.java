@@ -4,9 +4,12 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -14,14 +17,17 @@ public class SkinDye implements ISkinDye {
     
     public static final int MAX_SKIN_DYES = 8;
     private static final String TAG_SKIN_DYE = "dyeData";
-    private static final String TAG_DYE= "dye";
+    private static final String TAG_DYE = "dye";
+    private static final String TAG_NAME = "name";
     
     private byte[][] dyes;
     private boolean[] hasDye;
+    private String[] names;
     
     public SkinDye() {
         dyes = new byte[MAX_SKIN_DYES][4];
         hasDye = new boolean[MAX_SKIN_DYES];
+        names = new String[MAX_SKIN_DYES];
     }
     
     public SkinDye(ISkinDye skinDye) {
@@ -39,12 +45,22 @@ public class SkinDye implements ISkinDye {
     }
     
     @Override
+    public String getDyeName(int index) {
+        return names[index];
+    }
+    
+    @Override
     public boolean haveDyeInSlot(int index) {
         return hasDye[index];
     }
     
     @Override
-    public void addDye(byte[] rgbt) {
+    public boolean hasName(int index) {
+        return !StringUtils.isNullOrEmpty(names[index]);
+    }
+    
+    @Override
+    public void addDye(byte[] rgbt, String name) {
         if (rgbt.length != 4) {
             ModLogger.log(Level.WARN, "Something tried to set an invalid dye colour.");
             Thread.dumpStack();
@@ -54,13 +70,19 @@ public class SkinDye implements ISkinDye {
             if (!hasDye[i]) {
                 dyes[i] = rgbt;
                 hasDye[i] = true;
+                names[i] = name;
                 break;
             }
         }
     }
     
     @Override
-    public void addDye(int index, byte[] rgbt) {
+    public void addDye(byte[] rgbt) {
+        addDye(rgbt, null);
+    }
+    
+    @Override
+    public void addDye(int index, byte[] rgbt, String name) {
         if (rgbt.length != 4) {
             ModLogger.log(Level.WARN, "Something tried to set an invalid dye colour.");
             Thread.dumpStack();
@@ -68,12 +90,19 @@ public class SkinDye implements ISkinDye {
         }
         dyes[index] = rgbt;
         hasDye[index] = true;
+        names[index] = name;
+    }
+    
+    @Override
+    public void addDye(int index, byte[] rgbt) {
+        addDye(index, rgbt, null);
     }
     
     @Override
     public void removeDye(int index) {
         dyes[index] = new byte[] {(byte)0, (byte)0, (byte)0, (byte)255};
         hasDye[index] = false;
+        names[index] = null;
     }
 
     @Override
@@ -93,6 +122,12 @@ public class SkinDye implements ISkinDye {
             buf.writeBoolean(hasDye[i]);
             if (hasDye[i]) {
                 buf.writeBytes(dyes[i]);
+                if (!StringUtils.isNullOrEmpty(names[i])) {
+                    buf.writeBoolean(true);
+                    ByteBufUtils.writeUTF8String(buf, names[i]);
+                } else {
+                    buf.writeBoolean(false);
+                }
             }
         }
     }
@@ -103,6 +138,9 @@ public class SkinDye implements ISkinDye {
             hasDye[i] = buf.readBoolean();
             if (hasDye[i]) {
                 buf.readBytes(dyes[i]);
+                if (buf.readBoolean()) {
+                    names[i] = ByteBufUtils.readUTF8String(buf);
+                }
             }
         }
     }
@@ -112,6 +150,9 @@ public class SkinDye implements ISkinDye {
         for (int i = 0; i < MAX_SKIN_DYES; i++) {
             if (hasDye[i]) {
                 dyeCompound.setByteArray(TAG_DYE + i, dyes[i]);
+                if (!StringUtils.isNullOrEmpty(names[i])) {
+                    dyeCompound.setString(TAG_NAME + i, names[i]);
+                }
             }
         }
         compound.setTag(TAG_SKIN_DYE, dyeCompound);
@@ -127,6 +168,9 @@ public class SkinDye implements ISkinDye {
                 } else {
                     dyes[i] = new byte[] {0,0,0,0};
                 }
+                if (dyeCompound.hasKey(TAG_NAME + i, NBT.TAG_STRING)) {
+                    names[i] = dyeCompound.getString(TAG_NAME + i);
+                }
             }
         }
     }
@@ -137,6 +181,7 @@ public class SkinDye implements ISkinDye {
         int result = 1;
         result = prime * result + Arrays.deepHashCode(dyes);
         result = prime * result + Arrays.hashCode(hasDye);
+        result = prime * result + Arrays.hashCode(names);
         return result;
     }
 
@@ -153,15 +198,13 @@ public class SkinDye implements ISkinDye {
             return false;
         if (!Arrays.equals(hasDye, other.hasDye))
             return false;
+        if (!Arrays.equals(names, other.names))
+            return false;
         return true;
     }
 
     @Override
     public String toString() {
-        String returnString = "SkinDye [dyes=";
-        returnString += Arrays.deepToString(dyes);
-        returnString += Arrays.toString(hasDye);
-        returnString += "]";
-        return returnString;
+        return "SkinDye [dyes=" + Arrays.toString(dyes) + ", hasDye=" + Arrays.toString(hasDye) + ", names=" + Arrays.toString(names) + "]";
     }
 }
