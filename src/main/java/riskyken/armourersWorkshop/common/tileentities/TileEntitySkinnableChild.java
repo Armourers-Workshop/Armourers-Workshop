@@ -41,8 +41,11 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
         int heightOffset = y;
         int depthOffset = z;
         
-        if (block != null && block instanceof BlockSkinnableChild) {
+        if (block != null && !(block instanceof BlockSkinnableChild)) {
             ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", xOffset, yOffset, zOffset));
+            if (worldObj != null) {
+                worldObj.removeTileEntity(xOffset, yOffset, zOffset);
+            }
             return;
         }
         
