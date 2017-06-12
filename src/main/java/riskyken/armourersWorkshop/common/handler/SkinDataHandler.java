@@ -23,22 +23,40 @@ public class SkinDataHandler implements ISkinDataHandler {
     public static final SkinDataHandler INSTANCE = new SkinDataHandler();
     
     @Override
-    public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack) {
+    public void setSkinOnPlayer(EntityPlayer player, ItemStack stack, int index) {
         ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        entityProps.setEquipmentStack(stack);
+        entityProps.setEquipmentStack(stack, index);
+    }
+    
+    @Deprecated
+    @Override
+    public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack) {
+        setSkinOnPlayer(player, stack, 0);
         return false;
     }
-
+    
+    @Override
+    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType, int index) {
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        return entityProps.getEquipmentStack(skinType, index);
+    }
+    
+    @Deprecated
     @Override
     public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        return entityProps.getEquipmentStack(skinType);
+        return getSkinFormPlayer(player, skinType, 0);
     }
-
+    
+    @Override
+    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType, int index) {
+        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        entityProps.clearEquipmentStack(skinType, index);
+    }
+    
+    @Deprecated
     @Override
     public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
-        entityProps.clearEquipmentStack(skinType);
+        removeSkinFromPlayer(player, skinType, 0);
     }
     
     @Override

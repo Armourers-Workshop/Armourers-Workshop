@@ -90,14 +90,6 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
             }
         }
     }
-    /** See also {@link #getEquipmentStack(String)}. */
-    /**
-     * @Deprecated Use the {@link #getEquipmentStack(ItemStack, int) getEquipmentStack(ItemStack stack, int index)} method.
-     */
-    @Deprecated
-    public ItemStack getEquipmentStack(ISkinType skinType) {
-        return getEquipmentStack(skinType, 0);
-    }
     
     public ItemStack getEquipmentStack(ISkinType skinType, int index) {
         WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
@@ -118,11 +110,6 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
                 }
             }
         }
-    }
-    
-    @Deprecated
-    public void clearEquipmentStack(ISkinType skinType) {
-        clearEquipmentStack(skinType, 0);
     }
     
     public void clearEquipmentStack(ISkinType skinType, int index) {
