@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.render;
 
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,8 +11,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
-import com.mojang.authlib.GameProfile;
 
 public class MannequinFakePlayer extends AbstractClientPlayer {
     
@@ -88,9 +88,10 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
     @Override public void travelToDimension(int dim){ return; }
     @Override public void addChatMessage(IChatComponent p_145747_1_) {}
     @Override
-    public IIcon getItemIcon(ItemStack p_70620_1_, int p_70620_2_) {
-        IIcon icon = p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
-        //ModLogger.log(icon);
-        return p_70620_1_.getItem().requiresMultipleRenderPasses() ? p_70620_1_.getItem().getIconFromDamageForRenderPass(p_70620_1_.getItemDamage(), p_70620_2_) : p_70620_1_.getIconIndex();
+    public IIcon getItemIcon(ItemStack stack, int pass) {
+        if (stack.getItem().requiresMultipleRenderPasses()) {
+            return stack.getItem().getIcon(stack, pass);
+        }
+        return stack.getIconIndex();
     }
 }
