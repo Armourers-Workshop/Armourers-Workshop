@@ -13,14 +13,14 @@ import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabController;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
+import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
 @SideOnly(Side.CLIENT)
 public class GuiMannequin extends GuiContainer {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinNew.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.MANNEQUIN);
     
     public final TileEntityMannequin tileEntity;
     private final EntityPlayer player;
