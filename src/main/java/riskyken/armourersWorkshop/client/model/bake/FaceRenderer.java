@@ -7,6 +7,7 @@ public class FaceRenderer {
     
     private static final IRenderBuffer BUF = RenderBridge.INSTANCE;
     private static final float SCALE = 0.0625F;
+    private static final float NORMAL = 0.75F;
     
     //0 = west
     //1 = east
@@ -44,7 +45,7 @@ public class FaceRenderer {
     }
     
     public static void renderPosXFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        BUF.setNormal(-1F, 0F, 0F);
+        BUF.setNormal(-NORMAL, 0F, 0F);
         BUF.setColourRGBA_B(r, g, b, a);
         addVertex(x * SCALE, y * SCALE, z * SCALE + scale, 0, 0, textured);
         addVertex(x * SCALE, y * SCALE + scale, z * SCALE + scale, 0, 1, textured);
@@ -53,7 +54,7 @@ public class FaceRenderer {
     }
     
     public static void renderNegXFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        BUF.setNormal(1F, 0F, 0F);
+        BUF.setNormal(NORMAL, 0F, 0F);
         BUF.setColourRGBA_B(r, g, b, a);
         addVertex(x * SCALE + scale, y * SCALE, z * SCALE, 0, 0, textured);
         addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE, 0, 1, textured);
@@ -62,7 +63,7 @@ public class FaceRenderer {
     }
     
     public static void renderPosYFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        BUF.setNormal(0F, -1F, 0F);
+        BUF.setNormal(0F, -NORMAL, 0F);
         BUF.setColourRGBA_B(r, g, b, a);
         addVertex(x * SCALE, y * SCALE, z * SCALE + scale , 0 ,0, textured);
         addVertex(x * SCALE, y * SCALE, z * SCALE , 0, 1, textured);
@@ -71,7 +72,7 @@ public class FaceRenderer {
     }
     
     public static void renderNegYFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        BUF.setNormal(0F, 1F, 0F);
+        BUF.setNormal(0F, NORMAL, 0F);
         BUF.setColourRGBA_B(r, g, b, a);
         addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 1, 1, textured);
         addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE, 1, 0, textured);
@@ -80,7 +81,7 @@ public class FaceRenderer {
     }
     
     public static void renderPosZFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        BUF.setNormal(0F, 0F, 1F);
+        BUF.setNormal(0F, 0F, NORMAL);
         BUF.setColourRGBA_B(r, g, b, a);
         addVertex(x * SCALE + scale, y * SCALE, z * SCALE + scale, 0, 0, textured);
         addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 0, 1, textured);
@@ -89,7 +90,7 @@ public class FaceRenderer {
     }
     
     public static void renderNegZFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        BUF.setNormal(0F, 0F, -1F);
+        BUF.setNormal(0F, 0F, -NORMAL);
         BUF.setColourRGBA_B(r, g, b, a);
         addVertex(x * SCALE, y * SCALE, z * SCALE, 0, 0, textured);
         addVertex(x * SCALE, y * SCALE + scale, z * SCALE, 0, 1, textured);
