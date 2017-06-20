@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -75,5 +76,27 @@ public class SlotMannequin extends SlotHidable {
             break;
         }
         return false;
+    }
+    
+    @Override
+    public IIcon getBackgroundIconIndex() {
+        SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
+        switch (slotType) {
+        case HEAD:
+            return str.skinHead.getEmptySlotIcon();
+        case CHEST:
+            return str.skinChest.getEmptySlotIcon();
+        case LEGS:
+            return str.skinLegs.getEmptySlotIcon();
+        case FEET:
+            return str.skinFeet.getEmptySlotIcon();
+        case LEFT_HAND:
+            return str.skinBow.getEmptySlotIcon();
+        case RIGHT_HAND:
+            return str.skinSword.getEmptySlotIcon();
+        case WINGS:
+            return str.skinWings.getEmptySlotIcon();
+        }
+        return super.getBackgroundIconIndex();
     }
 }
