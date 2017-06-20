@@ -1,3 +1,23 @@
+Build 0.45.1
+Changed:
+	Preserved dyes names when using them in the dye table.
+	Incressed the size of the head skin bounds.
+	Allowed & symbol in skin file names.
+	Small change to lighting on skins. (should be more subtle at some angles)
+	Made mannequin slot icons only show when they are empty.
+	Updated zh_CN lang file. (Ethan)
+	Updated ru_RU lang file. ([\\//972])
+Fixed:
+	Library not remembering the current folder when the GUI is closed.
+	Crash if a AW block was removed incorrectly my another mod.
+	Shift-clicking not working on all mannequin slots.
+	Dupe bugs in the dye table.
+	Crash if a item was added to the item override config more than once.
+	Items with multiple colours and layers will now render in mannequins hands.
+API:
+	Added new player equipment set, get and clear methods with indexes.
+
+
 Build 0.45.0
 Added:
 	block skin inventory option
