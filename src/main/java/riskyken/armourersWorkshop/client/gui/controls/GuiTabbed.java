@@ -28,7 +28,7 @@ public abstract class GuiTabbed extends GuiContainer {
         buttonList.clear();
         
         
-        tabController.initGui(guiLeft - 16, guiTop, xSize, ySize);
+        tabController.initGui(guiLeft - 17, guiTop, xSize, ySize);
         
         tabController.setActiveTabIndex(activeTab);
         

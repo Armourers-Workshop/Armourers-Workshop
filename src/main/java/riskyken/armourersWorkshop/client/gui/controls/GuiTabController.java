@@ -36,6 +36,10 @@ public class GuiTabController extends GuiButtonExt {
         this(parent, fullscreen, 0, 0, 0, 0, texture);
     }
     
+    public void setTabSpacing(int tabSpacing) {
+        this.tabSpacing = tabSpacing;
+    }
+    
     public void initGui(int xPos, int yPos, int width, int height) {
         if (fullscreen) {
             this.xPosition = 0;
@@ -135,7 +139,7 @@ public class GuiTabController extends GuiButtonExt {
         if (hoverTab != null) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(hoverTab.getName());
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, Minecraft.getMinecraft().fontRenderer, width, height, zLevel);
+            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, width, height, zLevel);
         }
     }
 }

@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
@@ -78,6 +79,8 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
             if (!username.equals("")) {
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetSkin(username));
             }
+        } else {
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
         }
     }
 
