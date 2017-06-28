@@ -30,7 +30,7 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel {
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
         String guiName = tileEntity.getInventoryName();
-        buttonList.add(new GuiButtonExt(10, 177, 16, 70, 16, GuiHelper.getLocalizedControlName(guiName, "clear")));
+        buttonList.add(new GuiButtonExt(10, 10, 20, 70, 16, GuiHelper.getLocalizedControlName(guiName, "clear")));
         //buttonList.add(new GuiButtonExt(11, guiLeft + 177, guiTop + 46, 70, 16, GuiHelper.getLocalizedControlName(guiName, "westToEast")));
         //buttonList.add(new GuiButtonExt(12, guiLeft + 177, guiTop + 66, 70, 16, GuiHelper.getLocalizedControlName(guiName, "eastToWest")));
         //buttonList.add(new GuiButtonExt(13, guiLeft + 177, guiTop + 76, 70, 16, "Add Noise"));

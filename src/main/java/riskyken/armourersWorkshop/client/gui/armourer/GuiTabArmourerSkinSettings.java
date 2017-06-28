@@ -58,13 +58,13 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         buttonList.clear();
         
         SkinProperties skinProps = tileEntity.getSkinProps();
-        checkBlockGlowing = new GuiCheckBox(15, 177, 45, GuiHelper.getLocalizedControlName(guiName, "glowing"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
-        checkBlockLadder = new GuiCheckBox(15, 177, 60, GuiHelper.getLocalizedControlName(guiName, "ladder"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
-        checkBlockNoCollision = new GuiCheckBox(15, 177, 75, GuiHelper.getLocalizedControlName(guiName, "noCollision"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
-        checkBlockSeat = new GuiCheckBox(15, 177, 90, GuiHelper.getLocalizedControlName(guiName, "seat"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
-        checkBlockMultiblock = new GuiCheckBox(15, 177, 105, GuiHelper.getLocalizedControlName(guiName, "multiblock"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
-        checkBlockBed = new GuiCheckBox(15, 177, 120, GuiHelper.getLocalizedControlName(guiName, "bed"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
-        checkBlockInventory = new GuiCheckBox(15, 177, 135, GuiHelper.getLocalizedControlName(guiName, "inventory"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false));
+        checkBlockGlowing = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "glowing"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
+        checkBlockLadder = new GuiCheckBox(15, 10, 35, GuiHelper.getLocalizedControlName(guiName, "ladder"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
+        checkBlockNoCollision = new GuiCheckBox(15, 10, 50, GuiHelper.getLocalizedControlName(guiName, "noCollision"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
+        checkBlockSeat = new GuiCheckBox(15, 10, 65, GuiHelper.getLocalizedControlName(guiName, "seat"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
+        checkBlockMultiblock = new GuiCheckBox(15, 10, 80, GuiHelper.getLocalizedControlName(guiName, "multiblock"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+        checkBlockBed = new GuiCheckBox(15, 10, 95, GuiHelper.getLocalizedControlName(guiName, "bed"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
+        checkBlockInventory = new GuiCheckBox(15, 10, 110, GuiHelper.getLocalizedControlName(guiName, "inventory"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false));
         if (!checkBlockMultiblock.isChecked()) {
             checkBlockBed.enabled = false;
             checkBlockBed.setIsChecked(false);
@@ -74,12 +74,12 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         //TODO remove to re-enable beds
         checkBlockBed.enabled = false;
         
-        sliderWingIdleSpeed = new GuiCustomSlider(15, 177, 45, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
-        sliderWingFlyingSpeed = new GuiCustomSlider(15, 177, 65, 70, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
-        sliderWingMinAngle = new GuiCustomSlider(15, 177, 85, 70, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
-        sliderWingMaxAngle = new GuiCustomSlider(15, 177, 105, 70, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
+        sliderWingIdleSpeed = new GuiCustomSlider(15, 10, 45, 154, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
+        sliderWingFlyingSpeed = new GuiCustomSlider(15, 10, 65, 154, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
+        sliderWingMinAngle = new GuiCustomSlider(15, 10, 85, 154, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D), false, true, this);
+        sliderWingMaxAngle = new GuiCustomSlider(15, 10, 105, 154, 10, "", DEGREE, -90D, 90D, skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D), false, true, this);
         
-        checkArmourOverrideBodyPart = new GuiCheckBox(15, 177, 45, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
+        checkArmourOverrideBodyPart = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
         
         buttonList.add(checkBlockGlowing);
         buttonList.add(checkBlockLadder);
@@ -183,10 +183,10 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
             String minAngleLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.minAngle");
             String maxAngleLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.maxAngle");
             
-            this.fontRenderer.drawString(idleSpeedLabel, 177, 36, 4210752);
-            this.fontRenderer.drawString(flyingSpeedLabel, 177, 56, 4210752);
-            this.fontRenderer.drawString(minAngleLabel, 177, 76, 4210752);
-            this.fontRenderer.drawString(maxAngleLabel, 177, 96, 4210752);
+            this.fontRenderer.drawString(idleSpeedLabel, 10, 36, 4210752);
+            this.fontRenderer.drawString(flyingSpeedLabel, 10, 56, 4210752);
+            this.fontRenderer.drawString(minAngleLabel, 10, 76, 4210752);
+            this.fontRenderer.drawString(maxAngleLabel, 10, 96, 4210752);
         }
     }
 

@@ -54,7 +54,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         buttonList.clear();
         
         SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
-        GuiDropDownList dropDownList = new GuiDropDownList(0, 5, 16, 50, "", this);
+        GuiDropDownList dropDownList = new GuiDropDownList(0, 10, 20, 50, "", this);
         ArrayList<ISkinType> skinList = str.getRegisteredSkinTypes();
         int skinCount = 0;
         for (int i = 0; i < skinList.size(); i++) {
@@ -135,17 +135,15 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        GuiHelper.renderLocalizedGuiName(fontRenderer, this.width, tileEntity.getInventoryName());
+        //GuiHelper.renderLocalizedGuiName(fontRenderer, this.width, tileEntity.getInventoryName());
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.height - 96 + 2, 4210752);
     
         String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.itemName");
-        String usernameLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.username");
+        
         String cloneLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.clone");
         String versionLabel = "Alpha: " + LibModInfo.VERSION;
         
         this.fontRenderer.drawString(itemNameLabel, 64, 48, 4210752);
-        this.fontRenderer.drawString(usernameLabel, 64, 78, 4210752);
-        
         
         int versionWidth = fontRenderer.getStringWidth(versionLabel);
         this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 4, this.height - 96, 4210752);

@@ -41,12 +41,12 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
         
         buttonList.clear();
         
-        checkShowGuides = new GuiCheckBox(7, 64, 118, GuiHelper.getLocalizedControlName(guiName, "showGuide"), tileEntity.isShowGuides());
-        checkShowOverlay = new GuiCheckBox(9, 64, 134, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), tileEntity.isShowOverlay());
-        checkShowHelper = new GuiCheckBox(6, 64, 134, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
+        checkShowGuides = new GuiCheckBox(7, 10, 55, GuiHelper.getLocalizedControlName(guiName, "showGuide"), tileEntity.isShowGuides());
+        checkShowOverlay = new GuiCheckBox(9, 10, 70, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), tileEntity.isShowOverlay());
+        checkShowHelper = new GuiCheckBox(6, 10, 70, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
         
-        buttonList.add(new GuiButtonExt(8, 138, 88, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
-        textUserSkin = new GuiTextField(fontRenderer, x + 64, y + 88, 70, 16);
+        buttonList.add(new GuiButtonExt(8, 138, 30, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
+        textUserSkin = new GuiTextField(fontRenderer, x + 10, y + 30, 120, 16);
         textUserSkin.setMaxStringLength(30);
         if (tileEntity.getGameProfile() != null) {
             textUserSkin.setText(tileEntity.getGameProfile().getName());
@@ -94,7 +94,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
         checkShowGuides.setIsChecked(tileEntity.isShowGuides());
         checkShowOverlay.setIsChecked(tileEntity.isShowOverlay());
         
-        int checkY = 134;
+        int checkY = 70;
         if (tileEntity.getSkinType() != null) {
             checkShowOverlay.visible = tileEntity.getSkinType().showSkinOverlayCheckbox();
             checkShowOverlay.yPosition = checkY;
@@ -112,5 +112,12 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
         } else {
             checkShowHelper.visible = false;
         }
+    }
+    
+    @Override
+    public void drawForegroundLayer(int mouseX, int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
+        String usernameLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.username");
+        this.fontRenderer.drawString(usernameLabel, 10, 20, 4210752);
     }
 }
