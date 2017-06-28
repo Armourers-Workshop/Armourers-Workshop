@@ -360,9 +360,18 @@ public final class ArmourerWorldHelper {
     }
     
     public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps) {
+        return clearEquipmentCubes(world, x, y, z, skinType, skinProps, null);
+    }
+    
+    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
+            if (partType != null) {
+                if (partType != skinPart) {
+                    continue;
+                }
+            }
             if (skinType == SkinTypeRegistry.skinBlock) {
                 boolean multiblock = skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
                 if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {

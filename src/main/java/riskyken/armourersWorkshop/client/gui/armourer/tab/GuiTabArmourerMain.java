@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui.armourer;
+package riskyken.armourersWorkshop.client.gui.armourer.tab;
 
 import java.util.ArrayList;
 
@@ -15,6 +15,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
+import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;

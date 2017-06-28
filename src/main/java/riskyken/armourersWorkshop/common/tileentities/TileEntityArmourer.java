@@ -20,6 +20,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
@@ -289,6 +290,17 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         return HEIGHT_OFFSET;
     }
 
+    public void clearArmourCubes(ISkinPartType partType) {
+        if (skinType != null) {
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps, partType);
+            clearPaintData(true);
+            SkinProperties newSkinProps = new SkinProperties();
+            newSkinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+            setSkinProps(newSkinProps);
+            resyncData();
+        }
+    }
+    
     public void clearArmourCubes() {
         if (skinType != null) {
             ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps);

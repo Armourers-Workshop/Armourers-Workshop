@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.client.gui.armourer;
+package riskyken.armourersWorkshop.client.gui.armourer.tab;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
+import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;

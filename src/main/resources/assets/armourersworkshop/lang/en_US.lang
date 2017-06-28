@@ -284,6 +284,7 @@ inventory.armourersworkshop:armourerBrain.save=Save
 inventory.armourersworkshop:armourerBrain.load=Load
 inventory.armourersworkshop:armourerBrain.set=Set
 inventory.armourersworkshop:armourerBrain.clear=Clear
+inventory.armourersworkshop:armourerBrain.copy=Copy
 inventory.armourersworkshop:armourerBrain.glowing=Glowing?
 inventory.armourersworkshop:armourerBrain.ladder=Ladder?
 inventory.armourersworkshop:armourerBrain.noCollision=No Collision?
@@ -296,6 +297,9 @@ inventory.armourersworkshop:armourerBrain.tab.main=Main
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Display Settings
 inventory.armourersworkshop:armourerBrain.tab.skinSettings=Skin Settings
 inventory.armourersworkshop:armourerBrain.tab.blockUtils=Block Utils
+inventory.armourersworkshop:armourerBrain.dialog.clear.title=Clear
+inventory.armourersworkshop:armourerBrain.dialog.clear.close=Close
+inventory.armourersworkshop:armourerBrain.dialog.clear.clear=Clear
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation

@@ -45,11 +45,6 @@ public class GuiDialogDelete extends AbstractGuiDialog {
     }
     
     @Override
-    public void drawBackground(int mouseX, int mouseY, float partialTickTime) {
-        super.drawBackground(mouseX, mouseY, partialTickTime);
-    }
-    
-    @Override
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
         super.drawForeground(mouseX, mouseY, partialTickTime);
         drawTitle();
