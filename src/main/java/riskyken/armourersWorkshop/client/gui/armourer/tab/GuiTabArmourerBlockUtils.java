@@ -53,10 +53,10 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
     protected void actionPerformed(GuiButton button) {
         String guiName = tileEntity.getInventoryName();
         if (button == buttonClear) {
-            ((GuiArmourer)parent).openDialog(new GuiDialogClear(parent, guiName + ".dialog.clear", (IDialogCallback) parent, 190, 140, tileEntity.getSkinType()));
+            ((GuiArmourer)parent).openDialog(new GuiDialogClear(parent, guiName + ".dialog.clear", (IDialogCallback) parent, 190, 140, tileEntity.getSkinType(), tileEntity.getSkinProps()));
         }
         if (button == buttonCopy) {
-            ((GuiArmourer)parent).openDialog(new GuiDialogCopy(parent, guiName + ".dialog.copy", (IDialogCallback) parent, 190, 140, tileEntity.getSkinType()));
+            ((GuiArmourer)parent).openDialog(new GuiDialogCopy(parent, guiName + ".dialog.copy", (IDialogCallback) parent, 190, 140, tileEntity.getSkinType(), tileEntity.getSkinProps()));
         }
     }
 

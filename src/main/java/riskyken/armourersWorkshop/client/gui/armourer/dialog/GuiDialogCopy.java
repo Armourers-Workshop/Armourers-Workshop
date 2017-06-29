@@ -10,12 +10,14 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 
 @SideOnly(Side.CLIENT)
 public class GuiDialogCopy extends AbstractGuiDialog {
 
-    
     private final ISkinType skinType;
     
     private GuiButtonExt buttonClose;
@@ -23,10 +25,12 @@ public class GuiDialogCopy extends AbstractGuiDialog {
     private GuiDropDownList dropDownSrcPart;
     private GuiDropDownList dropDownDesPart;
     private GuiCheckBox checkMirror;
+    private final SkinProperties skinProperties;
     
-    public GuiDialogCopy(GuiScreen parent, String name, IDialogCallback callback, int width, int height, ISkinType skinType) {
+    public GuiDialogCopy(GuiScreen parent, String name, IDialogCallback callback, int width, int height, ISkinType skinType, SkinProperties skinProperties) {
         super(parent, name, callback, width, height);
         this.skinType = skinType;
+        this.skinProperties = skinProperties;
     }
     
     @Override
@@ -39,25 +43,26 @@ public class GuiDialogCopy extends AbstractGuiDialog {
         checkMirror = new GuiCheckBox(-1, x + 10, y  + height - 50, GuiHelper.getLocalizedControlName(name, "mirror"), false);
         
         dropDownSrcPart = new GuiDropDownList(0, x + 10, y + 35, 80, "", null);
+        dropDownDesPart = new GuiDropDownList(0, x + 100, y + 35, 80, "", null);
         if (skinType != null) {
-            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-                ISkinPartType partType = skinType.getSkinParts().get(i);
-                String regName = partType.getRegistryName();
-                String disName = SkinTypeRegistry.INSTANCE.getLocalizedSkinPartTypeName(partType);
-                dropDownSrcPart.addListItem(disName, regName, true);
+            if (skinType != SkinTypeRegistry.skinBlock) {
+                for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+                    addPartToDropDown(dropDownSrcPart, skinType.getSkinParts().get(i));
+                    addPartToDropDown(dropDownDesPart, skinType.getSkinParts().get(i));
+                }
+            } else {
+                boolean multiblock = skinProperties.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+                ISkinPartType partType;
+                if (multiblock) {
+                    partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
+                } else {
+                    partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partBase;
+                }
+                addPartToDropDown(dropDownSrcPart, partType);
+                addPartToDropDown(dropDownDesPart, partType);
             }
         }
         dropDownSrcPart.setListSelectedIndex(0);
-        
-        dropDownDesPart = new GuiDropDownList(0, x + 100, y + 35, 80, "", null);
-        if (skinType != null) {
-            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-                ISkinPartType partType = skinType.getSkinParts().get(i);
-                String regName = partType.getRegistryName();
-                String disName = SkinTypeRegistry.INSTANCE.getLocalizedSkinPartTypeName(partType);
-                dropDownDesPart.addListItem(disName, regName, true);
-            }
-        }
         dropDownDesPart.setListSelectedIndex(0);
         
         
@@ -66,6 +71,12 @@ public class GuiDialogCopy extends AbstractGuiDialog {
         buttonList.add(checkMirror);
         buttonList.add(dropDownSrcPart);
         buttonList.add(dropDownDesPart);
+    }
+    
+    private void addPartToDropDown(GuiDropDownList dropDown, ISkinPartType partType) {
+        String regName = partType.getRegistryName();
+        String disName = SkinTypeRegistry.INSTANCE.getLocalizedSkinPartTypeName(partType);
+        dropDown.addListItem(disName, regName, true);
     }
     
     @Override

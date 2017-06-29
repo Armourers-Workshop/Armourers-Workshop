@@ -10,7 +10,10 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 
 @SideOnly(Side.CLIENT)
 public class GuiDialogClear extends AbstractGuiDialog {
@@ -21,10 +24,12 @@ public class GuiDialogClear extends AbstractGuiDialog {
     private GuiCheckBox checkClearBlocks;
     private GuiCheckBox checkClearPaint;
     private final ISkinType skinType;
+    private final SkinProperties skinProperties;
     
-    public GuiDialogClear(GuiScreen parent, String name, IDialogCallback callback, int width, int height, ISkinType skinType) {
+    public GuiDialogClear(GuiScreen parent, String name, IDialogCallback callback, int width, int height, ISkinType skinType, SkinProperties skinProperties) {
         super(parent, name, callback, width, height);
         this.skinType = skinType;
+        this.skinProperties = skinProperties;
     }
     
     @Override
@@ -37,11 +42,20 @@ public class GuiDialogClear extends AbstractGuiDialog {
         dropDownParts = new GuiDropDownList(0, x + 10, y + 20, 60, "", null);
         dropDownParts.addListItem("*", "*", true);
         if (skinType != null) {
-            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-                ISkinPartType partType = skinType.getSkinParts().get(i);
-                String regName = partType.getRegistryName();
-                String disName = SkinTypeRegistry.INSTANCE.getLocalizedSkinPartTypeName(partType);
-                dropDownParts.addListItem(disName, regName, true);
+            if (skinType != SkinTypeRegistry.skinBlock) {
+                for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+                    ISkinPartType partType = skinType.getSkinParts().get(i);
+                    addPartToDropDown(dropDownParts, partType);
+                }
+            } else {
+                boolean multiblock = skinProperties.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+                ISkinPartType partType;
+                if (multiblock) {
+                    partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
+                } else {
+                    partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partBase;
+                }
+                addPartToDropDown(dropDownParts, partType);
             }
         }
         dropDownParts.setListSelectedIndex(0);
@@ -53,6 +67,12 @@ public class GuiDialogClear extends AbstractGuiDialog {
         buttonList.add(dropDownParts);
         buttonList.add(checkClearBlocks);
         buttonList.add(checkClearPaint);
+    }
+    
+    private void addPartToDropDown(GuiDropDownList dropDown, ISkinPartType partType) {
+        String regName = partType.getRegistryName();
+        String disName = SkinTypeRegistry.INSTANCE.getLocalizedSkinPartTypeName(partType);
+        dropDown.addListItem(disName, regName, true);
     }
     
     public String getClearTag() {
