@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.client.gui.armourer.dialog.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.armourer.dialog.AbstractGuiDialog.DialogResult;
 import riskyken.armourersWorkshop.client.gui.armourer.dialog.AbstractGuiDialog.IDialogCallback;
 import riskyken.armourersWorkshop.client.gui.armourer.dialog.GuiDialogClear;
+import riskyken.armourersWorkshop.client.gui.armourer.dialog.GuiDialogCopy;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
@@ -44,8 +45,6 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
         buttonClear = new GuiButtonExt(10, 10, 20, 70, 16, GuiHelper.getLocalizedControlName(guiName, "clear"));
         buttonCopy = new GuiButtonExt(11, 10, 40, 70, 16, GuiHelper.getLocalizedControlName(guiName, "copy"));
         
-        buttonCopy.enabled = false;
-        
         buttonList.add(buttonClear);
         buttonList.add(buttonCopy);
     }
@@ -55,6 +54,9 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
         String guiName = tileEntity.getInventoryName();
         if (button == buttonClear) {
             ((GuiArmourer)parent).openDialog(new GuiDialogClear(parent, guiName + ".dialog.clear", (IDialogCallback) parent, 190, 140, tileEntity.getSkinType()));
+        }
+        if (button == buttonCopy) {
+            ((GuiArmourer)parent).openDialog(new GuiDialogCopy(parent, guiName + ".dialog.copy", (IDialogCallback) parent, 190, 140, tileEntity.getSkinType()));
         }
     }
 
@@ -66,15 +68,23 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
 
     @Override
     public void dialogResult(AbstractGuiDialog dialog, DialogResult result) {
-        if (result == DialogResult.OK) {
-            if (dialog != null && dialog instanceof GuiDialogClear) {
+        if (result == DialogResult.OK & dialog != null) {
+            if (dialog instanceof GuiDialogClear) {
                 String tag = ((GuiDialogClear)dialog).getClearTag();
                 if (!StringUtils.isNullOrEmpty(tag)) {
                     ISkinPartType partType = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(tag);
                     MessageClientGuiArmourerBlockUtil message;
-                    message = new MessageClientGuiArmourerBlockUtil("clear", partType, null);
+                    message = new MessageClientGuiArmourerBlockUtil("clear", partType, null, false);
                     PacketHandler.networkWrapper.sendToServer(message);
                 }
+            }
+            if (dialog instanceof GuiDialogCopy) {
+                ISkinPartType srcPart  = ((GuiDialogCopy)dialog).getSrcPart();
+                ISkinPartType desPart  = ((GuiDialogCopy)dialog).getDesPart();
+                boolean mirror  = ((GuiDialogCopy)dialog).isMirror();
+                MessageClientGuiArmourerBlockUtil message;
+                message = new MessageClientGuiArmourerBlockUtil("copy", srcPart, desPart, mirror);
+                PacketHandler.networkWrapper.sendToServer(message);
             }
         }
     }

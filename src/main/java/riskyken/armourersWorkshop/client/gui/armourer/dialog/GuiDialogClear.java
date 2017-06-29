@@ -45,8 +45,8 @@ public class GuiDialogClear extends AbstractGuiDialog {
             }
         }
         dropDownParts.setListSelectedIndex(0);
-        checkClearBlocks = new GuiCheckBox(0, x + 10, y + 20, "Clear equipment cubes?", true);
-        checkClearPaint = new GuiCheckBox(0, x + 10, y + 35, "Clear skin paint?", true);
+        checkClearBlocks = new GuiCheckBox(0, x + 10, y + 20, "Clear equipment cubes?", false);
+        checkClearPaint = new GuiCheckBox(0, x + 10, y + 35, "Clear skin paint?", false);
         checkClearBlocks.enabled = checkClearPaint.enabled = false;
         
         buttonList.add(buttonClose);

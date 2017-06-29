@@ -300,6 +300,12 @@ inventory.armourersworkshop:armourerBrain.tab.blockUtils=Block Utils
 inventory.armourersworkshop:armourerBrain.dialog.clear.title=Clear
 inventory.armourersworkshop:armourerBrain.dialog.clear.close=Close
 inventory.armourersworkshop:armourerBrain.dialog.clear.clear=Clear
+inventory.armourersworkshop:armourerBrain.dialog.copy.title=Copy
+inventory.armourersworkshop:armourerBrain.dialog.copy.close=Close
+inventory.armourersworkshop:armourerBrain.dialog.copy.copy=Copy
+inventory.armourersworkshop:armourerBrain.dialog.copy.srcPart=Source Part:
+inventory.armourersworkshop:armourerBrain.dialog.copy.desPart=Destination Part:
+inventory.armourersworkshop:armourerBrain.dialog.copy.mirror=Mirror?
 
 inventory.armourersworkshop:colourMixer.label.hue=Hue
 inventory.armourersworkshop:colourMixer.label.saturation=Saturation

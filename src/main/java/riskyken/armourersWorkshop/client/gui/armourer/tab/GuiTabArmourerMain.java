@@ -124,6 +124,10 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(this.x, this.y, 0, 0, this.width, this.height);
+        // input slot
+        drawTexturedModalRect(this.x + 63, this.y + 20, 238, 0, 18, 18);
+        // output slot
+        drawTexturedModalRect(this.x + 142, this.y + 16, 230, 18, 26, 26);
         textItemName.drawTextBox();
     }
     

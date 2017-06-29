@@ -17,14 +17,16 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
     private String utilType;
     private ISkinPartType partType1;
     private ISkinPartType partType2;
+    private boolean option;
     
     public MessageClientGuiArmourerBlockUtil() {
     }
     
-    public MessageClientGuiArmourerBlockUtil(String utilType, ISkinPartType part1, ISkinPartType part2) {
+    public MessageClientGuiArmourerBlockUtil(String utilType, ISkinPartType part1, ISkinPartType part2, boolean option) {
         this.utilType = utilType;
         this.partType1 = part1;
         this.partType2 = part2;
+        this.option = option;
     }
 
 
@@ -39,6 +41,7 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
         if (partType2 != null) {
             ByteBufUtils.writeUTF8String(buf, partType2.getRegistryName());
         }
+        buf.writeBoolean(option);
     }
 
     @Override
@@ -52,6 +55,7 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
             String registryName = ByteBufUtils.readUTF8String(buf);
             partType2 = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(registryName);
         }
+        this.option = buf.readBoolean();
     }
 
 
@@ -67,6 +71,10 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
             
             if (message.utilType.equals("clear")) {
                 armourerBrain.clearArmourCubes(message.partType1);
+            }
+            
+            if (message.utilType.equals("copy")) {
+                armourerBrain.copySkinCubes(player, message.partType1, message.partType2, message.option);
             }
         }
         return null;

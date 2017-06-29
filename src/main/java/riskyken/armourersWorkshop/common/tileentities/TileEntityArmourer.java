@@ -289,6 +289,15 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public int getHeightOffset() {
         return HEIGHT_OFFSET;
     }
+    
+
+    public void copySkinCubes(EntityPlayerMP player, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) {
+        try {
+            ArmourerWorldHelper.copySkinCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, srcPart, desPart, mirror);
+        } catch (SkinSaveException e) {
+            player.addChatMessage(new ChatComponentText(e.getMessage()));
+        }
+    }
 
     public void clearArmourCubes(ISkinPartType partType) {
         if (skinType != null) {
