@@ -20,4 +20,5 @@ public class LibBlockNames {
     public static final String SKINNABLE_CHILD_GLOWING = "skinnableChildGlowing";
     public static final String DYE_TABLE = "dyeTable";
     public static final String GLOBAL_SKIN_LIBRARY = "globalSkinLibrary";
+    public static final String HOLOGRAM_PROJECTOR = "hologramProjector";
 }

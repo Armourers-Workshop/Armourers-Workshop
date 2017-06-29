@@ -82,7 +82,7 @@ public final class ItemStackRenderHelper {
         
         GL11.glPushMatrix();
         
-        GL11.glScalef(scale * blockScale, scale * blockScale, scale * blockScale);
+        //GL11.glScalef(scale * blockScale, scale * blockScale, scale * blockScale);
         GL11.glTranslatef(offsetX * mcScale, 0, 0);
         GL11.glTranslatef(0, offsetY * mcScale, 0);
         GL11.glTranslatef(0, 0, offsetZ * mcScale);

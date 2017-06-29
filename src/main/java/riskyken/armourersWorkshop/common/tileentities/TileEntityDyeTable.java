@@ -20,6 +20,7 @@ public class TileEntityDyeTable extends AbstractTileEntityInventory {
     public String getInventoryName() {
         return LibBlockNames.DYE_TABLE;
     }
+    
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
