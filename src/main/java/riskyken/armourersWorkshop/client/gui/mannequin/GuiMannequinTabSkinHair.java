@@ -33,13 +33,13 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     public Color hoverColour = null;
     
     public GuiMannequinTabSkinHair(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
-        super(tabId, parent);
+        super(tabId, parent, true);
         this.tileEntity = tileEntity;
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         skinColour = tileEntity.getSkinColour();
         hairColour = tileEntity.getHairColour();
         

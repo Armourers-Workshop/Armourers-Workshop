@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ICrashCallable;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -154,6 +155,26 @@ public class ClientProxy extends CommonProxy {
         if (HolidayHelper.valentins.isHolidayActive()) {
             enableValentinsClouds();
         }
+        
+        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
+        {
+            public String call() throws Exception
+            {
+                int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
+                return "\n" + 
+                        "\t\tRender Type: " + getSkinRenderType().toString() + "\n" + 
+                        "\t\tTexture Render: " + useSafeTextureRender() + "\n" + 
+                        "\t\tBaking Queue: " + bakeQueue + "\n" +
+                        "\t\tRequest Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue) + "\n" +
+                        "\t\tTexture Painting: " + useTexturePainting() + "\n" +
+                        "\t\tMultipass Skin Rendering: " + useMultipassSkinRendering();
+            }
+
+            public String getLabel()
+            {
+                return "Armourer's Workshop";
+            }
+        });
     }
     
     @SubscribeEvent

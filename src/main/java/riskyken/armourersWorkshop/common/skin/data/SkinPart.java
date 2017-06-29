@@ -93,6 +93,11 @@ public class SkinPart implements ISkinPart {
         return new Rectangle3D(minX, minY, minZ, xSize + 1, ySize + 1, zSize + 1);
     }
     
+    public void setSkinPart(ISkinPartType skinPart) {
+        this.skinPart = skinPart;
+        setupPartBounds();
+    }
+    
     public Rectangle3D getBlockBounds(int x, int y, int z) {
         return blockGrid[x][y][z];
     }

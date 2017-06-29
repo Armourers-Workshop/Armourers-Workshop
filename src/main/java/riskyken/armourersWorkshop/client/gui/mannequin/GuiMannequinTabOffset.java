@@ -27,14 +27,14 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
     private GuiCustomSlider bipedOffsetZslider;
     
     public GuiMannequinTabOffset(int tabId, GuiScreen parent, String inventoryName, TileEntityMannequin tileEntity) {
-        super(tabId, parent);
+        super(tabId, parent, true);
         this.inventoryName = inventoryName;
         this.tileEntity = tileEntity;
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         guiLoaded = false;
         resetOffsetButton = new GuiButtonExt(0, this.width / 2 + 27, 25, 50, 18, GuiHelper.getLocalizedControlName(inventoryName, "reset"));
         bipedOffsetXslider = new GuiCustomSlider(0, (int)((width / 2F) - (176 / 2F)) + 10, 25, 100, 10, "X: ", "", -1D, 1D, 0D, true, true, this);

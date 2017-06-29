@@ -65,11 +65,18 @@ public final class ArmourerWorldHelper {
             if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
                 partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
             }
-            saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+            
+            SkinPart skinPart = saveArmourPart(world, partType, xCoord, yCoord, zCoord, direction, true);
+            if (skinPart != null) {
+                parts.add(skinPart);
+            }
         } else {
             for (int i = 0; i < skinType.getSkinParts().size(); i++) {
                 ISkinPartType partType = skinType.getSkinParts().get(i);
-                saveArmourPart(world, parts, partType, xCoord, yCoord, zCoord, direction);
+                SkinPart skinPart = saveArmourPart(world, partType, xCoord, yCoord, zCoord, direction, true);
+                if (skinPart != null) {
+                    parts.add(skinPart);
+                }
             }
         }
         
@@ -108,9 +115,8 @@ public final class ArmourerWorldHelper {
         
         //Check if multiblock is valid.
         if (skinType == SkinTypeRegistry.skinBlock & skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
-            ArrayList<SkinPart> testPart = new ArrayList<SkinPart>();
-            saveArmourPart(world, testPart, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, xCoord, yCoord, zCoord, direction); 
-            if (testPart.isEmpty()) {
+            SkinPart testPart = saveArmourPart(world, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, xCoord, yCoord, zCoord, direction, true);
+            if (testPart == null) {
                 throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveExceptionType.INVALID_MULTIBLOCK);
             }
         }
@@ -118,12 +124,11 @@ public final class ArmourerWorldHelper {
         return skin;
     }
     
-    private static void saveArmourPart(World world, ArrayList<SkinPart> armourData,
-            ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws SkinSaveException {
+    private static SkinPart saveArmourPart(World world, ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction, boolean markerCheck) throws SkinSaveException {
         
         int cubeCount = getNumberOfCubesInPart(world, xCoord, yCoord, zCoord, skinPart);
         if (cubeCount < 1) {
-            return;
+            return null;
         }
         SkinCubeData cubeData = new SkinCubeData();
         cubeData.setCubeCount(cubeCount);
@@ -161,15 +166,18 @@ public final class ArmourerWorldHelper {
             }
         }
         
-        if (skinPart.getMinimumMarkersNeeded() > markerBlocks.size()) {
-            throw new SkinSaveException("Missing marker for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
+        if (markerCheck) {
+            if (skinPart.getMinimumMarkersNeeded() > markerBlocks.size()) {
+                throw new SkinSaveException("Missing marker for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
+            }
+            
+            if (markerBlocks.size() > skinPart.getMaximumMarkersNeeded()) {
+                throw new SkinSaveException("Too many markers for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
+            }
         }
+
         
-        if (markerBlocks.size() > skinPart.getMaximumMarkersNeeded()) {
-            throw new SkinSaveException("Too many markers for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
-        }
-        
-        armourData.add(new SkinPart(cubeData, skinPart, markerBlocks));
+        return new SkinPart(cubeData, skinPart, markerBlocks);
     }
     
     private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz,
@@ -207,11 +215,11 @@ public final class ArmourerWorldHelper {
         ArrayList<SkinPart> parts = skin.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
-            loadSkinPartIntoWorld(world, parts.get(i), x, y, z, direction);
+            loadSkinPartIntoWorld(world, parts.get(i), x, y, z, direction, false);
         }
     }
     
-    private static void loadSkinPartIntoWorld(World world, SkinPart partData, int xCoord, int yCoord, int zCoord, ForgeDirection direction) {
+    private static void loadSkinPartIntoWorld(World world, SkinPart partData, int xCoord, int yCoord, int zCoord, ForgeDirection direction, boolean mirror) {
         ISkinPartType skinPart = partData.getPartType();
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
@@ -233,20 +241,23 @@ public final class ArmourerWorldHelper {
             int yOrigin = -offset.getY() + -buildSpace.getY();
             int zOrigin = offset.getZ();
             
-            loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction, meta, cubeData, i);
+            loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction, meta, cubeData, i, mirror);
         }
         
     }
     
     private static void loadSkinBlockIntoWorld(World world, int x, int y, int z,
             int xOrigin, int yOrigin, int zOrigin, ICube blockData,
-            ForgeDirection direction, int meta, SkinCubeData cubeData, int index) {
+            ForgeDirection direction, int meta, SkinCubeData cubeData, int index, boolean mirror) {
         
         byte[] loc = cubeData.getCubeLocation(index);
         
         int shiftX = -loc[0] - 1;
         int shiftY = loc[1] + 1;
         int shiftZ = loc[2];
+        if (mirror) {
+            shiftX = loc[0];
+        }
         
         int targetX = x + shiftX + xOrigin;
         int targetY = y + yOrigin - shiftY;
@@ -267,11 +278,22 @@ public final class ArmourerWorldHelper {
                 for (int i = 0; i < 6; i++) {
                     byte[] c = cubeData.getCubeColour(index, i);
                     byte paintType = cubeData.getCubePaintType(index, i);
+                    if (mirror) {
+                        if (i == 4) {
+                            c = cubeData.getCubeColour(index, 5);
+                            paintType = cubeData.getCubePaintType(index, 5);
+                        }
+                        if (i == 5) {
+                            c = cubeData.getCubeColour(index, 4);
+                            paintType = cubeData.getCubePaintType(index, 4);
+                        }
+                    }
                     cc.setRed(c[0], i);
                     cc.setGreen(c[1], i);
                     cc.setBlue(c[2], i);
                     cc.setPaintType(paintType, i);
                 }
+
                 ((TileEntityColourable)te).setColour(cc);
             }
         }
@@ -359,10 +381,29 @@ public final class ArmourerWorldHelper {
         }
     }
     
+
+    public static void copySkinCubes(World world, int x, int y, int z, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) throws SkinSaveException {
+        ArrayList<BlockLocation> blList = new ArrayList<BlockLocation>();
+        SkinPart skinPart = saveArmourPart(world, srcPart, x, y, z, ForgeDirection.UNKNOWN, false);
+        if (skinPart != null) {
+            skinPart.setSkinPart(desPart);
+            loadSkinPartIntoWorld(world, skinPart, x, y, z, ForgeDirection.UNKNOWN, mirror);
+        }
+    }
+    
     public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps) {
+        return clearEquipmentCubes(world, x, y, z, skinType, skinProps, null);
+    }
+    
+    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
+            if (partType != null) {
+                if (partType != skinPart) {
+                    continue;
+                }
+            }
             if (skinType == SkinTypeRegistry.skinBlock) {
                 boolean multiblock = skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
                 if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {

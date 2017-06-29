@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,24 +11,47 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
 public class GuiTabController extends GuiButtonExt {
-
-    protected static final ResourceLocation tabTextures = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinTabs.png");
     
+    private final ResourceLocation texture;
     private GuiScreen parent;
+    private boolean fullscreen;
     private int activeTab = -1;
     private ArrayList<GuiTab> tabs = new ArrayList<GuiTab>();
+    private int tabSpacing = 27;
     
-    public GuiTabController(GuiScreen parent, int xPos, int yPos, int width, int height) {
-        super(0, 0 , 0, parent.width, parent.height, "");
+    public GuiTabController(GuiScreen parent, boolean fullscreen, int xPos, int yPos, int width, int height, ResourceLocation texture) {
+        super(0, xPos, yPos, width, height, "");
         this.parent = parent;
+        this.fullscreen = fullscreen;
+        this.texture = texture;
+        if (!fullscreen) {
+            tabSpacing = 25;
+        }
     }
     
-    public GuiTabController(GuiScreen parent) {
-        this(parent, 0, 0, 0, 0);
+    public GuiTabController(GuiScreen parent, boolean fullscreen, ResourceLocation texture) {
+        this(parent, fullscreen, 0, 0, 0, 0, texture);
+    }
+    
+    public void setTabSpacing(int tabSpacing) {
+        this.tabSpacing = tabSpacing;
+    }
+    
+    public void initGui(int xPos, int yPos, int width, int height) {
+        if (fullscreen) {
+            this.xPosition = 0;
+            this.yPosition = 0;
+            this.width = parent.width;
+            this.height = parent.height;
+        } else {
+            this.xPosition = xPos;
+            this.yPosition = yPos;
+            this.width = width;
+            this.height = height;
+        }
     }
     
     public void setActiveTabIndex(int index) {
@@ -76,14 +101,21 @@ public class GuiTabController extends GuiButtonExt {
     
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * 27F) / 2F);
+        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * tabSpacing) / 2F);
+        if (!fullscreen) {
+            yOffset = 5;
+        }
+        int count = 0;
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
-            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * 27  + yOffset, mouseX, mouseY)) {
-                if (tab.enabled) {
-                    activeTab = i;
-                    return true;
+            if (tab.visible) {
+                if (tab.isMouseOver(this.xPosition - 4, this.yPosition + count * tabSpacing  + yOffset, mouseX, mouseY)) {
+                    if (tab.enabled) {
+                        activeTab = i;
+                        return true;
+                    }
                 }
+                count++;
             }
         }
         return false;
@@ -91,21 +123,31 @@ public class GuiTabController extends GuiButtonExt {
     
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(tabTextures);
-        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * 27F) / 2F);
+        mc.renderEngine.bindTexture(texture);
+        GL11.glColor4f(1, 1, 1, 1);
+        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * tabSpacing) / 2F);
+        
+        if (!fullscreen) {
+            yOffset = 5;
+        }
+        
         GuiTab hoverTab = null;
+        int count = 0;
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
-            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * 27 + yOffset, mouseX, mouseY)) {
-                hoverTab = tab;
+            if (tab.visible) {
+                if (tab.isMouseOver(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY)) {
+                    hoverTab = tab;
+                }
+                tab.render(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
+                count++;
             }
-            tab.render(this.xPosition - 4, this.yPosition + i * 27 + yOffset, mouseX, mouseY, activeTab == i);
         }
         
         if (hoverTab != null) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(hoverTab.getName());
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, Minecraft.getMinecraft().fontRenderer, width, height, zLevel);
+            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, width, height, zLevel);
         }
     }
 }

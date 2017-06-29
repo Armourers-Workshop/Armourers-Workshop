@@ -1,12 +1,11 @@
 package riskyken.armourersWorkshop.common.inventory.slot;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
 
-public class SlotSkinTemplate extends Slot {
+public class SlotSkinTemplate extends SlotHidable {
     
     private final ISlotChanged callback;
     

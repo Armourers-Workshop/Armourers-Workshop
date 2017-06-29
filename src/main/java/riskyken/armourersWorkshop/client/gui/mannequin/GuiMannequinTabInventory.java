@@ -25,12 +25,12 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
     private static final int INV_MAN_LEFT_PAD = 26;
     
     public GuiMannequinTabInventory(int tabId, GuiScreen parent) {
-        super(tabId, parent);
+        super(tabId, parent, true);
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         
         GuiContainer guiCon = (GuiContainer) parent;
         //Move player inventory slots.
