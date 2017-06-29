@@ -105,13 +105,17 @@ public class GuiTabController extends GuiButtonExt {
         if (!fullscreen) {
             yOffset = 5;
         }
+        int count = 0;
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
-            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * tabSpacing  + yOffset, mouseX, mouseY)) {
-                if (tab.enabled) {
-                    activeTab = i;
-                    return true;
+            if (tab.visible) {
+                if (tab.isMouseOver(this.xPosition - 4, this.yPosition + count * tabSpacing  + yOffset, mouseX, mouseY)) {
+                    if (tab.enabled) {
+                        activeTab = i;
+                        return true;
+                    }
                 }
+                count++;
             }
         }
         return false;
@@ -128,12 +132,16 @@ public class GuiTabController extends GuiButtonExt {
         }
         
         GuiTab hoverTab = null;
+        int count = 0;
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
-            if (tab.isMouseOver(this.xPosition - 4, this.yPosition + i * tabSpacing + yOffset, mouseX, mouseY)) {
-                hoverTab = tab;
+            if (tab.visible) {
+                if (tab.isMouseOver(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY)) {
+                    hoverTab = tab;
+                }
+                tab.render(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
+                count++;
             }
-            tab.render(this.xPosition - 4, this.yPosition + i * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
         }
         
         if (hoverTab != null) {

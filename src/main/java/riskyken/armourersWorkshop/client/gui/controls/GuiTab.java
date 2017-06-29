@@ -26,6 +26,7 @@ public class GuiTab extends Gui {
     public GuiTab(String name) {
         this.name = name;
         this.enabled = true;
+        this.visible = true;
     }
     
     public String getName() {

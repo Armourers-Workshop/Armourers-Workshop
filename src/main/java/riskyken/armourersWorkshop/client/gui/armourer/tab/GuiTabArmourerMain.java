@@ -140,7 +140,6 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        //GuiHelper.renderLocalizedGuiName(fontRenderer, this.width, tileEntity.getInventoryName());
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.height - 96 + 2, 4210752);
     
         String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.itemName");
@@ -152,13 +151,13 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         
         int versionWidth = fontRenderer.getStringWidth(versionLabel);
         this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 4, this.height - 96, 4210752);
-        //this.fontRendererObj.drawString(cloneLabel, 177, 36, 4210752);
     }
     
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
         DropDownListItem listItem = dropDownList.getListSelectedItem();
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
+        ((GuiArmourer)parent).skinTypeUpdate(skinType);
         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinType(skinType));
     }
 }

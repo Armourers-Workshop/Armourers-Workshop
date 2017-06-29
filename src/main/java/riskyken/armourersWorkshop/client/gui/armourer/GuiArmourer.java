@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.armourer.dialog.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.armourer.dialog.AbstractGuiDialog.DialogResult;
@@ -21,6 +22,7 @@ import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 @SideOnly(Side.CLIENT)
@@ -103,6 +105,15 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
             SkinProperties skinProperties = tileEntity.getSkinProps();
             tabMain.resetValues(skinProperties);
             tabSkinSettings.resetValues(skinProperties);
+            skinTypeUpdate(tileEntity.getSkinType());
+        }
+    }
+    
+    public void skinTypeUpdate(ISkinType skinType) {
+        if (skinType == SkinTypeRegistry.skinArrow | skinType == SkinTypeRegistry.skinBow | skinType == SkinTypeRegistry.skinSword) {
+            tabController.getTab(2).setVisable(false);
+        } else {
+            tabController.getTab(2).setVisable(true);
         }
     }
     
