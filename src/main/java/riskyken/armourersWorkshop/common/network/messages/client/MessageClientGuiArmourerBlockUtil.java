@@ -17,16 +17,18 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
     private String utilType;
     private ISkinPartType partType1;
     private ISkinPartType partType2;
-    private boolean option;
+    private boolean option1;
+    private boolean option2;
     
     public MessageClientGuiArmourerBlockUtil() {
     }
     
-    public MessageClientGuiArmourerBlockUtil(String utilType, ISkinPartType part1, ISkinPartType part2, boolean option) {
+    public MessageClientGuiArmourerBlockUtil(String utilType, ISkinPartType part1, ISkinPartType part2, boolean option1, boolean option2) {
         this.utilType = utilType;
         this.partType1 = part1;
         this.partType2 = part2;
-        this.option = option;
+        this.option1 = option1;
+        this.option2 = option2;
     }
 
 
@@ -41,7 +43,8 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
         if (partType2 != null) {
             ByteBufUtils.writeUTF8String(buf, partType2.getRegistryName());
         }
-        buf.writeBoolean(option);
+        buf.writeBoolean(option1);
+        buf.writeBoolean(option2);
     }
 
     @Override
@@ -55,7 +58,8 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
             String registryName = ByteBufUtils.readUTF8String(buf);
             partType2 = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(registryName);
         }
-        this.option = buf.readBoolean();
+        this.option1 = buf.readBoolean();
+        this.option2 = buf.readBoolean();
     }
 
 
@@ -68,13 +72,19 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
         Container container = player.openContainer;
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            
+            boolean clearBlocks = message.option1;
+            boolean clearPaint = message.option2;
             if (message.utilType.equals("clear")) {
-                armourerBrain.clearArmourCubes(message.partType1);
+                if (clearBlocks) {
+                    armourerBrain.clearArmourCubes(message.partType1);
+                }
+                if (clearPaint) {
+                    armourerBrain.clearPaintData(true);
+                }
             }
             
             if (message.utilType.equals("copy")) {
-                armourerBrain.copySkinCubes(player, message.partType1, message.partType2, message.option);
+                armourerBrain.copySkinCubes(player, message.partType1, message.partType2, message.option1);
             }
         }
         return null;

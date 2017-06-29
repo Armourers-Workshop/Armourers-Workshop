@@ -34,7 +34,7 @@ public class GuiDialogClear extends AbstractGuiDialog {
         
         buttonClose = new GuiButtonExt(-1, x + width - 80 - 10, y + height - 30, 80, 20, GuiHelper.getLocalizedControlName(name, "close"));
         buttonClear = new GuiButtonExt(-1, x + width - 160 - 20, y + height - 30, 80, 20, GuiHelper.getLocalizedControlName(name, "clear"));
-        dropDownParts = new GuiDropDownList(0, x + 10, y + 50, 60, "", null);
+        dropDownParts = new GuiDropDownList(0, x + 10, y + 20, 60, "", null);
         dropDownParts.addListItem("*", "*", true);
         if (skinType != null) {
             for (int i = 0; i < skinType.getSkinParts().size(); i++) {
@@ -45,9 +45,8 @@ public class GuiDialogClear extends AbstractGuiDialog {
             }
         }
         dropDownParts.setListSelectedIndex(0);
-        checkClearBlocks = new GuiCheckBox(0, x + 10, y + 20, "Clear equipment cubes?", false);
-        checkClearPaint = new GuiCheckBox(0, x + 10, y + 35, "Clear skin paint?", false);
-        checkClearBlocks.enabled = checkClearPaint.enabled = false;
+        checkClearBlocks = new GuiCheckBox(0, x + 10, y  + height - 60, "Clear equipment cubes?", true);
+        checkClearPaint = new GuiCheckBox(0, x + 10, y  + height - 50, "Clear skin paint?", true);
         
         buttonList.add(buttonClose);
         buttonList.add(buttonClear);
@@ -58,6 +57,14 @@ public class GuiDialogClear extends AbstractGuiDialog {
     
     public String getClearTag() {
         return dropDownParts.getListSelectedItem().tag;
+    }
+    
+    public boolean isClearBlocks() {
+        return checkClearBlocks.isChecked();
+    }
+    
+    public boolean isClearPaint() {
+        return checkClearPaint.isChecked();
     }
     
     @Override
