@@ -90,6 +90,8 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(this.x, this.y, 0, 0, this.width, this.height);
         
+        drawTexturedModalRect(this.x + 7, this.y + 141, 7, 3, 162, 76);
+        
         textUserSkin.drawTextBox();
         
         checkShowGuides.setIsChecked(tileEntity.isShowGuides());

@@ -157,7 +157,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(this.x, this.y, 0, 0, this.width, this.height);
-        
+        drawTexturedModalRect(this.x + 7, this.y + 141, 7, 3, 162, 76);
         checkBlockGlowing.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockLadder.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockNoCollision.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
