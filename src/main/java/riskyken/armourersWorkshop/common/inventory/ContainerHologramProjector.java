@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
@@ -35,7 +36,36 @@ public class ContainerHologramProjector extends Container {
     }
     
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slot) {
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
+        Slot slot = getSlot(slotId);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack = slot.getStack();
+            ItemStack result = stack.copy();
+            
+            if (slotId > 35) {
+                //Moving from tile entity to player.
+                if (!this.mergeItemStack(stack, 9, 36, false)) {
+                    if (!this.mergeItemStack(stack, 0, 9, false)) {
+                        return null;
+                    }
+                }
+            } else {
+              //Moving from player to tile entity.
+                if (!this.mergeItemStack(stack, 36, 37, false)) {
+                    return null;
+                }
+            }
+            
+            if (stack.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            slot.onPickupFromSlot(player, stack);
+            
+            return result;
+        }
         return null;
     }
     
