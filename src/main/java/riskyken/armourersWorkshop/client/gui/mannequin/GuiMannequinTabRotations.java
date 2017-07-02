@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +21,7 @@ import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiBipedRotations;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
     
     private static final int ROT_MAN_TEX_WIDTH = 206;

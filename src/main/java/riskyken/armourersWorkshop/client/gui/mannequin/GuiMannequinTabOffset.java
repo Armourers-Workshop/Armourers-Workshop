@@ -4,6 +4,8 @@ import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
@@ -15,6 +17,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
     
     private final String inventoryName;

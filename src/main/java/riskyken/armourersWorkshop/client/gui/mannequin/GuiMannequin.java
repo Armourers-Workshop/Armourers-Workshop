@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.client.gui.mannequin;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
@@ -20,7 +19,6 @@ public class GuiMannequin extends GuiTabbed {
     private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.MANNEQUIN_TABS);
     
     public final TileEntityMannequin tileEntity;
-    private final EntityPlayer player;
     private final String inventoryName;
     
     public GuiMannequinTabRotations tabRotations;
@@ -33,7 +31,6 @@ public class GuiMannequin extends GuiTabbed {
     public GuiMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
         super(new ContainerMannequin(invPlayer, tileEntity), true, textureTabs);
         this.tileEntity = tileEntity;
-        this.player = invPlayer.player;
         this.inventoryName = tileEntity.getInventoryName();
         
         tabInventory = new GuiMannequinTabInventory(0, this);

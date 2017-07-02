@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,6 +20,7 @@ import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabSkinHair extends GuiTabPanel {
 
     private GuiButtonExt selectSkinButton;

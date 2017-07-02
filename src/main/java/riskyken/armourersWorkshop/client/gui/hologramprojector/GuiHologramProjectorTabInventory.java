@@ -1,5 +1,7 @@
-package riskyken.armourersWorkshop.client.gui.mannequin;
+package riskyken.armourersWorkshop.client.gui.hologramprojector;
 
+import cpw.mods.fml.client.config.GuiSlider;
+import cpw.mods.fml.client.config.GuiSlider.ISlider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
@@ -7,9 +9,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequinTabInventory extends GuiTabPanel {
+public class GuiHologramProjectorTabInventory extends GuiTabPanel implements ISlider {
 
     private static final int INV_SLOT_SIZE = 18;
     
@@ -27,7 +30,7 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
     private static final int INV_MAN_TOP_PAD = 15;
     private static final int INV_MAN_LEFT_PAD = 26;
     
-    public GuiMannequinTabInventory(int tabId, GuiScreen parent) {
+    public GuiHologramProjectorTabInventory(int tabId, GuiScreen parent) {
         super(tabId, parent, true);
     }
     
@@ -38,7 +41,7 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
         GuiContainer guiCon = (GuiContainer) parent;
         //Move player inventory slots.
         for (int x = 0; x < 9; x++) {
-            Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(7 + x);
+            Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(x);
             if (slot instanceof SlotHidable) {
                 ((SlotHidable)slot).setDisplayPosition(
                         (int) ((this.width / 2F) - (176F / 2F) + x * INV_SLOT_SIZE + INV_PLAYER_LEFT_PAD),
@@ -47,7 +50,7 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(7 + x + y * 9 + 9);
+                Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(x + y * 9 + 9);
                 if (slot instanceof SlotHidable) {
                     ((SlotHidable)slot).setDisplayPosition(
                             (int) ((this.width / 2F) - (176F / 2F) + x * INV_SLOT_SIZE + 8),
@@ -56,13 +59,14 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
             }
         }
         
-        //Move mannequin inventory slots.
-        for (int i = 0; i < 7; i++) {
-            Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(i);
-            if (slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setDisplayPosition(this.width / 2 - INV_MAN_TEX_WIDTH / 2 + INV_MAN_LEFT_PAD + i * 18, 16);
-            }
+        Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(36);
+        if (slot instanceof SlotHidable) {
+            ((SlotHidable)slot).setDisplayPosition(
+                    (int) ((this.width / 2F) - (16F / 2F)), 16);
         }
+        
+        ModLogger.log(guiCon.inventorySlots.inventorySlots.size());
+        
     }
     
     @Override
@@ -75,7 +79,7 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
             }
         }
     }
-
+    
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
         int center = (int) ((float)this.width / 2F);
@@ -92,8 +96,8 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
-        //this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+    public void onChangeSliderValue(GuiSlider slider) {
+        // TODO Auto-generated method stub
+        
     }
 }

@@ -1,27 +1,23 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
-import net.minecraft.client.Minecraft;
-
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 
 @SideOnly(Side.CLIENT)
 public class GuiCustomSlider extends GuiSlider {
 
+    private double lastValue;
+    
     public GuiCustomSlider(int id, int xPos, int yPos, int width, int height,
             String prefix, String suf, double minVal, double maxVal,
             double currentVal, boolean showDec, boolean drawStr, ISlider par) {
         super(id, xPos, yPos, width, height, prefix, suf, minVal, maxVal, currentVal,
                 showDec, drawStr, par);
-    }
-
-    @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        // TODO Auto-generated method stub
-        super.drawButton(mc, mouseX, mouseY);
+        this.lastValue = sliderValue;
     }
     
     @Override
@@ -29,7 +25,10 @@ public class GuiCustomSlider extends GuiSlider {
         if (this.visible) {
             if (this.dragging) {
                 this.sliderValue = (par2 - (this.xPosition + 4)) / (float)(this.width - 8);
-                updateSlider();
+                if (lastValue != sliderValue) {
+                    updateSlider();
+                    lastValue = sliderValue;
+                }
             }
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

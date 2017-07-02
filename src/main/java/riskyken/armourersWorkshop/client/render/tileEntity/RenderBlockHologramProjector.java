@@ -23,29 +23,93 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
             return;
         }
         
+        int rot = tileEntity.getBlockMetadata();
+        
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_NORMALIZE);
-        GL11.glTranslated(x + 0.5F, y + 2D, z + 0.5F);
-        GL11.glScalef(-1, -1, 1);
-        //GL11.glScalef(2, 2, 2);
+
+        GL11.glTranslated(x + 0.5F, y + 0.5D, z + 0.5F);
         
-        if (tileEntity != null) {
-            float angle = (((tileEntity.getWorldObj().getTotalWorldTime() + tileEntity.hashCode()) % 360) + partialTickTime);
-            GL11.glRotatef(angle * 5, 0, 1, 0);
+        GL11.glRotatef(180, 0, 0, 1);
+        
+        if (rot == 1) {
+            GL11.glRotatef(180, 0, 0, 1);
         }
-        //GL11.glTranslated(0, 0, -1F);
+        if (rot == 2) {
+            GL11.glRotatef(90, -1, 0, 0);
+        }
+        if (rot == 3) {
+            GL11.glRotatef(90, 1, 0, 0);
+        }
+        if (rot == 4) {
+            GL11.glRotatef(90, 0, 0, -1);
+        }
+        if (rot == 5) {
+            GL11.glRotatef(90, 0, 0, 1);
+        }
+        
+        float scale = 0.0625F;
+        
+        
+        
+        GL11.glTranslated(tileEntity.getOffsetX() * scale, tileEntity.getOffsetY() * scale, tileEntity.getOffsetZ() * scale);
+        
+        GL11.glScalef(-1, -1, 1);
+        
+        int speedX = tileEntity.getRotationSpeedX();
+        int speedY = tileEntity.getRotationSpeedY();
+        int speedZ = tileEntity.getRotationSpeedZ();
+        
+        float angleX = 0;
+        float angleY = 0;
+        float angleZ = 0;
+        
+        if (speedX != 0) {
+            angleX = (System.currentTimeMillis() % speedX);
+            angleX = angleX / speedX * 360F;
+        }
+        if (speedY != 0) {
+            angleY = (System.currentTimeMillis() % speedY);
+            angleY = angleY / speedY * 360F;
+        }
+        if (speedZ != 0) {
+            angleZ = (System.currentTimeMillis() % speedZ);
+            angleZ = angleZ / speedZ * 360F;
+        }
+        
+        
+        GL11.glTranslated(
+                (-tileEntity.getRotationOffsetX() + tileEntity.getRotationOffsetX()) * scale,
+                (-tileEntity.getRotationOffsetY() + tileEntity.getRotationOffsetY()) * scale,
+                (-tileEntity.getRotationOffsetZ() + tileEntity.getRotationOffsetZ()) * scale);
+        
+        
+        if (angleX != 0) {
+            GL11.glRotatef((float)angleX, 1, 0, 0);
+        }
+        if (angleY != 0) {
+            GL11.glRotatef((float)angleY, 0, 1, 0);
+        }
+        if (angleZ != 0) {
+            GL11.glRotatef((float)angleZ, 0, 0, 1);
+        }
+        
+        GL11.glTranslated(tileEntity.getRotationOffsetX() * scale, tileEntity.getRotationOffsetY() * scale, tileEntity.getRotationOffsetZ() * scale);
+        
         
         ModRenderHelper.disableLighting();
         ModRenderHelper.enableAlphaBlend();
         
-        ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, true);
+        
+        ItemStackRenderHelper.renderSkinWithoutHelper(skinPointer, true);
+        //ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, true);
         
         ModRenderHelper.disableAlphaBlend();
         ModRenderHelper.enableLighting();
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
     }
-    
+
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
         renderTileEntityAt((TileEntityHologramProjector)tileEntity, x, y, z, partialTickTime);
