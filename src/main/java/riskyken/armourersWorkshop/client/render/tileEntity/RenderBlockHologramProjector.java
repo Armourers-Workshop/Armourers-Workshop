@@ -81,6 +81,8 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
             angleZ = angleZ / speedZ * 360F;
         }
         
+
+        GL11.glPushMatrix();
         
         GL11.glTranslated(
                 (-tileEntity.getRotationOffsetX() + tileEntity.getRotationOffsetX()) * scale,
@@ -106,6 +108,12 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         
         
         ItemStackRenderHelper.renderSkinWithoutHelper(skinPointer, true);
+        
+        GL11.glPopMatrix();
+        if (tileEntity.isShowRotationPoint()) {
+            AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, scale, scale, scale);
+            renderBox(aabb, 1F, 0F, 1F);
+        }
         //ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, true);
         
         ModRenderHelper.disableAlphaBlend();
@@ -118,31 +126,38 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
         renderTileEntityAt((TileEntityHologramProjector)tileEntity, x, y, z, partialTickTime);
         if (ConfigHandlerClient.showSkinRenderBounds) {
-            
             if (tileEntity != null && !(tileEntity instanceof TileEntityHologramProjector)) {
                 return;
             }
-            
-            
-            
-            float f1 = 0.002F;
-            
             AxisAlignedBB aabb = tileEntity.getRenderBoundingBox().copy();
             aabb.offset(x - tileEntity.xCoord, y - tileEntity.yCoord, z - tileEntity.zCoord);
-            ModRenderHelper.disableLighting();
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            GL11.glColor4f(1.0F, 1.0F, 0.0F, 0.4F);
-            GL11.glLineWidth(1.0F);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glDepthMask(false);
-            RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
-            GL11.glDepthMask(true);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_BLEND);
-            ModRenderHelper.enableLighting();
+            renderBox(aabb, 1.0F, 1.0F, 0.0F);
         }
+    }
+    
+    private void renderBox(AxisAlignedBB aabb, float r, float g, float b) {
+        float f1 = 0.002F;
+        ModRenderHelper.disableLighting();
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GL11.glColor4f(r, g, b, 0.4F);
+        GL11.glLineWidth(1.0F);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        
+        
+        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+        
+        
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_BLEND);
+        ModRenderHelper.enableLighting();
     }
 }

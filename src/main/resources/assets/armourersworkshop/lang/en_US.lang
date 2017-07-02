@@ -379,7 +379,7 @@ inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory
 inventory.armourersworkshop:hologramProjector.tab.offset=Offset
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Rotation Offset
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Rotation Speed
-
+inventory.armourersworkshop:hologramProjector.showRotationPoint=Show Rotation Point?
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=No more undos

@@ -39,6 +39,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     private int rotationSpeedY = 0;
     private int rotationSpeedZ = 0;
     
+    private static boolean showRotationPoint;
+    
     public TileEntityHologramProjector() {
         super(INVENTORY_SIZE);
     }
@@ -89,6 +91,12 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public void setShowRotationPoint(boolean showRotationPoint) {
+        this.showRotationPoint = showRotationPoint;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     public int getOffsetX() {
         return offsetX;
     }
@@ -123,6 +131,10 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     
     public int getRotationSpeedZ() {
         return rotationSpeedZ;
+    }
+    
+    public boolean isShowRotationPoint() {
+        return showRotationPoint;
     }
     
     @Override
@@ -208,14 +220,6 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         default:
             break;
         }
-        
-
-        
-
-        
-        //bb.offset(dir.offsetZ * offsetX * scale, dir.offsetY * offsetY * scale, dir.offsetZ * offsetY * scale);
-        
-        //bb.offset(dir.offsetX * 1, dir.offsetY * 1, dir.offsetZ * 1);
         return bb;
     }
 }

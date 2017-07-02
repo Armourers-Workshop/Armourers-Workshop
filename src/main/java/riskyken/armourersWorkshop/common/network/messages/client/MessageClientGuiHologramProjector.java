@@ -72,7 +72,7 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             buf.writeInt(rotationSpeedY);
             buf.writeInt(rotationSpeedZ);
         }
-    }
+     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
