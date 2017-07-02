@@ -35,6 +35,12 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
     }
     
     @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+        BlockUtils.dropInventoryBlocks(world, x, y, z);
+        super.breakBlock(world, x, y, z, block, meta);
+    }
+    
+    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemStack) {
         int dir = BlockUtils.determineOrientation(x, y, z, entityLivingBase);
         world.setBlockMetadataWithNotify(x, y, z, dir, 2);
