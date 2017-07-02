@@ -4,11 +4,15 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -113,5 +117,32 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
         renderTileEntityAt((TileEntityHologramProjector)tileEntity, x, y, z, partialTickTime);
+        if (ConfigHandlerClient.showSkinRenderBounds) {
+            
+            if (tileEntity != null && !(tileEntity instanceof TileEntityHologramProjector)) {
+                return;
+            }
+            
+            
+            
+            float f1 = 0.002F;
+            
+            AxisAlignedBB aabb = tileEntity.getRenderBoundingBox().copy();
+            aabb.offset(x - tileEntity.xCoord, y - tileEntity.yCoord, z - tileEntity.zCoord);
+            ModRenderHelper.disableLighting();
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            GL11.glColor4f(1.0F, 1.0F, 0.0F, 0.4F);
+            GL11.glLineWidth(1.0F);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glDepthMask(false);
+            RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+            GL11.glDepthMask(true);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_BLEND);
+            ModRenderHelper.enableLighting();
+        }
     }
 }

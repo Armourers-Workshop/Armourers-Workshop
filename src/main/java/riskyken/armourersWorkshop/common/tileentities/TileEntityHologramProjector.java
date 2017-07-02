@@ -1,10 +1,14 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 public class TileEntityHologramProjector extends AbstractTileEntityInventory {
@@ -158,5 +162,60 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
             return compound.getInteger(key);
         }
         return defaultValue;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(-2, -2, -2, 3, 3, 3);
+        //bb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
+        ForgeDirection dir = ForgeDirection.getOrientation(getBlockMetadata());
+        bb.offset(xCoord, yCoord, zCoord);
+        
+        float scale = 0.0625F;
+        
+        switch (dir) {
+        case UP:
+            bb.offset(offsetX * scale,
+                    offsetY * scale,
+                    offsetZ * scale);
+            break;
+        case DOWN:
+            bb.offset(-offsetX * scale,
+                    -offsetY * scale,
+                    offsetZ * scale);
+            break;
+        case EAST:
+            bb.offset(offsetY * scale,
+                    -offsetX * scale,
+                    offsetZ * scale);
+            break;
+        case WEST:
+            bb.offset(-offsetY * scale,
+                    offsetX * scale,
+                    offsetZ * scale);
+            break;
+        case NORTH:
+            bb.offset(-offsetX * scale,
+                    -offsetZ * scale,
+                    -offsetY * scale);
+            break;
+        case SOUTH:
+            bb.offset(-offsetX * scale,
+                    offsetZ * scale,
+                    offsetY * scale);
+            break;
+        default:
+            break;
+        }
+        
+
+        
+
+        
+        //bb.offset(dir.offsetZ * offsetX * scale, dir.offsetY * offsetY * scale, dir.offsetZ * offsetY * scale);
+        
+        //bb.offset(dir.offsetX * 1, dir.offsetY * 1, dir.offsetZ * 1);
+        return bb;
     }
 }

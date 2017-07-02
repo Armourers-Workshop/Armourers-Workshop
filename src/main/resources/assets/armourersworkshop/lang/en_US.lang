@@ -53,6 +53,7 @@ tile.armourersworkshop:doll.name=Doll
 tile.armourersworkshop:skinningTable.name=Skinning Table
 tile.armourersworkshop:dyeTable.name=Dye Table
 tile.armourersworkshop:skinnable.name=Skinnable Block
+tile.armourersworkshop:hologramProjector.name=Hologram Projector
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
@@ -235,6 +236,7 @@ inventory.armourersworkshop:entityEquipment.name=Entity Equipment
 inventory.armourersworkshop:skinningTable.name=Skinning Table
 inventory.armourersworkshop:dyeTable.name=Dye Table
 inventory.armourersworkshop:skinnable.name=Skinnable Block
+inventory.armourersworkshop:hologramProjector.name=Hologram Projector
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Search:
@@ -372,6 +374,11 @@ inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Most Downloade
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Search Results: Page %d of %d - Total of %d results.
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
+
+inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory
+inventory.armourersworkshop:hologramProjector.tab.offset=Offset
+inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Rotation Offset
+inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Rotation Speed
 
 
 # Chat Messages
