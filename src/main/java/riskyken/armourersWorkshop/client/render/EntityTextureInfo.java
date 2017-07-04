@@ -23,7 +23,6 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class EntityTextureInfo {
     
@@ -155,7 +154,6 @@ public class EntityTextureInfo {
     
     public void checkTexture() {
         if (needsUpdate) {
-            ModLogger.log("rebuilding texture");
             buildTexture();
             needsUpdate = false;
         }
