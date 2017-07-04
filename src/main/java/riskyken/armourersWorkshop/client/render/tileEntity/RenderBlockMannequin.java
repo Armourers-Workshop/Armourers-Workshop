@@ -267,6 +267,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glPopMatrix();
         }
         
+        mc.mcProfiler.endStartSection("magicCircle");
         //Magic circle.
         if (te.isRenderExtras() & te.isVisible()) {
             if (te.hasSpecialRender()) {
@@ -310,7 +311,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     }
     
     private void renderMagicCircle(float r, float g, float b, float partialTickTime, int offset, boolean isChild) {
-        mc.mcProfiler.startSection("magicCircle");
         GL11.glPushMatrix();
         if (isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
@@ -344,7 +344,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             ModelHelper.disableChildModelScale();
         }
         GL11.glPopMatrix();
-        mc.mcProfiler.endSection();
     }
     
     private void renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
