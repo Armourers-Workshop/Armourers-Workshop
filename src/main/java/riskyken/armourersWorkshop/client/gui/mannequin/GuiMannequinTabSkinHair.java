@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -114,16 +115,16 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingSkinColour = true;
         }
         if (button == autoSkinButton) {
-            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
-            skinColour = autoColourSkin(rl);
+            PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(tileEntity);
+            skinColour = autoColourSkin(playerTexture.getResourceLocation());
             ((GuiMannequin)parent).tabOffset.sendData();
         }
         if (button == selectHairButton) {
             selectingHairColour = true;
         }
         if (button == autoHairButton) {
-            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
-            hairColour = autoColourHair(rl);
+            PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(tileEntity);
+            hairColour = autoColourHair(playerTexture.getResourceLocation());
             ((GuiMannequin)parent).tabOffset.sendData();
         }
     }

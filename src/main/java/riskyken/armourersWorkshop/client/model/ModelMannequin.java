@@ -1,28 +1,36 @@
 package riskyken.armourersWorkshop.client.model;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.common.data.BipedRotations;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelMannequin extends ModelBiped {
 
-    private boolean compiled;
+    private boolean slim = false;
     
-    public ModelMannequin() {
-        super();
+    public ModelMannequin(boolean slim) {
+        super(0F, 0F, 64, 32);
+        this.slim = slim;
         this.isChild = false;
-        this.compiled = false;
+        if (slim) {
+            this.bipedRightArm = new ModelRenderer(this, 40, 16);
+            this.bipedRightArm.addBox(-2.0F, -1.5F, -2F, 3, 12, 4, 0F);
+            this.bipedRightArm.setRotationPoint(-5.0F, 2.0F, 0.0F);
+            this.bipedLeftArm = new ModelRenderer(this, 40, 16);
+            this.bipedLeftArm.mirror = true;
+            this.bipedLeftArm.addBox(-1.0F, -1.5F, -2F, 3, 12, 4, 0F);
+            this.bipedLeftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
+        }
+    }
+    
+    public boolean isSlim() {
+        return slim;
     }
     
     private void resetRotationsOnPart(ModelRenderer mr) {
@@ -97,36 +105,6 @@ public class ModelMannequin extends ModelBiped {
                 this.bipedHeadwear.render(scale);
                 GL11.glEnable(GL11.GL_CULL_FACE);
             }
-        }
-    }
-    
-    public void compile(float scale) {
-        if (!compiled) {
-            compilePart(bipedHead, scale);
-            compilePart(bipedHeadwear, scale);
-            compilePart(bipedBody, scale);
-            compilePart(bipedRightArm, scale);
-            compilePart(bipedLeftArm, scale);
-            compilePart(bipedRightLeg, scale);
-            compilePart(bipedLeftLeg, scale);
-            compiled = true;
-        }
-        
-    }
-    
-    private void compilePart(ModelRenderer modelRenderer, float scale) {
-        Method m = ReflectionHelper.findMethod(ModelRenderer.class, modelRenderer, new String[] {"func_78788_d", "compileDisplayList"}, float.class);
-        m.setAccessible(true);
-        try {
-            m.invoke(modelRenderer, scale);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         }
     }
 }

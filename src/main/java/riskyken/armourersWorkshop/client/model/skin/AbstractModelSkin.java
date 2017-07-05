@@ -9,6 +9,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -19,6 +20,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
 
     public Skin npcSkinData = null;
     public ISkinDye npcDyeData = null;
+    protected boolean slim;
     
     protected static float SCALE = 0.0625F;
     
@@ -40,6 +42,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         this.isSneak = false;
         this.aimedBow = false;
         this.isChild = false;
+        this.slim = false;
         this.heldItemRight = 0;
         bipedLeftLeg.rotateAngleZ = 0F;
         bipedRightLeg.rotateAngleZ = 0F;
@@ -54,6 +57,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
             this.isSneak = false;
             this.aimedBow = false;
             this.isChild = false;
+            this.slim = false;
             this.heldItemRight = 0;
             if (entity instanceof EntityLivingBase) {
                 if (((EntityLivingBase)entity).getHeldItem() != null) {
@@ -112,6 +116,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         this.isSneak = false;
         this.aimedBow = false;
         this.heldItemRight = 0;
+        this.slim = false;
         if (modelBiped == null) {
             setRotation(bipedHead, 0F, 0F, 0F);
             setRotation(bipedBody, 0F, 0F, 0F);
@@ -128,6 +133,11 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
             setRotation(bipedLeftLeg, modelBiped.bipedLeftLeg);
             setRotation(bipedRightLeg, modelBiped.bipedRightLeg);
             isChild = modelBiped.isChild;
+            if (modelBiped instanceof ModelMannequin) {
+                this.slim = ((ModelMannequin)modelBiped).isSlim();
+            } else {
+                this.slim = false;
+            }
         }
     }
     

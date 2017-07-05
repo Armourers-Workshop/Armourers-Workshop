@@ -1,42 +1,30 @@
 package riskyken.armourersWorkshop.client.helper;
 
-import java.io.File;
-import java.util.HashSet;
-
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.ImageBufferDownload;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.Constants;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
 public final class MannequinTextureHelper {
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_IMAGE_URL = "imageUrl";
-    
-    private static long lastSkinDownload = 0;
-    private static final HashSet<String> downloadedSkins = new HashSet<String>();
+    private static final PlayerTexture NO_TEXTURE = new PlayerTexture(null, TextureType.USER);
     
     private MannequinTextureHelper() {}
-
-    public static ResourceLocation getMannequinResourceLocation(ItemStack itemStack) {
-        ResourceLocation resourceLocation = AbstractClientPlayer.locationStevePng;
-        
+    
+    public static PlayerTexture getMannequinTexture(ItemStack itemStack) {
+        PlayerTexture playerTexture = NO_TEXTURE;
         GameProfile gameProfile = null;
         String imageUrl = null;
         
@@ -51,64 +39,27 @@ public final class MannequinTextureHelper {
         }
         
         if (gameProfile != null) {
-            resourceLocation = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
-            AbstractClientPlayer.getDownloadImageSkin(resourceLocation, gameProfile.getName());
+            playerTexture = getMannequinTexture(gameProfile.getName(), TextureType.USER);
         }
         if (!StringUtils.isNullOrEmpty(imageUrl)) {
-            resourceLocation = downloadImageUrl(resourceLocation, imageUrl);
+            playerTexture = getMannequinTexture(imageUrl, TextureType.URL);
         }
-        return resourceLocation;
+        return playerTexture;
     }
     
-    public static ResourceLocation getMannequinResourceLocation(TileEntityMannequin tileEntity) {
-        ResourceLocation resourceLocation = AbstractClientPlayer.locationStevePng;
-        
-        
+    public static PlayerTexture getMannequinTexture(TileEntityMannequin tileEntity) {
+        PlayerTexture playerTexture = NO_TEXTURE;
         if (tileEntity.getGameProfile() != null && tileEntity.getTextureType() == TextureType.USER) {
             String name = tileEntity.getGameProfile().getName();
-            if (downloadedSkins.contains(name)) {
-                resourceLocation = AbstractClientPlayer.getLocationSkin(name);
-                AbstractClientPlayer.getDownloadImageSkin(resourceLocation, name);
-            } else {
-                if (lastSkinDownload + 100L < System.currentTimeMillis()) {
-                    lastSkinDownload = System.currentTimeMillis();
-                    resourceLocation = AbstractClientPlayer.getLocationSkin(name);
-                    AbstractClientPlayer.getDownloadImageSkin(resourceLocation, name);
-                    downloadedSkins.add(name);
-                }
-            }
+            playerTexture = getMannequinTexture(name, TextureType.USER);
         }
-        
         if (!StringUtils.isNullOrEmpty(tileEntity.getImageUrl()) &&  tileEntity.getTextureType() == TextureType.URL) {
-            resourceLocation = downloadImageUrl(resourceLocation, tileEntity.getImageUrl());
+            playerTexture = getMannequinTexture(tileEntity.getImageUrl(), TextureType.URL);
         }
-        
-        
-        return resourceLocation;
+        return playerTexture;
     }
     
-    private static ResourceLocation downloadImageUrl(ResourceLocation rl, String imageUrl) {
-        if (downloadedSkins.contains(imageUrl)) {
-            rl = new ResourceLocation(LibModInfo.ID.toLowerCase(), StringUtils.stripControlCodes(imageUrl));
-            downloadImage(rl, imageUrl);
-        } else {
-            if (lastSkinDownload + 100L < System.currentTimeMillis()) {
-                lastSkinDownload = System.currentTimeMillis();
-                rl = new ResourceLocation(LibModInfo.ID.toLowerCase(), StringUtils.stripControlCodes(imageUrl));
-                downloadImage(rl, imageUrl);
-                downloadedSkins.add(imageUrl);
-            }
-        }
-        return rl;
-    }
-    
-    private static ThreadDownloadImageData downloadImage(ResourceLocation resourceLocation, String imageUrl) {
-        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-        Object object = texturemanager.getTexture(resourceLocation);
-        if (object == null) {
-            object = new ThreadDownloadImageData((File)null, imageUrl, AbstractClientPlayer.locationStevePng, new ImageBufferDownload());
-            texturemanager.loadTexture(resourceLocation, (ITextureObject)object);
-        }
-        return (ThreadDownloadImageData)object;
+    private static PlayerTexture getMannequinTexture(String textureString, TextureType textureType) {
+        return ClientProxy.playerTextureDownloader.getPlayerTexture(textureString, textureType);
     }
 }

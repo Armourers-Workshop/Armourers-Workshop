@@ -55,6 +55,7 @@ import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmour
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.client.texture.PlayerTextureDownloader;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
@@ -87,6 +88,7 @@ public class ClientProxy extends CommonProxy {
     
     public static EquipmentWardrobeHandler equipmentWardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
+    public static PlayerTextureDownloader playerTextureDownloader;
     
     public static int renderPass;
     public static IIcon dyeBottleSlotIcon;
@@ -131,11 +133,12 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
         
         //Register item renderers.
-        ModelMannequin modelMannequin = new ModelMannequin();
+        ModelMannequin modelSteve = new ModelMannequin(false);
+        ModelMannequin modelAlex = new ModelMannequin(true);
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelMannequin));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelMannequin));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelSteve, modelAlex));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelSteve, modelAlex));
         
         //Register block renderers.
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
@@ -146,6 +149,7 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         equipmentWardrobeHandler = new EquipmentWardrobeHandler();
         playerTextureHandler = new PlayerTextureHandler();
+        playerTextureDownloader = new PlayerTextureDownloader();
         ClientSkinCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
