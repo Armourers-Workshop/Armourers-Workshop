@@ -53,6 +53,7 @@ tile.armourersworkshop:doll.name=娃娃模特
 tile.armourersworkshop:skinningTable.name=镶嵌工作台
 tile.armourersworkshop:dyeTable.name=配色工作台
 tile.armourersworkshop:skinnable.name=神秘方块
+tile.armourersworkshop:hologramProjector.name=全息投影仪
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=制作时装用%n使用工具潜行+右键可以编辑范围内所有造型方块.
@@ -216,6 +217,7 @@ skinPartType.armourers:sword.base.name=剑
 skinPartType.armourers:bow.base.name=弓
 skinPartType.armourers:bow.frame1.name=框架1
 skinPartType.armourers:bow.frame2.name=框架2
+skinPartType.armourers:bow.frame3.name=框架3
 skinPartType.armourers:arrow.base.name=箭
 skinPartType.armourers:block.base.name=方块
 skinPartType.armourers:wings.leftWing.name=左翼
@@ -234,6 +236,7 @@ inventory.armourersworkshop:entityEquipment.name=动物装备
 inventory.armourersworkshop:skinningTable.name=镶嵌工作台
 inventory.armourersworkshop:dyeTable.name=配色工作台
 inventory.armourersworkshop:skinnable.name=宝箱
+inventory.armourersworkshop:hologramProjector.name=全息投影仪
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=搜索:
@@ -284,8 +287,7 @@ inventory.armourersworkshop:armourerBrain.save=保存
 inventory.armourersworkshop:armourerBrain.load=加载
 inventory.armourersworkshop:armourerBrain.set=设置
 inventory.armourersworkshop:armourerBrain.clear=清除
-inventory.armourersworkshop:armourerBrain.westToEast=西到东
-inventory.armourersworkshop:armourerBrain.eastToWest=东到西
+inventory.armourersworkshop:armourerBrain.copy=复制
 inventory.armourersworkshop:armourerBrain.glowing=是否发光
 inventory.armourersworkshop:armourerBrain.ladder=是否为梯子
 inventory.armourersworkshop:armourerBrain.noCollision=是否能被人穿过
@@ -294,6 +296,21 @@ inventory.armourersworkshop:armourerBrain.multiblock=多方块?
 inventory.armourersworkshop:armourerBrain.bed=是否为床
 inventory.armourersworkshop:armourerBrain.inventory=是否是箱子?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=隐藏皮肤层?
+inventory.armourersworkshop:armourerBrain.tab.main=主菜单
+inventory.armourersworkshop:armourerBrain.tab.displaySettings=显示设定
+inventory.armourersworkshop:armourerBrain.tab.skinSettings=时装设定
+inventory.armourersworkshop:armourerBrain.tab.blockUtils=复制和清除
+inventory.armourersworkshop:armourerBrain.dialog.clear.title=清除
+inventory.armourersworkshop:armourerBrain.dialog.clear.close=关闭
+inventory.armourersworkshop:armourerBrain.dialog.clear.clear=清除
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=是否要清除造型方块?
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=是否要清除画在皮肤上的颜色?
+inventory.armourersworkshop:armourerBrain.dialog.copy.title=复制
+inventory.armourersworkshop:armourerBrain.dialog.copy.close=关闭
+inventory.armourersworkshop:armourerBrain.dialog.copy.copy=复制
+inventory.armourersworkshop:armourerBrain.dialog.copy.srcPart=来源部位:
+inventory.armourersworkshop:armourerBrain.dialog.copy.desPart=目的部位:
+inventory.armourersworkshop:armourerBrain.dialog.copy.mirror=镜像?
 
 inventory.armourersworkshop:colourMixer.label.hue=色相
 inventory.armourersworkshop:colourMixer.label.saturation=饱和度
@@ -358,6 +375,11 @@ inventory.armourersworkshop:globalSkinLibrary.searchResults.results=搜索结果
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=返回
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=下载时装
 
+inventory.armourersworkshop:hologramProjector.tab.inventory=物品栏
+inventory.armourersworkshop:hologramProjector.tab.offset=位置设置
+inventory.armourersworkshop:hologramProjector.tab.rotationOffset=旋转设置
+inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=旋转速度
+inventory.armourersworkshop:hologramProjector.showRotationPoint=是否显示中心点
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=没有更多步撤销
@@ -372,7 +394,7 @@ chat.armourersworkshop:slotUnlocked=解锁了一个 %s 时装栏. 你现在有 %
 chat.armourersworkshop:slotUnlockedFailed=%s 时装栏栏位达到最大数量.
 
 # Death Messages
-death.attack.victorious=%1$s mewo mewo mewo？？？
+death.attack.victorious=%1$s 脚被刺穿了（恭喜你发现了彩蛋）
 
 # Commands
 commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable> 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模型数据| 设置皮肤栏数|重新同步衣柜|管理员面板|设置物品可加载时装> 
