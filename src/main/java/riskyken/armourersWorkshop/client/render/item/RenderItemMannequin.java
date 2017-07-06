@@ -7,20 +7,22 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 
 public class RenderItemMannequin implements IItemRenderer {
     
-    private final ModelMannequin modelMannequin;
+    private final ModelMannequin modelSteve;
+    private final ModelMannequin modelAlex;
     
-    public RenderItemMannequin(ModelMannequin modelMannequin) {
-        this.modelMannequin = modelMannequin;
+    public RenderItemMannequin(ModelMannequin modelSteve, ModelMannequin modelAlex) {
+        this.modelSteve = modelSteve;
+        this.modelAlex = modelAlex;
     }
     
     @Override
@@ -92,8 +94,8 @@ public class RenderItemMannequin implements IItemRenderer {
             break;
         }
         
-        ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(item);
-        Minecraft.getMinecraft().renderEngine.bindTexture(rl);
+        PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(item);
+        Minecraft.getMinecraft().renderEngine.bindTexture(playerTexture.getResourceLocation());
         
         if (item.getItem() == Item.getItemFromBlock(ModBlocks.doll)) {
             float dollScale = 0.5F;
@@ -104,7 +106,11 @@ public class RenderItemMannequin implements IItemRenderer {
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        modelMannequin.render(null, 0, limbWobble, 0, headPitch, headTilt, scale, true);
+        if (playerTexture.isSlimModel()) {
+            modelAlex.render(null, 0, limbWobble, 0, headPitch, headTilt, scale, true);
+        } else {
+            modelSteve.render(null, 0, limbWobble, 0, headPitch, headTilt, scale, true);
+        }
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }

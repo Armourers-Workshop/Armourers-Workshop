@@ -38,6 +38,7 @@ public class ContainerDyeTable extends Container {
             }
         }
         
+        
         addSlotToContainer(new SlotDyeableSkin(tileEntity, 0, 26, 23, this));
         
         addSlotToContainer(new SlotDyeBottle(tileEntity, 1, 68, 36, this));
@@ -52,6 +53,7 @@ public class ContainerDyeTable extends Container {
         addSlotToContainer(new SlotOutput(tileEntity, 9, 26, 69, this));
         
         ItemStack stack = getSlot(36).getStack();
+        
         if (stack != null) {
             updateLockedSlots(stack);
         }
@@ -59,23 +61,45 @@ public class ContainerDyeTable extends Container {
     
     
     public void skinAdded(ItemStack stack) {
+        updateLockedSlots(stack);
+        if (tileEntity.getWorldObj().isRemote) {
+            return;
+        }
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
         skinRemoved();
         updateLockedSlots(stack);
         putStackInSlot(45, stack.copy());
+        putDyesInSlots();
+        detectAndSendChanges();
     }
     
+    public void skinRemoved() {
+        if (!tileEntity.getWorldObj().isRemote) {
+            for (int i = 0; i < 8; i++) {
+                SlotDyeBottle slot = (SlotDyeBottle) getSlot(37 + i);
+                if (!slot.isLocked()) {
+                    UtilPlayer.giveItem(invPlayer.player, getSlot(37 + i).getStack());
+                } else {
+                    slot.setLocked(false);
+                }
+                putStackInSlot(37 + i, null);
+            }
+            putStackInSlot(45, null);
+            detectAndSendChanges();
+        }
+        unlockedSlots();
+    }
+    
+    /**
+     * Reads the input slot and locks dye slots that are in use.
+     * @param stack
+     */
     private void updateLockedSlots(ItemStack stack) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
-                byte[] rgbt = dye.getDyeColour(i);
-                ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
-                PaintingHelper.setToolPaintColour(bottle, rgbt);
-                PaintingHelper.setToolPaint(bottle, PaintType.getPaintTypeFormSKey(rgbt[3]));
-                putStackInSlot(37 + i, bottle);
                 ((SlotDyeBottle)getSlot(37 + i)).setLocked(true);
             } else {
                 ((SlotDyeBottle)getSlot(37 + i)).setLocked(false);
@@ -83,17 +107,36 @@ public class ContainerDyeTable extends Container {
         }
     }
     
-    public void skinRemoved() {
+    private void unlockedSlots() {
         for (int i = 0; i < 8; i++) {
-            SlotDyeBottle slot = (SlotDyeBottle) getSlot(37 + i);
-            if (!slot.isLocked()) {
-                UtilPlayer.giveItem(invPlayer.player, getSlot(37 + i).getStack());
-            } else {
-                slot.setLocked(false);
-            }
-            putStackInSlot(37 + i, null);
+            ((SlotDyeBottle)getSlot(37 + i)).setLocked(false);
         }
-        putStackInSlot(45, null);
+    }
+    
+    /**
+     * Reads the output slot and adds dye bottles to their slots.
+     */
+    private void putDyesInSlots() {
+        if (tileEntity.getWorldObj().isRemote) {
+            return;
+        }
+        ItemStack outStack = getSlot(45).getStack();
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(outStack);
+        ISkinDye dye = skinPointer.getSkinDye();
+        for (int i = 0; i < 8; i++) {
+            if (dye.haveDyeInSlot(i)) {
+                byte[] rgbt = dye.getDyeColour(i);
+                ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
+                PaintingHelper.setToolPaintColour(bottle, rgbt);
+                PaintingHelper.setToolPaint(bottle, PaintType.getPaintTypeFormSKey(rgbt[3]));
+                if (dye.hasName(i)) {
+                    bottle.setStackDisplayName(dye.getDyeName(i));
+                }
+                putStackInSlot(37 + i, bottle);
+            } else {
+                putStackInSlot(37 + i, null);
+            }
+        }
     }
     
     @Override
@@ -115,13 +158,17 @@ public class ContainerDyeTable extends Container {
         ISkinDye skinDye = skinPointer.getSkinDye();
         
         byte[] rgbt = PaintingHelper.getToolPaintData(dyeStack);
-        skinDye.addDye(slotId, rgbt);
+        String name = null;
+        if (dyeStack.hasDisplayName()) {
+            name = dyeStack.getDisplayName();
+        }
+        skinDye.addDye(slotId, rgbt, name);
         
         SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
     }
     
     public void dyeRemoved(int slotId) {
-        ItemStack skinStack = tileEntity.getStackInSlot(9);
+        ItemStack skinStack = getSlot(45).getStack();
         if (skinStack == null) {
             return;
         }

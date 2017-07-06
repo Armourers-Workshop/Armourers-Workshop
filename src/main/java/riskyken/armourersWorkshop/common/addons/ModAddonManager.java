@@ -25,7 +25,7 @@ public final class ModAddonManager {
     private static IdentityHashMap<Item, IItemRenderer> customItemRenderers = Maps.newIdentityHashMap();
     private static ArrayList<ModAddon> loadedAddons = new ArrayList<ModAddon>(); 
     
-    public static String[] itemOverrides = {};
+    public static ArrayList<String> itemOverrides = new ArrayList<String>();
     
     public static AddonAquaTweaks addonAquaTweaks;
     public static AddonBalkonsWeaponMod addonBalkonsWeaponMod;
@@ -136,12 +136,13 @@ public final class ModAddonManager {
     }
     
     public static void initRenderers() {
+        checkForDuplicateItemOverrides();
         overrideItemRenders();
     }
     
     private static void overrideItemRenders() {
-        for (int i = 0; i < itemOverrides.length; i++) {
-            String arrayItem = itemOverrides[i];
+        for (int i = 0; i < itemOverrides.size(); i++) {
+            String arrayItem = itemOverrides.get(i);
             int splitterCount = arrayItem.length() - arrayItem.replace(":", "").length();
             if (splitterCount > 1) {
                 String type = arrayItem.substring(0, arrayItem.indexOf(":"));
@@ -161,6 +162,28 @@ public final class ModAddonManager {
                 }
             }
         }
+    }
+    
+    private static void checkForDuplicateItemOverrides() {
+        for (int i = 0; i < itemOverrides.size(); i++) {
+            if (!itemOverrides.get(i).isEmpty()) {
+                if (countNumberOfAppearancesInArray(itemOverrides, itemOverrides.get(i)) > 1) {
+                    ModLogger.log("Removing duplicate item override: " + itemOverrides.get(i));
+                    itemOverrides.remove(i);
+                }
+            }
+        }
+    }
+    
+    private static int countNumberOfAppearancesInArray(ArrayList<String> list, String item) {
+        int count = 0;
+        item = item.trim();
+        for (int i = 0; i < list.size(); i++) {
+            if (item.equalsIgnoreCase(list.get(i).trim())) {
+                count++;
+            }
+        }
+        return count;
     }
     
     private static void overrideItemRenderer(String modId, String itemName, RenderType renderType) {

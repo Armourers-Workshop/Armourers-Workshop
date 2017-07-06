@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
@@ -37,6 +38,7 @@ public class ModBlocks {
     public static Block skinnableChild;
     public static Block skinnableChildGlowing;
     public static Block dyeTable;
+    public static Block hologramProjector;
     
     public ModBlocks() {
         armourerBrain = new BlockArmourer();
@@ -57,6 +59,7 @@ public class ModBlocks {
         skinnableChild = new BlockSkinnableChild();
         skinnableChildGlowing = new BlockSkinnableChildGlowing();
         dyeTable = new BlockDyeTable();
+        hologramProjector = new BlockHologramProjector();
     }
 
     public void registerTileEntities() {
@@ -72,6 +75,7 @@ public class ModBlocks {
         registerTileEntity(TileEntitySkinnable.class, LibBlockNames.SKINNABLE);
         registerTileEntity(TileEntityDyeTable.class, LibBlockNames.DYE_TABLE);
         registerTileEntity(TileEntitySkinnableChild.class, LibBlockNames.SKINNABLE_CHILD);
+        registerTileEntity(TileEntityHologramProjector.class, LibBlockNames.HOLOGRAM_PROJECTOR);
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {

@@ -59,6 +59,8 @@ public class ModelSkinChest extends AbstractModelSkin {
             GL11.glPopAttrib();
         }
         
+        boolean override = armourData.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+        
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
             
@@ -74,9 +76,9 @@ public class ModelSkinChest extends AbstractModelSkin {
             if (part.getPartType().getPartName().equals("base")) {
                 renderChest(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
             } else if (part.getPartType().getPartName().equals("leftArm")) {
-                renderLeftArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
+                renderLeftArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, override);
             } else if (part.getPartType().getPartName().equals("rightArm")) {
-                renderRightArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
+                renderRightArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, override);
             }
             
             GL11.glPopMatrix();
@@ -99,7 +101,7 @@ public class ModelSkinChest extends AbstractModelSkin {
         GL11.glPopMatrix();
     }
     
-    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
         GL11.glPushMatrix();
         
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -113,12 +115,19 @@ public class ModelSkinChest extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleX), 1, 0, 0);
         
+        if (slim & !override) {
+            GL11.glTranslatef(-0.25F * scale, 0F, 0F);
+            GL11.glTranslatef(0F, 0.5F * scale, 0F);
+            
+            GL11.glScalef(0.75F, 1F, 1F);
+        }
+        
         renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         
         GL11.glPopMatrix();
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
         GL11.glPushMatrix();
         
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -130,6 +139,13 @@ public class ModelSkinChest extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
+        
+        if (slim & !override) {
+            GL11.glTranslatef(0.25F * scale, 0F, 0F);
+            GL11.glTranslatef(0F, 0.5F * scale, 0F);
+            
+            GL11.glScalef(0.75F, 1F, 1F);
+        }
         
         renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
         GL11.glPopMatrix();

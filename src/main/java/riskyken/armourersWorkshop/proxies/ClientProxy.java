@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ICrashCallable;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -48,11 +49,13 @@ import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockColourable;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
+import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockHologramProjector;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockSkinnable;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.client.texture.PlayerTextureDownloader;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
@@ -72,6 +75,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
@@ -84,6 +88,7 @@ public class ClientProxy extends CommonProxy {
     
     public static EquipmentWardrobeHandler equipmentWardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
+    public static PlayerTextureDownloader playerTextureDownloader;
     
     public static int renderPass;
     public static IIcon dyeBottleSlotIcon;
@@ -125,13 +130,15 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockColourable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
         
         //Register item renderers.
-        ModelMannequin modelMannequin = new ModelMannequin();
+        ModelMannequin modelSteve = new ModelMannequin(false);
+        ModelMannequin modelAlex = new ModelMannequin(true);
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelMannequin));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelMannequin));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelSteve, modelAlex));
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelSteve, modelAlex));
         
         //Register block renderers.
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
@@ -142,6 +149,7 @@ public class ClientProxy extends CommonProxy {
     public void init() {
         equipmentWardrobeHandler = new EquipmentWardrobeHandler();
         playerTextureHandler = new PlayerTextureHandler();
+        playerTextureDownloader = new PlayerTextureDownloader();
         ClientSkinCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
@@ -154,6 +162,26 @@ public class ClientProxy extends CommonProxy {
         if (HolidayHelper.valentins.isHolidayActive()) {
             enableValentinsClouds();
         }
+        
+        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
+        {
+            public String call() throws Exception
+            {
+                int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
+                return "\n" + 
+                        "\t\tRender Type: " + getSkinRenderType().toString() + "\n" + 
+                        "\t\tTexture Render: " + useSafeTextureRender() + "\n" + 
+                        "\t\tBaking Queue: " + bakeQueue + "\n" +
+                        "\t\tRequest Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue) + "\n" +
+                        "\t\tTexture Painting: " + useTexturePainting() + "\n" +
+                        "\t\tMultipass Skin Rendering: " + useMultipassSkinRendering();
+            }
+
+            public String getLabel()
+            {
+                return "Armourer's Workshop";
+            }
+        });
     }
     
     @SubscribeEvent

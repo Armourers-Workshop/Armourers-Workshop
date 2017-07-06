@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +21,7 @@ import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiBipedRotations;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
     
     private static final int ROT_MAN_TEX_WIDTH = 206;
@@ -42,7 +45,7 @@ public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
     private Rectangle_I_2D[] bipedParts = new Rectangle_I_2D[6];
     
     public GuiMannequinTabRotations(int tabId, GuiScreen parent, String inventoryName, BipedRotations rots) {
-        super(tabId, parent);
+        super(tabId, parent, true);
         this.inventoryName = inventoryName;
         updateRotationData(rots);
     }
@@ -61,8 +64,8 @@ public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         guiLoaded = false;
         
         int recX = (int)((width / 2F) - (ROT_MAN_TEX_WIDTH / 2));

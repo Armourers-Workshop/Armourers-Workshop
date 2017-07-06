@@ -1,36 +1,26 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
-import java.util.ArrayList;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
-import riskyken.armourersWorkshop.client.gui.controls.GuiTabController;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
+import riskyken.armourersWorkshop.client.gui.controls.GuiTabbed;
+import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequin extends GuiContainer {
+public class GuiMannequin extends GuiTabbed {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/mannequinNew.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.MANNEQUIN);
+    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.MANNEQUIN_TABS);
     
     public final TileEntityMannequin tileEntity;
-    private final EntityPlayer player;
     private final String inventoryName;
     
-    private boolean guiLoaded = false;
-    private GuiTabController tabController;
-    private static int activeTab = 0;
-    
-    private ArrayList<GuiTabPanel> tabList;
     public GuiMannequinTabRotations tabRotations;
     public GuiMannequinTabInventory tabInventory;
     public GuiMannequinTabOffset tabOffset;
@@ -39,11 +29,9 @@ public class GuiMannequin extends GuiContainer {
     public GuiMannequinTabExtraRenders tabExtraRenders;
     
     public GuiMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
-        super(new ContainerMannequin(invPlayer, tileEntity));
+        super(new ContainerMannequin(invPlayer, tileEntity), true, textureTabs);
         this.tileEntity = tileEntity;
-        this.player = invPlayer.player;
         this.inventoryName = tileEntity.getInventoryName();
-        tabList = new ArrayList<GuiTabPanel>();
         
         tabInventory = new GuiMannequinTabInventory(0, this);
         tabRotations = new GuiMannequinTabRotations(1, this, inventoryName, tileEntity.getBipedRotations());
@@ -58,6 +46,15 @@ public class GuiMannequin extends GuiContainer {
         tabList.add(tabSkinAndHair);
         tabList.add(tabTexture);
         tabList.add(tabExtraRenders);
+        
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(0, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotations")).setIconLocation(16, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(32, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinAndHair")).setIconLocation(48, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.name")).setIconLocation(64, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(80, 52));
+        tabController.setActiveTabIndex(activeTab);
+        tabChanged();
     }
     
     @Override
@@ -66,75 +63,7 @@ public class GuiMannequin extends GuiContainer {
         this.ySize = this.height;
         super.initGui();
         buttonList.clear();
-        guiLoaded = false;
-        
-        tabController = new GuiTabController(this);
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(0, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotations")).setIconLocation(16, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(32, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinAndHair")).setIconLocation(48, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.name")).setIconLocation(64, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(80, 52));
-        tabController.setActiveTabIndex(activeTab);
-        
-        for (int i = 0; i < tabList.size(); i++) {
-            tabList.get(i).initGui();
-        }
         buttonList.add(tabController);
-        
-        tabChanged();
-        guiLoaded = true;
-    }
-    
-    private void tabChanged() {
-        this.activeTab = tabController.getActiveTabIndex();
-        for (int i = 0; i < tabList.size(); i++) {
-            GuiTabPanel tab = tabList.get(i);
-            tab.tabChanged(activeTab);
-        }
-    }
-    
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
-        for (int i = 0; i < tabList.size(); i++) {
-            GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
-                tab.mouseClicked(mouseX, mouseY, button);
-            }
-        }
-    }
-    
-    @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        super.mouseMovedOrUp(mouseX, mouseY, button);
-        for (int i = 0; i < tabList.size(); i++) {
-            GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
-                tab.mouseMovedOrUp(mouseX, mouseY, button);
-            }
-        }
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button) {
-        if (button == tabController) {
-            tabChanged();
-        }
-    }
-    
-    @Override
-    protected void keyTyped(char c, int keycode) {
-        boolean keyTyped = false;
-        for (int i = 0; i < tabList.size(); i++) {
-            GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
-                keyTyped = tab.keyTyped(c, keycode);
-            }
-        }
-        if (!keyTyped) {
-            super.keyTyped(c, keycode);
-        }
     }
     
     @Override

@@ -1,11 +1,14 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabInventory extends GuiTabPanel {
 
     private static final int INV_SLOT_SIZE = 18;
@@ -25,12 +28,12 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
     private static final int INV_MAN_LEFT_PAD = 26;
     
     public GuiMannequinTabInventory(int tabId, GuiScreen parent) {
-        super(tabId, parent);
+        super(tabId, parent, true);
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         
         GuiContainer guiCon = (GuiContainer) parent;
         //Move player inventory slots.

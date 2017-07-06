@@ -17,4 +17,5 @@ public class LibGuiIds {
     public static final int GLOBAL_SKIN_LIBRARY = 13;
     public static final int ADMIN_PANEL = 14;
     public static final int SKINNABLE = 15;
+    public static final int HOLOGRAM_PROJECTOR = 16;
 }

@@ -1,6 +1,8 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
@@ -9,6 +11,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabExtraRenders extends GuiTabPanel {
     
     private final String inventoryName;
@@ -19,14 +22,14 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel {
     public GuiCheckBox isVisible;
     
     public GuiMannequinTabExtraRenders(int tabId, GuiScreen parent, String inventoryName, TileEntityMannequin tileEntity) {
-        super(tabId, parent);
+        super(tabId, parent, true);
         this.inventoryName = inventoryName;
         this.tileEntity = tileEntity;
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         isChildCheck = new GuiCheckBox(3, this.width / 2 - 78, 25, GuiHelper.getLocalizedControlName(inventoryName, "label.isChild"), false);
         isExtraRenders = new GuiCheckBox(0, this.width / 2 - 78, 40, GuiHelper.getLocalizedControlName(inventoryName, "label.isExtraRenders"), tileEntity.isRenderExtras());
         isFlying = new GuiCheckBox(0, this.width / 2 - 78, 55, GuiHelper.getLocalizedControlName(inventoryName, "label.isFlying"), tileEntity.isFlying());

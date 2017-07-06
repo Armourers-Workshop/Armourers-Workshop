@@ -7,12 +7,6 @@ import net.minecraft.client.gui.Gui;
 @SideOnly(Side.CLIENT)
 public class GuiTab extends Gui {
     
-    private final int TAB_TEXTURE_WIDTH = 26;
-    private final int TAB_TEXTURE_HEIGHT = 26;
-    
-    private final int ICON_TEXTURE_WIDTH = 16;
-    private final int ICON_TEXTURE_HEIGHT = 16;
-    
     private final String name;
     
     public boolean enabled;
@@ -21,9 +15,18 @@ public class GuiTab extends Gui {
     private int iconTextureX = 0;
     private int iconTextureY = 0;
     
+    private int iconTextureWidth = 16;
+    private int iconTextureHeight = 16;
+    
+    private int tabTextureWidth = 26;
+    private int tabTextureHeight = 26;
+    
+    private int padLeft, padRight, padTop, padBottom = 0;
+    
     public GuiTab(String name) {
         this.name = name;
         this.enabled = true;
+        this.visible = true;
     }
     
     public String getName() {
@@ -32,17 +35,17 @@ public class GuiTab extends Gui {
     
     public void render(int x, int y, int mouseX, int mouseY, boolean activeTab) {
         int textureOffsetX = 0;
-        int textureOffsetY = TAB_TEXTURE_HEIGHT;
+        int textureOffsetY = tabTextureHeight;
         if (isMouseOver(x, y, mouseX, mouseY)) {
-            textureOffsetX += TAB_TEXTURE_WIDTH;
+            textureOffsetX += tabTextureWidth;
         }
         if (!enabled) {
-            textureOffsetX = TAB_TEXTURE_WIDTH * 2;
+            textureOffsetX = tabTextureWidth * 2;
         }
         if (activeTab) {
             textureOffsetY = 0;
         }
-        drawTexturedModalRect(x, y, textureOffsetX, textureOffsetY, TAB_TEXTURE_WIDTH, TAB_TEXTURE_HEIGHT);
+        drawTexturedModalRect(x, y, textureOffsetX, textureOffsetY, tabTextureWidth, tabTextureHeight);
         renderIcon(x, y);
     }
     
@@ -62,9 +65,29 @@ public class GuiTab extends Gui {
         return this;
     }
     
+    public GuiTab setIconSize(int width, int height) {
+        this.iconTextureWidth = width;
+        this.iconTextureHeight = height;
+        return this;
+    }
+    
+    public GuiTab setTabTextureSize(int width, int height) {
+        this.tabTextureWidth = width;
+        this.tabTextureHeight = height;
+        return this;
+    }
+    
+    public GuiTab setPadding(int left, int right, int top, int bottom) {
+        this.padLeft = left;
+        this.padRight = right;
+        this.padTop = top;
+        this.padBottom = bottom;
+        return this;
+    }
+    
     public boolean isMouseOver(int x, int y, int mouseX, int mouseY) {
-        if (mouseX >= x & mouseX < x + TAB_TEXTURE_WIDTH) {
-            if (mouseY >= y & mouseY < y + TAB_TEXTURE_HEIGHT) {
+        if (mouseX >= x + padLeft & mouseX < x + tabTextureWidth - padRight) {
+            if (mouseY >= y + padTop & mouseY < y + tabTextureHeight - padBottom) {
                 return true;
             }
         }
@@ -73,9 +96,9 @@ public class GuiTab extends Gui {
     
     private void renderIcon(int x, int y) {
         drawTexturedModalRect(
-                x + (int)((float)TAB_TEXTURE_WIDTH / 2F - (float)ICON_TEXTURE_WIDTH / 2F),
-                y + (int)((float)TAB_TEXTURE_HEIGHT / 2F - (float)ICON_TEXTURE_HEIGHT / 2F),
+                x + (int)((float)tabTextureWidth / 2F - (float)iconTextureWidth / 2F),
+                y + (int)((float)tabTextureHeight / 2F - (float)iconTextureHeight / 2F),
                 iconTextureX, iconTextureY,
-                ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT);
+                iconTextureWidth, iconTextureHeight);
     }
 }

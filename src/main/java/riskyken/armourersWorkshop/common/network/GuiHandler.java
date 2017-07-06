@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiAdminPanel;
-import riskyken.armourersWorkshop.client.gui.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
 import riskyken.armourersWorkshop.client.gui.GuiDebugTool;
 import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
@@ -20,7 +19,9 @@ import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiSkinnable;
 import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
+import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
+import riskyken.armourersWorkshop.client.gui.hologramprojector.GuiHologramProjector;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
@@ -31,6 +32,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.inventory.ContainerEntityEquipment;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
+import riskyken.armourersWorkshop.common.inventory.ContainerHologramProjector;
 import riskyken.armourersWorkshop.common.inventory.ContainerMannequin;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerMiniArmourerBuilding;
@@ -46,6 +48,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
@@ -131,6 +134,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.SKINNABLE:
                 if (te instanceof TileEntitySkinnable) {
                     return new ContainerSkinnable(player.inventory, (TileEntitySkinnable)te);
+                }
+                break;
+            case LibGuiIds.HOLOGRAM_PROJECTOR:
+                if (te instanceof TileEntityHologramProjector) {
+                    return new ContainerHologramProjector(player.inventory, (TileEntityHologramProjector)te);
                 }
                 break;
         }
@@ -222,6 +230,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.SKINNABLE:
                 if (te instanceof TileEntitySkinnable) {
                     return new GuiSkinnable(player.inventory, (TileEntitySkinnable)te);
+                }
+                break;
+            case LibGuiIds.HOLOGRAM_PROJECTOR:
+                if (te instanceof TileEntityHologramProjector) {
+                    return new GuiHologramProjector(player.inventory, (TileEntityHologramProjector)te);
                 }
                 break;
         }

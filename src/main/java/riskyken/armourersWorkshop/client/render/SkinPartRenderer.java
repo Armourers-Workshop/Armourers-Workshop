@@ -111,6 +111,7 @@ public class SkinPartRenderer extends ModelBase {
                             }
                             if (ConfigHandlerClient.wireframeRender) {
                                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                                GL11.glLineWidth(1.0F);
                             }
                             skinModel.displayList[i].render();
                             if (ConfigHandlerClient.wireframeRender) {

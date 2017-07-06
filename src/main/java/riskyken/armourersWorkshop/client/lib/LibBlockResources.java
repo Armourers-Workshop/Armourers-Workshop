@@ -39,7 +39,9 @@ public final class LibBlockResources {
     public static final String DYE_TABLE_SIDE = PREFIX_RESOURCE + "dyeTable/dyeTableSide";
     public static final String DYE_TABLE_BOTTOM = PREFIX_RESOURCE + "dyeTable/dyeTableBottom";
     
-
+    public static final String HOLOGRAM_PROJECTOR_TOP = PREFIX_RESOURCE + "hologramProjector/hologramProjectorTop";
+    public static final String HOLOGRAM_PROJECTOR_SIDE = PREFIX_RESOURCE + "hologramProjector/hologramProjectorSide";
+    public static final String HOLOGRAM_PROJECTOR_BOTTOM = PREFIX_RESOURCE + "hologramProjector/hologramProjectorBottom";
     
     public static final String SKINNABLE = PREFIX_RESOURCE + "skinnable";
     public static final String CUBE = PREFIX_RESOURCE + "cube";

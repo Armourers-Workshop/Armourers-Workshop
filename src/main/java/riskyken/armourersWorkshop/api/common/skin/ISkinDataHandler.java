@@ -10,11 +10,32 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public interface ISkinDataHandler {
+        
+    /** Set a skin in the players wardrobe.
+     * 
+     * @param player Target player.
+     * @param stack Stack with skin.
+     * @param index Index for this skin type.
+     */
+    public void setSkinOnPlayer(EntityPlayer player, ItemStack stack, int index);
     
+    /**
+     * Set a skin in the players wardrobe.
+     * 
+     * @Deprecated Use the {@link #setSkinOnPlayer(EntityPlayer, ItemStack, Int)} method.
+     * @return Deprecated always returns false.
+     */
+    @Deprecated
     public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack);
     
+    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType, int index);
+    
+    @Deprecated
     public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType);
     
+    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType, int index);
+    
+    @Deprecated
     public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType);
     
     public boolean isValidEquipmentSkin(ItemStack stack);

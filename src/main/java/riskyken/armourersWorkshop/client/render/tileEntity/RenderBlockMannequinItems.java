@@ -21,6 +21,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
+import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -92,7 +93,7 @@ public class RenderBlockMannequinItems {
         }
     }
 
-    public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
+    public void renderChestStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelMannequin targetBiped, RenderManager rm, byte[] extraColours, double distance) {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, targetBiped, extraColours, distance, true);
@@ -270,7 +271,26 @@ public class RenderBlockMannequinItems {
             }
         }
         
-        rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
+        if (targetItem.requiresMultipleRenderPasses()) {
+            int passes = targetItem.getRenderPasses(stack.getItemDamage());
+            for (int i = 0 ; i < passes; i++) {
+                int c = targetItem.getColorFromItemStack(stack, i);
+                float r = (float)(c >> 16 & 255) / 255.0F;
+                float g = (float)(c >> 8 & 255) / 255.0F;
+                float b = (float)(c & 255) / 255.0F;
+                GL11.glColor4f(r, g, b, 1F);
+                rm.itemRenderer.renderItem(fakePlayer, stack, i, ItemRenderType.EQUIPPED);
+            }
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+        } else {
+            int c = targetItem.getColorFromItemStack(stack, 0);
+            float r = (float)(c >> 16 & 255) / 255.0F;
+            float g = (float)(c >> 8 & 255) / 255.0F;
+            float b = (float)(c & 255) / 255.0F;
+            GL11.glColor4f(r, g, b, 1F);
+            rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+        }
     }
     
     public void renderLeftArmStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {
@@ -322,7 +342,26 @@ public class RenderBlockMannequinItems {
             }
         }
         
-        rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
+        if (targetItem.requiresMultipleRenderPasses()) {
+            int passes = targetItem.getRenderPasses(stack.getItemDamage());
+            for (int i = 0 ; i < passes; i++) {
+                int c = targetItem.getColorFromItemStack(stack, i);
+                float r = (float)(c >> 16 & 255) / 255.0F;
+                float g = (float)(c >> 8 & 255) / 255.0F;
+                float b = (float)(c & 255) / 255.0F;
+                GL11.glColor4f(r, g, b, 1F);
+                rm.itemRenderer.renderItem(fakePlayer, stack, i, ItemRenderType.EQUIPPED);
+            }
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+        } else {
+            int c = targetItem.getColorFromItemStack(stack, 0);
+            float r = (float)(c >> 16 & 255) / 255.0F;
+            float g = (float)(c >> 8 & 255) / 255.0F;
+            float b = (float)(c & 255) / 255.0F;
+            GL11.glColor4f(r, g, b, 1F);
+            rm.itemRenderer.renderItem(fakePlayer, stack, 0, ItemRenderType.EQUIPPED);
+            GL11.glColor4f(1F, 1F, 1F, 1F);
+        }
     }
     
     public void renderWingsStack(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, RenderManager rm, byte[] extraColours, double distance) {

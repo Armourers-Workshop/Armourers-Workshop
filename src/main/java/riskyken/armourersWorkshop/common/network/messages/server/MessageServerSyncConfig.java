@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.common.network.messages.server;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -35,7 +36,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     public MessageServerSyncConfig() {
         this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
         this.allowClientsToUploadSkins = ConfigHandler.allowClientsToUploadSkins;
-        this.itemOverrides = ModAddonManager.itemOverrides;
+        this.itemOverrides = ModAddonManager.itemOverrides.toArray(new String[ModAddonManager.itemOverrides.size()]);
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
         this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
     }
@@ -78,7 +79,8 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private void setConfigsOnClient(MessageServerSyncConfig message) {
         ConfigHandler.allowClientsToDownloadSkins = message.allowClientsToDownloadSkins;
         ConfigHandler.allowClientsToUploadSkins = message.allowClientsToUploadSkins;
-        ModAddonManager.itemOverrides = message.itemOverrides;
+        ModAddonManager.itemOverrides.clear();
+        ModAddonManager.itemOverrides.addAll(Arrays.asList(message.itemOverrides));
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;
         ConfigHandler.remotePlayerId = message.playerId;

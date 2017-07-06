@@ -6,6 +6,7 @@ import java.util.HashMap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -68,9 +69,11 @@ public final class EntitySkinRenderHandler {
             if (props == null) {
                 return;
             }
+            Minecraft.getMinecraft().mcProfiler.startSection("wandOfStyleRender");
             ModRenderHelper.enableAlphaBlend();
             renderer.render(entity, event.renderer, event.x, event.y, event.z, props.getEquipmentData());
             ModRenderHelper.disableAlphaBlend();
+            Minecraft.getMinecraft().mcProfiler.endSection();
         }
     }
 }

@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,10 +16,12 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabSkinHair extends GuiTabPanel {
 
     private GuiButtonExt selectSkinButton;
@@ -33,13 +37,13 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     public Color hoverColour = null;
     
     public GuiMannequinTabSkinHair(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
-        super(tabId, parent);
+        super(tabId, parent, true);
         this.tileEntity = tileEntity;
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         skinColour = tileEntity.getSkinColour();
         hairColour = tileEntity.getHairColour();
         
@@ -111,16 +115,16 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             selectingSkinColour = true;
         }
         if (button == autoSkinButton) {
-            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
-            skinColour = autoColourSkin(rl);
+            PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(tileEntity);
+            skinColour = autoColourSkin(playerTexture.getResourceLocation());
             ((GuiMannequin)parent).tabOffset.sendData();
         }
         if (button == selectHairButton) {
             selectingHairColour = true;
         }
         if (button == autoHairButton) {
-            ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(tileEntity);
-            hairColour = autoColourHair(rl);
+            PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(tileEntity);
+            hairColour = autoColourHair(playerTexture.getResourceLocation());
             ((GuiMannequin)parent).tabOffset.sendData();
         }
     }

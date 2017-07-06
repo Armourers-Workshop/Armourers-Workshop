@@ -20,6 +20,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
@@ -244,14 +245,13 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         this.setInventorySlotContents(1, stackInput);
     }
     
-    private void clearPaintData(boolean update) {
+    public void clearPaintData(boolean update) {
         this.paintData = new int[SkinTexture.TEXTURE_SIZE];
         for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
             this.paintData[i] = 0x00FFFFFF;
         }
         if (update) {
-            this.markDirty();
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);   
+            resyncData();
         }
     }
     
@@ -288,11 +288,19 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public int getHeightOffset() {
         return HEIGHT_OFFSET;
     }
+    
 
-    public void clearArmourCubes() {
+    public void copySkinCubes(EntityPlayerMP player, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) {
+        try {
+            ArmourerWorldHelper.copySkinCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, srcPart, desPart, mirror);
+        } catch (SkinSaveException e) {
+            player.addChatMessage(new ChatComponentText(e.getMessage()));
+        }
+    }
+
+    public void clearArmourCubes(ISkinPartType partType) {
         if (skinType != null) {
-            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps);
-            clearPaintData(true);
+            ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps, partType);
             SkinProperties newSkinProps = new SkinProperties();
             newSkinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
             setSkinProps(newSkinProps);

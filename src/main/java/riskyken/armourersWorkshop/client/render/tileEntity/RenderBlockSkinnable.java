@@ -163,7 +163,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             GL11.glDisable(GL11.GL_LIGHTING);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.4F);
-            GL11.glLineWidth(2.0F);
+            GL11.glLineWidth(1.0F);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glDepthMask(false);
             RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
@@ -185,7 +185,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             GL11.glDisable(GL11.GL_LIGHTING);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             GL11.glColor4f(1.0F, 1.0F, 0.0F, 0.4F);
-            GL11.glLineWidth(2.0F);
+            GL11.glLineWidth(1.0F);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glDepthMask(false);
             RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);

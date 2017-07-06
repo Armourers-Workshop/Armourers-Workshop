@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.client.gui.mannequin;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.client.config.GuiUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -13,6 +15,7 @@ import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
+@SideOnly(Side.CLIENT)
 public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownListCallback {
     
     private final TileEntityMannequin tileEntity;
@@ -21,13 +24,13 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     private GuiButtonExt setNameButton;
     
     public GuiMannequinTabTexture(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
-        super(tabId, parent);
+        super(tabId, parent, true);
         this.tileEntity = tileEntity;
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void initGui(int xPos, int yPos, int width, int height) {
+        super.initGui(xPos, yPos, width, height);
         textureTypeList = new GuiDropDownList(0, width / 2 - 110, 25, 50, "", this);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.user"), TextureType.USER.toString(), true);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.url"), TextureType.URL.toString(), true);

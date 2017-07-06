@@ -73,22 +73,28 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         return (ExPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
+    /**
+     * @Deprecated Use the {@link #setEquipmentStack(ItemStack, int) setEquipmentStack(ItemStack stack, int index)} method.
+     */
     @Deprecated
     public void setEquipmentStack(ItemStack stack) {
+        setEquipmentStack(stack, 0);
+    }
+    
+    public void setEquipmentStack(ItemStack stack, int index) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer.skinType != null) {
             WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.skinType);
             if (wi != null) {
-                wi.setInventorySlotContents(0, stack);
+                wi.setInventorySlotContents(index, stack);
             }
         }
     }
     
-    @Deprecated
-    public ItemStack getEquipmentStack(ISkinType skinType) {
+    public ItemStack getEquipmentStack(ISkinType skinType, int index) {
         WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
         if (wi != null) {
-            return wi.getStackInSlot(0);
+            return wi.getStackInSlot(index);
         }
         return null;
     }
@@ -106,11 +112,10 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         }
     }
     
-    @Deprecated
-    public void clearEquipmentStack(ISkinType skinType) {
+    public void clearEquipmentStack(ISkinType skinType, int index) {
         WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
         if (wi != null) {
-            wi.setInventorySlotContents(0, null);
+            wi.setInventorySlotContents(index, null);
         }
     }
     

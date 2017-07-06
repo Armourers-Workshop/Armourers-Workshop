@@ -13,6 +13,7 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -38,6 +39,7 @@ import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
@@ -61,8 +63,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private static boolean isHalloween;
     private final static float SCALE = 0.0625F;
     private static long lastTextureBuild = 0;
-    
-    private final ModelMannequin model;
+    private final ModelMannequin modelSteve;
+    private final ModelMannequin modelAlex;
     private MannequinFakePlayer mannequinFakePlayer;
     private final RenderPlayer renderPlayer;
     private final Minecraft mc;
@@ -70,7 +72,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     public RenderBlockMannequin() {
         renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
-        model = new ModelMannequin();
+        modelSteve = new ModelMannequin(false);
+        modelAlex = new ModelMannequin(true);
     }
     
     public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
@@ -80,8 +83,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         isHalloween = HolidayHelper.halloween.isHolidayActive();
         MannequinFakePlayer fakePlayer = te.getFakePlayer();
         mc.mcProfiler.endStartSection("move");
-        
-        model.compile(SCALE);
         
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -108,6 +109,21 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             float dollScale = 0.5F;
             GL11.glScalef(dollScale, dollScale, dollScale);
             GL11.glTranslatef(0, SCALE * 24, 0);
+        }
+        
+        mc.mcProfiler.endStartSection("getTexture");
+        ResourceLocation rl;
+        boolean slimModel = false;
+        boolean download;
+        
+        PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(te);
+        rl = playerTexture.getResourceLocation();
+        slimModel = playerTexture.isSlimModel();
+        download = playerTexture.isDownloaded();
+        
+        ModelMannequin model = modelSteve;
+        if (slimModel) {
+            model = modelAlex;
         }
         
         mc.mcProfiler.endStartSection("fakePlayer");
@@ -172,9 +188,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             model.bipedHeadwear.rotateAngleY = model.bipedHead.rotateAngleY;
         }
         
-        mc.mcProfiler.endStartSection("getTexture");
-        ResourceLocation rl = MannequinTextureHelper.getMannequinResourceLocation(te);
-        
         mc.mcProfiler.endStartSection("textureBuild");
         
         if (te.haveSkinsUpdated()) {
@@ -224,7 +237,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         bindTexture(rl);
         
         
-        mc.mcProfiler.endStartSection("modelRender");
+        mc.mcProfiler.endStartSection("selectModelRender");
         te.getBipedRotations().hasCustomHead = hasCustomHead(te);
         
         boolean selectingColour = false;
@@ -250,10 +263,30 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glEnable(GL11.GL_LIGHTING);
         }
         
+        mc.mcProfiler.endStartSection("modelRender");
         if (te.isVisible() & !(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
-            renderModel(te, model, fakePlayer);
+            long time = System.currentTimeMillis();
+            int fadeTime = 1000;
+            int fade = (int) (time - playerTexture.getDownloadTime());
+            if (playerTexture.isDownloaded() & fade < fadeTime) {
+                bindTexture(AbstractClientPlayer.locationStevePng);
+                renderModel(te, model, fakePlayer);
+                bindTexture(rl);
+                ModRenderHelper.enableAlphaBlend();
+                GL11.glColor4f(1, 1, 1, fade / 1000F);
+                GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+                GL11.glPolygonOffset(-3F, -3F);
+                renderModel(te, model, fakePlayer);
+                GL11.glPolygonOffset(0F, 0F);
+                GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
+                ModRenderHelper.disableAlphaBlend();
+                GL11.glColor4f(1, 1, 1, 1);
+            } else {
+                renderModel(te, model, fakePlayer);
+            }
         }
         
+        mc.mcProfiler.endStartSection("earRender");
         if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
             GL11.glPushMatrix();
             GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleZ), 0, 0, 1);
@@ -267,6 +300,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             GL11.glPopMatrix();
         }
         
+        mc.mcProfiler.endStartSection("magicCircle");
         //Magic circle.
         if (te.isRenderExtras() & te.isVisible()) {
             if (te.hasSpecialRender()) {
@@ -310,7 +344,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     }
     
     private void renderMagicCircle(float r, float g, float b, float partialTickTime, int offset, boolean isChild) {
-        mc.mcProfiler.startSection("magicCircle");
         GL11.glPushMatrix();
         if (isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
@@ -344,7 +377,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             ModelHelper.disableChildModelScale();
         }
         GL11.glPopMatrix();
-        mc.mcProfiler.endSection();
     }
     
     private void renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
@@ -384,7 +416,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         return new Color(r,g,b);
     }
     
-    private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelBiped targetBiped, double distance) {
+    private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelMannequin targetBiped, double distance) {
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         MannequinFakePlayer renderEntity = fakePlayer;
         if (renderEntity == null) {
@@ -440,7 +472,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         return false;
     }
     
-    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelBiped targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
+    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelMannequin targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         

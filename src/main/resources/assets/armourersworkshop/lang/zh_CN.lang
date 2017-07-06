@@ -230,9 +230,10 @@ inventory.armourersworkshop:equipmentWardrobe.name=时装栏
 inventory.armourersworkshop:mannequin.name=模特
 inventory.armourersworkshop:doll.name=娃娃模特
 inventory.armourersworkshop:miniArmourer.name=迷你工坊 - (未完成)
-inventory.armourersworkshop:entityEquipment.name=实体设备
+inventory.armourersworkshop:entityEquipment.name=动物装备
 inventory.armourersworkshop:skinningTable.name=镶嵌工作台
 inventory.armourersworkshop:dyeTable.name=配色工作台
+inventory.armourersworkshop:skinnable.name=宝箱
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=搜索:
@@ -291,6 +292,7 @@ inventory.armourersworkshop:armourerBrain.noCollision=是否能被人穿过
 inventory.armourersworkshop:armourerBrain.seat=是否为椅子
 inventory.armourersworkshop:armourerBrain.multiblock=多方块?
 inventory.armourersworkshop:armourerBrain.bed=是否为床
+inventory.armourersworkshop:armourerBrain.inventory=是否是箱子?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=隐藏皮肤层?
 
 inventory.armourersworkshop:colourMixer.label.hue=色相
@@ -342,6 +344,20 @@ inventory.armourersworkshop:mannequin.tab.extraRenders=其他
 inventory.armourersworkshop:miniArmourer.save=保存
 inventory.armourersworkshop:miniArmourer.load=读取
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=潜行右键迷你工坊来访问.
+
+inventory.armourersworkshop:globalSkinLibrary.header.home=主页
+inventory.armourersworkshop:globalSkinLibrary.header.favourites=喜欢
+inventory.armourersworkshop:globalSkinLibrary.header.friends=好友
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=上传时装
+inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=输入你想搜索的内容...
+inventory.armourersworkshop:globalSkinLibrary.searchBox.search=搜索
+inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=显示所有时装
+inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=最新上传
+inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=最多下载
+inventory.armourersworkshop:globalSkinLibrary.searchResults.results=搜索结果: %d / %d 页- 总计 %d 页.
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=返回
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=下载时装
+
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=没有更多步撤销

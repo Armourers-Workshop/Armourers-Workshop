@@ -23,14 +23,13 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class EntityTextureInfo {
     
-    public static final int TEXTURE_WIDTH = 64;
-    public static final int TEXTURE_HEIGHT = 32;
-    public static final int TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
-    
+    /** Width of the entities texture. */
+    private final int textureWidth;
+    /** Height of the entities texture. */
+    private final int textureHeight;
     /** The last texture entity had when the replacement texture was made. */
     private int lastEntityTextureHash;
     /** The last skin hashs the entity had when the replacement texture was made. */
@@ -59,6 +58,12 @@ public class EntityTextureInfo {
     private boolean loading;
     
     public EntityTextureInfo() {
+        this(64, 32);
+    }
+    
+    public EntityTextureInfo(int width, int height) {
+        textureWidth = width;
+        textureHeight = height;
         lastEntityTextureHash = -1;
         lastSkinHashs = new int[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
         lastDyeHashs = new int[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
@@ -72,7 +77,7 @@ public class EntityTextureInfo {
         }
         lastEntitySkinColour = -1;
         lastEntityHairColour = -1;
-        bufferedEntitySkinnedImage = new BufferedImage(TEXTURE_WIDTH, TEXTURE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        bufferedEntitySkinnedImage = new BufferedImage(textureWidth, textureHeight, BufferedImage.TYPE_INT_ARGB);
         needsUpdate = true;
         loading = false;
     }
@@ -155,7 +160,6 @@ public class EntityTextureInfo {
     
     public void checkTexture() {
         if (needsUpdate) {
-            ModLogger.log("rebuilding texture");
             buildTexture();
             needsUpdate = false;
         }
@@ -169,8 +173,8 @@ public class EntityTextureInfo {
     }
     
     private void applyPlayerToTexture() {
-        for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
-            for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
+        for (int ix = 0; ix < textureWidth; ix++) {
+            for (int iy = 0; iy < textureHeight; iy++) {
                 if (bufferedEntityImage == null) {
                     break;
                 }
@@ -183,10 +187,10 @@ public class EntityTextureInfo {
         for (int i = 0; i < skins.length; i++) {
             Skin skin = skins[i];
             if (skin != null && skin.hasPaintData()) {
-                for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
-                    for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
+                for (int ix = 0; ix < textureWidth; ix++) {
+                    for (int iy = 0; iy < textureHeight; iy++) {
                         
-                        int paintColour = skin.getPaintData()[ix + (iy * TEXTURE_WIDTH)];
+                        int paintColour = skin.getPaintData()[ix + (iy * textureWidth)];
                         PaintType paintType = PaintType.getPaintTypeFromColour(paintColour);
                         
                         if (paintType == PaintType.NORMAL) {

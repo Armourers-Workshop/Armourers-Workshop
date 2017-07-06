@@ -50,9 +50,6 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             if (message.buttonId == 9) {
                 armourerBrain.toggleOverlay();
             }
-            if (message.buttonId == 10) {
-                armourerBrain.clearArmourCubes();
-            }
             if (message.buttonId == 6) {
                 armourerBrain.toggleHelper();
             }
