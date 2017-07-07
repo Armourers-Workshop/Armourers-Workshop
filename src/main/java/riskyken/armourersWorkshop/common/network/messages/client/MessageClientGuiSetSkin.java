@@ -1,38 +1,39 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
-
-import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
+import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
+import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 public class MessageClientGuiSetSkin implements IMessage, IMessageHandler<MessageClientGuiSetSkin, IMessage> {
 
-    String username;
+    PlayerTexture playerTexture;
     
     public MessageClientGuiSetSkin() {
-        // TODO Auto-generated constructor stub
     }
     
-    public MessageClientGuiSetSkin(String username) {
-        this.username = username;
+    public MessageClientGuiSetSkin(PlayerTexture playerTexture) {
+        this.playerTexture = playerTexture;
+    }
+    
+    @Override
+    public void toBytes(ByteBuf buf) {
+        NBTTagCompound compound = new NBTTagCompound();
+        playerTexture.writeToNBT(compound);
+        ByteBufUtils.writeTag(buf, compound);
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        username = ByteBufUtils.readUTF8String(buf);
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, username);
+        NBTTagCompound compound = ByteBufUtils.readTag(buf);
+        playerTexture = PlayerTexture.fromNBT(compound);
     }
     
     @Override
@@ -44,10 +45,8 @@ public class MessageClientGuiSetSkin implements IMessage, IMessageHandler<Messag
         
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            GameProfile gameProfile = new GameProfile(null, message.username);
-            armourerBrain.setGameProfile(gameProfile);
+            armourerBrain.setTexture(message.playerTexture);
         }
-        
         return null;
     }
 }

@@ -10,9 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockArmourer extends TileEntitySpecialRenderer {
@@ -28,7 +30,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         if (te.skinTexture == null) {
             te.skinTexture = new SkinTexture();
         }
-        te.skinTexture.updateGameProfile(te.getGameProfile());
+        
+        PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(te.getTexture());
+        te.skinTexture.updateForResourceLocation(playerTexture.getResourceLocation());
         te.skinTexture.updatePaintData(te.getPaintData());
         te.skinTexture.bindTexture();
         mc.mcProfiler.endSection();

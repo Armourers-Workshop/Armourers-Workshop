@@ -10,11 +10,8 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -55,20 +52,6 @@ public class SkinTexture {
     protected void finalize() throws Throwable {
         deleteTexture();
         super.finalize();
-    }
-    
-    public void updateGameProfile(GameProfile gameProfile) {
-        //TODO Look at RealmsScreen code.
-        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
-        if (gameProfile != null) {
-            rl = AbstractClientPlayer.getLocationSkin(gameProfile.getName());
-            AbstractClientPlayer.getDownloadImageSkin(rl, gameProfile.getName());
-        }
-        updateForResourceLocation(rl);
-        
-        if (bufferedPlayerImage == null) {
-            updateForResourceLocation(AbstractClientPlayer.locationStevePng);
-        }
     }
     
     public void updatePaintData(int[] paintData) {

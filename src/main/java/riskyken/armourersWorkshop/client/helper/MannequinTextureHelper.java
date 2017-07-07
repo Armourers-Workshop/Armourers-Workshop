@@ -10,8 +10,8 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.Constants;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
@@ -19,7 +19,7 @@ public final class MannequinTextureHelper {
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_IMAGE_URL = "imageUrl";
-    private static final PlayerTexture NO_TEXTURE = new PlayerTexture(null, TextureType.USER);
+    private static final PlayerTexture NO_TEXTURE = new PlayerTexture("", TextureType.USER);
     
     private MannequinTextureHelper() {}
     

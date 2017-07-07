@@ -1,12 +1,16 @@
 package riskyken.armourersWorkshop.client.texture;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
 public class PlayerTexture {
+    
+    private static final String TAG_TEXTURE_STRING = "string";
+    private static final String TAG_TEXTURE_TYPE = "type";
     
     private ResourceLocation resourceLocation;
     private boolean slimModel;
@@ -34,6 +38,10 @@ public class PlayerTexture {
         downloaded = true;
     }
     
+    public String getTextureString() {
+        return textureString;
+    }
+    
     public TextureType getTextureType() {
         return textureType;
     }
@@ -52,5 +60,21 @@ public class PlayerTexture {
     
     public ResourceLocation getResourceLocation() {
         return resourceLocation;
+    }
+    
+    public void writeToNBT(NBTTagCompound compound) {
+        compound.setString(TAG_TEXTURE_STRING, textureString);
+        compound.setByte(TAG_TEXTURE_TYPE, (byte) textureType.ordinal());
+    }
+    
+    public void readFromNBT(NBTTagCompound compound) {
+        textureString = compound.getString(TAG_TEXTURE_STRING);
+        textureType = TextureType.values()[compound.getByte(TAG_TEXTURE_TYPE)];
+    }
+    
+    public static PlayerTexture fromNBT(NBTTagCompound compound) {
+        PlayerTexture playerTexture = new PlayerTexture("", TextureType.USER);
+        playerTexture.readFromNBT(compound);
+        return playerTexture;
     }
 }

@@ -19,6 +19,7 @@ import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
@@ -525,10 +526,5 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         newProfile = gameProfile;
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-    
-    public static enum TextureType {
-        USER,
-        URL
     }
 }

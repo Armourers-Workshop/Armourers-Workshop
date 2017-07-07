@@ -18,10 +18,13 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -36,36 +39,39 @@ import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
-import riskyken.armourersWorkshop.utils.GameProfileUtils;
-import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 
-public class TileEntityArmourer extends AbstractTileEntityInventory implements IGameProfileCallback {
+public class TileEntityArmourer extends AbstractTileEntityInventory {
     
     private static final String TAG_DIRECTION = "direction";
-    private static final String TAG_OWNER = "owner";
     private static final String TAG_TYPE = "skinType";
-    private static final String TAG_TYPE_OLD = "type";
     private static final String TAG_SHOW_GUIDES = "showGuides";
     private static final String TAG_SHOW_OVERLAY = "showOverlay";
     private static final String TAG_SHOW_HELPER = "showHelper";
     private static final String TAG_PAINT_DATA = "paintData";
+    private static final String TAG_TEXTURE = "texture";
+    
+    private static final String TAG_TYPE_OLD = "type";
+    private static final String TAG_OWNER_OLD = "owner";
+    
     private static final int HEIGHT_OFFSET = 1;
     private static final int INVENTORY_SIZE = 2;
     
     private ForgeDirection direction;
-    private GameProfile gameProfile = null;
-    private GameProfile newProfile = null;
     private ISkinType skinType;
     private boolean showGuides;
     private boolean showOverlay;
     private boolean showHelper;
     private SkinProperties skinProps;
     private int[] paintData;
+    public boolean loadedArmourItem = false;
+    
+    private PlayerTexture texture = new PlayerTexture("", TextureType.USER);
+    private PlayerTexture textureOld = new PlayerTexture("", TextureType.USER);
+    
     @SideOnly(Side.CLIENT)
     public SkinTexture skinTexture;
-    public boolean loadedArmourItem = false;
     
     public TileEntityArmourer() {
         super(INVENTORY_SIZE);
@@ -359,8 +365,19 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         return showHelper;
     }
     
-    public GameProfile getGameProfile() {
-        return gameProfile;
+    public void setTexture(PlayerTexture texture) {
+        this.textureOld = this.texture;
+        this.texture = texture;
+        this.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public PlayerTexture getTexture() {
+        return texture;
+    }
+    
+    public PlayerTexture getTextureOld() {
+        return textureOld;
     }
     
     public void setSkinType(ISkinType skinType) {
@@ -372,13 +389,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         skinProps = new SkinProperties();
         clearPaintData(true);
         createBoundingBoxes(); 
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-    
-    public void setGameProfile(GameProfile gameProfile) {
-        this.gameProfile = gameProfile;
-        updateProfileData();
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -425,10 +435,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void resyncData() {
         this.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-    
-    private void updateProfileData() {
-        GameProfileUtils.updateProfileData(gameProfile, this);
     }
     
     @Override
@@ -478,6 +484,11 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         if (skinType == null && compound.hasKey(TAG_TYPE_OLD)) {
             skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(compound.getInteger(TAG_TYPE_OLD) - 1);
         }
+        if (compound.hasKey(TAG_OWNER_OLD, NBT.TAG_COMPOUND)) {
+            GameProfile gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER_OLD));
+            texture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
+        }
+        
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         if (compound.hasKey(TAG_SHOW_HELPER)) {
@@ -485,8 +496,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         }
         skinProps = new SkinProperties();
         skinProps.readFromNBT(compound);
-        if (compound.hasKey(TAG_OWNER, 10)) {
-            this.gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+        if (compound.hasKey(TAG_TEXTURE, NBT.TAG_COMPOUND)) {
+            texture = PlayerTexture.fromNBT(compound.getCompoundTag(TAG_TEXTURE));
         }
         if (compound.hasKey(TAG_PAINT_DATA)) {
             paintData = compound.getIntArray(TAG_PAINT_DATA);
@@ -504,22 +515,9 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setBoolean(TAG_SHOW_HELPER, showHelper);
         skinProps.writeToNBT(compound);
-        if (this.newProfile != null) {
-            this.gameProfile = newProfile;
-            this.newProfile = null;
-        }
-        if (this.gameProfile != null) {
-            NBTTagCompound profileTag = new NBTTagCompound();
-            NBTUtil.func_152460_a(profileTag, this.gameProfile);
-            compound.setTag(TAG_OWNER, profileTag);
-        }
+        NBTTagCompound textureCompound = new NBTTagCompound();
+        texture.writeToNBT(textureCompound);
+        compound.setTag(TAG_TEXTURE, textureCompound);
         compound.setIntArray(TAG_PAINT_DATA, this.paintData);
-    }
-
-    @Override
-    public void profileUpdated(GameProfile gameProfile) {
-        newProfile = gameProfile;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }
