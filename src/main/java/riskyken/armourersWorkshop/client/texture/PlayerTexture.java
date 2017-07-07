@@ -77,4 +77,32 @@ public class PlayerTexture {
         playerTexture.readFromNBT(compound);
         return playerTexture;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((textureString == null) ? 0 : textureString.hashCode());
+        result = prime * result + ((textureType == null) ? 0 : textureType.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PlayerTexture other = (PlayerTexture) obj;
+        if (textureString == null) {
+            if (other.textureString != null)
+                return false;
+        } else if (!textureString.equals(other.textureString))
+            return false;
+        if (textureType != other.textureType)
+            return false;
+        return true;
+    }
 }

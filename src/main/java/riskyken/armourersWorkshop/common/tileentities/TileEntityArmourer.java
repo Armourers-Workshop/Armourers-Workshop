@@ -457,8 +457,12 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
+        PlayerTexture playerTexture = texture;
         readBaseFromNBT(compound);
         readCommonFromNBT(compound);
+        if (!texture.equals(playerTexture)) {
+            textureOld = playerTexture;
+        }
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         loadedArmourItem = true;
     }

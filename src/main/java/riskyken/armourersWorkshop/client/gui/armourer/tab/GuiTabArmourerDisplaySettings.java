@@ -85,7 +85,6 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
     protected void actionPerformed(GuiButton button) {
         if (button.id == 8) {
             String username = textUserSkin.getText().trim();
-            // TODO change this to allow no username
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetSkin(new PlayerTexture(username, TextureType.values()[textureTypeList.getListSelectedIndex()])));
         } else {
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
@@ -118,7 +117,6 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         if (tileEntity.getSkinType() != null) {
             checkShowHelper.visible = tileEntity.getSkinType().showHelperCheckbox();
             checkShowHelper.yPosition = checkY;
-            //checkY += 16;
         } else {
             checkShowHelper.visible = false;
         }
