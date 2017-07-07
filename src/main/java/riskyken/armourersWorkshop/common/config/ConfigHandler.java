@@ -39,6 +39,7 @@ public class ConfigHandler {
     public static int startingWardrobeSlots = 3;
     public static boolean libraryShowsModelPreviews = true;
     public static boolean lockDyesOnSkins = false;
+    public static boolean instancedDyeTable = false;
     
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
@@ -126,6 +127,10 @@ public class ConfigHandler {
         lockDyesOnSkins = config
                 .getBoolean("lockDyesOnSkins", CATEGORY_GENERAL, false,
                         "When enabled players will not be able to remove dyes from skins in the dye table.");
+        
+        instancedDyeTable = config
+                .getBoolean("instancedDyeTable", CATEGORY_GENERAL, false,
+                        "If true the dye table will be instanced for each player. Items will be dropped when the table is closed.");
     }
     
     private static void loadCategoryRecipe() {

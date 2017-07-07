@@ -7,6 +7,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeBottle;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeableSkin;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
@@ -22,10 +23,19 @@ public class ContainerDyeTable extends Container {
 
     private final InventoryPlayer invPlayer;
     private final TileEntityDyeTable tileEntity;
+    private boolean instanced;
+    private IInventory inventory;
     
     public ContainerDyeTable(InventoryPlayer invPlayer, TileEntityDyeTable tileEntity) {
         this.invPlayer = invPlayer;
         this.tileEntity = tileEntity;
+        
+        instanced = ConfigHandler.instancedDyeTable;
+        if (instanced) {
+            inventory = new ModInventory("fakeInventory", 10);
+        } else {
+            inventory = tileEntity;
+        }
         
         int playerInvY = 108;
         int hotBarY = playerInvY + 58;
@@ -39,18 +49,18 @@ public class ContainerDyeTable extends Container {
         }
         
         
-        addSlotToContainer(new SlotDyeableSkin(tileEntity, 0, 26, 23, this));
+        addSlotToContainer(new SlotDyeableSkin(inventory, 0, 26, 23, this));
         
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 1, 68, 36, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 2, 90, 36, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 3, 112, 36, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 4, 134, 36, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 5, 68, 58, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 6, 90, 58, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 7, 112, 58, this));
-        addSlotToContainer(new SlotDyeBottle(tileEntity, 8, 134, 58, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 1, 68, 36, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 2, 90, 36, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 3, 112, 36, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 4, 134, 36, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 5, 68, 58, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 6, 90, 58, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 7, 112, 58, this));
+        addSlotToContainer(new SlotDyeBottle(inventory, 8, 134, 58, this));
         
-        addSlotToContainer(new SlotOutput(tileEntity, 9, 26, 69, this));
+        addSlotToContainer(new SlotOutput(inventory, 9, 26, 69, this));
         
         ItemStack stack = getSlot(36).getStack();
         
@@ -72,6 +82,27 @@ public class ContainerDyeTable extends Container {
         putStackInSlot(45, stack.copy());
         putDyesInSlots();
         detectAndSendChanges();
+    }
+    
+    @Override
+    public void onContainerClosed(EntityPlayer entityPlayer) {
+        super.onContainerClosed(entityPlayer);
+        if (!tileEntity.getWorldObj().isRemote & instanced) {
+            // Drop dye bottles.
+            /*
+            for (int i = 0; i < 8; i++) {
+                SlotDyeBottle slot = (SlotDyeBottle) getSlot(37 + i);
+                if (!slot.isLocked()) {
+                    entityPlayer.dropPlayerItemWithRandomChoice(slot.getStack(), false);
+                }
+            }
+            */
+            // Drop input slot.
+            Slot slot = getSlot(45);
+            if (slot.getHasStack()) {
+                entityPlayer.dropPlayerItemWithRandomChoice(slot.getStack(), false);
+            }
+        }
     }
     
     public void skinRemoved() {

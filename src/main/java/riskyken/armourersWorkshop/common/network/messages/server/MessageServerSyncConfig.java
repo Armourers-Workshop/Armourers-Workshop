@@ -26,6 +26,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private String[] itemOverrides;
     private boolean libraryShowsModelPreviews;
     private boolean lockDyesOnSkins;
+    private boolean instancedDyeTable;
     private UUID playerId;
     
     public MessageServerSyncConfig(EntityPlayer player) {
@@ -39,6 +40,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         this.itemOverrides = ModAddonManager.itemOverrides.toArray(new String[ModAddonManager.itemOverrides.size()]);
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
         this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
+        this.instancedDyeTable = ConfigHandler.instancedDyeTable;
     }
     
     @Override
@@ -48,6 +50,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ByteBufHelper.writeStringArrayToBuf(buf, itemOverrides);
         buf.writeBoolean(libraryShowsModelPreviews);
         buf.writeBoolean(lockDyesOnSkins);
+        buf.writeBoolean(instancedDyeTable);
         if (playerId == null) {
             buf.writeBoolean(false);
         } else {
@@ -64,6 +67,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         itemOverrides = ByteBufHelper.readStringArrayFromBuf(buf);
         libraryShowsModelPreviews = buf.readBoolean();
         lockDyesOnSkins = buf.readBoolean();
+        instancedDyeTable = buf.readBoolean();
         if (buf.readBoolean()) {
             playerId = ByteBufHelper.readUUID(buf);
         }
@@ -84,5 +88,6 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;
         ConfigHandler.remotePlayerId = message.playerId;
+        ConfigHandler.instancedDyeTable = message.instancedDyeTable;
     }
 }
