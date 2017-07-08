@@ -298,11 +298,14 @@ public class Skin implements ISkin {
 
     @Override
     public int hashCode() {
-        String result = this.toString();
-        for (int i = 0; i < parts.size(); i++) {
-            result += parts.get(i).toString();
+        if (lightHash == 0) {
+            String result = this.toString();
+            for (int i = 0; i < parts.size(); i++) {
+                result += parts.get(i).toString();
+            }
+            lightHash = result.hashCode();
         }
-        return result.hashCode();
+        return lightHash;
     }
 
     @Override
@@ -314,19 +317,9 @@ public class Skin implements ISkin {
         if (getClass() != obj.getClass())
             return false;
         Skin other = (Skin) obj;
-        if (properties == null) {
-            if (other.properties != null)
-                return false;
-        } else if (!properties.equals(other.properties))
-            return false;
-        if (parts == null) {
-            if (other.parts != null)
-                return false;
-        } else if (!parts.equals(other.parts))
-            return false;
-        if (equipmentSkinType != other.equipmentSkinType)
-            return false;
-        return true;
+        if (other.lightHash == lightHash)
+            return true;
+        return false;
     }
 
     @Override
