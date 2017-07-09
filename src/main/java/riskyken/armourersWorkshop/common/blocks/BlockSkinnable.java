@@ -13,6 +13,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -326,6 +328,33 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
         setBlockBoundsBasedOnState(world, x, y, z);
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+    }
+    
+    @Override
+    public boolean canCollideCheck(int meta, boolean holdingBoat) {
+        if (!ArmourersWorkshop.isDedicated()) {
+            return !checkCameraCollide();
+        }
+        return true;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public boolean checkCameraCollide() {
+        if (!Minecraft.getMinecraft().thePlayer.isRiding()) {
+            return false;
+        }
+        int renderCount = 0;
+        StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < stack.length; i++) {
+            StackTraceElement element = stack[i];
+            if (element.getClassName().equals(EntityRenderer.class.getName())) {
+                renderCount++;
+            }
+            if (renderCount == 4) {
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override
