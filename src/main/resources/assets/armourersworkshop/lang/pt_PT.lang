@@ -53,6 +53,7 @@ tile.armourersworkshop:doll.name=Boneco
 tile.armourersworkshop:skinningTable.name=Mesa de Aplicação de Pele
 tile.armourersworkshop:dyeTable.name=Mesa de Corantes
 tile.armourersworkshop:skinnable.name=Bloco de Pele Aplicável
+tile.armourersworkshop:hologramProjector.name=Projetor de Holograma
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Permite-te construir peles de equipamentos.
@@ -94,6 +95,10 @@ item.armourersworkshop:dyeBottle.name=Frasco de Corante
 item.armourersworkshop:blendingTool.name=Ferramenta Mesclagem
 item.armourersworkshop:armourersHammer.name=Martelo Armeiro
 item.armourersworkshop:debugTool.name=Ferramenta Debug
+item.armourersworkshop:skinUnlock.0.name=Desbloqueio de Pele para Cabeça
+item.armourersworkshop:skinUnlock.1.name=Desbloqueio de Pele para Peito
+item.armourersworkshop:skinUnlock.2.name=Desbloqueio de Pele para Pernas
+item.armourersworkshop:skinUnlock.3.name=Desbloqueio de Pele para Pés
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=Um presente de RiskyKen
@@ -112,6 +117,10 @@ item.armourersworkshop:hueTool.flavour=Muda a cor de um bloco%nsem afetar o somb
 item.armourersworkshop:blockMarker.flavour=Cria um marcador em um cubo de equipamento.%nUtilize apenas com peles que necessitam de marcador de blocos.
 item.armourersworkshop:dyeBottle.flavour=Usado na Mesa de Corantes para tingir peles.
 item.armourersworkshop:armourersHammer.flavour=Usado para girar blocos.
+item.armourersworkshop:skinUnlock.0.flavour=Destrava 1 slot additional de pele para cabeça no guarda-roupa.
+item.armourersworkshop:skinUnlock.1.flavour=Destrava 1 slot additional de pele para peito no guarda-roupa. 
+item.armourersworkshop:skinUnlock.2.flavour=Destrava 1 slot additional de pele para pernas no guarda-roupa. 
+item.armourersworkshop:skinUnlock.3.flavour=Destrava 1 slot additional de pele para pés no guarda-roupa.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6Intensidade:&7 %s
@@ -210,6 +219,7 @@ skinPartType.armourers:bow.frame2.name=Quadro 2
 skinPartType.armourers:bow.frame3.name=Quadro 3
 skinPartType.armourers:arrow.base.name=Base
 skinPartType.armourers:block.base.name=Base
+skinPartType.armourers:block.multiblock.name=Multibloco
 skinPartType.armourers:wings.leftWing.name=Asa Esquerda 
 skinPartType.armourers:wings.rightWing.name=Asa Direita
 
@@ -225,6 +235,8 @@ inventory.armourersworkshop:miniArmourer.name=Mini Armeiro - (TEMP)
 inventory.armourersworkshop:entityEquipment.name=Equipamento da Entidade
 inventory.armourersworkshop:skinningTable.name=Mesa de Aplicação de Pele
 inventory.armourersworkshop:dyeTable.name=Mesa de Corantes
+inventory.armourersworkshop:skinnable.name=Bloco de Pele Aplicável
+inventory.armourersworkshop:hologramProjector.name=Projector de Holograma
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Busca:
@@ -241,9 +253,25 @@ inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=Ver arquiv
 inventory.armourersworkshop:armourLibrary.rollover.notOnServer=Precisas estar conectado a um servidor para usar esse recurso.
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Abrir pasta da biblioteca no seu computador.
 inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Apagar pele.
+inventory.armourersworkshop:armourLibrary.rollover.deleteSkinSelect=Selecionar item para apagar.
 inventory.armourersworkshop:armourLibrary.rollover.refresh=Atualizar arquivos da biblioteca.
+inventory.armourersworkshop:armourLibrary.rollover.newFolder=Criar nova pasta.
 inventory.armourersworkshop:armourLibrary.label.enterFileName=Inserir o nome do arquivo.
 inventory.armourersworkshop:armourLibrary.label.typeToSearch=Digitar para buscar...
+inventory.armourersworkshop:armourLibrary.dialog.newFolder.title=Nova Pasta
+inventory.armourersworkshop:armourLibrary.dialog.newFolder.enterFolderName=Digitar nome da pasta...
+inventory.armourersworkshop:armourLibrary.dialog.newFolder.close=Fechar
+inventory.armourersworkshop:armourLibrary.dialog.newFolder.create=Criar
+inventory.armourersworkshop:armourLibrary.dialog.newFolder.invalidFolderName=O nome da pasta contém caracteres inválidos.
+inventory.armourersworkshop:armourLibrary.dialog.delete.title=Apagar
+inventory.armourersworkshop:armourLibrary.dialog.delete.close=Fechar
+inventory.armourersworkshop:armourLibrary.dialog.delete.delete=Apagar
+inventory.armourersworkshop:armourLibrary.dialog.delete.deleteFolder=Apagar pasta "%s" e todos os arquivos que ela contém?
+inventory.armourersworkshop:armourLibrary.dialog.delete.deleteFile=Apagar arquivo "%s"?
+inventory.armourersworkshop:armourLibrary.dialog.overwrite.title=Sobrescrever Arquivo
+inventory.armourersworkshop:armourLibrary.dialog.overwrite.close=Fechar
+inventory.armourersworkshop:armourLibrary.dialog.overwrite.ok=OK
+inventory.armourersworkshop:armourLibrary.dialog.overwrite.overwriteFile=Sobrescrever arquivo "%s"?
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Nome do Item:
 inventory.armourersworkshop:armourerBrain.label.username=Nome do Usuário:
@@ -252,20 +280,37 @@ inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Veloc. em voo:
 inventory.armourersworkshop:armourerBrain.label.minAngle=Ângulo Mínimo:
 inventory.armourersworkshop:armourerBrain.label.maxAngle=Ângulo Máximo:
 inventory.armourersworkshop:armourerBrain.label.clone=Clone:
-inventory.armourersworkshop:armourerBrain.showGuide=Mostrar guia de construção?
+inventory.armourersworkshop:armourerBrain.showGuide=Mostrar guias?
 inventory.armourersworkshop:armourerBrain.showOverlay=Mostrar overlay da cabeça?
 inventory.armourersworkshop:armourerBrain.showHelper=Mostrar modelo auxiliar?
 inventory.armourersworkshop:armourerBrain.save=Salvar
 inventory.armourersworkshop:armourerBrain.load=Carregar
-inventory.armourersworkshop:armourerBrain.set=Definir
+inventory.armourersworkshop:armourerBrain.set=OK
 inventory.armourersworkshop:armourerBrain.clear=Limpar
-inventory.armourersworkshop:armourerBrain.westToEast=Oeste-Leste
-inventory.armourersworkshop:armourerBrain.eastToWest=Leste-Oeste
+inventory.armourersworkshop:armourerBrain.copy=Copiar
 inventory.armourersworkshop:armourerBrain.glowing=Brilhar?
 inventory.armourersworkshop:armourerBrain.ladder=Escada?
 inventory.armourersworkshop:armourerBrain.noCollision=Sem colisão?
 inventory.armourersworkshop:armourerBrain.seat=Assento?
-inventory.armourersworkshop:armourerBrain.overrideBodyPart=Sobrepor?
+inventory.armourersworkshop:armourerBrain.multiblock=Multibloco?
+inventory.armourersworkshop:armourerBrain.bed=Cama?
+inventory.armourersworkshop:armourerBrain.inventory=Inventário?
+inventory.armourersworkshop:armourerBrain.overrideBodyPart=Substituir?
+inventory.armourersworkshop:armourerBrain.tab.main=Principal
+inventory.armourersworkshop:armourerBrain.tab.displaySettings=Configuração de Exibição
+inventory.armourersworkshop:armourerBrain.tab.skinSettings=Configuração de Pele
+inventory.armourersworkshop:armourerBrain.tab.blockUtils=Utils. de Bloco
+inventory.armourersworkshop:armourerBrain.dialog.clear.title=Limpar
+inventory.armourersworkshop:armourerBrain.dialog.clear.close=Fechar
+inventory.armourersworkshop:armourerBrain.dialog.clear.clear=Limpar
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=Limpar cubos de equipamento?
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=Limpar pintura de pele?
+inventory.armourersworkshop:armourerBrain.dialog.copy.title=Copiar
+inventory.armourersworkshop:armourerBrain.dialog.copy.close=Fechar
+inventory.armourersworkshop:armourerBrain.dialog.copy.copy=Copiar
+inventory.armourersworkshop:armourerBrain.dialog.copy.srcPart=Parte Original:
+inventory.armourersworkshop:armourerBrain.dialog.copy.desPart=Parte Destino:
+inventory.armourersworkshop:armourerBrain.dialog.copy.mirror=Espelhar?
 
 inventory.armourersworkshop:colourMixer.label.hue=Matiz
 inventory.armourersworkshop:colourMixer.label.saturation=Saturação
@@ -280,7 +325,7 @@ inventory.armourersworkshop:equipmentWardrobe.selectSkin=Escolha Cor de Pele
 inventory.armourersworkshop:equipmentWardrobe.autoSkin=Auto
 inventory.armourersworkshop:equipmentWardrobe.selectHair=Escolha Cor de Cabelo
 inventory.armourersworkshop:equipmentWardrobe.autoHair=Auto
-inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Sobrepor Pele
+inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Substituir Pele
 inventory.armourersworkshop:equipmentWardrobe.renderHeadArmour=Exibir armadura da cabeça?
 inventory.armourersworkshop:equipmentWardrobe.renderChestArmour=Exibir armadura do peito?
 inventory.armourersworkshop:equipmentWardrobe.renderLegArmour=Exibir armadura das pernas?
@@ -317,6 +362,25 @@ inventory.armourersworkshop:miniArmourer.save=Salvar
 inventory.armourersworkshop:miniArmourer.load=Carregar
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=Agachar + botão direito no mini armeiro para acessar a interface de construção.
 
+inventory.armourersworkshop:globalSkinLibrary.header.home=Início
+inventory.armourersworkshop:globalSkinLibrary.header.favourites=Favoritos
+inventory.armourersworkshop:globalSkinLibrary.header.friends=Amigos
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Hospedar Pele
+inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Digitar para buscar...
+inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Buscar
+inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Mostrar tudo
+inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Recentemente Hospedado
+inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Os Mais Baixados
+inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Resultado da Busca: Pág. %d de %d - Total de %d resultados.
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Voltar
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Baixar Pele
+
+inventory.armourersworkshop:hologramProjector.tab.inventory=Inventário
+inventory.armourersworkshop:hologramProjector.tab.offset=Deslocamentos
+inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Afastamento de Rotação
+inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Veloc. de Rotação
+inventory.armourersworkshop:hologramProjector.showRotationPoint=Mostrar Ponto de Rotação?
+
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=Não dá para desfazer mais
 chat.armourersworkshop:undo.undoing=Desfazendo
@@ -325,12 +389,21 @@ chat.armourersworkshop:inventoryGiftFail=Alguém tentou te dar um presente, mas 
 chat.armourersworkshop:updateAvailable=Atualização do Armourer's Workshop %s está disponível.
 chat.armourersworkshop:updateDownload=[Download]
 chat.armourersworkshop:updateDownloadRollover=Clica para ir à página de download
+chat.armourersworkshop:devWarning=Aviso: você está usando uma versão de desenvolvimento do Armourer's Workshop. As versões de desenvolvimento são apenas para testes e não recomendadas para uso público.
+chat.armourersworkshop:slotUnlocked=Slot de pele para %s foi destravado. Agora são %s slots.
+chat.armourersworkshop:slotUnlockedFailed=O total de slots de pele para %s está no máximo.
 
 # Death Messages
 death.attack.victorious=%1$s foi esfaqueado até a morte pela coroa de Vic.
 
 # Commands
 commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setSkinColumnCount> <player> [skinName | value]
+commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
+commands.armourers.clearSkins.usage=/armourers clearSkins <player>
+commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>
+commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
+commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
+commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=O arquivo %1$s não foi encontrado.
 
 # Creative tab
@@ -343,24 +416,24 @@ keys.armourersworkshop.undo=Desfaz
 
 # Guide Book
 # Chapter 1
-book.armourersworkshop:guideBook.contents.name=Contents
+book.armourersworkshop:guideBook.contents.name=Conteúdo
 
 # Chapter 2
-book.armourersworkshop:guideBook.introduction.name=Introduction
+book.armourersworkshop:guideBook.introduction.name=Introdução
 book.armourersworkshop:guideBook.introduction.paragraph1=Note: This book is still a WIP.&pWelcome to the Armourer's Workshop Guide Book.&pThis book will help you get started with Armourer's Workshop.
 book.armourersworkshop:guideBook.introduction.paragraph2=Armourer's Workshop will let you build your own equipment skins for armour and weapons to replace their look!
 
 # Chapter 3
-book.armourersworkshop:guideBook.armourer.name=Armourer
+book.armourersworkshop:guideBook.armourer.name=Armeiro
 book.armourersworkshop:guideBook.armourer.paragraph1=The first thing you will need to get started building your custom armour is the armourer.&pAfter placing the block down right click it to open the GUI. Down the left side you will see all the types of equipment that can be build.
 book.armourersworkshop:guideBook.armourer.paragraph2=Select the type of equipment that you would like to crate then start building your equipment using Equipment Cubes.&pAfter you have finished place an equipment template into the armourer type in a name and press save.
 
 # Chapter 4
-book.armourersworkshop:guideBook.equipmentTemplates.name=Equipment Templates
+book.armourersworkshop:guideBook.equipmentTemplates.name=Gabarito de Equip.
 book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=Equipment templates are what equipment skins are saved on simply place the equipment skin into the equipment wardrobe to apply the skin.
 
 # Chapter 5
-book.armourersworkshop:guideBook.paintingTools.name=Painting Tools
+book.armourersworkshop:guideBook.paintingTools.name=Ferramenta de Pintura
 book.armourersworkshop:guideBook.paintingTools.paragraph1=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Equipment Cube.
 book.armourersworkshop:guideBook.paintingTools.paragraph2=Colour Picker&nLets you pick a colour from an Equipment Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
 book.armourersworkshop:guideBook.paintingTools.paragraph3=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Equipment Cube.
