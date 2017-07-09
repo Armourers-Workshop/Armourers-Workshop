@@ -234,7 +234,7 @@ public class TileEntitySkinnable extends TileEntity {
     }
 
     private Skin getSkinServer(ISkinPointer skinPointer) {
-        return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
+        return CommonSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
     public void setRelatedBlocks(ArrayList<BlockLocation> relatedBlocks) {
