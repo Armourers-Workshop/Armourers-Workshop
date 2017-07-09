@@ -43,6 +43,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
@@ -133,7 +134,10 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.SKINNABLE:
                 if (te instanceof TileEntitySkinnable) {
-                    return new ContainerSkinnable(player.inventory, (TileEntitySkinnable)te);
+                    Skin skin = ((TileEntitySkinnable)te).getSkin(((TileEntitySkinnable)te).getSkinPointer());
+                    if (skin != null) {
+                        return new ContainerSkinnable(player.inventory, (TileEntitySkinnable)te, skin);
+                    }
                 }
                 break;
             case LibGuiIds.HOLOGRAM_PROJECTOR:
@@ -229,7 +233,10 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiAdminPanel();
             case LibGuiIds.SKINNABLE:
                 if (te instanceof TileEntitySkinnable) {
-                    return new GuiSkinnable(player.inventory, (TileEntitySkinnable)te);
+                    Skin skin = ((TileEntitySkinnable)te).getSkin(((TileEntitySkinnable)te).getSkinPointer());
+                    if (skin != null) {
+                        return new GuiSkinnable(player.inventory, (TileEntitySkinnable)te, skin);
+                    }
                 }
                 break;
             case LibGuiIds.HOLOGRAM_PROJECTOR:

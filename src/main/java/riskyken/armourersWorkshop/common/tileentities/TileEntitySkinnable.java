@@ -18,6 +18,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -30,6 +31,7 @@ import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.utils.ModConstants;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.plushieWrapper.common.world.BlockLocation;
@@ -42,6 +44,7 @@ public class TileEntitySkinnable extends TileEntity {
     private static final String TAG_Y = "y";
     private static final String TAG_Z = "z";
     private static final String TAG_BLOCK_INVENTORY = "blockInventory";
+    private static final String TAG_BLOCK_INVENTORY_SIZE = "blockInventorySize";
     private static final int NBT_VERSION = 1;
 
     private int nbtVersion;
@@ -74,9 +77,11 @@ public class TileEntitySkinnable extends TileEntity {
     public void setSkinPointer(Skin skin, SkinPointer skinPointer) {
         this.skinPointer = skinPointer;
         if (skin != null & isParent()) {
-            if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false)) {
+            SkinProperties skinProps = skin.getProperties();
+            if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false)) {
                 blockInventory = true;
-                inventory = new ModInventory(LibBlockNames.SKINNABLE, 36, this);
+                int size = skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 9) * skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4);
+                inventory = new ModInventory(LibBlockNames.SKINNABLE, size, this);
             }
         }
         markDirty();
@@ -215,7 +220,7 @@ public class TileEntitySkinnable extends TileEntity {
         this.bedOccupied = bedOccupied;
     }
     
-    private Skin getSkin(ISkinPointer skinPointer) {
+    public Skin getSkin(ISkinPointer skinPointer) {
         if (getWorldObj().isRemote) {
             return getSkinClient(skinPointer);
         } else {
@@ -302,6 +307,7 @@ public class TileEntitySkinnable extends TileEntity {
             }
             if (isParent() & blockInventory & inventory != null) {
                 compound.setBoolean(TAG_BLOCK_INVENTORY, true);
+                compound.setInteger(TAG_BLOCK_INVENTORY_SIZE, inventory.getSizeInventory());
                 inventory.saveItemsToNBT(compound);
             } else {
                 compound.setBoolean(TAG_BLOCK_INVENTORY, false);
@@ -338,8 +344,12 @@ public class TileEntitySkinnable extends TileEntity {
             inventory = null;
             if (isParent()) {
                 if (compound.hasKey(TAG_BLOCK_INVENTORY, Constants.NBT.TAG_BYTE) && compound.getBoolean(TAG_BLOCK_INVENTORY)) {
+                    int size = 36;
+                    if (compound.hasKey(TAG_BLOCK_INVENTORY_SIZE, NBT.TAG_INT)) {
+                        size = compound.getInteger(TAG_BLOCK_INVENTORY_SIZE);
+                    }
                     blockInventory = true;
-                    inventory = new ModInventory(LibBlockNames.SKINNABLE, 36, this);
+                    inventory = new ModInventory(LibBlockNames.SKINNABLE, size, this);
                     inventory.loadItemsFromNBT(compound);
                 }
             }

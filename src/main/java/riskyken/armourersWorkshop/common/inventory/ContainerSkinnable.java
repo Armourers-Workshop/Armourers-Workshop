@@ -5,16 +5,22 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 
 public class ContainerSkinnable extends Container {
 
     private final TileEntitySkinnable tileEntity;
+    private int size;
     
-    public ContainerSkinnable(InventoryPlayer invPlayer, TileEntitySkinnable tileEntity) {
+    public ContainerSkinnable(InventoryPlayer invPlayer, TileEntitySkinnable tileEntity, Skin skin) {
         this.tileEntity = tileEntity;
         
-        int playerInvY = 103;
+        int width = skin.getProperties().getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 9);
+        int height = skin.getProperties().getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4);
+        size = width * height;
+        
+        int playerInvY = height * 18 + 41;
         int hotBarY = playerInvY + 58;
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, hotBarY));
@@ -25,9 +31,10 @@ public class ContainerSkinnable extends Container {
             }
         }
         
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(tileEntity.getInventory(), x + y * 9, 8 + 18 * x, 18 + y * 18));
+        int guiWidth = 176;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                addSlotToContainer(new Slot(tileEntity.getInventory(), x + y * width, (guiWidth / 2 - (width * 18) / 2) + 1 + 18 * x, 21 + y * 18));
             }
         }
     }
@@ -53,7 +60,7 @@ public class ContainerSkinnable extends Container {
                 }
             } else {
                 // Moving from player to tile entity.
-                if (!this.mergeItemStack(stack, 36, 72, false)) {
+                if (!this.mergeItemStack(stack, 36, 36 + size, false)) {
                     return null;
                 }
             }

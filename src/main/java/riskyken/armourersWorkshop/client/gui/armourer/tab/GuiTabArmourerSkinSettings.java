@@ -8,12 +8,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
+import riskyken.armourersWorkshop.client.gui.controls.GuiInventorySize;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinProps;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -36,6 +39,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
     private GuiCheckBox checkBlockMultiblock;
     private GuiCheckBox checkBlockBed;
     private GuiCheckBox checkBlockInventory;
+    private GuiInventorySize inventorySize;
     
     private GuiCustomSlider sliderWingIdleSpeed;
     private GuiCustomSlider sliderWingFlyingSpeed;
@@ -64,7 +68,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         checkBlockNoCollision = new GuiCheckBox(15, 10, 50, GuiHelper.getLocalizedControlName(guiName, "noCollision"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
         checkBlockSeat = new GuiCheckBox(15, 10, 65, GuiHelper.getLocalizedControlName(guiName, "seat"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
         checkBlockMultiblock = new GuiCheckBox(15, 10, 80, GuiHelper.getLocalizedControlName(guiName, "multiblock"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
-        checkBlockBed = new GuiCheckBox(15, 10, 95, GuiHelper.getLocalizedControlName(guiName, "bed"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
+        checkBlockBed = new GuiCheckBox(15, 22, 95, GuiHelper.getLocalizedControlName(guiName, "bed"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
         checkBlockInventory = new GuiCheckBox(15, 10, 110, GuiHelper.getLocalizedControlName(guiName, "inventory"), skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false));
         if (!checkBlockMultiblock.isChecked()) {
             checkBlockBed.enabled = false;
@@ -74,6 +78,9 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         }
         //TODO remove to re-enable beds
         checkBlockBed.enabled = false;
+        inventorySize = new GuiInventorySize(10, 145, 9, 6);
+        inventorySize.setSrc(TEXTURE, 176, 0);
+        inventorySize.setSelection(skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 9), skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4));
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, 10, 45, 154, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, 10, 65, 154, 10, "", "ms", 200D, 10000D, skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D), false, true, this);
@@ -89,6 +96,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         buttonList.add(checkBlockMultiblock);
         buttonList.add(checkBlockBed);
         buttonList.add(checkBlockInventory);
+        buttonList.add(inventorySize);
         
         buttonList.add(sliderWingIdleSpeed);
         buttonList.add(sliderWingFlyingSpeed);
@@ -113,7 +121,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         
         if (
                 button == checkBlockGlowing | button == checkBlockLadder | button == checkBlockNoCollision |
-                button == checkBlockSeat | button == checkBlockMultiblock | button == checkBlockBed | button == checkBlockInventory) {
+                button == checkBlockSeat | button == checkBlockMultiblock | button == checkBlockBed | button == checkBlockInventory |
+                button == inventorySize) {
             skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, checkBlockGlowing.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_LADDER, checkBlockLadder.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, checkBlockNoCollision.isChecked());
@@ -121,6 +130,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
             skinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, checkBlockMultiblock.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_BED, checkBlockBed.isChecked());
             skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY, checkBlockInventory.isChecked());
+            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY_WIDTH, inventorySize.getSelectionWidth());
+            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY_HEIGHT, inventorySize.getSelectionHeight());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         
@@ -128,6 +139,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
             skinProps.setProperty(Skin.KEY_ARMOUR_OVERRIDE, checkArmourOverrideBodyPart.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
+        
+        inventorySize.visible = checkBlockInventory.isChecked();
     }
     
     public void resetValues(SkinProperties skinProperties) {
@@ -139,6 +152,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         checkBlockMultiblock.setIsChecked(skinProperties.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
         checkBlockBed.setIsChecked(skinProperties.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
         checkBlockInventory.setIsChecked(skinProperties.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false));
+        inventorySize.setSelection(skinProperties.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 9), skinProperties.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4));
+        inventorySize.visible = checkBlockInventory.isChecked();
         
         sliderWingMinAngle.setValue(skinProperties.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D));
         sliderWingMinAngle.updateSlider();
@@ -188,6 +203,16 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
             this.fontRenderer.drawString(flyingSpeedLabel, 10, 56, 4210752);
             this.fontRenderer.drawString(minAngleLabel, 10, 76, 4210752);
             this.fontRenderer.drawString(maxAngleLabel, 10, 96, 4210752);
+        }
+        
+        if (tileEntity.getSkinType() == SkinTypeRegistry.skinBlock & checkBlockInventory.isChecked()) {
+            String labelInventorySize = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.inventorySize");
+            
+            String labelInventorySlots = "inventory." + LibModInfo.ID.toLowerCase() + ":" + tileEntity.getInventoryName() + ".label.inventorySlots";
+            labelInventorySlots = StatCollector.translateToLocalFormatted(labelInventorySlots, inventorySize.getSelectionWidth() * inventorySize.getSelectionHeight(), inventorySize.getSelectionWidth(), inventorySize.getSelectionHeight());
+            
+            this.fontRenderer.drawString(labelInventorySize, 10, 126, 4210752);
+            this.fontRenderer.drawString(labelInventorySlots, 10, 136, 4210752);
         }
     }
 

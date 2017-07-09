@@ -146,6 +146,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             skinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
             skinProps.setProperty(Skin.KEY_BLOCK_BED, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
             skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false));
+            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY_WIDTH, this.skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 10));
+            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY_HEIGHT, this.skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4));
         }
         
         if (skinType == SkinTypeRegistry.skinWings) {

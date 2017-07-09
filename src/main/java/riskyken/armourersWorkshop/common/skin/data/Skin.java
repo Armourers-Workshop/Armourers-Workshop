@@ -37,6 +37,8 @@ public class Skin implements ISkin {
     public static final String KEY_BLOCK_MULTIBLOCK = "blockMultiblock";
     public static final String KEY_BLOCK_BED = "blockBed";
     public static final String KEY_BLOCK_INVENTORY = "blockInventory";
+    public static final String KEY_BLOCK_INVENTORY_WIDTH = "blockInventoryWidth";
+    public static final String KEY_BLOCK_INVENTORY_HEIGHT = "blockInventoryHeight";
     
     public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
     public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
