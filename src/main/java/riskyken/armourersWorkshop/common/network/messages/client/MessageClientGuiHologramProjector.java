@@ -16,6 +16,11 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
     private int offsetY = 16;
     private int offsetZ = 0;
     
+    private boolean hasAngle = false;
+    private int angleX = 0;
+    private int angleY = 16;
+    private int angleZ = 0;
+    
     private boolean hasRotationOffset = false;
     private int rotationOffsetX = 0;
     private int rotationOffsetY = 0;
@@ -34,6 +39,13 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
         this.offsetY = y;
         this.offsetZ = z;
         hasOffsets = true;
+    }
+    
+    public void setAngle(int x, int y, int z) {
+        this.angleX = x;
+        this.angleY = y;
+        this.angleZ = z;
+        hasAngle = true;
     }
     
     public void setRotationOffset(int x, int y, int z) {
@@ -59,6 +71,13 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             buf.writeInt(offsetZ);
         }
         
+        buf.writeBoolean(hasAngle);
+        if (hasAngle) {
+            buf.writeInt(angleX);
+            buf.writeInt(angleY);
+            buf.writeInt(angleZ);
+        }
+        
         buf.writeBoolean(hasRotationOffset);
         if (hasRotationOffset) {
             buf.writeInt(rotationOffsetX);
@@ -81,6 +100,13 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             offsetY = buf.readInt();
             offsetZ = buf.readInt();
             hasOffsets = true;
+        }
+        
+        if (buf.readBoolean()) {
+            angleX = buf.readInt();
+            angleY = buf.readInt();
+            angleZ = buf.readInt();
+            hasAngle = true;
         }
         
         if (buf.readBoolean()) {
@@ -111,6 +137,9 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             TileEntityHologramProjector tileEntity = ((ContainerHologramProjector)container).getTileEntity();
             if (message.hasOffsets) {
                 tileEntity.setOffset(message.offsetX, message.offsetY, message.offsetZ);
+            }
+            if (message.hasAngle) {
+                tileEntity.setAngle(message.angleX, message.angleY, message.angleZ);
             }
             if (message.hasRotationOffset) {
                 tileEntity.setRotationOffset(message.rotationOffsetX, message.rotationOffsetY, message.rotationOffsetZ);

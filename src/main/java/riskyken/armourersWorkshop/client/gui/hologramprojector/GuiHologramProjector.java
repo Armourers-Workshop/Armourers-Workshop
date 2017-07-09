@@ -27,6 +27,7 @@ public class GuiHologramProjector extends GuiTabbed {
     
     public GuiHologramProjectorTabInventory tabInventory;
     public GuiHologramProjectorTabOffset tabOffset;
+    public GuiHologramProjectorTabAngle tabAngle;
     public GuiHologramProjectorTabRotationOffset tabRotationOffset;
     public GuiHologramProjectorTabRotationSpeed tabRotationSpeed;
     
@@ -39,16 +40,19 @@ public class GuiHologramProjector extends GuiTabbed {
         
         tabInventory = new GuiHologramProjectorTabInventory(0, this);
         tabOffset = new GuiHologramProjectorTabOffset(1, this, inventoryName, tileEntity);
-        tabRotationOffset = new GuiHologramProjectorTabRotationOffset(2, this, inventoryName, tileEntity);
-        tabRotationSpeed = new GuiHologramProjectorTabRotationSpeed(3, this, inventoryName, tileEntity);
+        tabAngle = new GuiHologramProjectorTabAngle(2, this, inventoryName, tileEntity);
+        tabRotationOffset = new GuiHologramProjectorTabRotationOffset(3, this, inventoryName, tileEntity);
+        tabRotationSpeed = new GuiHologramProjectorTabRotationSpeed(4, this, inventoryName, tileEntity);
         
         tabList.add(tabInventory);
         tabList.add(tabOffset);
+        tabList.add(tabAngle);
         tabList.add(tabRotationOffset);
         tabList.add(tabRotationSpeed);
         
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(0, 52));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(32, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.angle")).setIconLocation(64, 52));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationOffset")).setIconLocation(32, 52));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationSpeed")).setIconLocation(48, 52));
         tabController.setActiveTabIndex(activeTab);

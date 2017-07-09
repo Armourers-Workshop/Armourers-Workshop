@@ -383,6 +383,7 @@ inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Ski
 
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory
 inventory.armourersworkshop:hologramProjector.tab.offset=Offset
+inventory.armourersworkshop:hologramProjector.tab.angle=Angle
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Rotation Offset
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Rotation Speed
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Show Rotation Point?

@@ -100,6 +100,16 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
             GL11.glRotatef((float)angleZ, 0, 0, 1);
         }
         
+        if (tileEntity.getAngleX() != 0) {
+            GL11.glRotatef(tileEntity.getAngleX(), 1F, 0F, 0F);
+        }
+        if (tileEntity.getAngleY() != 0) {
+            GL11.glRotatef(tileEntity.getAngleY(), 0F, 1F, 0F);
+        }
+        if (tileEntity.getAngleZ() != 0) {
+            GL11.glRotatef(tileEntity.getAngleZ(), 0F, 0F, 1F);
+        }
+        
         GL11.glTranslated(tileEntity.getRotationOffsetX() * scale, tileEntity.getRotationOffsetY() * scale, tileEntity.getRotationOffsetZ() * scale);
         
         

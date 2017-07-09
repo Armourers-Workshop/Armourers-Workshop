@@ -18,6 +18,10 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     private static final String TAG_OFFSET_X = "offsetX";
     private static final String TAG_OFFSET_Y = "offsetY";
     private static final String TAG_OFFSET_Z = "offsetZ";
+
+    private static final String TAG_ANGLE_X = "angleX";
+    private static final String TAG_ANGLE_Y = "angleY";
+    private static final String TAG_ANGLE_Z = "angleZ";
     
     private static final String TAG_ROTATION_OFFSET_X = "rotationOffsetX";
     private static final String TAG_ROTATION_OFFSET_Y = "rotationOffsetY";
@@ -30,6 +34,10 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     private int offsetX = 0;
     private int offsetY = 16;
     private int offsetZ = 0;
+    
+    private int angleX = 0;
+    private int angleY = 0;
+    private int angleZ = 0;
     
     private int rotationOffsetX = 0;
     private int rotationOffsetY = 0;
@@ -75,6 +83,14 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public void setAngle(int x, int y, int z) {
+        this.angleX = x;
+        this.angleY = y;
+        this.angleZ = z;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     public void setRotationOffset(int x, int y, int z) {
         this.rotationOffsetX = x;
         this.rotationOffsetY = y;
@@ -107,6 +123,18 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     
     public int getOffsetZ() {
         return offsetZ;
+    }
+    
+    public int getAngleX() {
+        return angleX;
+    }
+    
+    public int getAngleY() {
+        return angleY;
+    }
+    
+    public int getAngleZ() {
+        return angleZ;
     }
     
     public int getRotationOffsetX() {
@@ -144,6 +172,10 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         compound.setInteger(TAG_OFFSET_Y, offsetY);
         compound.setInteger(TAG_OFFSET_Z, offsetZ);
         
+        compound.setInteger(TAG_ANGLE_X, angleX);
+        compound.setInteger(TAG_ANGLE_Y, angleY);
+        compound.setInteger(TAG_ANGLE_Z, angleZ);
+        
         compound.setInteger(TAG_ROTATION_OFFSET_X, rotationOffsetX);
         compound.setInteger(TAG_ROTATION_OFFSET_Y, rotationOffsetY);
         compound.setInteger(TAG_ROTATION_OFFSET_Z, rotationOffsetZ);
@@ -159,6 +191,10 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         offsetX = readIntFromCompound(compound, TAG_OFFSET_X, 0);
         offsetY = readIntFromCompound(compound, TAG_OFFSET_Y, 16);
         offsetZ = readIntFromCompound(compound, TAG_OFFSET_Z, 0);
+        
+        angleX = readIntFromCompound(compound, TAG_ANGLE_X, 0);
+        angleY = readIntFromCompound(compound, TAG_ANGLE_Y, 0);
+        angleZ = readIntFromCompound(compound, TAG_ANGLE_Z, 0);
         
         rotationOffsetX = readIntFromCompound(compound, TAG_ROTATION_OFFSET_X, 0);
         rotationOffsetY = readIntFromCompound(compound, TAG_ROTATION_OFFSET_Y, 0);
