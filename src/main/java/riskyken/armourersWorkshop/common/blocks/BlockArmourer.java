@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -36,7 +38,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
                 ForgeDirection direction = BlockUtils.determineDirectionSide(entity).getOpposite();
                 ((TileEntityArmourer)te).setDirection(ForgeDirection.NORTH);
                 if (!world.isRemote) {
-                    ((TileEntityArmourer)te).setGameProfile(player.getGameProfile());
+                    ((TileEntityArmourer)te).setTexture(new PlayerTexture(player.getCommandSenderName(), TextureType.USER));
                     ((TileEntityArmourer)te).onPlaced();
                 }
             }

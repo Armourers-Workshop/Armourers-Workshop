@@ -5,8 +5,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,6 +29,7 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -38,6 +37,7 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
 
 public class BlockBoundingBox extends AbstractModBlockContainer implements IPantableBlock {
@@ -198,13 +198,11 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                         return colour;
                     } else {
                         if (te.getWorldObj().isRemote) {
-                            GameProfile gameProfile = parent.getGameProfile();
-                            if (gameProfile != null) {
-                                BufferedImage playerSkin = SkinHelper.getBufferedImageSkinNew(gameProfile);
-                                if (playerSkin != null) {
-                                    colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
-                                    return colour;
-                                }
+                            PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(parent.getTexture());
+                            BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(playerTexture.getResourceLocation());
+                            if (playerSkin != null) {
+                                colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
+                                return colour;
                             }
                         }
                     }

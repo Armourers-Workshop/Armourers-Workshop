@@ -10,9 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockArmourer extends TileEntitySpecialRenderer {
@@ -24,13 +26,18 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
         
         ISkinType skinType = te.getSkinType();
         
-        mc.mcProfiler.startSection("textureBind");
+        mc.mcProfiler.startSection("textureBuild");
         if (te.skinTexture == null) {
             te.skinTexture = new SkinTexture();
         }
-        te.skinTexture.updateGameProfile(te.getGameProfile());
+        
+        PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(te.getTexture());
+        if (!playerTexture.isDownloaded()) {
+            playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(te.getTextureOld());
+        }
+        
+        te.skinTexture.updateForResourceLocation(playerTexture.getResourceLocation());
         te.skinTexture.updatePaintData(te.getPaintData());
-        te.skinTexture.bindTexture();
         mc.mcProfiler.endSection();
         
         GL11.glPushMatrix();
@@ -72,7 +79,26 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer {
             GL11.glPolygonOffset(3F, 3F);
             GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
             if (!hidden) {
-                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
+                long time = System.currentTimeMillis();
+                int fadeTime = 1000;
+                int fade = (int) (time - playerTexture.getDownloadTime());
+                if (playerTexture.isDownloaded() & fade < fadeTime) {
+                    PlayerTexture oldTexture = te.getTextureOld();
+                    oldTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(oldTexture);
+                    bindTexture(oldTexture.getResourceLocation());
+                    SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
+                    te.skinTexture.bindTexture();
+                    ModRenderHelper.enableAlphaBlend();
+                    GL11.glColor4f(1, 1, 1, fade / 1000F);
+                    GL11.glPolygonOffset(-6F, -6F);
+                    SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
+                    GL11.glPolygonOffset(3F, 3F);
+                    ModRenderHelper.disableAlphaBlend();
+                    GL11.glColor4f(1, 1, 1, 1);
+                } else {
+                    te.skinTexture.bindTexture();
+                    SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
+                }
             }
             
             GL11.glPolygonOffset(-3F, -3F);

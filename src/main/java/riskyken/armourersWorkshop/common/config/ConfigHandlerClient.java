@@ -119,9 +119,9 @@ public class ConfigHandlerClient {
                 .getBoolean(true);
         
         showSkinTooltipDebugInfo = config
-                .get(CATEGORY_DEBUG, "showSkinTooltipDebugInfo", true,
+                .get(CATEGORY_DEBUG, "showSkinTooltipDebugInfo", false,
                 "Shows extra debug info on skin tooltips.")
-                .getBoolean(true);
+                .getBoolean(false);
         
         texturePainting = config
                 .getInt("texturePainting", CATEGORY_DEBUG, 0, 0, 2,

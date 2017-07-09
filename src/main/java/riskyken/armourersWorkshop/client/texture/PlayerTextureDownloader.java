@@ -13,20 +13,24 @@ import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
 @SideOnly(Side.CLIENT)
 public class PlayerTextureDownloader {
     
     private final HashMap<String, PlayerTexture> playerTextureMap;
     private final String SKIN_DOWNLOAD_URL = "http://skins.minecraft.net/MinecraftSkins/%s.png";
-    private static final PlayerTexture NO_TEXTURE = new PlayerTexture(null, TextureType.USER);
+    private static final PlayerTexture NO_TEXTURE = new PlayerTexture("", TextureType.USER);
     
     private static long lastSkinDownload = 0;
 
     public PlayerTextureDownloader() {
         playerTextureMap = new HashMap<String, PlayerTexture>();
+    }
+    
+    public PlayerTexture getPlayerTexture(PlayerTexture playerTexture) {
+        return getPlayerTexture(playerTexture.getTextureString(), playerTexture.getTextureType());
     }
     
     public PlayerTexture getPlayerTexture(String textureString, TextureType textureType) {

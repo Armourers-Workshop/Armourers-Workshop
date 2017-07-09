@@ -12,10 +12,10 @@ import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiMannequinData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin.TextureType;
 
 @SideOnly(Side.CLIENT)
 public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {

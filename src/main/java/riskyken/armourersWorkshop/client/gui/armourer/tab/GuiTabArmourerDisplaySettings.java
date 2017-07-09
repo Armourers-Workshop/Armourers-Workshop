@@ -11,20 +11,25 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
+import riskyken.armourersWorkshop.client.texture.PlayerTexture;
+import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetSkin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 
 @SideOnly(Side.CLIENT)
-public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
+public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropDownListCallback {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.ARMOURER);
     
     private final TileEntityArmourer tileEntity;
     
+    private GuiDropDownList textureTypeList;
     private GuiTextField textUserSkin;
     private GuiCheckBox checkShowGuides;
     private GuiCheckBox checkShowOverlay;
@@ -42,20 +47,24 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
         
         buttonList.clear();
         
-        checkShowGuides = new GuiCheckBox(7, 10, 55, GuiHelper.getLocalizedControlName(guiName, "showGuide"), tileEntity.isShowGuides());
-        checkShowOverlay = new GuiCheckBox(9, 10, 70, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), tileEntity.isShowOverlay());
-        checkShowHelper = new GuiCheckBox(6, 10, 70, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
+        checkShowGuides = new GuiCheckBox(7, 10, 95, GuiHelper.getLocalizedControlName(guiName, "showGuide"), tileEntity.isShowGuides());
+        checkShowOverlay = new GuiCheckBox(9, 10, 110, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), tileEntity.isShowOverlay());
+        checkShowHelper = new GuiCheckBox(6, 10, 110, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
         
-        buttonList.add(new GuiButtonExt(8, 138, 30, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
-        textUserSkin = new GuiTextField(fontRenderer, x + 10, y + 30, 120, 16);
-        textUserSkin.setMaxStringLength(30);
-        if (tileEntity.getGameProfile() != null) {
-            textUserSkin.setText(tileEntity.getGameProfile().getName());
-        }
+        buttonList.add(new GuiButtonExt(8, width - 36 - 5, 70, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
+        textUserSkin = new GuiTextField(fontRenderer, x + 10, y + 70, 120, 16);
+        textUserSkin.setMaxStringLength(300);
+        textUserSkin.setText(tileEntity.getTexture().getTextureString());
+        
+        textureTypeList = new GuiDropDownList(0, 10, 30, 50, "", this);
+        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.user"), TextureType.USER.toString(), true);
+        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.url"), TextureType.URL.toString(), true);
+        textureTypeList.setListSelectedIndex(tileEntity.getTexture().getTextureType().ordinal());
         
         buttonList.add(checkShowGuides);
         buttonList.add(checkShowOverlay);
         buttonList.add(checkShowHelper);
+        buttonList.add(textureTypeList);
     }
     
     @Override
@@ -66,8 +75,8 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
     
     @Override
     public boolean keyTyped(char c, int keycode) {
-        if (!textUserSkin.textboxKeyTyped(c, keycode)) {
-            return super.keyTyped(c, keycode);
+        if (textUserSkin.textboxKeyTyped(c, keycode)) {
+            return true;
         }
         return false;
     }
@@ -76,10 +85,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
     protected void actionPerformed(GuiButton button) {
         if (button.id == 8) {
             String username = textUserSkin.getText().trim();
-            // TODO change this to allow no username
-            if (!username.equals("")) {
-                PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetSkin(username));
-            }
+            PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetSkin(new PlayerTexture(username, TextureType.values()[textureTypeList.getListSelectedIndex()])));
         } else {
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiButton((byte) button.id)); 
         }
@@ -97,7 +103,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
         checkShowGuides.setIsChecked(tileEntity.isShowGuides());
         checkShowOverlay.setIsChecked(tileEntity.isShowOverlay());
         
-        int checkY = 70;
+        int checkY = 110;
         if (tileEntity.getSkinType() != null) {
             checkShowOverlay.visible = tileEntity.getSkinType().showSkinOverlayCheckbox();
             checkShowOverlay.yPosition = checkY;
@@ -111,7 +117,6 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
         if (tileEntity.getSkinType() != null) {
             checkShowHelper.visible = tileEntity.getSkinType().showHelperCheckbox();
             checkShowHelper.yPosition = checkY;
-            //checkY += 16;
         } else {
             checkShowHelper.visible = false;
         }
@@ -119,8 +124,20 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel {
     
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+        String labelSkinType = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.skinType");
         String usernameLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.username");
-        this.fontRenderer.drawString(usernameLabel, 10, 20, 4210752);
+        String urlLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.url");
+        this.fontRenderer.drawString(labelSkinType, 10, 20, 4210752);
+        if (textureTypeList.getListSelectedIndex() == 0) {
+            this.fontRenderer.drawString(usernameLabel, 10, 60, 4210752);
+        } else {
+            this.fontRenderer.drawString(urlLabel, 10, 60, 4210752);
+        }
+        super.drawForegroundLayer(mouseX, mouseY);
+    }
+
+    @Override
+    public void onDropDownListChanged(GuiDropDownList dropDownList) {
+        textUserSkin.setText("");
     }
 }

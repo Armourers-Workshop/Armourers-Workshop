@@ -71,12 +71,16 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
         
         if (selectingSkinColour) {
-            drawColourBox(width / 2 - 7, 25, hoverColour.getRGB());
+            if (hoverColour != null) {
+                drawColourBox(width / 2 - 7, 25, hoverColour.getRGB());
+            }
         } else {
             drawColourBox(width / 2 - 7, 25, skinColour);
         }
         if (selectingHairColour) {
-            drawColourBox(width / 2 - 7, 40, hoverColour.getRGB());
+            if (hoverColour != null) {
+                drawColourBox(width / 2 - 7, 40, hoverColour.getRGB());
+            }
         } else {
             drawColourBox(width / 2 - 7, 40, hairColour);
         }
