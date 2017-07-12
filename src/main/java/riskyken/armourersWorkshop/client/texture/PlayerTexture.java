@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.client.texture;
 
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
@@ -22,7 +21,11 @@ public class PlayerTexture {
     public PlayerTexture(String textureString, TextureType textureType) {
         this.textureString = textureString;
         this.textureType = textureType;
-        resourceLocation = AbstractClientPlayer.locationStevePng;
+        resourceLocation = getSteveResourceLocation();
+    }
+    
+    private ResourceLocation getSteveResourceLocation() {
+        return new ResourceLocation("textures/entity/steve.png");
     }
     
     public void textureDownloaded(boolean slimModel) {
