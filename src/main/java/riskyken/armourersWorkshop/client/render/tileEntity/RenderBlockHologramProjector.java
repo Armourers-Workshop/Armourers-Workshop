@@ -89,6 +89,15 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
                 (-tileEntity.getRotationOffsetY() + tileEntity.getRotationOffsetY()) * scale,
                 (-tileEntity.getRotationOffsetZ() + tileEntity.getRotationOffsetZ()) * scale);
         
+        if (tileEntity.getAngleX() != 0) {
+            GL11.glRotatef(tileEntity.getAngleX(), 1F, 0F, 0F);
+        }
+        if (tileEntity.getAngleY() != 0) {
+            GL11.glRotatef(tileEntity.getAngleY(), 0F, 1F, 0F);
+        }
+        if (tileEntity.getAngleZ() != 0) {
+            GL11.glRotatef(tileEntity.getAngleZ(), 0F, 0F, 1F);
+        }
         
         if (angleX != 0) {
             GL11.glRotatef((float)angleX, 1, 0, 0);
@@ -100,22 +109,10 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
             GL11.glRotatef((float)angleZ, 0, 0, 1);
         }
         
-        if (tileEntity.getAngleX() != 0) {
-            GL11.glRotatef(tileEntity.getAngleX(), 1F, 0F, 0F);
-        }
-        if (tileEntity.getAngleY() != 0) {
-            GL11.glRotatef(tileEntity.getAngleY(), 0F, 1F, 0F);
-        }
-        if (tileEntity.getAngleZ() != 0) {
-            GL11.glRotatef(tileEntity.getAngleZ(), 0F, 0F, 1F);
-        }
-        
         GL11.glTranslated(tileEntity.getRotationOffsetX() * scale, tileEntity.getRotationOffsetY() * scale, tileEntity.getRotationOffsetZ() * scale);
-        
         
         ModRenderHelper.disableLighting();
         ModRenderHelper.enableAlphaBlend();
-        
         
         ItemStackRenderHelper.renderSkinWithoutHelper(skinPointer, true);
         
@@ -154,17 +151,13 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         GL11.glColor4f(r, g, b, 0.4F);
         GL11.glLineWidth(1.0F);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
         
-        
         RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
-        
         
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_BLEND);
