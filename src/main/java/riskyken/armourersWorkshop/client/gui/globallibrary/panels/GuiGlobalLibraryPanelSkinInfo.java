@@ -32,6 +32,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     private GuiButtonExt buttonBack;
     private GuiButtonExt buttonDownload;
     private JsonObject skinJson = null;
+    private Screen returnScreen;
     
     public GuiGlobalLibraryPanelSkinInfo(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -52,7 +53,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == buttonBack) {
-            ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
+            ((GuiGlobalLibrary)parent).switchScreen(returnScreen);
         }
         if (button == buttonDownload) {
             if (skinJson != null) {
@@ -74,7 +75,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), this.x + 5, this.y + 5 + 12 * 1, 0xFFEEEEEE);
             drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), this.x + 5, this.y + 5 + 12 * 2, 0xFFEEEEEE);
             drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), this.x + 5, this.y + 5 + 12 * 3, 0xFFEEEEEE);
-            drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), this.x + 5, this.y + 5 + 12 * 4, 0xFFEEEEEE);
+            if (skinJson.has("downloads")) {
+                drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), this.x + 5, this.y + 5 + 12 * 4, 0xFFEEEEEE);
+            }
             
             int iconSize = 200;
             float scale = iconSize / 2;
@@ -107,9 +110,10 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         super.draw(mouseX, mouseY, partialTickTime);
     }
     
-    public void displaySkinInfo(JsonObject jsonObject) {
+    public void displaySkinInfo(JsonObject jsonObject, Screen returnScreen) {
         skinJson = jsonObject;
         ((GuiGlobalLibrary)parent).switchScreen(Screen.SKIN_INFO);
+        this.returnScreen = returnScreen;
     }
     
     private static class DownloadSkin implements Runnable {

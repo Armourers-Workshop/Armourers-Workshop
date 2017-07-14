@@ -14,8 +14,8 @@ import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelCreateAccount;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelLogin;
-import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelRecentlyUploaded;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
@@ -37,7 +37,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     
     public GuiGlobalLibraryPanelHeader panelHeader;
     public GuiGlobalLibraryPanelSearchBox panelSearchBox;
-    public GuiGlobalLibraryPanelRecentlyUploaded panelRecentlyUploaded;
+    public GuiGlobalLibraryPanelHome panelHome;
     public GuiGlobalLibraryPanelSearchResults panelSearchResults;
     public GuiGlobalLibraryPanelSkinInfo panelSkinInfo;
     public GuiGlobalLibraryPanelLogin panelLogin;
@@ -68,8 +68,8 @@ public class GuiGlobalLibrary extends GuiContainer {
         panelSearchBox = new GuiGlobalLibraryPanelSearchBox(this, 2, 31, width - 4, 23);
         panelList.add(panelSearchBox);
         
-        panelRecentlyUploaded = new GuiGlobalLibraryPanelRecentlyUploaded(this, 2, 136, width / 2 - 5, height - 141);
-        panelList.add(panelRecentlyUploaded);
+        panelHome = new GuiGlobalLibraryPanelHome(this, 2, 136, width / 2 - 5, height - 141);
+        panelList.add(panelHome);
         
         panelSearchResults = new GuiGlobalLibraryPanelSearchResults(this, 5, 5, 100, 100);
         panelList.add(panelSearchResults);
@@ -95,7 +95,7 @@ public class GuiGlobalLibrary extends GuiContainer {
             panelList.get(i).initGui();
         }
         if (screen == Screen.HOME) {
-            ((GuiGlobalLibraryPanelRecentlyUploaded)panelRecentlyUploaded).updateRecentlyUploadedSkins();
+            ((GuiGlobalLibraryPanelHome)panelHome).updateSkinPanels();
         }
         //Move player inventory slots.
         for (int x = 0; x < 9; x++) {
@@ -128,8 +128,8 @@ public class GuiGlobalLibrary extends GuiContainer {
             panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
             panelSearchBox.setVisible(true);
             yOffset += PADDING + 23;
-            panelRecentlyUploaded.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
-            panelRecentlyUploaded.setVisible(true);
+            panelHome.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelHome.setVisible(true);
             break;
         case SEARCH:
             panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
