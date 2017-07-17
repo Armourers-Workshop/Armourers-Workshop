@@ -108,7 +108,7 @@ item.armourersworkshop:rollover.skinNumCubes=&eКубы:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlowing=&eСветяшиеся Кубы:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlass=&eСтеклянные Кубы:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eСветящиеся Стеклянные Кубы:&7 %s
-item.armourersworkshop:rollover.skinPaintData=&eСведения о Краске:&7 %s
+item.armourersworkshop:rollover.skinPaintData=&eОкрашен:&7 %s
 item.armourersworkshop:rollover.skinMarkerCount=&eКоличество Маркеров:&7 %d
 item.armourersworkshop:rollover.skinDyeCount=&eКоличество Красителей:&7 %d/8
 item.armourersworkshop:rollover.skindownloading=Загрузка ID Скина: %d
@@ -121,7 +121,7 @@ item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Старый ID: %s Но�
 item.armourersworkshop:rollover.skinProperties=&eСвойства Скина:
 
 # Tool Options
-tooloption.armourersworkshop:fullBlockMode=Режим полного блока
+tooloption.armourersworkshop:fullBlockMode=Режим Полного Блока
 tooloption.armourersworkshop:changeHue=Изменить Тон
 tooloption.armourersworkshop:changeSaturation=Изменить Насыщенность
 tooloption.armourersworkshop:changeBrightness=Изменить Яркость
@@ -207,18 +207,18 @@ inventory.armourersworkshop:armourLibrary.error.noFileName=&7Вы должны �
 inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7Вы должны выбрать скин из списка, чтобы загрузить его.
 inventory.armourersworkshop:armourLibrary.save=Сохранить
 inventory.armourersworkshop:armourLibrary.load=Загрузить
-inventory.armourersworkshop:armourLibrary.openFolder=Откройть папку...
-inventory.armourersworkshop:armourLibrary.rollover.localFiles=Просмотр файлов на этом компьютере.
-inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=Просмотр публичных файлов на сервере.
-inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=Просмотр приватных файлов на сервере.
-inventory.armourersworkshop:armourLibrary.rollover.notOnServer=Вы должны быть подключены к серверу,чтобы использовать эту функцию.
-inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Откройте папку библиотеки на компьютере.
-inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Удалить скин.
-inventory.armourersworkshop:armourLibrary.rollover.deleteSkinSelect=Выбрать скин для удаления.
-inventory.armourersworkshop:armourLibrary.rollover.refresh=Обновить библиотеку файлов.
-inventory.armourersworkshop:armourLibrary.rollover.newFolder=Создать новую папку.
-inventory.armourersworkshop:armourLibrary.label.enterFileName=Введите имя файла.
-inventory.armourersworkshop:armourLibrary.label.typeToSearch=Поиск по типу...
+inventory.armourersworkshop:armourLibrary.openFolder=Открыть папку...
+inventory.armourersworkshop:armourLibrary.rollover.localFiles=Просмотр файлов на диске
+inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=Просмотр публичных файлов на сервере
+inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=Просмотр приватных файлов на сервере
+inventory.armourersworkshop:armourLibrary.rollover.notOnServer=Вы должны быть подключены к серверу, чтобы использовать эту фичу
+inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Откройте папку библиотеки на компьютере
+inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Удалить скин
+inventory.armourersworkshop:armourLibrary.rollover.deleteSkinSelect=Выберите скин для удаления
+inventory.armourersworkshop:armourLibrary.rollover.refresh=Обновить
+inventory.armourersworkshop:armourLibrary.rollover.newFolder=Создать новую папку
+inventory.armourersworkshop:armourLibrary.label.enterFileName=Введите имя файла
+inventory.armourersworkshop:armourLibrary.label.typeToSearch=Поиск...
 inventory.armourersworkshop:armourLibrary.dialog.newFolder.title=Новая Папка
 inventory.armourersworkshop:armourLibrary.dialog.newFolder.enterFolderName=Введите имя папки...
 inventory.armourersworkshop:armourLibrary.dialog.newFolder.close=Закрыть
@@ -234,15 +234,17 @@ inventory.armourersworkshop:armourLibrary.dialog.overwrite.close=Закрыть
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.ok=OK
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.overwriteFile=Перезаписать "%s"?
 
-inventory.armourersworkshop:armourerBrain.label.itemName=Название Предмета:
+inventory.armourersworkshop:armourerBrain.label.itemName=Имя Скина:
 inventory.armourersworkshop:armourerBrain.label.skinType=Тип Скина
-inventory.armourersworkshop:armourerBrain.label.username=Имя Пользователя:
+inventory.armourersworkshop:armourerBrain.label.username=Пользователь:
 inventory.armourersworkshop:armourerBrain.label.url=URL:
 inventory.armourersworkshop:armourerBrain.label.idleSpeed=Скорость на земле:
 inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Скорость в полете:
 inventory.armourersworkshop:armourerBrain.label.minAngle=Минимальный Угол:
 inventory.armourersworkshop:armourerBrain.label.maxAngle=Максимальный Угол:
 inventory.armourersworkshop:armourerBrain.label.clone=Клонировать:
+inventory.armourersworkshop:armourerBrain.label.inventorySize=Размер инвентаря:
+inventory.armourersworkshop:armourerBrain.label.inventorySlots=Слотов:%d Ширина:%d Высота:%d
 inventory.armourersworkshop:armourerBrain.showGuide=Показать границы
 inventory.armourersworkshop:armourerBrain.showOverlay=Показать второй слой головы
 inventory.armourersworkshop:armourerBrain.showHelper=Показать вспомогательную модель
@@ -255,21 +257,21 @@ inventory.armourersworkshop:armourerBrain.clear=Очистить
 inventory.armourersworkshop:armourerBrain.copy=Копировать
 inventory.armourersworkshop:armourerBrain.glowing=Светится
 inventory.armourersworkshop:armourerBrain.ladder=Лестница
-inventory.armourersworkshop:armourerBrain.noCollision=Нетвёрдый Блок
-inventory.armourersworkshop:armourerBrain.seat=С сидением
+inventory.armourersworkshop:armourerBrain.noCollision=Нетвёрдый блок
+inventory.armourersworkshop:armourerBrain.seat=Можно сесть
 inventory.armourersworkshop:armourerBrain.multiblock=МультиБлок
 inventory.armourersworkshop:armourerBrain.bed=Кровать
-inventory.armourersworkshop:armourerBrain.inventory=Имеет Инвентарь
+inventory.armourersworkshop:armourerBrain.inventory=С инвентарём
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Замещает
 inventory.armourersworkshop:armourerBrain.tab.main=Основное
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Настройки Отображения
-inventory.armourersworkshop:armourerBrain.tab.skinSettings=Настройки Скина
-inventory.armourersworkshop:armourerBrain.tab.blockUtils=Свойства Блока
+inventory.armourersworkshop:armourerBrain.tab.skinSettings=Свойства Скина
+inventory.armourersworkshop:armourerBrain.tab.blockUtils=Разное
 inventory.armourersworkshop:armourerBrain.dialog.clear.title=Очистить
 inventory.armourersworkshop:armourerBrain.dialog.clear.close=Закрыть
 inventory.armourersworkshop:armourerBrain.dialog.clear.clear=Очистить
-inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=Очистить скин от кубов
-inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=Очистить скин от краски
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=Очистить скин от кубов снаряжения
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=Очистить скин от краски на скине(?)
 inventory.armourersworkshop:armourerBrain.dialog.copy.title=Копировать
 inventory.armourersworkshop:armourerBrain.dialog.copy.close=Закрыть
 inventory.armourersworkshop:armourerBrain.dialog.copy.copy=Копировать
@@ -281,7 +283,7 @@ inventory.armourersworkshop:colourMixer.label.hue=Тон
 inventory.armourersworkshop:colourMixer.label.saturation=Насыщенность
 inventory.armourersworkshop:colourMixer.label.brightness=Яркость
 inventory.armourersworkshop:colourMixer.label.hex=Hex
-inventory.armourersworkshop:colourMixer.label.presets=Предварительные Настройки
+inventory.armourersworkshop:colourMixer.label.presets=Пресеты
 inventory.armourersworkshop:colourMixer.label.paintType=Тип Краски
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Цвет Кожи
@@ -314,8 +316,8 @@ inventory.armourersworkshop:mannequin.dropdown.url=URL
 inventory.armourersworkshop:mannequin.set=Установить
 inventory.armourersworkshop:mannequin.selectSkin=Выбрать Цвет Кожи
 inventory.armourersworkshop:mannequin.selectHair=Выбрать Цвет Волос
-inventory.armourersworkshop:mannequin.autoSkin=Автовыбор Цвета Кожи
-inventory.armourersworkshop:mannequin.autoHair=Автовыбор Цвета Волос
+inventory.armourersworkshop:mannequin.autoSkin=Автовыбор
+inventory.armourersworkshop:mannequin.autoHair=Автовыбор
 inventory.armourersworkshop:mannequin.tab.inventory=Инвентарь
 inventory.armourersworkshop:mannequin.tab.rotations=Повороты
 inventory.armourersworkshop:mannequin.tab.offset=Смещение
@@ -328,13 +330,13 @@ inventory.armourersworkshop:miniArmourer.load=Загрузить
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=Крастья + ПКМ по Мини-Оружейнику, чтобы открыть его интерфейс.
 
 inventory.armourersworkshop:globalSkinLibrary.header.home=Домой
-inventory.armourersworkshop:globalSkinLibrary.header.favourites=Избранные
+inventory.armourersworkshop:globalSkinLibrary.header.favourites=Избранное
 inventory.armourersworkshop:globalSkinLibrary.header.friends=Друзья
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Загрузить
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Поиск...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Поиск
 inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Показать Все Скины
-inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=недавние
+inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Новые
 inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Наиболее Скачиваемые
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Результаты поиска: Стр. %d из %d - Всего %d результатов.
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Назад
@@ -342,20 +344,21 @@ inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Скачат
 
 inventory.armourersworkshop:hologramProjector.tab.inventory=Инвентать
 inventory.armourersworkshop:hologramProjector.tab.offset=Смещение
+inventory.armourersworkshop:hologramProjector.tab.angle=Углы
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Смещения Центра Вращения
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Скорость Вращения
-inventory.armourersworkshop:hologramProjector.showRotationPoint=ПОказать Центр Вращения
+inventory.armourersworkshop:hologramProjector.showRotationPoint=Показать Центр Вращения
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=Отмен не осталось
 chat.armourersworkshop:undo.undoing=Отмена
 chat.armourersworkshop:inventoryFull=Твой инвентарь полон
 chat.armourersworkshop:inventoryGiftFail=Кто-то хотел сделать тебе Подарок, но тебе некуда было деть его!
-chat.armourersworkshop:updateAvailable=Armourer's Workshop Обновление %s Доступно.
+chat.armourersworkshop:updateAvailable=Armourer's Workshop: Доступно обновление %s.
 chat.armourersworkshop:updateDownload=[Скачать]
 chat.armourersworkshop:updateDownloadRollover=Нажмите, чтобы перейти на страницу загрузки
 chat.armourersworkshop:devWarning=Внимание, вы используете предварительную версию Armourer's Workshop. Предварительные версии используются для отладки и не предназначены для всеобщего использования.
-chat.armourersworkshop:slotUnlocked=Открыта %s ячейка для скина. Теперь у вас %s ячеек.
+chat.armourersworkshop:slotUnlocked=Открыта ячейка скина типа "%s". Теперь у вас %s ячеек.
 chat.armourersworkshop:slotUnlockedFailed=Достигнут максимум ячеек скинов для типа "%s".
 
 # Death Messages
@@ -385,13 +388,13 @@ book.armourersworkshop:guideBook.contents.name=Содержание
 
 # Chapter 2
 book.armourersworkshop:guideBook.introduction.name=Введение
-book.armourersworkshop:guideBook.introduction.paragraph1=Примечание: Эта книга ещё в разработке.&pДобро Пожаловать в Руководство Armourer's Workshop.&pЭта книга поможет вам начать работу с Armourer's Workshop.
+book.armourersworkshop:guideBook.introduction.paragraph1=Примечание: Эта книга ещё в разработке.&pДобро Пожаловать в Руководство по Armourer's Workshop. Эта книга поможет вам начать работу с Armourer's Workshop.
 book.armourersworkshop:guideBook.introduction.paragraph2=Armourer's Workshop позволит Вам создавать свои скины для брони и оружия, чтобы изменить их внешний вид!
 
 # Chapter 3
 book.armourersworkshop:guideBook.armourer.name=Оружейник
-book.armourersworkshop:guideBook.armourer.paragraph1=Первое, с чего следует начать при строительстве собственной брони это оружейник.&pПосле размещения блока щелкните по нему, чтобы открыть интерфейс. Вверху слева вы увидите меню выбора типа снаряжения, которые можно построить.
-book.armourersworkshop:guideBook.armourer.paragraph2=Выберите тип скина, который хотите построить, затем начните строительство, используя Кубы Снаряжения.&pПосле того, как вы закончили, разместите Шаблон Снаряжения внутри оруженика, выберите имя и нажмите Сохранить.
+book.armourersworkshop:guideBook.armourer.paragraph1=Первое, с чего следует начать при строительстве собственной брони это Оружейник.&nПосле размещения блока щелкните по нему, чтобы открыть интерфейс. Вверху слева вы увидите меню выбора типа снаряжения, которые можно построить.
+book.armourersworkshop:guideBook.armourer.paragraph2=Выберите тип скина, который хотите построить, затем начните строительство, используя Кубы Снаряжения.&nПосле того, как вы закончили, разместите Шаблон Снаряжения внутри оруженика, выберите имя и нажмите Сохранить.
 
 # Chapter 4
 book.armourersworkshop:guideBook.equipmentTemplates.name=Шаблоны Снаряжения
@@ -407,7 +410,7 @@ book.armourersworkshop:guideBook.paintingTools.paragraph4=Инструмент "
 # Chapter 6
 book.armourersworkshop:guideBook.equipmentWardrobe.name=Гардероб Снаряжения
 book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=В Разработке
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=В Разработке
+book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=Как только так сразу!
 
 # Chapter 7
 book.armourersworkshop:guideBook.recipes.name=Рецепты
