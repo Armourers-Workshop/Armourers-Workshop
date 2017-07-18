@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
@@ -10,6 +11,7 @@ import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -21,12 +23,14 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 public class GuiControlSkinPanel extends GuiButtonExt {
 
     private final ArrayList<SkinIcon> iconList;
+    private int panelPadding;
     private int iconPadding;
     private int iconSize;
     /** Number of icons that can fit into this control. */
     private int iconCount;
     private int rowCount;
     private int colCount;
+    private boolean showName;
     private SkinIcon lastPressedSkinIcon;
     
     public GuiControlSkinPanel() {
@@ -43,8 +47,10 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         this.yPosition = y;
         this.width = width;
         this.height = height;
-        this.iconSize = 50;
+        this.panelPadding = 2;
         this.iconPadding = 5;
+        this.iconSize = 50;
+        this.showName = false;
         this.lastPressedSkinIcon = null;
         updateIconCount();
     }
@@ -54,9 +60,17 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         updateIconCount();
     }
     
+    public void setPanelPadding(int panelPadding) {
+        this.panelPadding = panelPadding;
+    }
+    
+    public void setShowName(boolean showName) {
+        this.showName = showName;
+    }
+    
     public void updateIconCount() {
-        int boxW = width - iconPadding;
-        int boxH = height - iconPadding;
+        int boxW = width + iconPadding - panelPadding * 2;
+        int boxH = height + iconPadding - panelPadding * 2;
         rowCount = (int) Math.floor(boxW / (iconSize + iconPadding));
         colCount = (int) Math.floor(boxH / (iconSize + iconPadding));
         iconCount = rowCount * colCount;
@@ -76,12 +90,12 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             for (int i = 0; i < iconList.size(); i++) {
                 int x = i % rowCount;
                 int y = (int) (i / rowCount);
-                int iconX = xPosition + x * (iconSize + iconPadding) + iconPadding;
-                int iconY = yPosition + y * (iconSize + iconPadding) + iconPadding;
+                int iconX = xPosition + x * (iconSize + iconPadding) + panelPadding;
+                int iconY = yPosition + y * (iconSize + iconPadding) + panelPadding;
                 
                 SkinIcon skinIcon = iconList.get(i);
                 if (y < colCount) {
-                    skinIcon.drawIcon(iconX, iconY, mouseX, mouseY, iconSize);
+                    skinIcon.drawIcon(iconX, iconY, mouseX, mouseY, iconSize, showName);
                 }
             }
         }
@@ -92,8 +106,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         for (int i = 0; i < iconList.size(); i++) {
             int x = i % rowCount;
             int y = (int) (i / rowCount);
-            int iconX = xPosition + x * (iconSize + iconPadding) + iconPadding;
-            int iconY = yPosition + y * (iconSize + iconPadding) + iconPadding;
+            int iconX = xPosition + x * (iconSize + iconPadding) + panelPadding;
+            int iconY = yPosition + y * (iconSize + iconPadding) + panelPadding;
             
             SkinIcon skinIcon = iconList.get(i);
             if (y < colCount) {
@@ -132,7 +146,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             return skinJson;
         }
         
-        public void drawIcon(int x, int y, int mouseX, int mouseY, int iconSize) {
+        public void drawIcon(int x, int y, int mouseX, int mouseY, int iconSize, boolean showName) {
             if (mouseOver(x, y, mouseX, mouseY, iconSize)) {
                 drawRect(x, y, x + iconSize, y + iconSize, 0xC0777711);
             } else {
@@ -140,6 +154,20 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             }
             Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(id);
             if (skin != null) {
+                if (showName) {
+                    String name = skinJson.get("name").getAsString();
+                    FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+                    int size = fontRenderer.getStringWidth(skin.getCustomName());
+                    
+                    List list = fontRenderer.listFormattedStringToWidth(name, iconSize - 2);
+                    
+                    int textY = y + iconSize;
+                    textY -= fontRenderer.FONT_HEIGHT * list.size();
+                    
+                    fontRenderer.drawSplitString(name, x + 1, textY, iconSize - 2, 0xFFEEEEEE);
+                }
+
+
                 float scale = iconSize / 2;
                 GL11.glPushMatrix();
                 GL11.glPushAttrib(GL11.GL_ENABLE_BIT);

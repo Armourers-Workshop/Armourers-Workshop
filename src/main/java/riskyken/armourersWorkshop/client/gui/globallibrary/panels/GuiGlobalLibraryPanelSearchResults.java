@@ -1,13 +1,10 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
-import java.util.ArrayList;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-
-import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -17,16 +14,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.client.gui.controls.GuiControlSkinPanel;
+import riskyken.armourersWorkshop.client.gui.controls.GuiControlSkinPanel.SkinIcon;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.library.global.SkinDownloader.DownloadSkinCallable;
+import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
@@ -34,19 +32,21 @@ import riskyken.armourersWorkshop.utils.TranslateUtils;
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
-    private JsonArray json = null;
-    private ArrayList<JsonObject> downloadedSkins = null;
-    private int displayCount = 1;
-    private int page = 0;
-    private int mouseDownIndex = -1;
+    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/globalLibrary.png");
+    private static int iconScale = 110;
+    
+    private final CompletionService<Skin> skinCompletion;
+    private final GuiControlSkinPanel skinPanelResults;
+    
     
     private FutureTask<JsonArray> downloadSearchResultsTask;
-    private CompletionService<Skin> skinCompletion;
+    private JsonArray json = null;
+    private int page = 0;
     
     public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        downloadedSkins = new ArrayList<JsonObject>();
         skinCompletion = new ExecutorCompletionService<Skin>(((GuiGlobalLibrary)parent).skinDownloadExecutor);
+        skinPanelResults = new GuiControlSkinPanel();
     }
     
     public void setDownloadSearchResultsTask(FutureTask<JsonArray> downloadSearchResultsTask) {
@@ -58,9 +58,8 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         if (downloadSearchResultsTask != null && downloadSearchResultsTask.isDone()) {
             try {
                 json = null;
-                downloadedSkins.clear();
-                page = 0;
                 json = downloadSearchResultsTask.get();
+                changePage(0);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -93,81 +92,66 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        buttonList.add(new GuiButtonExt(0, x + 5, y + height - 25, 80, 20, "<<"));
-        buttonList.add(new GuiButtonExt(1, x + width - 85, y + height - 25, 80, 20, ">>"));
+        
+        skinPanelResults.init(x + 5, y + 22, width - 10, height - 50);
+        skinPanelResults.setIconSize(iconScale);
+        skinPanelResults.setPanelPadding(0);
+        skinPanelResults.setShowName(true);
+        
+        buttonList.add(skinPanelResults);
+        
+        buttonList.add(new GuiButtonExt(1, x + 5, y + height - 25, 80, 20, "<<"));
+        buttonList.add(new GuiButtonExt(2, x + width - 85, y + height - 25, 80, 20, ">>"));
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        int skinCount = 0;
-        if (json != null) {
-            skinCount = json.size();
-        }
-        int maxPages = (int) Math.ceil((float)skinCount / (float)displayCount);
-        
-        if (button.id == 0) {
-            if (page > 0) {
-                page--;
-            }
-        }
         if (button.id == 1) {
-            if (page < maxPages - 1) {
-                page++;
+            changePage(page - 1);
+        }
+        if (button.id == 2) {
+            changePage(page + 1);
+        }
+        if (button == skinPanelResults) {
+            SkinIcon skinIcon = ((GuiControlSkinPanel)button).getLastPressedSkinIcon();
+            if (skinIcon != null) {
+                ((GuiGlobalLibrary)parent).panelSkinInfo.displaySkinInfo(skinIcon.getSkinJson(), Screen.SEARCH);
             }
         }
     }
     
-    @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
-        if (!visible | !enabled | haveOpenDialog()) {
-            return;
+    private void changePage(int page) {
+        if (page < getMaxPages() & page >= 0) {
+            this.page = page;
         }
-        mouseDownIndex = getSkinIndexAtLocation(mouseX, mouseY);
-        super.mouseClicked(mouseX, mouseY, button);
+        updateSkinForPage();
     }
     
-    @Override
-    public void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        if (!visible | !enabled | haveOpenDialog()) {
-            return;
+    private void updateSkinForPage() {
+        int skinsPerPage = skinPanelResults.getIconCount();
+        int pageOffset = skinsPerPage * page;
+        skinPanelResults.clearIcons();
+        JsonArray downloadArray = new JsonArray();
+        for (int i = 0; i < skinsPerPage; i++) {
+            int index = i + pageOffset;
+            if (index < json.size()) {
+                JsonObject skinJson = json.get(index).getAsJsonObject();
+                downloadArray.add(skinJson);
+                skinPanelResults.addIcon(skinJson);
+            }
         }
-        int index = getSkinIndexAtLocation(mouseX, mouseY);
-        if (index == mouseDownIndex & index != -1) {
-            ((GuiGlobalLibrary)parent).panelSkinInfo.displaySkinInfo(json.get(index).getAsJsonObject(), Screen.SEARCH);
-            index = -1;
-        }
-        super.mouseMovedOrUp(mouseX, mouseY, button);
+        SkinDownloader.downloadSkins(skinCompletion, downloadArray);
     }
     
-    private int getSkinIndexAtLocation(int locX, int locY) {
+    private int getMaxPages() {
+        return MathHelper.ceiling_float_int((float)getNumberOfSkin() / (float)skinPanelResults.getIconCount());
+    }
+    
+    private int getNumberOfSkin() {
         if (json == null) {
-            return -1;
+            return 0;
         }
-        
-        int boxW = width - 5;
-        int boxH = height - 5 - 12;
-        int iconSize = 110;
-
-        for (int i = page * displayCount; i < json.size(); i++) {
-            int rowSize = (int) Math.floor(boxW / iconSize);
-            int colSize = (int) Math.floor(boxH / iconSize);
-            displayCount = rowSize * colSize;
-            int x = (i - page * displayCount) % rowSize;
-            int y = (i - page * displayCount) / rowSize;
-            
-            int iconX = this.x + x * iconSize + 5;
-            int iconY = this.y + y * iconSize + 5 + 22;
-            int iconW = iconX + iconSize - 10;
-            int iconH = iconY + iconSize - 10;
-            if (y < colSize) {
-                if (locX >= iconX & locX < iconW) {
-                    if (locY >= iconY & locY < iconH) {
-                        return i;
-                    }
-                }
-            }
-        }
-        return -1;
+        return json.size();
     }
     
     @Override
@@ -178,79 +162,13 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         super.draw(mouseX, mouseY, partialTickTime);
         
-        int boxW = width - 5;
-        int boxH = height - 5 - 12;
-        int iconSize = 110;
-        
-        int maxPages = 0;
-        int totalSkins = 0;
-        if (json != null) {
-            maxPages = (int) Math.ceil((float)json.size() / (float)displayCount);
-            totalSkins = json.size();
-        }
+        int maxPages = getMaxPages();
+        int totalSkins = getNumberOfSkin();
         
         String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + "searchResults.results";
         
         String resultsText = TranslateUtils.translate(unlocalizedName, page + 1, maxPages, totalSkins);
         fontRenderer.drawString(resultsText, x + 5, y + 6, 0xFFEEEEEE);
-        
-        if (json != null) {
-            for (int i = page * displayCount; i < json.size(); i++) {
-                int rowSize = (int) Math.floor(boxW / iconSize);
-                int colSize = (int) Math.floor(boxH / iconSize);
-                displayCount = rowSize * colSize;
-                int x = (i - page * displayCount) % rowSize;
-                int y = (i - page * displayCount) / rowSize;
-                JsonObject skinJson = json.get(i).getAsJsonObject();
-                
-                float scale = iconSize / 3;
-                if (y < colSize) {
-                    int iconX = this.x + x * iconSize + 5;
-                    int iconY = this.y + y * iconSize + 5 + 22;
-                    int iconW = iconX + iconSize - 10;
-                    int iconH = iconY + iconSize - 10;
-                    int hoverColour = 0xC0101010;
-                    if (mouseX >= iconX & mouseX < iconW) {
-                        if (mouseY >= iconY & mouseY < iconH) {
-                            hoverColour = 0xC0444410;
-                        }
-                    }
-                    
-                    Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
-                    if (!downloadedSkins.contains(skinJson)) {
-                        downloadedSkins.add(skinJson);
-                        String fileName = skinJson.get("file_name").getAsString();
-                        
-                        int serverId = skinJson.get("id").getAsInt();
-                        skinCompletion.submit(new DownloadSkinCallable(fileName, serverId));
-                    }
-                    drawGradientRect(iconX, iconY, iconW, iconH, hoverColour, 0xD0101010);
-                    
-                    if (skin != null) {
-                        String name = skinJson.get("name").getAsString();
-                        int size = fontRenderer.getStringWidth(skin.getCustomName());
-                        
-                        fontRenderer.drawSplitString(name, (int) (this.x + x * iconSize + 10), this.y + y * iconSize + iconSize, iconSize - 10, 0xFFEEEEEE);
-                        GL11.glPushMatrix();
-                        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-                        GL11.glTranslatef(iconX + iconSize / 2, iconY + iconSize / 2 - 12, 200.0F);
-                        GL11.glScalef((float)(-scale), (float)scale, (float)scale);
-                        GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-                        GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
-                        float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
-                        GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                        RenderHelper.enableStandardItemLighting();
-                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                        GL11.glEnable(GL11.GL_NORMALIZE);
-                        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-                        ModRenderHelper.enableAlphaBlend();
-                        ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
-                        GL11.glPopAttrib();
-                        GL11.glPopMatrix();
-                    }
-                }
-            }
-        }
     }
 }
