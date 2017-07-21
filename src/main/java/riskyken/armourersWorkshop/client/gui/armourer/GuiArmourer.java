@@ -150,6 +150,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         if (isDialogOpen()) {
             GL11.glTranslatef(-guiLeft, -guiTop, 0);
             dialog.draw(oldMouseX, oldMouseY, 0);
+            GL11.glTranslatef(guiLeft, guiTop, 0);
         }
     }
     
