@@ -378,6 +378,9 @@ inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Show All Skins
 inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Recently Uploaded
 inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Most Downloaded
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Search Results: Page %d of %d - Total of %d results.
+inventory.armourersworkshop:globalSkinLibrary.searchResults.small=Small
+inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=Medium
+inventory.armourersworkshop:globalSkinLibrary.searchResults.large=Large
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
 

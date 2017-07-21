@@ -16,8 +16,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiControlSkinPanel;
 import riskyken.armourersWorkshop.client.gui.controls.GuiControlSkinPanel.SkinIcon;
+import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
@@ -38,6 +40,9 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     private final CompletionService<Skin> skinCompletion;
     private final GuiControlSkinPanel skinPanelResults;
     
+    private GuiIconButton iconButtonSmall;
+    private GuiIconButton iconButtonMedium;
+    private GuiIconButton iconButtonLarge;
     
     private FutureTask<JsonArray> downloadSearchResultsTask;
     private JsonArray json = null;
@@ -91,13 +96,27 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     @Override
     public void initGui() {
         super.initGui();
+        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         buttonList.clear();
         
-        skinPanelResults.init(x + 5, y + 22, width - 10, height - 50);
+        skinPanelResults.init(x + 5, y + 24, width - 10, height - 52);
         skinPanelResults.setIconSize(iconScale);
         skinPanelResults.setPanelPadding(0);
         skinPanelResults.setShowName(true);
         
+        
+        iconButtonSmall = new GuiIconButton(parent, 0, x + width - 21 * 3, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.small"), BUTTON_TEXTURES);
+        iconButtonSmall.setIconLocation(34, 0, 16, 16);
+        
+        iconButtonMedium = new GuiIconButton(parent, 0, x + width - 21 * 2, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.medium"), BUTTON_TEXTURES);
+        iconButtonMedium.setIconLocation(34, 17, 16, 16);
+        
+        iconButtonLarge = new GuiIconButton(parent, 0, x + width - 21, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.large"), BUTTON_TEXTURES);
+        iconButtonLarge.setIconLocation(34, 34, 16, 16);
+        
+        buttonList.add(iconButtonSmall);
+        buttonList.add(iconButtonMedium);
+        buttonList.add(iconButtonLarge);
         buttonList.add(skinPanelResults);
         
         buttonList.add(new GuiButtonExt(1, x + 5, y + height - 25, 80, 20, "<<"));
@@ -111,6 +130,21 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         }
         if (button.id == 2) {
             changePage(page + 1);
+        }
+        if (button == iconButtonSmall) {
+            iconScale = 50;
+            skinPanelResults.setIconSize(iconScale);
+            updateSkinForPage();
+        }
+        if (button == iconButtonMedium) {
+            iconScale = 80;
+            skinPanelResults.setIconSize(iconScale);
+            updateSkinForPage();
+        }
+        if (button == iconButtonLarge) {
+            iconScale = 110;
+            skinPanelResults.setIconSize(iconScale);
+            updateSkinForPage();
         }
         if (button == skinPanelResults) {
             SkinIcon skinIcon = ((GuiControlSkinPanel)button).getLastPressedSkinIcon();
