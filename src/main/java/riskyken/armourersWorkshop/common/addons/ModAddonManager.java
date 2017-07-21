@@ -43,6 +43,7 @@ public final class ModAddonManager {
     public static AddonMinecraft addonMinecraft;
     public static AddonMorePlayerModels addonMorePlayerModels;
     public static AddonMoreSwordsMod addonMoreSwordsMod;
+    public static AddonNEI addonNEI;
     public static AddonOreSpawn addonOreSpawn;
     public static AddonShaders addonShaders;
     public static AddonSmartMoving addonSmartMoving;
@@ -76,6 +77,7 @@ public final class ModAddonManager {
         addonMinecraft = new AddonMinecraft();
         addonMorePlayerModels = new AddonMorePlayerModels();
         addonMoreSwordsMod = new AddonMoreSwordsMod();
+        addonNEI = new AddonNEI();
         addonOreSpawn = new AddonOreSpawn();
         addonShaders = new AddonShaders();
         addonSmartMoving = new AddonSmartMoving();
@@ -97,6 +99,7 @@ public final class ModAddonManager {
         loadedAddons.add(addonMetallurgy);
         loadedAddons.add(addonMinecraft);
         loadedAddons.add(addonMoreSwordsMod);
+        loadedAddons.add(addonNEI);
         loadedAddons.add(addonOreSpawn);
         loadedAddons.add(addonThaumcraft);
         loadedAddons.add(addonTinkersConstruct);

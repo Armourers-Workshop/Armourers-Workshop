@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -44,6 +43,7 @@ import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.items.ItemSkinTemplate;
@@ -117,7 +117,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         
         int slotSize = 18;
         
-        if (!Loader.isModLoaded("NotEnoughItems")) {
+        
+        if (ModAddonManager.addonNEI.isVisible()) {
+            neiBump = 18;
+        } else {
             neiBump = 0;
         }
         

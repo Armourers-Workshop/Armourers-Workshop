@@ -1,14 +1,12 @@
 package riskyken.armourersWorkshop.common.crafting;
 
-import java.lang.reflect.Method;
-
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeClearDye;
@@ -50,26 +48,21 @@ public final class CraftingManager {
     }
     
     public static void hideItemsInNEI() {
-        if (Loader.isModLoaded("NotEnoughItems")) {
-            try {
-                Class ccApi = Class.forName("codechicken.nei.api.API");
-                Method ccHideStack = ccApi.getMethod("hideItem", ItemStack.class);
-                if (ConfigHandler.hideDollFromCreativeTabs) {
-                    ccHideStack.invoke(null, new ItemStack(ModBlocks.doll, 1));
-                }
-                ccHideStack.invoke(null, new ItemStack(ModBlocks.boundingBox, 1));
-                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[0], 1));
-                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[1], 1));
-                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[2], 1));
-                ccHideStack.invoke(null, new ItemStack(ModItems.armourContainer[3], 1));
-                ccHideStack.invoke(null, new ItemStack(ModItems.equipmentSkin, 1));
-                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnable, 1));
-                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableGlowing, 1));
-                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableChild, 1));
-                ccHideStack.invoke(null, new ItemStack(ModBlocks.skinnableChildGlowing, 1));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (ConfigHandler.hideDollFromCreativeTabs) {
+            hideItemInNEI(new ItemStack(ModBlocks.doll, 1));
         }
+        hideItemInNEI(new ItemStack(ModBlocks.boundingBox, 1));
+        hideItemInNEI(new ItemStack(ModItems.armourContainer[0], 1));
+        hideItemInNEI(new ItemStack(ModItems.armourContainer[1], 1));
+        hideItemInNEI(new ItemStack(ModItems.armourContainer[2], 1));
+        hideItemInNEI(new ItemStack(ModItems.armourContainer[3], 1));
+        hideItemInNEI(new ItemStack(ModItems.equipmentSkin, 1));
+        hideItemInNEI(new ItemStack(ModBlocks.skinnable, 1));
+        hideItemInNEI(new ItemStack(ModBlocks.skinnableGlowing, 1));
+        hideItemInNEI(new ItemStack(ModBlocks.skinnableChild, 1));
+        hideItemInNEI(new ItemStack(ModBlocks.skinnableChildGlowing, 1));
+    }
+    private static void hideItemInNEI(ItemStack stack) {
+        ModAddonManager.addonNEI.hideItem(stack);
     }
 }
