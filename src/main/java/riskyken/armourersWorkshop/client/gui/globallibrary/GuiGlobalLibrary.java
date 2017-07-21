@@ -20,6 +20,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibra
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
@@ -35,6 +36,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     public Executor skinDownloadExecutor = Executors.newFixedThreadPool(1);
     
     private static final int PADDING = 5;
+    private boolean isNEIVisible;
     
     public GuiGlobalLibraryPanelHeader panelHeader;
     public GuiGlobalLibraryPanelSearchBox panelSearchBox;
@@ -85,6 +87,7 @@ public class GuiGlobalLibrary extends GuiContainer {
         panelList.add(panelCreateAccount);
         
         screen = Screen.HOME;
+        isNEIVisible = ModAddonManager.addonNEI.isVisible();
     }
     
     @Override
@@ -126,27 +129,31 @@ public class GuiGlobalLibrary extends GuiContainer {
         panelHeader.setPosition(PADDING, PADDING).setSize(width - PADDING * 2, 26);
         panelHeader.setVisible(true);
         yOffset += PADDING + 26;
+        int neiBump = 0;
+        if (isNEIVisible) {
+            neiBump = 18;
+        }
         
         switch (screen) {
         case HOME:
             panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
             panelSearchBox.setVisible(true);
             yOffset += PADDING + 23;
-            panelHome.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelHome.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
             panelHome.setVisible(true);
             break;
         case SEARCH:
             panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
             panelSearchBox.setVisible(true);
             yOffset += PADDING + 23;
-            panelSearchResults.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelSearchResults.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
             panelSearchResults.setVisible(true);
             break;
         case SKIN_INFO:
             panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
             panelSearchBox.setVisible(true);
             yOffset += PADDING + 23;
-            panelSkinInfo.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
+            panelSkinInfo.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
             panelSkinInfo.setVisible(true);
             break;
         case LOGON:
@@ -180,6 +187,7 @@ public class GuiGlobalLibrary extends GuiContainer {
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).mouseClicked(mouseX, mouseY, button);
         }
+        
     }
     
     @Override
@@ -200,6 +208,14 @@ public class GuiGlobalLibrary extends GuiContainer {
         }
         if (!keyTyped) {
             super.keyTyped(c, keycode);
+        }
+        checkNEIVisibility();
+    }
+    
+    private void checkNEIVisibility() {
+        if (isNEIVisible != ModAddonManager.addonNEI.isVisible()) {
+            isNEIVisible = !isNEIVisible;
+            initGui();
         }
     }
     
