@@ -98,12 +98,16 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     private GuiLabeledTextField filenameTextbox;
     private GuiLabeledTextField searchTextbox;
     private GuiDropDownList dropDownList;
+    
+    private boolean isNEIVisible;
+    
     private int neiBump = 18;
     
     public GuiSkinLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary armourLibrary) {
         super(new ContainerArmourLibrary(invPlayer, armourLibrary));
         player = invPlayer.player;
         this.armourLibrary = armourLibrary;
+        isNEIVisible = ModAddonManager.addonNEI.isVisible();
     }
     
     @Override
@@ -819,6 +823,14 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             }
         } else {
             super.keyTyped(key, keyCode);
+        }
+        checkNEIVisibility();
+    }
+    
+    private void checkNEIVisibility() {
+        if (isNEIVisible != ModAddonManager.addonNEI.isVisible()) {
+            isNEIVisible = !isNEIVisible;
+            initGui();
         }
     }
     
