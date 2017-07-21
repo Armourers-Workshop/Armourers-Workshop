@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -88,6 +89,9 @@ public class GuiGlobalLibrary extends GuiContainer {
     
     @Override
     public void initGui() {
+        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        this.xSize = reso.getScaledWidth();
+        this.ySize = reso.getScaledHeight();
         super.initGui();
         buttonList.clear();
         setupPanels();
