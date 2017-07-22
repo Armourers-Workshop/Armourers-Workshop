@@ -18,6 +18,9 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 @SideOnly(Side.CLIENT)
 public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownListCallback {
     
+    private static final int TAB_WIDTH = 240;
+    private static final int TAB_HEIGHT = 68;
+    
     private final TileEntityMannequin tileEntity;
     public GuiDropDownList textureTypeList;
     public GuiTextField nameTextbox;
@@ -36,7 +39,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.url"), TextureType.URL.toString(), true);
         textureTypeList.setListSelectedIndex(tileEntity.getTextureType().ordinal());
         nameTextbox = new GuiTextField(fontRenderer, width / 2 - 110 + 55, 25, 165, 14);
-        nameTextbox.setMaxStringLength(200);
+        nameTextbox.setMaxStringLength(300);
         if (tileEntity.getTextureType() == TextureType.USER) {
             if (tileEntity.getGameProfile() != null) {
                 nameTextbox.setText(tileEntity.getGameProfile().getName());
@@ -48,6 +51,8 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
         }
 
         setNameButton = new GuiButtonExt(0, width / 2 + 60, 45, 50, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "set"));
+        setNameButton.width = fontRenderer.getStringWidth(setNameButton.displayString + "  ");
+        setNameButton.xPosition = width / 2 + TAB_WIDTH / 2 - setNameButton.width - 10;
         
         buttonList.add(textureTypeList);
         buttonList.add(setNameButton);
@@ -55,7 +60,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
 
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 240, 68);
+        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, TAB_WIDTH, TAB_HEIGHT);
         rec.x = width / 2 - rec.width / 2;
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
     }

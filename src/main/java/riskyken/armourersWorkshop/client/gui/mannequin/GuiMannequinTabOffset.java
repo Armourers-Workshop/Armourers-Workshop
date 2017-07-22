@@ -20,6 +20,9 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 @SideOnly(Side.CLIENT)
 public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
     
+    private static final int TAB_WIDTH = 216;
+    private static final int TAB_HEIGHT = 90;
+    
     private final String inventoryName;
     private final TileEntityMannequin tileEntity;
     
@@ -39,10 +42,12 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
         guiLoaded = false;
-        resetOffsetButton = new GuiButtonExt(0, this.width / 2 + 27, 25, 50, 18, GuiHelper.getLocalizedControlName(inventoryName, "reset"));
-        bipedOffsetXslider = new GuiCustomSlider(0, (int)((width / 2F) - (176 / 2F)) + 10, 25, 100, 10, "X: ", "", -1D, 1D, 0D, true, true, this);
-        bipedOffsetYslider = new GuiCustomSlider(0, (int)((width / 2F) - (176 / 2F)) + 10, 25 + 10, 100, 10, "Y: ", "", -1D, 1D, 0D, true, true, this);
-        bipedOffsetZslider = new GuiCustomSlider(0, (int)((width / 2F) - (176 / 2F)) + 10, 25 + 20, 100, 10, "Z: ", "", -1D, 1D, 0D, true, true, this);
+        resetOffsetButton = new GuiButtonExt(0, 0, TAB_HEIGHT - 18 - 8, 50, 18, GuiHelper.getLocalizedControlName(inventoryName, "reset"));
+        resetOffsetButton.width = fontRenderer.getStringWidth(resetOffsetButton.displayString) + fontRenderer.getStringWidth(" ") * 4;
+        resetOffsetButton.xPosition = this.width / 2  - TAB_WIDTH / 2 + TAB_WIDTH - 10 - resetOffsetButton.width;
+        bipedOffsetXslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25, TAB_WIDTH - 20, 10, "X: ", "", -1D, 1D, 0D, true, true, this);
+        bipedOffsetYslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 12, TAB_WIDTH - 20, 10, "Y: ", "", -1D, 1D, 0D, true, true, this);
+        bipedOffsetZslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 24, TAB_WIDTH - 20, 10, "Z: ", "", -1D, 1D, 0D, true, true, this);
         setSliderValue(bipedOffsetXslider, tileEntity.getOffsetX());
         setSliderValue(bipedOffsetYslider, tileEntity.getOffsetY());
         setSliderValue(bipedOffsetZslider, tileEntity.getOffsetZ());
@@ -62,7 +67,7 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
 
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 176, 62);
+        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, TAB_WIDTH, TAB_HEIGHT);
         rec.x = width / 2 - rec.width / 2;
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
     }
