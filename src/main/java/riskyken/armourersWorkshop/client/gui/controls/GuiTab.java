@@ -23,6 +23,9 @@ public class GuiTab extends Gui {
     
     private int padLeft, padRight, padTop, padBottom = 0;
     
+    private int animationFrames = 0;
+    private int animationSpeed = 0;
+    
     public GuiTab(String name) {
         this.name = name;
         this.enabled = true;
@@ -46,7 +49,7 @@ public class GuiTab extends Gui {
             textureOffsetY = 0;
         }
         drawTexturedModalRect(x, y, textureOffsetX, textureOffsetY, tabTextureWidth, tabTextureHeight);
-        renderIcon(x, y);
+        renderIcon(x, y, mouseX, mouseY);
     }
     
     public GuiTab setEnabled(boolean enabled) {
@@ -85,6 +88,12 @@ public class GuiTab extends Gui {
         return this;
     }
     
+    public GuiTab setAnimation(int frames, int speed) {
+        this.animationFrames = frames;
+        this.animationSpeed = speed;
+        return this;
+    }
+    
     public boolean isMouseOver(int x, int y, int mouseX, int mouseY) {
         if (mouseX >= x + padLeft & mouseX < x + tabTextureWidth - padRight) {
             if (mouseY >= y + padTop & mouseY < y + tabTextureHeight - padBottom) {
@@ -94,11 +103,16 @@ public class GuiTab extends Gui {
         return false;
     }
     
-    private void renderIcon(int x, int y) {
+    private void renderIcon(int x, int y, int mouseX, int mouseY) {
+        int animationOffset = 0;
+        if (isMouseOver(x, y, mouseX, mouseY) & animationFrames > 0) {
+            int frame = (int) ((System.currentTimeMillis() / (long)animationSpeed) % animationFrames);
+            animationOffset += iconTextureHeight * frame;
+        }
         drawTexturedModalRect(
                 x + (int)((float)tabTextureWidth / 2F - (float)iconTextureWidth / 2F),
                 y + (int)((float)tabTextureHeight / 2F - (float)iconTextureHeight / 2F),
-                iconTextureX, iconTextureY,
+                iconTextureX, iconTextureY + animationOffset,
                 iconTextureWidth, iconTextureHeight);
     }
 }
