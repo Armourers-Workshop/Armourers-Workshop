@@ -50,11 +50,11 @@ public class GuiHologramProjector extends GuiTabbed {
         tabList.add(tabRotationOffset);
         tabList.add(tabRotationSpeed);
         
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(0, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(32, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.angle")).setIconLocation(64, 52));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationOffset")).setIconLocation(16, 52).setAnimation(4, 200));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationSpeed")).setIconLocation(48, 52));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(52, 0));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(84, 0).setAnimation(4, 100));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.angle")).setIconLocation(116, 0));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationOffset")).setIconLocation(68, 0).setAnimation(4, 200));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationSpeed")).setIconLocation(100, 0));
         tabController.setActiveTabIndex(activeTab);
         
         tabChanged();
