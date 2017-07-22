@@ -9,7 +9,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class GuiHologramProjectorTabInventory extends GuiTabPanel implements ISlider {
@@ -64,9 +63,6 @@ public class GuiHologramProjectorTabInventory extends GuiTabPanel implements ISl
             ((SlotHidable)slot).setDisplayPosition(
                     (int) ((this.width / 2F) - (16F / 2F)), 16);
         }
-        
-        ModLogger.log(guiCon.inventorySlots.inventorySlots.size());
-        
     }
     
     @Override
