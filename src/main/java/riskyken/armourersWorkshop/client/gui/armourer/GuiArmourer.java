@@ -59,10 +59,10 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         tabList.add(tabSkinSettings);
         tabList.add(tabBlockUtils);
         
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.main")).setIconLocation(52, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3).setAnimation(8, 250));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.blockUtils")).setIconLocation(52 + 48, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.main")).setIconLocation(52, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.blockUtils")).setIconLocation(52 + 48, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3).setAnimation(8, 150));
         
         tabController.setActiveTabIndex(activeTab);
         
