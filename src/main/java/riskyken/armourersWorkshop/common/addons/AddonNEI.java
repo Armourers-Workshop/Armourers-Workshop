@@ -19,7 +19,7 @@ public class AddonNEI extends ModAddon {
                 Class<?> c = Class.forName("codechicken.nei.NEIClientConfig");
                 Object object = c.getMethod("isHidden").invoke(null);
                 if (object != null && object instanceof Boolean) {
-                    return !(boolean)object;
+                    return !(Boolean)object;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -33,7 +33,7 @@ public class AddonNEI extends ModAddon {
             Class<?> c = Class.forName("codechicken.nei.NEIClientConfig");
             Object object = c.getMethod("isEnabled").invoke(null);
             if (object != null && object instanceof Boolean) {
-                return (boolean)object;
+                return (Boolean)object;
             }
         } catch (Exception e) {
             e.printStackTrace();
