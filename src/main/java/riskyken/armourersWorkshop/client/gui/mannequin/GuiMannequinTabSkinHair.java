@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
+import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.data.Rectangle_I_2D;
@@ -24,9 +25,15 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 @SideOnly(Side.CLIENT)
 public class GuiMannequinTabSkinHair extends GuiTabPanel {
 
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.MANNEQUIN);
+    
+    private static final int TAB_WIDTH = 200;
+    private static final int TAB_HEIGHT = 62;
+    
     private GuiButtonExt selectSkinButton;
-    private GuiButtonExt autoSkinButton;
     private GuiButtonExt selectHairButton;
+    
+    private GuiButtonExt autoSkinButton;
     private GuiButtonExt autoHairButton;
     
     private final TileEntityMannequin tileEntity;
@@ -66,7 +73,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
 
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 200, 62);
+        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, TAB_WIDTH, TAB_HEIGHT);
         rec.x = width / 2 - rec.width / 2;
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
         
