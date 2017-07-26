@@ -32,8 +32,8 @@ public class GuiGlobalLibrary extends GuiContainer {
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
     
-    public Executor jsonDownloadExecutor = Executors.newFixedThreadPool(1);
-    public Executor skinDownloadExecutor = Executors.newFixedThreadPool(1);
+    public Executor jsonDownloadExecutor = Executors.newFixedThreadPool(2);
+    public Executor skinDownloadExecutor = Executors.newFixedThreadPool(2);
     
     private static final int PADDING = 5;
     private boolean isNEIVisible;

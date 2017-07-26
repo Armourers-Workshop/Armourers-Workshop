@@ -381,6 +381,7 @@ inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Search Resul
 inventory.armourersworkshop:globalSkinLibrary.searchResults.small=Small
 inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=Medium
 inventory.armourersworkshop:globalSkinLibrary.searchResults.large=Large
+inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=Searching...
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
 

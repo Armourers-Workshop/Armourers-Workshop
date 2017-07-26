@@ -56,6 +56,8 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     public void setDownloadSearchResultsTask(FutureTask<JsonArray> downloadSearchResultsTask) {
         this.downloadSearchResultsTask = downloadSearchResultsTask;
+        clearResults();
+        skinPanelResults.clearIcons();
     }
     
     @Override
@@ -91,6 +93,10 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                 e.printStackTrace();
             }
         }
+    }
+    
+    public void clearResults() {
+        json = null;
     }
     
     @Override
@@ -158,23 +164,31 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         if (page < getMaxPages() & page >= 0) {
             this.page = page;
         }
+        if (this.page > getMaxPages()) {
+            this.page = getMaxPages() - 1;
+        }
+        if (this.page < 0) {
+            this.page = 0;
+        }
         updateSkinForPage();
     }
     
     private void updateSkinForPage() {
-        int skinsPerPage = skinPanelResults.getIconCount();
-        int pageOffset = skinsPerPage * page;
-        skinPanelResults.clearIcons();
-        JsonArray downloadArray = new JsonArray();
-        for (int i = 0; i < skinsPerPage; i++) {
-            int index = i + pageOffset;
-            if (index < json.size()) {
-                JsonObject skinJson = json.get(index).getAsJsonObject();
-                downloadArray.add(skinJson);
-                skinPanelResults.addIcon(skinJson);
+        if (json != null) {
+            int skinsPerPage = skinPanelResults.getIconCount();
+            int pageOffset = skinsPerPage * page;
+            skinPanelResults.clearIcons();
+            JsonArray downloadArray = new JsonArray();
+            for (int i = 0; i < skinsPerPage; i++) {
+                int index = i + pageOffset;
+                if (index < json.size()) {
+                    JsonObject skinJson = json.get(index).getAsJsonObject();
+                    downloadArray.add(skinJson);
+                    skinPanelResults.addIcon(skinJson);
+                }
             }
+            SkinDownloader.downloadSkins(skinCompletion, downloadArray);
         }
-        SkinDownloader.downloadSkins(skinCompletion, downloadArray);
     }
     
     private int getMaxPages() {
@@ -203,6 +217,9 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + "searchResults.results";
         
         String resultsText = TranslateUtils.translate(unlocalizedName, page + 1, maxPages, totalSkins);
+        if (json == null) {
+            resultsText = GuiHelper.getLocalizedControlName(guiName, "searchResults.label.searching");
+        }
         fontRenderer.drawString(resultsText, x + 5, y + 6, 0xFFEEEEEE);
     }
 }
