@@ -196,6 +196,27 @@ public class ItemSkin extends AbstractModItem {
         return false;
     }
     
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(itemStack);
+        if (!world.isRemote) {
+            if (skinPointer != null) {
+                if (equipSkin(player, itemStack.copy())) {
+                    itemStack.stackSize--;
+                }
+            }
+        }
+        return itemStack;
+    }
+    
+    private boolean equipSkin(EntityPlayer player, ItemStack itemStack) {
+        ExPropsPlayerEquipmentData equipmentData = ExPropsPlayerEquipmentData.get(player);
+        if (equipmentData.setStackInNextFreeSlot(itemStack)) {
+            return true;
+        }
+        return false;
+    }
+    
     private boolean canPlaceSkinAtLocation(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, SkinPointer skinPointer) {
         if (!player.canPlayerEdit(x, y, z, side, stack)) {
             return false;
