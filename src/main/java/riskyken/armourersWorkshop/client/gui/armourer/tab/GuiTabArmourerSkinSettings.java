@@ -180,6 +180,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         checkBlockMultiblock.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockBed.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockInventory.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
+        inventorySize.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock & checkBlockInventory.isChecked();
         
         sliderWingIdleSpeed.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingFlyingSpeed.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
