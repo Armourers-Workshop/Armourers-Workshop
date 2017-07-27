@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
+import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
@@ -36,12 +37,12 @@ public class SkinModelTexture extends AbstractTexture {
                     }
                     if (paintType == 254) {
                         byte[] hairColour = cmk.getExtraColours();
-                        int colour = dyeColour(new byte[] {hairColour[3], hairColour[4], hairColour[5]}, paintColour, 9, skin);
+                        int colour = dyeColour(new byte[] {hairColour[3], hairColour[4], hairColour[5]}, paintColour, 9, skin, cmk);
                         texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(colour, 0, 255));
                     }
                     if (paintType == 253) {
                         byte[] skinColour = cmk.getExtraColours();
-                        int colour = dyeColour(new byte[] {skinColour[0], skinColour[1], skinColour[2]}, paintColour, 8, skin);
+                        int colour = dyeColour(new byte[] {skinColour[0], skinColour[1], skinColour[2]}, paintColour, 8, skin, cmk);
                         texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(colour, 0, 255));
                     }
                     if (paintType >= 1 & paintType <= 8) {
@@ -50,7 +51,7 @@ public class SkinModelTexture extends AbstractTexture {
                         if (skinDye.haveDyeInSlot(dyeNumber)) {
                             byte[] dye = skinDye.getDyeColour(dyeNumber);
                             if ((dye[3] & 0xFF) != 0) {
-                                int colour = dyeColour(dye, paintColour, dyeNumber, skin);
+                                int colour = dyeColour(dye, paintColour, dyeNumber, skin, cmk);
                                 texture.setRGB(ix, iy, colour);
                             }
                         } else {
@@ -69,18 +70,20 @@ public class SkinModelTexture extends AbstractTexture {
         }
     }
     
-    private int dyeColour(int dye, int colour, int dyeIndex, Skin skin) {
-        byte[] dyeArray = new byte[3];
-        dyeArray[0] = (byte) (dye >>> 16 & 0xFF);
-        dyeArray[1] = (byte) (dye >>> 8 & 0xFF);
-        dyeArray[2] = (byte) (dye & 0xFF);
-        return  dyeColour(dyeArray, colour, dyeIndex, skin);
-    }
-    
-    private int dyeColour(byte[] dye, int colour, int dyeIndex, Skin skin) {
+    private int dyeColour(byte[] dye, int colour, int dyeIndex, Skin skin, SkinTextureKey cmk) {
         byte r = (byte) (colour >>> 16 & 0xFF);
         byte g = (byte) (colour >>> 8 & 0xFF);
         byte b = (byte) (colour & 0xFF);
+        
+        if (dye.length > 3) {
+            byte t = dye[3];
+            if ((t & 0xFF) == PaintType.HAIR.getKey()) {
+                dye = new byte[] {cmk.getExtraColours()[3], cmk.getExtraColours()[4], cmk.getExtraColours()[5]};
+            }
+            if ((t & 0xFF) == PaintType.SKIN.getKey()) {
+                dye = new byte[] {cmk.getExtraColours()[0], cmk.getExtraColours()[1], cmk.getExtraColours()[2]};
+            }
+        }
         
         int[] average = {127, 127, 127};
         

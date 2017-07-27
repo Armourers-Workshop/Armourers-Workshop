@@ -276,6 +276,22 @@ public class EntityTextureInfo {
         byte g = (byte) (colour >>> 8 & 0xFF);
         byte b = (byte) (colour & 0xFF);
         
+        if (dye.length > 3) {
+            byte t = dye[3];
+            if ((t & 0xFF) == PaintType.HAIR.getKey()) {
+                byte dyeR = (byte) (lastEntityHairColour >>> 16 & 0xFF);
+                byte dyeG = (byte) (lastEntityHairColour >>> 8 & 0xFF);
+                byte dyeB = (byte) (lastEntityHairColour & 0xFF);
+                dye = new byte[] {dyeR, dyeG, dyeB};
+            }
+            if ((t & 0xFF) == PaintType.SKIN.getKey()) {
+                byte dyeR = (byte) (lastEntitySkinColour >>> 16 & 0xFF);
+                byte dyeG = (byte) (lastEntitySkinColour >>> 8 & 0xFF);
+                byte dyeB = (byte) (lastEntitySkinColour & 0xFF);
+                dye = new byte[] {dyeR, dyeG, dyeB};
+            }
+        }
+        
         int[] average = {127, 127, 127};
         
         if (skin != null) {
