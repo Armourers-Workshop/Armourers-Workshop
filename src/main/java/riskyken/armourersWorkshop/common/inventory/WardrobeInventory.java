@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public class WardrobeInventory implements IInventory {
     
-    public ItemStack[] wardrobeItemStacks = new ItemStack[ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
+    private ItemStack[] wardrobeItemStacks = new ItemStack[ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
     private boolean inventoryChanged;
     private final IInventorySlotUpdate callback;
     private final ISkinType skinType;

@@ -91,6 +91,22 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         }
     }
     
+    public boolean setStackInNextFreeSlot(ItemStack stack) {
+        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        if (skinPointer.skinType != null) {
+            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.skinType);
+            if (wi != null) {
+                for (int i = 0; i < equipmentWardrobeData.getUnlockedSlotsForSkinType(skinPointer.skinType); i++) {
+                    if (wi.getStackInSlot(i) == null) {
+                        wi.setInventorySlotContents(i, stack);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
     public ItemStack getEquipmentStack(ISkinType skinType, int index) {
         WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
         if (wi != null) {

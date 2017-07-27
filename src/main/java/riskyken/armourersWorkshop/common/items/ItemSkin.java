@@ -8,12 +8,19 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -25,6 +32,7 @@ import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -41,6 +49,7 @@ public class ItemSkin extends AbstractModItem {
 
     public ItemSkin() {
         super(LibItemNames.EQUIPMENT_SKIN, false);
+        BlockDispenser.dispenseBehaviorRegistry.putObject(this, dispenserBehavior);
     }
     
     public ISkinType getSkinType(ItemStack stack) {
@@ -313,4 +322,34 @@ public class ItemSkin extends AbstractModItem {
             te.setRelatedBlocks(relatedBlocks);
         }
     }
+    
+    private static final IBehaviorDispenseItem dispenserBehavior = new BehaviorDefaultDispenseItem() {
+        
+        @Override
+        protected ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack) {
+            if (!SkinNBTHelper.stackHasSkinData(itemStack)) {
+                return super.dispenseStack(blockSource, itemStack);
+            }
+            EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
+            int x = blockSource.getXInt() + enumfacing.getFrontOffsetX();
+            int y = blockSource.getYInt() + enumfacing.getFrontOffsetY();
+            int z = blockSource.getZInt() + enumfacing.getFrontOffsetZ();
+            AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)(y + 1), (double)(z + 1));
+            List list = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+            
+            for (int i = 0; i < list.size(); i++) {
+                EntityLivingBase entitylivingbase = (EntityLivingBase)list.get(i);
+                if (entitylivingbase instanceof EntityPlayer) {
+                    EntityPlayer player = (EntityPlayer) entitylivingbase;
+                    ExPropsPlayerEquipmentData equipmentData = ExPropsPlayerEquipmentData.get(player);
+                    if (equipmentData.setStackInNextFreeSlot(itemStack.copy())) {
+                        --itemStack.stackSize;
+                        return itemStack;
+                    }
+                }
+            }
+            
+            return super.dispenseStack(blockSource, itemStack);
+        }
+    };
 }
