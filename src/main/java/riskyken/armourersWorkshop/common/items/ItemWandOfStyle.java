@@ -29,6 +29,7 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+        ModLogger.log(entity.getClass());
         if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entity)) {
             if (entity.worldObj.isRemote) {
                 return true;

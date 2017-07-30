@@ -41,6 +41,7 @@ public final class ModAddonManager {
     public static AddonMekanismTools addonMekanismTools;
     public static AddonMetallurgy addonMetallurgy;
     public static AddonMinecraft addonMinecraft;
+    public static AddonMinecraftComesAlive addonMinecraftComesAlive;
     public static AddonMorePlayerModels addonMorePlayerModels;
     public static AddonMoreSwordsMod addonMoreSwordsMod;
     public static AddonNEI addonNEI;
@@ -75,6 +76,7 @@ public final class ModAddonManager {
         addonMekanismTools = new AddonMekanismTools();
         addonMetallurgy = new AddonMetallurgy();
         addonMinecraft = new AddonMinecraft();
+        addonMinecraftComesAlive = new AddonMinecraftComesAlive();
         addonMorePlayerModels = new AddonMorePlayerModels();
         addonMoreSwordsMod = new AddonMoreSwordsMod();
         addonNEI = new AddonNEI();
@@ -98,6 +100,7 @@ public final class ModAddonManager {
         loadedAddons.add(addonMekanismTools);
         loadedAddons.add(addonMetallurgy);
         loadedAddons.add(addonMinecraft);
+        loadedAddons.add(addonMinecraftComesAlive);
         loadedAddons.add(addonMoreSwordsMod);
         loadedAddons.add(addonNEI);
         loadedAddons.add(addonOreSpawn);
