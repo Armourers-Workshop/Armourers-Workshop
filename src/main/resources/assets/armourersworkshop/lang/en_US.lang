@@ -112,6 +112,7 @@ item.armourersworkshop:shadeNoiseTool.flavour=Applies random shading to a block.
 item.armourersworkshop:mannequinTool.flavour=Save and load mannequin rotations.%nRight click to apply setting.%nSneak right click to save settings.
 item.armourersworkshop:guideBook.flavour=Your guide to Armourer's Workshop.
 item.armourersworkshop:armourContainer.flavour=Creative mode only item for map developers.%nAllows armour skin to placed on NPC's.%nUse in skinning table to apply skin.
+item.armourersworkshop:wandOfStyle.flavour=Allows skins to be placed on NPCs.
 item.armourersworkshop:soap.flavour=Use in the Skinner Table to clear an items skin.
 item.armourersworkshop:hueTool.flavour=Changes the colour of a block%nwithout affecting the shading.
 item.armourersworkshop:blockMarker.flavour=Creates a marker on an equipment cube.%nOnly use with skins that need marker blocks.
