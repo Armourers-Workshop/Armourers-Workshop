@@ -86,6 +86,9 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         textItemName.mouseClicked(mouseX, mouseY, button);
     }
     
+    int fidgCount = 0;
+    String[] fidgMessage = new String[] {"STOP!", "STOP ALREADY", "I SAID STOP!"};
+    
     @Override
     public boolean keyTyped(char c, int keycode) {
         if (!textItemName.textboxKeyTyped(c, keycode)) {
@@ -93,6 +96,13 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         } else {
             SkinProperties skinProps = tileEntity.getSkinProps();
             String sendText = textItemName.getText().trim();
+            if (fidgCount < 3) {
+                if (sendText.equalsIgnoreCase("fidget spinner")) {
+                    sendText = fidgMessage[fidgCount];
+                    fidgCount++;
+                }
+            }
+            
             String oldText = skinProps.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
             if (!sendText.equals(oldText)) {
                 skinProps.setProperty(Skin.KEY_CUSTOM_NAME, sendText);
@@ -133,7 +143,10 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     
     public void resetValues(SkinProperties skinProperties) {
         resetting = true;
-        textItemName.setText(skinProperties.getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
+        String newText = skinProperties.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
+        if (!newText.equals(textItemName.getText())) {
+            textItemName.setText(newText);
+        }
         resetting = false;
     }
     
