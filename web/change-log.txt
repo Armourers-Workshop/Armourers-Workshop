@@ -1,3 +1,60 @@
+Build 0.46.0
+Added:
+	New tabbed Armourer GUI.
+		Armourer copy option.
+		Armourer mirror option.
+		New Armourer clear options for each skin part.
+	Hologram Projector block.
+	Added icon zoom buttons the the global library.
+	Instanced dye table config option.
+	Allowed the armourer texture to be set from a URL.
+	Allowed block skins inventory to be resized.
+	Allowed mannequins to show the Alex model.
+	Added option to show rotation point in the hologram projector.
+	Texture fade animation when mannequins download a texture.
+	Allowed skins to be equipped with a dispenser.
+	Allowed right clicking skins to equip them.
+	Added wand of style support for Minecraft Comes Alive humans.
+	Added flavour text to the wand of style.
+Changed:
+	Removed "rebuilding texture" debug text.
+	Fade armourer texture in after they are loaded.
+	Improved skin lookup speed.
+	Turned off skin tooltip debug info by default.
+	Stopped camera colliding with skin blocks when the player is mounted.
+	Automatically change library GUI layout when NEI visibility is toggled.
+	Automatically change global library GUI layout when NEI visibility is toggled
+	Removed metadata from image files.
+	Clear search results in Global library before starting a new search.
+	Show text in Global library saying results are being downloaded.
+	Added wand of style render to the Minecraft profiler.
+	Added contributor ring for Thundercat_ and added them to the credits.
+	Added contributor ring for EzerArch.
+	Updated ru_RU lang file. ([\\//972])
+	Updated zh_CN lang file. (Ethan)
+	Update pt_PT and pt_BR lang files. (EzerArch)
+Fixed:
+	Fixed rare NPE crash in the mannequin GUI when selecting hair or skin colour.
+	Fixed block skins inventory GUI not opening on the first click.
+	NEI rendering on top of the global library GUI.
+	Some localisation size issues on the mannequin offset tab.
+	Mini armourer item rendering up side down.
+	Current page in global library going out of bounds when the window is resized.
+	Allowed hair and skin dye bottles to work with skins that have texture paint.
+Art:
+	Hologram projector GUI tab textures. (Ethan)
+	Updated hologram projector GUI tab icons to have animations. (Thundercat_)
+	Updated mannequin GUI tab icons to have animations. (Thundercat_)
+	Updated armourer GUI tab icons to have animations. (Thundercat_)
+	Updated mini armourer texture. (Thundercat_)
+	Updated global library texture. (Thundercat_)
+Refactor:
+	Global library home screen.
+	Global library search results screen.
+	Created NEI addon and moved most NEI code into it.
+	Mannequin skin & hair GUI tab code cleanup.
+
+
 Build 0.45.1
 Changed:
 	Preserved dyes names when using them in the dye table.
