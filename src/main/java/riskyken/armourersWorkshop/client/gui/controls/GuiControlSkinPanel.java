@@ -71,8 +71,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
     public void updateIconCount() {
         int boxW = width + iconPadding - panelPadding * 2;
         int boxH = height + iconPadding - panelPadding * 2;
-        rowCount = (int) Math.floor(boxW / (iconSize + iconPadding));
-        colCount = (int) Math.floor(boxH / (iconSize + iconPadding));
+        rowCount = Math.max(1, (int) Math.floor(boxW / (iconSize + iconPadding))) ;
+        colCount = Math.max(1, (int) Math.floor(boxH / (iconSize + iconPadding)));
         iconCount = rowCount * colCount;
     }
     
