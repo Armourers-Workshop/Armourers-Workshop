@@ -13,13 +13,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
-import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelCreateAccount;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelLogin;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelUpload;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
@@ -44,7 +44,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     public GuiGlobalLibraryPanelSearchResults panelSearchResults;
     public GuiGlobalLibraryPanelSkinInfo panelSkinInfo;
     public GuiGlobalLibraryPanelLogin panelLogin;
-    public GuiGlobalLibraryPanelCreateAccount panelCreateAccount;
+    public GuiGlobalLibraryPanelUpload panelUpload;
     
     private Screen screen;
     
@@ -83,8 +83,8 @@ public class GuiGlobalLibrary extends GuiContainer {
         panelLogin = new GuiGlobalLibraryPanelLogin(this, 5, 5, 500, 500);
         panelList.add(panelLogin);
         
-        panelCreateAccount = new GuiGlobalLibraryPanelCreateAccount(this, 5, 5, 100, 100);
-        panelList.add(panelCreateAccount);
+        panelUpload = new GuiGlobalLibraryPanelUpload(this, 5, 5, 100, 100);
+        panelList.add(panelUpload);
         
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
@@ -104,18 +104,37 @@ public class GuiGlobalLibrary extends GuiContainer {
         if (screen == Screen.HOME) {
             ((GuiGlobalLibraryPanelHome)panelHome).updateSkinPanels();
         }
-        //Move player inventory slots.
+    }
+    
+    public void setPlayerSlotVisibility(boolean visible) {
         for (int x = 0; x < 9; x++) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
             if (slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setVisible(false);
+                ((SlotHidable)slot).setVisible(visible);
             }
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
                 if (slot instanceof SlotHidable) {
-                    ((SlotHidable)slot).setVisible(false);
+                    ((SlotHidable)slot).setVisible(visible);
+                }
+            }
+        }
+    }
+    
+    public void setPlayerSlotLocation(int xPos, int yPos) {
+        for (int x = 0; x < 9; x++) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
+            if (slot instanceof SlotHidable) {
+                ((SlotHidable)slot).setDisplayPosition(xPos + x * 18, yPos + 58);
+            }
+        }
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
+                if (slot instanceof SlotHidable) {
+                    ((SlotHidable)slot).setDisplayPosition(xPos + x * 18, yPos + y * 18);
                 }
             }
         }
@@ -125,6 +144,7 @@ public class GuiGlobalLibrary extends GuiContainer {
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).setVisible(false);
         }
+        setPlayerSlotVisibility(false);
         int yOffset = PADDING;
         panelHeader.setPosition(PADDING, PADDING).setSize(width - PADDING * 2, 26);
         panelHeader.setVisible(true);
@@ -159,6 +179,11 @@ public class GuiGlobalLibrary extends GuiContainer {
         case LOGON:
             panelLogin.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
             panelLogin.setVisible(true);
+            break;
+        case UPLOAD:
+            panelUpload.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            panelUpload.setVisible(true);
+            setPlayerSlotVisibility(true);
             break;
         default:
             break;

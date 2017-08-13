@@ -373,11 +373,13 @@ inventory.armourersworkshop:globalSkinLibrary.header.home=Home
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=Favourites
 inventory.armourersworkshop:globalSkinLibrary.header.friends=Friends
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Upload Skin
+
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Type to search...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Search
 inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Show All Skins
 inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Recently Uploaded
 inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Most Downloaded
+
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Search Results: Page %d of %d - Total of %d results.
 inventory.armourersworkshop:globalSkinLibrary.searchResults.small=Small
 inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=Medium
@@ -385,6 +387,20 @@ inventory.armourersworkshop:globalSkinLibrary.searchResults.large=Large
 inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=Searching...
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
+
+inventory.armourersworkshop:globalSkinLibrary.upload.name=Upload Skin
+inventory.armourersworkshop:globalSkinLibrary.upload.skinName=Skin Name:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterName=Enter name
+inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=Skin Tags:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Enter tags
+inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Upload Skin
+
+# Beta - Will be removed later.
+inventory.armourersworkshop:globalSkinLibrary.upload.enterBetaCode=Enter beta code
+inventory.armourersworkshop:globalSkinLibrary.upload.closedBeta=Uploading to the global skin library is currently in closed beta. Please check back later.
+inventory.armourersworkshop:globalSkinLibrary.upload.buttonCheckBetaCode=Check Beta Code
+inventory.armourersworkshop:globalSkinLibrary.upload.betaCode=Beta Code:
+
 
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory
 inventory.armourersworkshop:hologramProjector.tab.offset=Offset
