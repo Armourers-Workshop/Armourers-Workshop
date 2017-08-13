@@ -78,6 +78,7 @@ item.armourersworkshop:hueTool.flavour=Изменяет цвет блоков,%n
 item.armourersworkshop:blockMarker.flavour=Создает маркер на кубе снаряжения.%nТолько для скинов, нуждающихся в таковых.
 item.armourersworkshop:dyeBottle.flavour=Используется в Красящем Столе для окраски скина.
 item.armourersworkshop:armourersHammer.flavour=Используется для вращения блоков.
+item.armourersworkshop:wandOfStyle.flavour=Наденьте скины на мобов! (В разработке)
 item.armourersworkshop:skinUnlock.0.flavour=Открывает дополнительную ячейку для скина головы в гардеробе.
 item.armourersworkshop:skinUnlock.1.flavour=Открывает дополнительную ячейку для скина тела в гардеробе.
 item.armourersworkshop:skinUnlock.2.flavour=Открывает дополнительную ячейку для скина ног в гардеробе.
@@ -234,7 +235,7 @@ inventory.armourersworkshop:armourLibrary.dialog.overwrite.close=Закрыть
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.ok=OK
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.overwriteFile=Перезаписать "%s"?
 
-inventory.armourersworkshop:armourerBrain.label.itemName=Имя Скина:
+inventory.armourersworkshop:armourerBrain.label.itemName=Название Скина:
 inventory.armourersworkshop:armourerBrain.label.skinType=Тип Скина
 inventory.armourersworkshop:armourerBrain.label.username=Пользователь:
 inventory.armourersworkshop:armourerBrain.label.url=URL:
@@ -332,12 +333,14 @@ inventory.armourersworkshop:miniArmourer.label.buildingAccess=Крастья + �
 inventory.armourersworkshop:globalSkinLibrary.header.home=Домой
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=Избранное
 inventory.armourersworkshop:globalSkinLibrary.header.friends=Друзья
-inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Загрузить
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Опубликовать скин
+
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Поиск...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Поиск
 inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Показать Все Скины
 inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Новые
 inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Наиболее Скачиваемые
+
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Результаты поиска: Стр. %d из %d - Всего %d результатов.
 inventory.armourersworkshop:globalSkinLibrary.searchResults.small=Малые
 inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=Средние
@@ -345,6 +348,20 @@ inventory.armourersworkshop:globalSkinLibrary.searchResults.large=Большие
 inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=Ищем...
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Назад
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Скачать Скин
+
+inventory.armourersworkshop:globalSkinLibrary.upload.name=Опубликовать скин
+inventory.armourersworkshop:globalSkinLibrary.upload.skinName=Название:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterName=Введите название
+inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=Тэги:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Введите тэги
+inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Опубликовать скин
+
+# Beta - Will be removed later.
+inventory.armourersworkshop:globalSkinLibrary.upload.enterBetaCode=Введите код доступа
+inventory.armourersworkshop:globalSkinLibrary.upload.closedBeta=Функция публикации скинов находится в стадии бета-теста. Заглятине попозже.
+inventory.armourersworkshop:globalSkinLibrary.upload.buttonCheckBetaCode=Проверить код
+inventory.armourersworkshop:globalSkinLibrary.upload.betaCode=Код доступа:
+
 
 inventory.armourersworkshop:hologramProjector.tab.inventory=Инвентать
 inventory.armourersworkshop:hologramProjector.tab.offset=Смещение

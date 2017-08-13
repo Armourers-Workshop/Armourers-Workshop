@@ -1,5 +1,10 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
+import java.util.UUID;
+import java.util.concurrent.FutureTask;
+
+import com.google.gson.JsonArray;
+
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,6 +14,7 @@ import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
+import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelUpload extends GuiPanel {
@@ -22,6 +28,10 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     //Beta
     private GuiLabeledTextField textBetaCode;
     private GuiButtonExt buttonCheckBetaCode;
+    
+    private boolean haveChecked = false;
+    private JsonArray jsonArray = null;
+    private FutureTask<JsonArray> jsonDownload = null;
     
     public GuiGlobalLibraryPanelUpload(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -41,9 +51,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12 * 7);
         //textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         
-        textBetaCode = new GuiLabeledTextField(fontRenderer, x + width - 125, y + 35, 120, 12);
+        textBetaCode = new GuiLabeledTextField(fontRenderer, x + width - 185, y + 35, 180, 12);
         textBetaCode.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterBetaCode"));
-        textBetaCode.setMaxStringLength(18);
+        textBetaCode.setMaxStringLength(36);
         
         buttonUpload = new GuiButtonExt(0, x + 5, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
         buttonUpload.enabled = false;
@@ -56,6 +66,18 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         
         if (visible) {
             updatePlayerSlots();
+        }
+    }
+    
+    @Override
+    public void update() {
+        super.update();
+        if (jsonDownload != null && jsonDownload.isDone()) {
+            try {
+                jsonArray = jsonDownload.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -86,7 +108,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //    return true;
         //}
         if (textBetaCode.textboxKeyTyped(c, keycode)) {
-            buttonCheckBetaCode.enabled = textBetaCode.getText().length() == 18;
+            buttonCheckBetaCode.enabled = textBetaCode.getText().length() == 36;
             return true;
         }
         return false;
@@ -120,7 +142,15 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        
+        if (button == buttonCheckBetaCode) {
+            if (textBetaCode.getText().length() == 36) {
+                try {
+                    UUID uuid = UUID.fromString(textBetaCode.getText());
+                    jsonDownload = PlushieAuth.isPlayerInBeta(uuid);
+                } catch (IllegalArgumentException e) {
+                }
+            }
+        }
     }
     
     @Override
@@ -141,9 +171,15 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         //textDescription.drawTextBox();
         
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "betaCode"), x + width - 125, y + 25, 0xFFFFFF);
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "betaCode"), x + width - 185, y + 25, 0xFFFFFF);
         textBetaCode.drawTextBox();
         
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBeta"), x + width - 125, y + 75, 120, 0xFF8888);
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBeta"), x + width - 185, y + 75, 180, 0xFF8888);
+        
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 5, y + 85, 180, 0xFF8888);
+        
+        if (jsonArray != null) {
+            fontRenderer.drawSplitString(jsonArray.toString(), x + width - 185, y + 115, 180, 0xFF8888);
+        }
     }
 }

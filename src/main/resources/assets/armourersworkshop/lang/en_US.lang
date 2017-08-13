@@ -400,7 +400,7 @@ inventory.armourersworkshop:globalSkinLibrary.upload.enterBetaCode=Enter beta co
 inventory.armourersworkshop:globalSkinLibrary.upload.closedBeta=Uploading to the global skin library is currently in closed beta. Please check back later.
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonCheckBetaCode=Check Beta Code
 inventory.armourersworkshop:globalSkinLibrary.upload.betaCode=Beta Code:
-
+inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=Warning all skins uploading during the closed beta will be wiped when the beta ends.
 
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory
 inventory.armourersworkshop:hologramProjector.tab.offset=Offset

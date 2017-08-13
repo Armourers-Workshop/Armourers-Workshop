@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.utils;
+package riskyken.armourersWorkshop.common.library.global;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +10,8 @@ import java.net.URL;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
+
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
     
