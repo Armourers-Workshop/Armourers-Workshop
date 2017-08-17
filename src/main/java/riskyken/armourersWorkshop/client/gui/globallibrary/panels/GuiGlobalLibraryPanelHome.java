@@ -75,8 +75,10 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     }
     
     public void updateSkinPanels() {
-        taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + skinPanelRecentlyUploaded.getIconCount()));
-        taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_DOWNLOADED_URL + "?limit=" + skinPanelMostDownloaded.getIconCount()));
+        int iconCountRecentlyUploaded = (int) Math.ceil((float)skinPanelRecentlyUploaded.getIconCount() / 20) * 20;
+        int iconCountMostDownloaded = (int) Math.ceil((float)skinPanelMostDownloaded.getIconCount() / 20) * 20;
+        taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded));
+        taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_DOWNLOADED_URL + "?limit=" + iconCountMostDownloaded));
         
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonRecentlyUploaded);
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonMostDownloaded);
