@@ -140,7 +140,6 @@ public final class SkinUploader {
                 IOUtils.closeQuietly(inputStream);
             }
             
-            ModLogger.log(result);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

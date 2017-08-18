@@ -140,6 +140,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         if (taskSkinUpload != null && taskSkinUpload.isDone()) {
             try {
                 JsonObject json = taskSkinUpload.get();
+                taskSkinUpload = null;
+                ModLogger.log("got json");
+                ModLogger.log(json.toString());
                 if (json.has("valid") & json.has("action")) {
                     String action = json.get("action").getAsString();
                     boolean valid = json.get("valid").getAsBoolean();
