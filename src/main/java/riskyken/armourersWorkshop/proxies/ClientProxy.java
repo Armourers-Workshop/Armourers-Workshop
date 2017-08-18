@@ -103,6 +103,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void preInit() {
+        super.preInit();
         enableCrossModSupport();
         spamSillyMessages();
     }
@@ -147,6 +148,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void init() {
+        super.init();
         equipmentWardrobeHandler = new EquipmentWardrobeHandler();
         playerTextureHandler = new PlayerTextureHandler();
         playerTextureDownloader = new PlayerTextureDownloader();
@@ -157,6 +159,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void postInit() {
+        super.postInit();
         ModAddonManager.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
         if (HolidayHelper.valentins.isHolidayActive()) {

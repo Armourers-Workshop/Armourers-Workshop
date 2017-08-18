@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.library.ILibraryCallback;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileType;
+import riskyken.armourersWorkshop.common.library.global.permission.PermissionSystem;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel.AdminPanelCommand;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
@@ -29,6 +30,7 @@ import riskyken.armourersWorkshop.utils.SkinIOUtils;
 public class CommonProxy implements ILibraryCallback {
     
     public ILibraryManager libraryManager;
+    private PermissionSystem permissionSystem;
     
     public void preInit() {
         
@@ -43,11 +45,15 @@ public class CommonProxy implements ILibraryCallback {
     }
     
     public void init() {
-        
+        permissionSystem = new PermissionSystem();
     }
     
     public void postInit() {
         
+    }
+    
+    public PermissionSystem getPermissionSystem() {
+        return permissionSystem;
     }
     
     public void registerKeyBindings() {
