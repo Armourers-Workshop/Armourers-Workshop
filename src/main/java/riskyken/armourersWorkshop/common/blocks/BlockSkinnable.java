@@ -340,9 +340,12 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     
     @SideOnly(Side.CLIENT)
     public boolean checkCameraCollide() {
-        if (!Minecraft.getMinecraft().thePlayer.isRiding()) {
-            return false;
+        if (Minecraft.getMinecraft().thePlayer != null) {
+            if (!Minecraft.getMinecraft().thePlayer.isRiding()) {
+                return false;
+            }
         }
+
         int renderCount = 0;
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
         for (int i = 0; i < stack.length; i++) {
