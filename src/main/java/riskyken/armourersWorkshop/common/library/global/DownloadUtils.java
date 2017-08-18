@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.io.IOUtils;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public final class DownloadUtils {
@@ -15,7 +16,7 @@ public final class DownloadUtils {
     private DownloadUtils() {
     }
     
-    private static String downloadString(String url) {
+    public static String downloadString(String url) {
         InputStream in = null;
         String data = null;
         try {
@@ -30,7 +31,7 @@ public final class DownloadUtils {
         return data;
     }
     
-    private static JsonArray downloadJsonArray(String url) {
+    public static JsonArray downloadJsonArray(String url) {
         String data = downloadString(url);
         if (data == null) {
             return null;
@@ -38,6 +39,21 @@ public final class DownloadUtils {
         JsonArray json = null;
         try {
             json = (JsonArray) new JsonParser().parse(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    
+    public static JsonObject downloadJsonObject(String url) {
+        String data = downloadString(url);
+        if (data == null) {
+            return null;
+        }
+        JsonObject json = null;
+        try {
+            json = (JsonObject) new JsonParser().parse(data);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -56,6 +72,21 @@ public final class DownloadUtils {
         @Override
         public JsonArray call() throws Exception {
             JsonArray array = downloadJsonArray(url);
+            return array;
+        }
+    }
+    
+    public static class DownloadJsonObjectCallable implements Callable<JsonObject> {
+
+        private final String url;
+        
+        public DownloadJsonObjectCallable(String url) {
+            this.url = url;
+        }
+        
+        @Override
+        public JsonObject call() throws Exception {
+            JsonObject array = downloadJsonObject(url);
             return array;
         }
     }

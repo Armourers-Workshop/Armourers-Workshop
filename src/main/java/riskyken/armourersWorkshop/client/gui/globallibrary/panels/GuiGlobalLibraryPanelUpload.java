@@ -1,37 +1,51 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
-import java.util.UUID;
+import java.io.ByteArrayOutputStream;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-import com.google.gson.JsonArray;
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Level;
+
+import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.library.global.SkinUploader;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
+import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.SkinIOUtils;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelUpload extends GuiPanel {
 
+    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/globalLibrary.png");
+    
     private final String guiName;
     private GuiLabeledTextField textName;
     private GuiLabeledTextField textTags;
     //private GuiLabeledTextField textDescription;
     private GuiButtonExt buttonUpload;
     
-    //Beta
-    private GuiLabeledTextField textBetaCode;
-    private GuiButtonExt buttonCheckBetaCode;
-    
-    private boolean haveChecked = false;
-    private JsonArray jsonArray = null;
-    private FutureTask<JsonArray> jsonDownload = null;
+    private FutureTask<JsonObject> taskSkinUpload;
     
     public GuiGlobalLibraryPanelUpload(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -51,33 +65,12 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12 * 7);
         //textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         
-        textBetaCode = new GuiLabeledTextField(fontRenderer, x + width - 185, y + 35, 180, 12);
-        textBetaCode.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterBetaCode"));
-        textBetaCode.setMaxStringLength(36);
-        
-        buttonUpload = new GuiButtonExt(0, x + 5, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
+        buttonUpload = new GuiButtonExt(0, x + 5, y + 85, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
         buttonUpload.enabled = false;
         
-        buttonCheckBetaCode = new GuiButtonExt(0, x + width - 125, y + 50, 120, 20, GuiHelper.getLocalizedControlName(guiName, "buttonCheckBetaCode"));
-        buttonCheckBetaCode.enabled = false;
-        
         buttonList.add(buttonUpload);
-        buttonList.add(buttonCheckBetaCode);
-        
         if (visible) {
             updatePlayerSlots();
-        }
-    }
-    
-    @Override
-    public void update() {
-        super.update();
-        if (jsonDownload != null && jsonDownload.isDone()) {
-            try {
-                jsonArray = jsonDownload.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
     
@@ -90,7 +83,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     }
     
     private void updatePlayerSlots() {
-        ((GuiGlobalLibrary)parent).setPlayerSlotLocation(x + width / 2 - 18 * 9 / 2, height - 42);
+        ((GuiGlobalLibrary)parent).setPlayerSlotLocation(x + width / 2 - 18 * 9 / 2, y + height - 81);
+        ((GuiGlobalLibrary)parent).setInputSlotLocation(x + 6, y + 115);
+        ((GuiGlobalLibrary)parent).setOutputSlotLocation(x + 83, y + 115);
     }
     
     @Override
@@ -107,10 +102,6 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //if (textDescription.textboxKeyTyped(c, keycode)) {
         //    return true;
         //}
-        if (textBetaCode.textboxKeyTyped(c, keycode)) {
-            buttonCheckBetaCode.enabled = textBetaCode.getText().length() == 36;
-            return true;
-        }
         return false;
     }
     
@@ -123,7 +114,6 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         textName.mouseClicked(mouseX, mouseY, button);
         textTags.mouseClicked(mouseX, mouseY, button);
         //textDescription.mouseClicked(mouseX, mouseY, button);
-        textBetaCode.mouseClicked(mouseX, mouseY, button);
         if (button == 1) {
             if (textName.isFocused()) {
                 textName.setText("");
@@ -134,23 +124,66 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
             //if (textDescription.isFocused()) {
             //    textDescription.setText("");
             //}
-            if (textBetaCode.isFocused()) {
-                textBetaCode.setText("");
+        }
+    }
+    
+    @Override
+    public void update() {
+        super.update();
+        buttonUpload.enabled = false;
+        if (!StringUtils.isNullOrEmpty(textName.getText())) {
+            SlotHidable slot = ((GuiGlobalLibrary)parent).getInputSlot();
+            if (SkinNBTHelper.stackHasSkinData(slot.getStack())) {
+                buttonUpload.enabled = true;
+            }
+        }
+        if (taskSkinUpload != null && taskSkinUpload.isDone()) {
+            try {
+                JsonObject json = taskSkinUpload.get();
+                if (json.has("valid") & json.has("action")) {
+                    String action = json.get("action").getAsString();
+                    boolean valid = json.get("valid").getAsBoolean();
+                    if (valid & action.equals("skin-upload")) {
+                        ((GuiGlobalLibrary)parent).panelHome.updateSkinPanels();
+                        ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
         }
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button == buttonCheckBetaCode) {
-            if (textBetaCode.getText().length() == 36) {
-                try {
-                    UUID uuid = UUID.fromString(textBetaCode.getText());
-                    jsonDownload = PlushieAuth.isPlayerInBeta(uuid);
-                } catch (IllegalArgumentException e) {
-                }
+        if (button == buttonUpload) {
+            GameProfile gameProfile = mc.thePlayer.getGameProfile();
+            PlushieSession plushieSession = ((GuiGlobalLibrary)parent).plushieSession;
+            if (!plushieSession.isAuthenticated()) {
+                JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
+                plushieSession.authenticate(jsonObject);
             }
+            
+            if (!plushieSession.isAuthenticated()) {
+                ModLogger.log(Level.ERROR, "Authentication failed.");
+                return;
+            }
+            
+            MessageClientGuiButton message = new MessageClientGuiButton((byte) 0);
+            PacketHandler.networkWrapper.sendToServer(message);
         }
+    }
+    
+    public void uploadSkin(Skin skin) {
+        GameProfile gameProfile = mc.thePlayer.getGameProfile();
+        PlushieSession plushieSession = ((GuiGlobalLibrary)parent).plushieSession;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        SkinIOUtils.saveSkinToStream(outputStream, skin);
+        byte[] fileBytes = outputStream.toByteArray();
+        IOUtils.closeQuietly(outputStream);
+        taskSkinUpload = SkinUploader.uploadSkin(fileBytes, textName.getText(), Integer.toString(plushieSession.getServer_id()), "", plushieSession.getAccessToken());
     }
     
     @Override
@@ -159,6 +192,14 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
+        mc.renderEngine.bindTexture(BUTTON_TEXTURES);
+        //inv
+        drawTexturedModalRect(x + width / 2 - 162 / 2 - 1, y + height - 82, 0, 180, 162, 76);
+        //input
+        drawTexturedModalRect(x + 5, y + 114, 0, 162, 18, 18);
+        //output
+        drawTexturedModalRect(x + 78, y + 110, 18, 154, 26, 26);
+        
         super.draw(mouseX, mouseY, partialTickTime);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "name"), x + 5, y + 5, 0xFFFFFF);
         
@@ -171,15 +212,6 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         //textDescription.drawTextBox();
         
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "betaCode"), x + width - 185, y + 25, 0xFFFFFF);
-        textBetaCode.drawTextBox();
-        
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBeta"), x + width - 185, y + 75, 180, 0xFF8888);
-        
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 5, y + 85, 180, 0xFF8888);
-        
-        if (jsonArray != null) {
-            fontRenderer.drawSplitString(jsonArray.toString(), x + width - 185, y + 115, 180, 0xFF8888);
-        }
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 5, y + 140, 180, 0xFF8888);
     }
 }

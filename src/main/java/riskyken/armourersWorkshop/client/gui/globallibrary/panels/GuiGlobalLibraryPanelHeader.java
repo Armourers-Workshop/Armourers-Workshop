@@ -20,6 +20,12 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
 
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/globalLibrary.png");
     
+    private GuiIconButton iconButtonHome;
+    private GuiIconButton iconButtonFavourites;
+    private GuiIconButton iconButtonMyFiles;
+    private GuiIconButton iconButtonUploadSkin;
+    private GuiIconButton iconButtonJoinBeta;
+    
     public GuiGlobalLibraryPanelHeader(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
     }
@@ -29,25 +35,51 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         super.initGui();
         String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         buttonList.clear();
-        buttonList.add(new GuiIconButton(parent, 0, this.x + this.width - 21, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.home"), BUTTON_TEXTURES).setIconLocation(0, 0, 16, 16));
-        buttonList.add(new GuiIconButton(parent, 1, this.x + this.width - 42, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.favourites"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16));
-        buttonList.add(new GuiIconButton(parent, 2, this.x + this.width - 62, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.friends"), BUTTON_TEXTURES).setIconLocation(0, 34, 16, 16));
-        buttonList.add(new GuiIconButton(parent, 3, this.x + this.width - 84, this.y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "header.uploadSkin"), BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16));
+        
+        iconButtonHome = new GuiIconButton(parent, 0, this.x + this.width - 21, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.home"), BUTTON_TEXTURES).setIconLocation(0, 0, 16, 16);
+        //iconButtonFavourites = new GuiIconButton(parent, 1, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.favourites"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16);
+        iconButtonMyFiles = new GuiIconButton(parent, 2, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.myFiles"), BUTTON_TEXTURES).setIconLocation(0, 34, 16, 16);
+        iconButtonUploadSkin = new GuiIconButton(parent, 3, this.x + this.width - 61, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.uploadSkin"), BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16);
+        iconButtonJoinBeta = new GuiIconButton(parent, 4, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.joinBeta"), BUTTON_TEXTURES).setIconLocation(0, 68, 16, 16);
+        
+        buttonList.add(iconButtonHome);
+        //buttonList.add(iconButtonFavourites);
+        buttonList.add(iconButtonMyFiles);
+        buttonList.add(iconButtonUploadSkin);
+        buttonList.add(iconButtonJoinBeta);
+        betaCheckUpdate();
+    }
+    
+    @Override
+    public void update() {
+        super.update();
+        betaCheckUpdate();
+    }
+    
+    private void betaCheckUpdate() {
+        boolean inBeta = ((GuiGlobalLibrary)parent).isPlayerInBeta();
+        //iconButtonFavourites.visible = inBeta;
+        iconButtonMyFiles.visible = inBeta;
+        iconButtonUploadSkin.visible = inBeta;
+        iconButtonJoinBeta.visible = !inBeta;
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button.id == 0) {
+        if (button == iconButtonHome) {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
         }
-        if (button.id == 1) {
+        if (button == iconButtonFavourites) {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.FAVOURITES);
         }
-        if (button.id == 2) {
-            ((GuiGlobalLibrary)parent).switchScreen(Screen.FRIENDS);
+        if (button == iconButtonMyFiles) {
+            ((GuiGlobalLibrary)parent).switchScreen(Screen.My_FILES);
         }
-        if (button.id == 3) {
+        if (button == iconButtonUploadSkin) {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.UPLOAD);
+        }
+        if (button == iconButtonJoinBeta) {
+            ((GuiGlobalLibrary)parent).switchScreen(Screen.JOIN_BETA);
         }
     }
     

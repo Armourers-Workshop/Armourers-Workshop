@@ -371,8 +371,9 @@ inventory.armourersworkshop:miniArmourer.label.buildingAccess=Sneak right click 
 
 inventory.armourersworkshop:globalSkinLibrary.header.home=Home
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=Favourites
-inventory.armourersworkshop:globalSkinLibrary.header.friends=Friends
+inventory.armourersworkshop:globalSkinLibrary.header.myFiles=My Files
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Upload Skin
+inventory.armourersworkshop:globalSkinLibrary.header.joinBeta=Join Beta
 
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Type to search...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Search
@@ -396,10 +397,18 @@ inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Enter tags
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Upload Skin
 
 # Beta - Will be removed later.
-inventory.armourersworkshop:globalSkinLibrary.upload.enterBetaCode=Enter beta code
-inventory.armourersworkshop:globalSkinLibrary.upload.closedBeta=Uploading to the global skin library is currently in closed beta. Please check back later.
-inventory.armourersworkshop:globalSkinLibrary.upload.buttonCheckBetaCode=Check Beta Code
-inventory.armourersworkshop:globalSkinLibrary.upload.betaCode=Beta Code:
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.name=Join Beta
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.enterBetaCode=Enter beta code
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=Uploading to the global skin library is currently in closed beta. Please check back later.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.buttonJoinBeta=Join Beta
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.betaCode=Beta Code:
+
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.checkCode=Checking beta code.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.codeInvalid=Code invalid.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joiningBeta=Joining beta.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedFailed=Failed to join beta.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedBeta=Successfully joined beta.
+
 inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=Warning all skins uploading during the closed beta will be wiped when the beta ends.
 
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory

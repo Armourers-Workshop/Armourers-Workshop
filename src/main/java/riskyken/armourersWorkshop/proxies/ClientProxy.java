@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -28,6 +29,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
 import riskyken.armourersWorkshop.client.handler.DebugTextHandler;
 import riskyken.armourersWorkshop.client.handler.EquipmentWardrobeHandler;
@@ -68,6 +70,7 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
@@ -338,9 +341,19 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin) {
-        SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin);
-        ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, null);
+    public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin, SendType sendType) {
+        switch (sendType) {
+        case LIBRARY_SAVE:
+            SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin);
+            ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, null);
+            break;
+        case GLOBAL_UPLOAD:
+            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+            if (screen instanceof GuiGlobalLibrary) {
+                ((GuiGlobalLibrary)screen).gotSkinFromServer(skin);
+            }
+            break;
+        }
     }
     
     @Override

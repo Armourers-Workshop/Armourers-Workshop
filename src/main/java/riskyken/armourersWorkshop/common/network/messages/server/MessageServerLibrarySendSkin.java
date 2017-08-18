@@ -20,33 +20,56 @@ public class MessageServerLibrarySendSkin implements IMessage, IMessageHandler<M
     private String fileName;
     private String filePath;
     private Skin skin;
+    private SendType sendType;
     
     public MessageServerLibrarySendSkin() {
     }
     
-    public MessageServerLibrarySendSkin(String fileName, String filePath, Skin skin) {
+    public MessageServerLibrarySendSkin(String fileName, String filePath, Skin skin, SendType sendType) {
         this.fileName = fileName;
         this.filePath = filePath;
         this.skin = skin;
+        this.sendType = sendType;
+    }
+    
+    @Override
+    public void toBytes(ByteBuf buf) {
+        if (fileName != null) {
+            buf.writeBoolean(true);
+            ByteBufUtils.writeUTF8String(buf, this.fileName);
+        } else {
+            buf.writeBoolean(false);
+        }
+        if (filePath != null) {
+            buf.writeBoolean(true);
+            ByteBufUtils.writeUTF8String(buf, this.filePath);
+        } else {
+            buf.writeBoolean(false);
+        }
+        ByteBufHelper.writeSkinToByteBuf(buf, skin);
+        buf.writeByte(sendType.ordinal());
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.fileName = ByteBufUtils.readUTF8String(buf);
-        this.filePath = ByteBufUtils.readUTF8String(buf);
+        if (buf.readBoolean()) {
+            this.fileName = ByteBufUtils.readUTF8String(buf);
+        }
+        if (buf.readBoolean()) {
+            this.filePath = ByteBufUtils.readUTF8String(buf);
+        }
         this.skin = ByteBufHelper.readSkinFromByteBuf(buf);
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, this.fileName);
-        ByteBufUtils.writeUTF8String(buf, this.filePath);
-        ByteBufHelper.writeSkinToByteBuf(buf, skin);
+        this.sendType = SendType.values()[buf.readByte()];
     }
     
     @Override
     public IMessage onMessage(MessageServerLibrarySendSkin message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.receivedSkinFromLibrary(message.fileName, message.filePath, message.skin);
+        ArmourersWorkshop.proxy.receivedSkinFromLibrary(message.fileName, message.filePath, message.skin, message.sendType);
         return null;
+    }
+    
+    public static enum SendType {
+        LIBRARY_SAVE,
+        GLOBAL_UPLOAD
     }
 }

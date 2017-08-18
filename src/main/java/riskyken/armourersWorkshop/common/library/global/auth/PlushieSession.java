@@ -52,14 +52,14 @@ public class PlushieSession {
     
     public boolean isAuthenticated() {
         if (isAuth) {
-            if (accessTokenReceivedTime + accessTokenExpiryTime > System.currentTimeMillis()) {
+            if (accessTokenReceivedTime + (accessTokenExpiryTime * 1000) > System.currentTimeMillis()) {
                 return true;
             }
         }
         return false;
     }
     
-    public void setAccessToken(String accessToken, int accessTokenExpiryTime) {
+    public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
         accessTokenReceivedTime = System.currentTimeMillis();
     }

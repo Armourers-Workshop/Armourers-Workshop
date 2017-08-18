@@ -3,6 +3,10 @@ package riskyken.armourersWorkshop.client.gui.globallibrary;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+
+import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,9 +17,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoinBeta;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
-import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelLogin;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelMySkins;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
@@ -23,11 +28,16 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibra
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
+import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
+import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibrary extends GuiContainer {
     
+    public PlushieSession plushieSession;
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
@@ -43,20 +53,25 @@ public class GuiGlobalLibrary extends GuiContainer {
     public GuiGlobalLibraryPanelHome panelHome;
     public GuiGlobalLibraryPanelSearchResults panelSearchResults;
     public GuiGlobalLibraryPanelSkinInfo panelSkinInfo;
-    public GuiGlobalLibraryPanelLogin panelLogin;
     public GuiGlobalLibraryPanelUpload panelUpload;
+    public GuiGlobalLibraryPaneJoinBeta panelJoinBeta;
+    public GuiGlobalLibraryPanelMySkins panelMySkins;
     
     private Screen screen;
+    
+    //Beta
+    private static boolean doneBetaCheck;
+    private static boolean isInbeta;
+    private static FutureTask<JsonObject> taskBetaCheck;
     
     public static enum Screen {
         HOME,
         SEARCH,
         UPLOAD,
         SKIN_INFO,
-        FRIENDS,
+        My_FILES,
         FAVOURITES,
-        LOGON,
-        CREATE_ACCOUNT
+        JOIN_BETA
     }
     
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
@@ -80,14 +95,35 @@ public class GuiGlobalLibrary extends GuiContainer {
         panelSkinInfo = new GuiGlobalLibraryPanelSkinInfo(this, 5, 5, 100, 100);
         panelList.add(panelSkinInfo);
         
-        panelLogin = new GuiGlobalLibraryPanelLogin(this, 5, 5, 500, 500);
-        panelList.add(panelLogin);
-        
         panelUpload = new GuiGlobalLibraryPanelUpload(this, 5, 5, 100, 100);
         panelList.add(panelUpload);
         
+        panelJoinBeta = new GuiGlobalLibraryPaneJoinBeta(this, 5, 5, 100, 100);
+        panelList.add(panelJoinBeta);
+        
+        panelMySkins = new GuiGlobalLibraryPanelMySkins(this, 5, 5, 100, 100);
+        panelList.add(panelMySkins);
+        
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
+        
+        if (plushieSession == null) {
+            plushieSession = new PlushieSession();
+        }
+        if (!doneBetaCheck) {
+            doBetaCheck();
+        }
+        doBetaCheck();
+    }
+    
+    public void doBetaCheck() {
+        doneBetaCheck = true;
+        GameProfile gameProfile = Minecraft.getMinecraft().thePlayer.getGameProfile();
+        taskBetaCheck = PlushieAuth.isPlayerInBeta(gameProfile.getId());
+    }
+    
+    public boolean isPlayerInBeta() {
+        return isInbeta;
     }
     
     @Override
@@ -106,7 +142,7 @@ public class GuiGlobalLibrary extends GuiContainer {
         }
     }
     
-    public void setPlayerSlotVisibility(boolean visible) {
+    public void setSlotVisibility(boolean visible) {
         for (int x = 0; x < 9; x++) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
             if (slot instanceof SlotHidable) {
@@ -120,6 +156,15 @@ public class GuiGlobalLibrary extends GuiContainer {
                     ((SlotHidable)slot).setVisible(visible);
                 }
             }
+        }
+        
+        Slot slot = getInputSlot();
+        if (slot instanceof SlotHidable) {
+            ((SlotHidable)slot).setVisible(visible);
+        }
+        slot = getOutputSlot();
+        if (slot instanceof SlotHidable) {
+            ((SlotHidable)slot).setVisible(visible);
         }
     }
     
@@ -140,11 +185,37 @@ public class GuiGlobalLibrary extends GuiContainer {
         }
     }
     
+    public void setInputSlotLocation(int xPos, int yPos) {
+        Slot slot = getInputSlot();
+        if (slot instanceof SlotHidable) {
+            ((SlotHidable)slot).setDisplayPosition(xPos, yPos);
+        }
+    }
+    
+    public void setOutputSlotLocation(int xPos, int yPos) {
+        Slot slot = getOutputSlot();
+        if (slot instanceof SlotHidable) {
+            ((SlotHidable)slot).setDisplayPosition(xPos, yPos);
+        }
+    }
+    
+    public SlotHidable getInputSlot() {
+        return (SlotHidable) inventorySlots.inventorySlots.get(36);
+    }
+    
+    public SlotHidable getOutputSlot() {
+        return (SlotHidable) inventorySlots.inventorySlots.get(37);
+    }
+    
+    public ContainerGlobalSkinLibrary getContainer() {
+        return (ContainerGlobalSkinLibrary) inventorySlots;
+    }
+    
     private void setupPanels() {
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).setVisible(false);
         }
-        setPlayerSlotVisibility(false);
+        setSlotVisibility(false);
         int yOffset = PADDING;
         panelHeader.setPosition(PADDING, PADDING).setSize(width - PADDING * 2, 26);
         panelHeader.setVisible(true);
@@ -176,14 +247,18 @@ public class GuiGlobalLibrary extends GuiContainer {
             panelSkinInfo.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
             panelSkinInfo.setVisible(true);
             break;
-        case LOGON:
-            panelLogin.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING);
-            panelLogin.setVisible(true);
-            break;
         case UPLOAD:
             panelUpload.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
             panelUpload.setVisible(true);
-            setPlayerSlotVisibility(true);
+            setSlotVisibility(true);
+            break;
+        case JOIN_BETA:
+            panelJoinBeta.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            panelJoinBeta.setVisible(true);
+            break;
+        case My_FILES:
+            panelMySkins.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            panelMySkins.setVisible(true);
             break;
         default:
             break;
@@ -193,6 +268,20 @@ public class GuiGlobalLibrary extends GuiContainer {
     @Override
     public void updateScreen() {
         super.updateScreen();
+        if (taskBetaCheck != null && taskBetaCheck.isDone()) {
+            try {
+                JsonObject jsonObject = taskBetaCheck.get();
+                if (jsonObject.has("action") && jsonObject.get("action").getAsString().equals("beta-check")) {
+                    if (jsonObject.has("valid") && jsonObject.get("valid").getAsBoolean() == true) {
+                        isInbeta = true;
+                    }
+                }
+            } catch (Exception e) {
+                ModLogger.log("Failed beta check.");
+                e.printStackTrace();
+            }
+            taskBetaCheck = null;
+        }
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).update();
         }
@@ -258,5 +347,9 @@ public class GuiGlobalLibrary extends GuiContainer {
     
     public String getGuiName() {
         return "globalSkinLibrary";
+    }
+
+    public void gotSkinFromServer(Skin skin) {
+        panelUpload.uploadSkin(skin);
     }
 }

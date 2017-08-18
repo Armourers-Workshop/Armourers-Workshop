@@ -72,11 +72,19 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         drawString(fontRenderer, "Skin Info", this.x + 5, this.y + 5, 0xFFEEEEEE);
         
         if (skinJson != null) {
-            drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), this.x + 5, this.y + 5 + 12 * 1, 0xFFEEEEEE);
-            drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), this.x + 5, this.y + 5 + 12 * 2, 0xFFEEEEEE);
-            drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), this.x + 5, this.y + 5 + 12 * 3, 0xFFEEEEEE);
+            int yOffset = 12;
+            drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+            yOffset += 12;
+            drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+            yOffset += 12;
+            drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+            yOffset += 12;
             if (skinJson.has("downloads")) {
-                drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), this.x + 5, this.y + 5 + 12 * 4, 0xFFEEEEEE);
+                drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12;
+            }
+            if (skinJson.has("description")) {
+                drawString(fontRenderer, "description: " + skinJson.get("description").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
             }
             
             int iconSize = 200;

@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -82,7 +83,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         //ModLogger.log(file.getFullName());
         
-        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, filePath, skin);
+        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, filePath, skin, SendType.LIBRARY_SAVE);
         PacketHandler.networkWrapper.sendTo(message, player);
         
         this.decrStackSize(0, 1);

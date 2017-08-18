@@ -43,13 +43,14 @@ public final class GlobalSkinLibraryUtils {
         return jsonResult;
     }
     
-    private static String performPostRequest(URL url, String post, String contentType) throws IOException {
+    public static String performPostRequest(URL url, String post, String contentType) throws IOException {
         Validate.notNull(url);
         Validate.notNull(post);
         Validate.notNull(contentType);
         HttpURLConnection connection = createUrlConnection(url);
         byte[] postAsBytes = post.getBytes(Charsets.UTF_8);
 
+        connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", contentType + "; charset=utf-8");
         connection.setRequestProperty("Content-Length", "" + postAsBytes.length);
         connection.setDoOutput(true);

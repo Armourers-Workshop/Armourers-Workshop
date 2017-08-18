@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -133,6 +134,22 @@ public final class SkinIOUtils {
             IOUtils.closeQuietly(inputStream);
         }
         return skin;
+    }
+    
+    public static boolean saveSkinToStream(OutputStream outputStream, Skin skin) {
+        BufferedOutputStream bufferedOutputStream = null;
+        try {
+            bufferedOutputStream =  new BufferedOutputStream(outputStream);
+            SkinSerializer.writeToStream(skin, new DataOutputStream(bufferedOutputStream));
+            bufferedOutputStream.flush();
+        } catch (IOException e) {
+            ModLogger.log(Level.ERROR, "Skin file load failed.");
+            e.printStackTrace();
+            return false;
+        } finally {
+            IOUtils.closeQuietly(bufferedOutputStream);
+        }
+        return true;
     }
     
     public static ISkinType getSkinTypeNameFromFile(File file) {

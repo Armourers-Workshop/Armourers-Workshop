@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.common.library.global;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,50 +7,62 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
-import net.minecraft.entity.player.EntityPlayer;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import riskyken.armourersWorkshop.utils.ModLogger;
 
-public final class SkinUploader implements Runnable {
+public final class SkinUploader {
     
+    private static final Executor SKIN_UPLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final String UPLOAD_URL = "https://plushie.moe/armourers_workshop/user-skin-upload.php";
     
-    private File file;
-    private String name;
-    private String userId;
-    private String description;
-    private String accessToken;
     
-    private EntityPlayer player;
-    
-    
-    
-    private SkinUploader(File file, String name, String userId, String description, String accessToken) {
-        this.file = file;
-        this.name = name;
-        this.userId = userId;
-        this.description = description;
-        this.accessToken = accessToken;
+    public static FutureTask<JsonObject> uploadSkin(byte[] file, String name, String userId, String description, String accessToken) {
+        FutureTask<JsonObject> futureTask = new FutureTask<JsonObject>(new SkinUploadCallable(file, name, userId, description, accessToken));
+        SKIN_UPLOAD_EXECUTOR.execute(futureTask);
+        return futureTask;
     }
     
-    public static void startUpload(File file, String name, String userId, String description, String accessToken) {
-        (new Thread(new SkinUploader(file, name, userId, description, accessToken), LibModInfo.NAME + " upload thread.")).start();
-    }
-    
-    @Override
-    public void run() {
-        try {
-            uploadSkin();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static class SkinUploadCallable implements Callable<JsonObject> {
+
+        private byte[] file;
+        private String name;
+        private String userId;
+        private String description;
+        private String accessToken;
+        
+        public SkinUploadCallable(byte[] file, String name, String userId, String description, String accessToken) {
+            this.file = file;
+            this.name = name;
+            this.userId = userId;
+            this.description = description;
+            this.accessToken = accessToken;
+        }
+        
+        @Override
+        public JsonObject call() throws Exception {
+            String result = doSkinUpload(file, name, userId, description, accessToken);
+            JsonObject json = null;
+            try {
+                json = (JsonObject) new JsonParser().parse(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return json;
         }
     }
     
-    private void writeMultipartData(PrintWriter writer, String boundary, String name, String value) {
+    private static void writeMultipartData(PrintWriter writer, String boundary, String name, String value) {
         String CRLF = "\r\n";
         String charset = "UTF-8";
         
@@ -63,7 +73,7 @@ public final class SkinUploader implements Runnable {
         writer.append(value).append(CRLF);
     }
     
-    private void writeMultipartFile(PrintWriter writer, OutputStream output, String boundary, String name, String filename, byte[] fileData) throws IOException {
+    private static void writeMultipartFile(PrintWriter writer, OutputStream output, String boundary, String name, String filename, byte[] fileData) throws IOException {
         String CRLF = "\r\n";
         String charset = "UTF-8";
         
@@ -76,7 +86,7 @@ public final class SkinUploader implements Runnable {
         output.flush(); // Important before continuing with writer!
     }
     
-    private void uploadSkin() throws IOException{
+    private static String doSkinUpload(byte[] file, String name, String userId, String description, String accessToken) throws IOException{
         ModLogger.log("Upload Test Started");
         
         String CRLF = "\r\n";
@@ -91,9 +101,8 @@ public final class SkinUploader implements Runnable {
         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
         OutputStream output = null;
         PrintWriter writer = null;
-        FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] fileBytes = IOUtils.toByteArray(fileInputStream);
-        fileInputStream.close();
+        
+        String result = "";
         
         try {
             output = connection.getOutputStream();
@@ -111,7 +120,7 @@ public final class SkinUploader implements Runnable {
             writer.append("Content-Type: application/octet-stream").append(CRLF);
             writer.append("Content-Transfer-.Encoding: binary").append(CRLF);
             writer.append(CRLF).flush();
-            output.write(fileBytes);
+            output.write(file);
             output.flush(); // Important before continuing with writer!
             
             
@@ -120,7 +129,6 @@ public final class SkinUploader implements Runnable {
             writer.append("--" + boundary + "--").append(CRLF).flush();
             
             
-            String result = "";
             InputStream inputStream = null;
             try {
                 inputStream = connection.getInputStream();
@@ -139,7 +147,6 @@ public final class SkinUploader implements Runnable {
             IOUtils.closeQuietly(output);
             IOUtils.closeQuietly(writer);
         }
-
-        ModLogger.log("Upload Test Finished");
+        return result;
     }
 }

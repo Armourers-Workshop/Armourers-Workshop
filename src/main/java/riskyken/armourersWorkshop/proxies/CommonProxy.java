@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.common.library.global.permission.PermissionSys
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel.AdminPanelCommand;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -91,7 +92,7 @@ public class CommonProxy implements ILibraryCallback {
         
     }
     
-    public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin) {
+    public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin, SendType sendType) {
         
     }
     
