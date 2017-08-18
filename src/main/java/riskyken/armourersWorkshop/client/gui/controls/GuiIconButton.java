@@ -77,7 +77,7 @@ public class GuiIconButton extends GuiButtonExt {
             //xPos += (iconWidth + 1) * 2;
         }
         mc.renderEngine.bindTexture(iconTexture);
-        drawTexturedModalRect(xPosition, yPosition, xPos, iconPosY, iconWidth, iconHeight);
+        drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2, yPosition + height / 2 - iconHeight / 2, xPos, iconPosY, iconWidth, iconHeight);
     }
     
     public void drawRollover(Minecraft mc, int mouseX, int mouseY) {
