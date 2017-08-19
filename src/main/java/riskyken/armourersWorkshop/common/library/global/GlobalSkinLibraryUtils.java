@@ -6,16 +6,63 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.logging.log4j.Level;
+
+import com.google.gson.JsonObject;
 
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
     
-    private GlobalSkinLibraryUtils() {
+    private static final String USER_INFO_URL = "http://plushie.moe/armourers_workshop/user-info.php";
+    private static final Executor JSON_DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
+    private static final HashMap<Integer, PlushieUser> USERS = new HashMap<Integer, PlushieUser>();
+    private static final HashSet<Integer> DOWNLOADED_USERS = new HashSet<Integer>();
+    
+    private GlobalSkinLibraryUtils() {}
+    
+    public static PlushieUser getUserInfo(int userId) {
+        synchronized (USERS) {
+            if (USERS.containsKey(userId)) {
+                return USERS.get(userId);
+            }
+        }
+        if (!DOWNLOADED_USERS.contains(userId)) {
+            DOWNLOADED_USERS.add(userId);
+            JSON_DOWNLOAD_EXECUTOR.execute(new DownloadUserCallable(userId));
+        }
+        return null;
+    }
+    
+    public static class DownloadUserCallable implements Runnable {
+
+        private final int userId;
+        
+        public DownloadUserCallable(int userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        public void run() {
+            
+            JsonObject json = DownloadUtils.downloadJsonObject(USER_INFO_URL + "?userId=" + userId);
+            PlushieUser plushieUser = PlushieUser.readPlushieUser(json);
+            if (plushieUser != null) {
+                synchronized (USERS) {
+                    USERS.put(userId, plushieUser);
+                }
+            } else {
+                ModLogger.log(Level.ERROR, "Failed downloading info for user id: " + userId);
+            }
+        }
     }
     
     public static String authenticatePlayer(String token) {

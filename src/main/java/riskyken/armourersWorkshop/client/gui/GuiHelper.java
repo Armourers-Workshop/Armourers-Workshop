@@ -8,14 +8,36 @@ import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
-public class GuiHelper {
+public final class GuiHelper {
+    
+    private GuiHelper() {}
+    
+    public static void drawPlayerHead(int x, int y, int size, String username) {
+        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+        if (username != null) {
+            rl = AbstractClientPlayer.getLocationSkin(username);
+            AbstractClientPlayer.getDownloadImageSkin(rl, username);
+        }
+        Minecraft.getMinecraft().renderEngine.bindTexture(rl);
+        
+        int sourceSize = 8;
+        
+        //Face
+        Gui.func_152125_a(x + 1, y + 1, 8, 8, sourceSize, sourceSize, size, size, 64, 32);
+        //Overlay
+        Gui.func_152125_a(x, y, 40, 8, sourceSize, sourceSize, size + 2, size + 2, 64, 32);
+    }
     
     public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name) {
         renderLocalizedGuiName(fontRenderer, xSize, name, null, 4210752);

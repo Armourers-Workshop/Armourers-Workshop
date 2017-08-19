@@ -21,6 +21,8 @@ import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
+import riskyken.armourersWorkshop.common.library.global.GlobalSkinLibraryUtils;
+import riskyken.armourersWorkshop.common.library.global.PlushieUser;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -68,6 +70,15 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         if (!visible) {
             return;
         }
+        
+        PlushieUser user = null;
+        if (skinJson != null && skinJson.has("user_id")) {
+            int userId = skinJson.get("user_id").getAsInt();
+            user = GlobalSkinLibraryUtils.getUserInfo(userId);
+        }
+        
+
+        
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         drawString(fontRenderer, "Skin Info", this.x + 5, this.y + 5, 0xFFEEEEEE);
         
@@ -85,15 +96,30 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             }
             if (skinJson.has("description")) {
                 drawString(fontRenderer, "description: " + skinJson.get("description").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12;
+            }
+            if (skinJson.has("user_id")) {
+                drawString(fontRenderer, "user_id: " + skinJson.get("user_id").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12;
             }
             
             int iconSize = 200;
             float scale = iconSize / 2;
+            yOffset += 12;
+            
             
             Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
             if (skin != null) {
-                drawString(fontRenderer, "author name: " + skin.getAuthorName(), this.x + 5, this.y + 5 + 12 * 5, 0xFFEEEEEE);
-                drawString(fontRenderer, "custom name: " + skin.getCustomName(), this.x + 5, this.y + 5 + 12 * 6, 0xFFEEEEEE);
+                drawString(fontRenderer, "author name: " + skin.getAuthorName(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12;
+                drawString(fontRenderer, "custom name: " + skin.getCustomName(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12;
+                
+                if (user != null) {
+                    GuiHelper.drawPlayerHead(x + 5, y + yOffset + 10, 16, user.getUsername());
+                } else {
+                    GuiHelper.drawPlayerHead(x + 5, y + yOffset + 10, 16, null);
+                }
                 
                 GL11.glPushMatrix();
                 GL11.glPushAttrib(GL11.GL_ENABLE_BIT);

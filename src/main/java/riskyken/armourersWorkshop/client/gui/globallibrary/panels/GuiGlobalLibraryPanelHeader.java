@@ -98,7 +98,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         GameProfile gameProfile = mc.thePlayer.getGameProfile();
         if (gameProfile != null) {
             username = gameProfile.getName();
-            drawPlayerHead(username);
+            GuiHelper.drawPlayerHead(x + 4, y + 4, 16, username);
             this.fontRenderer.drawString(" - " + username, this.x + 24, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xAAFFAA);
         } else {
             this.fontRenderer.drawString("Not logged in.", this.x + 90, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFAAAA);
