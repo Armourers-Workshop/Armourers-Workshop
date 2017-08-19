@@ -215,6 +215,6 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         //textDescription.drawTextBox();
         
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 5, y + 140, 180, 0xFF8888);
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 5, y + 140, 120, 0xFF8888);
     }
 }
