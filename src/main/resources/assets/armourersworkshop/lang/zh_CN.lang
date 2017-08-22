@@ -112,6 +112,7 @@ item.armourersworkshop:shadeNoiseTool.flavour=给一个造型方块随机明度.
 item.armourersworkshop:mannequinTool.flavour=保存和加载模型动作.%n右击加载动作.%n潜行右击保存动作.
 item.armourersworkshop:guideBook.flavour=各种使用方法说明.
 item.armourersworkshop:armourContainer.flavour=创造模式才能获得.%n允许将时装穿到NPC身上%n只作用于装备不包含武器.
+item.armourersworkshop:wandOfStyle.flavour=左键点npc，右键点动物或怪物.
 item.armourersworkshop:soap.flavour=通过镶嵌工作台来洗掉物品内镶嵌的时装!
 item.armourersworkshop:hueTool.flavour=可以改变造型方块的%n(色相 饱和度 亮度以及染色类型).
 item.armourersworkshop:blockMarker.flavour=在弓,翅膀,方块的时装制作时需要用到.%n注：弓制作时标记箭尾的位置，每个阶段上只能也必须有一个标记.%n注：翅膀制作时标记左边翅膀和右边翅膀的旋转轴.%n注：方块制作时标记坐在哪个位置.
@@ -372,14 +373,43 @@ inventory.armourersworkshop:globalSkinLibrary.header.home=主页
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=喜欢
 inventory.armourersworkshop:globalSkinLibrary.header.friends=好友
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=上传时装
+inventory.armourersworkshop:globalSkinLibrary.header.joinBeta=正版登入（内测）
+
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=输入你想搜索的内容...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=搜索
 inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=显示所有时装
 inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=最新上传
 inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=最多下载
+
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=搜索结果: %d / %d 页- 总计 %d 页.
+inventory.armourersworkshop:globalSkinLibrary.searchResults.small=小
+inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=中
+inventory.armourersworkshop:globalSkinLibrary.searchResults.large=大
+inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=搜索中...
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=返回
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=下载时装
+
+inventory.armourersworkshop:globalSkinLibrary.upload.name=上传时装
+inventory.armourersworkshop:globalSkinLibrary.upload.skinName=时装名称:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterName=输入名字
+inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=时装标签:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=输入标签
+inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=上传时装
+
+# Beta - Will be removed later.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.name=登录（内测）
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.enterBetaCode=输入邀请码
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=上传功能还处于内测状态. 以后再试.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.buttonJoinBeta=加入（内测）
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.betaCode=邀请码:
+
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.checkCode=邀请码检查中.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.codeInvalid=无效的邀请码.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joiningBeta=正在登入.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedFailed=登入失败.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedBeta=登入成功.
+
+inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=警告所有在内测期间上传的时装将在测试版结束时被清掉.
 
 inventory.armourersworkshop:hologramProjector.tab.inventory=物品栏
 inventory.armourersworkshop:hologramProjector.tab.offset=位置设置
