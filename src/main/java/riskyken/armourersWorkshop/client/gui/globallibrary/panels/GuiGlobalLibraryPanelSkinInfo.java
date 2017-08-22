@@ -12,6 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
@@ -77,71 +78,94 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             user = GlobalSkinLibraryUtils.getUserInfo(userId);
         }
         
-
-        
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
-        drawString(fontRenderer, "Skin Info", this.x + 5, this.y + 5, 0xFFEEEEEE);
         
+        Skin skin = null;
+        if (skinJson != null && skinJson.has("id")) {
+            skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
+        }
+        
+        drawUserbox(x + 5, y + 5, 160, 30, mouseX, mouseY, partialTickTime);
+        drawSkinInfo(skin, x + 5, y + 20 + 20, 160, height - 70, mouseX, mouseY, partialTickTime);
+        drawPreviewBox(skin, x + 170, y + 5, width - 175, height - 35, mouseX, mouseY, partialTickTime);
+        
+        
+        super.draw(mouseX, mouseY, partialTickTime);
+    }
+    
+    public void drawUserbox(int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
+        drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
+        PlushieUser user = null;
+        if (skinJson != null && skinJson.has("user_id")) {
+            int userId = skinJson.get("user_id").getAsInt();
+            user = GlobalSkinLibraryUtils.getUserInfo(userId);
+        }
+        if (user != null) {
+            drawString(fontRenderer, "Uploader: " + user.getUsername(), boxX + 28, boxY + 5, 0xFFEEEEEE);
+            GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, user.getUsername());
+        } else {
+            GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, null);
+        }
+    }
+    
+    public void drawSkinInfo(Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
+        drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
+        drawString(fontRenderer, "Skin Info", boxX + 5, boxY + 5, 0xFFEEEEEE);
         if (skinJson != null) {
             int yOffset = 12;
-            drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+            //drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+            //yOffset += 12;
+            drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             yOffset += 12;
-            drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
-            yOffset += 12;
-            drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
-            yOffset += 12;
+            //drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+            //yOffset += 12;
             if (skinJson.has("downloads")) {
-                drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
             }
             if (skinJson.has("description")) {
-                drawString(fontRenderer, "description: " + skinJson.get("description").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, "description: " + skinJson.get("description").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
             }
+            /*
             if (skinJson.has("user_id")) {
-                drawString(fontRenderer, "user_id: " + skinJson.get("user_id").getAsString(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, "user_id: " + skinJson.get("user_id").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
             }
-            
-            int iconSize = 200;
-            float scale = iconSize / 2;
-            yOffset += 12;
-            
-            
-            Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
+            */
             if (skin != null) {
-                drawString(fontRenderer, "author name: " + skin.getAuthorName(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, "author name: " + skin.getAuthorName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
-                drawString(fontRenderer, "custom name: " + skin.getCustomName(), this.x + 5, this.y + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12;
-                
-                if (user != null) {
-                    GuiHelper.drawPlayerHead(x + 5, y + yOffset + 10, 16, user.getUsername());
-                } else {
-                    GuiHelper.drawPlayerHead(x + 5, y + yOffset + 10, 16, null);
+                if (!StringUtils.isNullOrEmpty(skin.getCustomName())) {
+                    drawString(fontRenderer, "custom name: " + skin.getCustomName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                    yOffset += 12;
                 }
-                
-                GL11.glPushMatrix();
-                GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-                GL11.glTranslatef(this.x + this.width - iconSize, this.y + iconSize / 2, 200.0F);
-                GL11.glScalef((float)(-scale), (float)scale, (float)scale);
-                GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
-                float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
-                GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                RenderHelper.enableStandardItemLighting();
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                GL11.glEnable(GL11.GL_NORMALIZE);
-                GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-                ModRenderHelper.enableAlphaBlend();
-                ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
-                GL11.glPopAttrib();
-                GL11.glPopMatrix();
             }
-            
         }
-        
-        super.draw(mouseX, mouseY, partialTickTime);
+    }
+    
+    public void drawPreviewBox(Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
+        drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
+        if (skin != null) {
+            int iconSize = Math.min(boxWidth, boxHeight);
+            float scale = iconSize / 2;
+            GL11.glPushMatrix();
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+            GL11.glTranslatef(boxX + boxWidth / 2, boxY + boxHeight / 2, 200.0F);
+            GL11.glScalef((float)(-scale), (float)scale, (float)scale);
+            GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+            float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
+            GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
+            RenderHelper.enableStandardItemLighting();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GL11.glEnable(GL11.GL_NORMALIZE);
+            GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+            ModRenderHelper.enableAlphaBlend();
+            ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
+            GL11.glPopAttrib();
+            GL11.glPopMatrix();
+        }
     }
     
     public void displaySkinInfo(JsonObject jsonObject, Screen returnScreen) {
