@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.library.global.GlobalSkinLibraryUtils;
 import riskyken.armourersWorkshop.common.library.global.SkinUploader;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
@@ -33,6 +34,7 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelUpload extends GuiPanel {
@@ -215,6 +217,11 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         //textDescription.drawTextBox();
         
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 5, y + 140, 120, 0xFF8888);
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 135, y + 35, width - 140, 0xFF8888);
+        
+        int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
+        if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
+            fontRenderer.drawSplitString(TranslateUtils.translate("inventory.armourersworkshop:globalSkinLibrary.invalidJava", javaVersion[0], javaVersion[1]), x + 135, y + 65, width - 140, 0xFF8888);
+        }
     }
 }

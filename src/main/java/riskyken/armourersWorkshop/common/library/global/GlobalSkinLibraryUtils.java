@@ -42,6 +42,36 @@ public final class GlobalSkinLibraryUtils {
         return null;
     }
     
+    public static int[] getJavaVersion() {
+        int[] version = new int[] {6, 0};
+        try {
+            String java = System.getProperty("java.version");
+            String[] javaSplit = java.split("_");
+            int javaVersion = Integer.valueOf(javaSplit[1]);
+            version[1] = javaVersion;
+            javaSplit = javaSplit[0].split("\\.");
+            version[0] = Integer.valueOf(javaSplit[1]);
+        } catch (Exception e) {
+        }
+        return version;
+    }
+    
+    public static boolean isValidJavaVersion(int[] javaVersion) {
+        if (javaVersion[0] < 8 & javaVersion[1] < 101) {
+            return false;
+        }
+        return true;
+    }
+    
+    public static boolean isValidJavaVersion() {
+        int[] javaVersion = getJavaVersion();
+        if (javaVersion[0] < 8 & javaVersion[1] < 101) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     public static class DownloadUserCallable implements Runnable {
 
         private final int userId;

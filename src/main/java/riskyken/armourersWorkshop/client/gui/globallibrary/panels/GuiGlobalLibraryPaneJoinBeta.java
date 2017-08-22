@@ -17,7 +17,9 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
+import riskyken.armourersWorkshop.common.library.global.GlobalSkinLibraryUtils;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
+import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
@@ -121,6 +123,9 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
         }
         if (textBetaCode.textboxKeyTyped(c, keycode)) {
             buttonCheckBetaCode.enabled = textBetaCode.getText().length() == 36;
+            if (!GlobalSkinLibraryUtils.isValidJavaVersion()) {
+                buttonCheckBetaCode.enabled = false;
+            }
             return true;
         }
         return false;
@@ -168,13 +173,19 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "betaCode"), x + 5, y + 25, 0xFFFFFF);
         textBetaCode.drawTextBox();
         
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBeta"), x + 5, y + 75, 230, 0xFF8888);
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBeta"), x + 5, y + 75, 230, 0xEEEEEE);
         
         if (joinState != null && !StringUtils.isNullOrEmpty(joinState)) {
-            fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, joinState), x + 5, y + 115, 230, 0xFFFFFF);
+            fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, joinState), x + 5, y + 115, 230, 0xEEEEEE);
         }
+        
         if (joinFailMessage != null) {
             fontRenderer.drawSplitString(joinFailMessage, x + 5, y + 140, 230, 0xFF8888);
+        }
+        
+        int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
+        if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
+            fontRenderer.drawSplitString(TranslateUtils.translate("inventory.armourersworkshop:globalSkinLibrary.invalidJava", javaVersion[0], javaVersion[1]), x + 5, y + 160, 230, 0xFF8888);
         }
     }
 }

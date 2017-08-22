@@ -340,6 +340,7 @@ inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=Render foot armou
 inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=Render head overlay?
 inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=Limit limb movement?
 
+# Mannequin
 inventory.armourersworkshop:mannequin.label.headRotation=Head Rotation
 inventory.armourersworkshop:mannequin.label.leftArmRotation=Left Arm Rotation
 inventory.armourersworkshop:mannequin.label.rightArmRotation=Right Arm Rotation
@@ -365,30 +366,42 @@ inventory.armourersworkshop:mannequin.tab.skinAndHair=Skin & Hair Colour
 inventory.armourersworkshop:mannequin.tab.name=Name
 inventory.armourersworkshop:mannequin.tab.extraRenders=Extra Renders
 
+# Mini Armourer
 inventory.armourersworkshop:miniArmourer.save=Save
 inventory.armourersworkshop:miniArmourer.load=Load
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=Sneak right click the mini armourer to access the building interface.
 
+# Global Skin Library
+inventory.armourersworkshop:globalSkinLibrary.invalidJava=[Java %d Update %d] is too old. Please update to [Java 8 Update 101] or newer.
+
+# Global Skin Library (Header)
 inventory.armourersworkshop:globalSkinLibrary.header.home=Home
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=Favourites
 inventory.armourersworkshop:globalSkinLibrary.header.myFiles=My Files
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Upload Skin
 inventory.armourersworkshop:globalSkinLibrary.header.joinBeta=Join Beta
 
+# Global Skin Library (Search Box)
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Type to search...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Search
+
+# Global Skin Library (Home)
 inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Show All Skins
 inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Recently Uploaded
 inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Most Downloaded
 
+# Global Skin Library (Search Results)
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Search Results: Page %d of %d - Total of %d results.
 inventory.armourersworkshop:globalSkinLibrary.searchResults.small=Small
 inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=Medium
 inventory.armourersworkshop:globalSkinLibrary.searchResults.large=Large
 inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=Searching...
+
+# Global Skin Library (Skin Info)
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
 
+# Global Skin Library (Upload)
 inventory.armourersworkshop:globalSkinLibrary.upload.name=Upload Skin
 inventory.armourersworkshop:globalSkinLibrary.upload.skinName=Skin Name:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterName=Enter name
@@ -396,21 +409,20 @@ inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=Skin Tags:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Enter tags
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Upload Skin
 
-# Beta - Will be removed later.
+# Global Skin Library (Beta - Will be removed later).
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.name=Join Beta
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.enterBetaCode=Enter beta code
-inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=Uploading to the global skin library is currently in closed beta. Please check back later.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=Uploading to the global skin library is currently in closed beta. Enter your beta code if you have one, otherwise please check back later.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.buttonJoinBeta=Join Beta
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.betaCode=Beta Code:
-
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.checkCode=Checking beta code.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.codeInvalid=Code invalid.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joiningBeta=Joining beta.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedFailed=Failed to join beta.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedBeta=Successfully joined beta.
-
 inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=Warning all skins uploading during the closed beta will be wiped when the beta ends.
 
+# Hologram Projector
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory
 inventory.armourersworkshop:hologramProjector.tab.offset=Offset
 inventory.armourersworkshop:hologramProjector.tab.angle=Angle
@@ -450,6 +462,10 @@ itemGroup.armourersworkshop=Armourer's Workshop
 keys.armourersworkshop:category=Armourer's Workshop
 keys.armourersworkshop.equipmentWardrobe=Equipment Wardrobe
 keys.armourersworkshop.undo=Undo
+
+# Notes to translators.
+# The guide book will be rewritten before release so you don't need to waste time translating it.
+# Well unless you are really bored. :(
 
 # Guide Book
 # Chapter 1
