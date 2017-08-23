@@ -304,12 +304,12 @@ public final class SkinIOUtils {
                     String customName = skin.getProperties().getPropertyString(Skin.KEY_CUSTOM_NAME, null);
                     if (!StringUtils.isNullOrEmpty(fileName)) {
                         fileName = makeFileNameValid(fileName);
-                        File newSkinFile = new File(recoverDir, fileName);
+                        File newSkinFile = new File(recoverDir, fileName + SKIN_FILE_EXTENSION);
                         if (newSkinFile.exists()) {
                             int nameCount = 0;
                             while (true) {
                                 nameCount++;
-                                newSkinFile = new File(recoverDir, fileName + "-" + nameCount);
+                                newSkinFile = new File(recoverDir, fileName + "-" + nameCount + SKIN_FILE_EXTENSION);
                                 if (!newSkinFile.exists()) {
                                     break;
                                 }
@@ -321,12 +321,12 @@ public final class SkinIOUtils {
                     }
                     if (!StringUtils.isNullOrEmpty(customName)) {
                         customName = makeFileNameValid(customName);
-                        File newSkinFile = new File(recoverDir, customName);
+                        File newSkinFile = new File(recoverDir, customName + SKIN_FILE_EXTENSION);
                         if (newSkinFile.exists()) {
                             int nameCount = 0;
                             while (true) {
                                 nameCount++;
-                                newSkinFile = new File(recoverDir, customName + "-" + nameCount);
+                                newSkinFile = new File(recoverDir, customName + "-" + nameCount + SKIN_FILE_EXTENSION);
                                 if (!newSkinFile.exists()) {
                                     break;
                                 }
@@ -337,7 +337,7 @@ public final class SkinIOUtils {
                         continue;
                     }
                     unnamedSkinCount++;
-                    saveSkinToFile(new File(recoverDir,"unnamed-skin-" + unnamedSkinCount), skin);
+                    saveSkinToFile(new File(recoverDir,"unnamed-skin-" + unnamedSkinCount + SKIN_FILE_EXTENSION), skin);
                     successCount++;
                 } else {
                     failCount++;
