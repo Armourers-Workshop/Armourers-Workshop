@@ -102,13 +102,14 @@ public final class SkinIOUtils {
         } catch (InvalidCubeTypeException e) {
             ModLogger.log(Level.ERROR, "Unable to load skin. Unknown cube types found.");
             e.printStackTrace();
+        } catch (Exception e) {
+            ModLogger.log(Level.ERROR, "Unable to load skin. Unknown error.");
+            e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(stream);
         }
-        
         return skin;
     }
-    
     
     public static Skin loadSkinFromStream(InputStream inputStream) {
         DataInputStream stream = null;

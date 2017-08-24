@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -20,6 +21,7 @@ import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class Skin implements ISkin {
     
@@ -203,7 +205,10 @@ public class Skin implements ISkin {
         if (fileVersion > FILE_VERSION) {
             throw new NewerFileVersionException();
         }
+        
         SkinProperties properties = new SkinProperties();
+        boolean loadedProps = true;
+        IOException e = null;
         if (fileVersion < 12) {
             String authorName = stream.readUTF();
             String customName = stream.readUTF();
@@ -213,26 +218,54 @@ public class Skin implements ISkin {
             } else {
                 tags = "";
             }
-            properties.setProperty(KEY_AUTHOR_NAME, authorName);
-            properties.setProperty(KEY_CUSTOM_NAME, customName);
+            properties.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
+            properties.setProperty(Skin.KEY_CUSTOM_NAME, customName);
             if (tags != null && !tags.equalsIgnoreCase("")) {
-                properties.setProperty(KEY_TAGS, tags);
+                properties.setProperty(Skin.KEY_TAGS, tags);
             }
         } else {
-            properties.readFromStream(stream);
+            try {
+                properties.readFromStream(stream);
+            } catch (IOException propE) {
+                ModLogger.log(Level.ERROR, "prop load failed");
+                e = propE;
+                loadedProps = false;
+            }
         }
-        
         
         ISkinType skinType;
         
         if (fileVersion < 5) {
-            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
-        } else {
-            String regName = stream.readUTF();
-            if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
-                regName = SkinTypeRegistry.skinLegs.getRegistryName();
+            if (loadedProps) {
+                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
+            } else {
+                throw e;
             }
-            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+        } else {
+            if (loadedProps) {
+                String regName = stream.readUTF();
+                if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
+                    regName = SkinTypeRegistry.skinLegs.getRegistryName();
+                }
+                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+            } else {
+                StringBuilder sb = new StringBuilder();
+                while (true) {
+                    sb.append(new String(new byte[] {stream.readByte()}, "UTF-8"));
+                    if (sb.toString().endsWith("armourers:")) {
+                        break;
+                    }
+                }
+                ModLogger.log("Got armourers");
+                sb = new StringBuilder();
+                sb.append("armourers:");
+                while (SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString()) == null) {
+                    sb.append(new String(new byte[] {stream.readByte()}, "UTF-8"));
+                }
+                ModLogger.log(sb.toString());
+                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString());
+                ModLogger.log("got failed type " + skinType);
+            }
         }
         return skinType;
     }

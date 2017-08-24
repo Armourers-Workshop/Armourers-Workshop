@@ -249,6 +249,9 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
                 customArmourItemData.cleanUpDisplayLists();
             }
         }
+        synchronized (requestedSkinIDs) {
+            requestedSkinIDs.clear();
+        }
     }
     
     public Skin getSkin(ISkinPointer skinPointer) {

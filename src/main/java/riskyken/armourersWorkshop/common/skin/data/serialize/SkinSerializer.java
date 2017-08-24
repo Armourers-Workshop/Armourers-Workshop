@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.Level;
+
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
@@ -13,6 +15,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class SkinSerializer {
     
@@ -24,7 +27,8 @@ public class SkinSerializer {
         }
         
         SkinProperties properties = new SkinProperties();
-        
+        boolean loadedProps = true;
+        IOException e = null;
         if (fileVersion < 12) {
             String authorName = stream.readUTF();
             String customName = stream.readUTF();
@@ -40,19 +44,48 @@ public class SkinSerializer {
                 properties.setProperty(Skin.KEY_TAGS, tags);
             }
         } else {
-            properties.readFromStream(stream);
+            try {
+                properties.readFromStream(stream);
+            } catch (IOException propE) {
+                ModLogger.log(Level.ERROR, "prop load failed");
+                e = propE;
+                loadedProps = false;
+            }
         }
         
         ISkinType equipmentSkinType = null;
 
         if (fileVersion < 5) {
-            equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
-        } else {
-            String regName = stream.readUTF();
-            if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
-                regName = SkinTypeRegistry.skinLegs.getRegistryName();
+            if (loadedProps) {
+                equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
+            } else {
+                throw e;
             }
-            equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+        } else {
+            if (loadedProps) {
+                String regName = stream.readUTF();
+                if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
+                    regName = SkinTypeRegistry.skinLegs.getRegistryName();
+                }
+                equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+            } else {
+                StringBuilder sb = new StringBuilder();
+                while (true) {
+                    sb.append(new String(new byte[] {stream.readByte()}, "UTF-8"));
+                    if (sb.toString().endsWith("armourers:")) {
+                        break;
+                    }
+                }
+                ModLogger.log("Got armourers");
+                sb = new StringBuilder();
+                sb.append("armourers:");
+                while (SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString()) == null) {
+                    sb.append(new String(new byte[] {stream.readByte()}, "UTF-8"));
+                }
+                ModLogger.log(sb.toString());
+                equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString());
+                ModLogger.log("got failed type " + equipmentSkinType);
+            }
         }
         
         if (equipmentSkinType == null) {
@@ -73,7 +106,8 @@ public class SkinSerializer {
         int size = stream.readByte();
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         for (int i = 0; i < size; i++) {
-            parts.add(new SkinPart(stream, fileVersion));
+            SkinPart part = new SkinPart(stream, fileVersion);
+            parts.add(part);
         }
         
         return new Skin(properties, equipmentSkinType, paintData, parts);
