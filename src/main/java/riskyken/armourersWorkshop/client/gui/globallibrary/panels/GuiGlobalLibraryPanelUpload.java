@@ -188,7 +188,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         SkinIOUtils.saveSkinToStream(outputStream, skin);
         byte[] fileBytes = outputStream.toByteArray();
         IOUtils.closeQuietly(outputStream);
-        taskSkinUpload = SkinUploader.uploadSkin(fileBytes, textName.getText(), Integer.toString(plushieSession.getServer_id()), "", plushieSession.getAccessToken());
+        taskSkinUpload = SkinUploader.uploadSkin(fileBytes, textName.getText(), Integer.toString(plushieSession.getServerId()), "", plushieSession.getAccessToken());
     }
     
     @Override

@@ -20,11 +20,11 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoinBeta;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
-import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelMySkins;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelUpload;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelUserSkins;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
@@ -55,11 +55,12 @@ public class GuiGlobalLibrary extends GuiContainer {
     public GuiGlobalLibraryPanelSkinInfo panelSkinInfo;
     public GuiGlobalLibraryPanelUpload panelUpload;
     public GuiGlobalLibraryPaneJoinBeta panelJoinBeta;
-    public GuiGlobalLibraryPanelMySkins panelMySkins;
+    public GuiGlobalLibraryPanelUserSkins panelUserSkins;
     
     private Screen screen;
     
     //Beta
+    private static boolean startedBetaCheck;
     private static boolean doneBetaCheck;
     private static boolean isInbeta;
     private static FutureTask<JsonObject> taskBetaCheck;
@@ -69,7 +70,7 @@ public class GuiGlobalLibrary extends GuiContainer {
         SEARCH,
         UPLOAD,
         SKIN_INFO,
-        My_FILES,
+        USER_SKINS,
         FAVOURITES,
         JOIN_BETA
     }
@@ -101,8 +102,8 @@ public class GuiGlobalLibrary extends GuiContainer {
         panelJoinBeta = new GuiGlobalLibraryPaneJoinBeta(this, 5, 5, 100, 100);
         panelList.add(panelJoinBeta);
         
-        panelMySkins = new GuiGlobalLibraryPanelMySkins(this, 5, 5, 100, 100);
-        panelList.add(panelMySkins);
+        panelUserSkins = new GuiGlobalLibraryPanelUserSkins(this, 5, 5, 100, 100);
+        panelList.add(panelUserSkins);
         
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
@@ -110,20 +111,24 @@ public class GuiGlobalLibrary extends GuiContainer {
         if (plushieSession == null) {
             plushieSession = new PlushieSession();
         }
-        if (!doneBetaCheck) {
+        if (!startedBetaCheck) {
             doBetaCheck();
         }
         doBetaCheck();
     }
     
     public void doBetaCheck() {
-        doneBetaCheck = true;
+        startedBetaCheck = true;
         GameProfile gameProfile = Minecraft.getMinecraft().thePlayer.getGameProfile();
         taskBetaCheck = PlushieAuth.isPlayerInBeta(gameProfile.getId());
     }
     
     public boolean isPlayerInBeta() {
         return isInbeta;
+    }
+    
+    public static boolean hasDoneBetaCheck() {
+        return doneBetaCheck;
     }
     
     @Override
@@ -256,9 +261,12 @@ public class GuiGlobalLibrary extends GuiContainer {
             panelJoinBeta.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
             panelJoinBeta.setVisible(true);
             break;
-        case My_FILES:
-            panelMySkins.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
-            panelMySkins.setVisible(true);
+        case USER_SKINS:
+            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setVisible(true);
+            yOffset += PADDING + 23;
+            panelUserSkins.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            panelUserSkins.setVisible(true);
             break;
         default:
             break;
@@ -273,6 +281,10 @@ public class GuiGlobalLibrary extends GuiContainer {
                 JsonObject jsonObject = taskBetaCheck.get();
                 if (jsonObject.has("action") && jsonObject.get("action").getAsString().equals("beta-check")) {
                     if (jsonObject.has("valid") && jsonObject.get("valid").getAsBoolean() == true) {
+                        if (jsonObject.has("id")) {
+                            int serverId = jsonObject.get("id").getAsInt();
+                            plushieSession.setServerId(serverId);
+                        }
                         isInbeta = true;
                     }
                 }
@@ -280,6 +292,7 @@ public class GuiGlobalLibrary extends GuiContainer {
                 ModLogger.log("Failed beta check.");
                 e.printStackTrace();
             }
+            doneBetaCheck = true;
             taskBetaCheck = null;
         }
         for (int i = 0; i < panelList.size(); i++) {

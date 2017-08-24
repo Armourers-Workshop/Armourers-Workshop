@@ -1,9 +1,11 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import java.io.File;
+import java.util.concurrent.FutureTask;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
@@ -34,6 +36,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
 
     private GuiButtonExt buttonBack;
     private GuiButtonExt buttonDownload;
+    private GuiButtonExt buttonUserSkins;
     private JsonObject skinJson = null;
     private Screen returnScreen;
     
@@ -48,9 +51,12 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonList.clear();
         int panelCenter = this.x + this.width / 2;
         buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.back"));
-        buttonList.add(buttonBack);
         buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.downloadSkin"));
+        buttonUserSkins = new GuiButtonExt(0, x + 6, y + 6, 26, 26, "");
+        
+        buttonList.add(buttonBack);
         buttonList.add(buttonDownload);
+        buttonList.add(buttonUserSkins);
     }
     
     @Override
@@ -62,6 +68,18 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             if (skinJson != null) {
                 buttonDownload.enabled = false;
                 new DownloadSkin(skinJson);
+            }
+        }
+        if (button == buttonUserSkins) {
+            if (skinJson != null && skinJson.has("user_id")) {
+                int userId = skinJson.get("user_id").getAsInt();
+                PlushieUser plushieUser = GlobalSkinLibraryUtils.getUserInfo(userId);
+                if (plushieUser != null) {
+                    GuiGlobalLibrary guiGlobalLibrary = (GuiGlobalLibrary) parent;
+                    FutureTask<JsonArray> taskJson = GlobalSkinLibraryUtils.getUserSkinsList(guiGlobalLibrary.jsonDownloadExecutor, userId);
+                    guiGlobalLibrary.panelUserSkins.setDownloadResultsTask(taskJson, userId);
+                    ((GuiGlobalLibrary)parent).switchScreen(Screen.USER_SKINS);
+                }
             }
         }
     }
@@ -85,12 +103,10 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
         }
         
+        super.draw(mouseX, mouseY, partialTickTime);
         drawUserbox(x + 5, y + 5, 160, 30, mouseX, mouseY, partialTickTime);
         drawSkinInfo(skin, x + 5, y + 20 + 20, 160, height - 70, mouseX, mouseY, partialTickTime);
         drawPreviewBox(skin, x + 170, y + 5, width - 175, height - 35, mouseX, mouseY, partialTickTime);
-        
-        
-        super.draw(mouseX, mouseY, partialTickTime);
     }
     
     public void drawUserbox(int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {

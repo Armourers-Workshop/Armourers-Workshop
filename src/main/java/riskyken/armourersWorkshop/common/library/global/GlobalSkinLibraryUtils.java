@@ -10,24 +10,39 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Level;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
     
-    private static final String USER_INFO_URL = "http://plushie.moe/armourers_workshop/user-info.php";
+    private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
+    private static final String USER_INFO_URL = BASE_URL + "user-info.php";
+    private static final String USER_SKINS_URL = BASE_URL + "user-skins.php";
+    
     private static final Executor JSON_DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final HashMap<Integer, PlushieUser> USERS = new HashMap<Integer, PlushieUser>();
     private static final HashSet<Integer> DOWNLOADED_USERS = new HashSet<Integer>();
     
     private GlobalSkinLibraryUtils() {}
+    
+    public static FutureTask<JsonArray> getUserSkinsList(Executor executor, int userId) {
+        Validate.notNull(executor);
+        Validate.notNull(userId);
+        String searchUrl = USER_SKINS_URL + "?userId=" + String.valueOf(userId);
+        FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
+        executor.execute(futureTask);
+        return futureTask;
+    }
     
     public static PlushieUser getUserInfo(int userId) {
         synchronized (USERS) {
@@ -82,7 +97,6 @@ public final class GlobalSkinLibraryUtils {
 
         @Override
         public void run() {
-            
             JsonObject json = DownloadUtils.downloadJsonObject(USER_INFO_URL + "?userId=" + userId);
             PlushieUser plushieUser = PlushieUser.readPlushieUser(json);
             if (plushieUser != null) {

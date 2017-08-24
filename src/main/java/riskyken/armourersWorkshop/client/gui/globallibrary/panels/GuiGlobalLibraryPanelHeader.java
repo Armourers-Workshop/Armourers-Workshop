@@ -1,5 +1,8 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
+import java.util.concurrent.FutureTask;
+
+import com.google.gson.JsonArray;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
@@ -14,6 +17,8 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.library.global.GlobalSkinLibraryUtils;
+import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelHeader extends GuiPanel {
@@ -58,10 +63,21 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     
     private void betaCheckUpdate() {
         boolean inBeta = ((GuiGlobalLibrary)parent).isPlayerInBeta();
+        boolean doneBetaCheck = ((GuiGlobalLibrary)parent).hasDoneBetaCheck();
+        PlushieSession session = ((GuiGlobalLibrary)parent).plushieSession;
         //iconButtonFavourites.visible = inBeta;
-        iconButtonMyFiles.visible = inBeta;
-        iconButtonUploadSkin.visible = inBeta;
-        iconButtonJoinBeta.visible = !inBeta;
+        if (session.hasServerId()) {
+            iconButtonMyFiles.visible = inBeta;
+            iconButtonUploadSkin.visible = inBeta;
+        } else {
+            iconButtonMyFiles.visible = false;
+            iconButtonUploadSkin.visible = false;
+        }
+        if (doneBetaCheck) {
+            iconButtonJoinBeta.visible = !inBeta;
+        } else {
+            iconButtonJoinBeta.visible = false;
+        }
     }
     
     @Override
@@ -73,7 +89,11 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.FAVOURITES);
         }
         if (button == iconButtonMyFiles) {
-            ((GuiGlobalLibrary)parent).switchScreen(Screen.My_FILES);
+            GuiGlobalLibrary guiGlobalLibrary = (GuiGlobalLibrary) parent;
+            int serverId = guiGlobalLibrary.plushieSession.getServerId();
+            FutureTask<JsonArray> taskJson = GlobalSkinLibraryUtils.getUserSkinsList(guiGlobalLibrary.jsonDownloadExecutor, serverId);
+            guiGlobalLibrary.panelUserSkins.setDownloadResultsTask(taskJson, serverId);
+            ((GuiGlobalLibrary)parent).switchScreen(Screen.USER_SKINS);
         }
         if (button == iconButtonUploadSkin) {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.UPLOAD);

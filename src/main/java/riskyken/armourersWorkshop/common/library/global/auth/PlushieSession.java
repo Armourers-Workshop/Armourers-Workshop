@@ -20,6 +20,7 @@ public class PlushieSession {
     
     public PlushieSession() {
         this.permissionGroup = ArmourersWorkshop.getProxy().getPermissionSystem().groupNoLogin;
+        server_id = 0;
     }
     
     public boolean authenticate(JsonObject jsonObject) {
@@ -42,8 +43,16 @@ public class PlushieSession {
         return false;
     }
     
-    public int getServer_id() {
+    public int getServerId() {
         return server_id;
+    }
+    
+    public void setServerId(int serverId) {
+        this.server_id = serverId;
+    }
+    
+    public boolean hasServerId() {
+        return server_id > 0;
     }
     
     public String getAccessToken() {

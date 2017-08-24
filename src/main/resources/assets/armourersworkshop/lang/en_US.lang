@@ -422,6 +422,9 @@ inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedFailed=Failed to jo
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedBeta=Successfully joined beta.
 inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=Warning all skins uploading during the closed beta will be wiped when the beta ends.
 
+# Global Skin Library (User Skins)
+inventory.armourersworkshop:globalSkinLibrary.userSkins.results=Skins uploaded by %s: Page %d of %d - Total of %d results.
+
 # Hologram Projector
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory
 inventory.armourersworkshop:hologramProjector.tab.offset=Offset

@@ -38,9 +38,8 @@ public final class SkinDownloader {
         Skin skin = null;
         
         long startTime = System.currentTimeMillis();
-        long maxRate = 50;
+        long maxRate = 10;
         
-        ModLogger.log(String.format("Downloading skin: %s", fileName));
         InputStream in = null;
         String data = null;
         try {
@@ -64,7 +63,7 @@ public final class SkinDownloader {
         if (skin != null) {
             skin.serverId = serverId;
         } else {
-            ModLogger.log("Failed to download skin.");
+            ModLogger.log(String.format("Failed to download skin: %s", fileName));
         }
         return skin;
     }
@@ -94,9 +93,8 @@ public final class SkinDownloader {
             }
             
             long startTime = System.currentTimeMillis();
-            long maxRate = 50;
+            long maxRate = 10;
             
-            ModLogger.log(String.format("Downloading skin: %s", name));
             InputStream in = null;
             String data = null;
             try {
@@ -116,7 +114,7 @@ public final class SkinDownloader {
             if (skin != null) {
                 skin.serverId = serverId;
             } else {
-                ModLogger.log("Failed to download skin.");
+                ModLogger.log(String.format("Failed to download skin: %s", name));
             }
             return skin;
         }
