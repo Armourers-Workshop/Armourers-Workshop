@@ -159,7 +159,7 @@ public final class SkinIOUtils {
         
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-            skinType = Skin.readSkinTypeNameFromStream(stream);
+            skinType = SkinSerializer.readSkinTypeNameFromStream(stream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             ModLogger.log(Level.ERROR, "File name: " + file.getName());

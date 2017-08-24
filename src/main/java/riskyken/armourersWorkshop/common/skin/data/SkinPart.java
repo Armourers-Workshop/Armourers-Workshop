@@ -1,11 +1,6 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,10 +11,8 @@ import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
-import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class SkinPart implements ISkinPart {
@@ -36,11 +29,6 @@ public class SkinPart implements ISkinPart {
         this.cubeData = cubeData;
         this.skinPart = skinPart;
         this.markerBlocks = markerBlocks;
-        partBounds = setupPartBounds();
-    }
-    
-    public SkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
-        readFromStream(stream, version);
         partBounds = setupPartBounds();
     }
     
@@ -186,49 +174,6 @@ public class SkinPart implements ISkinPart {
             return  ForgeDirection.getOrientation(cmd.meta - 1);
         }
         return null;
-    }
-    
-    public void writeToStream(DataOutputStream stream) throws IOException {
-        stream.writeUTF(skinPart.getRegistryName());
-        cubeData.writeToStream(stream);
-        stream.writeInt(markerBlocks.size());
-        for (int i = 0; i < markerBlocks.size(); i++) {
-            markerBlocks.get(i).writeToStream(stream);
-        }
-    }
-    
-    private void readFromStream(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
-        if (version < 6) {
-            skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromLegacyId(stream.readByte());
-            if (skinPart == null) {
-                ModLogger.log(Level.ERROR,"Skin part was null");
-                throw new IOException("Skin part was null");
-            }
-        } else {
-            String regName = stream.readUTF();
-            if (regName.equals("armourers:skirt.base")) {
-                regName = "armourers:legs.skirt";
-            }
-            if (regName.equals("armourers:bow.base")) {
-                regName = "armourers:bow.frame1";
-            }
-            skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(regName);
-            
-            if (skinPart == null) {
-                ModLogger.log(Level.ERROR,"Skin part was null - reg name: " + regName);
-                throw new IOException("Skin part was null - reg name: " + regName);
-            }
-        }
-        
-        cubeData = new SkinCubeData();
-        cubeData.readFromStream(stream, version, this);
-        markerBlocks = new ArrayList<CubeMarkerData>();
-        if (version > 8) {
-            int markerCount = stream.readInt();
-            for (int i = 0; i < markerCount; i++) {
-                markerBlocks.add(new CubeMarkerData(stream, version));
-            }
-        }
     }
 
     @Override

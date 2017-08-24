@@ -1,11 +1,8 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -17,11 +14,9 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
-import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class Skin implements ISkin {
     
@@ -198,76 +193,6 @@ public class Skin implements ISkin {
             lightHash = this.hashCode();
         }
         return lightHash;
-    }
-    
-    public static ISkinType readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
-        int fileVersion = stream.readInt();
-        if (fileVersion > FILE_VERSION) {
-            throw new NewerFileVersionException();
-        }
-        
-        SkinProperties properties = new SkinProperties();
-        boolean loadedProps = true;
-        IOException e = null;
-        if (fileVersion < 12) {
-            String authorName = stream.readUTF();
-            String customName = stream.readUTF();
-            String tags = "";
-            if (!(fileVersion < 4)) {
-                tags = stream.readUTF(); 
-            } else {
-                tags = "";
-            }
-            properties.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
-            properties.setProperty(Skin.KEY_CUSTOM_NAME, customName);
-            if (tags != null && !tags.equalsIgnoreCase("")) {
-                properties.setProperty(Skin.KEY_TAGS, tags);
-            }
-        } else {
-            try {
-                properties.readFromStream(stream);
-            } catch (IOException propE) {
-                ModLogger.log(Level.ERROR, "prop load failed");
-                e = propE;
-                loadedProps = false;
-            }
-        }
-        
-        ISkinType skinType;
-        
-        if (fileVersion < 5) {
-            if (loadedProps) {
-                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
-            } else {
-                throw e;
-            }
-        } else {
-            if (loadedProps) {
-                String regName = stream.readUTF();
-                if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
-                    regName = SkinTypeRegistry.skinLegs.getRegistryName();
-                }
-                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
-            } else {
-                StringBuilder sb = new StringBuilder();
-                while (true) {
-                    sb.append(new String(new byte[] {stream.readByte()}, "UTF-8"));
-                    if (sb.toString().endsWith("armourers:")) {
-                        break;
-                    }
-                }
-                ModLogger.log("Got armourers");
-                sb = new StringBuilder();
-                sb.append("armourers:");
-                while (SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString()) == null) {
-                    sb.append(new String(new byte[] {stream.readByte()}, "UTF-8"));
-                }
-                ModLogger.log(sb.toString());
-                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString());
-                ModLogger.log("got failed type " + skinType);
-            }
-        }
-        return skinType;
     }
     
     @Override

@@ -6,14 +6,13 @@ import java.io.IOException;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 
 public final class LegacyCubeHelper {
     
     //Used by file versions less than 10
-    public static void loadLegacyCubeData(SkinCubeData cubeData, int index, DataInputStream input, int version, SkinPart skinPart) throws IOException, InvalidCubeTypeException {
+    public static void loadLegacyCubeData(SkinCubeData cubeData, int index, DataInputStream input, int version, ISkinPartType skinPart) throws IOException, InvalidCubeTypeException {
         if (version < 3) {
-            loadlegacyCube(cubeData, index, input, version, skinPart.getPartType());
+            loadlegacyCube(cubeData, index, input, version, skinPart);
         } else {
             byte id = input.readByte();
             byte x = input.readByte();
