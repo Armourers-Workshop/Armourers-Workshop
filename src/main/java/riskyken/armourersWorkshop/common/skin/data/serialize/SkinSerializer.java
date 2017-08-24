@@ -47,7 +47,7 @@ public final class SkinSerializer {
             }
         } else {
             try {
-                properties.readFromStream(stream);
+                properties.readFromStream(stream, fileVersion);
             } catch (IOException propE) {
                 ModLogger.log(Level.ERROR, "prop load failed");
                 e = propE;
@@ -140,7 +140,7 @@ public final class SkinSerializer {
             }
         } else {
             try {
-                properties.readFromStream(stream);
+                properties.readFromStream(stream, fileVersion);
             } catch (IOException propE) {
                 ModLogger.log(Level.ERROR, "prop load failed");
                 e = propE;

@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import org.apache.commons.io.IOUtils;
 
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.utils.StreamUtils;
 
 public class SkinProperties {
     
@@ -39,10 +40,10 @@ public class SkinProperties {
         for (int i = 0; i < properties.size(); i++) {
             String key = (String) properties.keySet().toArray()[i];
             Object value = properties.get(key);
-            stream.writeUTF((String) key);
+            StreamUtils.writeStringUtf8(stream, key);
             if (value instanceof String) {
                 stream.writeByte(DataTypes.STRING.ordinal());
-                stream.writeUTF((String) value);
+                StreamUtils.writeStringUtf8(stream, (String) value);
             }
             if (value instanceof Integer) {
                 stream.writeByte(DataTypes.INT.ordinal());
@@ -59,10 +60,16 @@ public class SkinProperties {
         }
     }
     
-    public void readFromStream(DataInputStream stream) throws IOException {
+    public void readFromStream(DataInputStream stream, int fileVersion) throws IOException {
         int count = stream.readInt();
         for (int i = 0; i < count; i++) {
-            String key = stream.readUTF();
+            
+            String key = null;
+            if (fileVersion > 12) {
+                key = StreamUtils.readStringUtf8(stream);
+            } else {
+                key = stream.readUTF();
+            }
             int byteType = stream.readByte();
             DataTypes type = DataTypes.STRING;
             if (byteType >= 0 & byteType < DataTypes.values().length) {
@@ -74,7 +81,11 @@ public class SkinProperties {
             Object value = null;
             switch (type) {
             case STRING:
-                value = stream.readUTF();
+                if (fileVersion > 12) {
+                    value = StreamUtils.readStringUtf8(stream);
+                } else {
+                    value = stream.readUTF();
+                }
                 break;
             case INT:
                 value = stream.readInt();
@@ -169,7 +180,7 @@ public class SkinProperties {
         ByteArrayInputStream bais = new ByteArrayInputStream(data);
         DataInputStream dataInputStream = new DataInputStream(bais);
         try {
-            readFromStream(dataInputStream);
+            readFromStream(dataInputStream, Skin.FILE_VERSION);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
