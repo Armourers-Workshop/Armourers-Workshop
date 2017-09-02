@@ -1,5 +1,8 @@
 package riskyken.armourersWorkshop.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -53,6 +56,14 @@ public final class SkinUtils {
     @SideOnly(Side.CLIENT)
     private static Skin getSkinOnClient(SkinPointer skinPointer, boolean requestSkin) {
         return ClientSkinCache.INSTANCE.getSkin(skinPointer, requestSkin);
+    }
+    
+    public static Skin copySkin(Skin skin) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        SkinIOUtils.saveSkinToStream(outputStream, skin);
+        byte[] skinData = outputStream.toByteArray();
+        Skin skinCopy = SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(skinData));
+        return skinCopy;
     }
     
     public static double getFlapAngleForWings(Entity entity, Skin skin) {
