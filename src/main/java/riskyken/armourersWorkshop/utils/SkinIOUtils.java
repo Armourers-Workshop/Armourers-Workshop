@@ -89,7 +89,7 @@ public final class SkinIOUtils {
         
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-            skin = SkinSerializer.loadSkin(stream);
+            skin = SkinSerializer.readSkinFromStream(stream);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
             ModLogger.log(Level.WARN, file);
@@ -117,7 +117,7 @@ public final class SkinIOUtils {
         
         try {
             stream = new DataInputStream(new BufferedInputStream(inputStream));
-            skin = SkinSerializer.loadSkin(stream);
+            skin = SkinSerializer.readSkinFromStream(stream);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
             e.printStackTrace();

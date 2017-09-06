@@ -96,7 +96,7 @@ public final class ByteBufHelper {
         Skin skin = null;
         
         try {
-            skin = SkinSerializer.loadSkin(dataInputStream);
+            skin = SkinSerializer.readSkinFromStream(dataInputStream);
             skin.requestId = dataInputStream.readInt();
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +131,7 @@ public final class ByteBufHelper {
         DataInputStream dataInputStream = new DataInputStream(bais);
         Skin skin = null;
         try {
-            skin = SkinSerializer.loadSkin(dataInputStream);
+            skin = SkinSerializer.readSkinFromStream(dataInputStream);
             skin.requestId = dataInputStream.readInt();
         } catch (Exception e) {
             e.printStackTrace();

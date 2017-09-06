@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.cubes.ICube;
-import riskyken.armourersWorkshop.common.skin.cubes.LegacyCubeHelper;
+import riskyken.armourersWorkshop.common.skin.data.serialize.LegacyCubeHelper;
 
 public class SkinCubeData {
     private byte[] cubeId;

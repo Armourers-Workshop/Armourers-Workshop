@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.cubes;
+package riskyken.armourersWorkshop.common.skin.data.serialize;
 
 import java.io.DataInputStream;
 import java.io.IOException;
