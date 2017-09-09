@@ -85,6 +85,9 @@ public class CommonProxy implements ILibraryCallback {
         case RELOAD_LIBRARY:
             ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
             break;
+        case UPDATE_SKINS:
+            SkinIOUtils.updateSkins(player);
+            break;
         }
     }
     

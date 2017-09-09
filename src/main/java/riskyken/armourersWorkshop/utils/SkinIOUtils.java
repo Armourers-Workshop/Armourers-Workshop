@@ -169,6 +169,9 @@ public final class SkinIOUtils {
         } catch (NewerFileVersionException e) {
             e.printStackTrace();
             ModLogger.log(Level.ERROR, "File name: " + file.getName());
+        } catch (Exception e) {
+            ModLogger.log(Level.ERROR, "Unable to load skin name. Unknown error.");
+            e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(stream);
         }
@@ -349,6 +352,44 @@ public final class SkinIOUtils {
         } else {
             player.addChatComponentMessage(new ChatComponentText("No skins found to recover."));
         }
+    }
+    
+    public static void updateSkins(EntityPlayer player) {
+        File updateDir = new File(System.getProperty("user.dir"), "skin-update");
+        if (!updateDir.exists() & updateDir.isDirectory()) {
+            player.addChatComponentMessage(new ChatComponentText("Directory skin-update not found."));
+            return;
+        }
+        
+        File outputDir = new File(updateDir, "updated");
+        if (!outputDir.exists()) {
+            outputDir.mkdir();
+        }
+        File[] skinFiles = updateDir.listFiles();
+        player.addChatComponentMessage(new ChatComponentText(String.format("Found %d skins to be updated.", skinFiles.length)));
+        player.addChatComponentMessage(new ChatComponentText("Working..."));
+        int successCount = 0;
+        int failCount = 0;
+        
+        for (int i = 0; i < skinFiles.length; i++) {
+            File skinFile = skinFiles[i];
+            if (skinFile.isFile()) {
+                Skin skin = loadSkinFromFile(skinFile);
+                if (skin != null) {
+                    if (saveSkinToFile(new File(outputDir, skinFile.getName()), skin)) {
+                        successCount++;
+                    } else {
+                        ModLogger.log(Level.ERROR, "Failed to update skin " + skinFile.getName());
+                        failCount++;
+                    }
+                } else {
+                    ModLogger.log(Level.ERROR, "Failed to update skin " + skinFile.getName());
+                    failCount++;
+                }
+            }
+        }
+        player.addChatComponentMessage(new ChatComponentText("Finished skin update."));
+        player.addChatComponentMessage(new ChatComponentText(String.format("%d skins were updated and %d failed.", successCount, failCount)));
     }
     
     public static boolean isInSubDirectory(File dir, File file) {

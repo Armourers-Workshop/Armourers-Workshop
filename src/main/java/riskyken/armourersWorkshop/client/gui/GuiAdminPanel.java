@@ -17,6 +17,7 @@ public class GuiAdminPanel extends GuiScreen {
     
     private GuiButtonExt recoverSkins;
     private GuiButtonExt reloadLibrary;
+    private GuiButtonExt updateSkins;
     
     public GuiAdminPanel() {
         this.guiWidth = 180;
@@ -31,10 +32,12 @@ public class GuiAdminPanel extends GuiScreen {
         buttonList.clear();
         
         recoverSkins = new GuiButtonExt(0, guiLeft + 5, guiTop + 5, 100, 15, "Recover Skins");
-        reloadLibrary = new GuiButtonExt(0, guiLeft + 5, guiTop + 20, 100, 15, "Reload Library");
-                
+        reloadLibrary = new GuiButtonExt(0, guiLeft + 5, guiTop + 25, 100, 15, "Reload Library");
+        updateSkins = new GuiButtonExt(0, guiLeft + 5, guiTop + 45, 100, 15, "Update Skins");
+        
         buttonList.add(recoverSkins);
         buttonList.add(reloadLibrary);
+        buttonList.add(updateSkins);
     }
     
     @Override
@@ -58,6 +61,10 @@ public class GuiAdminPanel extends GuiScreen {
         }
         if (button == reloadLibrary) {
             MessageClientGuiAdminPanel message = new MessageClientGuiAdminPanel(AdminPanelCommand.RELOAD_LIBRARY);
+            PacketHandler.networkWrapper.sendToServer(message);
+        }
+        if (button == updateSkins) {
+            MessageClientGuiAdminPanel message = new MessageClientGuiAdminPanel(AdminPanelCommand.UPDATE_SKINS);
             PacketHandler.networkWrapper.sendToServer(message);
         }
     }
