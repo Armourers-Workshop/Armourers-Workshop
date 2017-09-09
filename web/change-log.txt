@@ -1,3 +1,16 @@
+Build 0.46.1
+Added:
+	Added beta access for skin uploading.
+Fixed:
+	Fixed crash when CNPCS tries to access a blocks camera collision.
+	Fixed overflow if skin panel is too small to show any skins.
+Changed:
+	Removed meta data from skinning table textures.
+Art:
+	Updated global library GUI icons. (Ethan)
+	Updated skinning table textures. (Thundercat_)
+
+
 Build 0.46.0
 Added:
 	New tabbed Armourer GUI.
