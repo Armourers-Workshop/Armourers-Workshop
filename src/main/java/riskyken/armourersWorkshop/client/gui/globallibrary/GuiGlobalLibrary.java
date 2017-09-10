@@ -3,10 +3,6 @@ package riskyken.armourersWorkshop.client.gui.globallibrary;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-
-import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,15 +25,12 @@ import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.inventory.ContainerGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
-import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibrary extends GuiContainer {
     
-    public PlushieSession plushieSession;
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
@@ -56,14 +49,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     public GuiGlobalLibraryPanelUpload panelUpload;
     public GuiGlobalLibraryPaneJoinBeta panelJoinBeta;
     public GuiGlobalLibraryPanelUserSkins panelUserSkins;
-    
     private Screen screen;
-    
-    //Beta
-    private static boolean startedBetaCheck;
-    private static boolean doneBetaCheck;
-    private static boolean isInbeta;
-    private static FutureTask<JsonObject> taskBetaCheck;
     
     public static enum Screen {
         HOME,
@@ -108,27 +94,9 @@ public class GuiGlobalLibrary extends GuiContainer {
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
         
-        if (plushieSession == null) {
-            plushieSession = new PlushieSession();
+        if (!PlushieAuth.startedRemoteUserCheck()) {
+            PlushieAuth.doRemoteUserCheck();
         }
-        if (!startedBetaCheck) {
-            doBetaCheck();
-        }
-        doBetaCheck();
-    }
-    
-    public void doBetaCheck() {
-        startedBetaCheck = true;
-        GameProfile gameProfile = Minecraft.getMinecraft().thePlayer.getGameProfile();
-        taskBetaCheck = PlushieAuth.isPlayerInBeta(gameProfile.getId());
-    }
-    
-    public boolean isPlayerInBeta() {
-        return isInbeta;
-    }
-    
-    public static boolean hasDoneBetaCheck() {
-        return doneBetaCheck;
     }
     
     @Override
@@ -276,25 +244,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (taskBetaCheck != null && taskBetaCheck.isDone()) {
-            try {
-                JsonObject jsonObject = taskBetaCheck.get();
-                if (jsonObject.has("action") && jsonObject.get("action").getAsString().equals("beta-check")) {
-                    if (jsonObject.has("valid") && jsonObject.get("valid").getAsBoolean() == true) {
-                        if (jsonObject.has("id")) {
-                            int serverId = jsonObject.get("id").getAsInt();
-                            plushieSession.setServerId(serverId);
-                        }
-                        isInbeta = true;
-                    }
-                }
-            } catch (Exception e) {
-                ModLogger.log("Failed beta check.");
-                e.printStackTrace();
-            }
-            doneBetaCheck = true;
-            taskBetaCheck = null;
-        }
+        PlushieAuth.taskCheck();
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).update();
         }

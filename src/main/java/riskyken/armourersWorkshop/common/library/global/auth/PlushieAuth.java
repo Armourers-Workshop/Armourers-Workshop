@@ -10,6 +10,7 @@ import java.util.concurrent.FutureTask;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.Minecraft;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils;
@@ -19,12 +20,59 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 public class PlushieAuth {
     
     private static final Executor JSON_DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
+    public static final  PlushieSession PLUSHIE_SESSION = new PlushieSession();
     
     private static final String BASE_URL = "https://plushie.moe/armourers_workshop/";
     private static final String AUTH_URL = BASE_URL + "authentication.php";
     private static final String BETA_CHECK_URL = BASE_URL + "beta-check.php";
     private static final String BETA_JOIN_URL = BASE_URL + "beta-join.php";
     private static final String BETA_CODE_CHECK_URL = BASE_URL + "beta-code-check.php";
+    
+    private static boolean doneRemoteUserCheck = false;
+    private static boolean startedRemoteUserCheck = false;
+    private static boolean isRemoteUser = false;
+    
+    private static FutureTask<JsonObject> taskBetaCheck;
+    
+    public static boolean isRemoteUser() {
+        return isRemoteUser;
+    }
+    
+    public static boolean doneRemoteUserCheck() {
+        return doneRemoteUserCheck;
+    }
+    
+    public static boolean startedRemoteUserCheck() {
+        return startedRemoteUserCheck;
+    }
+    
+    public static void doRemoteUserCheck() {
+        startedRemoteUserCheck = true;
+        GameProfile gameProfile = Minecraft.getMinecraft().thePlayer.getGameProfile();
+        taskBetaCheck = PlushieAuth.isPlayerInBeta(gameProfile.getId());
+    }
+    
+    public static void taskCheck() {
+        if (taskBetaCheck != null && taskBetaCheck.isDone()) {
+            try {
+                JsonObject jsonObject = taskBetaCheck.get();
+                if (jsonObject.has("action") && jsonObject.get("action").getAsString().equals("beta-check")) {
+                    if (jsonObject.has("valid") && jsonObject.get("valid").getAsBoolean() == true) {
+                        if (jsonObject.has("id")) {
+                            int serverId = jsonObject.get("id").getAsInt();
+                            PLUSHIE_SESSION.setServerId(serverId);
+                        }
+                        isRemoteUser = true;
+                    }
+                }
+            } catch (Exception e) {
+                ModLogger.log("Failed beta check.");
+                e.printStackTrace();
+            }
+            doneRemoteUserCheck = true;
+            taskBetaCheck = null;
+        }
+    }
     
     public static FutureTask<JsonObject> isPlayerInBeta(UUID uuid) {
         String searchUrl;

@@ -169,7 +169,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     protected void actionPerformed(GuiButton button) {
         if (button == buttonUpload) {
             GameProfile gameProfile = mc.thePlayer.getGameProfile();
-            PlushieSession plushieSession = ((GuiGlobalLibrary)parent).plushieSession;
+            PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
             if (!plushieSession.isAuthenticated()) {
                 JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
                 plushieSession.authenticate(jsonObject);
@@ -187,7 +187,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     
     public void uploadSkin(Skin skin) {
         GameProfile gameProfile = mc.thePlayer.getGameProfile();
-        PlushieSession plushieSession = ((GuiGlobalLibrary)parent).plushieSession;
+        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SkinIOUtils.saveSkinToStream(outputStream, skin);
         byte[] fileBytes = outputStream.toByteArray();

@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.global.GlobalSkinLibraryUtils;
+import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
 
 @SideOnly(Side.CLIENT)
@@ -62,9 +63,9 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     }
     
     private void betaCheckUpdate() {
-        boolean inBeta = ((GuiGlobalLibrary)parent).isPlayerInBeta();
-        boolean doneBetaCheck = ((GuiGlobalLibrary)parent).hasDoneBetaCheck();
-        PlushieSession session = ((GuiGlobalLibrary)parent).plushieSession;
+        boolean inBeta = PlushieAuth.isRemoteUser();
+        boolean doneBetaCheck = PlushieAuth.doneRemoteUserCheck();
+        PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
         //iconButtonFavourites.visible = inBeta;
         if (session.hasServerId()) {
             iconButtonMyFiles.visible = inBeta;
@@ -90,7 +91,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         }
         if (button == iconButtonMyFiles) {
             GuiGlobalLibrary guiGlobalLibrary = (GuiGlobalLibrary) parent;
-            int serverId = guiGlobalLibrary.plushieSession.getServerId();
+            int serverId = PlushieAuth.PLUSHIE_SESSION.getServerId();
             FutureTask<JsonArray> taskJson = GlobalSkinLibraryUtils.getUserSkinsList(guiGlobalLibrary.jsonDownloadExecutor, serverId);
             guiGlobalLibrary.panelUserSkins.setDownloadResultsTask(taskJson, serverId);
             ((GuiGlobalLibrary)parent).switchScreen(Screen.USER_SKINS);

@@ -111,8 +111,8 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
     private void joinedBeta(JsonObject jsonObject) {
         joining = false;
         joinState = STATE_JOINED_BETA;
-        ((GuiGlobalLibrary)parent).doBetaCheck();
-        ((GuiGlobalLibrary)parent).plushieSession.authenticate(jsonObject);
+        PlushieAuth.doRemoteUserCheck();
+        PlushieAuth.PLUSHIE_SESSION.authenticate(jsonObject);
         ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
     }
     
