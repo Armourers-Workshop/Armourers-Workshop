@@ -143,15 +143,19 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
             try {
                 JsonObject json = taskSkinUpload.get();
                 taskSkinUpload = null;
-                ModLogger.log("got json");
-                ModLogger.log(json.toString());
-                if (json.has("valid") & json.has("action")) {
-                    String action = json.get("action").getAsString();
-                    boolean valid = json.get("valid").getAsBoolean();
-                    if (valid & action.equals("skin-upload")) {
-                        ((GuiGlobalLibrary)parent).panelHome.updateSkinPanels();
-                        ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
+                if (json != null) {
+                    if (json.has("valid") & json.has("action")) {
+                        String action = json.get("action").getAsString();
+                        boolean valid = json.get("valid").getAsBoolean();
+                        if (valid & action.equals("skin-upload")) {
+                            ((GuiGlobalLibrary)parent).panelHome.updateSkinPanels();
+                            ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
+                        }
+                    } else {
+                        // TODO handle upload failure
                     }
+                } else {
+                    // TODO handle upload failure
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

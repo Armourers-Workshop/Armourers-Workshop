@@ -51,6 +51,7 @@ public final class SkinUploader {
         @Override
         public JsonObject call() throws Exception {
             String result = doSkinUpload(file, name, userId, description, accessToken);
+            ModLogger.log(result);
             JsonObject json = null;
             try {
                 json = (JsonObject) new JsonParser().parse(result);
