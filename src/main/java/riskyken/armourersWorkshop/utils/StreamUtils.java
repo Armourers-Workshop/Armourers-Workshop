@@ -13,16 +13,13 @@ public final class StreamUtils {
     
     public static void writeString(DataOutputStream stream, Charset charset, String string) throws IOException {
         byte[] bytes = string.getBytes(charset);
-        if (bytes.length > Short.MAX_VALUE) {
-            throw new IOException("String is over the max length allowed.");
-        }
-        short size = (short) bytes.length;
-        stream.writeShort(size);
+        int size = bytes.length;
+        writeUnsignedShort(stream, size);
         stream.write(bytes);
     }
     
     public static String readString(DataInputStream stream, Charset charset) throws IOException {
-        short size = stream.readShort();
+        int size = readUnsignedShort(stream);
         byte[] bytes = new byte[size];
         stream.read(bytes, 0, size);
         return new String(bytes, charset);
@@ -42,5 +39,16 @@ public final class StreamUtils {
     
     public static String readStringAscii(DataInputStream stream) throws IOException {
         return readString(stream, Charsets.US_ASCII);
+    }
+    
+    private static void writeUnsignedShort(DataOutputStream stream, int value) throws IOException {
+        if (value > 65535) {
+            throw new IOException("String is over the max length allowed.");
+        }
+        stream.writeShort((short)value);
+    }
+    
+    private static int readUnsignedShort(DataInputStream stream) throws IOException {
+        return stream.readShort() & 0xFFFF;
     }
 }

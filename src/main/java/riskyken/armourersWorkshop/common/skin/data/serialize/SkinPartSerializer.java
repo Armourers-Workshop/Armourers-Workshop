@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Level;
 
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -14,10 +15,11 @@ import riskyken.armourersWorkshop.common.skin.data.SkinCubeData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
+import riskyken.armourersWorkshop.utils.StreamUtils;
 
 public final class SkinPartSerializer {
     
-    public SkinPartSerializer() {}
+    private SkinPartSerializer() {}
     
     public static SkinPart loadSkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         ISkinPartType skinPart = null;
@@ -30,7 +32,12 @@ public final class SkinPartSerializer {
                 throw new IOException("Skin part was null");
             }
         } else {
-            String regName = stream.readUTF();
+            String regName = null;
+            if (version > 12) {
+                regName = StreamUtils.readString(stream, Charsets.US_ASCII);
+            } else {
+                regName = stream.readUTF();
+            }
             if (regName.equals("armourers:skirt.base")) {
                 regName = "armourers:legs.skirt";
             }
@@ -58,7 +65,7 @@ public final class SkinPartSerializer {
     }
     
     public static void saveSkinPart(SkinPart skinPart, DataOutputStream stream) throws IOException {
-        stream.writeUTF(skinPart.getPartType().getRegistryName());
+        StreamUtils.writeString(stream, Charsets.US_ASCII, skinPart.getPartType().getRegistryName());
         skinPart.getCubeData().writeToStream(stream);
         stream.writeInt(skinPart.getMarkerCount());
         for (int i = 0; i < skinPart.getMarkerCount(); i++) {

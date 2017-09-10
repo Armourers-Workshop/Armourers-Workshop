@@ -22,14 +22,19 @@ import riskyken.armourersWorkshop.utils.StreamUtils;
 public final class SkinSerializer {
     
     private static final String TAG_SKIN_HEADER = "AW-SKIN-START";
+    
     private static final String TAG_SKIN_PROPS_HEADER = "PROPS-START";
     private static final String TAG_SKIN_PROPS_FOOTER = "PROPS-END";
+    
     private static final String TAG_SKIN_TYPE_HEADER = "TYPE-START";
     private static final String TAG_SKIN_TYPE_FOOTER = "TYPE-END";
+    
     private static final String TAG_SKIN_PAINT_HEADER = "PAINT-START";
     private static final String TAG_SKIN_PAINT_FOOTER = "PAINT-END";
+    
     private static final String TAG_SKIN_PART_HEADER = "PART-START";
     private static final String TAG_SKIN_PART_FOOTER = "PART-END";
+    
     private static final String TAG_SKIN_FOOTER = "AW-SKIN-END";
     
     private SkinSerializer() {}
