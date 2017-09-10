@@ -117,7 +117,6 @@ public class MultipartForm {
                 inputStream = connection.getInputStream();
                 result = IOUtils.toString(inputStream, Charsets.UTF_8);
             } catch (IOException e) {
-                IOUtils.closeQuietly(inputStream);
                 e.printStackTrace();
             } finally {
                 IOUtils.closeQuietly(inputStream);
@@ -126,8 +125,8 @@ public class MultipartForm {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(output);
             IOUtils.closeQuietly(writer);
+            IOUtils.closeQuietly(output);
         }
         return result;
     }

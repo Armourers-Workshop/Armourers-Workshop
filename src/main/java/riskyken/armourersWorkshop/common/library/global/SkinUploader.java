@@ -135,7 +135,6 @@ public final class SkinUploader {
                 inputStream = connection.getInputStream();
                 result = IOUtils.toString(inputStream, Charsets.UTF_8);
             } catch (IOException e) {
-                IOUtils.closeQuietly(inputStream);
                 e.printStackTrace();
             } finally {
                 IOUtils.closeQuietly(inputStream);
@@ -144,8 +143,8 @@ public final class SkinUploader {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(output);
             IOUtils.closeQuietly(writer);
+            IOUtils.closeQuietly(output);
         }
         return result;
     }

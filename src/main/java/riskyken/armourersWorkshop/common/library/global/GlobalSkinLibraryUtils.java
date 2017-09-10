@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +27,7 @@ public final class GlobalSkinLibraryUtils {
     private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
     private static final String USER_INFO_URL = BASE_URL + "user-info.php";
     private static final String USER_SKINS_URL = BASE_URL + "user-skins.php";
+    private static final String USER_SKIN_EDIT_URL = BASE_URL + "user-skin-edit.php";
     
     private static final Executor JSON_DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final HashMap<Integer, PlushieUser> USERS = new HashMap<Integer, PlushieUser>();
@@ -107,31 +107,6 @@ public final class GlobalSkinLibraryUtils {
                 ModLogger.log(Level.ERROR, "Failed downloading info for user id: " + userId);
             }
         }
-    }
-    
-    public static String authenticatePlayer(String token) {
-        ModLogger.log("Authenticate Test Started");
-        //token = "badtokentest";
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"accessToken\": \"" + token  + "\"");
-        sb.append("}");
-        ModLogger.log(sb.toString());
-        String jsonResult = null;
-        
-        try {
-            jsonResult = performPostRequest(new URL("https://authserver.mojang.com/validate"), sb.toString(), "application/json");
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        ModLogger.log(jsonResult);
-        ModLogger.log("Authenticate Test Finished");
-        return jsonResult;
     }
     
     public static String performPostRequest(URL url, String post, String contentType) throws IOException {
