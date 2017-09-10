@@ -18,6 +18,7 @@ public abstract class AbstractGuiDialogContainer extends GuiContainer implements
     
     public void openDialog(AbstractGuiDialog dialog) {
         this.dialog = dialog;
+        this.dialog.initGui();
     }
     
     protected boolean isDialogOpen() {

@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -64,7 +65,6 @@ public class GuiDialogCopy extends AbstractGuiDialog {
         }
         dropDownSrcPart.setListSelectedIndex(0);
         dropDownDesPart.setListSelectedIndex(0);
-        
         
         buttonList.add(buttonClose);
         buttonList.add(buttonCopy);

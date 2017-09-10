@@ -46,7 +46,7 @@ public abstract class AbstractGuiDialog extends Gui {
         this.width = width;
         this.height = height;
         this.buttonList = new ArrayList<GuiButton>();
-        initGui();
+        //initGui();
     }
     
     public void initGui() {
