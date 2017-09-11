@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
@@ -18,8 +19,10 @@ import org.apache.logging.log4j.Level;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
+import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
@@ -28,6 +31,7 @@ public final class GlobalSkinLibraryUtils {
     private static final String USER_INFO_URL = BASE_URL + "user-info.php";
     private static final String USER_SKINS_URL = BASE_URL + "user-skins.php";
     private static final String USER_SKIN_EDIT_URL = BASE_URL + "user-skin-edit.php";
+    private static final String USER_SKIN_DELETE_URL = BASE_URL + "user-skin-delete.php";
     
     private static final Executor JSON_DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final HashMap<Integer, PlushieUser> USERS = new HashMap<Integer, PlushieUser>();
@@ -42,6 +46,51 @@ public final class GlobalSkinLibraryUtils {
         FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
         executor.execute(futureTask);
         return futureTask;
+    }
+    
+    public static FutureTask<JsonObject> deleteSkin(Executor executor, int userId, String accessToken, int skinId) {
+        Validate.notNull(executor);
+        Validate.notNull(userId);
+        Validate.notNull(accessToken);
+        String searchUrl = USER_SKIN_DELETE_URL + "?userId=" + String.valueOf(userId) + "&accessToken=" + accessToken + "&skinId=" + String.valueOf(skinId);
+        FutureTask<JsonObject> futureTask = new FutureTask<JsonObject>(new DownloadJsonObjectCallable(searchUrl));
+        executor.execute(futureTask);
+        return futureTask;
+    }
+    
+    public static FutureTask<JsonObject> editSkin(Executor executor, int userId, String accessToken, int skinId, String name, String description) {
+        Validate.notNull(executor);
+        Validate.notNull(userId);
+        Validate.notNull(accessToken);
+        String searchUrl = USER_SKIN_EDIT_URL + "?userId=" + String.valueOf(userId) + "&accessToken=" + accessToken + "&skinId=" + String.valueOf(skinId);
+        MultipartForm multipartForm = new MultipartForm(searchUrl);
+        multipartForm.addText("name", name);
+        multipartForm.addText("description", description);
+        FutureTask<JsonObject> futureTask = new FutureTask<JsonObject>(new PostMultipartFormCallable(multipartForm));
+        executor.execute(futureTask);
+        return futureTask;
+    }
+    
+    public static class PostMultipartFormCallable implements Callable<JsonObject> {
+
+        private final MultipartForm multipartForm;
+        
+        public PostMultipartFormCallable(MultipartForm multipartForm) {
+            this.multipartForm = multipartForm;
+        }
+        
+        @Override
+        public JsonObject call() throws Exception {
+            JsonObject result = null;
+            try {
+                String downloadData = multipartForm.upload();
+                ModLogger.log(downloadData);
+                result = (JsonObject) new JsonParser().parse(downloadData);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
     }
     
     public static PlushieUser getUserInfo(int userId) {

@@ -80,7 +80,7 @@ public class MultipartForm {
         }
     }
     
-    private String upload() throws IOException{
+    public String upload() throws IOException{
         ModLogger.log("Upload Test Started");
         
         String boundary = Long.toHexString(System.currentTimeMillis());

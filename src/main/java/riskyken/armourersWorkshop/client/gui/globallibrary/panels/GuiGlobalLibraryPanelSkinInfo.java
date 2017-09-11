@@ -37,6 +37,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     private GuiButtonExt buttonBack;
     private GuiButtonExt buttonDownload;
     private GuiButtonExt buttonUserSkins;
+    private GuiButtonExt buttonEditSkin;
     private JsonObject skinJson = null;
     private Screen returnScreen;
     
@@ -53,10 +54,12 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.back"));
         buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.downloadSkin"));
         buttonUserSkins = new GuiButtonExt(0, x + 6, y + 6, 26, 26, "");
+        buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.editSkin"));
         
         buttonList.add(buttonBack);
         buttonList.add(buttonDownload);
         buttonList.add(buttonUserSkins);
+        buttonList.add(buttonEditSkin);
     }
     
     @Override
@@ -80,6 +83,11 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                     guiGlobalLibrary.panelUserSkins.setDownloadResultsTask(taskJson, userId);
                     ((GuiGlobalLibrary)parent).switchScreen(Screen.USER_SKINS);
                 }
+            }
+        }
+        if (button == buttonEditSkin) {
+            if (skinJson != null) {
+                ((GuiGlobalLibrary)parent).panelSkinEdit.displaySkinInfo(skinJson, returnScreen);
             }
         }
     }

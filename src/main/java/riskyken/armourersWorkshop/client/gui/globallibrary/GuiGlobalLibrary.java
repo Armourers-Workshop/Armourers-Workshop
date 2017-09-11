@@ -4,20 +4,23 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import riskyken.armourersWorkshop.client.gui.AbstractGuiDialogContainer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoinBeta;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
+import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinEdit;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelUpload;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelUserSkins;
@@ -29,14 +32,17 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 
 @SideOnly(Side.CLIENT)
-public class GuiGlobalLibrary extends GuiContainer {
+public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
+    private int oldMouseX;
+    private int oldMouseY;
     
     public Executor jsonDownloadExecutor = Executors.newFixedThreadPool(2);
     public Executor skinDownloadExecutor = Executors.newFixedThreadPool(2);
+    public Executor uploadExecutor = Executors.newFixedThreadPool(1);
     
     private static final int PADDING = 5;
     private boolean isNEIVisible;
@@ -49,6 +55,7 @@ public class GuiGlobalLibrary extends GuiContainer {
     public GuiGlobalLibraryPanelUpload panelUpload;
     public GuiGlobalLibraryPaneJoinBeta panelJoinBeta;
     public GuiGlobalLibraryPanelUserSkins panelUserSkins;
+    public GuiGlobalLibraryPanelSkinEdit panelSkinEdit;
     private Screen screen;
     
     public static enum Screen {
@@ -58,7 +65,8 @@ public class GuiGlobalLibrary extends GuiContainer {
         SKIN_INFO,
         USER_SKINS,
         FAVOURITES,
-        JOIN_BETA
+        JOIN_BETA,
+        SKIN_EDIT
     }
     
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
@@ -90,6 +98,9 @@ public class GuiGlobalLibrary extends GuiContainer {
         
         panelUserSkins = new GuiGlobalLibraryPanelUserSkins(this, 5, 5, 100, 100);
         panelList.add(panelUserSkins);
+        
+        panelSkinEdit = new GuiGlobalLibraryPanelSkinEdit(this, 5, 5, 100, 100);
+        panelList.add(panelSkinEdit);
         
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
@@ -236,6 +247,13 @@ public class GuiGlobalLibrary extends GuiContainer {
             panelUserSkins.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
             panelUserSkins.setVisible(true);
             break;
+        case SKIN_EDIT:
+            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setVisible(true);
+            yOffset += PADDING + 23;
+            panelSkinEdit.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            panelSkinEdit.setVisible(true);
+            break;
         default:
             break;
         }
@@ -260,27 +278,32 @@ public class GuiGlobalLibrary extends GuiContainer {
     
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).mouseClicked(mouseX, mouseY, button);
+        if (!isDialogOpen()) {
+            for (int i = 0; i < panelList.size(); i++) {
+                panelList.get(i).mouseClicked(mouseX, mouseY, button);
+            }
         }
-        
+        super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        super.mouseMovedOrUp(mouseX, mouseY, button);
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).mouseMovedOrUp(mouseX, mouseY, button);
+        if (!isDialogOpen()) {
+            for (int i = 0; i < panelList.size(); i++) {
+                panelList.get(i).mouseMovedOrUp(mouseX, mouseY, button);
+            }
         }
+        super.mouseMovedOrUp(mouseX, mouseY, button);
     }
     
     @Override
     protected void keyTyped(char c, int keycode) {
         boolean keyTyped = false;
-        for (int i = 0; i < panelList.size(); i++) {
-            if (panelList.get(i).keyTyped(c, keycode)) {
-                keyTyped = true;
+        if (!isDialogOpen()) {
+            for (int i = 0; i < panelList.size(); i++) {
+                if (panelList.get(i).keyTyped(c, keycode)) {
+                    keyTyped = true;
+                }
             }
         }
         if (!keyTyped) {
@@ -300,11 +323,30 @@ public class GuiGlobalLibrary extends GuiContainer {
     public boolean doesGuiPauseGame() {
         return false;
     }
+    
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
+        oldMouseX = mouseX;
+        oldMouseY = mouseY;
+        if (isDialogOpen()) {
+            mouseX = mouseY = 0;
+        }
+        super.drawScreen(mouseX, mouseY, partialTickTime);
+    }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).draw(mouseX, mouseY, partialTickTime);
+        }
+    }
+    
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        if (isDialogOpen()) {
+            GL11.glTranslatef(-guiLeft, -guiTop, 0);
+            dialog.draw(oldMouseX, oldMouseY, 0);
+            GL11.glTranslatef(guiLeft, guiTop, 0);
         }
     }
     
