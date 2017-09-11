@@ -23,6 +23,7 @@ import com.google.gson.JsonParser;
 
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
@@ -42,7 +43,7 @@ public final class GlobalSkinLibraryUtils {
     public static FutureTask<JsonArray> getUserSkinsList(Executor executor, int userId) {
         Validate.notNull(executor);
         Validate.notNull(userId);
-        String searchUrl = USER_SKINS_URL + "?userId=" + String.valueOf(userId);
+        String searchUrl = USER_SKINS_URL + "?userId=" + String.valueOf(userId) + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
         FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
         executor.execute(futureTask);
         return futureTask;

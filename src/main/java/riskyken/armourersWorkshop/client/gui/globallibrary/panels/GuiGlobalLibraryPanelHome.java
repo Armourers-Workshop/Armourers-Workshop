@@ -77,8 +77,8 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     public void updateSkinPanels() {
         int iconCountRecentlyUploaded = (int) Math.ceil((float)skinPanelRecentlyUploaded.getIconCount() / 20) * 20;
         int iconCountMostDownloaded = (int) Math.ceil((float)skinPanelMostDownloaded.getIconCount() / 20) * 20;
-        taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded));
-        taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_DOWNLOADED_URL + "?limit=" + iconCountMostDownloaded));
+        taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
+        taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_DOWNLOADED_URL + "?limit=" + iconCountMostDownloaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
         
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonRecentlyUploaded);
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonMostDownloaded);
@@ -144,7 +144,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     protected void actionPerformed(GuiButton button) {
         if (button == buttonShowAll) {
             try {
-                String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode("", "UTF-8");
+                String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode("", "UTF-8") + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
                 FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
                 ((GuiGlobalLibrary)parent).panelSearchResults.setDownloadSearchResultsTask(futureTask);
                 ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(futureTask);

@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
@@ -71,7 +72,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     private void doSearch() {
         try {
-            String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode(searchTextbox.getText(), "UTF-8");
+            String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode(searchTextbox.getText(), "UTF-8") + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
             FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
             ((GuiGlobalLibrary)parent).panelSearchResults.setDownloadSearchResultsTask(futureTask);
             ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(futureTask);
