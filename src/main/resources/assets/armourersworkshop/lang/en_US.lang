@@ -400,6 +400,7 @@ inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=Sear
 # Global Skin Library (Skin Info)
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.editSkin=Edit Skin
 
 # Global Skin Library (Upload)
 inventory.armourersworkshop:globalSkinLibrary.upload.name=Upload Skin
@@ -424,6 +425,18 @@ inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=Warning a
 
 # Global Skin Library (User Skins)
 inventory.armourersworkshop:globalSkinLibrary.userSkins.results=Skins uploaded by %s: Page %d of %d - Total of %d results.
+
+# Global Skin Library (Edit Skin)
+inventory.armourersworkshop:globalSkinLibrary.edit.name=Edit Skin
+inventory.armourersworkshop:globalSkinLibrary.edit.skinName=Skin Name:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterName=Enter name
+inventory.armourersworkshop:globalSkinLibrary.edit.skinTags=Skin Tags:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterTags=Enter tags
+inventory.armourersworkshop:globalSkinLibrary.edit.buttonUpdate=Update Skin
+inventory.armourersworkshop:globalSkinLibrary.edit.buttonDelete=Delete Skin
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.title=Delete Skin
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.ok=OK
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.cancel=Cancel
 
 # Hologram Projector
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventory

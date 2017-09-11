@@ -163,7 +163,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
             }
         }
         if (button == buttonDelete) {
-            ((GuiGlobalLibrary)parent).openDialog(new GuiGlobalLibraryDialogDelete((GuiGlobalLibrary)parent, "Test", this, 100, 100));
+            ((GuiGlobalLibrary)parent).openDialog(new GuiGlobalLibraryDialogDelete((GuiGlobalLibrary)parent, guiName + ".dialog.delete", this, 190, 100));
         }
     }
     
