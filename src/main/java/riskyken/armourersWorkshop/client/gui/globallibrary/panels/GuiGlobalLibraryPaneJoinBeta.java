@@ -118,7 +118,7 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
     
     @Override
     public boolean keyTyped(char c, int keycode) {
-        if (!visible | !enabled | haveOpenDialog()) {
+        if (!visible | !enabled) {
             return false;
         }
         if (textBetaCode.textboxKeyTyped(c, keycode)) {
@@ -133,7 +133,7 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
     
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
-        if (!visible | !enabled | haveOpenDialog()) {
+        if (!visible | !enabled) {
             return;
         }
         super.mouseClicked(mouseX, mouseY, button);

@@ -40,7 +40,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
-        if (!visible | !enabled | haveOpenDialog()) {
+        if (!visible | !enabled) {
             return;
         }
         super.mouseClicked(mouseX, mouseY, button);
@@ -54,7 +54,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     @Override
     public boolean keyTyped(char c, int keycode) {
-        if (!visible | !enabled | haveOpenDialog()) {
+        if (!visible | !enabled) {
             return false;
         }
         boolean pressed = searchTextbox.textboxKeyTyped(c, keycode);
