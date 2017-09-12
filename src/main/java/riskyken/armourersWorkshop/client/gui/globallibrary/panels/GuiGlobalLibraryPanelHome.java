@@ -32,12 +32,15 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
     private static final String RECENTLY_UPLOADED_URL = BASE_URL + "recently-uploaded.php";
     private static final String MOST_DOWNLOADED_URL = BASE_URL + "most-downloaded.php";
+    private static final String MOST_LIKED_URL = BASE_URL + "most-liked.php";
     
     private final GuiControlSkinPanel skinPanelRecentlyUploaded;
     private final GuiControlSkinPanel skinPanelMostDownloaded;
+    private final GuiControlSkinPanel skinPanelMostLiked;
     
     private FutureTask<JsonArray> taskDownloadJsonRecentlyUploaded;
     private FutureTask<JsonArray> taskDownloadJsonMostDownloaded;
+    private FutureTask<JsonArray> taskDownloadJsonMostLiked;
     private CompletionService<Skin> skinCompletion;
     
     private GuiButtonExt buttonShowAll;
@@ -47,6 +50,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         skinCompletion = new ExecutorCompletionService<Skin>(((GuiGlobalLibrary)parent).skinDownloadExecutor);
         skinPanelRecentlyUploaded = new GuiControlSkinPanel();
         skinPanelMostDownloaded = new GuiControlSkinPanel();
+        skinPanelMostLiked = new GuiControlSkinPanel();
     }
     
     
@@ -62,24 +66,30 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         int boxW = (width - 15) / 2;
         int boxH = height - 10 - 35;
         skinPanelRecentlyUploaded.init(x + 5, y + 5 + 35, boxW, boxH);
-        skinPanelMostDownloaded.init(x + boxW + 10, y + 5 + 35, boxW, boxH);
+        skinPanelMostDownloaded.init(x + boxW + 10, y + 5 + 35, boxW, boxH / 2 - 10);
+        skinPanelMostLiked.init(x + boxW + 10, y + 5 + 35 + boxH / 2 + 5, boxW, boxH / 2 - 5);
         
         skinPanelRecentlyUploaded.setIconSize(40);
         skinPanelMostDownloaded.setIconSize(40);
+        skinPanelMostLiked.setIconSize(40);
         
         buttonList.add(buttonShowAll);
         buttonList.add(skinPanelRecentlyUploaded);
         buttonList.add(skinPanelMostDownloaded);
+        buttonList.add(skinPanelMostLiked);
     }
     
     public void updateSkinPanels() {
-        int iconCountRecentlyUploaded = (int) Math.ceil((float)skinPanelRecentlyUploaded.getIconCount() / 20) * 20;
-        int iconCountMostDownloaded = (int) Math.ceil((float)skinPanelMostDownloaded.getIconCount() / 20) * 20;
+        int iconCountRecentlyUploaded = skinPanelRecentlyUploaded.getIconCount();
+        int iconCountMostDownloaded = skinPanelMostDownloaded.getIconCount();
+        int iconCountMostLiked = skinPanelMostLiked.getIconCount();
         taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
         taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_DOWNLOADED_URL + "?limit=" + iconCountMostDownloaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
+        taskDownloadJsonMostLiked = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_LIKED_URL + "?limit=" + iconCountMostLiked + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
         
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonRecentlyUploaded);
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonMostDownloaded);
+        ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonMostLiked);
     }
     
     @Override
@@ -118,6 +128,23 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             }
         }
         
+        if (taskDownloadJsonMostLiked != null && taskDownloadJsonMostLiked.isDone()) {
+            try {
+                JsonArray jsonArray = taskDownloadJsonMostLiked.get();
+                skinPanelMostLiked.clearIcons();
+                if (jsonArray != null) {
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
+                        skinPanelMostLiked.addIcon(skinJson);
+                    }
+                    SkinDownloader.downloadSkins(skinCompletion, jsonArray);
+                }
+                taskDownloadJsonMostLiked = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
         Future<Skin> futureSkin = skinCompletion.poll();
         if (futureSkin != null) {
             try {
@@ -145,7 +172,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
             ((GuiGlobalLibrary)parent).panelSearchResults.doSearch("");
         }
-        if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded) {
+        if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded | button == skinPanelMostLiked) {
             SkinIcon skinIcon = ((GuiControlSkinPanel)button).getLastPressedSkinIcon();
             if (skinIcon != null) {
                 ((GuiGlobalLibrary)parent).panelSkinInfo.displaySkinInfo(skinIcon.getSkinJson(), Screen.HOME);
@@ -164,10 +191,13 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         String labelRecentlyUploaded = GuiHelper.getLocalizedControlName(guiName, "home.recentlyUploaded");
         String labelMostDownloaded = GuiHelper.getLocalizedControlName(guiName, "home.mostDownloaded");
+        String labelMostLikes = GuiHelper.getLocalizedControlName(guiName, "home.mostLikes");
         
         int boxW = (width - 15) / 2;
+        int boxH = height - 10 - 35;
         
         fontRenderer.drawString(labelRecentlyUploaded, x + 5, y + 30, 0xFFEEEEEE);
         fontRenderer.drawString(labelMostDownloaded, x + boxW + 10, y + 30, 0xFFEEEEEE);
+        fontRenderer.drawString(labelMostLikes, x + boxW + 10, y + 30 + boxH / 2 + 5, 0xFFEEEEEE);
     }
 }

@@ -11,6 +11,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import riskyken.armourersWorkshop.utils.ModLogger;
+
 public final class DownloadUtils {
     
     private DownloadUtils() {
@@ -55,6 +57,7 @@ public final class DownloadUtils {
         try {
             json = (JsonObject) new JsonParser().parse(data);
         } catch (Exception e) {
+            ModLogger.log(data);
             e.printStackTrace();
             return null;
         }
