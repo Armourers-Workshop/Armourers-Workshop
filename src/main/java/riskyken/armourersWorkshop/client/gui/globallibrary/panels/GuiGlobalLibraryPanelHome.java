@@ -1,7 +1,5 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
@@ -31,9 +29,9 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelHome extends GuiPanel {
     
-    private static final String RECENTLY_UPLOADED_URL = "http://plushie.moe/armourers_workshop/recently-uploaded.php";
-    private static final String MOST_DOWNLOADED_URL = "http://plushie.moe/armourers_workshop/most-downloaded.php";
-    private static final String SEARCH_URL = "http://plushie.moe/armourers_workshop/skin-search.php";
+    private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
+    private static final String RECENTLY_UPLOADED_URL = BASE_URL + "recently-uploaded.php";
+    private static final String MOST_DOWNLOADED_URL = BASE_URL + "most-downloaded.php";
     
     private final GuiControlSkinPanel skinPanelRecentlyUploaded;
     private final GuiControlSkinPanel skinPanelMostDownloaded;
@@ -143,15 +141,9 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == buttonShowAll) {
-            try {
-                String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode("", "UTF-8") + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
-                FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
-                ((GuiGlobalLibrary)parent).panelSearchResults.setDownloadSearchResultsTask(futureTask);
-                ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(futureTask);
-                ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            ((GuiGlobalLibrary)parent).panelSearchResults.clearResults();
+            ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
+            ((GuiGlobalLibrary)parent).panelSearchResults.doSearch("");
         }
         if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded) {
             SkinIcon skinIcon = ((GuiControlSkinPanel)button).getLastPressedSkinIcon();

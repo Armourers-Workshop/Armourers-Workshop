@@ -1,11 +1,9 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import java.io.File;
-import java.util.concurrent.FutureTask;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
@@ -88,10 +86,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                 int userId = skinJson.get("user_id").getAsInt();
                 PlushieUser plushieUser = GlobalSkinLibraryUtils.getUserInfo(userId);
                 if (plushieUser != null) {
-                    GuiGlobalLibrary guiGlobalLibrary = (GuiGlobalLibrary) parent;
-                    FutureTask<JsonArray> taskJson = GlobalSkinLibraryUtils.getUserSkinsList(guiGlobalLibrary.jsonDownloadExecutor, userId);
-                    guiGlobalLibrary.panelUserSkins.setDownloadResultsTask(taskJson, userId);
+                    ((GuiGlobalLibrary)parent).panelUserSkins.clearResults();
                     ((GuiGlobalLibrary)parent).switchScreen(Screen.USER_SKINS);
+                    ((GuiGlobalLibrary)parent).panelUserSkins.switchToUser(userId);
                 }
             }
         }

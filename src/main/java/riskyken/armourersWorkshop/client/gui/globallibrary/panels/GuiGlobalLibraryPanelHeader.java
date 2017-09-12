@@ -1,8 +1,5 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
-import java.util.concurrent.FutureTask;
-
-import com.google.gson.JsonArray;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
@@ -17,7 +14,6 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.library.global.GlobalSkinLibraryUtils;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
 
@@ -92,9 +88,10 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         if (button == iconButtonMyFiles) {
             GuiGlobalLibrary guiGlobalLibrary = (GuiGlobalLibrary) parent;
             int serverId = PlushieAuth.PLUSHIE_SESSION.getServerId();
-            FutureTask<JsonArray> taskJson = GlobalSkinLibraryUtils.getUserSkinsList(guiGlobalLibrary.jsonDownloadExecutor, serverId);
-            guiGlobalLibrary.panelUserSkins.setDownloadResultsTask(taskJson, serverId);
+            ((GuiGlobalLibrary)parent).panelUserSkins.clearResults();
             ((GuiGlobalLibrary)parent).switchScreen(Screen.USER_SKINS);
+            ((GuiGlobalLibrary)parent).panelUserSkins.switchToUser(serverId);
+            
         }
         if (button == iconButtonUploadSkin) {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.UPLOAD);

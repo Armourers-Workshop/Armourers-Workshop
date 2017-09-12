@@ -1,11 +1,5 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.concurrent.FutureTask;
-
-import com.google.gson.JsonArray;
-
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,13 +9,9 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
-import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
-    
-    private static final String SEARCH_URL = "http://plushie.moe/armourers_workshop/skin-search.php";
     
     private GuiLabeledTextField searchTextbox;
     
@@ -71,15 +61,9 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     }
     
     private void doSearch() {
-        try {
-            String searchUrl = SEARCH_URL + "?search=" + URLEncoder.encode(searchTextbox.getText(), "UTF-8") + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
-            FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
-            ((GuiGlobalLibrary)parent).panelSearchResults.setDownloadSearchResultsTask(futureTask);
-            ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(futureTask);
-            ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        ((GuiGlobalLibrary)parent).panelSearchResults.clearResults();
+        ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
+        ((GuiGlobalLibrary)parent).panelSearchResults.doSearch(searchTextbox.getText());
     }
     
     @Override
