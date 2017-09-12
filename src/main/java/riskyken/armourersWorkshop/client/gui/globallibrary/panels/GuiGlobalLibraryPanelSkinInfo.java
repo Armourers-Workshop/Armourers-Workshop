@@ -143,20 +143,22 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
         drawString(fontRenderer, "Skin Info", boxX + 5, boxY + 5, 0xFFEEEEEE);
         if (skinJson != null) {
-            int yOffset = 12;
+            int yOffset = 12 + 6;
             //drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             //yOffset += 12;
-            drawString(fontRenderer, "name: " + skinJson.get("name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+            drawString(fontRenderer, "name;", boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             yOffset += 12;
+            drawString(fontRenderer, skinJson.get("name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+            yOffset += 12 + 6;
             //drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             //yOffset += 12;
             if (skinJson.has("downloads")) {
                 drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12;
+                yOffset += 12 + 6;
             }
-            if (skinJson.has("description")) {
-                drawString(fontRenderer, "description: " + skinJson.get("description").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12;
+            if (skinJson.has("likes")) {
+                drawString(fontRenderer, "likes: " + skinJson.get("likes").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12 + 6;
             }
             /*
             if (skinJson.has("user_id")) {
@@ -165,12 +167,22 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             }
             */
             if (skin != null) {
-                drawString(fontRenderer, "author name: " + skin.getAuthorName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, "author name:" , boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
+                drawString(fontRenderer, skin.getAuthorName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12 + 6;
                 if (!StringUtils.isNullOrEmpty(skin.getCustomName())) {
-                    drawString(fontRenderer, "custom name: " + skin.getCustomName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                    drawString(fontRenderer, "custom name:", boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                     yOffset += 12;
+                    drawString(fontRenderer, skin.getCustomName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                    yOffset += 12 + 6;
                 }
+            }
+            if (skinJson.has("description")) {
+                drawString(fontRenderer, "description:", boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                yOffset += 12;
+                fontRenderer.drawSplitString(skinJson.get("description").getAsString(), boxX + 5, boxY + 5 + yOffset, boxWidth - 10, 0xFFEEEEEE);
+                yOffset += 12;
             }
         }
     }
