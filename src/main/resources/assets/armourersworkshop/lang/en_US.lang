@@ -402,6 +402,8 @@ inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=Sear
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Back
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Skin
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.editSkin=Edit Skin
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.like=Like
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.unlike=Unlike
 
 # Global Skin Library (Upload)
 inventory.armourersworkshop:globalSkinLibrary.upload.name=Upload Skin

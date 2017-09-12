@@ -1,10 +1,13 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import java.io.File;
+import java.util.concurrent.FutureTask;
 
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
@@ -12,33 +15,53 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
+import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
+import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
 import riskyken.armourersWorkshop.common.library.global.GlobalSkinLibraryUtils;
 import riskyken.armourersWorkshop.common.library.global.PlushieUser;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
+import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
-
+    
+    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/globalLibrary.png");
+    private static final String BASE_URL = "https://plushie.moe/armourers_workshop/";
+    private static final String SKIN_ACTION_URL = BASE_URL + "user-skin-action.php";
+    
     private GuiButtonExt buttonBack;
     private GuiButtonExt buttonDownload;
     private GuiButtonExt buttonUserSkins;
     private GuiButtonExt buttonEditSkin;
+    
+    private GuiIconButton buttonLikeSkin;
+    private GuiIconButton buttonUnlikeSkin;
+    
     private JsonObject skinJson = null;
     private Screen returnScreen;
+    
+    private boolean doneLikeCheck = false;
+    private boolean haveLiked = false;
+    
+    private FutureTask<JsonObject> taskCheckIfLiked;
+    private FutureTask<JsonObject> taskDoLiked;
     
     public GuiGlobalLibraryPanelSkinInfo(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -55,10 +78,19 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonUserSkins = new GuiButtonExt(0, x + 6, y + 6, 26, 26, "");
         buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.editSkin"));
         
+        buttonLikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.like"), BUTTON_TEXTURES);
+        buttonLikeSkin.setIconLocation(68, 0, 16, 16);
+        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.unlike"), BUTTON_TEXTURES);
+        buttonUnlikeSkin.setIconLocation(68, 17, 16, 16);
+        
+        updateLikeButtons();
+        
         buttonList.add(buttonBack);
         buttonList.add(buttonDownload);
         buttonList.add(buttonUserSkins);
         buttonList.add(buttonEditSkin);
+        buttonList.add(buttonLikeSkin);
+        buttonList.add(buttonUnlikeSkin);
     }
     
     @Override
@@ -67,6 +99,58 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             if (skinJson != null && skinJson.has("user_id")) {
                 buttonEditSkin.visible = skinJson.get("user_id").getAsInt() == PlushieAuth.PLUSHIE_SESSION.getServerId();
             }
+        }
+        if (taskCheckIfLiked != null && taskCheckIfLiked.isDone()) {
+            try {
+                JsonObject json = taskCheckIfLiked.get();
+                ModLogger.log("taskCheckIfLiked: " + json);
+                if (json != null) {
+                    if (json.has("isLiked")) {
+                        haveLiked = json.get("isLiked").getAsBoolean();
+                        doneLikeCheck = true;
+                        updateLikeButtons();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            taskCheckIfLiked = null;
+        }
+        
+        if (taskDoLiked != null && taskDoLiked.isDone()) {
+            try {
+                JsonObject json = taskDoLiked.get();
+                ModLogger.log("taskDoLiked: " + json);
+                if (json != null) {
+                    if (json.has("valid") && json.get("valid").getAsBoolean()) {
+                        if (skinJson != null) {
+                            if (skinJson.has("likes")) {
+                                if (haveLiked) {
+                                    skinJson.addProperty("likes", skinJson.get("likes").getAsInt() - 1);
+                                } else {
+                                    skinJson.addProperty("likes", skinJson.get("likes").getAsInt() + 1);
+                                }
+                            }
+                        }
+                        haveLiked = !haveLiked;
+                        updateLikeButtons();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            taskDoLiked = null;
+        }
+    }
+    
+    private void updateLikeButtons() {
+        buttonLikeSkin.visible = false;
+        buttonUnlikeSkin.visible = false;
+        buttonLikeSkin.enabled = true;
+        buttonUnlikeSkin.enabled = true;
+        if (doneLikeCheck) {
+            buttonLikeSkin.visible = !haveLiked;
+            buttonUnlikeSkin.visible = haveLiked;
         }
     }
     
@@ -97,6 +181,76 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                 ((GuiGlobalLibrary)parent).panelSkinEdit.displaySkinInfo(skinJson, returnScreen);
             }
         }
+        if (button == buttonLikeSkin) {
+            setSkinLike(true);
+            buttonLikeSkin.enabled = false;
+        }
+        if (button == buttonUnlikeSkin) {
+            setSkinLike(false);
+            buttonUnlikeSkin.enabled = false;
+        }
+    }
+    
+    public void displaySkinInfo(JsonObject jsonObject, Screen returnScreen) {
+        skinJson = jsonObject;
+        ((GuiGlobalLibrary)parent).switchScreen(Screen.SKIN_INFO);
+        this.returnScreen = returnScreen;
+        
+        doneLikeCheck = false;
+        if (PlushieAuth.isRemoteUser() & skinJson != null) {
+            checkIfLiked();
+        }
+    }
+    
+    private void checkIfLiked() {
+        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
+        GuiGlobalLibrary globalLibrary = (GuiGlobalLibrary) parent;
+        int userId = plushieSession.getServerId();
+        String accessToken = "";
+        int skinId = skinJson.get("id").getAsInt();
+        String url = SKIN_ACTION_URL;
+        url += "?userId=" + String.valueOf(userId);
+        url += "&accessToken=" + accessToken;
+        url += "&action=hasLike";
+        url += "&skinId=" + String.valueOf(skinId);
+        taskCheckIfLiked = new FutureTask<JsonObject>(new DownloadJsonObjectCallable(url));
+        ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskCheckIfLiked);
+    }
+    
+    private void setSkinLike(boolean like) {
+        if (authenticateUser()) {
+            PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
+            GuiGlobalLibrary globalLibrary = (GuiGlobalLibrary) parent;
+            int userId = plushieSession.getServerId();
+            String accessToken = plushieSession.getAccessToken();
+            int skinId = skinJson.get("id").getAsInt();
+            String url = "https://plushie.moe/armourers_workshop/user-skin-action.php";
+            url += "?userId=" + String.valueOf(userId);
+            url += "&accessToken=" + accessToken;
+            if (like) {
+                url += "&action=like";
+            } else {
+                url += "&action=unlike";
+            }
+            url += "&skinId=" + String.valueOf(skinId);
+            taskDoLiked = new FutureTask<JsonObject>(new DownloadJsonObjectCallable(url));
+            ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDoLiked);
+        }
+    }
+    
+    private boolean authenticateUser () {
+        GameProfile gameProfile = mc.thePlayer.getGameProfile();
+        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
+        if (!plushieSession.isAuthenticated()) {
+            JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
+            plushieSession.authenticate(jsonObject);
+        }
+        
+        if (!plushieSession.isAuthenticated()) {
+            ModLogger.log(Level.ERROR, "Authentication failed.");
+            return false;
+        }
+        return true;
     }
     
     @Override
@@ -209,12 +363,6 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
-    }
-    
-    public void displaySkinInfo(JsonObject jsonObject, Screen returnScreen) {
-        skinJson = jsonObject;
-        ((GuiGlobalLibrary)parent).switchScreen(Screen.SKIN_INFO);
-        this.returnScreen = returnScreen;
     }
     
     private static class DownloadSkin implements Runnable {
