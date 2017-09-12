@@ -81,6 +81,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     protected void actionPerformed(GuiButton button) {
         if (button == iconButtonHome) {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
+            ((GuiGlobalLibrary)parent).panelHome.updateSkinPanels();
         }
         if (button == iconButtonFavourites) {
             ((GuiGlobalLibrary)parent).switchScreen(Screen.FAVOURITES);
