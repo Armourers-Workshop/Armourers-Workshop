@@ -1,14 +1,35 @@
-Build 0.46.1
+Build 0.47.0
 Added:
-	Added beta access for skin uploading.
+	Added beta access for global library skin uploading.
+		Likes system.
+		Skin edit and delete options.
+		Most liked skins to the home screen.
+		Allowed setting the skins description.
+	Added skin update option to the admin panel.
 Fixed:
 	Fixed crash when CNPCS tries to access a blocks camera collision.
 	Fixed overflow if skin panel is too small to show any skins.
+	Global library panels sometimes not updating when the window is resized.
+	Fixed text overflow in the skin upload GUI.
+	Fixed skin recovery not adding file extensions.
+	Added missing localisations to the skin info panel.
+	Fixed text layout in the skin info box.
+	Fixed some characters not being allowed in file names.
 Changed:
+	Show the skin uploaders Minecraft face in the global library skin info panel.
+	Allowed players upload skins to be listed in the global library.
+	Show message if the users java version is too old for the global library.
 	Removed meta data from skinning table textures.
+	Global library skin info panel layout.
+	Updated skin file version.
+	Improved skin loading code to help load corrupted skins.
+	Made global library skin results paged.
+	Update global library home screen when returning to it.
+	Update ru_RU lang file. ([\\//972])
 Art:
 	Updated global library GUI icons. (Ethan)
 	Updated skinning table textures. (Thundercat_)
+	Updated global library like icons. (Ethan)
 
 
 Build 0.46.0
