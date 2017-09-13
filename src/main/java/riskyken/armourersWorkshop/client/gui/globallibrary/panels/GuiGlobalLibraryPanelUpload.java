@@ -44,7 +44,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     private final String guiName;
     private GuiLabeledTextField textName;
     private GuiLabeledTextField textTags;
-    //private GuiLabeledTextField textDescription;
+    private GuiLabeledTextField textDescription;
     private GuiButtonExt buttonUpload;
     
     private FutureTask<JsonObject> taskSkinUpload;
@@ -60,14 +60,16 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         buttonList.clear();
         textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 120, 12);
         textName.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterName"));
+        textName.setMaxStringLength(80);
         
         textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 120, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
         
-        //textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12 * 7);
-        //textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
+        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12);
+        textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
+        textDescription.setMaxStringLength(255);
         
-        buttonUpload = new GuiButtonExt(0, x + 5, y + 85, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
+        buttonUpload = new GuiButtonExt(0, x + 5, y + 110, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
         buttonUpload.enabled = false;
         
         buttonList.add(buttonUpload);
@@ -86,8 +88,8 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     
     private void updatePlayerSlots() {
         ((GuiGlobalLibrary)parent).setPlayerSlotLocation(x + width / 2 - 18 * 9 / 2, y + height - 81);
-        ((GuiGlobalLibrary)parent).setInputSlotLocation(x + 6, y + 115);
-        ((GuiGlobalLibrary)parent).setOutputSlotLocation(x + 83, y + 115);
+        ((GuiGlobalLibrary)parent).setInputSlotLocation(x + 6, y + 140);
+        ((GuiGlobalLibrary)parent).setOutputSlotLocation(x + 83, y + 140);
     }
     
     @Override
@@ -101,9 +103,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         if (textTags.textboxKeyTyped(c, keycode)) {
             return true;
         }
-        //if (textDescription.textboxKeyTyped(c, keycode)) {
-        //    return true;
-        //}
+        if (textDescription.textboxKeyTyped(c, keycode)) {
+            return true;
+        }
         return false;
     }
     
@@ -115,7 +117,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         super.mouseClicked(mouseX, mouseY, button);
         textName.mouseClicked(mouseX, mouseY, button);
         textTags.mouseClicked(mouseX, mouseY, button);
-        //textDescription.mouseClicked(mouseX, mouseY, button);
+        textDescription.mouseClicked(mouseX, mouseY, button);
         if (button == 1) {
             if (textName.isFocused()) {
                 textName.setText("");
@@ -123,9 +125,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
             if (textTags.isFocused()) {
                 textTags.setText("");
             }
-            //if (textDescription.isFocused()) {
-            //    textDescription.setText("");
-            //}
+            if (textDescription.isFocused()) {
+                textDescription.setText("");
+            }
         }
     }
     
@@ -192,7 +194,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         SkinIOUtils.saveSkinToStream(outputStream, skin);
         byte[] fileBytes = outputStream.toByteArray();
         IOUtils.closeQuietly(outputStream);
-        taskSkinUpload = SkinUploader.uploadSkin(fileBytes, textName.getText(), Integer.toString(plushieSession.getServerId()), "", plushieSession.getAccessToken());
+        taskSkinUpload = SkinUploader.uploadSkin(fileBytes, textName.getText().trim(), Integer.toString(plushieSession.getServerId()), textDescription.getText().trim(), plushieSession.getAccessToken());
     }
     
     @Override
@@ -205,9 +207,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         //inv
         drawTexturedModalRect(x + width / 2 - 162 / 2 - 1, y + height - 82, 0, 180, 162, 76);
         //input
-        drawTexturedModalRect(x + 5, y + 114, 0, 162, 18, 18);
+        drawTexturedModalRect(x + 5, y + 139, 0, 162, 18, 18);
         //output
-        drawTexturedModalRect(x + 78, y + 110, 18, 154, 26, 26);
+        drawTexturedModalRect(x + 78, y + 135, 18, 154, 26, 26);
         
         super.draw(mouseX, mouseY, partialTickTime);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "name"), x + 5, y + 5, 0xFFFFFF);
@@ -218,8 +220,8 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinTags"), x + 5, y + 55, 0xFFFFFF);
         textTags.drawTextBox();
         
-        //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
-        //textDescription.drawTextBox();
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
+        textDescription.drawTextBox();
         
         fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 135, y + 35, width - 140, 0xFF8888);
         

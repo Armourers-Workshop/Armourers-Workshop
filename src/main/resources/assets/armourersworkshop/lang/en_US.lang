@@ -418,6 +418,9 @@ inventory.armourersworkshop:globalSkinLibrary.upload.skinName=Skin Name:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterName=Enter name
 inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=Skin Tags:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Enter tags
+inventory.armourersworkshop:globalSkinLibrary.upload.skinDescription=Skin Description:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterDescription=Enter description
+
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Upload Skin
 
 # Global Skin Library (Beta - Will be removed later).
@@ -442,6 +445,8 @@ inventory.armourersworkshop:globalSkinLibrary.edit.skinName=Skin Name:
 inventory.armourersworkshop:globalSkinLibrary.edit.enterName=Enter name
 inventory.armourersworkshop:globalSkinLibrary.edit.skinTags=Skin Tags:
 inventory.armourersworkshop:globalSkinLibrary.edit.enterTags=Enter tags
+inventory.armourersworkshop:globalSkinLibrary.edit.skinDescription=Skin Description:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterDescription=Enter description
 inventory.armourersworkshop:globalSkinLibrary.edit.buttonUpdate=Update Skin
 inventory.armourersworkshop:globalSkinLibrary.edit.buttonDelete=Delete Skin
 inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.title=Delete Skin

@@ -12,6 +12,7 @@ import cpw.mods.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.DialogResult;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.IDialogCallback;
@@ -35,7 +36,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     private final String guiName;
     private GuiLabeledTextField textName;
     private GuiLabeledTextField textTags;
-    //private GuiLabeledTextField textDescription;
+    private GuiLabeledTextField textDescription;
     private GuiButtonExt buttonUpdate;
     private GuiButtonExt buttonDelete;
     private FutureTask<JsonObject> taskSkinEdit;
@@ -54,18 +55,25 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         buttonList.clear();
         textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 120, 12);
         textName.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterName"));
-        if (skinJson != null) {
-            if (skinJson.has("name")) {
-                textName.setText(skinJson.get("name").getAsString());
-            }
-        }
-        
+        textName.setMaxStringLength(80);
         
         textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 120, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
         
-        //textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12 * 7);
-        //textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
+        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12);
+        textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
+        textDescription.setMaxStringLength(255);
+        
+        if (skinJson != null) {
+            if (skinJson.has("name")) {
+                textName.setText(skinJson.get("name").getAsString());
+            }
+            
+            if (skinJson.has("description")) {
+                textDescription.setText(skinJson.get("description").getAsString());
+            }
+        }
+        
         
         buttonUpdate = new GuiButtonExt(0, x + 5, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpdate"));
         buttonDelete = new GuiButtonExt(0, x + width - 105, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonDelete"));
@@ -85,9 +93,9 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         if (textTags.textboxKeyTyped(c, keycode)) {
             return true;
         }
-        //if (textDescription.textboxKeyTyped(c, keycode)) {
-        //    return true;
-        //}
+        if (textDescription.textboxKeyTyped(c, keycode)) {
+            return true;
+        }
         return false;
     }
     
@@ -99,7 +107,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         super.mouseClicked(mouseX, mouseY, button);
         textName.mouseClicked(mouseX, mouseY, button);
         textTags.mouseClicked(mouseX, mouseY, button);
-        //textDescription.mouseClicked(mouseX, mouseY, button);
+        textDescription.mouseClicked(mouseX, mouseY, button);
         if (button == 1) {
             if (textName.isFocused()) {
                 textName.setText("");
@@ -107,15 +115,19 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
             if (textTags.isFocused()) {
                 textTags.setText("");
             }
-            //if (textDescription.isFocused()) {
-            //    textDescription.setText("");
-            //}
+            if (textDescription.isFocused()) {
+                textDescription.setText("");
+            }
         }
     }
     
     @Override
     public void update() {
         super.update();
+        buttonUpdate.enabled = false;
+        if (!StringUtils.isNullOrEmpty(textName.getText())) {
+            buttonUpdate.enabled = true;
+        }
         firstTick = false;
         if (taskSkinEdit != null && taskSkinEdit.isDone()) {
             try {
@@ -195,8 +207,8 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         int userId = plushieSession.getServerId();
         String accessToken = plushieSession.getAccessToken();
         int skinId = skinJson.get("id").getAsInt();
-        String name = textName.getText();
-        String description = "";
+        String name = textName.getText().trim();
+        String description = textDescription.getText().trim();
         taskSkinEdit = GlobalSkinLibraryUtils.editSkin(globalLibrary.uploadExecutor, userId, accessToken, skinId, name, description);
     }
     
@@ -225,8 +237,8 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinTags"), x + 5, y + 55, 0xFFFFFF);
         textTags.drawTextBox();
         
-        //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
-        //textDescription.drawTextBox();
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
+        textDescription.drawTextBox();
         
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {

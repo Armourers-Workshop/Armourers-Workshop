@@ -79,9 +79,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonUserSkins = new GuiButtonExt(0, x + 6, y + 6, 26, 26, "");
         buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
         
-        buttonLikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
+        buttonLikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
         buttonLikeSkin.setIconLocation(68, 0, 16, 16);
-        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
+        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
         buttonUnlikeSkin.setIconLocation(68, 17, 16, 16);
         
         updateLikeButtons();
@@ -273,9 +273,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         }
         
         super.draw(mouseX, mouseY, partialTickTime);
-        drawUserbox(x + 5, y + 5, 160, 30, mouseX, mouseY, partialTickTime);
-        drawSkinInfo(skin, x + 5, y + 20 + 20, 160, height - 70, mouseX, mouseY, partialTickTime);
-        drawPreviewBox(skin, x + 170, y + 5, width - 175, height - 35, mouseX, mouseY, partialTickTime);
+        drawUserbox(x + 5, y + 5, 185, 30, mouseX, mouseY, partialTickTime);
+        drawSkinInfo(skin, x + 5, y + 20 + 20, 185, height - 70, mouseX, mouseY, partialTickTime);
+        drawPreviewBox(skin, x + 195, y + 5, width - 200, height - 35, mouseX, mouseY, partialTickTime);
     }
     
     public void drawUserbox(int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
