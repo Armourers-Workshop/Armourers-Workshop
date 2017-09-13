@@ -379,6 +379,7 @@ inventory.armourersworkshop:globalSkinLibrary.header.home=Домой
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=Избранное
 inventory.armourersworkshop:globalSkinLibrary.header.friends=Друзья
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Опубликовать скин
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkinBan=Вы лишены возможности загружать скины!
 inventory.armourersworkshop:globalSkinLibrary.header.joinBeta=Стать Бэта-тестировщиком
 
 # Global Skin Library (Search Box)
@@ -423,7 +424,7 @@ inventory.armourersworkshop:globalSkinLibrary.upload.enterDescription=Введи
 
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Загрузить скин
 
-# Global Skin Library (Beta - Will be removed later). //А я вот осталю на память! с:
+# Global Skin Library (Beta - Will be removed later). //А вот я осталю на память! с:
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.name=Стать Бэта-тестировщиком
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.enterBetaCode=Ввести ключ доступа
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=Фича загрузки скинов находится на стадии ЗБТ. Для получения доступа требуется ключ.
