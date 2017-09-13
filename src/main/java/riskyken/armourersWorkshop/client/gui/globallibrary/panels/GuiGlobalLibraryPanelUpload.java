@@ -48,6 +48,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     private GuiButtonExt buttonUpload;
     
     private FutureTask<JsonObject> taskSkinUpload;
+    private String error = null;
     
     public GuiGlobalLibraryPanelUpload(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -154,7 +155,10 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
                             ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
                         }
                     } else {
-                        // TODO handle upload failure
+                        if (json.has("reason")) {
+                            String reason = json.get("reason").getAsString();
+                            error = reason;
+                        }
                     }
                 } else {
                     // TODO handle upload failure
@@ -224,6 +228,10 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         textDescription.drawTextBox();
         
         fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 135, y + 35, width - 140, 0xFF8888);
+        
+        if (!StringUtils.isNullOrEmpty(error)) {
+            fontRenderer.drawSplitString("Error: " + error, x + 135, y + 85, width - 140, 0xFF8888);
+        }
         
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
