@@ -62,8 +62,9 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel {
     
     private void doSearch() {
         ((GuiGlobalLibrary)parent).panelSearchResults.clearResults();
+        String search = searchTextbox.getText();
         ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
-        ((GuiGlobalLibrary)parent).panelSearchResults.doSearch(searchTextbox.getText());
+        ((GuiGlobalLibrary)parent).panelSearchResults.doSearch(search);
     }
     
     @Override

@@ -50,7 +50,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     protected static int iconScale = 110;
     
-    protected String search = "";
+    protected String search = null;
     protected JsonArray[] pageList;
     protected HashSet<Integer> downloadedPageList;
     protected JsonArray jsonCurrentPage;
@@ -70,11 +70,14 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     public void doSearch(String search) {
         clearResults();
         this.search = search;
+        if (this.search == null) {
+            return;
+        }
         fetchPage(0);
     }
     
     public void clearResults() {
-        search = "";
+        search = null;
         pageList = null;
         jsonCurrentPage = null;
         currentPageIndex = 0;
