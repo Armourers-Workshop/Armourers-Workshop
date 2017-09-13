@@ -116,7 +116,6 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             }
             taskCheckIfLiked = null;
         }
-        
         if (taskDoLiked != null && taskDoLiked.isDone()) {
             try {
                 JsonObject json = taskDoLiked.get();

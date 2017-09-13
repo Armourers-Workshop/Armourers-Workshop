@@ -81,6 +81,10 @@ public class GuiIconButton extends GuiButtonExt {
     }
     
     public void drawRollover(Minecraft mc, int mouseX, int mouseY) {
+        if (!this.visible) {
+            return;
+        }
+        this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
         int hoverState = this.getHoverState(this.field_146123_n);
         if (hoverState == 0 & this.field_146123_n) {
             if (!StringUtils.isNullOrEmpty(disableText)) {
