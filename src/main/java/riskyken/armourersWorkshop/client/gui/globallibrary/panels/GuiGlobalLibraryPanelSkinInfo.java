@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
+import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
@@ -50,9 +50,10 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     private GuiButtonExt buttonDownload;
     private GuiButtonExt buttonUserSkins;
     private GuiButtonExt buttonEditSkin;
-    
     private GuiIconButton buttonLikeSkin;
     private GuiIconButton buttonUnlikeSkin;
+    
+    private final String guiName;
     
     private JsonObject skinJson = null;
     private Screen returnScreen;
@@ -65,22 +66,22 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     
     public GuiGlobalLibraryPanelSkinInfo(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
+        guiName = ((GuiGlobalLibrary)parent).getGuiName() + ".skinInfo";
     }
     
     @Override
     public void initGui() {
         super.initGui();
-        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
         buttonList.clear();
         int panelCenter = this.x + this.width / 2;
-        buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.back"));
-        buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.downloadSkin"));
+        buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "back"));
+        buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "downloadSkin"));
         buttonUserSkins = new GuiButtonExt(0, x + 6, y + 6, 26, 26, "");
-        buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.editSkin"));
+        buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
         
-        buttonLikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.like"), BUTTON_TEXTURES);
+        buttonLikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
         buttonLikeSkin.setIconLocation(68, 0, 16, 16);
-        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "skinInfo.unlike"), BUTTON_TEXTURES);
+        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 175, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
         buttonUnlikeSkin.setIconLocation(68, 17, 16, 16);
         
         updateLikeButtons();
@@ -279,13 +280,14 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     
     public void drawUserbox(int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
+        String fullName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".";
         PlushieUser user = null;
         if (skinJson != null && skinJson.has("user_id")) {
             int userId = skinJson.get("user_id").getAsInt();
             user = GlobalSkinLibraryUtils.getUserInfo(userId);
         }
         if (user != null) {
-            drawString(fontRenderer, "Uploader: " + user.getUsername(), boxX + 28, boxY + 5, 0xFFEEEEEE);
+            drawString(fontRenderer, StatCollector.translateToLocalFormatted(fullName + "uploader", user.getUsername()), boxX + 28, boxY + 5, 0xFFEEEEEE);
             GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, user.getUsername());
         } else {
             GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, null);
@@ -294,23 +296,26 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     
     public void drawSkinInfo(Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
-        drawString(fontRenderer, "Skin Info", boxX + 5, boxY + 5, 0xFFEEEEEE);
+        
+        String fullName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".";
+        
+        drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "title"), boxX + 5, boxY + 5, 0xFFEEEEEE);
         if (skinJson != null) {
             int yOffset = 12 + 6;
             //drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             //yOffset += 12;
-            drawString(fontRenderer, "name;", boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+            drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "name"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             yOffset += 12;
             drawString(fontRenderer, skinJson.get("name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             yOffset += 12 + 6;
             //drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             //yOffset += 12;
             if (skinJson.has("downloads")) {
-                drawString(fontRenderer, "downloads: " + skinJson.get("downloads").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, StatCollector.translateToLocalFormatted(fullName + "downloads", skinJson.get("downloads").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12 + 6;
             }
             if (skinJson.has("likes")) {
-                drawString(fontRenderer, "likes: " + skinJson.get("likes").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, StatCollector.translateToLocalFormatted(fullName + "likes", skinJson.get("likes").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12 + 6;
             }
             /*
@@ -320,19 +325,21 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             }
             */
             if (skin != null) {
-                drawString(fontRenderer, "author name:" , boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "author"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
                 drawString(fontRenderer, skin.getAuthorName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12 + 6;
+                /*
                 if (!StringUtils.isNullOrEmpty(skin.getCustomName())) {
                     drawString(fontRenderer, "custom name:", boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                     yOffset += 12;
                     drawString(fontRenderer, skin.getCustomName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                     yOffset += 12 + 6;
                 }
+                */
             }
             if (skinJson.has("description")) {
-                drawString(fontRenderer, "description:", boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "description"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
                 fontRenderer.drawSplitString(skinJson.get("description").getAsString(), boxX + 5, boxY + 5 + yOffset, boxWidth - 10, 0xFFEEEEEE);
                 yOffset += 12;

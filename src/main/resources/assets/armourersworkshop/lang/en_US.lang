@@ -404,6 +404,13 @@ inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Download Ski
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.editSkin=Edit Skin
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.like=Like
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.unlike=Unlike
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.uploader=Uploader: %s
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.title=Skin Info
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.name=Name:
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloads=Downloads: %d
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.likes=Likes: %d
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.author=Author:
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.description=Description:
 
 # Global Skin Library (Upload)
 inventory.armourersworkshop:globalSkinLibrary.upload.name=Upload Skin
