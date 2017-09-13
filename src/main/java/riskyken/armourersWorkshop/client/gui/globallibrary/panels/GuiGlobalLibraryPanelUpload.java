@@ -59,14 +59,14 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 120, 12);
+        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 180, 12);
         textName.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterName"));
         textName.setMaxStringLength(80);
         
-        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 120, 12);
+        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 180, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
         
-        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12);
+        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, width - 10, 12);
         textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         textDescription.setMaxStringLength(255);
         
@@ -227,10 +227,10 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         textDescription.drawTextBox();
         
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 135, y + 35, width - 140, 0xFF8888);
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 195, y + 35, width - 200, 0xFF8888);
         
         if (!StringUtils.isNullOrEmpty(error)) {
-            fontRenderer.drawSplitString("Error: " + error, x + 135, y + 85, width - 140, 0xFF8888);
+            fontRenderer.drawSplitString("Error: " + error, x + 195, y + 115, width - 200, 0xFF8888);
         }
         
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();

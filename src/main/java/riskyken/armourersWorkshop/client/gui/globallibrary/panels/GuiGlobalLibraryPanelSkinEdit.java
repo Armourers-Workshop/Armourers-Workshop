@@ -53,14 +53,14 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 120, 12);
+        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 180, 12);
         textName.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterName"));
         textName.setMaxStringLength(80);
         
-        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 120, 12);
+        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 180, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
         
-        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 120, 12);
+        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, width - 10, 12);
         textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         textDescription.setMaxStringLength(255);
         
@@ -73,7 +73,6 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
                 textDescription.setText(skinJson.get("description").getAsString());
             }
         }
-        
         
         buttonUpdate = new GuiButtonExt(0, x + 5, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpdate"));
         buttonDelete = new GuiButtonExt(0, x + width - 105, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonDelete"));
@@ -239,6 +238,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         textDescription.drawTextBox();
+        fontRenderer.drawString(textDescription.getText().length() + " / " + "255", x + 5, y + 115, 0xFFFFFF);
         
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
