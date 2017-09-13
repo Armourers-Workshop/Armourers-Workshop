@@ -44,6 +44,8 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         iconButtonUploadSkin = new GuiIconButton(parent, 3, this.x + this.width - 61, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.uploadSkin"), BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16);
         iconButtonJoinBeta = new GuiIconButton(parent, 4, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.joinBeta"), BUTTON_TEXTURES).setIconLocation(0, 68, 16, 16);
         
+        iconButtonUploadSkin.setDisableText(GuiHelper.getLocalizedControlName(guiName, "header.uploadSkinBan"));
+        
         buttonList.add(iconButtonHome);
         //buttonList.add(iconButtonFavourites);
         buttonList.add(iconButtonMyFiles);
@@ -66,6 +68,10 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         if (session.hasServerId()) {
             iconButtonMyFiles.visible = inBeta;
             iconButtonUploadSkin.visible = inBeta;
+            iconButtonUploadSkin.enabled = true;
+            if (session.getPermission_group_id() == 255) {
+                iconButtonUploadSkin.enabled = false;
+            }
         } else {
             iconButtonMyFiles.visible = false;
             iconButtonUploadSkin.visible = false;

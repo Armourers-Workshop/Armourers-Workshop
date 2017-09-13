@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.library.global.permission.PermissionSystem.Action;
 import riskyken.armourersWorkshop.common.library.global.permission.PermissionSystem.PermissionGroup;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class PlushieSession {
     
@@ -17,6 +18,7 @@ public class PlushieSession {
     private String accessToken;
     private long accessTokenReceivedTime;
     private int accessTokenExpiryTime;
+    private int permission_group_id;
     
     public PlushieSession() {
         this.permissionGroup = ArmourersWorkshop.getProxy().getPermissionSystem().groupNoLogin;
@@ -33,9 +35,9 @@ public class PlushieSession {
                     accessToken = jsonObject.get("accessToken").getAsString();
                     accessTokenReceivedTime = System.currentTimeMillis();
                     accessTokenExpiryTime = jsonObject.get("expiryTime").getAsInt();
+                    permission_group_id = jsonObject.get("permission_group_id").getAsInt();
                     isAuth = true;
                     return true;
- 
                 }
             }
         }
@@ -45,6 +47,15 @@ public class PlushieSession {
     
     public int getServerId() {
         return server_id;
+    }
+    
+    public void setPermission_group_id(int permission_group_id) {
+        ModLogger.log("permission_group_id: " + permission_group_id);
+        this.permission_group_id = permission_group_id;
+    }
+    
+    public int getPermission_group_id() {
+        return permission_group_id;
     }
     
     public void setServerId(int serverId) {

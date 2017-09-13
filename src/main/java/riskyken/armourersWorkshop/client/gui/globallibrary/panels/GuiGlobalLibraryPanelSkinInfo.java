@@ -80,9 +80,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
         
         buttonLikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
-        buttonLikeSkin.setIconLocation(68, 0, 16, 16);
+        buttonLikeSkin.setIconLocation(102, 0, 16, 16);
         buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
-        buttonUnlikeSkin.setIconLocation(68, 17, 16, 16);
+        buttonUnlikeSkin.setIconLocation(102, 17, 16, 16);
         
         updateLikeButtons();
         

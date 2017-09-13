@@ -62,6 +62,9 @@ public class PlushieAuth {
                             int serverId = jsonObject.get("id").getAsInt();
                             PLUSHIE_SESSION.setServerId(serverId);
                         }
+                        if (jsonObject.has("permission_group_id")) {
+                            PLUSHIE_SESSION.setPermission_group_id(jsonObject.get("permission_group_id").getAsInt());
+                        }
                         isRemoteUser = true;
                     }
                 }

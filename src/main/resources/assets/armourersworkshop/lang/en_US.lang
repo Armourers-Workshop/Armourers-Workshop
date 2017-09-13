@@ -379,6 +379,7 @@ inventory.armourersworkshop:globalSkinLibrary.header.home=Home
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=Favourites
 inventory.armourersworkshop:globalSkinLibrary.header.myFiles=My Files
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Upload Skin
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkinBan=You are banned from upload skins
 inventory.armourersworkshop:globalSkinLibrary.header.joinBeta=Join Beta
 
 # Global Skin Library (Search Box)

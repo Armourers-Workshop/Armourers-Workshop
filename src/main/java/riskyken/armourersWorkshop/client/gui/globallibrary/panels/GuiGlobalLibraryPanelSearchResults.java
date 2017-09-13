@@ -195,13 +195,13 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         skinPanelResults.setShowName(true);
         
         iconButtonSmall = new GuiIconButton(parent, 0, x + width - 21 * 3, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.small"), BUTTON_TEXTURES);
-        iconButtonSmall.setIconLocation(34, 0, 16, 16);
+        iconButtonSmall.setIconLocation(51, 0, 16, 16);
         
         iconButtonMedium = new GuiIconButton(parent, 0, x + width - 21 * 2, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.medium"), BUTTON_TEXTURES);
-        iconButtonMedium.setIconLocation(34, 17, 16, 16);
+        iconButtonMedium.setIconLocation(51, 17, 16, 16);
         
         iconButtonLarge = new GuiIconButton(parent, 0, x + width - 21, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.large"), BUTTON_TEXTURES);
-        iconButtonLarge.setIconLocation(34, 34, 16, 16);
+        iconButtonLarge.setIconLocation(51, 34, 16, 16);
         
         buttonList.add(iconButtonSmall);
         buttonList.add(iconButtonMedium);
