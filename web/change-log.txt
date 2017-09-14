@@ -1,3 +1,10 @@
+Build 0.47.1
+Fixed:
+	Fixed the invalid Java version error not showing if an older version of java 8 is installed.
+Changed:
+	Update zh_CN lang file. (Ethan)
+
+
 Build 0.47.0
 Added:
 	Added beta access for global library skin uploading.
