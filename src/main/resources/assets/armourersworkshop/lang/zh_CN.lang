@@ -340,6 +340,7 @@ inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=显示/隐藏鞋�
 inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=显示/隐藏头部双层皮肤
 inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=限制抬腿幅度
 
+# Mannequin
 inventory.armourersworkshop:mannequin.label.headRotation=转动头部
 inventory.armourersworkshop:mannequin.label.leftArmRotation=转动左臂
 inventory.armourersworkshop:mannequin.label.rightArmRotation=转动右臂
@@ -365,38 +366,65 @@ inventory.armourersworkshop:mannequin.tab.skinAndHair=皮肤 & 头发 颜色
 inventory.armourersworkshop:mannequin.tab.name=名字
 inventory.armourersworkshop:mannequin.tab.extraRenders=其他
 
+# Mini Armourer
 inventory.armourersworkshop:miniArmourer.save=保存
 inventory.armourersworkshop:miniArmourer.load=读取
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=潜行右键迷你工坊来访问.
 
+# Global Skin Library
+inventory.armourersworkshop:globalSkinLibrary.invalidJava=[Java %d Update %d] 版本过低. 请更新至 [Java 8 Update 101] 或最新.
+
+# Global Skin Library (Header)
 inventory.armourersworkshop:globalSkinLibrary.header.home=主页
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=喜欢
 inventory.armourersworkshop:globalSkinLibrary.header.friends=好友
 inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=上传时装
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkinBan=你被加入了上传黑名单
 inventory.armourersworkshop:globalSkinLibrary.header.joinBeta=正版登入（内测）
 
+# Global Skin Library (Search Box)
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=输入你想搜索的内容...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=搜索
+
+# Global Skin Library (Home)
 inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=显示所有时装
 inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=最新上传
-inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=最多下载
+inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=下载排行
+inventory.armourersworkshop:globalSkinLibrary.home.mostLikes=赞排行
 
+# Global Skin Library (Search Results)
 inventory.armourersworkshop:globalSkinLibrary.searchResults.results=搜索结果: %d / %d 页- 总计 %d 页.
 inventory.armourersworkshop:globalSkinLibrary.searchResults.small=小
 inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=中
 inventory.armourersworkshop:globalSkinLibrary.searchResults.large=大
 inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=搜索中...
+
+# Global Skin Library (Skin Info)
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=返回
 inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=下载时装
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.editSkin=编辑详情
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.like=赞
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.unlike=取消
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.uploader=上传者: %s
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.title=时装详情
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.name=名字:
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloads=下载数: %d
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.likes=赞: %d
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.author=作者:
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.description=描述:
 
+# Global Skin Library (Upload)
 inventory.armourersworkshop:globalSkinLibrary.upload.name=上传时装
 inventory.armourersworkshop:globalSkinLibrary.upload.skinName=时装名称:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterName=输入名字
 inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=时装标签:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=输入标签
+inventory.armourersworkshop:globalSkinLibrary.upload.skinDescription=时装描述:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterDescription=输入说明
+
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=上传时装
 
-# Beta - Will be removed later.
+# Global Skin Library (Beta - Will be removed later).
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.name=登录（内测）
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.enterBetaCode=输入邀请码
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=上传功能还处于内测状态. 以后再试.
@@ -409,8 +437,24 @@ inventory.armourersworkshop:globalSkinLibrary.joinBeta.joiningBeta=正在登入.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedFailed=登入失败.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedBeta=登入成功.
 
+# Global Skin Library (User Skins)
 inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=警告所有在内测期间上传的时装将在测试版结束时被清掉.
 
+# Global Skin Library (Edit Skin)
+inventory.armourersworkshop:globalSkinLibrary.edit.name=编辑详情
+inventory.armourersworkshop:globalSkinLibrary.edit.skinName=时装名字:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterName=输入名字
+inventory.armourersworkshop:globalSkinLibrary.edit.skinTags=时装标签:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterTags=输入标签
+inventory.armourersworkshop:globalSkinLibrary.edit.skinDescription=时装描述:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterDescription=输入描述
+inventory.armourersworkshop:globalSkinLibrary.edit.buttonUpdate=上传时装
+inventory.armourersworkshop:globalSkinLibrary.edit.buttonDelete=删除时装
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.title=删除时装
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.ok=确定
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.cancel=取消
+
+# Hologram Projector
 inventory.armourersworkshop:hologramProjector.tab.inventory=物品栏
 inventory.armourersworkshop:hologramProjector.tab.offset=位置设置
 inventory.armourersworkshop:hologramProjector.tab.angle=角度
@@ -450,6 +494,10 @@ itemGroup.armourersworkshop=时装工坊
 keys.armourersworkshop:category=时装制造工坊
 keys.armourersworkshop.equipmentWardrobe=时装栏
 keys.armourersworkshop.undo=撤销
+
+# Notes to translators.
+# The guide book will be rewritten before release so you don't need to waste time translating it.
+# Well unless you are really bored. :(
 
 # Guide Book
 # Chapter 1
