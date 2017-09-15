@@ -11,7 +11,6 @@ import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
@@ -52,7 +51,7 @@ public class GuiDialogCopy extends AbstractGuiDialog {
                     addPartToDropDown(dropDownDesPart, skinType.getSkinParts().get(i));
                 }
             } else {
-                boolean multiblock = skinProperties.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+                boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProperties);
                 ISkinPartType partType;
                 if (multiblock) {
                     partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;

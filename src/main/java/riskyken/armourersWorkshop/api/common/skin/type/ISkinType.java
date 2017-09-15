@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperty;
 
 /**
  * 
@@ -71,4 +72,6 @@ public interface ISkinType {
      * @return Is enabled?
      */
     public boolean enabled();
+    
+    public ArrayList<ISkinProperty<?>> getProperties();
 }

@@ -62,7 +62,7 @@ public final class ArmourerWorldHelper {
         
         if (skinType == SkinTypeRegistry.skinBlock) {
             ISkinPartType partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partBase;
-            if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+            if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps)) {
                 partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
             }
             
@@ -109,12 +109,12 @@ public final class ArmourerWorldHelper {
         }
         
         //Check if the skin is not a seat and a bed.
-        if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false) & skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
+        if (SkinProperties.PROP_BLOCK_BED.getValue(skinProps) & SkinProperties.PROP_BLOCK_SEAT.getValue(skinProps)) {
             throw new SkinSaveException("Skin can not be a bed and a seat.", SkinSaveExceptionType.BED_AND_SEAT);
         }
         
         //Check if multiblock is valid.
-        if (skinType == SkinTypeRegistry.skinBlock & skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+        if (skinType == SkinTypeRegistry.skinBlock & SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps)) {
             SkinPart testPart = saveArmourPart(world, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, xCoord, yCoord, zCoord, direction, true);
             if (testPart == null) {
                 throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveExceptionType.INVALID_MULTIBLOCK);
@@ -405,7 +405,7 @@ public final class ArmourerWorldHelper {
                 }
             }
             if (skinType == SkinTypeRegistry.skinBlock) {
-                boolean multiblock = skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+                boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps);
                 if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
                     blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
                 }

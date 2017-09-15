@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
@@ -59,7 +60,7 @@ public class ModelSkinChest extends AbstractModelSkin {
             GL11.glPopAttrib();
         }
         
-        boolean override = armourData.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+        boolean override = SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(armourData.getProperties());
         
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);

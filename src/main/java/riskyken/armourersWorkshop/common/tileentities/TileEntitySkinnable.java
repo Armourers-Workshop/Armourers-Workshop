@@ -78,9 +78,9 @@ public class TileEntitySkinnable extends TileEntity {
         this.skinPointer = skinPointer;
         if (skin != null & isParent()) {
             SkinProperties skinProps = skin.getProperties();
-            if (skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false)) {
+            if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties())) {
                 blockInventory = true;
-                int size = skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 9) * skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4);
+                int size = SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skin.getProperties()) * SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skin.getProperties());
                 inventory = new ModInventory(LibBlockNames.SKINNABLE, size, this);
             }
         }
@@ -367,7 +367,7 @@ public class TileEntitySkinnable extends TileEntity {
             if (hasSkin()) {
                 Skin skin = getSkin(getSkinPointer());
                 if (skin != null) {
-                    if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+                    if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
                         renderBounds = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
                         ForgeDirection dir = getRotation().getOpposite();
                         renderBounds.offset(dir.offsetX, 0, dir.offsetZ);

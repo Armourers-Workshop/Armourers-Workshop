@@ -36,6 +36,7 @@ import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperty;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
@@ -138,27 +139,9 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             skinProps.setProperty(Skin.KEY_TAGS, tags);
         }
         
-        if (skinType == SkinTypeRegistry.skinBlock) {
-            skinProps.setProperty(Skin.KEY_BLOCK_GLOWING, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false));
-            skinProps.setProperty(Skin.KEY_BLOCK_LADDER, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false));
-            skinProps.setProperty(Skin.KEY_BLOCK_NO_COLLISION, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false));
-            skinProps.setProperty(Skin.KEY_BLOCK_SEAT, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false));
-            skinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
-            skinProps.setProperty(Skin.KEY_BLOCK_BED, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_BED, false));
-            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY, this.skinProps.getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false));
-            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY_WIDTH, this.skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 10));
-            skinProps.setProperty(Skin.KEY_BLOCK_INVENTORY_HEIGHT, this.skinProps.getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4));
-        }
-        
-        if (skinType == SkinTypeRegistry.skinWings) {
-            skinProps.setProperty(Skin.KEY_WINGS_FLYING_SPEED, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D));
-            skinProps.setProperty(Skin.KEY_WINGS_IDLE_SPEED, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D));
-            skinProps.setProperty(Skin.KEY_WINGS_MIN_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D));
-            skinProps.setProperty(Skin.KEY_WINGS_MAX_ANGLE, this.skinProps.getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D));
-        }
-        
-        if (skinType.getVanillaArmourSlotId() != -1) {
-            skinProps.setProperty(Skin.KEY_ARMOUR_OVERRIDE, this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false));
+        for (int i = 0; i < skinType.getProperties().size(); i++) {
+            SkinProperty skinProp = (SkinProperty) skinType.getProperties().get(i);
+            skinProp.setValue(skinProps, skinProp.getValue(this.skinProps));
         }
         
         try {
@@ -310,7 +293,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (skinType != null) {
             ArmourerWorldHelper.clearEquipmentCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps, partType);
             SkinProperties newSkinProps = new SkinProperties();
-            newSkinProps.setProperty(Skin.KEY_BLOCK_MULTIBLOCK, skinProps.getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false));
+            SkinProperties.PROP_BLOCK_MULTIBLOCK.setValue(newSkinProps, SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps));
             setSkinProps(newSkinProps);
             resyncData();
         }
@@ -324,7 +307,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     
     protected void createBoundingBoxes() {
         if (skinType != null) {
-            boolean hadBounds = !this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            boolean hadBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(this.skinProps);
             if (hadBounds) {
                 ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType);
             }
@@ -420,8 +403,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     public void setSkinProps(SkinProperties skinProps) {
         boolean updateBounds = false;
         if (skinType != null && skinType.getVanillaArmourSlotId() != -1) {
-            boolean hadBounds = !this.skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
-            boolean haveBounds = !skinProps.getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+            boolean hadBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(this.skinProps);
+            boolean haveBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps);
             if (hadBounds != haveBounds) {
                 updateBounds = true;
             }

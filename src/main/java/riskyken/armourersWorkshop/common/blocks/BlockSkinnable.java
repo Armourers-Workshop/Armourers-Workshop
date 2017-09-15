@@ -42,6 +42,7 @@ import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -85,13 +86,13 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         if (parentTe == null) {
             return false;
         }
-        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_SEAT, false)) {
+        if (SkinProperties.PROP_BLOCK_SEAT.getValue(skin.getProperties())) {
             return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
         }
-        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false)) {
+        if (SkinProperties.PROP_BLOCK_BED.getValue(skin.getProperties())) {
             //return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
         }
-        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_INVENTORY, false)) {
+        if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties())) {
             if (!world.isRemote) {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.SKINNABLE, world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord);
             }
@@ -244,7 +245,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player) {
         Skin skin = getSkin(world, x, y, z);
         if (skin != null) {
-            return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_BED, false);
+            return SkinProperties.PROP_BLOCK_BED.getValue(skin.getProperties());
         }
         return false;
     }
@@ -322,7 +323,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         Skin skin = getSkin(world, x, y, z);
         if (skin != null) {
-            if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_NO_COLLISION, false)) {
+            if (SkinProperties.PROP_BLOCK_NO_COLLISION.getValue(skin.getProperties())) {
                 return null;
             }
         }
@@ -436,7 +437,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
         Skin skin = getSkin(world, x, y, z);
         if (skin != null) {
-            return skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_LADDER, false);
+            return SkinProperties.PROP_BLOCK_LADDER.getValue(skin.getProperties());
         }
         return false;
     }
@@ -552,7 +553,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             return false;
         }
         
-        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false)) {
+        if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
             return false;
         }
         

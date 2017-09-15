@@ -36,6 +36,7 @@ import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
@@ -276,13 +277,13 @@ public class ItemSkin extends AbstractModItem {
         }
         
         BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnable;
-        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false)) {
+        if (SkinProperties.PROP_BLOCK_GLOWING.getValue(skin.getProperties())) {
             targetBlock = (BlockSkinnable) ModBlocks.skinnableGlowing;
         }
         
         int meta = targetBlock.convertDirectionToMetadata(dir);
         
-        boolean multiblock = skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_MULTIBLOCK, false);
+        boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties());
         ArrayList<BlockLocation> relatedBlocks = new ArrayList<BlockLocation>();
         if (multiblock) {
             if (!canPlaceChildren(world, player, side, stack, x, y, z, skin, skinPointer, relatedBlocks)) {
@@ -320,7 +321,7 @@ public class ItemSkin extends AbstractModItem {
         BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnableChild;
         
         int meta = targetBlock.convertDirectionToMetadata(dir);
-        if (skin.getProperties().getPropertyBoolean(Skin.KEY_BLOCK_GLOWING, false)) {
+        if (SkinProperties.PROP_BLOCK_GLOWING.getValue(skin.getProperties())) {
             targetBlock = (BlockSkinnable) ModBlocks.skinnableChildGlowing;
         }
         

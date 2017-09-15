@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
 
@@ -221,7 +222,7 @@ public class EntityTextureInfo {
         
         for (int i = 0; i < skins.length; i++) {
             Skin skin = skins[i];
-            if (skin!= null && skin.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false)) {
+            if (skin!= null && SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
                 for (int j = 0; j < skin.getPartCount(); j++) {
                     SkinPart skinPart = skin.getParts().get(j);
                     if (skinPart.getPartType() instanceof ISkinPartTypeTextured) {

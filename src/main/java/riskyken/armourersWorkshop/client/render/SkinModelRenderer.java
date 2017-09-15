@@ -43,6 +43,7 @@ import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
@@ -218,7 +219,7 @@ public final class SkinModelRenderer {
                 if (sp != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(sp, false);
                     if (skin!= null) {
-                        if (skin.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false)) {
+                        if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
                             return true;
                         }
                     }

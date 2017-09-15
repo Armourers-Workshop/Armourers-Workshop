@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 
 public class ContainerSkinnable extends Container {
@@ -16,8 +17,8 @@ public class ContainerSkinnable extends Container {
     public ContainerSkinnable(InventoryPlayer invPlayer, TileEntitySkinnable tileEntity, Skin skin) {
         this.tileEntity = tileEntity;
         
-        int width = skin.getProperties().getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 9);
-        int height = skin.getProperties().getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4);
+        int width = SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skin.getProperties());
+        int height = SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skin.getProperties());
         size = width * height;
         
         int playerInvY = height * 18 + 41;

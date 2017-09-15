@@ -1,8 +1,11 @@
 package riskyken.armourersWorkshop.common.skin.type;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.IIcon;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperty;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public abstract class AbstractSkinTypeBase implements ISkinType {
@@ -48,5 +51,11 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     @Override
     public boolean enabled() {
         return true;
+    }
+    
+    @Override
+    public ArrayList<ISkinProperty<?>> getProperties() {
+        ArrayList<ISkinProperty<?>> properties = new ArrayList<ISkinProperty<?>>();
+        return properties;
     }
 }

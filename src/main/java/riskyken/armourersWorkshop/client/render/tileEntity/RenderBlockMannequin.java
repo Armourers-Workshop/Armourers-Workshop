@@ -47,6 +47,7 @@ import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -204,7 +205,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     skins[i] = ClientSkinCache.INSTANCE.getSkin(sp[i]);
                     dyes[i] = sp[i].getSkinDye();
                     if (skins[i] != null) {
-                        if (skins[i].hasPaintData() | skins[i].getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false)) {
+                        if (skins[i].hasPaintData() | SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skins[i].getProperties())) {
                             hasPaintedSkin = true;
                         }
                     }
@@ -466,7 +467,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
             if (skin != null) {
-                return skin.getProperties().getPropertyBoolean(Skin.KEY_ARMOUR_OVERRIDE, false);
+                return SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties());
             }
         }
         return false;

@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinnable;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 
 public class GuiSkinnable extends GuiContainer {
@@ -24,8 +25,8 @@ public class GuiSkinnable extends GuiContainer {
     public GuiSkinnable(InventoryPlayer invPlayer, TileEntitySkinnable tileEntity, Skin skin) {
         super(new ContainerSkinnable(invPlayer, tileEntity, skin));
         this.tileEntity = tileEntity;
-        invWidth = skin.getProperties().getPropertyInt(Skin.KEY_BLOCK_INVENTORY_WIDTH, 9);
-        invHeight = skin.getProperties().getPropertyInt(Skin.KEY_BLOCK_INVENTORY_HEIGHT, 4);
+        invWidth = SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skin.getProperties());
+        invHeight = SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skin.getProperties());
     }
     
     @Override

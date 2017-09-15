@@ -15,6 +15,24 @@ import riskyken.armourersWorkshop.utils.StreamUtils;
 
 public class SkinProperties {
     
+    public static final SkinProperty<Boolean> PROP_ARMOUR_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
+    
+    public static final SkinProperty<Boolean> PROP_BLOCK_GLOWING = new SkinProperty<Boolean>("blockGlowing", false);
+    public static final SkinProperty<Boolean> PROP_BLOCK_LADDER = new SkinProperty<Boolean>("blockLadder", false);
+    public static final SkinProperty<Boolean> PROP_BLOCK_NO_COLLISION = new SkinProperty<Boolean>("blockNoCollision", false);
+    public static final SkinProperty<Boolean> PROP_BLOCK_SEAT = new SkinProperty<Boolean>("blockSeat", false);
+    public static final SkinProperty<Boolean> PROP_BLOCK_MULTIBLOCK = new SkinProperty<Boolean>("blockMultiblock", false);
+    public static final SkinProperty<Boolean> PROP_BLOCK_BED = new SkinProperty<Boolean>("blockBed", false);
+    public static final SkinProperty<Boolean> PROP_BLOCK_INVENTORY = new SkinProperty<Boolean>("blockInventory", false);
+    public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_WIDTH = new SkinProperty<Integer>("blockInventoryWidth", 9);
+    public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_HEIGHT = new SkinProperty<Integer>("blockInventoryHeight", 4);
+    
+    
+    public static final SkinProperty<Double> PROP_WINGS_MAX_ANGLE = new SkinProperty<Double>("wingsMaxAngle", 75D);
+    public static final SkinProperty<Double> PROP_WINGS_MIN_ANGLE = new SkinProperty<Double>("wingsMinAngle", 0D);
+    public static final SkinProperty<Double> PROP_WINGS_IDLE_SPEED = new SkinProperty<Double>("wingsIdleSpeed", 6000D);
+    public static final SkinProperty<Double> PROP_WINGS_FLYING_SPEED = new SkinProperty<Double>("wingsFlyingSpeed", 350D);
+    
     private static final String TAG_SKIN_PROPS = "skinProps";
     private final LinkedHashMap<String, Object> properties;
     
@@ -133,6 +151,14 @@ public class SkinProperties {
         Object value = properties.get(key);
         if (value != null && value instanceof Boolean) {
             return (Boolean) value;
+        }
+        return defaultValue;
+    }
+    
+    public Object getProperty(String key, Object defaultValue) {
+        Object value = properties.get(key);
+        if (value != null) {
+            return value;
         }
         return defaultValue;
     }

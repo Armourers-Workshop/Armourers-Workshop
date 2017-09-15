@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 
 public final class SkinUtils {
     
@@ -68,10 +69,10 @@ public final class SkinUtils {
     
     public static double getFlapAngleForWings(Entity entity, Skin skin) {
         
-        double maxAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MAX_ANGLE, 75D);
-        double minAngle = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_MIN_ANGLE, 0D);
-        double idleSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_IDLE_SPEED, 6000D);
-        double flyingSpeed = skin.getProperties().getPropertyDouble(Skin.KEY_WINGS_FLYING_SPEED, 350D);
+        double maxAngle = SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skin.getProperties());
+        double minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties());
+        double idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties());
+        double flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties());
         
         double angle = 0;
         double flapTime = idleSpeed;

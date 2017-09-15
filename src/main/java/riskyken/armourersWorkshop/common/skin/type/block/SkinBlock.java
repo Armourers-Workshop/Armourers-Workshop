@@ -3,7 +3,9 @@ package riskyken.armourersWorkshop.common.skin.type.block;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperty;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
 public class SkinBlock extends AbstractSkinTypeBase {
@@ -37,5 +39,20 @@ public class SkinBlock extends AbstractSkinTypeBase {
 
     @Override
     public void registerIcon(IIconRegister register) {
+    }
+    
+    @Override
+    public ArrayList<ISkinProperty<?>> getProperties() {
+        ArrayList<ISkinProperty<?>> properties = super.getProperties();
+        properties.add(SkinProperties.PROP_BLOCK_BED);
+        properties.add(SkinProperties.PROP_BLOCK_GLOWING);
+        properties.add(SkinProperties.PROP_BLOCK_LADDER);
+        properties.add(SkinProperties.PROP_BLOCK_MULTIBLOCK);
+        properties.add(SkinProperties.PROP_BLOCK_NO_COLLISION);
+        properties.add(SkinProperties.PROP_BLOCK_SEAT);
+        properties.add(SkinProperties.PROP_BLOCK_INVENTORY);
+        properties.add(SkinProperties.PROP_BLOCK_INVENTORY_WIDTH);
+        properties.add(SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT);
+        return properties;
     }
 }

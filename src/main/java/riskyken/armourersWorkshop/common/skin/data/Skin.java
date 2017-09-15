@@ -26,24 +26,6 @@ public class Skin implements ISkin {
     public static final String KEY_AUTHOR_UUID = "authorUUID";
     public static final String KEY_CUSTOM_NAME = "customName";
     public static final String KEY_TAGS = "tags";
-    
-    public static final String KEY_BLOCK_GLOWING = "blockGlowing";
-    public static final String KEY_BLOCK_LADDER = "blockLadder";
-    public static final String KEY_BLOCK_NO_COLLISION = "blockNoCollision";
-    public static final String KEY_BLOCK_SEAT = "blockSeat";
-    public static final String KEY_BLOCK_MULTIBLOCK = "blockMultiblock";
-    public static final String KEY_BLOCK_BED = "blockBed";
-    public static final String KEY_BLOCK_INVENTORY = "blockInventory";
-    public static final String KEY_BLOCK_INVENTORY_WIDTH = "blockInventoryWidth";
-    public static final String KEY_BLOCK_INVENTORY_HEIGHT = "blockInventoryHeight";
-    
-    public static final String KEY_WINGS_MAX_ANGLE = "wingsMaxAngle";
-    public static final String KEY_WINGS_MIN_ANGLE = "wingsMinAngle";
-    public static final String KEY_WINGS_IDLE_SPEED = "wingsIdleSpeed";
-    public static final String KEY_WINGS_FLYING_SPEED = "wingsFlyingSpeed";
-
-    public static final String KEY_ARMOUR_OVERRIDE = "armourOverride";
-    
     public static final String KEY_FILE_NAME = "fileName";
     
     private SkinProperties properties;
