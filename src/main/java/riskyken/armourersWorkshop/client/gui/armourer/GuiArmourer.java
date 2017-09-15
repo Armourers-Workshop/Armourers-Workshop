@@ -67,6 +67,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         tabController.setActiveTabIndex(activeTab);
         
         tabChanged();
+        skinTypeUpdate(tileEntity.getSkinType());
     }
     
     private void setSlotVisibility(boolean visible) {
@@ -110,7 +111,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     }
     
     public void skinTypeUpdate(ISkinType skinType) {
-        if (skinType == SkinTypeRegistry.skinArrow | skinType == SkinTypeRegistry.skinBow | skinType == SkinTypeRegistry.skinSword) {
+        if (skinType == SkinTypeRegistry.skinBow | skinType == SkinTypeRegistry.skinSword) {
             tabController.getTab(2).setVisable(false);
         } else {
             tabController.getTab(2).setVisable(true);
