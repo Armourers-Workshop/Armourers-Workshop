@@ -26,6 +26,15 @@ public final class ModBlockRecipes {
             'c', ModBlocks.colourable,
             'b', Items.book});
         
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.globalSkinLibrary, 1, 0), new Object[] {
+                "srs",
+                "bcb",
+                "sss",
+                'r', Items.ender_pearl,
+                's', "stone",
+                'c', ModBlocks.colourable,
+                'b', Items.book});
+        
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.colourMixer, 1, 0), new Object[] {
             "rgb",
             "scs",
