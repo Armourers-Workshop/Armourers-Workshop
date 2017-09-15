@@ -27,13 +27,21 @@ public final class ModBlockRecipes {
             'b', Items.book});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.globalSkinLibrary, 1, 0), new Object[] {
-                "srs",
-                "bcb",
-                "sss",
-                'r', Items.ender_pearl,
-                's', "stone",
-                'c', ModBlocks.colourable,
-                'b', Items.book});
+            "srs",
+            "bcb",
+            "sss",
+            'r', Items.ender_pearl,
+            's', "stone",
+            'c', ModBlocks.colourable,
+            'b', Items.book});
+        
+        CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.hologramProjector, 1, 0), new Object[] {
+            "igi",
+            "ici",
+            "iii",
+            'i', Items.iron_ingot,
+            'g', "blockGlass",
+            'c', ModBlocks.colourable});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.colourMixer, 1, 0), new Object[] {
             "rgb",
