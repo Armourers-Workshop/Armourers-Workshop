@@ -40,7 +40,7 @@ public final class ModBlockRecipes {
             "ici",
             "iii",
             'i', Items.iron_ingot,
-            'g', "blockGlass",
+            'g', "blockGlassLightBlue",
             'c', ModBlocks.colourable});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.colourMixer, 1, 0), new Object[] {
