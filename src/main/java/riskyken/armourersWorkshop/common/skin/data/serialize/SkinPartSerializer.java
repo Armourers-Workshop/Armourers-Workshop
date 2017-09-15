@@ -44,6 +44,9 @@ public final class SkinPartSerializer {
             if (regName.equals("armourers:bow.base")) {
                 regName = "armourers:bow.frame1";
             }
+            if (regName.equals("armourers:arrow.base")) {
+                regName = "armourers:bow.arrow";
+            }
             skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(regName);
             
             if (skinPart == null) {

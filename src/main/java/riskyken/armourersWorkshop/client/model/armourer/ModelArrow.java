@@ -60,7 +60,7 @@ public class ModelArrow {
         this.displayList = GLAllocation.generateDisplayLists(1);
         GL11.glNewList(this.displayList, GL11.GL_COMPILE);
         
-        GL11.glPushMatrix();
+        //GL11.glPushMatrix();
         Tessellator tessellator = Tessellator.instance;
         byte b0 = 0;
         float f2 = 0.0F;
@@ -101,7 +101,7 @@ public class ModelArrow {
             tessellator.draw();
         }
 
-        GL11.glPopMatrix();
+        //GL11.glPopMatrix();
         GL11.glEndList();
     }
 }

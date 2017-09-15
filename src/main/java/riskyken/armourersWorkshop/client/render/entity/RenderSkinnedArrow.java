@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
@@ -32,13 +33,19 @@ public class RenderSkinnedArrow extends RenderArrow {
         if (entityArrow.shootingEntity != null && entityArrow.shootingEntity instanceof EntityClientPlayerMP) {
             EntityClientPlayerMP player = (EntityClientPlayerMP) entityArrow.shootingEntity;
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
-            if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinArrow, 0)) {
-                ISkinPointer skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinArrow, 0);
+            if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
+                ISkinPointer skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinBow, 0);
                 if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
-                    ModRenderHelper.enableAlphaBlend();
-                    renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinPointer);
-                    ModRenderHelper.disableAlphaBlend();
-                    return;
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+                    if (skin != null) {
+                        SkinPart skinPart = skin.getPart("armourers:bow.arrow");
+                        if (skinPart != null) {
+                            ModRenderHelper.enableAlphaBlend();
+                            renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinPart, skinPointer.getSkinDye());
+                            ModRenderHelper.disableAlphaBlend();
+                            return;
+                        }
+                    }
                 } else {
                     ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
                 }
@@ -48,12 +55,7 @@ public class RenderSkinnedArrow extends RenderArrow {
         super.doRender(entityArrow, x, y, z, yaw, partialTickTime);
     }
     
-    private void renderArrowSkin(EntityArrow entityArrow, double x, double y, double z, float partialTickTime, ISkinPointer skinPointer) {
-        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-        if (skin == null) {
-            return;
-        }
-        
+    private void renderArrowSkin(EntityArrow entityArrow, double x, double y, double z, float partialTickTime, SkinPart skinPart, ISkinDye skinDye) {
         float scale = 0.0625F;
         GL11.glPushMatrix();
         GL11.glTranslatef((float)x, (float)y, (float)z);
@@ -70,11 +72,7 @@ public class RenderSkinnedArrow extends RenderArrow {
         }
         GL11.glRotatef(-90, 0, 1, 0);
         GL11.glScalef(-1, -1, 1);
-        for (int i = 0; i < skin.getParts().size(); i++) {
-            SkinPart skinPart = skin.getParts().get(i);
-            //TODO apply dyes to arrows.
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, null, null, true);
-        }
+        SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinDye, null, true);
         GL11.glPopMatrix();
     }
 }

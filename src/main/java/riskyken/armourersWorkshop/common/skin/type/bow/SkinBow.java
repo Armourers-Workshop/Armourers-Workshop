@@ -18,6 +18,7 @@ public class SkinBow extends AbstractSkinTypeBase {
         skinParts.add(new SkinBowPartBase(this));
         skinParts.add(new SkinBowPartFrame1(this));
         skinParts.add(new SkinBowPartFrame2(this));
+        skinParts.add(new SkinBowPartArrow(this));
     }
     
     @Override
@@ -35,6 +36,11 @@ public class SkinBow extends AbstractSkinTypeBase {
         return "bow";
     }
 
+    @Override
+    public boolean showHelperCheckbox() {
+        return true;
+    }
+    
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcon(IIconRegister register) {

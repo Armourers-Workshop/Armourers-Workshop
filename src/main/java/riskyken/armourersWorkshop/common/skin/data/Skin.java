@@ -230,6 +230,24 @@ public class Skin implements ISkin {
         return partList;
     }
     
+    public boolean hasPart(String partRegistryName) {
+        for (int i = 0; i < parts.size(); i++) {
+            if (parts.get(i).getPartType().getRegistryName().equals(partRegistryName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public SkinPart getPart(String partRegistryName) {
+        for (int i = 0; i < parts.size(); i++) {
+            if (parts.get(i).getPartType().getRegistryName().equals(partRegistryName)) {
+                return parts.get(i);
+            }
+        }
+        return null;
+    }
+    
     public String getCustomName() {
         return properties.getPropertyString(KEY_CUSTOM_NAME, "");
     }

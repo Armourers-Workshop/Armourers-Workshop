@@ -75,7 +75,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinFeet);
         registerSkin(skinSword);
         registerSkin(skinBow);
-        registerSkin(skinArrow);
+        //registerSkin(skinArrow);
         registerSkin(skinBlock);
         registerSkin(skinWings);
     }
@@ -117,6 +117,9 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         if(registryName.equals(skinSkirt.getRegistryName())) {
             return skinLegs;
         }
+        if(registryName.equals(skinArrow.getRegistryName())) {
+            return skinBow;
+        }
         ISkinType skinType = skinTypeMap.get(registryName);
         return skinType;
     }
@@ -139,7 +142,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         case 6:
             return getSkinTypeFromRegistryName("armourers:bow");
         case 7:
-            return getSkinTypeFromRegistryName("armourers:arrow");
+            return getSkinTypeFromRegistryName("armourers:bow");
+            //return getSkinTypeFromRegistryName("armourers:arrow");
         default:
             return null;
         }
