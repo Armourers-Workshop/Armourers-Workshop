@@ -165,5 +165,10 @@ public final class ModItemRecipes {
                 new ItemStack(Items.diamond_boots, 1),
                 new ItemStack(ModItems.equipmentSkinTemplate, 1),
                 new ItemStack(Items.nether_star, 1)});
+        
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.skinUnlock, 1, 4), new Object[] {
+                new ItemStack(Items.feather, 1),
+                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(Items.nether_star, 1)});
     }
 }
