@@ -14,6 +14,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class EquipmentWardrobeData {
     
@@ -54,6 +55,9 @@ public class EquipmentWardrobeData {
     }
     
     public int getUnlockedSlotsForSkinType(ISkinType skinType) {
+        if (skinType == SkinTypeRegistry.skinSword | skinType == SkinTypeRegistry.skinBow) {
+            return 1;
+        }
         if (slotsUnlocked.containsKey(skinType.getRegistryName())) {
             return slotsUnlocked.get(skinType.getRegistryName());
         } else {

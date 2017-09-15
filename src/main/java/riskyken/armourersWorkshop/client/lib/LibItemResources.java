@@ -22,6 +22,7 @@ public final class LibItemResources {
     public static final String SKIN_UNLOCK_CHEST = PREFIX_RESOURCE + "scrollChest";
     public static final String SKIN_UNLOCK_LEGS = PREFIX_RESOURCE + "scrollPants";
     public static final String SKIN_UNLOCK_FEET = PREFIX_RESOURCE + "scrollFeet";
+    public static final String SKIN_UNLOCK_WINGS = PREFIX_RESOURCE + "scrollWings";
     
     public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "templateHead";
     public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "templateChest";

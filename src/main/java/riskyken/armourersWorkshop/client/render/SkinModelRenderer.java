@@ -356,12 +356,14 @@ public final class SkinModelRenderer {
                         customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
+                if (slot == 0) {
+                    Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, skinIndex);
+                    ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, skinIndex);
+                    if (data != null) {
+                        customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                    }
+                }
             }
-        }
-        Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, 0);
-        ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, 0);
-        if (data != null) {
-            customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
         }
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);
