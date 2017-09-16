@@ -36,8 +36,12 @@ public class GuiHologramProjectorTabOffset extends GuiTabPanel implements ISlide
         guiLoaded = false;
         
         sliderOffsetX = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 30, 178, 10, "X: ", "", -64D, 64D, tileEntity.getOffsetX(), false, true, this);
-        sliderOffsetY = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 40, 178, 10, "Y: ", "", -64D, 64D, tileEntity.getOffsetY(), false, true, this);
-        sliderOffsetZ = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 50, 178, 10, "Z: ", "", -64D, 64D, tileEntity.getOffsetZ(), false, true, this);
+        sliderOffsetY = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 45, 178, 10, "Y: ", "", -64D, 64D, tileEntity.getOffsetY(), false, true, this);
+        sliderOffsetZ = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 60, 178, 10, "Z: ", "", -64D, 64D, tileEntity.getOffsetZ(), false, true, this);
+        
+        sliderOffsetX.setFineTuneButtons(true);
+        sliderOffsetY.setFineTuneButtons(true);
+        sliderOffsetZ.setFineTuneButtons(true);
         
         buttonList.add(sliderOffsetX);
         buttonList.add(sliderOffsetY);
@@ -48,7 +52,7 @@ public class GuiHologramProjectorTabOffset extends GuiTabPanel implements ISlide
     
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 200, 72);
+        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 200, 82);
         rec.x = width / 2 - rec.width / 2;
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 138, rec.width, rec.height, 38, 38, 4, zLevel);
     }

@@ -86,6 +86,10 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         sliderWingMinAngle = new GuiCustomSlider(15, 10, 85, 154, 10, "", DEGREE, -90D, 90D, SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skinProps), false, true, this);
         sliderWingMaxAngle = new GuiCustomSlider(15, 10, 105, 154, 10, "", DEGREE, -90D, 90D, SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skinProps), false, true, this);
         
+        sliderWingIdleSpeed.setFineTuneButtons(true);
+        sliderWingFlyingSpeed.setFineTuneButtons(true);
+        sliderWingMinAngle.setFineTuneButtons(true);
+        sliderWingMaxAngle.setFineTuneButtons(true);
         
         checkArmourOverrideBodyPart = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps));
         
