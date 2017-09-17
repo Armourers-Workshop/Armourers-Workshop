@@ -39,6 +39,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
     private GuiCheckBox checkBlockBed;
     private GuiCheckBox checkBlockInventory;
     private GuiInventorySize inventorySize;
+    private GuiCheckBox checkBlockEnderInventory;
     
     private GuiCustomSlider sliderWingIdleSpeed;
     private GuiCustomSlider sliderWingFlyingSpeed;
@@ -68,7 +69,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         checkBlockSeat = new GuiCheckBox(15, 10, 65, GuiHelper.getLocalizedControlName(guiName, "seat"), SkinProperties.PROP_BLOCK_SEAT.getValue(skinProps));
         checkBlockMultiblock = new GuiCheckBox(15, 10, 80, GuiHelper.getLocalizedControlName(guiName, "multiblock"), SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps));
         checkBlockBed = new GuiCheckBox(15, 22, 95, GuiHelper.getLocalizedControlName(guiName, "bed"), SkinProperties.PROP_BLOCK_BED.getValue(skinProps));
-        checkBlockInventory = new GuiCheckBox(15, 10, 110, GuiHelper.getLocalizedControlName(guiName, "inventory"), SkinProperties.PROP_BLOCK_INVENTORY.getValue(skinProps));
+        checkBlockEnderInventory = new GuiCheckBox(15, 10, 110, GuiHelper.getLocalizedControlName(guiName, "enderInventory"), SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skinProps));
+        checkBlockInventory = new GuiCheckBox(15, 10, 125, GuiHelper.getLocalizedControlName(guiName, "inventory"), SkinProperties.PROP_BLOCK_INVENTORY.getValue(skinProps));
         if (!checkBlockMultiblock.isChecked()) {
             checkBlockBed.enabled = false;
             checkBlockBed.setIsChecked(false);
@@ -77,9 +79,20 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         }
         //TODO remove to re-enable beds
         checkBlockBed.enabled = false;
-        inventorySize = new GuiInventorySize(10, 145, 9, 6);
+        
+        checkBlockEnderInventory.enabled = !checkBlockInventory.isChecked();
+        checkBlockInventory.enabled = !checkBlockEnderInventory.isChecked();
+        if (checkBlockInventory.isChecked()) {
+            checkBlockEnderInventory.setIsChecked(false);
+        }
+        if (checkBlockEnderInventory.isChecked()) {
+            checkBlockInventory.setIsChecked(false);
+        }
+        
+        inventorySize = new GuiInventorySize(10, 158, 9, 6);
         inventorySize.setSrc(TEXTURE, 176, 0);
         inventorySize.setSelection(SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skinProps), SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skinProps));
+        
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, 10, 45, 154, 10, "", "ms", 200D, 10000D, SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skinProps), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, 10, 65, 154, 10, "", "ms", 200D, 10000D, SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skinProps), false, true, this);
@@ -100,6 +113,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         buttonList.add(checkBlockMultiblock);
         buttonList.add(checkBlockBed);
         buttonList.add(checkBlockInventory);
+        buttonList.add(checkBlockEnderInventory);
         buttonList.add(inventorySize);
         
         buttonList.add(sliderWingIdleSpeed);
@@ -120,13 +134,24 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         } else {
             checkBlockBed.enabled = true;
         }
+        
+        
+        checkBlockEnderInventory.enabled = !checkBlockInventory.isChecked();
+        checkBlockInventory.enabled = !checkBlockEnderInventory.isChecked();
+        if (checkBlockInventory.isChecked()) {
+            checkBlockEnderInventory.setIsChecked(false);
+        }
+        if (checkBlockEnderInventory.isChecked()) {
+            checkBlockInventory.setIsChecked(false);
+        }
+        
         //TODO remove to re-enable beds
         checkBlockBed.enabled = false;
         
         if (
                 button == checkBlockGlowing | button == checkBlockLadder | button == checkBlockNoCollision |
                 button == checkBlockSeat | button == checkBlockMultiblock | button == checkBlockBed | button == checkBlockInventory |
-                button == inventorySize) {
+                button == inventorySize | button == checkBlockEnderInventory) {
             SkinProperties.PROP_BLOCK_GLOWING.setValue(skinProps, checkBlockGlowing.isChecked());
             SkinProperties.PROP_BLOCK_LADDER.setValue(skinProps, checkBlockLadder.isChecked());
             SkinProperties.PROP_BLOCK_NO_COLLISION.setValue(skinProps, checkBlockNoCollision.isChecked());
@@ -134,6 +159,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
             SkinProperties.PROP_BLOCK_MULTIBLOCK.setValue(skinProps, checkBlockMultiblock.isChecked());
             SkinProperties.PROP_BLOCK_BED.setValue(skinProps, checkBlockBed.isChecked());
             SkinProperties.PROP_BLOCK_INVENTORY.setValue(skinProps, checkBlockInventory.isChecked());
+            SkinProperties.PROP_BLOCK_ENDER_INVENTORY.setValue(skinProps, checkBlockEnderInventory.isChecked());
             SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.setValue(skinProps, inventorySize.getSelectionWidth());
             SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.setValue(skinProps, inventorySize.getSelectionHeight());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
@@ -156,6 +182,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         checkBlockMultiblock.setIsChecked(SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProperties));
         checkBlockBed.setIsChecked(SkinProperties.PROP_BLOCK_BED.getValue(skinProperties));
         checkBlockInventory.setIsChecked(SkinProperties.PROP_BLOCK_INVENTORY.getValue(skinProperties));
+        checkBlockEnderInventory.setIsChecked(SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skinProperties));
         inventorySize.setSelection(SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skinProperties), SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skinProperties));
         inventorySize.visible = checkBlockInventory.isChecked();
         
@@ -184,6 +211,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         checkBlockMultiblock.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockBed.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
         checkBlockInventory.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
+        checkBlockEnderInventory.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock;
         inventorySize.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinBlock & checkBlockInventory.isChecked();
         
         sliderWingIdleSpeed.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
@@ -216,8 +244,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
             String labelInventorySlots = "inventory." + LibModInfo.ID.toLowerCase() + ":" + tileEntity.getInventoryName() + ".label.inventorySlots";
             labelInventorySlots = StatCollector.translateToLocalFormatted(labelInventorySlots, inventorySize.getSelectionWidth() * inventorySize.getSelectionHeight(), inventorySize.getSelectionWidth(), inventorySize.getSelectionHeight());
             
-            this.fontRenderer.drawString(labelInventorySize, 10, 126, 4210752);
-            this.fontRenderer.drawString(labelInventorySlots, 10, 136, 4210752);
+            this.fontRenderer.drawString(labelInventorySize, 10, 140, 4210752);
+            this.fontRenderer.drawString(labelInventorySlots, 10, 150, 4210752);
         }
     }
 

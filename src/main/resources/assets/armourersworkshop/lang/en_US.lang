@@ -302,6 +302,7 @@ inventory.armourersworkshop:armourerBrain.seat=Seat?
 inventory.armourersworkshop:armourerBrain.multiblock=Multiblock?
 inventory.armourersworkshop:armourerBrain.bed=Bed?
 inventory.armourersworkshop:armourerBrain.inventory=Inventory?
+inventory.armourersworkshop:armourerBrain.enderInventory=Ender Inventory?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Override?
 inventory.armourersworkshop:armourerBrain.tab.main=Main
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Display Settings

@@ -92,7 +92,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         if (SkinProperties.PROP_BLOCK_BED.getValue(skin.getProperties())) {
             //return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
         }
-        if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties())) {
+        if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties()) | SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skin.getProperties())) {
             if (!world.isRemote) {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.SKINNABLE, world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord);
             }

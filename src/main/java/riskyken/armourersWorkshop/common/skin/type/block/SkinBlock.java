@@ -53,6 +53,7 @@ public class SkinBlock extends AbstractSkinTypeBase {
         properties.add(SkinProperties.PROP_BLOCK_INVENTORY);
         properties.add(SkinProperties.PROP_BLOCK_INVENTORY_WIDTH);
         properties.add(SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT);
+        properties.add(SkinProperties.PROP_BLOCK_ENDER_INVENTORY);
         return properties;
     }
 }

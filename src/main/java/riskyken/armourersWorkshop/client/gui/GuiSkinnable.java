@@ -19,14 +19,20 @@ public class GuiSkinnable extends GuiContainer {
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.SKINNABLE);
     
     private final TileEntitySkinnable tileEntity;
-    private final int invWidth;
-    private final int invHeight;
+    private final boolean ender;
+    private int invWidth;
+    private int invHeight;
     
     public GuiSkinnable(InventoryPlayer invPlayer, TileEntitySkinnable tileEntity, Skin skin) {
         super(new ContainerSkinnable(invPlayer, tileEntity, skin));
         this.tileEntity = tileEntity;
+        ender = SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skin.getProperties());
         invWidth = SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skin.getProperties());
         invHeight = SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skin.getProperties());
+        if (ender) {
+            invWidth = 9;
+            invHeight = 3;
+        }
     }
     
     @Override

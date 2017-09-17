@@ -24,6 +24,7 @@ public class SkinProperties {
     public static final SkinProperty<Boolean> PROP_BLOCK_MULTIBLOCK = new SkinProperty<Boolean>("blockMultiblock", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_BED = new SkinProperty<Boolean>("blockBed", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_INVENTORY = new SkinProperty<Boolean>("blockInventory", false);
+    public static final SkinProperty<Boolean> PROP_BLOCK_ENDER_INVENTORY = new SkinProperty<Boolean>("blockEnderInventory", false);
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_WIDTH = new SkinProperty<Integer>("blockInventoryWidth", 9);
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_HEIGHT = new SkinProperty<Integer>("blockInventoryHeight", 4);
     
