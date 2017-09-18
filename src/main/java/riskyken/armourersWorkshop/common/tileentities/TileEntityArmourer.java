@@ -97,7 +97,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     public void updatePaintData(int x, int y, int colour) {
         paintData[x + (y * SkinTexture.TEXTURE_WIDTH)] = colour;
         this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     public int getPaintData(int x, int y) {
@@ -110,7 +110,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
      * @param name Custom name for the item.
      */
     public void saveArmourItem(EntityPlayerMP player, String customName, String tags) {
-        if (this.worldObj.isRemote) {
+        if (getWorldObj().isRemote) {
             return;
         }
         ItemStack stackInput = getStackInSlot(0);
@@ -180,7 +180,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         
         this.decrStackSize(0, 1);
         setInventorySlotContents(1, stackOutput);
-        
     }
 
     /**
@@ -188,7 +187,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
      * @param player The player that pressed the load button.
      */
     public void loadArmourItem(EntityPlayerMP player) {
-        if (this.worldObj.isRemote) {
+        if (getWorldObj().isRemote) {
             return;
         }
         ItemStack stackInput = this.getStackInSlot(0);
@@ -229,8 +228,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         } else {
             clearPaintData(true);
         }
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
         
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
@@ -242,7 +240,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             this.paintData[i] = 0x00FFFFFF;
         }
         if (update) {
-            resyncData();
+            dirtySync();
         }
     }
     
@@ -295,7 +293,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             SkinProperties newSkinProps = new SkinProperties();
             SkinProperties.PROP_BLOCK_MULTIBLOCK.setValue(newSkinProps, SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps));
             setSkinProps(newSkinProps);
-            resyncData();
+            dirtySync();
         }
     }
     
@@ -316,14 +314,14 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     
     public void setDirection(ForgeDirection direction) {
         this.direction = direction;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public ForgeDirection getDirection() {
         return direction;
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = super.getRenderBoundingBox();
@@ -353,8 +351,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     public void setTexture(PlayerTexture texture) {
         this.textureOld = this.texture;
         this.texture = texture;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public PlayerTexture getTexture() {
@@ -374,26 +371,22 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         skinProps = new SkinProperties();
         clearPaintData(true);
         createBoundingBoxes(); 
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public void toggleOverlay() {
         this.showOverlay = !this.showOverlay;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();;
     }
     
     public void toggleHelper() {
         this.showHelper = !this.showHelper;
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public SkinProperties getSkinProps() {
@@ -414,12 +407,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             removeBoundingBoxes();
             createBoundingBoxes();
         }
-        resyncData();
-    }
-    
-    public void resyncData() {
-        this.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     @Override
@@ -448,7 +436,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (!texture.equals(playerTexture)) {
             textureOld = playerTexture;
         }
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
         loadedArmourItem = true;
     }
     

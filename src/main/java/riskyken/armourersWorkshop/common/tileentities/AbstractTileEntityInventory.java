@@ -4,10 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 
-public abstract class AbstractTileEntityInventory extends TileEntity implements IInventory {
+public abstract class AbstractTileEntityInventory extends ModTileEntity implements IInventory {
 
     private static final String TAG_ITEMS = "items";
     protected final ItemStack[] items;
