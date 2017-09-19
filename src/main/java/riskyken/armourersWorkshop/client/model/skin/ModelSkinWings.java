@@ -98,7 +98,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
             GL11.glRotated(angle, 0, 1, 0);
             break;
         case NORTH:
-            GL11.glRotated(angle, 1, 0, 0);
+            GL11.glRotated(-angle, 0, 0, 1);
             break;
         case EAST:
             GL11.glRotated(angle, 1, 0, 0);
@@ -107,7 +107,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
             GL11.glRotated(angle, 0, 0, 1);
             break;
         case WEST:
-            GL11.glRotated(angle, 0, 0, 1);
+            GL11.glRotated(-angle, 1, 0, 0);
             break;
         case UNKNOWN:
             break;
@@ -142,7 +142,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
             GL11.glRotated(angle, 0, 1, 0);
             break;
         case NORTH:
-            GL11.glRotated(angle, 1, 0, 0);
+            GL11.glRotated(-angle, 0, 0, 1);
             break;
         case EAST:
             GL11.glRotated(angle, 1, 0, 0);
