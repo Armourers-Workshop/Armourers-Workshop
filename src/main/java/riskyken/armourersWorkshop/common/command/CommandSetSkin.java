@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.command;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -86,12 +88,17 @@ public class CommandSetSkin extends ModCommand {
             int dyeIndex = parseIntBounded(commandSender, commandSplit[0], 1, 8) - 1;
             String dye = commandSplit[1];
             
-            if (dye.startsWith("#") & dye.length() == 8) {
-                Color dyeColour = Color.decode(dye);
-                int r = dyeColour.getRed();
-                int g = dyeColour.getGreen();
-                int b = dyeColour.getBlue();
-                skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)255});
+            if (dye.startsWith("#") && dye.length() == 7) {
+                //dye = dye.substring(2, 8);
+                if (isValidHex(dye)) {
+                    Color dyeColour = Color.decode(dye);
+                    int r = dyeColour.getRed();
+                    int g = dyeColour.getGreen();
+                    int b = dyeColour.getBlue();
+                    skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)255});
+                } else {
+                    throw new WrongUsageException("commands.armourers.invalidDyeFormat", (Object)dye);
+                }
             } else if (dye.length() >= 5 & dye.contains(",")) {
                 String dyeValues[] = dye.split(",");
                 if (dyeValues.length != 3) {
@@ -114,5 +121,13 @@ public class CommandSetSkin extends ModCommand {
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, skinName);
         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin, skinDye);
         ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
+    }
+    
+    private boolean isValidHex (String colorStr) {
+        ModLogger.log(colorStr);
+        String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        Pattern pattern = Pattern.compile(hexPatten);
+        Matcher matcher = pattern.matcher(colorStr);
+        return matcher.matches();
     }
 }
