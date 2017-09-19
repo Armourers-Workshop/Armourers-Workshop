@@ -149,7 +149,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             mannequinFakePlayer.isAirBorne = te.isFlying();
             mannequinFakePlayer.capabilities.isFlying = te.isFlying();
         }
-        
+        if (fakePlayer != null) {
+            fakePlayer.setEntityId(te.xCoord * 31 * -te.zCoord);
+            fakePlayer.isAirBorne = te.isFlying();
+            fakePlayer.capabilities.isFlying = te.isFlying();
+        }
         
         if (te.getBipedRotations() != null) {
             te.getBipedRotations().applyRotationsToBiped(model);

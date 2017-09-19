@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import org.apache.commons.io.IOUtils;
 
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 import riskyken.armourersWorkshop.utils.StreamUtils;
 
 public class SkinProperties {
@@ -33,8 +34,10 @@ public class SkinProperties {
     public static final SkinProperty<Double> PROP_WINGS_MIN_ANGLE = new SkinProperty<Double>("wingsMinAngle", 0D);
     public static final SkinProperty<Double> PROP_WINGS_IDLE_SPEED = new SkinProperty<Double>("wingsIdleSpeed", 6000D);
     public static final SkinProperty<Double> PROP_WINGS_FLYING_SPEED = new SkinProperty<Double>("wingsFlyingSpeed", 350D);
+    public static final SkinProperty<String> PROP_WINGS_MOVMENT_TYPE = new SkinProperty<String>("wingsMovmentType", MovementType.EASE.toString());
     
     private static final String TAG_SKIN_PROPS = "skinProps";
+
     private final LinkedHashMap<String, Object> properties;
     
     public SkinProperties() {

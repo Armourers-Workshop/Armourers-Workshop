@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
+import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 
 public final class SkinUtils {
     
@@ -73,6 +74,7 @@ public final class SkinUtils {
         double minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties());
         double idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties());
         double flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties());
+        MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
         
         double angle = 0;
         double flapTime = idleSpeed;
@@ -87,11 +89,23 @@ public final class SkinUtils {
                     flapTime = flyingSpeed;
                 }
             }
+            
             angle = (((double)System.currentTimeMillis() + entity.getEntityId()) % flapTime);
-            angle = Math.sin(angle / flapTime * Math.PI * 2);
+            if (movmentType == MovementType.EASE) {
+                angle = Math.sin(angle / flapTime * Math.PI * 2);
+            }
+            if (movmentType == MovementType.LINEAR) {
+                angle = angle / flapTime;
+            }
         }
         
+
+        
         double fullAngle = maxAngle - minAngle;
+        if (movmentType == MovementType.LINEAR) {
+            return fullAngle * angle;
+        }
+        
         return -minAngle - fullAngle * ((angle + 1D) / 2);
     }
 }

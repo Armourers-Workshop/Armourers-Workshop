@@ -224,6 +224,10 @@ skinPartType.armourers:block.multiblock.name=Multiblock
 skinPartType.armourers:wings.leftWing.name=Left Wing
 skinPartType.armourers:wings.rightWing.name=Right Wing
 
+# Movement types
+movmentType.armourersworkshop:ease=Ease
+movmentType.armourersworkshop:linear=Linear
+
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer

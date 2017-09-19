@@ -50,6 +50,12 @@ public class SkinWings extends AbstractSkinTypeBase {
         properties.add(SkinProperties.PROP_WINGS_IDLE_SPEED);
         properties.add(SkinProperties.PROP_WINGS_MAX_ANGLE);
         properties.add(SkinProperties.PROP_WINGS_MIN_ANGLE);
+        properties.add(SkinProperties.PROP_WINGS_MOVMENT_TYPE);
         return properties;
+    }
+    
+    public static enum MovementType {
+        EASE,
+        LINEAR
     }
 }

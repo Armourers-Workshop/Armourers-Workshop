@@ -13,6 +13,8 @@ import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
+import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import riskyken.armourersWorkshop.client.gui.controls.GuiInventorySize;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
@@ -21,10 +23,12 @@ import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSetArmourerSkinProps;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
-public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
+public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, IDropDownListCallback {
     
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.ARMOURER);
     private static final String DEGREE  = "\u00b0";
@@ -47,6 +51,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
     private GuiCustomSlider sliderWingMaxAngle;
     
     private GuiCheckBox checkArmourOverrideBodyPart;
+    private GuiDropDownList dropDownList;
     
     private boolean resetting;
     
@@ -96,8 +101,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         
         sliderWingIdleSpeed = new GuiCustomSlider(15, 10, 45, 154, 10, "", "ms", 200D, 10000D, SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skinProps), false, true, this);
         sliderWingFlyingSpeed = new GuiCustomSlider(15, 10, 65, 154, 10, "", "ms", 200D, 10000D, SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skinProps), false, true, this);
-        sliderWingMinAngle = new GuiCustomSlider(15, 10, 85, 154, 10, "", DEGREE, -90D, 90D, SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skinProps), false, true, this);
-        sliderWingMaxAngle = new GuiCustomSlider(15, 10, 105, 154, 10, "", DEGREE, -90D, 90D, SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skinProps), false, true, this);
+        sliderWingMinAngle = new GuiCustomSlider(15, 10, 85, 154, 10, "", DEGREE, -180D, 180D, SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skinProps), false, true, this);
+        sliderWingMaxAngle = new GuiCustomSlider(15, 10, 105, 154, 10, "", DEGREE, -180D, 180D, SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skinProps), false, true, this);
         
         sliderWingIdleSpeed.setFineTuneButtons(true);
         sliderWingFlyingSpeed.setFineTuneButtons(true);
@@ -105,6 +110,18 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         sliderWingMaxAngle.setFineTuneButtons(true);
         
         checkArmourOverrideBodyPart = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps));
+        
+        MovementType skinMovmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skinProps));
+        dropDownList = new GuiDropDownList(0, 10, 125, 50, "", this);
+        for (int i = 0; i < MovementType.values().length; i++) {
+            MovementType movementType = MovementType.values()[i];
+            String unlocalizedName = "movmentType." + LibModInfo.ID.toLowerCase() + ":" + movementType.name().toLowerCase();
+            String localizedName = StatCollector.translateToLocal(unlocalizedName);
+            dropDownList.addListItem(localizedName, movementType.name(), true);
+            if (movementType == skinMovmentType) {
+                dropDownList.setListSelectedIndex(i);
+            }
+        }
         
         buttonList.add(checkBlockGlowing);
         buttonList.add(checkBlockLadder);
@@ -122,6 +139,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         buttonList.add(sliderWingMaxAngle);
         
         buttonList.add(checkArmourOverrideBodyPart);
+        buttonList.add(dropDownList);
     }
     
     @Override
@@ -196,6 +214,15 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
         sliderWingFlyingSpeed.updateSlider();
         
         checkArmourOverrideBodyPart.setIsChecked(SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProperties));
+        
+        MovementType skinMovmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skinProperties));
+        for (int i = 0; i < MovementType.values().length; i++) {
+            MovementType movementType = MovementType.values()[i];
+            if (movementType == skinMovmentType) {
+                dropDownList.setListSelectedIndex(i);
+            }
+        }
+        
         resetting = false;
     }
     
@@ -261,5 +288,13 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider {
             
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
+    }
+
+    @Override
+    public void onDropDownListChanged(GuiDropDownList dropDownList) {
+        SkinProperties skinProps = tileEntity.getSkinProps();
+        SkinProperties.PROP_WINGS_MOVMENT_TYPE.setValue(skinProps, dropDownList.getListSelectedItem().tag);
+        ModLogger.log("Setting skin movment type to: " + dropDownList.getListSelectedItem().tag);
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
     }
 }
