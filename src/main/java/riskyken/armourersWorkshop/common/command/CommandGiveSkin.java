@@ -1,6 +1,9 @@
 package riskyken.armourersWorkshop.common.command;
 
+import java.awt.Color;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -9,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -30,7 +34,6 @@ public class CommandGiveSkin extends ModCommand {
 
     @Override
     public void processCommand(ICommandSender commandSender, String[] currentCommand) {
-        ModLogger.log("give");
         if (currentCommand.length < 3) {
             throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
         }
@@ -41,17 +44,89 @@ public class CommandGiveSkin extends ModCommand {
         }
         
         String skinName = currentCommand[2];
-        for (int i = 3; i < currentCommand.length; i++) {
-            skinName += " " + currentCommand[i];
+        if (!skinName.substring(0, 1).equals("\"")) {
+            throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
         }
-        Skin armourItemData = SkinIOUtils.loadSkinFromFileName(skinName + ".armour");
-        if (armourItemData == null) {
+        
+        int usedCommands = 2;
+        
+        if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
+            for (int i = 3; i < currentCommand.length; i++) {
+                skinName += " " + currentCommand[i];
+                if (skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
+                    usedCommands = i;
+                    break;
+                }
+            }
+        }        
+        
+        ModLogger.log("usedCommands used: " + usedCommands);
+        ModLogger.log("total commands used: " + currentCommand.length);
+        
+        if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
+            throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+        }
+        
+        skinName = skinName.replace("\"", "");
+        SkinDye skinDye = new SkinDye();
+        
+        for (int i = usedCommands + 1; i < currentCommand.length; i++) {
+            String dyeCommand = currentCommand[i];
+            ModLogger.log("Command dye: " + dyeCommand);
+            
+            if (!dyeCommand.contains("-")) {
+                throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+            }
+            String commandSplit[] = dyeCommand.split("-");
+            if (commandSplit.length != 2) {
+                throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+            }
+            
+            int dyeIndex = parseIntBounded(commandSender, commandSplit[0], 1, 8) - 1;
+            String dye = commandSplit[1];
+            
+            if (dye.startsWith("#") && dye.length() == 7) {
+                //dye = dye.substring(2, 8);
+                if (isValidHex(dye)) {
+                    Color dyeColour = Color.decode(dye);
+                    int r = dyeColour.getRed();
+                    int g = dyeColour.getGreen();
+                    int b = dyeColour.getBlue();
+                    skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)255});
+                } else {
+                    throw new WrongUsageException("commands.armourers.invalidDyeFormat", (Object)dye);
+                }
+            } else if (dye.length() >= 5 & dye.contains(",")) {
+                String dyeValues[] = dye.split(",");
+                if (dyeValues.length != 3) {
+                    throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+                }
+                int r = parseIntBounded(commandSender, dyeValues[0], 0, 255);
+                int g = parseIntBounded(commandSender, dyeValues[1], 0, 255);
+                int b = parseIntBounded(commandSender, dyeValues[2], 0, 255);
+                skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)255});
+            } else {
+                throw new WrongUsageException("commands.armourers.invalidDyeFormat", (Object)dye);
+            }
+        }
+        
+        Skin skin = SkinIOUtils.loadSkinFromFileName(skinName + ".armour");
+        if (skin == null) {
             throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
         }
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, skinName);
-        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(armourItemData);
+        
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, skinName);
+        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin, skinDye);
         EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
         entityItem.delayBeforeCanPickup = 0;
         entityItem.func_145797_a(player.getCommandSenderName());
+    }
+    
+    private boolean isValidHex (String colorStr) {
+        ModLogger.log(colorStr);
+        String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        Pattern pattern = Pattern.compile(hexPatten);
+        Matcher matcher = pattern.matcher(colorStr);
+        return matcher.matches();
     }
 }

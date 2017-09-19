@@ -168,10 +168,17 @@ public class SkinNBTHelper {
         return skinDataCompound.getInteger(TAG_OLD_SKIN_ID);
     }
     
-    public static ItemStack makeEquipmentSkinStack(Skin equipmentItemData) {
+    public static ItemStack makeEquipmentSkinStack(Skin skin, ISkinDye skinDye) {
         ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, equipmentItemData.getSkinType(), equipmentItemData.hashCode(), false, null);
+        addSkinDataToStack(stack, skin.getSkinType(), skin.hashCode(), false, skinDye);
+        return stack;
+    }
+    
+    public static ItemStack makeEquipmentSkinStack(Skin skin) {
+        ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
+        stack.setTagCompound(new NBTTagCompound());
+        addSkinDataToStack(stack, skin.getSkinType(), skin.hashCode(), false, null);
         return stack;
     }
     
