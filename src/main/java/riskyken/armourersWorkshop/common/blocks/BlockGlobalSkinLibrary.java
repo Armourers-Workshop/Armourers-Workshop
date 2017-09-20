@@ -22,6 +22,7 @@ public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEnt
 
     public BlockGlobalSkinLibrary() {
         super(LibBlockNames.GLOBAL_SKIN_LIBRARY);
+        setSortPriority(197);
     }
     
     @Override

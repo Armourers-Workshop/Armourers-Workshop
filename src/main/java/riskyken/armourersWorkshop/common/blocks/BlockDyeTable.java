@@ -21,6 +21,7 @@ public class BlockDyeTable extends AbstractModBlockContainer {
 
     public BlockDyeTable() {
         super(LibBlockNames.DYE_TABLE);
+        setSortPriority(150);
     }
     
     @Override

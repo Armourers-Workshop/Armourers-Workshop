@@ -11,6 +11,10 @@ public class BlockColourableGlass extends BlockColourable {
 
     public BlockColourableGlass(String name, boolean glowing) {
         super(name, glowing);
+        setSortPriority(122);
+        if (glowing) {
+            setSortPriority(123);
+        }
     }
     
     @SideOnly(Side.CLIENT)

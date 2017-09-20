@@ -32,6 +32,10 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
         }
         setHardness(1.0F);
         setLightOpacity(0);
+        setSortPriority(120);
+        if (glowing) {
+            setSortPriority(121);
+        }
     }
     
     @Override

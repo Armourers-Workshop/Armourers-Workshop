@@ -26,6 +26,7 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
 
     public BlockHologramProjector() {
         super(LibBlockNames.HOLOGRAM_PROJECTOR);
+        setSortPriority(150);
     }
     
     @Override

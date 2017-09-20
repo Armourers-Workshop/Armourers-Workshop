@@ -37,6 +37,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     
     public ItemPaintbrush() {
         super(LibItemNames.PAINTBRUSH);
+        setSortPriority(20);
     }
 
     @SideOnly(Side.CLIENT)

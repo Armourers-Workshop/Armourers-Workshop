@@ -3,10 +3,13 @@ package riskyken.armourersWorkshop.common.blocks;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.creativetab.ISortOrder;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
-public abstract class AbstractModBlockContainer extends BlockContainer {
+public abstract class AbstractModBlockContainer extends BlockContainer implements ISortOrder {
 
+    private int sortPriority = 100;
+    
     public AbstractModBlockContainer(String name) {
         super(Material.iron);
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
@@ -33,5 +36,15 @@ public abstract class AbstractModBlockContainer extends BlockContainer {
     protected String getModdedUnlocalizedName(String unlocalizedName) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
         return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
+    }
+    
+    public AbstractModBlockContainer setSortPriority(int sortPriority) {
+        this.sortPriority = sortPriority;
+        return this;
+    }
+    
+    @Override
+    public int getSortPriority() {
+        return sortPriority;
     }
 }

@@ -31,6 +31,7 @@ public class ItemSkinUnlock extends AbstractModItem {
     public ItemSkinUnlock() {
         super(LibItemNames.SKIN_UNLOCK);
         setHasSubtypes(true);
+        setSortPriority(7);
     }
     
     @Override

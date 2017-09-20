@@ -20,6 +20,7 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
 
     public ItemArmourersHammer() {
         super(LibItemNames.ARMOURERS_HAMMER);
+        setSortPriority(9);
     }
     
     @Override

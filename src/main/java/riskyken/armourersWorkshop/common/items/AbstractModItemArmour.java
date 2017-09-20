@@ -15,13 +15,16 @@ import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.common.creativetab.ISortOrder;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class AbstractModItemArmour extends ItemArmor {
+public class AbstractModItemArmour extends ItemArmor implements ISortOrder {
 
+    private int sortPriority = 0;
+    
     public AbstractModItemArmour(String name, ArmorMaterial armorMaterial, int armorType, boolean addCreativeTab) {
         super(armorMaterial, 2, armorType);
         if (addCreativeTab) {
@@ -110,5 +113,15 @@ public class AbstractModItemArmour extends ItemArmor {
         targetModel.npcSkinData = data;
         targetModel.npcDyeData = skinData.getSkinDye();
         return targetModel;
+    }
+    
+    public AbstractModItemArmour setSortPriority(int sortPriority) {
+        this.sortPriority = sortPriority;
+        return this;
+    }
+
+    @Override
+    public int getSortPriority() {
+        return sortPriority;
     }
 }

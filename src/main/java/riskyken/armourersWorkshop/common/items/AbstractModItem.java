@@ -2,18 +2,21 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.creativetab.ISortOrder;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class AbstractModItem extends Item {
+public abstract class AbstractModItem extends Item implements ISortOrder {
 
+    private int sortPriority = 0;
+    
     public AbstractModItem(String name) {
         this(name, true);
     }
@@ -82,5 +85,15 @@ public abstract class AbstractModItem extends Item {
         } else {
             return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
         }
+    }
+    
+    public AbstractModItem setSortPriority(int sortPriority) {
+        this.sortPriority = sortPriority;
+        return this;
+    }
+    
+    @Override
+    public int getSortPriority() {
+        return sortPriority;
     }
 }

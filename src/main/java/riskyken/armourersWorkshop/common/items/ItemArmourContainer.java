@@ -12,6 +12,7 @@ public class ItemArmourContainer extends AbstractModItemArmour {
 
     public ItemArmourContainer(String name, int armourType) {
         super(name, ArmorMaterial.IRON, armourType, false);
+        setCreativeTab(null);
     }
     
     @SideOnly(Side.CLIENT)

@@ -38,6 +38,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
 
     public ItemShadeNoiseTool() {
         super(LibItemNames.SHADE_NOISE_TOOL);
+        setSortPriority(16);
     }
     
     @Override

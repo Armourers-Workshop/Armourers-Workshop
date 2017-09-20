@@ -37,6 +37,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     
     public ItemColourPicker() {
         super(LibItemNames.COLOUR_PICKER);
+        setSortPriority(12);
     }
     
     @SideOnly(Side.CLIENT)

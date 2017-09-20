@@ -19,6 +19,7 @@ public class ItemWandOfStyle extends AbstractModItem {
 
     public ItemWandOfStyle() {
         super(LibItemNames.WAND_OF_STYLE);
+        setSortPriority(8);
     }
     
     @Override

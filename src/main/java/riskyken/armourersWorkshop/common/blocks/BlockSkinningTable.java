@@ -22,6 +22,7 @@ public class BlockSkinningTable extends AbstractModBlockContainer {
 
     public BlockSkinningTable() {
         super(LibBlockNames.SKINNING_TABLE);
+        setSortPriority(150);
     }
     
     @Override

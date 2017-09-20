@@ -38,6 +38,7 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
 
     public ItemColourNoiseTool() {
         super(LibItemNames.COLOUR_NOISE_TOOL);
+        setSortPriority(15);
     }
     
     @Override

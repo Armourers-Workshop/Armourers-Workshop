@@ -49,6 +49,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     public ItemBlendingTool() {
         super(LibItemNames.BLENDING_TOOL);
         MinecraftForge.EVENT_BUS.register(this);
+        setSortPriority(14);
     }
     
     @Override

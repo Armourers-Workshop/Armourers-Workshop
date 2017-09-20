@@ -39,6 +39,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     
     public ItemHueTool() {
         super(LibItemNames.HUE_TOOL);
+        setSortPriority(13);
     }
     
     @Override

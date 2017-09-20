@@ -17,6 +17,7 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
 
     public BlockMiniArmourer() {
         super(LibBlockNames.MINI_ARMOURER);
+        setSortPriority(-1);
     }
     
     @Override

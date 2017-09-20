@@ -13,7 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
-import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
@@ -26,6 +25,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
 
     public ItemDyeBottle() {
         super(LibItemNames.DYE_BOTTLE);
+        setSortPriority(11);
     }
     
     private IIcon paintIcon;

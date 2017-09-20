@@ -46,6 +46,7 @@ public class BlockDoll extends AbstractModBlockContainer {
         setLightOpacity(0);
         setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
+        setSortPriority(198);
     }
     
     @Override

@@ -24,6 +24,7 @@ public class BlockColourMixer extends AbstractModBlockContainer {
 
     public BlockColourMixer() {
         super(LibBlockNames.COLOUR_MIXER);
+        setSortPriority(124);
     }
     
     @Override

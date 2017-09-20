@@ -27,6 +27,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
 
     public BlockArmourer() {
         super(LibBlockNames.ARMOURER_BRAIN);
+        setSortPriority(200);
     }
     
     @Override

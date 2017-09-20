@@ -54,6 +54,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         setLightOpacity(0);
         setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
+        setSortPriority(199);
     }
     
     @Override

@@ -27,6 +27,7 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
 
     public BlockSkinLibrary() {
         super(LibBlockNames.ARMOUR_LIBRARY);
+        setSortPriority(150);
     }
     
     @Override

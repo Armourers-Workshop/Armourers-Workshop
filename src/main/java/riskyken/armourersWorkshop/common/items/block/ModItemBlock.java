@@ -7,8 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import riskyken.armourersWorkshop.common.creativetab.ISortOrder;
 
-public class ModItemBlock extends ItemBlock {
+public class ModItemBlock extends ItemBlock implements ISortOrder {
 
     public ModItemBlock(Block block) {
         super(block);
@@ -38,5 +39,13 @@ public class ModItemBlock extends ItemBlock {
         }
         
         super.addInformation(itemStack, player, list, par4);
+    }
+
+    @Override
+    public int getSortPriority() {
+        if (field_150939_a instanceof ISortOrder) {
+            return ((ISortOrder)field_150939_a).getSortPriority();
+        }
+        return 100;
     }
 }

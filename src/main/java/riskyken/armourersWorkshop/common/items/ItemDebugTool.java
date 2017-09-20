@@ -17,6 +17,7 @@ public class ItemDebugTool extends AbstractModItem {
 
     public ItemDebugTool() {
         super(LibItemNames.DEBUG_TOOL, true);
+        setSortPriority(-1);
     }
     
     @SideOnly(Side.CLIENT)
@@ -33,8 +34,7 @@ public class ItemDebugTool extends AbstractModItem {
         return stack;
     }
     
-    public static interface IDebug {
-        
+    public static interface IDebug {   
         public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines);
     }
 }

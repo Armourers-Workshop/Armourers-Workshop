@@ -38,6 +38,7 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
 
     public ItemBurnTool() {
         super(LibItemNames.BURN_TOOL);
+        setSortPriority(18);
     }
 
     @Override

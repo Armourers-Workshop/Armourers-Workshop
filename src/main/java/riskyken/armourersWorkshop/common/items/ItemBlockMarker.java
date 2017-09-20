@@ -15,6 +15,7 @@ public class ItemBlockMarker extends AbstractModItem {
 
     public ItemBlockMarker() {
         super(LibItemNames.BLOCK_MARKER);
+        setSortPriority(12);
     }
     
     @SideOnly(Side.CLIENT)

@@ -34,6 +34,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     public ItemPaintRoller() {
         super(LibItemNames.PAINT_ROLLER);
+        setSortPriority(19);
     }
     
     @SideOnly(Side.CLIENT)

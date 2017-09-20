@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,8 +18,6 @@ import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemMannequinTool extends AbstractModItem {
     
@@ -25,6 +25,7 @@ public class ItemMannequinTool extends AbstractModItem {
 
     public ItemMannequinTool() {
         super(LibItemNames.MANNEQUIN_TOOL);
+        setSortPriority(10);
     }
 
     @Override

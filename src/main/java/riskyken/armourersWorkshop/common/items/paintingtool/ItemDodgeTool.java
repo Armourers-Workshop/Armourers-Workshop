@@ -38,6 +38,7 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
 
     public ItemDodgeTool() {
         super(LibItemNames.DODGE_TOOL);
+        setSortPriority(17);
     }
 
     @Override
