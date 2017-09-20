@@ -15,16 +15,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
+import riskyken.armourersWorkshop.client.render.IRenderBuffer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.RenderBridge;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
-import riskyken.plushieWrapper.client.IRenderBuffer;
-import riskyken.plushieWrapper.client.RenderBridge;
-import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockColourable extends TileEntitySpecialRenderer {
@@ -193,7 +192,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
                 return true;
             } else if (item == ModItems.colourPicker) {
                 return true;
-            } else if (item == ModRegistry.getMinecraftItem(ModItems.blockMarker)) {
+            } else if (item == ModItems.blockMarker) {
                 return true;
             }
         }

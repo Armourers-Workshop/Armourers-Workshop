@@ -37,7 +37,6 @@ import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
-import riskyken.plushieWrapper.common.creativetab.ModCreativeTab;
 
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class ArmourersWorkshop {
@@ -81,7 +80,6 @@ public class ArmourersWorkshop {
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
     public static CommonProxy proxy;
 
-    public static ModCreativeTab creativeTabArmorersWorkshop = new ModCreativeTab(LibModInfo.ID);
     public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
 
     private static ModItems modItems;
@@ -90,7 +88,6 @@ public class ArmourersWorkshop {
     @Mod.EventHandler
     public void perInit(FMLPreInitializationEvent event) {
         ModLogger.log(String.format("Loading %s version %s", LibModInfo.NAME, LibModInfo.VERSION));
-        creativeTabArmorersWorkshop.setMinecraftCreativeTab(tabArmorersWorkshop);
         
         File configDir = event.getSuggestedConfigurationFile().getParentFile();
         configDir = new File(configDir, LibModInfo.ID);

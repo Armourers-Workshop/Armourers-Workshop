@@ -36,8 +36,10 @@ import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
+import riskyken.armourersWorkshop.client.render.IRenderBuffer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.RenderBridge;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
@@ -51,8 +53,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import riskyken.plushieWrapper.client.IRenderBuffer;
-import riskyken.plushieWrapper.client.RenderBridge;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer {

@@ -19,8 +19,8 @@ public class ItemDebugTool extends AbstractModItem {
         super(LibItemNames.DEBUG_TOOL, true);
     }
     
-    @Override
     @SideOnly(Side.CLIENT)
+    @Override
     public void registerIcons(IIconRegister register) {
         itemIcon = register.registerIcon(LibItemResources.DEBUG_TOOL);
     }

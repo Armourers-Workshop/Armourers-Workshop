@@ -1,4 +1,4 @@
-package riskyken.plushieWrapper.common.world;
+package riskyken.armourersWorkshop.common.blocks;
 
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;

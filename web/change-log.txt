@@ -1,3 +1,28 @@
+Build 0.48.0 (dev)
+Added:
+	Added movement types to wing skins.
+	Added ender inventory option to block skins.
+	Added fine tune buttons to the hologram projector and armourer GUI sliders.
+	Added recipes for wing slot unlock item, blending tool, hologram projector and the global library.
+Fixed:
+	Fix wing skins rotating wrong on some axis.
+	Flying option on mannequins only working when they are named.
+	Fixed the skin settings tab in the armourer sometimes showing when it…
+Changed:
+	Allowed more than one wing skin to be equipped.
+	Moved arrow skins into the bow skin. 
+	Allowed give set skin commands to add dyes.
+	Removed meta data from global library GUI texture.
+	Increased the size of the wing building bounds.
+	Changed the hologram projector recipe to use light blue glass.
+	Removed the global skin library's WIP text.
+Art:
+	Added texture for wing slot unlock item. (LordPhrozen)
+Refractor:
+	Updated armourer tile entity to use the mod tile entity.
+	Clean-up of the skin property system.
+
+
 Build 0.47.1
 Fixed:
 	Fixed the invalid Java version error not showing if an older version of java 8 is installed.

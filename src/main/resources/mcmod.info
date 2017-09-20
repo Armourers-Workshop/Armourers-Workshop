@@ -12,17 +12,5 @@
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
-},
-{
-  "modid": "plushieWrapper",
-  "name": "Plushie Wrapper",
-  "description": "Adds a soft plushie wrapper to Minecraft!",
-  "version": "0.0.0",
-  "mcversion": "${mcversion}",
-  "authorList": ["RiskyKen"],
-  "credits": "",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
 }
 ]

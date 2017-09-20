@@ -11,9 +11,9 @@ import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class SkinPart implements ISkinPart {
     

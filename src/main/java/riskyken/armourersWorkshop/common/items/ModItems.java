@@ -15,8 +15,6 @@ import riskyken.armourersWorkshop.common.items.paintingtool.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemShadeNoiseTool;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.plushieWrapper.common.item.PlushieItem;
-import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class ModItems {
     
@@ -32,13 +30,13 @@ public class ModItems {
     public static Item shadeNoiseTool;
     public static Item hueTool;
     public static Item blendingTool;
-    public static PlushieItem blockMarker;
+    public static Item blockMarker;
     
     public static Item mannequinTool;
     public static Item wandOfStyle;
-    public static PlushieItem soap;
+    public static Item soap;
     public static Item dyeBottle;
-    public static PlushieItem guideBook;
+    public static Item guideBook;
     public static Item armourersHammer;
     public static Item debugTool;
     public static Item skinUnlock;
@@ -78,10 +76,6 @@ public class ModItems {
         armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, 1);
         armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, 2);
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, 3);
-        
-        ModRegistry.registerItem(guideBook);
-        ModRegistry.registerItem(soap);
-        ModRegistry.registerItem(blockMarker);
     }
     
     private void setEquipmentSkinType() {

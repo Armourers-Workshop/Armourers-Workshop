@@ -23,6 +23,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.inventory.ModInventory;
@@ -34,7 +35,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.utils.ModConstants;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class TileEntitySkinnable extends TileEntity {
 

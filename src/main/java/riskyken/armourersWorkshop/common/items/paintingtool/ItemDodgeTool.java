@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -32,7 +33,6 @@ import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilItems;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool, IBlockPainter {
 

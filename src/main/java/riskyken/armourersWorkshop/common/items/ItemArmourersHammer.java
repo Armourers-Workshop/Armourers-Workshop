@@ -25,7 +25,7 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.ARMOURERs_HAMMER);
+        itemIcon = register.registerIcon(LibItemResources.ARMOURERS_HAMMER);
     }
     
     @Override

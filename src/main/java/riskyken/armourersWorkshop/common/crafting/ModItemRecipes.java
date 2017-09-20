@@ -5,7 +5,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public final class ModItemRecipes {
 
@@ -73,7 +72,7 @@ public final class ModItemRecipes {
             'b', "dyeBlack",
             's', "stickWood"});
         
-        CraftingManager.addShapedRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.blockMarker), 1, 0), new Object[] {
+        CraftingManager.addShapedRecipe(new ItemStack(ModItems.blockMarker, 1, 0), new Object[] {
             "  b",
             " c ",
             "b  ",
@@ -137,11 +136,11 @@ public final class ModItemRecipes {
                 'i', "ingotIron",
                 's', "stickWood"});
         
-        CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.guideBook), 1, 0), new Object[] {
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.guideBook, 1, 0), new Object[] {
             new ItemStack(Items.book, 1),
             new ItemStack(ModBlocks.colourable, 1)});
         
-        CraftingManager.addShapelessRecipe(new ItemStack(ModRegistry.getMinecraftItem(ModItems.soap), 1, 0), new Object[] {
+        CraftingManager.addShapelessRecipe(new ItemStack(ModItems.soap, 1, 0), new Object[] {
             new ItemStack(Items.water_bucket, 1),
             new ItemStack(Items.rotten_flesh, 1),
             "slimeball"});

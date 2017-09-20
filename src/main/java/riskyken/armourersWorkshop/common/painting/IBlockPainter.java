@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import riskyken.plushieWrapper.common.world.BlockLocation;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 
 public interface IBlockPainter {
     

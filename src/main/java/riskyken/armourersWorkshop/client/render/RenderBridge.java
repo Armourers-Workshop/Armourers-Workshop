@@ -1,13 +1,13 @@
-package riskyken.plushieWrapper.client;
+package riskyken.armourersWorkshop.client.render;
 
-import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.Tessellator;
 
 @SideOnly(Side.CLIENT)
 public class RenderBridge implements IRenderBuffer {
 
-    public static IRenderBuffer INSTANCE;
+    public static IRenderBuffer INSTANCE = new RenderBridge();
     
     Tessellator tessellator;
     

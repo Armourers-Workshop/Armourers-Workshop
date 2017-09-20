@@ -18,7 +18,9 @@ import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.bake.FaceRenderer;
+import riskyken.armourersWorkshop.client.render.IRenderBuffer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.RenderBridge;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.MiniCube;
@@ -29,8 +31,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import riskyken.plushieWrapper.client.IRenderBuffer;
-import riskyken.plushieWrapper.client.RenderBridge;
 
 @SideOnly(Side.CLIENT)
 public class GuiMiniArmourerBuildingModel {

@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
@@ -41,7 +42,6 @@ import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class TileEntityArmourer extends AbstractTileEntityInventory {
     

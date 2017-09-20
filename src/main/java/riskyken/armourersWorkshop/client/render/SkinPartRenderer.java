@@ -19,8 +19,6 @@ import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
-import riskyken.plushieWrapper.client.IRenderBuffer;
-import riskyken.plushieWrapper.client.RenderBridge;
 
 @SideOnly(Side.CLIENT)
 public class SkinPartRenderer extends ModelBase {

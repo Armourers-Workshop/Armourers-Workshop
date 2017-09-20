@@ -9,7 +9,6 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class RecipeClearDye implements IRecipe {
 
@@ -29,7 +28,7 @@ public class RecipeClearDye implements IRecipe {
                 continue;
             }
             Item item = stack.getItem();
-            if (item == ModRegistry.getMinecraftItem(ModItems.soap)) {
+            if (item == ModItems.soap) {
                 if (soapStack != null) {
                     return null;
                 }

@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.BlockMannequin;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -31,7 +32,6 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurableTool {
     

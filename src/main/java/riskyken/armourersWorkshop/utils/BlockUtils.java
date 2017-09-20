@@ -13,9 +13,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public final class BlockUtils {
     

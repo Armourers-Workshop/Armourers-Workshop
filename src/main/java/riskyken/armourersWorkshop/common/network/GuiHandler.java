@@ -56,7 +56,6 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.plushieWrapper.common.registry.ModRegistry;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -169,7 +168,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.GUIDE_BOOK:
-                if (player.getCurrentEquippedItem().getItem() == ModRegistry.getMinecraftItem(ModItems.guideBook)) {
+                if (player.getCurrentEquippedItem().getItem() == ModItems.guideBook) {
                     return new GuiGuideBook(player.getCurrentEquippedItem());
                 }
                 break;

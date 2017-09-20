@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
@@ -28,7 +29,6 @@ import riskyken.armourersWorkshop.common.skin.type.block.SkinBlock;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.utils.BlockUtils;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 /**
  * Helper class for converting back and forth from
  * in world blocks to skin classes.

@@ -1,4 +1,4 @@
-package riskyken.plushieWrapper.client;
+package riskyken.armourersWorkshop.client.render;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

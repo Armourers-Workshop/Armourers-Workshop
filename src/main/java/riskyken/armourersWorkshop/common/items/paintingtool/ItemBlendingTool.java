@@ -28,6 +28,7 @@ import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -42,7 +43,6 @@ import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilItems;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemBlendingTool extends AbstractModItem implements IConfigurableTool, IBlockPainter {
 

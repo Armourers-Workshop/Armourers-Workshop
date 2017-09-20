@@ -28,6 +28,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
@@ -44,7 +45,6 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.SkinUtils;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 import riskyken.armourersWorkshop.utils.UtilPlayer;
-import riskyken.plushieWrapper.common.world.BlockLocation;
 
 public class ItemSkin extends AbstractModItem {
 

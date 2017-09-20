@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
-import riskyken.plushieWrapper.client.IRenderBuffer;
-import riskyken.plushieWrapper.client.RenderBridge;
+import riskyken.armourersWorkshop.client.render.IRenderBuffer;
+import riskyken.armourersWorkshop.client.render.RenderBridge;
 
 public class FaceRenderer {
     
