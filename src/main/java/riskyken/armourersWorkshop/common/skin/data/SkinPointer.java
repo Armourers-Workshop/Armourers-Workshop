@@ -10,68 +10,67 @@ public class SkinPointer implements ISkinPointer {
 
     public static final String TAG_SKIN_DATA = "armourersWorkshop";
     private static final String TAG_SKIN_TYPE = "skinType";
-    private static final String TAG_SKIN_ID = "skinId";
     private static final String TAG_SKIN_LOCK = "lock";
     
     public ISkinType skinType;
-    public int skinId;
+    private SkinIdentifier identifier;
+    
     public boolean lockSkin;
     public SkinDye skinDye;
     
-    
-    /**
-     * TODO add more skin tracking info here
-     * 
-     * library file name
-     * global library id
-     */
-    
     public SkinPointer() {
         this.skinDye = new SkinDye();
+        this.identifier = new SkinIdentifier(0, null, 0);
     }
     
     public SkinPointer(Skin skin) {
-        this(skin.getSkinType(), skin.lightHash());
+        this(skin.getSkinType(), new SkinIdentifier(skin.lightHash(), null, 0));
     }
     
     public SkinPointer(ISkinPointer skinPointer) {
         this.skinType = skinPointer.getSkinType();
-        this.skinId = skinPointer.getSkinId();
+        this.identifier = new SkinIdentifier(skinPointer.getIdentifier());
         this.lockSkin = false;
         this.skinDye = new SkinDye(skinPointer.getSkinDye());
     }
     
-    public SkinPointer(ISkinType skinType, int skinId) {
+    public SkinPointer(ISkinType skinType, SkinIdentifier identifier) {
         this.skinType = skinType;
-        this.skinId = skinId;
+        this.identifier = identifier;
         this.lockSkin = false;
         this.skinDye = new SkinDye();
     }
     
-    public SkinPointer(ISkinType skinType, int skinId, SkinDye skinDye) {
+    public SkinPointer(ISkinType skinType, SkinIdentifier identifier, SkinDye skinDye) {
         this.skinType = skinType;
-        this.skinId = skinId;
+        this.identifier = identifier;
         this.lockSkin = false;
         this.skinDye = skinDye;
     }
     
-    public SkinPointer(ISkinType skinType, int skinId, boolean lockSkin) {
+    public SkinPointer(ISkinType skinType, SkinIdentifier identifier, boolean lockSkin) {
         this.skinType = skinType;
-        this.skinId = skinId;
+        this.identifier = identifier;
         this.lockSkin = lockSkin;
         this.skinDye = new SkinDye();
     }
     
-    public SkinPointer(ISkinType skinType, int skinId, ISkinDye skinDye, boolean lockSkin) {
+    public SkinPointer(ISkinType skinType, SkinIdentifier identifier, ISkinDye skinDye, boolean lockSkin) {
         this.skinType = skinType;
-        this.skinId = skinId;
+        this.identifier = identifier;
         this.lockSkin = lockSkin;
         this.skinDye = new SkinDye(skinDye);
     }
     
     @Override
+    public SkinIdentifier getIdentifier() {
+        return identifier;
+    }
+    
+    @Deprecated
+    @Override
     public int getSkinId() {
-        return skinId;
+        return identifier.getSkinLocalId();
     }
     
     @Override
@@ -87,7 +86,7 @@ public class SkinPointer implements ISkinPointer {
     public void readFromCompound(NBTTagCompound compound) {
         NBTTagCompound skinDataCompound = compound.getCompoundTag(TAG_SKIN_DATA);
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinDataCompound.getString(TAG_SKIN_TYPE));
-        this.skinId = skinDataCompound.getInteger(TAG_SKIN_ID);
+        this.identifier.readFromCompound(skinDataCompound);
         this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
         this.skinDye.readFromCompound(skinDataCompound);
     }
@@ -95,7 +94,7 @@ public class SkinPointer implements ISkinPointer {
     public void writeToCompound(NBTTagCompound compound) {
         NBTTagCompound skinDataCompound = new NBTTagCompound();
         skinDataCompound.setString(TAG_SKIN_TYPE, this.skinType.getRegistryName());
-        skinDataCompound.setInteger(TAG_SKIN_ID, this.skinId);
+        this.identifier.writeToCompound(skinDataCompound);
         skinDataCompound.setBoolean(TAG_SKIN_LOCK, this.lockSkin);
         skinDye.writeToCompound(skinDataCompound);
         compound.setTag(TAG_SKIN_DATA, skinDataCompound);

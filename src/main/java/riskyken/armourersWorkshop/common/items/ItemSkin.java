@@ -99,7 +99,7 @@ public class ItemSkin extends AbstractModItem {
                 }
                 if (ConfigHandlerClient.showSkinTooltipDebugInfo) {
                     if (GuiScreen.isShiftKeyDown()) {
-                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.skinId));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.getIdentifier().getSkinLocalId()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubes", data.getTotalOfCubeType(CubeRegistry.INSTANCE.getCubeFormId((byte) 0))));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlowing", data.getTotalOfCubeType(CubeRegistry.INSTANCE.getCubeFormId((byte) 1))));
@@ -118,13 +118,13 @@ public class ItemSkin extends AbstractModItem {
                     }
                 }
                 
-                if (skinData.skinId != data.lightHash()) {
+                if (skinData.getSkinId() != data.lightHash()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError1"));
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError2"));
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError3", data.requestId, data.lightHash()));
                 }
             } else {
-                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading", skinData.skinId));
+                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading", skinData.getSkinId()));
             }
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
             if (isEquipmentSkin) {

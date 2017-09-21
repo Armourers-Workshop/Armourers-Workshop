@@ -71,7 +71,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
         
-        Skin skin = CommonSkinCache.INSTANCE.getEquipmentData(skinPointer.skinId);
+        Skin skin = CommonSkinCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
         if (skin == null) {
             return;
         }

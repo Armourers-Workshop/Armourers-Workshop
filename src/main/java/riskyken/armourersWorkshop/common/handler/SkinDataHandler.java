@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -135,7 +136,7 @@ public class SkinDataHandler implements ISkinDataHandler {
         if (inputStream != null) {
             Skin skin = CommonSkinCache.INSTANCE.addSkinToCache(inputStream);
             if (skin != null) {
-                SkinPointer sp = new SkinPointer(skin.getSkinType(), skin.lightHash(), false);
+                SkinPointer sp = new SkinPointer(skin.getSkinType(), new SkinIdentifier(skin), false);
                 return sp;
             }
         }

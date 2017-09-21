@@ -673,7 +673,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (item != null && !item.getFile().isDirectory()) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getFile().getFullName(), true);
                 if (skin != null) {
-                    SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
+                    SkinPointer skinPointer = new SkinPointer(skin);
                     
                     int listRight = this.width - INVENTORY_WIDTH - PADDING * 5;
                     listRight = MathHelper.clamp_int(listRight, 0, 200);

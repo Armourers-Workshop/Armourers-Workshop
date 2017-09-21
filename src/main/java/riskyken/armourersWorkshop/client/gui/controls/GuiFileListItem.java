@@ -59,7 +59,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                 if (item != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(file.getFullName(), true);
                     if (skin != null) {
-                        SkinPointer skinPointer = new SkinPointer(skin.getSkinType(), skin.lightHash());
+                        SkinPointer skinPointer = new SkinPointer(skin);
                         float scale = 8F;
                         GL11.glPushMatrix();
                         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);

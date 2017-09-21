@@ -7,6 +7,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.AbstractModItemArmour;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -62,7 +63,7 @@ public class RecipeSkinUpdate implements IRecipe {
             int skinId = SkinNBTHelper.getLegacyIdFromStack(oldSkinStack);
             ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(oldSkinStack.getItemDamage());
             
-            SkinPointer skinPointer = new SkinPointer(skinType, skinId, false);
+            SkinPointer skinPointer = new SkinPointer(skinType, new SkinIdentifier(skinId, null, 0), false);
             
             if (oldSkinStack.getItem() instanceof AbstractModItemArmour) {
                 return SkinNBTHelper.makeArmouerContainerStack(skinPointer);

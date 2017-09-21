@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
 public class EntityEquipmentData implements IEntityEquipment {
@@ -80,9 +81,9 @@ public class EntityEquipmentData implements IEntityEquipment {
             int skinId = this.skinId.get(key);
             ISkinDye skinDye = getSkinDye(skinType, slotIndex);
             if (skinDye != null) {
-                return new SkinPointer(skinType, skinId, new SkinDye(skinDye));
+                return new SkinPointer(skinType, new SkinIdentifier(skinId, null, 0), new SkinDye(skinDye));
             } else {
-                return new SkinPointer(skinType, skinId);
+                return new SkinPointer(skinType, new SkinIdentifier(skinId, null, 0));
             }
         }
         return null;
