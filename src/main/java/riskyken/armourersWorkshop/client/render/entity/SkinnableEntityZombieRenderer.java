@@ -30,7 +30,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
         
-        GL11.glTranslated(0, -entity.height + 4.7F * scale, 0);
+        GL11.glTranslated(0, -entity.height + 4.675F * scale, 0);
         
         double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
         GL11.glRotated(rot, 0, 1, 0);
@@ -66,7 +66,13 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
             if (isZombieVillager & skinType == SkinTypeRegistry.skinHead) {
                 GL11.glTranslated(0, -2.0F * scale, 0);
             }
+            if (skinType == SkinTypeRegistry.skinLegs | skinType == SkinTypeRegistry.skinFeet) {
+                GL11.glTranslated(0, 0, 0.1F * scale);
+            }
+            //GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+            //GL11.glPolygonOffset(-1F, -1F);
             model.render(entity, rz.modelBipedMain, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
+            //GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
             GL11.glPopMatrix();
         }
     }
