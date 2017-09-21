@@ -68,7 +68,7 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer 
             GL11.glEnable(GL11.GL_NORMALIZE);
             float scale = 1F / 16F;
             for (int i = 0; i < skin.getParts().size(); i++) {
-                SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, null, null, false);
+                SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, false);
             }
             GL11.glDisable(GL11.GL_NORMALIZE);
         }
