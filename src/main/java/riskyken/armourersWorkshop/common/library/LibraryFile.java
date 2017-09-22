@@ -16,6 +16,15 @@ public class LibraryFile implements Comparable<LibraryFile> {
         this(fileName, filePath, skinType, false);
     }
     
+    public LibraryFile(String fullFilePath) {
+        fullFilePath = fullFilePath.replace("\\", "/");
+        String[] splitFile = fullFilePath.split("/");
+        this.fileName = splitFile[splitFile.length - 1];
+        this.filePath = fullFilePath.replace(fileName, "");
+        this.skinType = null;
+        this.directory = false;
+    }
+    
     public LibraryFile(String fileName, String filePath, ISkinType skinType, boolean directory) {
         this.fileName = fileName.replace("\\", "/");
         this.filePath = filePath.replace("\\", "/");
@@ -95,5 +104,10 @@ public class LibraryFile implements Comparable<LibraryFile> {
             return getFullName().compareTo(o.getFullName()) + 1000;
         }
         return getFullName().compareTo(o.getFullName());
+    }
+
+    @Override
+    public String toString() {
+        return "LibraryFile [fileName=" + fileName + ", filePath=" + filePath + ", skinType=" + skinType + ", directory=" + directory + "]";
     }
 }

@@ -1,8 +1,5 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import com.google.gson.JsonArray;
@@ -19,12 +16,8 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiControlSkinPanel.SkinIc
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
-import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonCallable;
-import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelHome extends GuiPanel {
@@ -41,13 +34,11 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     private FutureTask<JsonArray> taskDownloadJsonRecentlyUploaded;
     private FutureTask<JsonArray> taskDownloadJsonMostDownloaded;
     private FutureTask<JsonArray> taskDownloadJsonMostLiked;
-    private CompletionService<Skin> skinCompletion;
     
     private GuiButtonExt buttonShowAll;
     
     public GuiGlobalLibraryPanelHome(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        skinCompletion = new ExecutorCompletionService<Skin>(((GuiGlobalLibrary)parent).skinDownloadExecutor);
         skinPanelRecentlyUploaded = new GuiControlSkinPanel();
         skinPanelMostDownloaded = new GuiControlSkinPanel();
         skinPanelMostLiked = new GuiControlSkinPanel();
@@ -104,7 +95,6 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
                         skinPanelRecentlyUploaded.addIcon(skinJson);
                     }
-                    SkinDownloader.downloadSkins(skinCompletion, jsonArray);
                 }
                 taskDownloadJsonRecentlyUploaded = null;
             } catch (Exception e) {
@@ -121,7 +111,6 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
                         skinPanelMostDownloaded.addIcon(skinJson);
                     }
-                    SkinDownloader.downloadSkins(skinCompletion, jsonArray);
                 }
                 taskDownloadJsonMostDownloaded = null;
             } catch (Exception e) {
@@ -138,28 +127,8 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
                         skinPanelMostLiked.addIcon(skinJson);
                     }
-                    SkinDownloader.downloadSkins(skinCompletion, jsonArray);
                 }
                 taskDownloadJsonMostLiked = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-        Future<Skin> futureSkin = skinCompletion.poll();
-        if (futureSkin != null) {
-            try {
-                Skin skin = futureSkin.get();
-                if (skin != null) {
-                    SkinPointer skinPointer = new SkinPointer(skin);
-                    if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
-                        ModelBakery.INSTANCE.receivedUnbakedModel(skin);
-                    } else {
-                        if (skin != null) {
-                            ClientSkinCache.INSTANCE.addServerIdMap(skin);
-                        }
-                    }
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

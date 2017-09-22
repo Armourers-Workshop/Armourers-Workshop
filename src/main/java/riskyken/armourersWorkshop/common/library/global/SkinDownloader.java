@@ -9,23 +9,15 @@ import java.util.concurrent.CompletionService;
 
 import org.apache.commons.io.IOUtils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 public final class SkinDownloader {
     
-    public static void downloadSkins(CompletionService<Skin> skinCompletion, JsonArray json) {
-        for (int i = 0; i < json.size(); i++) {
-            JsonObject obj = json.get(i).getAsJsonObject();
-            String name = obj.get("file_name").getAsString();
-            int serverId = obj.get("id").getAsInt();
-            skinCompletion.submit(new DownloadSkinCallable(name, serverId));
-        }
+    public static void downloadSkin(CompletionService<Skin> skinCompletion, int serverId) {
+        skinCompletion.submit(new DownloadSkinCallable(null, serverId));
     }
     
     /**
@@ -86,19 +78,32 @@ public final class SkinDownloader {
         
         private Skin downloadSkin(String name, int serverId) throws InterruptedException {
             //Check if we already have the skin in the cache.
-            Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(serverId);
+            /*
+            SkinIdentifier identifier = new SkinIdentifier(0, null, serverId);
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier, false);
             if (skin != null) {
                 skin.serverId = serverId;
                 return skin;
             }
+            */
             
             long startTime = System.currentTimeMillis();
-            long maxRate = 10;
+            long maxRate = 5;
             
+            //ModLogger.log("Downloading skin id: " + serverId);
+            
+            String downloadUrl = "http://plushie.moe/armourers_workshop/";
+            if (!StringUtils.isNullOrEmpty(name)) {
+                downloadUrl += "skins/" + name;
+            } else {
+                downloadUrl += "get-skin.php?skinid=" + String.valueOf(serverId);
+            }
+            
+            Skin skin = null;
             InputStream in = null;
             String data = null;
             try {
-                in = new URL("http://plushie.moe/armourers_workshop/skins/" + name).openStream();
+                in = new URL(downloadUrl).openStream();
                 skin = SkinIOUtils.loadSkinFromStream(new BufferedInputStream(in));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,13 +113,13 @@ public final class SkinDownloader {
             
             long waitTime = maxRate - (System.currentTimeMillis() - startTime);
             if (waitTime > 0) {
-                Thread.sleep(waitTime);
+                //Thread.sleep(waitTime);
             }
             
             if (skin != null) {
                 skin.serverId = serverId;
             } else {
-                ModLogger.log(String.format("Failed to download skin: %s", name));
+                ModLogger.log(String.format("Failed to download skin: %d", serverId));
             }
             return skin;
         }

@@ -23,13 +23,9 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
-import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
-import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 @SideOnly(Side.CLIENT)
@@ -39,7 +35,6 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     protected static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
     private static final String SEARCH_URL = BASE_URL + "skin-search-page.php";
     
-    protected final CompletionService<Skin> skinCompletion;
     protected final CompletionService<JsonObject> pageCompletion;
     
     protected final GuiControlSkinPanel skinPanelResults;
@@ -60,7 +55,6 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        skinCompletion = new ExecutorCompletionService<Skin>(((GuiGlobalLibrary)parent).skinDownloadExecutor);
         pageCompletion = new ExecutorCompletionService<JsonObject>(((GuiGlobalLibrary)parent).jsonDownloadExecutor);
         skinPanelResults = new GuiControlSkinPanel();
         pageList = null;
@@ -120,25 +114,6 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                 JsonObject pageJson = futureJson.get();
                 if (pageJson != null) {
                     onPageJsonDownload(pageJson);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-        Future<Skin> futureSkin = skinCompletion.poll();
-        if (futureSkin != null) {
-            try {
-                Skin skin = futureSkin.get();
-                if (skin != null) {
-                    SkinPointer skinPointer = new SkinPointer(skin);
-                    if (skin != null && !ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
-                        ModelBakery.INSTANCE.receivedUnbakedModel(skin);
-                    } else {
-                        if (skin != null) {
-                            ClientSkinCache.INSTANCE.addServerIdMap(skin);
-                        }
-                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -273,7 +248,6 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
                     skinPanelResults.addIcon(skinJson);
                 }
             }
-            SkinDownloader.downloadSkins(skinCompletion, downloadArray);
         }
     }
     

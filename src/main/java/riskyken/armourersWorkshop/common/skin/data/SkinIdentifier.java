@@ -18,14 +18,14 @@ public class SkinIdentifier implements ISkinIdentifier {
     private LibraryFile libraryFile;
     private int globalId;
     
-    public SkinIdentifier(Skin skin) {
-        this.localId = skin.lightHash();
-    }
-    
     public SkinIdentifier(int localId, LibraryFile libraryFile, int globalId) {
         this.localId = localId;
         this.libraryFile = libraryFile;
         this.globalId = globalId;
+    }
+    
+    public SkinIdentifier(Skin skin) {
+        this(skin.lightHash(), null, 0);
     }
     
     public SkinIdentifier(ISkinIdentifier identifier) {
@@ -58,7 +58,9 @@ public class SkinIdentifier implements ISkinIdentifier {
         } else {
             NBTTagCompound idDataCompound = compound.getCompoundTag(TAG_SKIN_ID_DATA);
             localId = idDataCompound.getInteger(TAG_SKIN_LOCAL_ID);
-            // TODO Read library file.
+            if (idDataCompound.hasKey(TAG_SKIN_LIBRARY_FILE, NBT.TAG_STRING)) {
+                libraryFile = new LibraryFile(idDataCompound.getString(TAG_SKIN_LIBRARY_FILE));
+            }
             globalId = idDataCompound.getInteger(TAG_SKIN_GLOBAL_ID);
         }
     }
@@ -66,7 +68,9 @@ public class SkinIdentifier implements ISkinIdentifier {
     public void writeToCompound(NBTTagCompound compound) {
         NBTTagCompound idDataCompound = new NBTTagCompound();
         idDataCompound.setInteger(TAG_SKIN_LOCAL_ID, localId);
-        // TODO Write library file.
+        if (libraryFile != null) {
+            idDataCompound.setString(TAG_SKIN_LIBRARY_FILE, libraryFile.getFullName());
+        }
         idDataCompound.setInteger(TAG_SKIN_GLOBAL_ID, globalId);
         compound.setTag(TAG_SKIN_ID_DATA, idDataCompound);
     }

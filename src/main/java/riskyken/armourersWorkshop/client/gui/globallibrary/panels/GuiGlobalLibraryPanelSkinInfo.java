@@ -35,6 +35,7 @@ import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
@@ -269,7 +270,8 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         
         Skin skin = null;
         if (skinJson != null && skinJson.has("id")) {
-            skin = ClientSkinCache.INSTANCE.getSkinFromServerId(skinJson.get("id").getAsInt());
+            SkinIdentifier identifier = new SkinIdentifier(0, null, skinJson.get("id").getAsInt());
+            skin = ClientSkinCache.INSTANCE.getSkin(identifier);
         }
         
         super.draw(mouseX, mouseY, partialTickTime);
@@ -302,8 +304,6 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "title"), boxX + 5, boxY + 5, 0xFFEEEEEE);
         if (skinJson != null) {
             int yOffset = 12 + 6;
-            //drawString(fontRenderer, "id: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-            //yOffset += 12;
             drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "name"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             yOffset += 12;
             drawString(fontRenderer, skinJson.get("name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
@@ -342,8 +342,10 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                 drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "description"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
                 fontRenderer.drawSplitString(skinJson.get("description").getAsString(), boxX + 5, boxY + 5 + yOffset, boxWidth - 10, 0xFFEEEEEE);
-                yOffset += 12;
+                yOffset += 12 + 6;
             }
+            drawString(fontRenderer, "Global ID: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+            yOffset += 12;
         }
     }
     

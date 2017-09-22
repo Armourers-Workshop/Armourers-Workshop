@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 
 @SideOnly(Side.CLIENT)
@@ -152,7 +153,9 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             } else {
                 drawRect(x, y, x + iconSize, y + iconSize, 0x22FFFFFF);
             }
-            Skin skin = ClientSkinCache.INSTANCE.getSkinFromServerId(id);
+            SkinIdentifier identifier = new SkinIdentifier(0, null, id);
+
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier);
             if (skin != null) {
                 if (showName) {
                     String name = skinJson.get("name").getAsString();

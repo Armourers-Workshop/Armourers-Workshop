@@ -2,8 +2,11 @@ package riskyken.armourersWorkshop.client.skin.cache;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.logging.log4j.Level;
 
@@ -14,14 +17,18 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinIdentifier;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
+import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap.IExpiringMapCallback;
+import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinId;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
@@ -31,10 +38,14 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     
     private final ExpiringHashMap<Integer, Skin> skinIDMap;
     private final HashMap<String, Integer> skinNameMap;
-    private final HashMap<Integer, Integer> skinServerIdMap;
     private final HashSet<Integer> requestedSkinIDs;
     private final HashSet<String> requestedSkinNames;
     private final Executor skinRequestExecutor;
+    
+    private final HashMap<Integer, Integer> globalSkinIdMap;
+    private final Executor globalSkinDownloadExecutor;
+    private CompletionService<Skin> globalSkinDownloadCompletion;
+    private final HashSet<Integer> globalRequestedSkin;
     
     public static void init() {
         INSTANCE = new ClientSkinCache();
@@ -43,15 +54,92 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     protected ClientSkinCache() {
         skinIDMap = new ExpiringHashMap<Integer, Skin>(ConfigHandlerClient.clientModelCacheTime, this);
         skinNameMap = new HashMap<String, Integer>();
-        skinServerIdMap = new HashMap<Integer, Integer>();
         requestedSkinIDs = new HashSet<Integer>();
         requestedSkinNames = new HashSet<String>();
         skinRequestExecutor = Executors.newFixedThreadPool(1);
+        
+        globalSkinIdMap = new HashMap<Integer, Integer>();
+        globalSkinDownloadExecutor = Executors.newFixedThreadPool(2);
+        globalSkinDownloadCompletion = new ExecutorCompletionService<Skin>(globalSkinDownloadExecutor);
+        globalRequestedSkin = new HashSet<Integer>();
         FMLCommonHandler.instance().bus().register(this);
     }
     
+    public Skin getSkin(ISkinPointer skinPointer) {
+        return getSkin(skinPointer.getIdentifier(), true);
+    }
+    
+    public Skin getSkin(ISkinPointer skinPointer, boolean requestSkin) {
+        return getSkin(skinPointer.getIdentifier(), requestSkin);
+    }
+    
+    public Skin getSkin(ISkinIdentifier identifier) {
+        return getSkin(identifier, true);
+    }
+    
+    public Skin getSkin(ISkinIdentifier identifier, boolean requestSkin) {
+        if (identifier.getSkinGlobalId() != 0) {
+            int serverId = identifier.getSkinGlobalId();
+            if (haveSkinForGlobalId(serverId)) {
+                return getSkinFromGlobalId(serverId);
+            } else {
+                if (requestSkin) {
+                    requestSkinForServerId(serverId);
+                }
+                return null;
+            }
+        }
+        
+        if (identifier.getSkinLibraryFile() != null) {
+            String fileName = identifier.getSkinLibraryFile().getFullName();
+            if (haveIdForFileName(fileName)) {
+                return getSkin(getIdForFileName(fileName), requestSkin);
+            } else {
+                if (requestSkin) {
+                    requestIdForFileName(fileName);
+                }
+                return null;
+            }
+        }
+        
+        return getSkin(identifier.getSkinLocalId(), requestSkin);
+    }
+    
+    private Skin getSkin(int skinId, boolean requestSkin) {
+        synchronized (skinIDMap) {
+            if (skinIDMap.containsKey(skinId)) {
+                return skinIDMap.get(skinId);
+            }
+        }
+        if (requestSkin) {
+            requestSkinFromServer(skinId);
+        }
+        return null;
+    }
+    
     public void requestSkinFromServer(ISkinPointer skinPointer) {
-        requestSkinFromServer(skinPointer.getSkinId());
+        requestSkinFromServer(skinPointer.getIdentifier());
+    }
+    
+    private void requestSkinFromServer(ISkinIdentifier identifier) {
+        if (identifier.getSkinGlobalId() != 0) {
+            int serverId = identifier.getSkinGlobalId();
+            if (!haveSkinForGlobalId(serverId)) {
+                requestSkinForServerId(serverId);
+            }
+            return;
+        }
+        
+        if (identifier.getSkinLibraryFile() != null) {
+            String fileName = identifier.getSkinLibraryFile().getFullName();
+            if (haveIdForFileName(fileName)) {
+                requestSkinFromServer(getIdForFileName(fileName));
+            } else {
+                requestIdForFileName(fileName);
+            }
+            return;
+        }
+        requestSkinFromServer(identifier.getSkinLocalId());
     }
     
     private void requestSkinFromServer(int skinId) {
@@ -64,12 +152,26 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     }
     
     public boolean isSkinInCache(ISkinPointer skinPointer) {
-        synchronized (skinIDMap) {
-            return skinIDMap.containsKey(skinPointer.getSkinId()); 
-        }
+        return isSkinInCache(skinPointer.getIdentifier());
     }
     
-    public boolean isSkinInCache(int skinId) {
+    public boolean isSkinInCache(ISkinIdentifier identifier) {
+        if (identifier.getSkinGlobalId() != 0) {
+            int serverId = identifier.getSkinGlobalId();
+            return haveSkinForGlobalId(serverId);
+        }
+        
+        if (identifier.getSkinLibraryFile() != null) {
+            if (haveIdForFileName(identifier.getSkinLibraryFile().getFullName())) {
+                return isSkinInCache(getIdForFileName(identifier.getSkinLibraryFile().getFullName()));
+            }
+            return false;
+        }
+        
+        return isSkinInCache(identifier.getSkinLocalId());
+    }
+    
+    private boolean isSkinInCache(int skinId) {
         synchronized (skinIDMap) {
             return skinIDMap.containsKey(skinId); 
         }
@@ -95,25 +197,45 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         return null;
     }
     
-    public Skin getSkinFromServerId(int serverId) {
-        synchronized (skinServerIdMap) {
-            if (skinServerIdMap.containsKey(serverId)) {
-                int skinId = skinServerIdMap.get(serverId);
+    private Skin getSkinFromGlobalId(int serverId) {
+        synchronized (globalSkinIdMap) {
+            if (globalSkinIdMap.containsKey(serverId)) {
+                int skinId = globalSkinIdMap.get(serverId);
                 if (isSkinInCache(skinId)) {
                     synchronized (skinIDMap) {
                         return skinIDMap.get(skinId);
                     }
                 } else {
-                    skinServerIdMap.remove(serverId);
+                    globalSkinIdMap.remove(serverId);
                 }
             }
         }
         return null;
     }
     
-    public void addServerIdMap(Skin skin) {
-        synchronized (skinServerIdMap) {
-            skinServerIdMap.put(skin.serverId, skin.lightHash());
+    public void addGlobalIdMap(Skin skin) {
+        synchronized (globalSkinIdMap) {
+            globalSkinIdMap.put(skin.serverId, skin.lightHash());
+        }
+    }
+    
+    private boolean haveSkinForGlobalId(int serverId) {
+        synchronized (globalSkinIdMap) {
+            if (globalSkinIdMap.containsKey(serverId)) {
+                int skinId = globalSkinIdMap.get(serverId);
+                return isSkinInCache(skinId);
+            }
+        }
+        return false;
+    }
+    
+    private void requestSkinForServerId(int serverId) {
+        synchronized (globalRequestedSkin) {
+            if (globalRequestedSkin.contains(serverId)) {
+                return;
+            }
+            globalRequestedSkin.add(serverId);
+            SkinDownloader.downloadSkin(globalSkinDownloadCompletion, serverId);
         }
     }
     
@@ -165,10 +287,8 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     
     public void receivedModelFromBakery(Skin skin) {
         int skinID = skin.requestId;
-        
         synchronized (requestedSkinIDs) {
             synchronized (skinIDMap) {
-                
                 if (skinIDMap.containsKey(skinID)) {
                     Skin oldSkin = skinIDMap.get(skinID);
                     skinIDMap.remove(skinID);
@@ -176,25 +296,23 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
                     ModLogger.log("removing skin");
                 }
                 
-                
-                
                 if (requestedSkinIDs.contains(skinID)) {
                     skinIDMap.put(skinID, skin);
                     requestedSkinIDs.remove(skinID);
                 } else if (skin.serverId != -1) {
                     skinID = skin.lightHash();
                     synchronized (skinIDMap) {
-                        skinServerIdMap.put(skin.serverId, skinID);
+                        globalSkinIdMap.put(skin.serverId, skinID);
                     }
                     skinIDMap.put(skinID, skin);
+                    synchronized (globalRequestedSkin) {
+                        globalRequestedSkin.remove(skin.serverId);
+                    }
                 } else {
                     skinID = skin.lightHash();
                     skinIDMap.put(skinID, skin);
                     ModLogger.log(Level.WARN, "Got an unknown skin ID: " + skinID);
                 }
-                
-                
-                
             }
         }
     }
@@ -252,28 +370,37 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         synchronized (requestedSkinIDs) {
             requestedSkinIDs.clear();
         }
-    }
-    
-    public Skin getSkin(ISkinPointer skinPointer) {
-        return getSkin(skinPointer, true);
-    }
-    
-    public Skin getSkin(ISkinPointer skinPointer, boolean requestSkin) {
-        synchronized (skinIDMap) {
-            if (skinIDMap.containsKey(skinPointer.getSkinId())) {
-                return skinIDMap.get(skinPointer.getSkinId());
-            }
+        synchronized (globalRequestedSkin) {
+            globalRequestedSkin.clear();
         }
-        if (requestSkin) {
-            requestSkinFromServer(skinPointer);
+        synchronized (globalSkinIdMap) {
+            globalSkinIdMap.clear();
         }
-        return null;
     }
     
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
             skinIDMap.cleanupCheck();
+            
+            Future<Skin> futureSkin = globalSkinDownloadCompletion.poll();
+            if (futureSkin != null) {
+                try {
+                    Skin skin = futureSkin.get();
+                    if (skin != null) {
+                        SkinPointer skinPointer = new SkinPointer(skin);
+                        if (skin != null && !isSkinInCache(skinPointer)) {
+                            ModelBakery.INSTANCE.receivedUnbakedModel(skin);
+                        } else {
+                            if (skin != null) {
+                                addGlobalIdMap(skin);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

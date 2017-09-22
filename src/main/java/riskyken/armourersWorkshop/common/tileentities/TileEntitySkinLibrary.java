@@ -16,7 +16,9 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLi
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -71,7 +73,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
         
-        Skin skin = CommonSkinCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
+        Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;
         }
@@ -192,10 +194,13 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         }
         
         skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
+        LibraryFile libraryFile = new LibraryFile(fileName, filePath, skin.getSkinType());
+        SkinIdentifier identifier = new SkinIdentifier(skin.lightHash(), libraryFile, 0);
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, new LibraryFile(filePath, fileName, skin.getSkinType()));
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
+        ModLogger.log("Loaded file form lib: " + libraryFile.toString());
         
-        ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin);
+        ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin, identifier);
         
         if (stackArmour == null) {
             return;

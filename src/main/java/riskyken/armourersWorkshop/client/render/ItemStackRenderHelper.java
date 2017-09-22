@@ -44,6 +44,7 @@ public final class ItemStackRenderHelper {
         if (skin == null) {
             return;
         }
+        //ModLogger.log("render skin");
         
         float blockScale = 16F;
         

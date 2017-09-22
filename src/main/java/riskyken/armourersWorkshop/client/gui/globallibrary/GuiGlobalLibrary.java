@@ -41,7 +41,6 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     private int oldMouseY;
     
     public Executor jsonDownloadExecutor = Executors.newFixedThreadPool(2);
-    public Executor skinDownloadExecutor = Executors.newFixedThreadPool(2);
     public Executor uploadExecutor = Executors.newFixedThreadPool(1);
     
     private static final int PADDING = 5;

@@ -99,7 +99,7 @@ public class ItemSkin extends AbstractModItem {
                 }
                 if (ConfigHandlerClient.showSkinTooltipDebugInfo) {
                     if (GuiScreen.isShiftKeyDown()) {
-                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.getIdentifier().getSkinLocalId()));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.getIdentifier().toString()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubes", data.getTotalOfCubeType(CubeRegistry.INSTANCE.getCubeFormId((byte) 0))));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlowing", data.getTotalOfCubeType(CubeRegistry.INSTANCE.getCubeFormId((byte) 1))));

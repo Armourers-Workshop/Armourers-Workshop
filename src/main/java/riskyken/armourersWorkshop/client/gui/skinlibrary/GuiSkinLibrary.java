@@ -704,7 +704,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                         GL11.glEnable(GL11.GL_NORMALIZE);
                         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                         ModRenderHelper.enableAlphaBlend();
-                        ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                        ItemStackRenderHelper.renderItemModelFromSkin(skin, skinPointer, true, false);
                         GL11.glPopAttrib();
                         GL11.glPopMatrix();
                     }

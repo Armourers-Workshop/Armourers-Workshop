@@ -176,6 +176,13 @@ public class SkinNBTHelper {
         return stack;
     }
     
+    public static ItemStack makeEquipmentSkinStack(Skin skin, SkinIdentifier identifier) {
+        ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
+        stack.setTagCompound(new NBTTagCompound());
+        addSkinDataToStack(stack, skin.getSkinType(), identifier, false, null);
+        return stack;
+    }
+    
     public static ItemStack makeEquipmentSkinStack(Skin skin) {
         ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
         stack.setTagCompound(new NBTTagCompound());
