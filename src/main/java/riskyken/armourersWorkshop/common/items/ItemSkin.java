@@ -36,6 +36,7 @@ import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -76,6 +77,7 @@ public class ItemSkin extends AbstractModItem {
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
+            SkinIdentifier identifier = skinData.getIdentifier();
             
             if (!isEquipmentSkin & !skinData.lockSkin & !isEquipmentContainer) {
                 return;
@@ -99,7 +101,16 @@ public class ItemSkin extends AbstractModItem {
                 }
                 if (ConfigHandlerClient.showSkinTooltipDebugInfo) {
                     if (GuiScreen.isShiftKeyDown()) {
-                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinId", skinData.getIdentifier().toString()));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdentifier"));
+                        if (identifier.hasLocalId()) {
+                            tooltip.add("  " + TranslateUtils.translate("item.armourersworkshop:rollover.skinId", identifier.getSkinLocalId()));
+                        }
+                        if (identifier.hasLibraryFile()) {
+                            tooltip.add("  " + TranslateUtils.translate("item.armourersworkshop:rollover.skinLibraryFile", identifier.getSkinLibraryFile().getFullName()));
+                        }
+                        if (identifier.hasGlobalId()) {
+                            tooltip.add("  " + TranslateUtils.translate("item.armourersworkshop:rollover.skinGlobalId", identifier.getSkinGlobalId()));
+                        }
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinTotalCubes", data.getTotalCubes()));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubes", data.getTotalOfCubeType(CubeRegistry.INSTANCE.getCubeFormId((byte) 0))));
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinNumCubesGlowing", data.getTotalOfCubeType(CubeRegistry.INSTANCE.getCubeFormId((byte) 1))));
@@ -117,14 +128,16 @@ public class ItemSkin extends AbstractModItem {
                         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinHoldShiftForInfo"));
                     }
                 }
-                
-                if (skinData.getSkinId() != data.lightHash()) {
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError1"));
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError2"));
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError3", data.requestId, data.lightHash()));
+                if (identifier.hasLocalId()) {
+                    if (identifier.getSkinLocalId() != data.lightHash()) {
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError1"));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError2"));
+                        tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinIdError3", data.requestId, data.lightHash()));
+                    }
                 }
+                
             } else {
-                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading", skinData.getSkinId()));
+                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading", identifier.toString()));
             }
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
             if (isEquipmentSkin) {

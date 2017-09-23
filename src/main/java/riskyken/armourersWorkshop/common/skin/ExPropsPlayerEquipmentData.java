@@ -44,6 +44,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     private final WardrobeInventoryContainer wardrobeInventoryContainer;
     private final EntityEquipmentData equipmentData;
     private final EntityPlayer player;
+    /** Stores all other wardrobe settings. */
     private EquipmentWardrobeData equipmentWardrobeData = new EquipmentWardrobeData(); 
     public int lastXmasYear;
     private boolean allowNetworkUpdates;

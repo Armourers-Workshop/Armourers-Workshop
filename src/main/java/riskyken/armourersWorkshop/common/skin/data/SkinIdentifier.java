@@ -32,6 +32,18 @@ public class SkinIdentifier implements ISkinIdentifier {
         this(identifier.getSkinLocalId(), identifier.getSkinLibraryFile(), identifier.getSkinGlobalId());
     }
     
+    public boolean hasLocalId() {
+        return localId != 0;
+    }
+    
+    public boolean hasLibraryFile() {
+        return libraryFile != null;
+    }
+    
+    public boolean hasGlobalId() {
+        return globalId != 0;
+    }
+    
     @Override
     public int getSkinLocalId() {
         return localId;
