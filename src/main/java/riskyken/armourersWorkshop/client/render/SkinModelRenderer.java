@@ -189,20 +189,17 @@ public final class SkinModelRenderer {
     }
     
     private boolean isPlayerWearingSkirt(PlayerPointer playerPointer) {
-        if (!playerEquipmentMap.containsKey(playerPointer)) {
-            return false;
-        }
         EntityEquipmentData equipmentData = playerEquipmentMap.get(playerPointer);
-        for (int i = 0; i < equipmentData.getNumberOfSlots(); i++) {
-            if (!equipmentData.haveEquipment(SkinTypeRegistry.skinLegs, i)) {
-                return false;
-            } else {
+        if (equipmentData != null) { 
+            for (int i = 0; i < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
                 ISkinPointer skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinLegs, i);
-                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-                if (skin != null) {
-                    for (int j = 0; j < skin.getPartCount(); j++) {
-                        if (skin.getParts().get(j).getPartType().getPartName().equals("skirt")) {
-                            return true;
+                if (skinPointer != null) {
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+                    if (skin != null) {
+                        for (int j = 0; j < skin.getPartCount(); j++) {
+                            if (skin.getParts().get(j).getPartType().getPartName().equals("skirt")) {
+                                return true;
+                            }
                         }
                     }
                 }
