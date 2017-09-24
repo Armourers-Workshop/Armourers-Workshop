@@ -84,7 +84,11 @@ public class SkinPointer implements ISkinPointer {
     }
     
     public void readFromCompound(NBTTagCompound compound) {
-        NBTTagCompound skinDataCompound = compound.getCompoundTag(TAG_SKIN_DATA);
+        readFromCompound(compound, TAG_SKIN_DATA);
+    }
+    
+    public void readFromCompound(NBTTagCompound compound, String tag) {
+        NBTTagCompound skinDataCompound = compound.getCompoundTag(tag);
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinDataCompound.getString(TAG_SKIN_TYPE));
         this.identifier.readFromCompound(skinDataCompound);
         this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
@@ -92,11 +96,15 @@ public class SkinPointer implements ISkinPointer {
     }
     
     public void writeToCompound(NBTTagCompound compound) {
+        writeToCompound(compound, TAG_SKIN_DATA);
+    }
+    
+    public void writeToCompound(NBTTagCompound compound, String tag) {
         NBTTagCompound skinDataCompound = new NBTTagCompound();
         skinDataCompound.setString(TAG_SKIN_TYPE, this.skinType.getRegistryName());
         this.identifier.writeToCompound(skinDataCompound);
         skinDataCompound.setBoolean(TAG_SKIN_LOCK, this.lockSkin);
         skinDye.writeToCompound(skinDataCompound);
-        compound.setTag(TAG_SKIN_DATA, skinDataCompound);
+        compound.setTag(tag, skinDataCompound);
     }
 }

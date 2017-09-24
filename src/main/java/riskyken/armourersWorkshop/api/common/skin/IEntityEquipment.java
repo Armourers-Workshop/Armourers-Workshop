@@ -13,11 +13,13 @@ public interface IEntityEquipment {
     
     public boolean haveEquipment(ISkinType skinType, int slotIndex);
     
+    @Deprecated
     public int getEquipmentId(ISkinType skinType, int slotIndex);
     
     public ISkinPointer getSkinPointer(ISkinType skinType, int slotIndex);
-    
+    @Deprecated
     public ISkinDye getSkinDye(ISkinType skinType, int slotIndex);
     
+    @Deprecated
     public int getNumberOfSlots();
 }

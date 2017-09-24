@@ -26,10 +26,12 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     private final Entity entity;
     private EntityEquipmentData equipmentData;
     private final InventoryEntitySkin skinInventory;
+    private boolean allowNetworkUpdates;
     
     public ExPropsEntityEquipmentData(Entity entity, ISkinnableEntity skinnableEntity) {
+        allowNetworkUpdates = true;
         this.entity = entity;
-        this.equipmentData = new EntityEquipmentData(1);
+        this.equipmentData = new EntityEquipmentData();
         
         ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
         skinnableEntity.getValidSkinTypes(skinTypes);
@@ -56,6 +58,9 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     }
     
     private void sendEquipmentDataToPlayerToAllPlayersAround() {
+        if (!allowNetworkUpdates) {
+            return;
+        }
         TargetPoint p = new TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 512);
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerEntitySkinData(equipmentData, entity.getEntityId()), p);
     }
@@ -78,14 +83,14 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     
     @Override
     public void saveNBTData(NBTTagCompound compound) {
-        this.equipmentData.saveNBTData(compound);
         this.skinInventory.saveItemsToNBT(compound);
     }
 
     @Override
     public void loadNBTData(NBTTagCompound compound) {
-        this.equipmentData.loadNBTData(compound);
+        allowNetworkUpdates = false;
         this.skinInventory.loadItemsFromNBT(compound);
+        allowNetworkUpdates = true;
     }
 
     @Override

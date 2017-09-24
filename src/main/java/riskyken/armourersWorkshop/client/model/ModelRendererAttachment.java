@@ -148,6 +148,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                                 break;
                             }
                         } else {
+                            angle = -angle;
                             switch (axis) {
                             case UP:
                                 GL11.glRotated(angle, 0, 1, 0);

@@ -55,7 +55,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
         //An array of all the skins that can be placed in the players wardrobe.
 
         wardrobeInventoryContainer = new WardrobeInventoryContainer(this, validSkins);
-        equipmentData = new EntityEquipmentData(1);
+        equipmentData = new EntityEquipmentData();
     }
     
     public WardrobeInventoryContainer getWardrobeInventoryContainer() {
