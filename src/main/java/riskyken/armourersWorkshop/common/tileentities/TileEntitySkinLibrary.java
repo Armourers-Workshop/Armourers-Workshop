@@ -195,7 +195,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         LibraryFile libraryFile = new LibraryFile(fileName, filePath, skin.getSkinType());
-        SkinIdentifier identifier = new SkinIdentifier(skin.lightHash(), libraryFile, 0);
+        SkinIdentifier identifier = new SkinIdentifier(skin.lightHash(), libraryFile, 0, skin.getSkinType());
         
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         ModLogger.log("Loaded file form lib: " + libraryFile.toString());

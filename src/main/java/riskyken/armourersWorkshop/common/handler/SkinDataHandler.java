@@ -136,7 +136,7 @@ public class SkinDataHandler implements ISkinDataHandler {
         if (inputStream != null) {
             Skin skin = CommonSkinCache.INSTANCE.addSkinToCache(inputStream);
             if (skin != null) {
-                SkinPointer sp = new SkinPointer(skin.getSkinType(), new SkinIdentifier(skin), false);
+                SkinPointer sp = new SkinPointer(new SkinIdentifier(skin), false);
                 return sp;
             }
         }

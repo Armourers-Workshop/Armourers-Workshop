@@ -63,7 +63,7 @@ public class RecipeSkinUpdate implements IRecipe {
             int skinId = SkinNBTHelper.getLegacyIdFromStack(oldSkinStack);
             ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(oldSkinStack.getItemDamage());
             
-            SkinPointer skinPointer = new SkinPointer(skinType, new SkinIdentifier(skinId, null, 0), false);
+            SkinPointer skinPointer = new SkinPointer(new SkinIdentifier(skinId, null, 0, skinType), false);
             
             if (oldSkinStack.getItem() instanceof AbstractModItemArmour) {
                 return SkinNBTHelper.makeArmouerContainerStack(skinPointer);

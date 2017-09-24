@@ -4,15 +4,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class SkinPointer implements ISkinPointer {
 
     public static final String TAG_SKIN_DATA = "armourersWorkshop";
-    private static final String TAG_SKIN_TYPE = "skinType";
     private static final String TAG_SKIN_LOCK = "lock";
     
-    public ISkinType skinType;
     private SkinIdentifier identifier;
     
     public boolean lockSkin;
@@ -20,43 +17,38 @@ public class SkinPointer implements ISkinPointer {
     
     public SkinPointer() {
         this.skinDye = new SkinDye();
-        this.identifier = new SkinIdentifier(0, null, 0);
+        this.identifier = new SkinIdentifier(0, null, 0, null);
     }
     
     public SkinPointer(Skin skin) {
-        this(skin.getSkinType(), new SkinIdentifier(skin.lightHash(), null, 0));
+        this(new SkinIdentifier(skin.lightHash(), null, 0, skin.getSkinType()));
     }
     
     public SkinPointer(ISkinPointer skinPointer) {
-        this.skinType = skinPointer.getSkinType();
         this.identifier = new SkinIdentifier(skinPointer.getIdentifier());
         this.lockSkin = false;
         this.skinDye = new SkinDye(skinPointer.getSkinDye());
     }
     
-    public SkinPointer(ISkinType skinType, SkinIdentifier identifier) {
-        this.skinType = skinType;
+    public SkinPointer(SkinIdentifier identifier) {
         this.identifier = identifier;
         this.lockSkin = false;
         this.skinDye = new SkinDye();
     }
     
-    public SkinPointer(ISkinType skinType, SkinIdentifier identifier, SkinDye skinDye) {
-        this.skinType = skinType;
+    public SkinPointer(SkinIdentifier identifier, SkinDye skinDye) {
         this.identifier = identifier;
         this.lockSkin = false;
         this.skinDye = skinDye;
     }
     
-    public SkinPointer(ISkinType skinType, SkinIdentifier identifier, boolean lockSkin) {
-        this.skinType = skinType;
+    public SkinPointer(SkinIdentifier identifier, boolean lockSkin) {
         this.identifier = identifier;
         this.lockSkin = lockSkin;
         this.skinDye = new SkinDye();
     }
     
-    public SkinPointer(ISkinType skinType, SkinIdentifier identifier, ISkinDye skinDye, boolean lockSkin) {
-        this.skinType = skinType;
+    public SkinPointer(SkinIdentifier identifier, ISkinDye skinDye, boolean lockSkin) {
         this.identifier = identifier;
         this.lockSkin = lockSkin;
         this.skinDye = new SkinDye(skinDye);
@@ -73,9 +65,10 @@ public class SkinPointer implements ISkinPointer {
         return identifier.getSkinLocalId();
     }
     
+    @Deprecated
     @Override
     public ISkinType getSkinType() {
-        return skinType;
+        return identifier.getSkinType();
     }
     
     @Override
@@ -89,7 +82,6 @@ public class SkinPointer implements ISkinPointer {
     
     public void readFromCompound(NBTTagCompound compound, String tag) {
         NBTTagCompound skinDataCompound = compound.getCompoundTag(tag);
-        this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinDataCompound.getString(TAG_SKIN_TYPE));
         this.identifier.readFromCompound(skinDataCompound);
         this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
         this.skinDye.readFromCompound(skinDataCompound);
@@ -101,7 +93,6 @@ public class SkinPointer implements ISkinPointer {
     
     public void writeToCompound(NBTTagCompound compound, String tag) {
         NBTTagCompound skinDataCompound = new NBTTagCompound();
-        skinDataCompound.setString(TAG_SKIN_TYPE, this.skinType.getRegistryName());
         this.identifier.writeToCompound(skinDataCompound);
         skinDataCompound.setBoolean(TAG_SKIN_LOCK, this.lockSkin);
         skinDye.writeToCompound(skinDataCompound);

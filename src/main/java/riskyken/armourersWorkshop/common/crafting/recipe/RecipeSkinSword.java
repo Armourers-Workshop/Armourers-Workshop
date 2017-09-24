@@ -51,7 +51,7 @@ public class RecipeSkinSword extends RecipeItemSkinning {
             ItemStack returnStack = swordStack.copy();
             
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
-            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.getIdentifier(), skinData.getSkinDye(), true);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), skinData.getSkinDye(), true);
             
             return returnStack;
         } else {

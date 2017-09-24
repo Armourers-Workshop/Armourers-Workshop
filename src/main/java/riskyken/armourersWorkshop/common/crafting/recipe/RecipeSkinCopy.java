@@ -49,7 +49,7 @@ public class RecipeSkinCopy extends RecipeItemSkinning {
         if (skinStack != null && blackStack != null) {
             ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
-            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.skinType, skinData.getIdentifier(), false, new SkinDye(skinData.getSkinDye()));
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), false, new SkinDye(skinData.getSkinDye()));
             return returnStack;
         }
         return null;

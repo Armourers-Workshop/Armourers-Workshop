@@ -84,8 +84,8 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     public void setEquipmentStack(ItemStack stack, int index) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-        if (skinPointer.skinType != null) {
-            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.skinType);
+        if (skinPointer.getIdentifier().getSkinType() != null) {
+            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.getIdentifier().getSkinType());
             if (wi != null) {
                 wi.setInventorySlotContents(index, stack);
             }
@@ -94,10 +94,10 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     public boolean setStackInNextFreeSlot(ItemStack stack) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-        if (skinPointer.skinType != null) {
-            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.skinType);
+        if (skinPointer.getIdentifier().getSkinType() != null) {
+            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.getIdentifier().getSkinType());
             if (wi != null) {
-                for (int i = 0; i < equipmentWardrobeData.getUnlockedSlotsForSkinType(skinPointer.skinType); i++) {
+                for (int i = 0; i < equipmentWardrobeData.getUnlockedSlotsForSkinType(skinPointer.getIdentifier().getSkinType()); i++) {
                     if (wi.getStackInSlot(i) == null) {
                         wi.setInventorySlotContents(i, stack);
                         return true;
@@ -256,7 +256,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     private void loadFromItemStack(ItemStack stack, byte slotId) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-        addCustomEquipment(skinPointer.skinType, slotId, skinPointer);
+        addCustomEquipment(skinPointer.getIdentifier().getSkinType(), slotId, skinPointer);
     }
     
     @Override

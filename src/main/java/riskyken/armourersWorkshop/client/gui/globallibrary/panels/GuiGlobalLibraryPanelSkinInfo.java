@@ -270,7 +270,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         
         Skin skin = null;
         if (skinJson != null && skinJson.has("id")) {
-            SkinIdentifier identifier = new SkinIdentifier(0, null, skinJson.get("id").getAsInt());
+            SkinIdentifier identifier = new SkinIdentifier(0, null, skinJson.get("id").getAsInt(), null);
             skin = ClientSkinCache.INSTANCE.getSkin(identifier);
         }
         

@@ -12,6 +12,9 @@ public interface ISkinPointer {
     @Deprecated
     public int getSkinId();
     
+    /**
+     * @deprecated  As of 0.48.0, replaced by {@link #getIdentifier()}
+     */
     public ISkinType getSkinType();
     
     public ISkinDye getSkinDye();

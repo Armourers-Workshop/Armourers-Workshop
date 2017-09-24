@@ -153,7 +153,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             } else {
                 drawRect(x, y, x + iconSize, y + iconSize, 0x22FFFFFF);
             }
-            SkinIdentifier identifier = new SkinIdentifier(0, null, id);
+            SkinIdentifier identifier = new SkinIdentifier(0, null, id, null);
 
             Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier);
             if (skin != null) {

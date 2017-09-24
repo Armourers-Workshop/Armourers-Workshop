@@ -48,7 +48,7 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
             equipmentData.removeEquipment(skinType, 0);
         } else {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            equipmentData.addEquipment(skinData.skinType, 0, skinData);
+            equipmentData.addEquipment(skinData.getIdentifier().getSkinType(), 0, skinData);
         }
         sendEquipmentDataToPlayerToAllPlayersAround();
     }

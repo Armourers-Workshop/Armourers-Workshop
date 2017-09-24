@@ -95,8 +95,8 @@ public class ItemSkin extends AbstractModItem {
                 if (!data.getAuthorName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinAuthor", data.getAuthorName()));
                 }
-                if (skinData.skinType != null) {
-                    String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.skinType);
+                if (skinData.getIdentifier().getSkinType() != null) {
+                    String localSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinData.getIdentifier().getSkinType());
                     tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinType", localSkinName));
                 }
                 if (ConfigHandlerClient.showSkinTooltipDebugInfo) {
@@ -182,9 +182,9 @@ public class ItemSkin extends AbstractModItem {
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (skinData.skinType != null) {
-                if (skinData.skinType.getIcon() != null) {
-                    return skinData.skinType.getIcon();
+            if (skinData.getIdentifier().getSkinType() != null) {
+                if (skinData.getIdentifier().getSkinType().getIcon() != null) {
+                    return skinData.getIdentifier().getSkinType().getIcon();
                 }
             }
         }

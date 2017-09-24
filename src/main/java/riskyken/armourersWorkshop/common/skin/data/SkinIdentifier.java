@@ -3,7 +3,9 @@ package riskyken.armourersWorkshop.common.skin.data;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinIdentifier;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class SkinIdentifier implements ISkinIdentifier {
     
@@ -11,25 +13,29 @@ public class SkinIdentifier implements ISkinIdentifier {
     private static final String TAG_SKIN_LOCAL_ID = "localId";
     private static final String TAG_SKIN_LIBRARY_FILE = "libraryFile";
     private static final String TAG_SKIN_GLOBAL_ID = "globalId";
+    private static final String TAG_SKIN_TYPE = "skinType";
     
     private static final String TAG_SKIN_OLD_ID = "skinId";
     
     private int localId;
+    // TODO Create ILibraryFile for the API
     private LibraryFile libraryFile;
     private int globalId;
+    private ISkinType skinType;
     
-    public SkinIdentifier(int localId, LibraryFile libraryFile, int globalId) {
+    public SkinIdentifier(int localId, LibraryFile libraryFile, int globalId, ISkinType skinType) {
         this.localId = localId;
         this.libraryFile = libraryFile;
         this.globalId = globalId;
+        this.skinType = skinType;
     }
     
     public SkinIdentifier(Skin skin) {
-        this(skin.lightHash(), null, 0);
+        this(skin.lightHash(), null, 0, skin.getSkinType());
     }
     
     public SkinIdentifier(ISkinIdentifier identifier) {
-        this(identifier.getSkinLocalId(), identifier.getSkinLibraryFile(), identifier.getSkinGlobalId());
+        this(identifier.getSkinLocalId(), identifier.getSkinLibraryFile(), identifier.getSkinGlobalId(), identifier.getSkinType());
     }
     
     public boolean hasLocalId() {
@@ -58,6 +64,11 @@ public class SkinIdentifier implements ISkinIdentifier {
     public int getSkinGlobalId() {
         return globalId;
     }
+    
+    @Override
+    public ISkinType getSkinType() {
+        return skinType;
+    }
 
     @Override
     public String toString() {
@@ -65,15 +76,19 @@ public class SkinIdentifier implements ISkinIdentifier {
     }
     
     public void readFromCompound(NBTTagCompound compound) {
+        NBTTagCompound idDataCompound = compound.getCompoundTag(TAG_SKIN_ID_DATA);
+        localId = idDataCompound.getInteger(TAG_SKIN_LOCAL_ID);
+        if (idDataCompound.hasKey(TAG_SKIN_LIBRARY_FILE, NBT.TAG_STRING)) {
+            libraryFile = new LibraryFile(idDataCompound.getString(TAG_SKIN_LIBRARY_FILE));
+        }
+        globalId = idDataCompound.getInteger(TAG_SKIN_GLOBAL_ID);
+        skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(idDataCompound.getString(TAG_SKIN_TYPE));
+        
         if (compound.hasKey(TAG_SKIN_OLD_ID, NBT.TAG_INT)) {
             localId = compound.getInteger(TAG_SKIN_OLD_ID);
-        } else {
-            NBTTagCompound idDataCompound = compound.getCompoundTag(TAG_SKIN_ID_DATA);
-            localId = idDataCompound.getInteger(TAG_SKIN_LOCAL_ID);
-            if (idDataCompound.hasKey(TAG_SKIN_LIBRARY_FILE, NBT.TAG_STRING)) {
-                libraryFile = new LibraryFile(idDataCompound.getString(TAG_SKIN_LIBRARY_FILE));
-            }
-            globalId = idDataCompound.getInteger(TAG_SKIN_GLOBAL_ID);
+        }
+        if (compound.hasKey(TAG_SKIN_TYPE, NBT.TAG_STRING)) {
+            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_SKIN_TYPE));
         }
     }
     
@@ -84,6 +99,9 @@ public class SkinIdentifier implements ISkinIdentifier {
             idDataCompound.setString(TAG_SKIN_LIBRARY_FILE, libraryFile.getFullName());
         }
         idDataCompound.setInteger(TAG_SKIN_GLOBAL_ID, globalId);
+        if (skinType != null) {
+            idDataCompound.setString(TAG_SKIN_TYPE, skinType.getRegistryName());
+        }
         compound.setTag(TAG_SKIN_ID_DATA, idDataCompound);
     }
 

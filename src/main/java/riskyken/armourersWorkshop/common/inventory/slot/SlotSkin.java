@@ -24,7 +24,7 @@ public class SlotSkin extends SlotHidable {
         if (stack.getItem() instanceof ItemSkin) {
             if (SkinNBTHelper.stackHasSkinData(stack)) {
                 SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-                if (this.skinType != null && this.skinType == skinData.skinType) {
+                if (this.skinType != null && this.skinType == skinData.getIdentifier().getSkinType()) {
                     return true;
                 }
             }
