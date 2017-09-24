@@ -97,6 +97,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     
     @Override
     public void update() {
+        buttonEditSkin.visible = false;
         if (PlushieAuth.isRemoteUser()) {
             if (skinJson != null && skinJson.has("user_id")) {
                 buttonEditSkin.visible = skinJson.get("user_id").getAsInt() == PlushieAuth.PLUSHIE_SESSION.getServerId();
