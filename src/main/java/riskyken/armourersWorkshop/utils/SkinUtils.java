@@ -51,7 +51,7 @@ public final class SkinUtils {
         if (softLoad) {
             return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
         } else {
-            return CommonSkinCache.INSTANCE.getEquipmentData(skinPointer.getSkinId());
+            return CommonSkinCache.INSTANCE.getSkin(skinPointer);
         }
     }
     

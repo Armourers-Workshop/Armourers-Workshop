@@ -86,4 +86,35 @@ public class SkinIdentifier implements ISkinIdentifier {
         idDataCompound.setInteger(TAG_SKIN_GLOBAL_ID, globalId);
         compound.setTag(TAG_SKIN_ID_DATA, idDataCompound);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + globalId;
+        result = prime * result + ((libraryFile == null) ? 0 : libraryFile.hashCode());
+        result = prime * result + localId;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SkinIdentifier other = (SkinIdentifier) obj;
+        if (globalId != other.globalId)
+            return false;
+        if (libraryFile == null) {
+            if (other.libraryFile != null)
+                return false;
+        } else if (!libraryFile.equals(other.libraryFile))
+            return false;
+        if (localId != other.localId)
+            return false;
+        return true;
+    }
 }

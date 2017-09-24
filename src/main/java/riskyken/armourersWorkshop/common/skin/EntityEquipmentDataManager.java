@@ -24,7 +24,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
-import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -85,20 +85,14 @@ public final class EntityEquipmentDataManager {
         if (stack != null) {
             if (isSwordRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 0)) {
-                    SkinNBTHelper.addRenderIdToStack(
-                            stack, SkinTypeRegistry.skinSword,
-                            new SkinIdentifier(equipmentData.getEquipmentId(SkinTypeRegistry.skinSword, 0), null, 0),
-                            equipmentData.getSkinDye(SkinTypeRegistry.skinSword, 0));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 0));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isBowRenderItem(stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
-                    SkinNBTHelper.addRenderIdToStack(
-                            stack, SkinTypeRegistry.skinBow,
-                            new SkinIdentifier(equipmentData.getEquipmentId(SkinTypeRegistry.skinBow, 0), null, 0),
-                            equipmentData.getSkinDye(SkinTypeRegistry.skinBow, 0));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinBow, 0));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }

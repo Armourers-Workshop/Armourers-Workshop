@@ -143,7 +143,7 @@ public final class SkinModelRenderer {
             return null;
         }
         
-        ISkinDye skinDye = equipmentData.getSkinDye(skinType, slotIndex);
+        ISkinDye skinDye = equipmentData.getSkinPointer(skinType, slotIndex).getSkinDye();
         return skinDye;
     }
     

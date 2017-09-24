@@ -211,6 +211,19 @@ public class SkinNBTHelper {
         return stack;
     }
     
+    public static void addSkinPointerToStack(ItemStack stack, SkinPointer skinPointer) {
+        if (stackHasSkinData(stack)) {
+            SkinPointer skinData = getSkinPointerFromStack(stack);
+            if (!skinData.lockSkin) {
+                if (!skinData.getIdentifier().equals(skinPointer.getIdentifier()) | !skinData.skinDye.equals(skinPointer.getSkinDye())) {
+                    addSkinDataToStack(stack, skinPointer);
+                }
+            }
+        } else {
+            addSkinDataToStack(stack, skinPointer);
+        }
+    }
+    
     public static void addRenderIdToStack(ItemStack stack, ISkinType skinType, SkinIdentifier identifier, ISkinDye skinDye) {
         if (stackHasSkinData(stack)) {
             SkinPointer skinData = getSkinPointerFromStack(stack);
@@ -227,6 +240,4 @@ public class SkinNBTHelper {
     public static void removeRenderIdFromStack(ItemStack stack) {
         removeSkinDataFromStack(stack, false);
     }
-    
-
 }
