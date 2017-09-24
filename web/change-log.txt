@@ -1,4 +1,18 @@
-Build 0.48.0 (dev)
+Build 0.48.0-pre2 (dev)
+Fixed:
+	Fixed skin dyes not working on chickens, creepers and ghasts.
+	Fixed skin render offset on zombies.
+	Skin limit limb movement only working for skin in the first slot.
+	Fixed edit skin button being visible when the player is not part of the beta.
+Changed:
+	Sorted items in the creative tab. 
+	Debug tooltip cleanup.
+Refractor:
+	Created skin identifier class.
+	Remove plushie wrapper. 
+
+
+Build 0.48.0-pre1 (dev)
 Added:
 	Added movement types to wing skins.
 	Added ender inventory option to block skins.
