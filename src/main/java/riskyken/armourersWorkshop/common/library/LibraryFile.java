@@ -2,10 +2,11 @@ package riskyken.armourersWorkshop.common.library;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import riskyken.armourersWorkshop.api.common.library.ILibraryFile;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
-public class LibraryFile implements Comparable<LibraryFile> {
+public class LibraryFile implements Comparable<LibraryFile>, ILibraryFile {
     
     public final String fileName;
     public final String filePath;
@@ -88,6 +89,7 @@ public class LibraryFile implements Comparable<LibraryFile> {
         return new LibraryFile(fileName, filePath, skinType, directory);
     }
     
+    @Override
     public String getFullName() {
         return this.filePath + this.fileName;
     }

@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.skin.data;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
+import riskyken.armourersWorkshop.api.common.library.ILibraryFile;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinIdentifier;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
@@ -19,11 +20,11 @@ public class SkinIdentifier implements ISkinIdentifier {
     
     private int localId;
     // TODO Create ILibraryFile for the API
-    private LibraryFile libraryFile;
+    private ILibraryFile libraryFile;
     private int globalId;
     private ISkinType skinType;
     
-    public SkinIdentifier(int localId, LibraryFile libraryFile, int globalId, ISkinType skinType) {
+    public SkinIdentifier(int localId, ILibraryFile libraryFile, int globalId, ISkinType skinType) {
         this.localId = localId;
         this.libraryFile = libraryFile;
         this.globalId = globalId;
@@ -56,7 +57,7 @@ public class SkinIdentifier implements ISkinIdentifier {
     }
 
     @Override
-    public LibraryFile getSkinLibraryFile() {
+    public ILibraryFile getSkinLibraryFile() {
         return libraryFile;
     }
 
