@@ -1,3 +1,10 @@
+Build 0.48.0-current (dev)
+Fixed:
+	Fixed library files not loading if the path had the file name in it.
+Changed:
+	Loading skin roll over text clean-up.
+
+
 Build 0.48.0-pre2 (dev)
 Fixed:
 	Fixed skin dyes not working on chickens, creepers and ghasts.
@@ -21,7 +28,7 @@ Added:
 Fixed:
 	Fix wing skins rotating wrong on some axis.
 	Flying option on mannequins only working when they are named.
-	Fixed the skin settings tab in the armourer sometimes showing when it…
+	Fixed the skin settings tab in the armourer sometimes showing when it should not.
 Changed:
 	Allowed more than one wing skin to be equipped.
 	Moved arrow skins into the bow skin. 
