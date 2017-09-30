@@ -24,10 +24,9 @@ import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileList;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public final class EntitySkinHandler implements IEntitySkinHandler {
@@ -119,15 +118,9 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             if (libraryFile == null) {
                 continue;
             }
+            SkinIdentifier identifier = new SkinIdentifier(0, libraryFile, 0, skinType);
+            ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinPointer(identifier));
             
-            Skin skin = SkinIOUtils.loadSkinFromFileName(libraryFile.getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION);
-            if (skin == null) {
-                continue;
-            }
-            skin.getProperties().setProperty(Skin.KEY_FILE_NAME, libraryFile.getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION);
-            CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
-            
-            ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin);
             if (skinStack == null) {
                 continue;
             }
@@ -138,14 +131,9 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     public LibraryFile getRandomSkinOfType(ISkinType skinType) {
         ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
         LibraryFileList fileList = libraryManager.getClientPublicFileList();
-        
-        ArrayList<LibraryFile> typeList = new ArrayList<LibraryFile>();
-        
-        for (int i = 0; i < fileList.getFileCount(); i++) {
-            LibraryFile libraryFile = fileList.getFileList().get(i);
-            if (libraryFile.skinType == skinType) {
-                typeList.add(libraryFile);
-            }
+        ArrayList<LibraryFile> typeList = fileList.getCachedFileListForSkinType(skinType);
+        if (typeList == null) {
+            return null;
         }
         Random random = new Random();
         if (!typeList.isEmpty()) {

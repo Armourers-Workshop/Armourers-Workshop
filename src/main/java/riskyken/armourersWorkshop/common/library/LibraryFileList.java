@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.library;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -9,21 +10,25 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
+import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibraryFileList;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class LibraryFileList {
 
     private final ArrayList<LibraryFile> fileList;
+    private final HashMap<String, ArrayList<LibraryFile>> typeListsMap;
     private final LibraryFileType listType;
     /** Players that have an up to date copy of the servers library files. */
     private final HashSet<UUID> syncedClients;
     
     public LibraryFileList(LibraryFileType listType) {
         this.fileList = new ArrayList<LibraryFile>();
+        this.typeListsMap = new HashMap<String, ArrayList<LibraryFile>>();
         this.listType = listType;
-        syncedClients = new HashSet<UUID>();
+        this.syncedClients = new HashSet<UUID>();
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -38,6 +43,7 @@ public class LibraryFileList {
         synchronized (syncedClients) {
             syncedClients.clear();
         }
+        updateTypeLists();
     }
     
     public ArrayList<LibraryFile> getFileList() {
@@ -64,6 +70,38 @@ public class LibraryFileList {
             Collections.sort(this.fileList);
         }
         markDirty();
+    }
+    
+    private void updateTypeLists() {
+        ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        synchronized (typeListsMap) {
+            typeListsMap.clear();
+            for (int i = 0; i < skinTypes.size(); i++) {
+                ISkinType skinType = skinTypes.get(i);
+                ArrayList<LibraryFile> typeList = getFileListForSkinType(skinType);
+                typeListsMap.put(skinType.getRegistryName(), typeList);
+            }
+            ModLogger.log(String.format("Created %d type lists for file list type %s.", typeListsMap.size(), this.listType.toString()));
+        }
+    }
+    
+    private ArrayList<LibraryFile> getFileListForSkinType(ISkinType skinType) {
+        ArrayList<LibraryFile> typeList = new ArrayList<LibraryFile>();
+        synchronized (this.fileList) {
+            for (int i = 0; i < this.fileList.size(); i++) {
+                LibraryFile libraryFile = this.fileList.get(i);
+                if (libraryFile.skinType == skinType) {
+                    typeList.add(libraryFile);
+                }
+            }
+        }
+        return typeList;
+    }
+    
+    public ArrayList<LibraryFile> getCachedFileListForSkinType(ISkinType skinType) {
+        synchronized (typeListsMap) {
+            return typeListsMap.get(skinType.getRegistryName());
+        }
     }
     
     public void removeFileFromList(LibraryFile file) {
