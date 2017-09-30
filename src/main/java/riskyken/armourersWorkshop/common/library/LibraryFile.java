@@ -20,7 +20,7 @@ public class LibraryFile implements Comparable<LibraryFile> {
         fullFilePath = fullFilePath.replace("\\", "/");
         String[] splitFile = fullFilePath.split("/");
         this.fileName = splitFile[splitFile.length - 1];
-        this.filePath = fullFilePath.replace(fileName, "");
+        this.filePath = fullFilePath.substring(0, fullFilePath.length() - fileName.length());
         this.skinType = null;
         this.directory = false;
     }
