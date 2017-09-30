@@ -138,6 +138,15 @@ public class ItemSkin extends AbstractModItem {
                 
             } else {
                 tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skindownloading", identifier.toString()));
+                if (identifier.hasLocalId()) {
+                    tooltip.add("  " + TranslateUtils.translate("item.armourersworkshop:rollover.skinId", identifier.getSkinLocalId()));
+                }
+                if (identifier.hasLibraryFile()) {
+                    tooltip.add("  " + TranslateUtils.translate("item.armourersworkshop:rollover.skinLibraryFile", identifier.getSkinLibraryFile().getFullName()));
+                }
+                if (identifier.hasGlobalId()) {
+                    tooltip.add("  " + TranslateUtils.translate("item.armourersworkshop:rollover.skinGlobalId", identifier.getSkinGlobalId()));
+                }
             }
             String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
             if (isEquipmentSkin) {
