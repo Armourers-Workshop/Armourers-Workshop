@@ -245,6 +245,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         sliderWingFlyingSpeed.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingMinAngle.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         sliderWingMaxAngle.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
+        dropDownList.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         
         checkArmourOverrideBodyPart.visible = tileEntity.getSkinType().getVanillaArmourSlotId() != -1;
     }
