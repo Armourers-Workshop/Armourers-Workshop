@@ -37,6 +37,8 @@ public final class SkinSerializer {
     
     private static final String TAG_SKIN_FOOTER = "AW-SKIN-END";
     
+    private static final String KEY_TAGS = "tags";
+    
     private SkinSerializer() {}
     
     public static void writeToStream(Skin skin, DataOutputStream stream) throws IOException {
@@ -107,7 +109,7 @@ public final class SkinSerializer {
             properties.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
             properties.setProperty(Skin.KEY_CUSTOM_NAME, customName);
             if (tags != null && !tags.equalsIgnoreCase("")) {
-                properties.setProperty(Skin.KEY_TAGS, tags);
+                properties.setProperty(KEY_TAGS, tags);
             }
         } else {
             try {
@@ -261,7 +263,7 @@ public final class SkinSerializer {
             properties.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
             properties.setProperty(Skin.KEY_CUSTOM_NAME, customName);
             if (tags != null && !tags.equalsIgnoreCase("")) {
-                properties.setProperty(Skin.KEY_TAGS, tags);
+                properties.setProperty(KEY_TAGS, tags);
             }
         } else {
             try {

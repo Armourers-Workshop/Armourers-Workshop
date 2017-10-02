@@ -138,10 +138,6 @@ public final class BlockUtils {
         return blockFaces;
     }
     
-    public static class BlockPath {
-        
-    }
-    
     public static class BlockFace extends BlockLocation {
 
         public final int face;

@@ -6,6 +6,7 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 
 public interface IPantableBlock {
     
+    /** @deprecated Replaced by {@link #setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side)} */
     @Deprecated
     public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side);
     

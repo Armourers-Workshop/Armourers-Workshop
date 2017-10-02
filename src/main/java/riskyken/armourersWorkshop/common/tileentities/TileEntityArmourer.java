@@ -135,9 +135,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
         }
         skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
-        if (tags != null && !tags.equalsIgnoreCase("")) {
-            skinProps.setProperty(Skin.KEY_TAGS, tags);
-        }
         
         for (int i = 0; i < skinType.getProperties().size(); i++) {
             SkinProperty skinProp = (SkinProperty) skinType.getProperties().get(i);

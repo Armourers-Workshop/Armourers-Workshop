@@ -50,7 +50,7 @@ public class ArmourersWorkshop {
      * (normal called the players skin) it will be called the player texture or entity
      * texture to prevent confusion with AW skins.
      * 
-     * Skin - A custom 3D model that can be created by a player. Skins are stored in SkinDataCache
+     * Skin - A custom 3D model that can be created by a player. Skins are stored in CommonSkinCache
      * server side and ClientSkinCache on the client side.
      * 
      * SkinType - Each skin has a skin type, examples; head, chest, bow and block. All
@@ -60,18 +60,6 @@ public class ArmourersWorkshop {
      * base, left arm and right arm skin parts.
      * 
      * SkinPartType - Each skin part has a part type examples; left arm, left leg and right arm.
-     * 
-     * TODO Finish this!
-     * 
-     * SkinTexture
-     * EntityTexture
-     * SkinPartModel
-     * 
-     * SkinPointer
-     * SkinDye
-     * 
-     * SkinTextureKey
-     * SkinPartModelKey
      */
     
     @Mod.Instance(LibModInfo.ID)

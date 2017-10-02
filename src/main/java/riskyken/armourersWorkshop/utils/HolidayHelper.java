@@ -15,27 +15,24 @@ public final class HolidayHelper {
     
     private static ArrayList<Holiday> holidayList;
     
-    //Spooky scary skeletons.
+    // Spooky scary skeletons.
     public static final Holiday halloween = new Holiday(31, Calendar.OCTOBER, 0, 24);
     public static final Holiday halloween_season = new Holiday(24, Calendar.OCTOBER, 8, 0);
     
-    //Some guy was born or something.
+    // Some guy was born or something.
     public static final Holiday christmas = new Holiday(25, Calendar.DECEMBER, 0, 24);
     public static final Holiday christmas_season = new Holiday(1, Calendar.DECEMBER, 31, 0);
     
-    //Forever alone.
+    // Forever alone.
     public static final Holiday valentins = new Holiday(14, Calendar.FEBRUARY, 1, 0);
     
-    //year++
+    // year++
     public static final Holiday newYears = new Holiday(1, Calendar.JANUARY, 1, 0);
     
-    //The best holiday!
+    // The best holiday!
     public static final Holiday ponytailDay = new Holiday(7, Calendar.JULY, 1, 0);
     
-    //It began small! At 10FPS that is.
-    public static final Holiday btm15Anniversary = new Holiday(4, Calendar.JULY, 2, 0);
-    
-    //Should be 12 but making it 24 so more people can see it.
+    // Should be 12 but making it 24 so more people can see it.
     public static final Holiday aprilFools = new Holiday(1, Calendar.APRIL, 1, 0);
     
     static {
@@ -47,7 +44,6 @@ public final class HolidayHelper {
         holidayList.add(valentins);
         holidayList.add(newYears);
         holidayList.add(ponytailDay);
-        holidayList.add(btm15Anniversary);
         holidayList.add(aprilFools);
     }
     

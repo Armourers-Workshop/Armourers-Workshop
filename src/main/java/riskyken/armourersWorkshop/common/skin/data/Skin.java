@@ -25,7 +25,6 @@ public class Skin implements ISkin {
     public static final String KEY_AUTHOR_NAME = "authorName";
     public static final String KEY_AUTHOR_UUID = "authorUUID";
     public static final String KEY_CUSTOM_NAME = "customName";
-    public static final String KEY_TAGS = "tags";
     public static final String KEY_FILE_NAME = "fileName";
     
     private SkinProperties properties;
