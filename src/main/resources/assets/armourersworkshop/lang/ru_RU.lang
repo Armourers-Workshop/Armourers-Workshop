@@ -142,7 +142,10 @@ item.armourersworkshop:rollover.skinName=&6Название:&7 %s
 item.armourersworkshop:rollover.skinAuthor=&6Автор:&7 %s
 item.armourersworkshop:rollover.skinType=&6Тип:&7 %s
 item.armourersworkshop:rollover.skinHoldShiftForInfo=Зажмите &ashift&7 для доп. информации.
+item.armourersworkshop:rollover.skinIdentifier=&eИдентификатор Скина:
 item.armourersworkshop:rollover.skinId=&eId Скина:&7 %s
+item.armourersworkshop:rollover.skinLibraryFile=Файл в библиотеке: %s
+item.armourersworkshop:rollover.skinGlobalId=ГлобальныйID: %s
 item.armourersworkshop:rollover.skinTotalCubes=&eВсего Кубов:&7 %s
 item.armourersworkshop:rollover.skinNumCubes=&eКубы:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlowing=&eСветяшиеся Кубы:&7 %s
@@ -224,6 +227,10 @@ skinPartType.armourers:block.multiblock.name=МультиБлок
 skinPartType.armourers:wings.leftWing.name=Левое Крыло
 skinPartType.armourers:wings.rightWing.name=Правое Крыло
 
+# Movement types
+movmentType.armourersworkshop:ease=Круговое(*)
+movmentType.armourersworkshop:linear=Линейное(*)
+
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Миксер Цветов
 inventory.armourersworkshop:armourerBrain.name=Оружейник
@@ -299,9 +306,10 @@ inventory.armourersworkshop:armourerBrain.glowing=Светится
 inventory.armourersworkshop:armourerBrain.ladder=Лестница
 inventory.armourersworkshop:armourerBrain.noCollision=Нетвёрдый блок
 inventory.armourersworkshop:armourerBrain.seat=Можно сесть
-inventory.armourersworkshop:armourerBrain.multiblock=МультиБлок
+inventory.armourersworkshop:armourerBrain.multiblock=Мультиблок
 inventory.armourersworkshop:armourerBrain.bed=Кровать
 inventory.armourersworkshop:armourerBrain.inventory=С инвентарём
+inventory.armourersworkshop:armourerBrain.enderInventory=С эндер-инвентарём
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Замещает
 inventory.armourersworkshop:armourerBrain.tab.main=Основное
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Настройки Отображения
@@ -481,12 +489,12 @@ death.attack.victorious=%1$s был зарезан короной Vic'а.
 commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
-commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>
+commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [R,G,B] | [0xRRGGBB]
 commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
 commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=Файл %1$s не Был Найден.
-
+commands.armourers.invalidDyeFormat=%1$s - неправильный формат цвета.
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
 
