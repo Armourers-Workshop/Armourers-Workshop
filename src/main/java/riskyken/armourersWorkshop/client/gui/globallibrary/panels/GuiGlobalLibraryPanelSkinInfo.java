@@ -339,14 +339,14 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                 }
                 */
             }
+            drawString(fontRenderer, "Global ID: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+            yOffset += 12 + 6;
             if (skinJson.has("description")) {
                 drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "description"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12;
                 fontRenderer.drawSplitString(skinJson.get("description").getAsString(), boxX + 5, boxY + 5 + yOffset, boxWidth - 10, 0xFFEEEEEE);
                 yOffset += 12 + 6;
             }
-            drawString(fontRenderer, "Global ID: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-            yOffset += 12;
         }
     }
     
