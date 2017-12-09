@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
@@ -24,40 +25,48 @@ public final class SkinUtils {
     
     public static Skin getSkinDetectSide(ItemStack stack, boolean serverSoftLoad, boolean clientRequestSkin) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        return getSkinDetectSide(skinPointer, serverSoftLoad, clientRequestSkin);
+    }
+    
+    public static Skin getSkinDetectSide(SkinPointer skinPointer, boolean serverSoftLoad, boolean clientRequestSkin) {
         if (skinPointer != null) {
-            return getSkinDetectSide(skinPointer, serverSoftLoad, clientRequestSkin);
+            SkinIdentifier skinIdentifier = skinPointer.getIdentifier();
+            return getSkinDetectSide(skinIdentifier, serverSoftLoad, clientRequestSkin);
         }
         return null;
     }
     
-    public static Skin getSkinDetectSide(SkinPointer skinPointer, boolean serverSoftLoad, boolean clientRequestSkin) {
-        if (ArmourersWorkshop.isDedicated()) {
-            return getSkinForSide(skinPointer, Side.SERVER, serverSoftLoad, clientRequestSkin);
-        } else {
-            Side side = FMLCommonHandler.instance().getEffectiveSide();
-            return getSkinForSide(skinPointer, side, serverSoftLoad, clientRequestSkin);
+    public static Skin getSkinDetectSide(SkinIdentifier skinIdentifier, boolean serverSoftLoad, boolean clientRequestSkin) {
+        if (skinIdentifier != null) {
+            if (ArmourersWorkshop.isDedicated()) {
+                return getSkinForSide(skinIdentifier, Side.SERVER, serverSoftLoad, clientRequestSkin);
+            } else {
+                Side side = FMLCommonHandler.instance().getEffectiveSide();
+                return getSkinForSide(skinIdentifier, side, serverSoftLoad, clientRequestSkin);
+            }
         }
+        return null;
     }
     
-    public static Skin getSkinForSide(SkinPointer skinPointer, Side side, boolean softLoad, boolean requestSkin) {
+    public static Skin getSkinForSide(SkinIdentifier skinIdentifier, Side side, boolean softLoad, boolean requestSkin) {
         if (side == Side.CLIENT) {
-            return getSkinOnClient(skinPointer, requestSkin);
+            return getSkinOnClient(skinIdentifier, requestSkin);
         } else {
-            return getSkinOnServer(skinPointer, softLoad);
+            return getSkinOnServer(skinIdentifier, softLoad);
         }
     }
     
-    private static Skin getSkinOnServer(SkinPointer skinPointer, boolean softLoad) {
+    private static Skin getSkinOnServer(SkinIdentifier skinIdentifier, boolean softLoad) {
         if (softLoad) {
-            return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getSkinId());
+            return CommonSkinCache.INSTANCE.softGetSkin(skinIdentifier);
         } else {
-            return CommonSkinCache.INSTANCE.getSkin(skinPointer);
+            return CommonSkinCache.INSTANCE.getSkin(skinIdentifier);
         }
     }
     
     @SideOnly(Side.CLIENT)
-    private static Skin getSkinOnClient(SkinPointer skinPointer, boolean requestSkin) {
-        return ClientSkinCache.INSTANCE.getSkin(skinPointer, requestSkin);
+    private static Skin getSkinOnClient(SkinIdentifier skinIdentifier, boolean requestSkin) {
+        return ClientSkinCache.INSTANCE.getSkin(skinIdentifier, requestSkin);
     }
     
     public static Skin copySkin(Skin skin) {

@@ -255,6 +255,7 @@ inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7You must select
 inventory.armourersworkshop:armourLibrary.save=Save
 inventory.armourersworkshop:armourLibrary.load=Load
 inventory.armourersworkshop:armourLibrary.openFolder=Open Folder...
+inventory.armourersworkshop:armourLibrary.trackFile=Track file?
 inventory.armourersworkshop:armourLibrary.rollover.localFiles=View files on this computer.
 inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=View public files on the server.
 inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=View private files on the server.
@@ -429,7 +430,6 @@ inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=Skin Tags:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Enter tags
 inventory.armourersworkshop:globalSkinLibrary.upload.skinDescription=Skin Description:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterDescription=Enter description
-
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Upload Skin
 
 # Global Skin Library (Beta - Will be removed later).

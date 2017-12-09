@@ -199,29 +199,25 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (!(stackInput.getItem() instanceof ItemSkin)) {
             return;
         }
-        
-        if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
+        SkinPointer skinPointerInput = SkinNBTHelper.getSkinPointerFromStack(stackInput);
+        if (skinPointerInput == null) {
             return;
         }
-        
-        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stackInput);
-
         if (skinType == null) {
             return;
         }
-        if (skinType != skinData.getIdentifier().getSkinType()) {
-            if (!(skinType == SkinTypeRegistry.skinLegs && skinData.getIdentifier().getSkinType() == SkinTypeRegistry.skinSkirt)) {
+        if (skinType != skinPointerInput.getIdentifier().getSkinType()) {
+            if (!(skinType == SkinTypeRegistry.skinLegs && skinPointerInput.getIdentifier().getSkinType() == SkinTypeRegistry.skinSkirt)) {
                 return;
             }
         }
         
-        int equipmentId = SkinNBTHelper.getSkinIdFromStack(stackInput);
-        Skin equipmentData = CommonSkinCache.INSTANCE.getEquipmentData(equipmentId);
-        setSkinProps(new SkinProperties(equipmentData.getProperties()));
+        Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointerInput);
+        setSkinProps(new SkinProperties(skin.getProperties()));
         
-        ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, equipmentData, direction);
-        if (equipmentData.hasPaintData()) {
-            this.paintData = equipmentData.getPaintData().clone();
+        ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, skin, direction);
+        if (skin.hasPaintData()) {
+            this.paintData = skin.getPaintData().clone();
         } else {
             clearPaintData(true);
         }

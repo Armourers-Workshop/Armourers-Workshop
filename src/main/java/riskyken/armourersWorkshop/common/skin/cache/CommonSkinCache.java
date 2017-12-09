@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.Level;
 
@@ -15,6 +19,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinIdentifier;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
@@ -53,8 +58,13 @@ public final class CommonSkinCache implements Runnable {
     
     private boolean madeDatabase = false;
     
+    private final Executor globalSkinDownloadExecutor;
+    private CompletionService<Skin> globalSkinDownloadCompletion;
+    
     public CommonSkinCache() {
         skinDataCache = new ExpiringHashMap<Integer, Skin>(ConfigHandler.serverModelCacheTime);
+        globalSkinDownloadExecutor = Executors.newFixedThreadPool(2);
+        globalSkinDownloadCompletion = new ExecutorCompletionService<Skin>(globalSkinDownloadExecutor);
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -284,25 +294,33 @@ public final class CommonSkinCache implements Runnable {
         }
     }
     
-    public Skin getSkin(ISkinPointer skinPointer) {
-        return getEquipmentData(skinPointer.getSkinId());
+    public Skin getSkin(ISkinPointer  skinPointer) {
+        return getSkin(skinPointer.getIdentifier());
     }
     
-    public Skin getEquipmentData(int equipmentId) {
+    public Skin getSkin(ISkinIdentifier skinIdentifier) {
+        return getSkin(skinIdentifier.getSkinLocalId());
+    }
+    
+    public Skin getSkin(int skinId) {
         synchronized (skinDataCache) {
-            if (!skinDataCache.containsKey(equipmentId)) {
-                if (haveEquipmentOnDisk(equipmentId)) {
+            if (!skinDataCache.containsKey(skinId)) {
+                if (haveEquipmentOnDisk(skinId)) {
                     Skin equipmentData;
-                    equipmentData = loadEquipmentFromDisk(equipmentId);
-                    addEquipmentDataToCache(equipmentData, equipmentId);
+                    equipmentData = loadEquipmentFromDisk(skinId);
+                    addEquipmentDataToCache(equipmentData, skinId);
                 }
             }
         }
-        if (skinDataCache.containsKey(equipmentId)) {
-            Skin skin = skinDataCache.get(equipmentId);
+        if (skinDataCache.containsKey(skinId)) {
+            Skin skin = skinDataCache.get(skinId);
             return skin;
         }
         return null;
+    }
+    
+    public Skin softGetSkin(ISkinIdentifier skinIdentifier) {
+        return softGetSkin(skinIdentifier.getSkinLocalId());
     }
     
     /**

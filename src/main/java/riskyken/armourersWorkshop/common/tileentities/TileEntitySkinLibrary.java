@@ -162,7 +162,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
      * @param filename The name of the file to load.
      * @param player The player that pressed the load button.
      */
-    public void loadArmour(String fileName, String filePath, EntityPlayerMP player) {
+    public void loadArmour(String fileName, String filePath, EntityPlayerMP player, boolean trackFile) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
@@ -193,9 +193,10 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        skin.getProperties().setProperty(Skin.KEY_FILE_NAME, filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         LibraryFile libraryFile = new LibraryFile(fileName, filePath, skin.getSkinType());
         SkinIdentifier identifier = new SkinIdentifier(skin.lightHash(), libraryFile, 0, skin.getSkinType());
+        
+        // TODO Set master using trackFile
         
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         ModLogger.log("Loaded file form lib: " + libraryFile.toString());

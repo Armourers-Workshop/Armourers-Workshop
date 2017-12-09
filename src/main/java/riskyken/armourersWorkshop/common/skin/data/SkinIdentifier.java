@@ -19,10 +19,20 @@ public class SkinIdentifier implements ISkinIdentifier {
     private static final String TAG_SKIN_OLD_ID = "skinId";
     
     private int localId;
-    // TODO Create ILibraryFile for the API
     private ILibraryFile libraryFile;
     private int globalId;
     private ISkinType skinType;
+    
+    
+    // 1 2 3
+    // 1 3 2
+    // 2 1 3
+    // 2 3 1
+    // 3 1 2
+    // 3 2 1
+    
+    // 6 Permutations
+    // primary secondary tertiary
     
     public SkinIdentifier(int localId, ILibraryFile libraryFile, int globalId, ISkinType skinType) {
         this.localId = localId;

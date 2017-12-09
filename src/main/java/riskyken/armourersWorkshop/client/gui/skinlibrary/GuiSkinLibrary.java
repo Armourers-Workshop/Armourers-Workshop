@@ -33,6 +33,7 @@ import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.DialogResult;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialogContainer;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
+import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiFileListItem;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
@@ -79,6 +80,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     private static ISkinType lastSkinType;
     private static String lastSearchText = "";
     private static String currentFolder = "/";
+    private static boolean trackFile = false;
     
     private TileEntitySkinLibrary armourLibrary;
     private final EntityPlayer player;
@@ -98,6 +100,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     private GuiLabeledTextField filenameTextbox;
     private GuiLabeledTextField searchTextbox;
     private GuiDropDownList dropDownList;
+    private GuiCheckBox checkBoxTrack;
     
     private boolean isNEIVisible;
     
@@ -228,6 +231,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             }
         }
         buttonList.add(dropDownList);
+        
+        checkBoxTrack = new GuiCheckBox(-1, PADDING, this.height - INVENTORY_HEIGHT - PADDING * 5 - 2 - 20 - neiBump, GuiHelper.getLocalizedControlName(guiName, "trackFile"), trackFile);
+        checkBoxTrack.setTextColour(0xCCCCCC);
+        buttonList.add(checkBoxTrack);
     }
     
     public TileEntitySkinLibrary getArmourLibrary() {
@@ -353,6 +360,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             openDialog(new GuiDialogNewFolder(this, armourLibrary.getInventoryName() + ".dialog.newFolder", this, 190, 120));
         }
         
+        if (button == checkBoxTrack) {
+            trackFile = checkBoxTrack.isChecked();
+        }
+        
         GuiFileListItem fileItem = (GuiFileListItem) fileList.getSelectedListEntry();
         
         boolean clientLoad = false;
@@ -378,7 +389,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                             SkinUploadHelper.uploadSkinToServer(itemData);
                         }
                     } else {
-                        message = new MessageClientGuiLoadSaveArmour(file.fileName, file.filePath, LibraryPacketType.SERVER_LOAD, publicList);
+                        message = new MessageClientGuiLoadSaveArmour(file.fileName, file.filePath, LibraryPacketType.SERVER_LOAD, publicList, trackFile);
                         PacketHandler.networkWrapper.sendToServer(message);
                     }
                     filenameTextbox.setText("");
@@ -391,10 +402,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                         return;
                     }
                     if (clientLoad) {
-                        message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.CLIENT_SAVE, false);
+                        message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.CLIENT_SAVE, false, trackFile);
                         PacketHandler.networkWrapper.sendToServer(message);
                     } else {
-                        message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
+                        message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.SERVER_SAVE, publicList, trackFile);
                         PacketHandler.networkWrapper.sendToServer(message);
                     }
                     
@@ -508,10 +519,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     publicList = false;
                 }
                 if (clientLoad) {
-                    message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.CLIENT_SAVE, false);
+                    message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.CLIENT_SAVE, false, trackFile);
                     PacketHandler.networkWrapper.sendToServer(message);
                 } else {
-                    message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.SERVER_SAVE, publicList);
+                    message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.SERVER_SAVE, publicList, trackFile);
                     PacketHandler.networkWrapper.sendToServer(message);
                 }
                 ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + overwriteDialog.getFileName());
