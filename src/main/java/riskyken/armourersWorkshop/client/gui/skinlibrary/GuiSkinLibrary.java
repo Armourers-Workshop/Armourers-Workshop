@@ -59,6 +59,7 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
@@ -492,7 +493,8 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                                     e.printStackTrace();
                                 }
                             } else {
-                                ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + deleteDialog.getFileName());
+                                LibraryFile libraryFile = new LibraryFile(currentFolder + deleteDialog.getFileName());
+                                ClientSkinCache.INSTANCE.markSkinAsDirty(new SkinIdentifier(0, libraryFile, 0, null));
                                 dir.delete();
                                 reloadLocalLibrary();
                             }
@@ -525,7 +527,8 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     message = new MessageClientGuiLoadSaveArmour(overwriteDialog.getFileName(), currentFolder, LibraryPacketType.SERVER_SAVE, publicList, trackFile);
                     PacketHandler.networkWrapper.sendToServer(message);
                 }
-                ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + overwriteDialog.getFileName());
+                LibraryFile libraryFile = new LibraryFile(currentFolder + overwriteDialog.getFileName());
+                ClientSkinCache.INSTANCE.markSkinAsDirty(new SkinIdentifier(0, libraryFile, 0, null));
                 // reloadLocalLibrary();
                 // TODO clear name lookup list on clients or just removed this one name
             }
@@ -682,7 +685,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         if (showModelPreviews()) {
             GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
             if (item != null && !item.getFile().isDirectory()) {
-                Skin skin = ClientSkinCache.INSTANCE.getSkin(item.getFile().getFullName(), true);
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(new SkinIdentifier(0, new LibraryFile(item.getFile().getFullName()), 0, null), true);
                 if (skin != null) {
                     SkinPointer skinPointer = new SkinPointer(skin);
                     

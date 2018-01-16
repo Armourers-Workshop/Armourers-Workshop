@@ -5,6 +5,12 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public interface ISkinIdentifier {
     
+    public boolean hasLocalId();
+    
+    public boolean hasLibraryFile();
+    
+    public boolean hasGlobalId();
+    
     public int getSkinLocalId();
     
     public ILibraryFile getSkinLibraryFile();

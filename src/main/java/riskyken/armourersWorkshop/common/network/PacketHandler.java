@@ -23,7 +23,6 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientKeyPress;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientLoadArmour;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinData;
-import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestSkinId;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientToolPaintBlock;
@@ -34,8 +33,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLi
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinDataSend;
-import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinIdSend;
+import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSendSkinData;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSyncConfig;
@@ -59,7 +57,7 @@ public class PacketHandler {
         registerMessage(MessageClientSkinWardrobeUpdate.class, MessageClientSkinWardrobeUpdate.class, Side.SERVER);
         registerMessage(MessageServerSkinWardrobeUpdate.class, MessageServerSkinWardrobeUpdate.class, Side.CLIENT);
         registerMessage(MessageClientRequestSkinData.class, MessageClientRequestSkinData.class, Side.SERVER);
-        registerMessage(MessageServerSkinDataSend.class, MessageServerSkinDataSend.class, Side.CLIENT);
+        registerMessage(MessageServerSendSkinData.class, MessageServerSendSkinData.class, Side.CLIENT);
         registerMessage(MessageClientGuiSetArmourerSkinProps.class, MessageClientGuiSetArmourerSkinProps.class, Side.SERVER);
         registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, Side.SERVER);
         registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, Side.CLIENT);
@@ -71,8 +69,6 @@ public class PacketHandler {
         registerMessage(MessageServerMiniArmourerCubeEdit.class, MessageServerMiniArmourerCubeEdit.class, Side.CLIENT);
         registerMessage(MessageClientSkinPart.class, MessageClientSkinPart.class, Side.SERVER);
         registerMessage(MessageServerSyncConfig.class, MessageServerSyncConfig.class, Side.CLIENT);
-        registerMessage(MessageClientRequestSkinId.class, MessageClientRequestSkinId.class, Side.SERVER);
-        registerMessage(MessageServerSkinIdSend.class, MessageServerSkinIdSend.class, Side.CLIENT);
         registerMessage(MessageClientGuiMannequinData.class, MessageClientGuiMannequinData.class, Side.SERVER);
         registerMessage(MessageClientToolPaintBlock.class, MessageClientToolPaintBlock.class, Side.SERVER);
         registerMessage(MessageClientGuiAdminPanel.class, MessageClientGuiAdminPanel.class, Side.SERVER);

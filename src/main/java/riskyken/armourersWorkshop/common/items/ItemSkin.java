@@ -205,7 +205,7 @@ public class ItemSkin extends AbstractModItem {
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-        if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
+        if (skinPointer != null && skinPointer.getIdentifier().getSkinType() == SkinTypeRegistry.skinBlock) {
             Skin skin = SkinUtils.getSkinDetectSide(skinPointer, false, true);
             if (skin != null) {
                 ForgeDirection dir = ForgeDirection.getOrientation(side);

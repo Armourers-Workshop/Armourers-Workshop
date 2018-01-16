@@ -9,6 +9,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -21,9 +23,11 @@ import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinTexture;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public final class ModelBakery {
@@ -31,7 +35,7 @@ public final class ModelBakery {
     public static final ModelBakery INSTANCE = new ModelBakery();
     
     private final Executor skinBakeExecutor;
-    private final CompletionService<Skin> skinCompletion;
+    private final CompletionService<BakedSkin> skinCompletion;
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
     
     private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(100);
@@ -39,7 +43,7 @@ public final class ModelBakery {
     
     public ModelBakery() {
         skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.maxModelBakingThreads);
-        skinCompletion = new ExecutorCompletionService<Skin>(skinBakeExecutor);
+        skinCompletion = new ExecutorCompletionService<BakedSkin>(skinBakeExecutor);
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -63,19 +67,23 @@ public final class ModelBakery {
         return (int) ((double)totalTime / (double)totalItems);
     }
     
-    public void receivedUnbakedModel(Skin skin) {
+    public void receivedUnbakedModel(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
         bakingQueue.incrementAndGet();
-        skinCompletion.submit(new BakingOven(skin));
+        skinCompletion.submit(new BakingOven(skin, skinIdentifierRequested, skinIdentifierUpdated));
     }
     
     private void checkBakery() {
-        Future<Skin> futureSkin = skinCompletion.poll();
+        Future<BakedSkin> futureSkin = skinCompletion.poll();
         while (futureSkin != null) {
             try {
-                Skin skin = futureSkin.get();
-                if (skin != null) {
+                BakedSkin bakedSkin = futureSkin.get();
+                if (bakedSkin != null) {
                     bakingQueue.decrementAndGet();
-                    ClientSkinCache.INSTANCE.receivedModelFromBakery(skin);
+                    if (bakedSkin.skin != null) {
+                        ClientSkinCache.INSTANCE.receivedModelFromBakery(bakedSkin);
+                    } else {
+                        ModLogger.log(Level.ERROR, "A skin failed to bake.");
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -88,16 +96,20 @@ public final class ModelBakery {
         return bakingQueue.get();
     }
     
-    private class BakingOven implements Callable<Skin> {
+    private class BakingOven implements Callable<BakedSkin> {
 
         private final Skin skin;
+        private final SkinIdentifier skinIdentifierRequested;
+        private final SkinIdentifier skinIdentifierUpdated;
         
-        public BakingOven(Skin skin) {
+        public BakingOven(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
             this.skin = skin;
+            this.skinIdentifierRequested = skinIdentifierRequested;
+            this.skinIdentifierUpdated = skinIdentifierUpdated;
         }
 
         @Override
-        public Skin call() throws Exception {
+        public BakedSkin call() throws Exception {
             Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
             long startTime = System.currentTimeMillis();
             skin.lightHash();
@@ -175,7 +187,32 @@ public final class ModelBakery {
                 bakeTimesIndex.set(0);
             }
             bakeTimes.set(index, (int)totalTime);
+            return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated);
+        }
+    }
+    
+    public static class BakedSkin {
+        
+        private final Skin skin;
+        private final SkinIdentifier skinIdentifierRequested;
+        private final SkinIdentifier skinIdentifierUpdated;
+        
+        public BakedSkin(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
+            this.skin = skin;
+            this.skinIdentifierRequested = skinIdentifierRequested;
+            this.skinIdentifierUpdated = skinIdentifierUpdated;
+        }
+
+        public Skin getSkin() {
             return skin;
+        }
+
+        public SkinIdentifier getSkinIdentifierRequested() {
+            return skinIdentifierRequested;
+        }
+
+        public SkinIdentifier getSkinIdentifierUpdated() {
+            return skinIdentifierUpdated;
         }
     }
 }

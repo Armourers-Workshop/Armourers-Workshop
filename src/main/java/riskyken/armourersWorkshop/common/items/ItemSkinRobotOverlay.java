@@ -1,18 +1,17 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.item.ItemStack;
-
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import buildcraft.api.robots.IRobotOverlayItem;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @Optional.Interface(iface = "buildcraft.api.robots.IRobotOverlayItem", modid = "BuildCraft|Core")
 public class ItemSkinRobotOverlay extends ItemSkin implements IRobotOverlayItem {
@@ -24,7 +23,7 @@ public class ItemSkinRobotOverlay extends ItemSkin implements IRobotOverlayItem 
             return false;
         }
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
-        if (skinPointer.getSkinType() != SkinTypeRegistry.skinHead) {
+        if (skinPointer.getIdentifier().getSkinType() != SkinTypeRegistry.skinHead) {
             return false;
         }
         return true;

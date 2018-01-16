@@ -1,12 +1,8 @@
 package riskyken.armourersWorkshop.common.skin.data;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.Constants.NBT;
 import riskyken.armourersWorkshop.api.common.library.ILibraryFile;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinIdentifier;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.library.LibraryFile;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class SkinIdentifier implements ISkinIdentifier {
     
@@ -34,6 +30,13 @@ public class SkinIdentifier implements ISkinIdentifier {
     // 6 Permutations
     // primary secondary tertiary
     
+    public SkinIdentifier() {
+        this.localId = 0;
+        this.libraryFile = null;
+        this.globalId = 0;
+        this.skinType = null;
+    }
+    
     public SkinIdentifier(int localId, ILibraryFile libraryFile, int globalId, ISkinType skinType) {
         this.localId = localId;
         this.libraryFile = libraryFile;
@@ -49,14 +52,17 @@ public class SkinIdentifier implements ISkinIdentifier {
         this(identifier.getSkinLocalId(), identifier.getSkinLibraryFile(), identifier.getSkinGlobalId(), identifier.getSkinType());
     }
     
+    @Override
     public boolean hasLocalId() {
         return localId != 0;
     }
     
+    @Override
     public boolean hasLibraryFile() {
         return libraryFile != null;
     }
     
+    @Override
     public boolean hasGlobalId() {
         return globalId != 0;
     }
@@ -86,36 +92,6 @@ public class SkinIdentifier implements ISkinIdentifier {
         return "SkinIdentifier [localId=" + localId + ", libraryFile=" + libraryFile + ", globalId=" + globalId + "]";
     }
     
-    public void readFromCompound(NBTTagCompound compound) {
-        NBTTagCompound idDataCompound = compound.getCompoundTag(TAG_SKIN_ID_DATA);
-        localId = idDataCompound.getInteger(TAG_SKIN_LOCAL_ID);
-        if (idDataCompound.hasKey(TAG_SKIN_LIBRARY_FILE, NBT.TAG_STRING)) {
-            libraryFile = new LibraryFile(idDataCompound.getString(TAG_SKIN_LIBRARY_FILE));
-        }
-        globalId = idDataCompound.getInteger(TAG_SKIN_GLOBAL_ID);
-        skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(idDataCompound.getString(TAG_SKIN_TYPE));
-        
-        if (compound.hasKey(TAG_SKIN_OLD_ID, NBT.TAG_INT)) {
-            localId = compound.getInteger(TAG_SKIN_OLD_ID);
-        }
-        if (compound.hasKey(TAG_SKIN_TYPE, NBT.TAG_STRING)) {
-            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_SKIN_TYPE));
-        }
-    }
-    
-    public void writeToCompound(NBTTagCompound compound) {
-        NBTTagCompound idDataCompound = new NBTTagCompound();
-        idDataCompound.setInteger(TAG_SKIN_LOCAL_ID, localId);
-        if (libraryFile != null) {
-            idDataCompound.setString(TAG_SKIN_LIBRARY_FILE, libraryFile.getFullName());
-        }
-        idDataCompound.setInteger(TAG_SKIN_GLOBAL_ID, globalId);
-        if (skinType != null) {
-            idDataCompound.setString(TAG_SKIN_TYPE, skinType.getRegistryName());
-        }
-        compound.setTag(TAG_SKIN_ID_DATA, idDataCompound);
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -145,5 +121,11 @@ public class SkinIdentifier implements ISkinIdentifier {
         if (localId != other.localId)
             return false;
         return true;
+    }
+    
+    public enum SkinIdentifierType {
+        LOCAL_DATABASE,
+        LOCAL_FILE,
+        GLOBAL_DATABASE
     }
 }

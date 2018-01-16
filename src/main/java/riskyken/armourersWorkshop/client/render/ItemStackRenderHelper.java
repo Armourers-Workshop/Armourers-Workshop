@@ -98,7 +98,7 @@ public final class ItemStackRenderHelper {
     }
     
     public static void renderSkinWithHelper(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
-        ISkinType skinType = skinPointer.getSkinType();
+        ISkinType skinType = skinPointer.getIdentifier().getSkinType();
         
         IEquipmentModel targetModel = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
         

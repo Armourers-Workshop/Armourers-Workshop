@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.skin.data.serialize.SkinIdentifierSerializer;
 
 public class SkinPointer implements ISkinPointer {
 
@@ -82,7 +83,7 @@ public class SkinPointer implements ISkinPointer {
     
     public void readFromCompound(NBTTagCompound compound, String tag) {
         NBTTagCompound skinDataCompound = compound.getCompoundTag(tag);
-        this.identifier.readFromCompound(skinDataCompound);
+        this.identifier = SkinIdentifierSerializer.readFromCompound(skinDataCompound);
         this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
         this.skinDye.readFromCompound(skinDataCompound);
     }
@@ -93,7 +94,7 @@ public class SkinPointer implements ISkinPointer {
     
     public void writeToCompound(NBTTagCompound compound, String tag) {
         NBTTagCompound skinDataCompound = new NBTTagCompound();
-        this.identifier.writeToCompound(skinDataCompound);
+        SkinIdentifierSerializer.writeToCompound(identifier, skinDataCompound);
         skinDataCompound.setBoolean(TAG_SKIN_LOCK, this.lockSkin);
         skinDye.writeToCompound(skinDataCompound);
         compound.setTag(tag, skinDataCompound);

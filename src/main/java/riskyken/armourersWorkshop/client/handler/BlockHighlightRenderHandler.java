@@ -66,7 +66,7 @@ public class BlockHighlightRenderHandler {
             ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(event.currentItem);
             ForgeDirection sideDir = ForgeDirection.getOrientation(side);
             
-            if (skinPointer != null && skinPointer.getSkinType() == SkinTypeRegistry.skinBlock) {
+            if (skinPointer != null && skinPointer.getIdentifier().getSkinType() == SkinTypeRegistry.skinBlock) {
                 x += sideDir.offsetX;
                 y += sideDir.offsetY;
                 z += sideDir.offsetZ;

@@ -31,9 +31,10 @@ public class Skin implements ISkin {
     private ISkinType equipmentSkinType;
     private int[] paintData;
     private ArrayList<SkinPart> parts;
-    public int requestId;
-    public int serverId = -1;
     private int lightHash = 0;
+    
+    public SkinIdentifier requestId;
+    public int serverId = -1;
     
     @SideOnly(Side.CLIENT)
     public SkinModelTexture skinModelTexture;

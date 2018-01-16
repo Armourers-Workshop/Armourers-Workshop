@@ -16,6 +16,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.serialize.SkinIdentifierSerializer;
 import riskyken.armourersWorkshop.common.skin.data.serialize.SkinSerializer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -55,7 +56,7 @@ public final class ByteBufHelper {
         buf.writeBoolean(compress);
         try {
             SkinSerializer.writeToStream(skin, dataOutputStream);
-            dataOutputStream.writeInt(skin.requestId);
+            SkinIdentifierSerializer.writeToStream(skin.requestId, dataOutputStream);
             dataOutputStream.flush();
             
             byte[] skinData = baos.toByteArray();
@@ -97,7 +98,7 @@ public final class ByteBufHelper {
         
         try {
             skin = SkinSerializer.readSkinFromStream(dataInputStream);
-            skin.requestId = dataInputStream.readInt();
+            skin.requestId = SkinIdentifierSerializer.readFromStream(dataInputStream);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -114,7 +115,7 @@ public final class ByteBufHelper {
         byte[] skinData = null;
         try {
             SkinSerializer.writeToStream(skin, dataOutputStream);
-            dataOutputStream.writeInt(skin.requestId);
+            SkinIdentifierSerializer.writeToStream(skin.requestId, dataOutputStream);
             dataOutputStream.flush();
             skinData = baos.toByteArray();
         } catch (IOException ex) {
@@ -132,7 +133,7 @@ public final class ByteBufHelper {
         Skin skin = null;
         try {
             skin = SkinSerializer.readSkinFromStream(dataInputStream);
-            skin.requestId = dataInputStream.readInt();
+            skin.requestId = SkinIdentifierSerializer.readFromStream(dataInputStream);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

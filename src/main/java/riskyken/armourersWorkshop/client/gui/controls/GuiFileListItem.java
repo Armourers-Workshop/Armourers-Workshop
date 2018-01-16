@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
@@ -57,7 +58,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
             if (GuiSkinLibrary.showModelPreviews() | file.isDirectory()) {
                 IGuiListItem item = this;
                 if (item != null) {
-                    Skin skin = ClientSkinCache.INSTANCE.getSkin(file.getFullName(), true);
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(new SkinIdentifier(0, new LibraryFile(file.getFullName()), 0, null), true);
                     if (skin != null) {
                         SkinPointer skinPointer = new SkinPointer(skin);
                         float scale = 8F;

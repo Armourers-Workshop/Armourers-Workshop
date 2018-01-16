@@ -90,7 +90,7 @@ public class SkinNBTHelper {
         SkinPointer skinData = new SkinPointer();
         skinData.readFromCompound(stack.getTagCompound());
         
-        return skinData.getSkinId();
+        return skinData.getIdentifier().getSkinLocalId();
     }
     
     public static boolean isSkinLockedOnStack(ItemStack stack) {

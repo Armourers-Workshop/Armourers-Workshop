@@ -90,7 +90,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     
     @Override
     public boolean renderSkin(ISkinPointer skinPointer) {
-        ISkinType skinType= skinPointer.getSkinType();
+        ISkinType skinType= skinPointer.getIdentifier().getSkinType();
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             //TODO Offset each part when rendering.
             ISkinPartType skinPartType = skinType.getSkinParts().get(i);

@@ -244,7 +244,7 @@ public class RenderBlockMannequinItems {
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
+            if (sp.getIdentifier().getSkinType() == SkinTypeRegistry.skinSword | sp.getIdentifier().getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(1 * scale, 0 * scale, 2 * scale);
                 SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(stack, null, extraColours, distance, true);
@@ -312,7 +312,7 @@ public class RenderBlockMannequinItems {
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (sp.getSkinType() == SkinTypeRegistry.skinSword | sp.getSkinType() == SkinTypeRegistry.skinBow) {
+            if (sp.getIdentifier().getSkinType() == SkinTypeRegistry.skinSword | sp.getIdentifier().getSkinType() == SkinTypeRegistry.skinBow) {
                 GL11.glRotatef(90, 1, 0, 0);
                 GL11.glTranslated(0 * scale, 0 * scale, 2 * scale);
                 GL11.glScalef(-1, 1, 1);
@@ -368,7 +368,7 @@ public class RenderBlockMannequinItems {
         Item targetItem = stack.getItem();
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (sp.getSkinType() == SkinTypeRegistry.skinWings) {
+            if (sp.getIdentifier().getSkinType() == SkinTypeRegistry.skinWings) {
                 SkinModelRenderer.INSTANCE.renderEquipmentPartFromStack(fakePlayer, stack, null, extraColours, distance, true);
                 return;
             }

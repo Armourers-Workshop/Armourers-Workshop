@@ -69,10 +69,6 @@ public class CommonProxy implements ILibraryCallback {
         return 0;
     }
     
-    public void receivedEquipmentData(Skin equipmentData) {
-        
-    }
-    
     public void receivedCommandFromSever(CommandType command) {
         
     }

@@ -317,11 +317,6 @@ public class ClientProxy extends CommonProxy {
     public int getPlayerModelCacheSize() {
         return ClientSkinCache.INSTANCE.getCacheSize();
     }
-
-    @Override
-    public void receivedEquipmentData(Skin skin) {
-        ModelBakery.INSTANCE.receivedUnbakedModel(skin);
-    }
     
     @Override
     public void receivedCommandFromSever(CommandType command) {
