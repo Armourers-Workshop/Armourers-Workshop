@@ -9,10 +9,10 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class RecipeSkinBow extends RecipeItemSkinning {
+public class RecipeSkinPickaxe extends RecipeItemSkinning {
     
-    public RecipeSkinBow() {
-        super(SkinTypeRegistry.skinBow);
+    public RecipeSkinPickaxe() {
+        super(SkinTypeRegistry.skinSword);
     }
     
     @Override
@@ -23,7 +23,7 @@ public class RecipeSkinBow extends RecipeItemSkinning {
     @Override
     public ItemStack getCraftingResult(IInventory inventory) {
         ItemStack skinStack = null;
-        ItemStack bowStack = null;
+        ItemStack swordStack = null;
         
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
@@ -35,12 +35,12 @@ public class RecipeSkinBow extends RecipeItemSkinning {
                         return null;
                     }
                     skinStack = stack;
-                } else if (EntityEquipmentDataManager.INSTANCE.isRenderItem(ItemOverrideType.BOW, item) &
+                } else if (EntityEquipmentDataManager.INSTANCE.isRenderItem(ItemOverrideType.PICKAXE, item) &
                          !SkinNBTHelper.isSkinLockedOnStack(stack)) {
-                    if (bowStack != null) {
+                    if (swordStack != null) {
                         return null;
                     }
-                    bowStack = stack;
+                    swordStack = stack;
                 } else {
                     return null;
                 }
@@ -48,8 +48,8 @@ public class RecipeSkinBow extends RecipeItemSkinning {
             }
         }
         
-        if (skinStack != null && bowStack != null) {
-            ItemStack returnStack = bowStack.copy();
+        if (skinStack != null && swordStack != null) {
+            ItemStack returnStack = swordStack.copy();
             
             SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), skinData.getSkinDye(), true);

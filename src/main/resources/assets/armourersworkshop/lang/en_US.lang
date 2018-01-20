@@ -478,7 +478,7 @@ chat.armourersworkshop:inventoryGiftFail=Someone tried to give you a gift but yo
 chat.armourersworkshop:updateAvailable=Armourer's Workshop update %s is available.
 chat.armourersworkshop:updateDownload=[Download]
 chat.armourersworkshop:updateDownloadRollover=Click to goto the download page
-chat.armourersworkshop:devWarning=Warning you are using a development version of the Armourer's Workshop. Development versions are for testing only and not recommended for public use.
+chat.armourersworkshop:devWarning=Warning you are using a development version of Armourer's Workshop. Development versions are for testing only and not recommended for public use.
 chat.armourersworkshop:slotUnlocked=Unlocked %s skin slot. You now have %s slots.
 chat.armourersworkshop:slotUnlockedFailed=%s skin slots are at maximum.
 
@@ -495,6 +495,7 @@ commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=The file %1$s was not found.
 commands.armourers.invalidDyeFormat=%1$s is not a valid dye format.
+
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
 

@@ -21,9 +21,9 @@ import riskyken.armourersWorkshop.common.skin.type.bow.SkinBow;
 import riskyken.armourersWorkshop.common.skin.type.chest.SkinChest;
 import riskyken.armourersWorkshop.common.skin.type.feet.SkinFeet;
 import riskyken.armourersWorkshop.common.skin.type.head.SkinHead;
+import riskyken.armourersWorkshop.common.skin.type.item.SkinSword;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinLegs;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinSkirt;
-import riskyken.armourersWorkshop.common.skin.type.sword.SkinSword;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings;
 import riskyken.armourersWorkshop.utils.ModLogger;
 

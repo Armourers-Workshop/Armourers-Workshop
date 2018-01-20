@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinArmourContain
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinBow;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinClear;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinCopy;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinPickaxe;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinSword;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
@@ -22,6 +23,7 @@ public class ItemSkinningRecipes {
     public static void init() {
         recipes.add(new RecipeSkinSword());
         recipes.add(new RecipeSkinBow());
+        recipes.add(new RecipeSkinPickaxe());
         recipes.add(new RecipeSkinCopy());
         recipes.add(new RecipeSkinClear());
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinHead));

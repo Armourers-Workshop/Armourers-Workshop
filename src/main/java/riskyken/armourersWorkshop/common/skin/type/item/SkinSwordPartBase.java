@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.type.sword;
+package riskyken.armourersWorkshop.common.skin.type.item;
 
 import org.lwjgl.opengl.GL11;
 

@@ -38,7 +38,7 @@ public class DebugTextHandler {
             event.left.add(EnumChatFormatting.GOLD + "[" + LibModInfo.NAME + "]");
             event.left.add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
             event.left.add("Model Count: " + ClientSkinCache.INSTANCE.getModelCount());
-            if (GuiScreen.isCtrlKeyDown()) {
+            if (GuiScreen.isCtrlKeyDown() != LibModInfo.DEVELOPMENT_VERSION) {
                 event.left.add("Client Skin Count: " + ArmourersWorkshop.proxy.getPlayerModelCacheSize());
                 if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     event.left.add("Common Skin Count: " + CommonSkinCache.INSTANCE.size());

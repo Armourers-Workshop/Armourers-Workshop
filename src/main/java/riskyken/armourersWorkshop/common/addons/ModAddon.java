@@ -57,7 +57,7 @@ public abstract class ModAddon {
     
     public void onWeaponRender(ItemRenderType type, EventState state) {};
     
-    protected static enum ItemOverrideType {
+    public static enum ItemOverrideType {
         SWORD,
         ITEM,
         PICKAXE,

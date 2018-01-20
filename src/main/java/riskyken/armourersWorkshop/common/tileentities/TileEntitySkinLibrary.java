@@ -124,12 +124,13 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         if (!publicFiles) {
             //filePath = "/private/" + player.getUniqueID().toString() + filePath;
         }
-        
+        ModLogger.log("save");
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
+            ModLogger.log("no input");
             return;
         }
-        
+        ModLogger.log("save");
         filePath = SkinIOUtils.makeFilePathValid(filePath);
         fileName = SkinIOUtils.makeFileNameValid(fileName);
         
@@ -194,7 +195,13 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         }
         
         LibraryFile libraryFile = new LibraryFile(fileName, filePath, skin.getSkinType());
-        SkinIdentifier identifier = new SkinIdentifier(skin.lightHash(), libraryFile, 0, skin.getSkinType());
+        SkinIdentifier identifier = null;
+        if (trackFile) {
+            identifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
+        } else {
+            identifier = new SkinIdentifier(skin.lightHash(), null, 0, skin.getSkinType());
+        }
+        
         
         // TODO Set master using trackFile
         

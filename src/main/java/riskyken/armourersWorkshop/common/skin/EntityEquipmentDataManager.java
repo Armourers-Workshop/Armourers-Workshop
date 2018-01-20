@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import riskyken.armourersWorkshop.common.addons.ModAddon.ItemOverrideType;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -42,23 +43,11 @@ public final class EntityEquipmentDataManager {
         FMLCommonHandler.instance().bus().register(this);
     }
     
-    public boolean isSwordRenderItem(Item item) {
+    public boolean isRenderItem(ItemOverrideType  type, Item item) {
         String itemName = item.itemRegistry.getNameForObject(item);
         if (itemName != null && !itemName.equals("")) {
             for (int i = 0; i < ModAddonManager.itemOverrides.size(); i++) {
-                if (ModAddonManager.itemOverrides.get(i).equals("sword:" + itemName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    public boolean isBowRenderItem(Item item) {
-        String itemName = item.itemRegistry.getNameForObject(item);
-        if (itemName != null && !itemName.equals("")) {
-            for (int i = 0; i < ModAddonManager.itemOverrides.size(); i++) {
-                if (ModAddonManager.itemOverrides.get(i).equals("bow:" + itemName)) {
+                if (ModAddonManager.itemOverrides.get(i).equals(type.toString().toLowerCase() + ":" + itemName)) {
                     return true;
                 }
             }
@@ -83,14 +72,14 @@ public final class EntityEquipmentDataManager {
         EntityEquipmentData equipmentData = props.getEquipmentData();
         ItemStack stack = inventory.getCurrentItem();
         if (stack != null) {
-            if (isSwordRenderItem(stack.getItem())) {
+            if (isRenderItem(ItemOverrideType.SWORD, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 0)) {
                     SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 0));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
-            if (isBowRenderItem(stack.getItem())) {
+            if (isRenderItem(ItemOverrideType.BOW, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
                     SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinBow, 0));
                 } else {

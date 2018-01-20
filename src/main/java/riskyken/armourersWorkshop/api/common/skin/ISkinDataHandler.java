@@ -22,7 +22,7 @@ public interface ISkinDataHandler {
     /**
      * Set a skin in the players wardrobe.
      * 
-     * @Deprecated Use the {@link #setSkinOnPlayer(EntityPlayer, ItemStack, Int)} method.
+     * @Deprecated Use the {@link #setSkinOnPlayer(EntityPlayer, ItemStack, int)} method.
      * @return Deprecated always returns false.
      */
     @Deprecated
