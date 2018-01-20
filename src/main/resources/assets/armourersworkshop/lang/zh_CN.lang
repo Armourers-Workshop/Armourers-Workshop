@@ -142,7 +142,10 @@ item.armourersworkshop:rollover.skinName=&6名字:&7 %s
 item.armourersworkshop:rollover.skinAuthor=&6作者:&7 %s
 item.armourersworkshop:rollover.skinType=&6类型:&7 %s
 item.armourersworkshop:rollover.skinHoldShiftForInfo=按住 &ashift键&7 查看更多信息.
+item.armourersworkshop:rollover.skinIdentifier=&e时装标识符:
 item.armourersworkshop:rollover.skinId=&e时装编号:&7 %s
+item.armourersworkshop:rollover.skinLibraryFile=文件名: %s
+item.armourersworkshop:rollover.skinGlobalId=全球资源库 ID: %s
 item.armourersworkshop:rollover.skinTotalCubes=&e使用了的方块数量:&7 %s
 item.armourersworkshop:rollover.skinNumCubes=&e造型方块:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlowing=&e发光造型方块:&7 %s
@@ -224,6 +227,10 @@ skinPartType.armourers:block.base.name=方块
 skinPartType.armourers:wings.leftWing.name=左翼
 skinPartType.armourers:wings.rightWing.name=右翼
 
+# Movement types
+movmentType.armourersworkshop:ease=走路时缓慢煽动
+movmentType.armourersworkshop:linear=飞行时快速煽动
+
 # Inventory names 
 inventory.armourersworkshop:colourMixer.name=调色器
 inventory.armourersworkshop:armourerBrain.name=时装工坊
@@ -248,6 +255,7 @@ inventory.armourersworkshop:armourLibrary.error.noFileName=&7你必须选择一�
 inventory.armourersworkshop:armourLibrary.save=保存
 inventory.armourersworkshop:armourLibrary.load=加载
 inventory.armourersworkshop:armourLibrary.openFolder=打开文件夹...
+inventory.armourersworkshop:armourLibrary.trackFile=是否连接到源文件?（即修改一个全部被替换）
 inventory.armourersworkshop:armourLibrary.rollover.localFiles=查看这台电脑上的文件.
 inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=查看服务器上的公共文件.
 inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=查看服务器上的私人文件.
@@ -302,6 +310,7 @@ inventory.armourersworkshop:armourerBrain.seat=是否为椅子
 inventory.armourersworkshop:armourerBrain.multiblock=多方块?
 inventory.armourersworkshop:armourerBrain.bed=是否为床
 inventory.armourersworkshop:armourerBrain.inventory=是否是箱子?
+inventory.armourersworkshop:armourerBrain.enderInventory=是否是末影箱？
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=隐藏皮肤层?
 inventory.armourersworkshop:armourerBrain.tab.main=主菜单
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=显示设定
