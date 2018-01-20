@@ -494,6 +494,7 @@ commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
 commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=文件 %1$s 没有找到.
+commands.armourers.invalidDyeFormat=%1$s 不是有效的染料格式.
 
 # Creative tab
 itemGroup.armourersworkshop=时装工坊
