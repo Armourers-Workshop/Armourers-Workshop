@@ -142,6 +142,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     public void removeCustomEquipment(ISkinType skinType, byte slotId) {
+        ModLogger.log(skinType);
         equipmentData.removeEquipment(skinType, slotId);
         updateEquipmentDataToPlayersAround();
     }

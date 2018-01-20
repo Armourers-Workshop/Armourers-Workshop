@@ -70,4 +70,8 @@ public final class LibItemResources {
     public static final String SLOT_SKIN_ARROW = PREFIX_RESOURCE + "slot/skinArrow";
     public static final String SLOT_SKIN_WINGS = PREFIX_RESOURCE + "slot/skinWings";
     public static final String SLOT_DYE_BOTTLE = PREFIX_RESOURCE + "slot/dyeBottle";
+    public static final String SLOT_SKIN_PICKAXE = PREFIX_RESOURCE + "slot/skinPickaxe";
+    public static final String SLOT_SKIN_AXE = PREFIX_RESOURCE + "slot/skinAxe";
+    public static final String SLOT_SKIN_HOE = PREFIX_RESOURCE + "slot/skinHoe";
+    public static final String SLOT_SKIN_SHOVEL = PREFIX_RESOURCE + "slot/skinShovel";
 }

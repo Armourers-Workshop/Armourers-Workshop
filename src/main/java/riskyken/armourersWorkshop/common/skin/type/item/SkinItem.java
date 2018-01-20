@@ -9,13 +9,13 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
-public class SkinSword extends AbstractSkinTypeBase {
+public class SkinItem extends AbstractSkinTypeBase {
 
     private ArrayList<ISkinPartType> skinParts;
     
-    public SkinSword() {
+    public SkinItem() {
         this.skinParts = new ArrayList<ISkinPartType>();
-        skinParts.add(new SkinSwordPartBase(this));
+        skinParts.add(new SkinItemPartBase(this));
     }
     
     @Override

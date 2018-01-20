@@ -86,6 +86,34 @@ public final class EntityEquipmentDataManager {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
+            if (isRenderItem(ItemOverrideType.PICKAXE, stack.getItem())) {
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 1)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 1));
+                } else {
+                    SkinNBTHelper.removeRenderIdFromStack(stack);
+                }
+            }
+            if (isRenderItem(ItemOverrideType.AXE, stack.getItem())) {
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 2)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 2));
+                } else {
+                    SkinNBTHelper.removeRenderIdFromStack(stack);
+                }
+            }
+            if (isRenderItem(ItemOverrideType.SHOVEL, stack.getItem())) {
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 3)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 3));
+                } else {
+                    SkinNBTHelper.removeRenderIdFromStack(stack);
+                }
+            }
+            if (isRenderItem(ItemOverrideType.HOE, stack.getItem())) {
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 4)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 4));
+                } else {
+                    SkinNBTHelper.removeRenderIdFromStack(stack);
+                }
+            }
         }
     }
     

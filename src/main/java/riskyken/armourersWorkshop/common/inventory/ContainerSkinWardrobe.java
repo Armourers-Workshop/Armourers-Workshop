@@ -60,7 +60,11 @@ public class ContainerSkinWardrobe extends Container {
         
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 29, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 49, 113));
-        skinSlots += 2;
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 1, 69, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 2, 89, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 3, 109, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 4, 129, 113));
+        skinSlots += 6;
         
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 54 + 18 * x, 232));

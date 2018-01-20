@@ -55,8 +55,11 @@ public class EquipmentWardrobeData {
     }
     
     public int getUnlockedSlotsForSkinType(ISkinType skinType) {
-        if (skinType == SkinTypeRegistry.skinSword | skinType == SkinTypeRegistry.skinBow) {
+        if (skinType == SkinTypeRegistry.skinBow) {
             return 1;
+        }
+        if (skinType == SkinTypeRegistry.skinSword) {
+            return 5;
         }
         if (slotsUnlocked.containsKey(skinType.getRegistryName())) {
             return slotsUnlocked.get(skinType.getRegistryName());

@@ -10,9 +10,9 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
-public class SkinSwordPartBase extends AbstractSkinPartTypeBase {
+public class SkinItemPartBase extends AbstractSkinPartTypeBase {
     
-    public SkinSwordPartBase(ISkinType baseType) {
+    public SkinItemPartBase(ISkinType baseType) {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-10, -20, -28, 20, 62, 56);
         this.guideSpace = new Rectangle3D(-2, -2, 2, 4, 4, 8);

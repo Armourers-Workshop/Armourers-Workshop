@@ -21,7 +21,7 @@ import riskyken.armourersWorkshop.common.skin.type.bow.SkinBow;
 import riskyken.armourersWorkshop.common.skin.type.chest.SkinChest;
 import riskyken.armourersWorkshop.common.skin.type.feet.SkinFeet;
 import riskyken.armourersWorkshop.common.skin.type.head.SkinHead;
-import riskyken.armourersWorkshop.common.skin.type.item.SkinSword;
+import riskyken.armourersWorkshop.common.skin.type.item.SkinItem;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinLegs;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinSkirt;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings;
@@ -62,7 +62,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinLegs = new SkinLegs();
         skinSkirt = new SkinSkirt();
         skinFeet = new SkinFeet();
-        skinSword = new SkinSword();
+        skinSword = new SkinItem();
         skinBow = new SkinBow();
         skinArrow = new SkinArrow();
         skinBlock = new SkinBlock();
