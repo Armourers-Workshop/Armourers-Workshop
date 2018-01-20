@@ -212,7 +212,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
                 skin = SkinIOUtils.loadSkinFromFileName(identifier.getSkinLibraryFile().getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION);
                 if (skin != null) {
                     synchronized (cacheMapDatabase) {
-                        cacheMapDatabase.put(skin.lightHash(), skin);
+                        addEquipmentDataToCache(skin, skin.lightHash());
                         cacheMapFileLink.put(identifier.getSkinLibraryFile(), skin.lightHash());
                     }
                 } else {
@@ -240,7 +240,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         synchronized (cacheMapGlobalLink) {
             if (skin != null) {
                 synchronized (cacheMapDatabase) {
-                    cacheMapDatabase.put(skin.lightHash(), skin);
+                    addEquipmentDataToCache(skin, skin.lightHash());
                     cacheMapGlobalLink.put(globalId, skin.lightHash());
                 }
             } else {
