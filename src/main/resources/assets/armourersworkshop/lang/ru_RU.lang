@@ -255,6 +255,7 @@ inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7Вы должн
 inventory.armourersworkshop:armourLibrary.save=Сохранить
 inventory.armourersworkshop:armourLibrary.load=Загрузить
 inventory.armourersworkshop:armourLibrary.openFolder=Открыть папку...
+inventory.armourersworkshop:armourLibrary.trackFile=Синхронизировать файл?
 inventory.armourersworkshop:armourLibrary.rollover.localFiles=Просмотр файлов на диске
 inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=Просмотр публичных файлов на сервере
 inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=Просмотр приватных файлов на сервере
@@ -429,7 +430,6 @@ inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=Тэги:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Введите тэги
 inventory.armourersworkshop:globalSkinLibrary.upload.skinDescription=Описание скина:
 inventory.armourersworkshop:globalSkinLibrary.upload.enterDescription=Введите описание
-
 inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Загрузить скин
 
 # Global Skin Library (Beta - Will be removed later). //А вот я осталю на память! с:
@@ -495,6 +495,7 @@ commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=Файл %1$s не Был Найден.
 commands.armourers.invalidDyeFormat=%1$s - неправильный формат цвета.
+
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
 
