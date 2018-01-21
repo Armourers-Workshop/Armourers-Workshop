@@ -135,7 +135,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
             synchronized (cacheMapDatabase) {
                 if (haveEquipmentOnDisk(skinId)) {
                     Skin skin = loadEquipmentFromDisk(skinId);
-                    addEquipmentDataToCache(skin, skinId);
+                    addEquipmentDataToCache(skin, skinId, false);
                 }
             }
             synchronized (skinLoadQueueDatabase) {
@@ -184,9 +184,9 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
                     Skin skin;
                     skin = loadEquipmentFromDisk(identifier.getSkinLocalId());
                     if (skin != null) {
-                        addEquipmentDataToCache(skin, identifier.getSkinLocalId());
+                        addEquipmentDataToCache(skin, identifier.getSkinLocalId(), false);
                         if (skin.hashCode() != identifier.getSkinLocalId()) {
-                            addEquipmentDataToCache(skin, skin.hashCode());
+                            addEquipmentDataToCache(skin, skin.hashCode(), false);
                         }
                     } else {
                         ModLogger.log(Level.ERROR, String.format("Failed to load skin id:%s from disk.", String.valueOf(identifier.getSkinLocalId())));
@@ -206,22 +206,20 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     }
     
     private void sendLocalFileSkinToClient(ISkinIdentifier identifier, EntityPlayerMP player) {
-        synchronized (cacheMapFileLink) {
-            if (!cacheMapFileLink.containsKey(identifier.getSkinLibraryFile())) {
-                Skin skin = null;
-                skin = SkinIOUtils.loadSkinFromFileName(identifier.getSkinLibraryFile().getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION);
-                if (skin != null) {
-                    synchronized (cacheMapDatabase) {
-                        addEquipmentDataToCache(skin, skin.lightHash());
+        synchronized (cacheMapDatabase) {
+            synchronized (cacheMapFileLink) {
+                if (!cacheMapFileLink.containsKey(identifier.getSkinLibraryFile())) {
+                    Skin skin = null;
+                    skin = SkinIOUtils.loadSkinFromFileName(identifier.getSkinLibraryFile().getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION);
+                    if (skin != null) {
+                        addEquipmentDataToCache(skin, skin.lightHash(), false);
                         cacheMapFileLink.put(identifier.getSkinLibraryFile(), skin.lightHash());
+                    } else {
+                        ModLogger.log(Level.ERROR, String.format("Failed to load skin %s from disk. ", String.valueOf(identifier.getSkinLibraryFile().getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION)));
                     }
-                } else {
-                    ModLogger.log(Level.ERROR, String.format("Failed to load skin %s from disk. ", String.valueOf(identifier.getSkinLibraryFile().getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION)));
                 }
-            }
-            
-            if (cacheMapFileLink.containsKey(identifier.getSkinLibraryFile())) {
-                synchronized (cacheMapDatabase) {
+                
+                if (cacheMapFileLink.containsKey(identifier.getSkinLibraryFile())) {
                     int id = cacheMapFileLink.get(identifier.getSkinLibraryFile());
                     Skin skin = cacheMapDatabase.get(id);
                     if (skin != null) {
@@ -237,20 +235,34 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     
     public void onGlobalSkinDownload(Skin skin, int globalId) {
         ModLogger.log("Skin downloaded: " + globalId);
-        synchronized (cacheMapGlobalLink) {
-            if (skin != null) {
-                synchronized (cacheMapDatabase) {
-                    addEquipmentDataToCache(skin, skin.lightHash());
-                    cacheMapGlobalLink.put(globalId, skin.lightHash());
+        
+        //ModLogger.log("Locking A");
+        synchronized (cacheMapDatabase) {
+            //ModLogger.log("Locked A");
+            //ModLogger.log("Locking B");
+            synchronized (cacheMapGlobalLink) {
+                //ModLogger.log("Locked B");
+                if (skin != null) {
+                        addEquipmentDataToCache(skin, skin.lightHash(), false);
+                        cacheMapGlobalLink.put(globalId, skin.lightHash());
+                } else {
+                    ModLogger.log(Level.ERROR, String.format("Failed to load skin %s from global database. ", String.valueOf(globalId)));
                 }
-            } else {
-                ModLogger.log(Level.ERROR, String.format("Failed to load skin %s from global database. ", String.valueOf(globalId)));
             }
         }
-        for (int i = 0; i < messageWaitQueue.size(); i++) {
-            if (messageWaitQueue.get(i).skinIdentifier.getSkinGlobalId() == globalId) {
-                sendGlobalSkinToPlayer(messageWaitQueue.get(i).skinIdentifier, messageWaitQueue.get(i).player);
-                messageWaitQueue.remove(i);
+        
+        //ModLogger.log("Locking C");
+        synchronized (cacheMapDatabase) {
+            //ModLogger.log("Locked C");
+            //ModLogger.log("Locking D");
+            synchronized (cacheMapGlobalLink) {
+                //ModLogger.log("Locked D");
+                for (int i = 0; i < messageWaitQueue.size(); i++) {
+                    if (messageWaitQueue.get(i).skinIdentifier.getSkinGlobalId() == globalId) {
+                        sendGlobalSkinToPlayer(messageWaitQueue.get(i).skinIdentifier, messageWaitQueue.get(i).player);
+                        messageWaitQueue.remove(i);
+                    }
+                }
             }
         }
     }
@@ -258,27 +270,27 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     private void sendGlobalDatabaseSkinToClient(QueueMessage queueMessage) {
         ISkinIdentifier identifier = queueMessage.skinIdentifier;
         EntityPlayerMP player = queueMessage.player;
-        synchronized (cacheMapGlobalLink) {
-            if (!cacheMapGlobalLink.containsKey(identifier.getSkinGlobalId())) {
-                messageWaitQueue.add(queueMessage);
-                SkinCacheGlobal.INSTANCE.downloadSkin(identifier);
-            } else {
-                sendGlobalSkinToPlayer(identifier, player);
+        synchronized (cacheMapDatabase) {
+            synchronized (cacheMapGlobalLink) {
+                if (!cacheMapGlobalLink.containsKey(identifier.getSkinGlobalId())) {
+                    messageWaitQueue.add(queueMessage);
+                    SkinCacheGlobal.INSTANCE.downloadSkin(identifier);
+                } else {
+                    sendGlobalSkinToPlayer(identifier, player);
+                }
             }
         }
     }
     
     private void sendGlobalSkinToPlayer(ISkinIdentifier identifier, EntityPlayerMP player) {
         //ModLogger.log("Sending skin to player");
-        synchronized (cacheMapDatabase) {
-            int id = cacheMapGlobalLink.get(identifier.getSkinGlobalId());
-            Skin skin = cacheMapDatabase.get(id);
-            if (skin != null) {
-                skin.requestId = (SkinIdentifier) identifier;
-                PacketHandler.networkWrapper.sendTo(new MessageServerSendSkinData((SkinIdentifier) identifier, getFullIdentifier(skin, identifier), skin), player);
-            } else {
-                ModLogger.log(Level.WARN, "Somehow failed to load a skin that we should have. ID was " + id);
-            }
+        int id = cacheMapGlobalLink.get(identifier.getSkinGlobalId());
+        Skin skin = cacheMapDatabase.get(id);
+        if (skin != null) {
+            skin.requestId = (SkinIdentifier) identifier;
+            PacketHandler.networkWrapper.sendTo(new MessageServerSendSkinData((SkinIdentifier) identifier, getFullIdentifier(skin, identifier), skin), player);
+        } else {
+            ModLogger.log(Level.WARN, "Somehow failed to load a skin that we should have. ID was " + id);
         }
     }
     
@@ -301,7 +313,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     
     public void addEquipmentDataToCache(Skin skin, LibraryFile file) {
         skin.lightHash();
-        addEquipmentDataToCache(skin, skin.lightHash());
+        addEquipmentDataToCache(skin, skin.lightHash(), true);
         if (file != null) {
             cacheMapFileLink.put(file, skin.lightHash());
         }
@@ -324,11 +336,20 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         //PacketHandler.networkWrapper.sendToAll(message);
     }
     
-    private void addEquipmentDataToCache(Skin equipmentData, int equipmentId) {
+    private void addEquipmentDataToCache(Skin equipmentData, int equipmentId, boolean lockmap) {
         if (equipmentData == null) {
             return;
         }
-        synchronized (cacheMapDatabase) {
+        if (lockmap) {
+            synchronized (cacheMapDatabase) {
+                if (!cacheMapDatabase.containsKey(equipmentId)) {
+                    cacheMapDatabase.put(equipmentId, equipmentData);
+                    if (!haveEquipmentOnDisk(equipmentId)) {
+                        saveEquipmentToDisk(equipmentData);
+                    }
+                }
+            }
+        } else {
             if (!cacheMapDatabase.containsKey(equipmentId)) {
                 cacheMapDatabase.put(equipmentId, equipmentData);
                 if (!haveEquipmentOnDisk(equipmentId)) {
@@ -352,13 +373,13 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
                 if (haveEquipmentOnDisk(skinId)) {
                     Skin equipmentData;
                     equipmentData = loadEquipmentFromDisk(skinId);
-                    addEquipmentDataToCache(equipmentData, skinId);
+                    addEquipmentDataToCache(equipmentData, skinId, false);
                 }
             }
-        }
-        if (cacheMapDatabase.containsKey(skinId)) {
-            Skin skin = cacheMapDatabase.get(skinId);
-            return skin;
+            if (cacheMapDatabase.containsKey(skinId)) {
+                Skin skin = cacheMapDatabase.get(skinId);
+                return skin;
+            }
         }
         return null;
     }
@@ -426,10 +447,13 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
 
     @Override
     public void itemExpired(Skin mapItem) {
+        if (mapItem == null) {
+            return;
+        }
         synchronized (cacheMapFileLink) {
             synchronized (cacheMapGlobalLink) {
                 int skinId = mapItem.lightHash();
-                ModLogger.log("Removing local cache skin. " + skinId);
+                //ModLogger.log("Removing local cache skin. " + skinId);
                 if (cacheMapFileLink.containsValue(skinId)) {
                     ILibraryFile libraryFile = cacheMapFileLink.getBackward(skinId);
                     //ModLogger.log("Removing library cache skin. " + libraryFile.getFullName());

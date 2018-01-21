@@ -54,8 +54,8 @@ public class SkinCacheGlobal {
             try {
                 Skin skin = futureSkin.get();
                 if (skin != null) {
+                    CommonSkinCache.INSTANCE.onGlobalSkinDownload(skin, skin.serverId);
                     synchronized (downloadingSet) {
-                        CommonSkinCache.INSTANCE.onGlobalSkinDownload(skin, skin.serverId);
                         downloadingSet.remove(skin.serverId);
                     }
                 }
