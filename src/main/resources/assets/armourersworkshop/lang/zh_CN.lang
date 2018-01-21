@@ -99,6 +99,7 @@ item.armourersworkshop:skinUnlock.0.name=时装栏解锁器-头
 item.armourersworkshop:skinUnlock.1.name=时装栏解锁器-身
 item.armourersworkshop:skinUnlock.2.name=时装栏解锁器-腿
 item.armourersworkshop:skinUnlock.3.name=时装栏解锁器-脚
+item.armourersworkshop:linkingTool.name=方块链接工具
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=RiskyKen(mod作者)的礼物
@@ -122,6 +123,7 @@ item.armourersworkshop:skinUnlock.0.flavour=右键使用解锁1个额外的头�
 item.armourersworkshop:skinUnlock.1.flavour=右键使用解锁1个额外的上身时装栏.
 item.armourersworkshop:skinUnlock.2.flavour=右键使用解锁1个额外的腿部时装栏.
 item.armourersworkshop:skinUnlock.3.flavour=右键使用解锁1个额外的脚部时装栏.
+item.armourersworkshop:linkingTool.flavour=可以把时装制作的方块链接到周围的其他功能性方块上，使时装方块享受到被连接方块的功能。%n首先右键先后点击自己制作的时装方块 %n然后右键点击有功能的方块。
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6强度:&7 %s
@@ -481,6 +483,9 @@ chat.armourersworkshop:updateDownloadRollover=点击打开下载页面
 chat.armourersworkshop:devWarning=警告，你正在使用时装工坊的开发版. 开发版仅用于测试，不推荐公开使用.
 chat.armourersworkshop:slotUnlocked=解锁了一个 %s 时装栏. 你现在有 %s 个栏位.
 chat.armourersworkshop:slotUnlockedFailed=%s 时装栏栏位达到最大数量.
+chat.armourersworkshop:linkingTool.start=方块开始连接.
+chat.armourersworkshop:linkingTool.finish=方块连接成功.
+chat.armourersworkshop:linkingTool.fail=方块连接失败.
 
 # Death Messages
 death.attack.victorious=%1$s 脚被刺穿了（恭喜你发现了彩蛋）
