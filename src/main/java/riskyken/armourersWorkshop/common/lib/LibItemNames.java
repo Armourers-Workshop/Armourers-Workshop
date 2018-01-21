@@ -26,4 +26,5 @@ public class LibItemNames {
     public static final String ARMOURERS_HAMMER = "armourersHammer";
     public static final String DEBUG_TOOL = "debugTool";
     public static final String SKIN_UNLOCK = "skinUnlock";
+    public static final String LINKING_TOOL = "linkingTool";
 }

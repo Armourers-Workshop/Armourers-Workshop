@@ -45,6 +45,7 @@ public class TileEntitySkinnable extends TileEntity {
     private static final String TAG_Z = "z";
     private static final String TAG_BLOCK_INVENTORY = "blockInventory";
     private static final String TAG_BLOCK_INVENTORY_SIZE = "blockInventorySize";
+    private static final String TAG_LINKED_BLOCK = "linkedBlock";
     private static final int NBT_VERSION = 1;
 
     private int nbtVersion;
@@ -54,6 +55,7 @@ public class TileEntitySkinnable extends TileEntity {
     private boolean bedOccupied;
     private ModInventory inventory;
     private boolean blockInventory;
+    private BlockLocation linkedBlock = null;
     
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderBounds;
@@ -84,6 +86,20 @@ public class TileEntitySkinnable extends TileEntity {
                 inventory = new ModInventory(LibBlockNames.SKINNABLE, size, this);
             }
         }
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    public BlockLocation getLinkedBlock() {
+        return linkedBlock;
+    }
+    
+    public boolean hasLinkedBlock() {
+        return linkedBlock != null;
+    }
+    
+    public void setLinkedBlock(BlockLocation linkedBlock) {
+        this.linkedBlock = linkedBlock;
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
@@ -291,6 +307,9 @@ public class TileEntitySkinnable extends TileEntity {
         super.writeToNBT(compound);
         compound.setBoolean(TAG_HAS_SKIN, hasSkin());
         compound.setInteger(ModConstants.Tags.TAG_NBT_VERSION, NBT_VERSION);
+        if (hasLinkedBlock()) {
+            compound.setIntArray(TAG_LINKED_BLOCK, new int[] {linkedBlock.x, linkedBlock.y, linkedBlock.z});
+        }
         if (hasSkin()) {
             skinPointer.writeToCompound(compound);
             if (relatedBlocks != null) {
@@ -322,6 +341,12 @@ public class TileEntitySkinnable extends TileEntity {
         nbtVersion = 0;
         if (compound.hasKey(ModConstants.Tags.TAG_NBT_VERSION, Constants.NBT.TAG_INT)) {
             nbtVersion = compound.getInteger(ModConstants.Tags.TAG_NBT_VERSION);
+        }
+        if (compound.hasKey(TAG_LINKED_BLOCK, Constants.NBT.TAG_INT_ARRAY)) {
+            int[] loc = compound.getIntArray(TAG_LINKED_BLOCK);
+            linkedBlock = new BlockLocation(loc[0], loc[1], loc[2]);
+        } else {
+            linkedBlock = null;
         }
         if (hasSkin) {
             skinPointer = new SkinPointer();

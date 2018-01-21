@@ -99,6 +99,7 @@ item.armourersworkshop:skinUnlock.0.name=Head Skin Slot Unlock
 item.armourersworkshop:skinUnlock.1.name=Chest Skin Slot Unlock
 item.armourersworkshop:skinUnlock.2.name=Legs Skin Slot Unlock
 item.armourersworkshop:skinUnlock.3.name=Feet Skin Slot Unlock
+item.armourersworkshop:linkingTool.name=Linking Tool
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=A Gift from RiskyKen
@@ -122,6 +123,7 @@ item.armourersworkshop:skinUnlock.0.flavour=Unlocks 1 additional head skin slot 
 item.armourersworkshop:skinUnlock.1.flavour=Unlocks 1 additional chest skin slot in the wardrobe.
 item.armourersworkshop:skinUnlock.2.flavour=Unlocks 1 additional leg skin slot in the wardrobe.
 item.armourersworkshop:skinUnlock.3.flavour=Unlocks 1 additional feet skin slot in the wardrobe.
+item.armourersworkshop:linkingTool.flavour=Use to link usable blocks to block skins.%nFirst right click on a usable block then%nright click on a block skin to link them.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6Intensity:&7 %s
@@ -481,6 +483,9 @@ chat.armourersworkshop:updateDownloadRollover=Click to goto the download page
 chat.armourersworkshop:devWarning=Warning you are using a development version of Armourer's Workshop. Development versions are for testing only and not recommended for public use.
 chat.armourersworkshop:slotUnlocked=Unlocked %s skin slot. You now have %s slots.
 chat.armourersworkshop:slotUnlockedFailed=%s skin slots are at maximum.
+chat.armourersworkshop:linkingTool.start=Started linking.
+chat.armourersworkshop:linkingTool.finish=Link created.
+chat.armourersworkshop:linkingTool.fail=Linking failed.
 
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.

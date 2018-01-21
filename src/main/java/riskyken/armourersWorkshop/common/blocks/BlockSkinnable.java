@@ -79,13 +79,23 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
         Skin skin = getSkin(world, x, y, z);
         TileEntitySkinnable te = getTileEntity(world, x, y, z);
-        if (te == null | skin == null) {
+        if (te == null) {
             return false;
         }
         TileEntitySkinnable parentTe = te.getParent();
         if (parentTe == null) {
             return false;
         }
+        if (parentTe.hasLinkedBlock()) {
+            BlockLocation loc = parentTe.getLinkedBlock();
+            Block block = world.getBlock(loc.x, loc.y, loc.z);
+            return block.onBlockActivated(world, loc.x, loc.y, loc.z, player, side, xHit, yHit, zHit);
+        }
+        
+        if (skin == null) {
+            return false;
+        }
+        
         if (SkinProperties.PROP_BLOCK_SEAT.getValue(skin.getProperties())) {
             return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
         }

@@ -40,6 +40,7 @@ public class ModItems {
     public static Item armourersHammer;
     public static Item debugTool;
     public static Item skinUnlock;
+    public static Item linkingTool;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -69,6 +70,7 @@ public class ModItems {
         armourersHammer = new ItemArmourersHammer();
         debugTool = new ItemDebugTool();
         skinUnlock = new ItemSkinUnlock();
+        linkingTool = new ItemLinkingTool();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];

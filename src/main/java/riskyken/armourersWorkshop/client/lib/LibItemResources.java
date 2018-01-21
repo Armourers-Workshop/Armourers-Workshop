@@ -37,6 +37,8 @@ public final class LibItemResources {
     
     public static final String TEMPLATE_BLANK = PREFIX_RESOURCE + "templateBlank";
     public static final String GIFT_SACK = PREFIX_RESOURCE + "giftSack";
+    public static final String LINKING_TOOL = PREFIX_RESOURCE + "linkingTool";
+    public static final String LINKING_TOOL_LINK = PREFIX_RESOURCE + "linkingToolLink";
     
     //Painting tools
     public static final String PAINTBRUSH = PREFIX_RESOURCE + "paintbrush";
