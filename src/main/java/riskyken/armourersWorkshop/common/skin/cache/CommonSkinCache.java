@@ -56,7 +56,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     private boolean madeDatabase = false;
     
     public CommonSkinCache() {
-        cacheMapDatabase = new ExpiringHashMap<Integer, Skin>(ConfigHandler.serverModelCacheTime);
+        cacheMapDatabase = new ExpiringHashMap<Integer, Skin>(ConfigHandler.serverModelCacheTime, this);
         cacheMapFileLink = new BidirectionalHashMap<ILibraryFile, Integer>();
         cacheMapGlobalLink = new BidirectionalHashMap<Integer, Integer>();
         
@@ -236,7 +236,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     }
     
     public void onGlobalSkinDownload(Skin skin, int globalId) {
-        ModLogger.log("Skin downloaded.");
+        ModLogger.log("Skin downloaded: " + globalId);
         synchronized (cacheMapGlobalLink) {
             if (skin != null) {
                 synchronized (cacheMapDatabase) {
@@ -269,7 +269,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     }
     
     private void sendGlobalSkinToPlayer(ISkinIdentifier identifier, EntityPlayerMP player) {
-        ModLogger.log("Sending skin to player");
+        //ModLogger.log("Sending skin to player");
         synchronized (cacheMapDatabase) {
             int id = cacheMapGlobalLink.get(identifier.getSkinGlobalId());
             Skin skin = cacheMapDatabase.get(id);
@@ -429,12 +429,15 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         synchronized (cacheMapFileLink) {
             synchronized (cacheMapGlobalLink) {
                 int skinId = mapItem.lightHash();
+                ModLogger.log("Removing local cache skin. " + skinId);
                 if (cacheMapFileLink.containsValue(skinId)) {
                     ILibraryFile libraryFile = cacheMapFileLink.getBackward(skinId);
+                    //ModLogger.log("Removing library cache skin. " + libraryFile.getFullName());
                     cacheMapFileLink.remove(libraryFile);
                 }
                 if (cacheMapGlobalLink.containsValue(skinId)) {
                     int globalId = cacheMapGlobalLink.getBackward(skinId);
+                    //ModLogger.log("Removing global cache skin. " + globalId);
                     cacheMapGlobalLink.remove(globalId);
                 }
             }
