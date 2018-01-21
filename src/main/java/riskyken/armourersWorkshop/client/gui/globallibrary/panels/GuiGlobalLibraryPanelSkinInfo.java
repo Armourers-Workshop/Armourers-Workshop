@@ -385,7 +385,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             String idString = String.format ("%04d", skinId);
             String skinName = skinJson.get("name").getAsString();
             File path = new File(SkinIOUtils.getSkinLibraryDirectory(), "downloads/");
-            target = new File(path, idString + " - " + skinName + ".armour");
+            target = new File(path, SkinIOUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
             if (!path.exists()) {
                 path.mkdirs();
             }

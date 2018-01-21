@@ -41,12 +41,14 @@ public final class SkinIOUtils {
     public static String makeFileNameValid(String fileName) {
         fileName = fileName.replace("\\", "/");
         fileName = fileName.replace("/", "_");
+        fileName = fileName.replace(":", "_");
         return fileName; //fileName.fileName.replaceAll("[^a-zA-Z0-9_()'`+& \\-\\.]", "_");
     }
     
     public static String makeFilePathValid(String filePath) {
         filePath = filePath.replace("\\", "/");
         filePath = filePath.replace("../", "_");
+        filePath = filePath.replace(":", "_");
         return filePath; //filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
     }
     
