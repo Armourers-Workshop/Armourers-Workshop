@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinPart;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -30,6 +31,7 @@ public final class SkinUploadHelper {
         if (!ConfigHandler.allowClientsToUploadSkins) {
             return;
         }
+        skin.requestId = new SkinIdentifier(skin);
         ModLogger.log("Uploading skin to server: " + skin);
         byte[] skinData = ByteBufHelper.convertSkinToByteArray(skin);
         
