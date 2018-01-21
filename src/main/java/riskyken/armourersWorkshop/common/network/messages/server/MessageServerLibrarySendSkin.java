@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 
 /**
  * Send from the server to the client when a client saves a skin
@@ -46,6 +47,7 @@ public class MessageServerLibrarySendSkin implements IMessage, IMessageHandler<M
         } else {
             buf.writeBoolean(false);
         }
+        skin.requestId = new SkinIdentifier(skin);
         ByteBufHelper.writeSkinToByteBuf(buf, skin);
         buf.writeByte(sendType.ordinal());
     }
