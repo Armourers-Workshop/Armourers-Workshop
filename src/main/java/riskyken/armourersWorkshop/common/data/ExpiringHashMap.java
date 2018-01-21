@@ -73,7 +73,12 @@ public class ExpiringHashMap<K, V> implements Runnable {
     
     public boolean containsKey(K key) {
         synchronized (cacheMap) {
-            return cacheMap.containsKey(key);
+            CacheMapObject mapitem = cacheMap.get(key);
+            if (mapitem != null) {
+                mapitem.getMapItem();
+                return true;
+            }
+            return false;
         }
     }
     
