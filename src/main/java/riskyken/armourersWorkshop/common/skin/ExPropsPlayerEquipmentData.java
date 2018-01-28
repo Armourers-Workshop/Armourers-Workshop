@@ -22,7 +22,6 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSk
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
@@ -142,7 +141,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     public void removeCustomEquipment(ISkinType skinType, byte slotId) {
-        ModLogger.log(skinType);
+        //ModLogger.log(skinType);
         equipmentData.removeEquipment(skinType, slotId);
         updateEquipmentDataToPlayersAround();
     }
@@ -185,7 +184,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     
     public void setSkinColumnCount(ISkinType skinType, int value) {
         if (value > 0 & value <= MAX_SLOTS_PER_SKIN_TYPE) {
-            ModLogger.log(String.format("Setting slot count for %s to %d.", skinType.getRegistryName() ,value));
+            //ModLogger.log(String.format("Setting slot count for %s to %d.", skinType.getRegistryName() ,value));
             equipmentWardrobeData.setUnlockedSlotsForSkinType(skinType, value);
             sendNakedData((EntityPlayerMP) this.player);
         }
