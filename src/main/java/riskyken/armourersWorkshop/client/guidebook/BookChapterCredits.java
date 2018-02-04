@@ -28,7 +28,8 @@ public class BookChapterCredits extends BookChapterBase {
                 "EzerArch (pt_PT)",
                 "EzerArch (pt_BR)",
                 "Flummie2000 (de_DE)",
-                "V972 (ru_RU)"});
+                "V972 (ru_RU)",
+                "BredFace (pt_BR)"});
     }
     
     private void addCategoryPage(String pageName, String[] people) {
