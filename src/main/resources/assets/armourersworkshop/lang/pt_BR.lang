@@ -42,7 +42,7 @@ tile.armourersworkshop:armourerBrain.name=Armeiro
 tile.armourersworkshop:miniArmourer.name=Mini Armeiro - (TEMP)
 tile.armourersworkshop:armourLibrary0.name=Biblioteca de Equipamentos
 tile.armourersworkshop:armourLibrary1.name=Biblioteca de Equipamentos - (Criativo)
-tile.armourersworkshop:globalSkinLibrary.name=Biblioteca Global de Peles - (TEMP)
+tile.armourersworkshop:globalSkinLibrary.name=Biblioteca Global de Visuais - (TEMP)
 tile.armourersworkshop:colourable.name=Cubo de Equipamento
 tile.armourersworkshop:colourableGlowing.name=Cubo de Equipamento (Brilhante)
 tile.armourersworkshop:colourableGlass.name=Cubo de Equipamento de Vidro
@@ -50,13 +50,13 @@ tile.armourersworkshop:colourableGlassGlowing.name=Cubo de Equipamento de Vidro 
 tile.armourersworkshop:colourMixer.name=Misturador de Cores
 tile.armourersworkshop:mannequin.name=Manequim
 tile.armourersworkshop:doll.name=Boneco
-tile.armourersworkshop:skinningTable.name=Mesa de Aplicação de Pele
+tile.armourersworkshop:skinningTable.name=Mesa de Aplicação de Visuais
 tile.armourersworkshop:dyeTable.name=Mesa de Corantes
-tile.armourersworkshop:skinnable.name=Bloco de Pele Aplicável
+tile.armourersworkshop:skinnable.name=Bloco de Visual Aplicável
 tile.armourersworkshop:hologramProjector.name=Projetor de Holograma
 
 # Block flavour text
-tile.armourersworkshop:armourerBrain.flavour=Permite-lhe construir peles de equipamentos.
+tile.armourersworkshop:armourerBrain.flavour=Permite-lhe construir visuais para equipamentos.
 tile.armourersworkshop:miniArmourer.flavour=Inacabado.
 tile.armourersworkshop:armourLibrary0.flavour=Salvar e carregar modelos de equipamentos do HD.
 tile.armourersworkshop:armourLibrary1.flavour=Salvar e carregar modelos de equipamentos do HD.%nModo criativo.
@@ -64,63 +64,68 @@ tile.armourersworkshop:colourable.flavour=Bloco de construção principal para e
 tile.armourersworkshop:colourableGlowing.flavour=Cubos de equipamento que brilham no escuro!%n(Pintável)
 tile.armourersworkshop:colourableGlass.flavour=Cubo de equipamento transparente.%n(Pintável)
 tile.armourersworkshop:colourableGlassGlowing.flavour=Cubo de equipamento transparente brilhante!%n(Pintável)
-tile.armourersworkshop:colourMixer.flavour=Misture cores para pintar seu equipamento.%nTecla Agachar + botão direito com a ferramenta para pintar rapidamente.
-tile.armourersworkshop:mannequin.flavour=Mostre seu equipamento com um manequim medonho!%nUse o botão direito com uma etiqueta para definir uma pele.
+tile.armourersworkshop:colourMixer.flavour=Misture cores para pintar seu equipamento.%nTecla Agachar + botão direito com uma ferramenta%npara aplicar a cor rapidamente.
+tile.armourersworkshop:mannequin.flavour=Mostre seu equipamento em um manequim medonho!%nUse o botão direito com uma etiqueta%npara definir um modelo de jogador.
 tile.armourersworkshop:doll.flavour=Mini manequim!
-tile.armourersworkshop:skinningTable.flavour=Aplicar e remover as peles de itens.
+tile.armourersworkshop:skinningTable.flavour=Aplicar e remover os visuais de itens.
 
 # Item names
-item.armourersworkshop:equipmentSkinTemplate.0.name=Gabarito de Pele de Equipamento
-item.armourersworkshop:equipmentSkinTemplate.1000.name=Saco de Presente
-item.armourersworkshop:equipmentSkin.name=Pele de Equipamento
+item.armourersworkshop:equipmentSkinTemplate.0.name=Modelo de Visual de Equipamento
+item.armourersworkshop:equipmentSkinTemplate.1000.name=Saco de Presentes
+item.armourersworkshop:equipmentSkin.name=Visual de Equipamento
 item.armourersworkshop:paintbrush.name=Pincel
 item.armourersworkshop:paintRoller.name=Rolo de Pintura
-item.armourersworkshop:colourPicker.name=Seletor de Cores
-item.armourersworkshop:burnTool.name=Ferramenta Superexposição
-item.armourersworkshop:dodgeTool.name=Ferramenta Subexposição
-item.armourersworkshop:colourNoiseTool.name=Ferramenta Ruído de Cor
-item.armourersworkshop:shadeNoiseTool.name=Ferramenta Ruído de Sombra
-item.armourersworkshop:mannequinTool.name=Ferramenta Manequim
+item.armourersworkshop:colourPicker.name=Selecionador de Cores
+item.armourersworkshop:burnTool.name=Ferramenta de Escurecimento
+item.armourersworkshop:dodgeTool.name=Ferramenta de Clareamento
+item.armourersworkshop:colourNoiseTool.name=Ferramenta de Tons de Cor
+item.armourersworkshop:shadeNoiseTool.name=Ferramenta de Tons de Sombra
+item.armourersworkshop:mannequinTool.name=Ferramenta de Manequim
 item.armourersworkshop:guideBook.name=Livro-Guia
 item.armourersworkshop:armourContainer.name=Container de Armadura
-item.armourersworkshop:armourContainerHead.name=Container de Armadura (Cabeça)
-item.armourersworkshop:armourContainerChest.name=Container de Armadura (Peito)
-item.armourersworkshop:armourContainerLegs.name=Container de Armadura (Pernas)
-item.armourersworkshop:armourContainerFeet.name=Container de Armadura (Pés)
-item.armourersworkshop:wandOfStyle.name=Varinha de Estilo
+item.armourersworkshop:armourContainerHead.name=Container de Armadura para Cabeça
+item.armourersworkshop:armourContainerChest.name=Container de Armadura para Peito
+item.armourersworkshop:armourContainerLegs.name=Container de Armadura para Pernas
+item.armourersworkshop:armourContainerFeet.name=Container de Armadura para Pés
+item.armourersworkshop:wandOfStyle.name=Varinha do Estilo
 item.armourersworkshop:soap.name=Sabão
-item.armourersworkshop:hueTool.name=Ferramenta Matiz
+item.armourersworkshop:hueTool.name=Ferramenta de Matiz
 item.armourersworkshop:blockMarker.name=Marcador de Bloco
 item.armourersworkshop:dyeBottle.name=Frasco de Corante
-item.armourersworkshop:blendingTool.name=Ferramenta Mesclagem
-item.armourersworkshop:armourersHammer.name=Martelo Armeiro
-item.armourersworkshop:debugTool.name=Ferramenta Debug
-item.armourersworkshop:skinUnlock.0.name=Desbloqueio de Pele para Cabeça
-item.armourersworkshop:skinUnlock.1.name=Desbloqueio de Pele para Peito
-item.armourersworkshop:skinUnlock.2.name=Desbloqueio de Pele para Pernas
-item.armourersworkshop:skinUnlock.3.name=Desbloqueio de Pele para Pés
+item.armourersworkshop:blendingTool.name=Ferramenta de Mesclagem
+item.armourersworkshop:armourersHammer.name=Martelo do Armeiro
+item.armourersworkshop:debugTool.name=Ferramenta de Debug
+item.armourersworkshop:skinUnlock.0.name=Desbloqueio de Visual para Cabeça
+item.armourersworkshop:skinUnlock.1.name=Desbloqueio de Visual para Peito
+item.armourersworkshop:skinUnlock.2.name=Desbloqueio de Visual para Pernas
+item.armourersworkshop:skinUnlock.3.name=Desbloqueio de Visual para Pés
+item.armourersworkshop:skinUnlock.4.name=Desbloqueio de Visual para Asas
+item.armourersworkshop:linkingTool.name=Ferramenta de Conexão
 
 # Item flavour text
 item.armourersworkshop:equipmentSkinTemplate.1000.flavour=Um presente de RiskyKen
-item.armourersworkshop:paintbrush.flavour=Pinta um bloco.
+item.armourersworkshop:paintbrush.flavour=Pinta um único bloco.
 item.armourersworkshop:paintRoller.flavour=Pinta blocos em uma grande área.
 item.armourersworkshop:colourPicker.flavour=Usado para copiar a cor de blocos.
 item.armourersworkshop:burnTool.flavour=Escurece um bloco.
 item.armourersworkshop:dodgeTool.flavour=Clareia um bloco.
-item.armourersworkshop:colourNoiseTool.flavour=Aplica ruído de cor aleatória em um bloco.
+item.armourersworkshop:colourNoiseTool.flavour=Aplica tons aleatórios da cor de um bloco.
 item.armourersworkshop:shadeNoiseTool.flavour=Aplica sombreamento aleatório em um bloco.
-item.armourersworkshop:mannequinTool.flavour=Salvar e carregar rotações do manequim.%nBotão direito para aplicar configuração.%nAgachar + botão direito para salvar as configurações.
-item.armourersworkshop:guideBook.flavour=Seu guia para Armourer's Workshop.
-item.armourersworkshop:armourContainer.flavour=Item só para modo criativo para desenvolvedores de mapas.%nPermite que a pele de armadura seja colocada em NPCs.%nUse na Mesa de Aplicação de Pele para aplicar pele.
-item.armourersworkshop:soap.flavour=Use na Mesa de Aplicação de Pele para limpar a pele de um item.
-item.armourersworkshop:hueTool.flavour=Muda a cor de um bloco%nsem afetar o sombreamento.
-item.armourersworkshop:blockMarker.flavour=Cria um marcador em um cubo de equipamento.%nUtilize apenas com peles que necessitam de marcador de blocos.
-item.armourersworkshop:dyeBottle.flavour=Usado na Mesa de Corantes para tingir peles.
+item.armourersworkshop:mannequinTool.flavour=Salva e carrega rotações do manequim.%nBotão direito para aplicar a configuração.%nAgachar + botão direito para salvar a configuração.
+item.armourersworkshop:guideBook.flavour=Seu guia para o Armourer's Workshop.
+item.armourersworkshop:armourContainer.flavour=Item apenas para o modo criativo, destinado a desenvolvedores de mapas.%nPermite que o visual da armadura seja colocada em NPCs.%nUse-o junto do item visual na Mesa de Aplicação de Visuais.
+item.armourersworkshop:wandOfStyle.flavour=Permite que visuais sejam colocados em NPCs.
+item.armourersworkshop:soap.flavour=Use na Mesa de Aplicação de Visuais%npara retirar o visual de um item.
+item.armourersworkshop:hueTool.flavour=Muda a cor de um bloco sem afetar o sombreamento.
+item.armourersworkshop:blockMarker.flavour=Cria um marcador em um cubo de equipamento.%nUtilize apenas com visuais que necessitam de um marcador de blocos.
+item.armourersworkshop:dyeBottle.flavour=Usado na Mesa de Corantes para tingir visuais.
 item.armourersworkshop:armourersHammer.flavour=Usado para girar blocos.
-item.armourersworkshop:skinUnlock.0.flavour=Destrava 1 slot additional de pele para cabeça no guarda-roupa. 
-item.armourersworkshop:skinUnlock.1.flavour=Destrava 1 slot additional de pele para peito no guarda-roupa.
-item.armourersworkshop:skinUnlock.2.flavour=Destrava 1 slot additional de pele para pernas no guarda-roupa.
-item.armourersworkshop:skinUnlock.3.flavour=Destrava 1 slot additional de pele para pés no guarda-roupa. 
+item.armourersworkshop:skinUnlock.0.flavour=Destrava um espaço adicional de visual%npara cabeça no guarda-roupa. 
+item.armourersworkshop:skinUnlock.1.flavour=Destrava um espaço adicional de visual%npara peito no guarda-roupa.
+item.armourersworkshop:skinUnlock.2.flavour=Destrava um espaço adicional de visual%npara pernas no guarda-roupa.
+item.armourersworkshop:skinUnlock.3.flavour=Destrava um espaço adicional de visual%npara pés no guarda-roupa.
+item.armourersworkshop:skinUnlock.4.flavour=Destrava um espaço adicional de visual%npara asas no guarda-roupa.
+item.armourersworkshop:linkingTool.flavour=Use para conectar blocos utilizáveis à blocos visuais.%n Primeiro, clique com o botão direito no bloco utilizável, depois%nclique com o botão direito em um bloco visual para conecta-los.
 
 # Rollover Text
 item.armourersworkshop:rollover.intensity=&6Intensidade:&7 %s
@@ -129,35 +134,38 @@ item.armourersworkshop:rollover.hex=&6Hex:&7 %s
 item.armourersworkshop:rollover.paintType=&6Tipo de Pintura:&7 %s
 item.armourersworkshop:rollover.radius=&6Raio:&7 %d*%d*%d
 item.armourersworkshop:rollover.nopaint=&6Sem pintura.
-item.armourersworkshop:rollover.settingsSaved=&6Configurações salvas.
-item.armourersworkshop:rollover.noSettingsSaved=&cSem configurações salvas.
+item.armourersworkshop:rollover.settingsSaved=&6Configuração salva.
+item.armourersworkshop:rollover.noSettingsSaved=&cSem configuração salva.
 item.armourersworkshop:rollover.user=&6Usuário:&7 %s
 item.armourersworkshop:rollover.url=&6URL:&7 %s
 item.armourersworkshop:rollover.empty=&6Vazio.
 item.armourersworkshop:rollover.openSettings=Agachar + botão direito para abrir as configurações.
 
-item.armourersworkshop:rollover.hasSkin=&6Possui pele de Armouerer's Workshop
+item.armourersworkshop:rollover.hasSkin=&6Possui visual do Armouerer's Workshop
 item.armourersworkshop:rollover.skinName=&6Nome:&7 %s
 item.armourersworkshop:rollover.skinAuthor=&6Autor:&7 %s
 item.armourersworkshop:rollover.skinType=&6Tipo:&7 %s
 item.armourersworkshop:rollover.skinHoldShiftForInfo=Segurar &ashift&7 para mais informação.
-item.armourersworkshop:rollover.skinId=&eId da pele:&7 %s
+item.armourersworkshop:rollover.skinIdentifier=&eIdentificador de Visual:
+item.armourersworkshop:rollover.skinId=&eID do Visual:&7 %s
+item.armourersworkshop:rollover.skinLibraryFile=Arquivo da Biblioteca: %s
+item.armourersworkshop:rollover.skinGlobalId=ID Global: %s
 item.armourersworkshop:rollover.skinTotalCubes=&eTotal de Cubos:&7 %s
 item.armourersworkshop:rollover.skinNumCubes=&eCubos:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlowing=&eCubos Brilhantes:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlass=&eCubos de Vidro:&7 %s
 item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eCubos de Vidro Brilhantes:&7 %s
-item.armourersworkshop:rollover.skinPaintData=&ePossui Paint Data:&7 %s
+item.armourersworkshop:rollover.skinPaintData=&ePossui Informação de Pintura:&7 %s
 item.armourersworkshop:rollover.skinMarkerCount=&eContagem de Marcadores:&7 %d
 item.armourersworkshop:rollover.skinDyeCount=&eContagem de Corantes:&7 %d/8
-item.armourersworkshop:rollover.skindownloading=Baixando ID da pele: %d
+item.armourersworkshop:rollover.skindownloading=Baixando ID de visual: %d
 item.armourersworkshop:rollover.skinOpenWardrobe=Pressione a tecla &a%s&7 para abrir o &aGuarda-Roupa de Equipamentos
-item.armourersworkshop:rollover.skinOldType=&cTipo de pele antiga, coloque na grade de produção para atualizar.
-item.armourersworkshop:rollover.skinInvalidItem=&cErro: Pele de equipamento inválida, favor excluir.
-item.armourersworkshop:rollover.skinIdError1=&cAviso: esta pele está usando um formato de arquivo antigo.
-item.armourersworkshop:rollover.skinIdError2=&cFavor salvar e recarregá-lo na biblioteca para corrigir isso.
+item.armourersworkshop:rollover.skinOldType=&cTipo de visual antigo, coloque na grade de criação para atualizar.
+item.armourersworkshop:rollover.skinInvalidItem=&cErro: Visual de equipamento inválida, favor excluir.
+item.armourersworkshop:rollover.skinIdError1=&cAviso: este visual está usando um formato de arquivo antigo.
+item.armourersworkshop:rollover.skinIdError2=&cFavor salvar e recarregá-lo na biblioteca para corrigir.
 item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Antigo ID: %s Novo ID: %s
-item.armourersworkshop:rollover.skinProperties=&ePropriedades da Pele:
+item.armourersworkshop:rollover.skinProperties=&ePropriedades do Visual:
 
 # Tool Options
 tooloption.armourersworkshop:fullBlockMode=Modo bloco inteiro
@@ -223,6 +231,10 @@ skinPartType.armourers:block.multiblock.name=Multibloco
 skinPartType.armourers:wings.leftWing.name=Asa Esquerda 
 skinPartType.armourers:wings.rightWing.name=Asa Direita
 
+# Movement types
+movmentType.armourersworkshop:ease=Aliviado
+movmentType.armourersworkshop:linear=Linear
+
 # Inventory names
 inventory.armourersworkshop:colourMixer.name=Misturador de Cores
 inventory.armourersworkshop:armourerBrain.name=Armeiro
@@ -232,59 +244,66 @@ inventory.armourersworkshop:equipmentWardrobe.name=Guarda-Roupa de Equipamentos
 inventory.armourersworkshop:mannequin.name=Manequim
 inventory.armourersworkshop:doll.name=Boneco
 inventory.armourersworkshop:miniArmourer.name=Mini Armeiro - (TEMP)
-inventory.armourersworkshop:entityEquipment.name=Equipamento da Entidade
-inventory.armourersworkshop:skinningTable.name=Mesa de Aplicação de Pele
+inventory.armourersworkshop:entityEquipment.name=Equipamento de Entidade
+inventory.armourersworkshop:skinningTable.name=Mesa de Aplicação de Visuais
 inventory.armourersworkshop:dyeTable.name=Mesa de Corantes
-inventory.armourersworkshop:skinnable.name=Bloco de Pele Aplicável
+inventory.armourersworkshop:skinnable.name=Bloco de Visual Aplicável
 inventory.armourersworkshop:hologramProjector.name=Projetor de Holograma 
 
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Busca:
 inventory.armourersworkshop:armourLibrary.label.filename=Nome do Arquivo:
 inventory.armourersworkshop:armourLibrary.label.files=Arquivo:
-inventory.armourersworkshop:armourLibrary.error.noFileName=&7Precisa digitar um nome de arquivo para salvar uma pele.
-inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7Precisa selecionar uma pele da lista para carregar.
+inventory.armourersworkshop:armourLibrary.error.noFileName=&7É preciso digitar um nome para salvar um visual.
+inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7É preciso selecionar um visual da lista para carregar.
 inventory.armourersworkshop:armourLibrary.save=Salvar
 inventory.armourersworkshop:armourLibrary.load=Carregar
 inventory.armourersworkshop:armourLibrary.openFolder=Abrir Pasta...
-inventory.armourersworkshop:armourLibrary.rollover.localFiles=Ver arquivos neste computador.
+inventory.armourersworkshop:armourLibrary.trackFile=Rastrear arquivo?
+inventory.armourersworkshop:armourLibrary.rollover.localFiles=Ver arquivos deste computador.
 inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=Ver arquivos públicos no servidor.
 inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=Ver arquivos privados no servidor.
-inventory.armourersworkshop:armourLibrary.rollover.notOnServer=Precisa estar conectado a um servidor para usar esse recurso.
+inventory.armourersworkshop:armourLibrary.rollover.notOnServer=É preciso estar conectado a um servidor para usar esse recurso.
 inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Abrir pasta da biblioteca no seu computador.
-inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Apagar pele.
-inventory.armourersworkshop:armourLibrary.rollover.deleteSkinSelect=Selecionar item para apagar.
+inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Apagar visual.
+inventory.armourersworkshop:armourLibrary.rollover.deleteSkinSelect=Selecione um item para apagar.
 inventory.armourersworkshop:armourLibrary.rollover.refresh=Atualizar arquivos da biblioteca.
 inventory.armourersworkshop:armourLibrary.rollover.newFolder=Criar nova pasta.
-inventory.armourersworkshop:armourLibrary.label.enterFileName=Inserir o nome do arquivo.
-inventory.armourersworkshop:armourLibrary.label.typeToSearch=Digitar para buscar...
+inventory.armourersworkshop:armourLibrary.label.enterFileName=Insira o nome do arquivo.
+inventory.armourersworkshop:armourLibrary.label.typeToSearch=Digite para buscar...
 inventory.armourersworkshop:armourLibrary.dialog.newFolder.title=Nova Pasta
-inventory.armourersworkshop:armourLibrary.dialog.newFolder.enterFolderName=Digitar nome da pasta...
+inventory.armourersworkshop:armourLibrary.dialog.newFolder.enterFolderName=Digite o nome da pasta...
 inventory.armourersworkshop:armourLibrary.dialog.newFolder.close=Fechar
 inventory.armourersworkshop:armourLibrary.dialog.newFolder.create=Criar
 inventory.armourersworkshop:armourLibrary.dialog.newFolder.invalidFolderName=O nome da pasta contém caracteres inválidos.
 inventory.armourersworkshop:armourLibrary.dialog.delete.title=Apagar
 inventory.armourersworkshop:armourLibrary.dialog.delete.close=Fechar
 inventory.armourersworkshop:armourLibrary.dialog.delete.delete=Apagar
-inventory.armourersworkshop:armourLibrary.dialog.delete.deleteFolder=Apagar pasta "%s" e todos os arquivos que ela contém?
-inventory.armourersworkshop:armourLibrary.dialog.delete.deleteFile=Apagar arquivo "%s"?
+inventory.armourersworkshop:armourLibrary.dialog.delete.deleteFolder=Deseja apagar a pasta "%s" e todos os arquivos nela contidos?
+inventory.armourersworkshop:armourLibrary.dialog.delete.deleteFile=Deseja apagar o arquivo "%s"?
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.title=Sobrescrever Arquivo
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.close=Fechar
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.ok=OK
-inventory.armourersworkshop:armourLibrary.dialog.overwrite.overwriteFile=Sobrescrever arquivo "%s"?
+inventory.armourersworkshop:armourLibrary.dialog.overwrite.overwriteFile=Deseja sobrescrever o arquivo "%s"?
 
 inventory.armourersworkshop:armourerBrain.label.itemName=Nome do Item:
+inventory.armourersworkshop:armourerBrain.label.skinType=Tipo de Visual:
 inventory.armourersworkshop:armourerBrain.label.username=Nome do Usuário:
-inventory.armourersworkshop:armourerBrain.label.idleSpeed=Veloc. parado:
-inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Veloc. em voo:
+inventory.armourersworkshop:armourerBrain.label.url=URL:
+inventory.armourersworkshop:armourerBrain.label.idleSpeed=Velocidade Parado:
+inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Velocidade em Voo:
 inventory.armourersworkshop:armourerBrain.label.minAngle=Ângulo Mínimo:
 inventory.armourersworkshop:armourerBrain.label.maxAngle=Ângulo Máximo:
-inventory.armourersworkshop:armourerBrain.label.clone=Clone:
+inventory.armourersworkshop:armourerBrain.label.clone=Clonar:
+inventory.armourersworkshop:armourerBrain.label.inventorySize=Tamanho do Inventário:
+inventory.armourersworkshop:armourerBrain.label.inventorySlots=Espaços:%d Largura:%d Altura:%d
 inventory.armourersworkshop:armourerBrain.showGuide=Mostrar guias?
 inventory.armourersworkshop:armourerBrain.showOverlay=Mostrar overlay da cabeça?
 inventory.armourersworkshop:armourerBrain.showHelper=Mostrar modelo auxiliar?
 inventory.armourersworkshop:armourerBrain.save=Salvar
 inventory.armourersworkshop:armourerBrain.load=Carregar
+inventory.armourersworkshop:armourerBrain.dropdown.user=Usuário
+inventory.armourersworkshop:armourerBrain.dropdown.url=URL
 inventory.armourersworkshop:armourerBrain.set=OK
 inventory.armourersworkshop:armourerBrain.clear=Limpar
 inventory.armourersworkshop:armourerBrain.copy=Copiar
@@ -295,20 +314,21 @@ inventory.armourersworkshop:armourerBrain.seat=Assento?
 inventory.armourersworkshop:armourerBrain.multiblock=Multibloco?
 inventory.armourersworkshop:armourerBrain.bed=Cama?
 inventory.armourersworkshop:armourerBrain.inventory=Inventário?
+inventory.armourersworkshop:armourerBrain.enderInventory=Inventário do Ender?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Substituir?
-inventory.armourersworkshop:armourerBrain.tab.main=Principal 
+inventory.armourersworkshop:armourerBrain.tab.main=Principal
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Configuração de Exibição 
-inventory.armourersworkshop:armourerBrain.tab.skinSettings=Configuração de Pele
-inventory.armourersworkshop:armourerBrain.tab.blockUtils=Utils. de Bloco 
+inventory.armourersworkshop:armourerBrain.tab.skinSettings=Configuração de Visual
+inventory.armourersworkshop:armourerBrain.tab.blockUtils=Utilidades do Bloco 
 inventory.armourersworkshop:armourerBrain.dialog.clear.title=Limpar
 inventory.armourersworkshop:armourerBrain.dialog.clear.close=Fechar
 inventory.armourersworkshop:armourerBrain.dialog.clear.clear=Limpar
 inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=Limpar cubos de equipamento?
-inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=Limpar pintura de pele?
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=Limpar pintura de visual?
 inventory.armourersworkshop:armourerBrain.dialog.copy.title=Copiar
 inventory.armourersworkshop:armourerBrain.dialog.copy.close=Fechar
 inventory.armourersworkshop:armourerBrain.dialog.copy.copy=Copiar
-inventory.armourersworkshop:armourerBrain.dialog.copy.srcPart=Parte Original:
+inventory.armourersworkshop:armourerBrain.dialog.copy.srcPart=Parte Fonte:
 inventory.armourersworkshop:armourerBrain.dialog.copy.desPart=Parte Destino:
 inventory.armourersworkshop:armourerBrain.dialog.copy.mirror=Espelhar?
 
@@ -316,15 +336,15 @@ inventory.armourersworkshop:colourMixer.label.hue=Matiz
 inventory.armourersworkshop:colourMixer.label.saturation=Saturação
 inventory.armourersworkshop:colourMixer.label.brightness=Brilho
 inventory.armourersworkshop:colourMixer.label.hex=Hex
-inventory.armourersworkshop:colourMixer.label.presets=Presets
+inventory.armourersworkshop:colourMixer.label.presets=Padrões
 inventory.armourersworkshop:colourMixer.label.paintType=Tipo de Pintura
 
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Cor da Pele
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Cor do Cabelo
-inventory.armourersworkshop:equipmentWardrobe.selectSkin=Escolha Cor de Pele
-inventory.armourersworkshop:equipmentWardrobe.autoSkin=Auto
-inventory.armourersworkshop:equipmentWardrobe.selectHair=Escolha Cor de Cabelo
-inventory.armourersworkshop:equipmentWardrobe.autoHair=Auto
+inventory.armourersworkshop:equipmentWardrobe.selectSkin=Cor da Pele
+inventory.armourersworkshop:equipmentWardrobe.autoSkin=Auto.
+inventory.armourersworkshop:equipmentWardrobe.selectHair=Cor do Cabelo
+inventory.armourersworkshop:equipmentWardrobe.autoHair=Auto.
 inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Substituir Pele
 inventory.armourersworkshop:equipmentWardrobe.renderHeadArmour=Exibir armadura da cabeça?
 inventory.armourersworkshop:equipmentWardrobe.renderChestArmour=Exibir armadura do peito?
@@ -333,52 +353,125 @@ inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=Exibir armadura d
 inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=Exibir overlay da cabeça?
 inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=Limitar movimento de membros?
 
+# Mannequin
 inventory.armourersworkshop:mannequin.label.headRotation=Giro da Cabeça
-inventory.armourersworkshop:mannequin.label.leftArmRotation=Giro do Braço Esq.
-inventory.armourersworkshop:mannequin.label.rightArmRotation=Giro do Braço Dir.
-inventory.armourersworkshop:mannequin.label.leftLegRotation=Giro da Perna Esq.
-inventory.armourersworkshop:mannequin.label.rightLegRotation=Giro da Perna Dir.
+inventory.armourersworkshop:mannequin.label.leftArmRotation=Giro do Braço Esquerdo
+inventory.armourersworkshop:mannequin.label.rightArmRotation=Giro do Braço Direito
+inventory.armourersworkshop:mannequin.label.leftLegRotation=Giro da Perna Esquerdo
+inventory.armourersworkshop:mannequin.label.rightLegRotation=Giro da Perna Direito
 inventory.armourersworkshop:mannequin.label.isChild=Modelo Criança?
-inventory.armourersworkshop:mannequin.label.isExtraRenders=Renders Extras?
+inventory.armourersworkshop:mannequin.label.isExtraRenders=Renderização Extra?
 inventory.armourersworkshop:mannequin.label.isFlying=Voando?
 inventory.armourersworkshop:mannequin.label.isVisible=Visível?
 inventory.armourersworkshop:mannequin.random=Aleatório
-inventory.armourersworkshop:mannequin.reset=Reset
+inventory.armourersworkshop:mannequin.reset=Resetar
 inventory.armourersworkshop:mannequin.dropdown.user=Usuário
 inventory.armourersworkshop:mannequin.dropdown.url=URL
-inventory.armourersworkshop:mannequin.set=Set
-inventory.armourersworkshop:mannequin.selectSkin=Selecionar Pele
-inventory.armourersworkshop:mannequin.selectHair=Selecionar Cabelo
-inventory.armourersworkshop:mannequin.autoSkin=Auto Skin
-inventory.armourersworkshop:mannequin.autoHair=Auto Hair
+inventory.armourersworkshop:mannequin.set=OK
+inventory.armourersworkshop:mannequin.selectSkin=Selec. Pele
+inventory.armourersworkshop:mannequin.selectHair=Selec. Cabelo
+inventory.armourersworkshop:mannequin.autoSkin=Pele Auto.
+inventory.armourersworkshop:mannequin.autoHair=Cabelo Auto.
 inventory.armourersworkshop:mannequin.tab.inventory=Inventário
 inventory.armourersworkshop:mannequin.tab.rotations=Ângulos
 inventory.armourersworkshop:mannequin.tab.offset=Deslocamentos
-inventory.armourersworkshop:mannequin.tab.skinAndHair=Pele & Cor de Cabelo
+inventory.armourersworkshop:mannequin.tab.skinAndHair=Pele e Cor de Cabelo
 inventory.armourersworkshop:mannequin.tab.name=Nome
-inventory.armourersworkshop:mannequin.tab.extraRenders=Renders Extras
+inventory.armourersworkshop:mannequin.tab.extraRenders=Renderização Extra
 
+# Mini Armourer
 inventory.armourersworkshop:miniArmourer.save=Salvar
 inventory.armourersworkshop:miniArmourer.load=Carregar
 inventory.armourersworkshop:miniArmourer.label.buildingAccess=Agachar + botão direito no mini armeiro para acessar a interface de construção.
 
+# Global Skin Library
+inventory.armourersworkshop:globalSkinLibrary.invalidJava=[Java %d Update %d] é muito antigo. Porfavor atualize para [Java 8 Update 101] ou superior.
+
+# Global Skin Library (Header)
 inventory.armourersworkshop:globalSkinLibrary.header.home=Início
 inventory.armourersworkshop:globalSkinLibrary.header.favourites=Favoritos
-inventory.armourersworkshop:globalSkinLibrary.header.friends=Amigos
-inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Hospedar Pele 
+inventory.armourersworkshop:globalSkinLibrary.header.myFiles=Meus Arquivos
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkin=Hospedar Visual
+inventory.armourersworkshop:globalSkinLibrary.header.uploadSkinBan=Você foi banido de hopedar visuais
+inventory.armourersworkshop:globalSkinLibrary.header.joinBeta=Juntar-se à Beta
+
+# Global Skin Library (Search Box)
 inventory.armourersworkshop:globalSkinLibrary.searchBox.typeToSearch=Digitar para buscar...
 inventory.armourersworkshop:globalSkinLibrary.searchBox.search=Buscar
-inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Mostrar tudo
-inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Recentemente Hospedado
-inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Os Mais Baixados
-inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Resultado da Busca: Pág. %d de %d - Total de %d resultados.
-inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Voltar
-inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Baixar Pele 
 
+# Global Skin Library (Home)
+inventory.armourersworkshop:globalSkinLibrary.home.showAllSkins=Mostrar tudo
+inventory.armourersworkshop:globalSkinLibrary.home.recentlyUploaded=Recentemente Hospedados
+inventory.armourersworkshop:globalSkinLibrary.home.mostDownloaded=Os Mais Baixados
+inventory.armourersworkshop:globalSkinLibrary.home.mostLikes=Os Mais Curtidos
+
+# Global Skin Library (Search Results)
+inventory.armourersworkshop:globalSkinLibrary.searchResults.results=Resultado da Busca: Pág. %d de %d - Total de %d resultados.
+inventory.armourersworkshop:globalSkinLibrary.searchResults.small=Pequeno
+inventory.armourersworkshop:globalSkinLibrary.searchResults.medium=Médio
+inventory.armourersworkshop:globalSkinLibrary.searchResults.large=Grande
+inventory.armourersworkshop:globalSkinLibrary.searchResults.label.searching=Buscando...
+
+# Global Skin Library (Skin Info)
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.back=Voltar
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloadSkin=Baixar Visual
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.editSkin=Editar Visual
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.like=Curtir
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.unlike=Descurtir
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.uploader=Hospedeiro: %s
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.title=Informações do Visual
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.name=Nome:
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.downloads=Vezes Baixado: %d
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.likes=Curtidas: %d
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.author=Autor:
+inventory.armourersworkshop:globalSkinLibrary.skinInfo.description=Descrição:
+
+# Global Skin Library (Upload)
+inventory.armourersworkshop:globalSkinLibrary.upload.name=Hospedar Visual
+inventory.armourersworkshop:globalSkinLibrary.upload.skinName=Nome do Visual:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterName=Insira o nome
+inventory.armourersworkshop:globalSkinLibrary.upload.skinTags=Tags do Visual:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterTags=Insira as tags
+inventory.armourersworkshop:globalSkinLibrary.upload.skinDescription=Descrição do Visual:
+inventory.armourersworkshop:globalSkinLibrary.upload.enterDescription=Insira a descrição
+inventory.armourersworkshop:globalSkinLibrary.upload.buttonUpload=Hospedar Visual
+
+# Global Skin Library (Beta - Will be removed later).
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.name=Juntar-se à Beta
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.enterBetaCode=Insira o Código da Beta
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=Hospedar na biblioteca global está atualmente em beta fechada. Insira seu código da beta se tiver um, caso contrário volte novamente mais tarde.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.buttonJoinBeta=Juntar-se à Beta
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.betaCode=Código da Beta:
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.checkCode=Verificando código.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.codeInvalid=Codigo Inválido.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joiningBeta=Juntando-se à Beta.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedFailed=Falha ao se juntar à beta.
+inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedBeta=Você se juntou à beta com éxito.
+inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=AVISO! Todos os visuais hospedados durante a beta fechada serão apagados quando a mesma se encerrar.
+
+# Global Skin Library (User Skins)
+inventory.armourersworkshop:globalSkinLibrary.userSkins.results=Visuais hospedados por %s: Pág. %d de %d - Total de %d resultados.
+
+# Global Skin Library (Edit Skin)
+inventory.armourersworkshop:globalSkinLibrary.edit.name=Editar Visual
+inventory.armourersworkshop:globalSkinLibrary.edit.skinName=Nome do Visual:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterName=Insira o nome
+inventory.armourersworkshop:globalSkinLibrary.edit.skinTags=Tags do Visual:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterTags=Insira as tags
+inventory.armourersworkshop:globalSkinLibrary.edit.skinDescription=Descrição do Visual:
+inventory.armourersworkshop:globalSkinLibrary.edit.enterDescription=Insira a descrição
+inventory.armourersworkshop:globalSkinLibrary.edit.buttonUpdate=Atualizar Visual
+inventory.armourersworkshop:globalSkinLibrary.edit.buttonDelete=Deletar Visual
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.title=Deletar Visual?
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.ok=OK
+inventory.armourersworkshop:globalSkinLibrary.edit.dialog.delete.cancel=Cancelar
+
+# Hologram Projector
 inventory.armourersworkshop:hologramProjector.tab.inventory=Inventário
 inventory.armourersworkshop:hologramProjector.tab.offset=Deslocamentos
+inventory.armourersworkshop:hologramProjector.tab.angle=Ângulos
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Afastamento de Rotação
-inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Veloc. de Rotação
+inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Velocidade de Rotação
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Mostrar Ponto de Rotação?
 
 # Chat Messages
@@ -390,8 +483,11 @@ chat.armourersworkshop:updateAvailable=Atualização do Armourer's Workshop %s e
 chat.armourersworkshop:updateDownload=[Download]
 chat.armourersworkshop:updateDownloadRollover=Clique para ir à página de download
 chat.armourersworkshop:devWarning=Aviso: você está usando uma versão de desenvolvimento do Armourer's Workshop. As versões de desenvolvimento são apenas para testes e não recomendadas para uso público.
-chat.armourersworkshop:slotUnlocked=Slot de pele para %s foi destravado. Agora são %s slots.
-chat.armourersworkshop:slotUnlockedFailed=O total de slots de pele para %s está no máximo.
+chat.armourersworkshop:slotUnlocked=Espaço de visual para %s foi destravado. Agora são %s slots.
+chat.armourersworkshop:slotUnlockedFailed=O total de espaços de visuais para %s está no máximo.
+chat.armourersworkshop:linkingTool.start=Começando conexão.
+chat.armourersworkshop:linkingTool.finish=Conexão criada.
+chat.armourersworkshop:linkingTool.fail=Conexão falhada.
 
 # Death Messages
 death.attack.victorious=%1$s foi esfaqueado até a morte pela coroa de Vic.
@@ -405,6 +501,7 @@ commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
 commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.fileNotFound=O arquivo %1$s não foi encontrado.
+commands.armourers.invalidDyeFormat=%1$s não é um formato de corante válido.
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
@@ -412,7 +509,7 @@ itemGroup.armourersworkshop=Armourer's Workshop
 # Keybindings
 keys.armourersworkshop:category=Armourer's Workshop
 keys.armourersworkshop.equipmentWardrobe=Guarda-Roupa de Equipamentos
-keys.armourersworkshop.undo=Desfaz
+keys.armourersworkshop.undo=Desfazer
 
 # Guide Book
 # Chapter 1
@@ -450,7 +547,7 @@ book.armourersworkshop:guideBook.recipes.name=Receitas
 # Chapter 8
 book.armourersworkshop:guideBook.credits.name=Créditos
 book.armourersworkshop:guideBook.credits.programing=Programação
-book.armourersworkshop:guideBook.credits.premade Skins=Peles pré-produzidas
+book.armourersworkshop:guideBook.credits.premade Skins=Visuals pré-produzidas
 book.armourersworkshop:guideBook.credits.textures=Texturas
 book.armourersworkshop:guideBook.credits.sound=Sons
 book.armourersworkshop:guideBook.credits.localisations=Traduções
