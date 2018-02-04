@@ -34,6 +34,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.common.Contributors;
+import riskyken.armourersWorkshop.common.Contributors.Contributor;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
@@ -97,12 +99,12 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
             TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
             if (te != null && te.isRenderExtras()) {
-                if (te.hasSpecialRender() & te.isVisible()) {
+                Contributor contributor = Contributors.INSTANCE.getContributor(te.getGameProfile());
+                if (contributor != null & te.isVisible()) {
                     for (int i = 0; i < 4; i++) {
                         EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
                         ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
-                        float[] colour = te.getSpecialRenderColour();
-                        entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
+                        entityfx.setRBGColorF((float)(contributor.r & 0xFF) / 255F, (float)(contributor.g & 0xFF) / 255F, (float)(contributor.b & 0xFF) / 255F);
                         Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
                     }
                 }

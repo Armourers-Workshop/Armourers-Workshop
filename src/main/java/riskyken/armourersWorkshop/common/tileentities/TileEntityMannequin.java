@@ -180,69 +180,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.skinsUpdated = skinsUpdated;
     }
     
-    private static String[] specialPeople = {
-            "eba64cb1-0d29-4434-8d5e-31004b00488c", //RiskyKen
-            "b027a4f4-d480-426c-84a3-a9cb029f4b72", //Vic
-            "4fda0709-ada7-48a6-b4bf-0bbce8c40dfa", //Nanoha
-            "b9e99f95-09fe-497a-8a77-1ccc839ab0f4", //VermillionX
-            "0d98df01-26da-496c-ba7c-744a20a7b2c2", //Servantfly
-            "eda5e4cb-3b09-4b2c-b56c-d27d658d2e5d", //Gray_Mooo
-            "3e6a5f19-bb37-4f9a-94e0-7ccd67ef1d61", //Flummie2000
-            "e10ebd90-7922-4777-9cf6-76ecc70848ec", //LordPhrozen
-            "3683eab5-5a23-4cdb-b1f5-38090f1ba4a8", //TheEpicJames
-            "55b1659a-810f-4687-a514-b3201b09fd69", //V972
-            "a865907c-6b83-47b2-a088-35688169dc6a", //EzerArch
-            "d7d977c8-b264-49a3-ac6e-2fae419c8191"  //Thundercat_
-            };
-  
-    private static float[][] specialColours = {
-            {249F / 255, 223F / 255, 140F / 255},
-            {208F / 255, 212F / 255, 248F / 255},
-            {1F, 173F / 255, 1F},
-            {45F / 255, 45F / 255, 45F / 255},
-            {0F, 247F / 255, 141F / 255},
-            {1F, 0F, 0F},
-            {92F / 255, 32F / 255, 102F / 255},
-            {66F / 255, 244F / 255, 110F / 255},
-            {1F, 153F / 255, 0F},
-            {67F / 255, 232F / 255, 113F / 255},
-            {1F, 1F, 1F},
-            {74F / 255F, 89F / 255F, 169F / 255F}
-            };
-    
-    public boolean hasSpecialRender() {
-        if (gameProfile == null) {
-            return false;
-        }
-        
-        if (gameProfile.getId() == null) {
-            return false;
-        }
-        
-        for (int i = 0; i < specialPeople.length; i++) {
-            if (gameProfile.getId().toString().equals(specialPeople[i])) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    public float[] getSpecialRenderColour() {
-        float[] colour = new float[3];
-        if (gameProfile == null) {
-            return colour;
-        }
-        
-        for (int i = 0; i < specialColours.length; i++) {
-            if (gameProfile.getId().toString().equals(specialPeople[i])) {
-                return specialColours[i];
-            }
-        }
-        
-        return colour;
-    }
-    
     @Override
     public boolean canUpdate() {
         return false;

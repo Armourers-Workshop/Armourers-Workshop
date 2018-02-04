@@ -43,6 +43,8 @@ import riskyken.armourersWorkshop.client.render.RenderBridge;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
+import riskyken.armourersWorkshop.common.Contributors;
+import riskyken.armourersWorkshop.common.Contributors.Contributor;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
@@ -308,10 +310,10 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endStartSection("magicCircle");
         //Magic circle.
         if (te.isRenderExtras() & te.isVisible()) {
-            if (te.hasSpecialRender()) {
-                float[] colour = te.getSpecialRenderColour();
+            Contributor contributor = Contributors.INSTANCE.getContributor(te.getGameProfile());
+            if (contributor != null) {
                 int offset = te.xCoord * te.yCoord * te.zCoord;
-                renderMagicCircle(colour[0], colour[1], colour[2], partialTickTime, offset, te.getBipedRotations().isChild);
+                renderMagicCircle(contributor.r, contributor.g, contributor.b, partialTickTime, offset, te.getBipedRotations().isChild);
             }
         }
         
@@ -348,12 +350,13 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         mc.mcProfiler.endSection();
     }
     
-    private void renderMagicCircle(float r, float g, float b, float partialTickTime, int offset, boolean isChild) {
+    private void renderMagicCircle(byte r, byte g, byte b, float partialTickTime, int offset, boolean isChild) {
         GL11.glPushMatrix();
         if (isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
         }
-        GL11.glColor4f(r, g, b, 1F);
+        GL11.glColor4ub(r, g, b, (byte)255);
+        //GL11.glColor4f(r, g, b, 1F);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glTranslatef(0F, 1.48F, 0F);

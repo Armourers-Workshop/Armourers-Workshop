@@ -28,6 +28,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibBlockResources;
+import riskyken.armourersWorkshop.common.Contributors;
+import riskyken.armourersWorkshop.common.Contributors.Contributor;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -85,11 +87,11 @@ public class BlockDoll extends AbstractModBlockContainer {
         if (tileEntity != null && tileEntity instanceof TileEntityMannequin) {
             TileEntityMannequin te = (TileEntityMannequin) tileEntity;
             if (te.isRenderExtras() & te.isVisible()) {
-                if (te.hasSpecialRender()) {
+                Contributor contributor = Contributors.INSTANCE.getContributor(te.getGameProfile());
+                if (contributor != null) {
                     EntityFX entityfx = new EntitySpellParticleFX(world,  x + random.nextFloat() * 1F, y, z + random.nextFloat() * 1F, 0, 0, 0);
                     ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
-                    float[] colour = te.getSpecialRenderColour();
-                    entityfx.setRBGColorF(colour[0], colour[1], colour[2]);
+                    entityfx.setRBGColorF((float)(contributor.r & 0xFF) / 255F, (float)(contributor.g & 0xFF) / 255F, (float)(contributor.b & 0xFF) / 255F);
                     Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
                 }
             }
