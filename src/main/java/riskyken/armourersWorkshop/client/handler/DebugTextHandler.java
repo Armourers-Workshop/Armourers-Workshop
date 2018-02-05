@@ -41,7 +41,7 @@ public class DebugTextHandler {
             if (GuiScreen.isCtrlKeyDown() != LibModInfo.DEVELOPMENT_VERSION) {
                 event.left.add("Client Skin Count: " + ArmourersWorkshop.proxy.getPlayerModelCacheSize());
                 if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
-                    event.left.add("Common Skin Count: " + CommonSkinCache.INSTANCE.size());
+                    event.left.add("Common Skin Cache: S[" + CommonSkinCache.INSTANCE.size() + "] F[" + CommonSkinCache.INSTANCE.fileLinkSize() + "] G[" + CommonSkinCache.INSTANCE.globalLinkSize() + "]");
                 }
                 event.left.add("Part Count: " + ClientSkinCache.INSTANCE.getPartCount());
                 event.left.add("Player Data: " + SkinModelRenderer.INSTANCE.getSkinDataMapSize());
