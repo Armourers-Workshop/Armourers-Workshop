@@ -470,7 +470,9 @@ inventory.armourersworkshop:hologramProjector.tab.offset=Смещение
 inventory.armourersworkshop:hologramProjector.tab.angle=Наклон
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Смещение центра вращения
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Скорость вращения
+inventory.armourersworkshop:hologramProjector.tab.extra=Дополнительно
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Показать центр вращения
+inventory.armourersworkshop:hologramProjector.glowing=Светится
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=Отмен не осталось
