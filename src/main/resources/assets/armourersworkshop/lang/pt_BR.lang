@@ -472,7 +472,9 @@ inventory.armourersworkshop:hologramProjector.tab.offset=Deslocamentos
 inventory.armourersworkshop:hologramProjector.tab.angle=Ângulos
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Afastamento de Rotação
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Velocidade de Rotação
+inventory.armourersworkshop:hologramProjector.tab.extra=Extra
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Mostrar Ponto de Rotação?
+inventory.armourersworkshop:hologramProjector.glowing=Brilhar?
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=Não dá para desfazer mais
