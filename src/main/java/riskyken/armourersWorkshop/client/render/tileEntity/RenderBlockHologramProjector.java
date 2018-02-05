@@ -111,7 +111,9 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         
         GL11.glTranslated(tileEntity.getRotationOffsetX() * scale, tileEntity.getRotationOffsetY() * scale, tileEntity.getRotationOffsetZ() * scale);
         
-        ModRenderHelper.disableLighting();
+        if (tileEntity.isGlowing()) {
+            ModRenderHelper.disableLighting();
+        }
         ModRenderHelper.enableAlphaBlend();
         
         ItemStackRenderHelper.renderSkinWithoutHelper(skinPointer, true);
@@ -124,7 +126,9 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         //ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, true);
         
         ModRenderHelper.disableAlphaBlend();
-        ModRenderHelper.enableLighting();
+        if (tileEntity.isGlowing()) {
+            ModRenderHelper.enableLighting();
+        }
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
     }

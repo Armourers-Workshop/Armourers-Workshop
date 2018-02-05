@@ -30,6 +30,7 @@ public class GuiHologramProjector extends GuiTabbed {
     public GuiHologramProjectorTabAngle tabAngle;
     public GuiHologramProjectorTabRotationOffset tabRotationOffset;
     public GuiHologramProjectorTabRotationSpeed tabRotationSpeed;
+    public GuiHologramProjectorTabExtra tabExtra;
     
     private boolean loadingGui;
     
@@ -43,18 +44,21 @@ public class GuiHologramProjector extends GuiTabbed {
         tabAngle = new GuiHologramProjectorTabAngle(2, this, inventoryName, tileEntity);
         tabRotationOffset = new GuiHologramProjectorTabRotationOffset(3, this, inventoryName, tileEntity);
         tabRotationSpeed = new GuiHologramProjectorTabRotationSpeed(4, this, inventoryName, tileEntity);
+        tabExtra = new GuiHologramProjectorTabExtra(5, this, inventoryName, tileEntity);
         
         tabList.add(tabInventory);
         tabList.add(tabOffset);
         tabList.add(tabAngle);
         tabList.add(tabRotationOffset);
         tabList.add(tabRotationSpeed);
+        tabList.add(tabExtra);
         
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(52, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(84, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.angle")).setIconLocation(116, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationOffset")).setIconLocation(68, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationSpeed")).setIconLocation(100, 0).setAnimation(4, 150));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extra")).setIconLocation(132, 0).setAnimation(8, 150));
         tabController.setActiveTabIndex(activeTab);
         
         tabChanged();

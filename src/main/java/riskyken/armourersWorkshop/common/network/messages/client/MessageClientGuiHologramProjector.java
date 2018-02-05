@@ -31,6 +31,9 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
     private int rotationSpeedY = 0;
     private int rotationSpeedZ = 0;
     
+    private boolean hasGlowing = false;
+    private boolean glowing = false;
+    
     public MessageClientGuiHologramProjector() {
     }
     
@@ -62,6 +65,11 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
         hasRotationSpeed = true;
     }
     
+    public void setGlowing(boolean glowing) {
+        this.glowing = glowing;
+        hasGlowing = true;
+    }
+    
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(hasOffsets);
@@ -90,6 +98,10 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             buf.writeInt(rotationSpeedX);
             buf.writeInt(rotationSpeedY);
             buf.writeInt(rotationSpeedZ);
+        }
+        buf.writeBoolean(hasGlowing);
+        if (hasGlowing) {
+            buf.writeBoolean(glowing);
         }
      }
 
@@ -122,6 +134,10 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             rotationSpeedZ = buf.readInt();
             hasRotationSpeed = true;
         }
+        if (buf.readBoolean()) {
+            glowing = buf.readBoolean();
+            hasGlowing = true;
+        }
     }
 
 
@@ -146,6 +162,9 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             }
             if (message.hasRotationSpeed) {
                 tileEntity.setRotationSpeed(message.rotationSpeedX, message.rotationSpeedY, message.rotationSpeedZ);
+            }
+            if (message.hasGlowing) {
+                tileEntity.setGlowing(message.glowing);
             }
         }
         return null;

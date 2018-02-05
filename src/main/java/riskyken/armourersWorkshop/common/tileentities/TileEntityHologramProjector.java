@@ -31,6 +31,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     private static final String TAG_ROTATION_SPEED_Y = "rotationSpeedY";
     private static final String TAG_ROTATION_SPEED_Z = "rotationSpeedZ";
     
+    private static final String TAG_GLOWING = "glowing";
+    
     private int offsetX = 0;
     private int offsetY = 16;
     private int offsetZ = 0;
@@ -46,6 +48,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     private int rotationSpeedX = 0;
     private int rotationSpeedY = 0;
     private int rotationSpeedZ = 0;
+    
+    private boolean glowing = true;
     
     private static boolean showRotationPoint;
     
@@ -165,6 +169,16 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         return showRotationPoint;
     }
     
+    public boolean isGlowing() {
+        return glowing;
+    }
+    
+    public void setGlowing(boolean glowing) {
+        this.glowing = glowing;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
@@ -183,6 +197,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         compound.setInteger(TAG_ROTATION_SPEED_X, rotationSpeedX);
         compound.setInteger(TAG_ROTATION_SPEED_Y, rotationSpeedY);
         compound.setInteger(TAG_ROTATION_SPEED_Z, rotationSpeedZ);
+        
+        compound.setBoolean(TAG_GLOWING, glowing);
     }
     
     @Override
@@ -203,11 +219,20 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         rotationSpeedX = readIntFromCompound(compound, TAG_ROTATION_SPEED_X, 0);
         rotationSpeedY = readIntFromCompound(compound, TAG_ROTATION_SPEED_Y, 0);
         rotationSpeedZ = readIntFromCompound(compound, TAG_ROTATION_SPEED_Z, 0);
+        
+        glowing = readBoolFromCompound(compound, TAG_GLOWING, true);
     }
     
     private int readIntFromCompound(NBTTagCompound compound, String key, int defaultValue) {
         if (compound.hasKey(key, NBT.TAG_INT)) {
             return compound.getInteger(key);
+        }
+        return defaultValue;
+    }
+    
+    private boolean readBoolFromCompound(NBTTagCompound compound, String key, Boolean defaultValue) {
+        if (compound.hasKey(key, NBT.TAG_BYTE)) {
+            return compound.getBoolean(key);
         }
         return defaultValue;
     }
