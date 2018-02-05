@@ -28,8 +28,16 @@ public interface ISkinRenderHandler {
     
     public boolean renderSkinPart(ISkinPointer skinPointer, ISkinPartType skinPartType);
     
+    /**
+     * Checks if the client has a skin in it's cache.
+     * @return Returns true if the skin is in the cache.
+     */
     public boolean isSkinInModelCache(ItemStack stack);
     
+    /**
+     * Checks if the client has a skin in it's cache.
+     * @return Returns true if the skin is in the cache.
+     */
     public boolean isSkinInModelCache(ISkinPointer skinPointer);
     
     public void requestSkinModelFromSever(ItemStack stack);
