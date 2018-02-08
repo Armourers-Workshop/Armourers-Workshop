@@ -99,6 +99,7 @@ item.armourersworkshop:skinUnlock.0.name=时装栏解锁器-头
 item.armourersworkshop:skinUnlock.1.name=时装栏解锁器-身
 item.armourersworkshop:skinUnlock.2.name=时装栏解锁器-腿
 item.armourersworkshop:skinUnlock.3.name=时装栏解锁器-脚
+item.armourersworkshop:skinUnlock.4.name=时装栏解锁器-翅膀
 item.armourersworkshop:linkingTool.name=方块链接工具
 
 # Item flavour text
@@ -123,6 +124,7 @@ item.armourersworkshop:skinUnlock.0.flavour=右键使用解锁1个额外的头�
 item.armourersworkshop:skinUnlock.1.flavour=右键使用解锁1个额外的上身时装栏.
 item.armourersworkshop:skinUnlock.2.flavour=右键使用解锁1个额外的腿部时装栏.
 item.armourersworkshop:skinUnlock.3.flavour=右键使用解锁1个额外的脚部时装栏.
+item.armourersworkshop:skinUnlock.4.flavour=右键使用解锁1个额外的翅膀时装栏.
 item.armourersworkshop:linkingTool.flavour=可以把时装制作的方块链接到周围的其他功能性方块上，使时装方块享受到被连接方块的功能。%n首先右键先后点击自己制作的时装方块 %n然后右键点击有功能的方块。
 
 # Rollover Text
@@ -470,7 +472,9 @@ inventory.armourersworkshop:hologramProjector.tab.offset=位置设置
 inventory.armourersworkshop:hologramProjector.tab.angle=角度
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=旋转设置
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=旋转速度
+inventory.armourersworkshop:hologramProjector.tab.extra=副加
 inventory.armourersworkshop:hologramProjector.showRotationPoint=是否显示中心点
+inventory.armourersworkshop:hologramProjector.glowing=发光?
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=没有更多步撤销
