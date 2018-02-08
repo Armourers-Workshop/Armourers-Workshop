@@ -28,7 +28,7 @@ public final class SkinPartSerializer {
         if (version < 6) {
             skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromLegacyId(stream.readByte());
             if (skinPart == null) {
-                ModLogger.log(Level.ERROR,"Skin part was null");
+                ModLogger.log(Level.ERROR, "Skin part was null");
                 throw new IOException("Skin part was null");
             }
         } else {
@@ -50,8 +50,8 @@ public final class SkinPartSerializer {
             skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(regName);
             
             if (skinPart == null) {
-                ModLogger.log(Level.ERROR,"Skin part was null - reg name: " + regName);
-                throw new IOException("Skin part was null - reg name: " + regName);
+                ModLogger.log(Level.ERROR, "Skin part was null - reg name: " + regName + " version: " + version);
+                throw new IOException("Skin part was null - reg name: " + regName + " version: " + version);
             }
         }
         

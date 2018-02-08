@@ -23,9 +23,11 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
     
     /** Cache of skins that are in memory. */
     private final ExpiringHashMap<Integer, Skin> cacheMapDatabase;
+    private final Object cacheMapLock = new Object();
     
     /** A list of skin that need to be loaded. */
     private final ArrayList<SkinRequestMessage> skinLoadQueue;
+    private final Object skinLoadQueueLock = new Object();
     
     private final IExpiringMapCallback<Skin> callback;
     
@@ -37,13 +39,13 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
     }
     
     public void doSkinLoading() {
-        synchronized (cacheMapDatabase) {
-            synchronized (skinLoadQueue) {
+        synchronized (cacheMapLock) {
+            synchronized (skinLoadQueueLock) {
                 if (skinLoadQueue.size() > 0) {
                     SkinRequestMessage requestMessage = skinLoadQueue.get(0);
                     Skin skin = load(requestMessage.getSkinIdentifier().getSkinLocalId());
                     if (skin != null) {
-                        CommonSkinCache.INSTANCE.onLocalDatabaseSkinLoaded(skin, requestMessage);
+                        CommonSkinCache.INSTANCE.onSkinLoaded(skin, requestMessage);
                     }
                     skinLoadQueue.remove(0);
                 }
@@ -57,10 +59,10 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
     
     public Skin get(SkinRequestMessage requestMessage, boolean softLoad) {
         int skinId = requestMessage.getSkinIdentifier().getSkinLocalId();
-        synchronized (cacheMapDatabase) {
+        synchronized (cacheMapLock) {
             if (!cacheMapDatabase.containsKey(skinId)) {
                 if (softLoad) {
-                    synchronized (skinLoadQueue) {
+                    synchronized (skinLoadQueueLock) {
                         skinLoadQueue.add(requestMessage);
                     }
                     return null;
@@ -101,17 +103,19 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
     }
     
     public void add(Skin skin) {
-        addSkinDataToCache(skin, skin.lightHash());
+        synchronized (cacheMapLock) {
+            addSkinDataToCache(skin, skin.lightHash());
+        }
     }
     
     public int size() {
-        synchronized (cacheMapDatabase) {
+        synchronized (cacheMapLock) {
             return cacheMapDatabase.size();
         }
     }
     
     public void clear() {
-        synchronized (cacheMapDatabase) {
+        synchronized (cacheMapLock) {
             cacheMapDatabase.clear();
         }
     }

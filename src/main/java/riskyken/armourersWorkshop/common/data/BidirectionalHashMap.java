@@ -17,6 +17,14 @@ public class BidirectionalHashMap<K, V> implements Map<K, V> {
         mapBackward = new HashMap<V, K>();
     }
     
+    public HashMap<V, K> getMapBackward() {
+        return mapBackward;
+    }
+    
+    public HashMap<K, V> getMapForward() {
+        return mapForward;
+    }
+    
     @Override
     public void clear() {
         mapForward.clear();

@@ -213,6 +213,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
         
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointerInput);
+        if (skin == null) {
+            return;
+        }
+        
         setSkinProps(new SkinProperties(skin.getProperties()));
         
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, skin, direction);
