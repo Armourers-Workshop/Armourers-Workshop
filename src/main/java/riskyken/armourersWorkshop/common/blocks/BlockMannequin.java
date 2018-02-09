@@ -42,7 +42,9 @@ import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
+import riskyken.armourersWorkshop.utils.UtilItems;
 
 public class BlockMannequin extends AbstractModBlockContainer implements IDebug {
 
@@ -63,6 +65,19 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, ItemBlockMannequin.class, "block." + name);
         return super.setBlockName(name);
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {
+        if (!world.isRemote) {
+            TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
+            if (te != null && te.getDropItems()) {
+                ItemStack dropStack = te.getDropStack();
+                UtilItems.spawnItemInWorld(world, x, y, z, dropStack);
+                BlockUtils.dropInventoryBlocks(world, x, y, z);
+            }
+        }
+        super.breakBlock(world, x, y, z, block, metadata);
     }
     
     @Override

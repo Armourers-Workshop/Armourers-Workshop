@@ -36,7 +36,9 @@ import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.HolidayHelper;
+import riskyken.armourersWorkshop.utils.UtilItems;
 
 public class BlockDoll extends AbstractModBlockContainer {
 
@@ -55,6 +57,19 @@ public class BlockDoll extends AbstractModBlockContainer {
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {
+        if (!world.isRemote) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te != null && te instanceof TileEntityMannequin) {
+                ItemStack dropStack = ((TileEntityMannequin)te).getDropStack();
+                UtilItems.spawnItemInWorld(world, x, y, z, dropStack);
+            }
+            BlockUtils.dropInventoryBlocks(world, x, y, z);
+        }
+        super.breakBlock(world, x, y, z, block, metadata);
     }
     
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {

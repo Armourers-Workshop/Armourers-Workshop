@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -21,7 +20,6 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.utils.BlockUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils;
 import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 
@@ -97,6 +95,12 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this(false);
     }
     
+    public TileEntityMannequin(boolean isDoll) {
+        super(INVENTORY_SIZE);
+        bipedRotations = new BipedRotations();
+        this.isDoll = isDoll;
+    }
+    
     public void gotUpdateFromClient(float offsetX, float offsetY, float offsetZ,
             int skinColour, int hairColour, String username, boolean renderExtras,
             boolean flying, boolean visible, TextureType textureType) {
@@ -159,12 +163,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public String getImageUrl() {
         return imageUrl;
     }
-
-    public TileEntityMannequin(boolean isDoll) {
-        super(INVENTORY_SIZE);
-        bipedRotations = new BipedRotations();
-        this.isDoll = isDoll;
-    }
     
     @SideOnly(Side.CLIENT)
     public boolean haveSkinsUpdated() {
@@ -222,6 +220,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         this.dropItems = dropItems;
     }
     
+    public boolean getDropItems() {
+        return dropItems;
+    }
+    
     public int getSkinColour() {
         return skinColour;
     }
@@ -242,33 +244,23 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    @Override
-    public void invalidate() {
-        if (!worldObj.isRemote & dropItems) {
-            ItemStack stack = new ItemStack(ModBlocks.mannequin);
-            if (isDoll) {
-                stack = new ItemStack(ModBlocks.doll);
-            }
-            if (gameProfile != null) {
-                NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.func_152460_a(profileTag, gameProfile);
-                stack.setTagCompound(new NBTTagCompound());
-                stack.getTagCompound().setTag(TAG_OWNER, profileTag);
-                //stack.setStackDisplayName(gameProfile.getName());
-            }
-            if (!StringUtils.isNullOrEmpty(imageUrl)) {
-                stack.setTagCompound(new NBTTagCompound());
-                stack.getTagCompound().setString(TAG_IMAGE_URL, imageUrl);
-            }
-            float f = 0.7F;
-            double xV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double yV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double zV = (double)(worldObj.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            EntityItem entityitem = new EntityItem(worldObj, (double)xCoord + xV, (double)yCoord + yV, (double)zCoord + zV, stack);
-            worldObj.spawnEntityInWorld(entityitem);
-            BlockUtils.dropInventoryBlocks(worldObj, this, xCoord, yCoord, zCoord);
+    public ItemStack getDropStack() {
+        ItemStack stack = new ItemStack(ModBlocks.mannequin);
+        if (isDoll) {
+            stack = new ItemStack(ModBlocks.doll);
         }
-        super.invalidate();
+        if (gameProfile != null) {
+            NBTTagCompound profileTag = new NBTTagCompound();
+            NBTUtil.func_152460_a(profileTag, gameProfile);
+            stack.setTagCompound(new NBTTagCompound());
+            stack.getTagCompound().setTag(TAG_OWNER, profileTag);
+            //stack.setStackDisplayName(gameProfile.getName());
+        }
+        if (!StringUtils.isNullOrEmpty(imageUrl)) {
+            stack.setTagCompound(new NBTTagCompound());
+            stack.getTagCompound().setString(TAG_IMAGE_URL, imageUrl);
+        }
+        return stack;
     }
     
     public void setGameProfile(GameProfile gameProfile) {
