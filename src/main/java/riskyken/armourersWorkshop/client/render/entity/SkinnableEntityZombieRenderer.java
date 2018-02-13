@@ -8,6 +8,8 @@ import net.minecraft.client.model.ModelZombieVillager;
 import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -20,21 +22,32 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 @SideOnly(Side.CLIENT)
-public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer {
+public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<EntityZombie> {
     
     @Override
-    public void render(EntityLivingBase entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
+    public void render(EntityZombie entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
         
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
         
-        GL11.glTranslated(0, -entity.height + 4.675F * scale, 0);
-        
         double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
         GL11.glRotated(rot, 0, 1, 0);
         
+        if (entity.deathTime > 0) {
+            float angle = ((float)entity.deathTime + ModClientFMLEventHandler.renderTickTime - 1.0F) / 20.0F * 1.6F;
+            angle = MathHelper.sqrt_float(angle);
+            if (angle > 1.0F) {
+                angle = 1.0F;
+            }
+            GL11.glRotatef(angle * 90F, 0.0F, 0.0F, 1.0F);
+        }
+        
+        GL11.glTranslated(0, -entity.height + 4.675F * scale, 0);
+        
+        float headScale = 1.001F;
+        GL11.glScalef(headScale, headScale, headScale);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinChest, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinLegs, entityEquipment);

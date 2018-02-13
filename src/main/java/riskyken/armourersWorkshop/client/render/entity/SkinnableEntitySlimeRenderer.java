@@ -19,10 +19,10 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 @SideOnly(Side.CLIENT)
-public class SkinnableEntitySlimeRenderer implements ISkinnableEntityRenderer {
+public class SkinnableEntitySlimeRenderer implements ISkinnableEntityRenderer<EntitySlime> {
 
     @Override
-    public void render(EntityLivingBase entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
+    public void render(EntitySlime entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
         
@@ -42,13 +42,10 @@ public class SkinnableEntitySlimeRenderer implements ISkinnableEntityRenderer {
             GL11.glRotatef(angle * 90F, 0.0F, 0.0F, 1.0F);
         }
         
-        if (entity instanceof EntitySlime) {
-            EntitySlime entitySlime = (EntitySlime) entity;
-            float f1 = (float)entitySlime.getSlimeSize();
-            float f2 = (entitySlime.prevSquishFactor + (entitySlime.squishFactor - entitySlime.prevSquishFactor) * ModClientFMLEventHandler.renderTickTime) / (f1 * 0.5F + 1.0F);
-            float f3 = 1.0F / (f2 + 1.0F);
-            GL11.glScalef(f3 * f1, 1.0F / f3 * f1, f3 * f1);
-        }
+        float f1 = (float)entity.getSlimeSize();
+        float f2 = (entity.prevSquishFactor + (entity.squishFactor - entity.prevSquishFactor) * ModClientFMLEventHandler.renderTickTime) / (f1 * 0.5F + 1.0F);
+        float f3 = 1.0F / (f2 + 1.0F);
+        GL11.glScalef(f3 * f1, 1.0F / f3 * f1, f3 * f1);
         
         GL11.glTranslated(0, -0.12F * scale, 0);
         

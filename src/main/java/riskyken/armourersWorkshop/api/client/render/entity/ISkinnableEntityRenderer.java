@@ -16,8 +16,8 @@ import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
  *
  */
 @SideOnly(Side.CLIENT)
-public interface ISkinnableEntityRenderer {
+public interface ISkinnableEntityRenderer<ENTITY extends EntityLivingBase> {
 
     
-    public void render(EntityLivingBase entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment);
+    public void render(ENTITY entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment);
 }
