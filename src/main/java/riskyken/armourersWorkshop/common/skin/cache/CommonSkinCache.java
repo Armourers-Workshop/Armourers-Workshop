@@ -19,7 +19,6 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Holds a cache of equipment data on the server that will be sent to clients if
@@ -231,21 +230,6 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         if (libraryFile != null) {
             cacheLocalFile.add(libraryFile, skin.lightHash());
         }
-    }
-    
-    @Deprecated
-    public void addEquipmentDataToCache(Skin skin, String fileName) {
-        throw new NotImplementedException();
-        // TODO Edit anything pointing to this.
-        /*
-        try {
-            skin.lightHash();
-        } catch (Exception e) {
-            ModLogger.log(Level.ERROR, String.format("Unable to create ID for file %s.", fileName));
-            return;
-        }
-        addEquipmentDataToCache(skin, new LibraryFile(fileName));
-        */
     }
     
     public void clearFileNameIdLink(LibraryFile libraryFile) {

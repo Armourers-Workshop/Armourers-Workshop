@@ -5,14 +5,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -110,13 +114,21 @@ public class CommandGiveSkin extends ModCommand {
             }
         }
         
-        Skin skin = SkinIOUtils.loadSkinFromFileName(skinName + ".armour");
+        LibraryFile libraryFile = new LibraryFile(skinName);
+        Skin skin = SkinIOUtils.loadSkinFromLibraryFile(libraryFile);
         if (skin == null) {
             throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
         }
+        try {
+            skin.lightHash();
+        } catch (Exception e) {
+            ModLogger.log(Level.ERROR, String.format("Unable to create ID for file %s.", libraryFile.toString()));
+            return;
+        }
         
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, skinName);
-        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin, skinDye);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
+        SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
+        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin, skinIdentifier);
         EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
         entityItem.delayBeforeCanPickup = 0;
         entityItem.func_145797_a(player.getCommandSenderName());

@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -113,14 +116,21 @@ public class CommandSetSkin extends ModCommand {
             }
         }
         
-        Skin skin = SkinIOUtils.loadSkinFromFileName(skinName + ".armour");
+        LibraryFile libraryFile = new LibraryFile(skinName);
+        Skin skin = SkinIOUtils.loadSkinFromLibraryFile(libraryFile);
         if (skin == null) {
             throw new WrongUsageException("commands.armourers.fileNotFound", (Object)skinName);
         }
-        
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, skinName);
-        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin, skinDye);
-        ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack);
+        try {
+            skin.lightHash();
+        } catch (Exception e) {
+            ModLogger.log(Level.ERROR, String.format("Unable to create ID for file %s.", libraryFile.toString()));
+            return;
+        }
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
+        SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
+        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin, skinIdentifier);
+        ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack, slotNum - 1);
     }
     
     private boolean isValidHex (String colorStr) {

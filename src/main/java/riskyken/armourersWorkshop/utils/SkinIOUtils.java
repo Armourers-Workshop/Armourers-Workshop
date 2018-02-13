@@ -24,6 +24,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
 import riskyken.armourersWorkshop.common.exception.NewerFileVersionException;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.serialize.SkinSerializer;
 
@@ -76,6 +77,10 @@ public final class SkinIOUtils {
         }
         
         return true;
+    }
+    
+    public static Skin loadSkinFromLibraryFile(LibraryFile libraryFile) {
+        return loadSkinFromFileName(libraryFile.getFullName() + SKIN_FILE_EXTENSION);
     }
     
     public static Skin loadSkinFromFileName(String fileName) {
