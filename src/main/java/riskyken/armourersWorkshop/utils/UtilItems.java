@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.utils;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +26,10 @@ public final class UtilItems {
         }
         NBTTagCompound stackNbt = stack.getTagCompound();
         stackNbt.setInteger(LibCommonTags.TAG_INTENSITY, intensity);
+    }
+    
+    public static void spawnItemAtEntity(Entity entity, ItemStack stack) {
+        spawnItemInWorld(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
     }
     
     public static void spawnItemInWorld(World world, double x, double y, double z, ItemStack stack) {

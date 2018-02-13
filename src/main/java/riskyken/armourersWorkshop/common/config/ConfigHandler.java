@@ -16,6 +16,7 @@ public class ConfigHandler {
     public static String CATEGORY_GENERAL = "general";
     public static String CATEGORY_COMPATIBILITY = "compatibility";
     public static String CATEGORY_SERVER = "server";
+    public static String CATEGORY_ENTITY_SKINS = "entity_skins";
     
     public static Configuration config;
     
@@ -41,6 +42,11 @@ public class ConfigHandler {
     public static boolean lockDyesOnSkins = false;
     public static boolean instancedDyeTable = false;
     
+    //entity skins
+    public static int enitiySpawnWithSkinsChance = 75;
+    public static int entityDropSkinChance = 10;
+    public static String enitiySpawnSkinTargetPath = "/";
+    
     //compatibility
     public static boolean allowModsToRegisterWithAPI = true;
     
@@ -65,13 +71,28 @@ public class ConfigHandler {
     public static void loadConfigFile() {
         loadCategoryGeneral();
         loadCategoryRecipe();
-        
         loadCategoryCompatibility();
         loadCategoryServer();
-        
+        loadCategoryEntitySkins();
         if (config.hasChanged()) {
             config.save();
         }
+    }
+    
+    private static void loadCategoryEntitySkins() {
+        enitiySpawnWithSkinsChance = config
+                .getInt("enitiySpawnWithSkinsChance", CATEGORY_ENTITY_SKINS, 0, 0, 100,
+                        "Percentage change that entities will spawn with skins equipped.");
+        
+        entityDropSkinChance = config
+                .getInt("entityDropSkinChance", CATEGORY_ENTITY_SKINS, 0, 0, 100,
+                        "Percentage change that entities will drop equipped skins when killed.");
+        
+        enitiySpawnSkinTargetPath = "/" + config
+                .getString("enitiySpawnSkinTargetPath", CATEGORY_ENTITY_SKINS, "",
+                        "Target library path for skin spawned on entities.\n"
+                        + "Examples: 'official/' for only skins in the official folder or 'downloads/' for skins in the downloads folder.\n"
+                        + "Leave black for all skins.");
     }
     
     private static void loadCategoryGeneral() {

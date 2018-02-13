@@ -122,6 +122,9 @@ public class InventoryEntitySkin implements IInventory {
     
     public void loadItemsFromNBT(NBTTagCompound compound) {
         NBTTagList items = compound.getTagList(TAG_ITEMS, NBT.TAG_COMPOUND);
+        for (int i = 0; i < skinSlots.length; i++) {
+            skinSlots[i] = null;
+        }
         for (int i = 0; i < items.tagCount(); i++) {
             NBTTagCompound item = (NBTTagCompound)items.getCompoundTagAt(i);
             int slot = item.getByte(TAG_SLOT);

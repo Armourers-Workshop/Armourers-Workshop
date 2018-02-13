@@ -15,11 +15,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.entity.IEntitySkinHandler;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileList;
@@ -28,6 +31,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
+import riskyken.armourersWorkshop.utils.UtilItems;
 
 public final class EntitySkinHandler implements IEntitySkinHandler {
     
@@ -99,16 +103,56 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     
     @SubscribeEvent
     public void onEntityConstructing(EntityConstructing event) {
-        if (isValidEntity(event.entity)) {
-            ISkinnableEntity skinnableEntity = entityMap.get(event.entity.getClass());
-            ExPropsEntityEquipmentData.register(event.entity, skinnableEntity);
-            //giveRandomSkin(event.entity);
+        Entity entity = event.entity;
+        if (isValidEntity(entity)) {
+            ISkinnableEntity skinnableEntity = entityMap.get(entity.getClass());
+            ExPropsEntityEquipmentData.register(entity, skinnableEntity);
         }
     }
     
-    private void giveRandomSkin(Entity entity) {
-        ExPropsEntityEquipmentData entityEquipmentData = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
+    @SubscribeEvent
+    public void onLivingDeathEvent(LivingDeathEvent event) {
+        Entity entity = event.entity;
+        if (isValidEntity(entity)) {
+            if (entity.worldObj != null && !entity.worldObj.isRemote) {
+                dropEntitySkins(entity); 
+            }
+        }
+    }
+    
+    private void dropEntitySkins(Entity entity) {
+        if (ConfigHandler.entityDropSkinChance <= 0) {
+            return;
+        }
+        int rnd = entity.worldObj.rand.nextInt(99) + 1;
+        if (rnd >= ConfigHandler.entityDropSkinChance) {
+            ExPropsEntityEquipmentData entityEquipmentData = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
+            if (entityEquipmentData != null) {
+                ArrayList<ISkinType> skinTypes = entityEquipmentData.getSkinInventory().getSkinTypes();
+                for (int i = 0; i < skinTypes.size(); i++) {
+                    ISkinPointer skinPointer = entityEquipmentData.getEquipmentData().getSkinPointer(skinTypes.get(i), 0);
+                    if (skinPointer != null) {
+                        ItemStack stack = SkinNBTHelper.makeEquipmentSkinStack((SkinPointer) skinPointer);
+                        UtilItems.spawnItemAtEntity(entity, stack);
+                    }
+                }
+            }
+        }
+    }
+    
+    public void giveRandomSkin(Entity entity) {
+        giveRandomSkin(ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity));
+    }
+    
+    public void giveRandomSkin(ExPropsEntityEquipmentData entityEquipmentData) {
         if (entityEquipmentData == null) {
+            return;
+        }
+        if (ConfigHandler.enitiySpawnWithSkinsChance <= 0) {
+            return;
+        }
+        int rnd = entityEquipmentData.getEntity().worldObj.rand.nextInt(99) + 1;
+        if (rnd >= ConfigHandler.enitiySpawnWithSkinsChance) {
             return;
         }
         
@@ -136,9 +180,16 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         if (typeList == null) {
             return null;
         }
+        ArrayList<LibraryFile> validFiles = new ArrayList<LibraryFile>();
+        for (int i = 0; i < typeList.size(); i++) {
+            if (typeList.get(i).filePath.startsWith(ConfigHandler.enitiySpawnSkinTargetPath)) {
+                validFiles.add(typeList.get(i));
+            }
+        }
+        //touhou
         Random random = new Random();
-        if (!typeList.isEmpty()) {
-            return typeList.get(random.nextInt(typeList.size()));
+        if (!validFiles.isEmpty()) {
+            return validFiles.get(random.nextInt(validFiles.size()));
         }
         return null;
     }

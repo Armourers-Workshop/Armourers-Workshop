@@ -23,6 +23,8 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
     
     private static final String TAG_EXT_PROP_NAME = "entityCustomEquipmentData";
+    private static final String TAG_ADDED_SPAWN_ITEMS = "addedSpawnItems";
+    
     private final Entity entity;
     private EntityEquipmentData equipmentData;
     private final InventoryEntitySkin skinInventory;
@@ -89,12 +91,20 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     @Override
     public void loadNBTData(NBTTagCompound compound) {
         allowNetworkUpdates = false;
-        this.skinInventory.loadItemsFromNBT(compound);
+        equipmentData.clear();
+        skinInventory.loadItemsFromNBT(compound);
         allowNetworkUpdates = true;
     }
-
+    
+    private void addSpawnItems() {
+        if (entity.worldObj != null && !entity.worldObj.isRemote) {
+            EntitySkinHandler.INSTANCE.giveRandomSkin(this);
+        }
+    }
+    
     @Override
     public void init(Entity entity, World world) {
+        addSpawnItems();
     }
     
     public static final void register(Entity entity, ISkinnableEntity skinnableEntity) {
@@ -107,5 +117,9 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     
     public static final ExPropsEntityEquipmentData getExtendedPropsForEntity(Entity entity) {
         return ExPropsEntityEquipmentData.get(entity);
+    }
+    
+    public Entity getEntity() {
+        return entity;
     }
 }

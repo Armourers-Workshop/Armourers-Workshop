@@ -44,9 +44,9 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<E
             GL11.glRotatef(angle * 90F, 0.0F, 0.0F, 1.0F);
         }
         
-        GL11.glTranslated(0, -entity.height + 4.675F * scale, 0);
+        GL11.glTranslated(0, -entity.height + 4.67F * scale, 0);
         
-        float headScale = 1.001F;
+        float headScale = 1.002F;
         GL11.glScalef(headScale, headScale, headScale);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinChest, entityEquipment);

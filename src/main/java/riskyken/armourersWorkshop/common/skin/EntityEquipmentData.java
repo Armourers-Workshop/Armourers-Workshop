@@ -66,6 +66,10 @@ public class EntityEquipmentData implements IEntityEquipment {
         }
     }
     
+    public void clear() {
+        skinPointerMap.clear();
+    }
+    
     private void fromBytes(ByteBuf buf) {
         int itemCount = buf.readByte();
         skinPointerMap.clear();
