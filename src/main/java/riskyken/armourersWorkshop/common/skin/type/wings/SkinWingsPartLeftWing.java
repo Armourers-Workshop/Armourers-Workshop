@@ -16,7 +16,7 @@ public class SkinWingsPartLeftWing extends AbstractSkinPartTypeBase {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-32, -24, -20, 32, 48, 48);
         this.guideSpace = new Rectangle3D(-4, -12, -4, 8, 12, 4);
-        this.offset = new Point3D(0, -1, 0);
+        this.offset = new Point3D(0, -1, 2);
     }
 
     @Override
