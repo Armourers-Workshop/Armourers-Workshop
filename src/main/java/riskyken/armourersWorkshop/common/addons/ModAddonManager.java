@@ -37,6 +37,7 @@ public final class ModAddonManager {
     public static AddonCustomNPCS addonCustomNPCS;
     public static AddonGlassShards addonGlassShards;
     public static AddonJBRAClient addonJBRAClient;
+    public static AddonLittleMaidMob addonLittleMaidMob;
     public static AddonMaplecrafted addonMaplecrafted;
     public static AddonMekanismTools addonMekanismTools;
     public static AddonMetallurgy addonMetallurgy;
@@ -72,6 +73,7 @@ public final class ModAddonManager {
         addonCustomNPCS = new AddonCustomNPCS();
         addonGlassShards = new AddonGlassShards();
         addonJBRAClient = new AddonJBRAClient();
+        addonLittleMaidMob = new AddonLittleMaidMob();
         addonMaplecrafted = new AddonMaplecrafted();
         addonMekanismTools = new AddonMekanismTools();
         addonMetallurgy = new AddonMetallurgy();
@@ -96,6 +98,8 @@ public final class ModAddonManager {
         loadedAddons.add(addonBotania);
         loadedAddons.add(addonBuildCraft);
         loadedAddons.add(addonGlassShards);
+        loadedAddons.add(addonJBRAClient);
+        loadedAddons.add(addonLittleMaidMob);
         loadedAddons.add(addonMaplecrafted);
         loadedAddons.add(addonMekanismTools);
         loadedAddons.add(addonMetallurgy);
