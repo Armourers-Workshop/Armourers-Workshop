@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
+import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -48,13 +49,16 @@ public class CommandSetSkin extends ModCommand {
             return;
         }
         
+        int slotNum = 0;
+        slotNum = parseIntBounded(commandSender, currentCommand[2], 1, 8);
+        
 
-        String skinName = currentCommand[2];
+        String skinName = currentCommand[3];
         if (!skinName.substring(0, 1).equals("\"")) {
             throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
         }
         
-        int usedCommands = 2;
+        int usedCommands = 3;
         
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
             for (int i = 3; i < currentCommand.length; i++) {
