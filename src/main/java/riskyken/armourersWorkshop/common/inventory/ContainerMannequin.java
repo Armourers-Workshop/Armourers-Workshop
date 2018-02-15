@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotMannequin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerMannequin extends Container {
@@ -19,16 +20,18 @@ public class ContainerMannequin extends Container {
     public ContainerMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
         this.tileEntity = tileEntity;
         
-        for (int y = 0; y < MannequinSlotType.values().length; y++) {
-            addSlotToContainer(new SlotMannequin(MannequinSlotType.getOrdinal(y) ,tileEntity, y, 11, 25 + 19 * y));
-        }
-        
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new SlotHidable(invPlayer, x, 8 + 18 * x, 232));
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, 8 + 18 * x, 174 + y * 18));
+            }
+        }
+        
+        for (int i = 0; i < 5; i++) {
+            for (int y = 0; y < MannequinSlotType.values().length; y++) {
+                addSlotToContainer(new SlotMannequin(MannequinSlotType.getOrdinal(y), tileEntity, y + i * 7, 5 + 19 * y, 5 + i * 19));
             }
         }
     }
@@ -39,11 +42,11 @@ public class ContainerMannequin extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
-
-            if (slotId < 7) {
+            ModLogger.log(slotId);
+            if (slotId > 35) {
                 // Moving from mannequin to player.
-                if (!this.mergeItemStack(stack, 16, 43, false)) {
-                    if (!this.mergeItemStack(stack, 7, 16, false)) {
+                if (!this.mergeItemStack(stack, 9, 36, false)) {
+                    if (!this.mergeItemStack(stack, 0, 9, false)) {
                         return null;
                     }
                 }
@@ -51,15 +54,15 @@ public class ContainerMannequin extends Container {
                 // Moving from player to mannequin.
                 boolean slotted = false;
                 for (int i = 0; i < 7; i++) {
-                    Slot targetSlot = getSlot(i);
+                    int targetSlotId = i + 35;
+                    Slot targetSlot = getSlot(targetSlotId);
                     
                     ISkinType skinType = SkinNBTHelper.getSkinTypeFromStack(stack);
                     
                     if (skinType != null && skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
-                        
                         if (i != 4 & i != 5) {
                             if (targetSlot.isItemValid(stack)) {
-                                if (this.mergeItemStack(stack, i, i + 1, false)) {
+                                if (this.mergeItemStack(stack, targetSlotId, targetSlotId + 1, false)) {
                                     slotted = true;
                                     break;
                                 }
@@ -67,7 +70,7 @@ public class ContainerMannequin extends Container {
                         }
                     } else {
                         if (targetSlot.isItemValid(stack)) {
-                            if (this.mergeItemStack(stack, i, i + 1, false)) {
+                            if (this.mergeItemStack(stack, targetSlotId, targetSlotId + 1, false)) {
                                 slotted = true;
                                 break;
                             }

@@ -197,6 +197,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         
         mc.mcProfiler.endStartSection("textureBuild");
         
+        
         if (te.haveSkinsUpdated()) {
             te.sp = getSkinPointers(te);
         }
@@ -239,6 +240,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                 }
             }
         }
+        
         
         mc.mcProfiler.endStartSection("textureBind");
         bindTexture(rl);
@@ -483,7 +485,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelMannequin targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
         Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
-        
+        slot = slot % 7;
         String[] slotName = {"head", "chest", "legs", "unused", "feet", "rightArm", "leftArm"};
         
         mc.mcProfiler.startSection(slotName[slot]);
@@ -546,16 +548,24 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     }
     
     private ISkinPointer[] getSkinPointers(TileEntityMannequin te) {
-        ISkinPointer[] skinPointers = new ISkinPointer[4];
-        skinPointers[0] = getSkinPointerForSlot(te, MannequinSlotType.HEAD);
-        skinPointers[1] = getSkinPointerForSlot(te, MannequinSlotType.CHEST);
-        skinPointers[2] = getSkinPointerForSlot(te, MannequinSlotType.LEGS);
-        skinPointers[3] = getSkinPointerForSlot(te, MannequinSlotType.FEET);
+        ISkinPointer[] skinPointers = new ISkinPointer[4 * TileEntityMannequin.INVENTORY_ROWS_COUNT];
+        
+        for (int i = 0; i < TileEntityMannequin.INVENTORY_ROWS_COUNT; i++) {
+            skinPointers[0 + i * 4] = getSkinPointerForSlot(te, 0 + i * 7);
+            skinPointers[1 + i * 4] = getSkinPointerForSlot(te, 1 + i * 7);
+            skinPointers[2 + i * 4] = getSkinPointerForSlot(te, 2 + i * 7);
+            skinPointers[3 + i * 4] = getSkinPointerForSlot(te, 3 + i * 7);
+        }
+
         return skinPointers;
     }
     
     private ISkinPointer getSkinPointerForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
         return SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
+    }
+    
+    private ISkinPointer getSkinPointerForSlot(TileEntityMannequin te, int slotIndex) {
+        return SkinNBTHelper.getSkinPointerFromStack(te.getStackInSlot(slotIndex));
     }
     
     @Override

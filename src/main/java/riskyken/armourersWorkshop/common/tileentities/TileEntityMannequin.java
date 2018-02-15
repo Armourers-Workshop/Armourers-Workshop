@@ -39,7 +39,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     private static final String TAG_VISIBLE = "visible";
     private static final String TAG_TEXTURE_TYPE = "textureType";
     private static final String TAG_IMAGE_URL = "imageUrl";
-    private static final int INVENTORY_SIZE = 7;
+    
+    public static final int INVENTORY_ROW_SIZE = 7;
+    public static final int INVENTORY_ROWS_COUNT = 5;
+    private static final int INVENTORY_SIZE = INVENTORY_ROW_SIZE * INVENTORY_ROWS_COUNT;
     
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;

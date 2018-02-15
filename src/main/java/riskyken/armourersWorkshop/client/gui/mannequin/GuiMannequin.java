@@ -33,7 +33,7 @@ public class GuiMannequin extends GuiTabbed {
         this.tileEntity = tileEntity;
         this.inventoryName = tileEntity.getInventoryName();
         
-        tabInventory = new GuiMannequinTabInventory(0, this);
+        tabInventory = new GuiMannequinTabInventory(0, this, tileEntity);
         tabRotations = new GuiMannequinTabRotations(1, this, inventoryName, tileEntity.getBipedRotations());
         tabOffset = new GuiMannequinTabOffset(2, this, inventoryName, tileEntity);
         tabSkinAndHair = new GuiMannequinTabSkinHair(3, this, tileEntity);

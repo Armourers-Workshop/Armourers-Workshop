@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
+import cpw.mods.fml.client.config.GuiUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
@@ -7,6 +8,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
 
 @SideOnly(Side.CLIENT)
 public class GuiMannequinTabInventory extends GuiTabPanel {
@@ -20,15 +22,20 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
     private static final int INV_PLAYER_TOP_PAD = 15;
     private static final int INV_PLAYER_LEFT_PAD = 8;
     
-    private static final int INV_MAN_TEX_WIDTH = 176;
-    private static final int INV_MAN_TEX_HEIGHT = 40;
+    private static final int INV_MAN_TEX_WIDTH = 38;
+    private static final int INV_MAN_TEX_HEIGHT = 38;
+    private static final int INV_MAN_TAR_WIDTH = 176;
+    private static final int INV_MAN_TAR_HEIGHT = 40;
     private static final int INV_MAN_TEX_U = 0;
-    private static final int INV_MAN_TEX_V = 98;
-    private static final int INV_MAN_TOP_PAD = 15;
+    private static final int INV_MAN_TEX_V = 200;
+    private static final int INV_MAN_TOP_PAD = 16;
     private static final int INV_MAN_LEFT_PAD = 26;
     
-    public GuiMannequinTabInventory(int tabId, GuiScreen parent) {
+    private final TileEntityMannequin tileEntity;
+    
+    public GuiMannequinTabInventory(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
         super(tabId, parent, true);
+        this.tileEntity = tileEntity;
     }
     
     @Override
@@ -38,7 +45,7 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
         GuiContainer guiCon = (GuiContainer) parent;
         //Move player inventory slots.
         for (int x = 0; x < 9; x++) {
-            Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(7 + x);
+            Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(x);
             if (slot instanceof SlotHidable) {
                 ((SlotHidable)slot).setDisplayPosition(
                         (int) ((this.width / 2F) - (176F / 2F) + x * INV_SLOT_SIZE + INV_PLAYER_LEFT_PAD),
@@ -47,7 +54,7 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(7 + x + y * 9 + 9);
+                Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(x + y * 9 + 9);
                 if (slot instanceof SlotHidable) {
                     ((SlotHidable)slot).setDisplayPosition(
                             (int) ((this.width / 2F) - (176F / 2F) + x * INV_SLOT_SIZE + 8),
@@ -56,11 +63,16 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
             }
         }
         
+        
         //Move mannequin inventory slots.
-        for (int i = 0; i < 7; i++) {
-            Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(i);
-            if (slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setDisplayPosition(this.width / 2 - INV_MAN_TEX_WIDTH / 2 + INV_MAN_LEFT_PAD + i * 18, 16);
+        for (int j = 0; j < 5; j++) {
+            for (int i = 0; i < 7; i++) {
+                Slot slot = (Slot) guiCon.inventorySlots.inventorySlots.get(36 + i + j * 7);
+                if (slot instanceof SlotHidable) {
+                    ((SlotHidable)slot).setDisplayPosition(
+                            this.width / 2 - INV_MAN_TAR_WIDTH / 2 + INV_MAN_LEFT_PAD + i * INV_SLOT_SIZE,
+                            INV_MAN_TOP_PAD + j * 18);
+                }
             }
         }
     }
@@ -85,15 +97,22 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
                 INV_PLAYER_TEX_U, INV_PLAYER_TEX_V,
                 INV_PLAYER_TEX_WIDTH, INV_PLAYER_TEX_HEIGHT);
         
-        drawTexturedModalRect(
-                center - INV_MAN_TEX_WIDTH / 2, 0,
+        GuiUtils.drawContinuousTexturedBox(
+                center - INV_MAN_TAR_WIDTH / 2, 0,
                 INV_MAN_TEX_U, INV_MAN_TEX_V,
-                INV_MAN_TEX_WIDTH, INV_MAN_TEX_HEIGHT);
+                INV_MAN_TAR_WIDTH, INV_MAN_TAR_HEIGHT + 18 * 4,
+                INV_MAN_TEX_WIDTH, INV_MAN_TEX_HEIGHT,
+                4, zLevel);
+        for (int i = 0; i < 5; i++) {
+            drawTexturedModalRect(
+                    center - INV_PLAYER_TEX_WIDTH / 2 + INV_MAN_LEFT_PAD - 1, INV_MAN_TOP_PAD - 1 + i * INV_SLOT_SIZE,
+                    25, 113,
+                    128, INV_SLOT_SIZE);
+        }
     }
     
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        //this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
     }
 }
