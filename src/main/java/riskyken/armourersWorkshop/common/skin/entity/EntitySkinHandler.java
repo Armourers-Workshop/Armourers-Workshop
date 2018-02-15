@@ -175,7 +175,14 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     
     public LibraryFile getRandomSkinOfType(ISkinType skinType) {
         ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
-        LibraryFileList fileList = libraryManager.getClientPublicFileList();
+        
+        LibraryFileList fileList = null;
+        if (ArmourersWorkshop.isDedicated()) {
+            fileList = libraryManager.getServerPublicFileList();
+        } else {
+            fileList = libraryManager.getClientPublicFileList();
+        }
+        
         ArrayList<LibraryFile> typeList = fileList.getCachedFileListForSkinType(skinType);
         if (typeList == null) {
             return null;
