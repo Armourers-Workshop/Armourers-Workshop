@@ -12,10 +12,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -23,6 +27,8 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 @SideOnly(Side.CLIENT)
 public class GuiControlSkinPanel extends GuiButtonExt {
 
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/skin-panel.png");
+    
     private final ArrayList<SkinIcon> iconList;
     private int panelPadding;
     private int iconPadding;
@@ -169,8 +175,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                     
                     fontRenderer.drawSplitString(name, x + 1, textY, iconSize - 2, 0xFFEEEEEE);
                 }
-
-
+                
                 float scale = iconSize / 2;
                 GL11.glPushMatrix();
                 GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -188,6 +193,22 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
                 GL11.glPopAttrib();
                 GL11.glPopMatrix();
+                
+            } else {
+                Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+                
+                int frame = (int) ((System.currentTimeMillis() / (long)100) % 12);
+                
+                int u = MathHelper.floor_double(frame / 9);
+                int v = frame - u * 9;
+                
+                Gui.func_152125_a(
+                        x + 8, y + 8,
+                        u * 28, v * 28,
+                        27, 27,
+                        iconSize - 16, iconSize - 16,
+                        256, 256
+                        );
             }
         }
         
