@@ -138,11 +138,11 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
         if (skin == null) {
             return;
         }
+        if (!haveSkinOnDisk(skinId)) {
+            saveSkinToDisk(skin);
+        }
         if (!cacheMapDatabase.containsKey(skinId)) {
             cacheMapDatabase.put(skinId, skin);
-            if (!haveSkinOnDisk(skinId)) {
-                saveSkinToDisk(skin);
-            }
         }
     }
     
