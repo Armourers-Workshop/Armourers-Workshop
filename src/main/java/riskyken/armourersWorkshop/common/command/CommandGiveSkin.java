@@ -17,6 +17,7 @@ import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
+import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -128,7 +129,7 @@ public class CommandGiveSkin extends ModCommand {
         
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
-        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(skin, skinIdentifier);
+        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinPointer(skinIdentifier, skinDye));
         EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
         entityItem.delayBeforeCanPickup = 0;
         entityItem.func_145797_a(player.getCommandSenderName());
