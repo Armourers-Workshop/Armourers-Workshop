@@ -20,7 +20,8 @@ import riskyken.armourersWorkshop.common.lib.LibModInfo;
 public class PlayerTextureDownloader {
     
     private final HashMap<String, PlayerTexture> playerTextureMap;
-    private final String SKIN_DOWNLOAD_URL = "http://skins.minecraft.net/MinecraftSkins/%s.png";
+    //private final String SKIN_DOWNLOAD_URL = "http://skins.minecraft.net/MinecraftSkins/%s.png";
+    private final String SKIN_DOWNLOAD_URL = "https://s3.amazonaws.com/MinecraftSkins/%s.png";
     private static final PlayerTexture NO_TEXTURE = new PlayerTexture("", TextureType.USER);
     
     private static long lastSkinDownload = 0;
@@ -71,7 +72,7 @@ public class PlayerTextureDownloader {
             if (textureType == TextureType.URL) {
                 downloadUrl = textureString;
             } else {
-                downloadUrl = String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", new Object[] {StringUtils.stripControlCodes(textureString)});
+                downloadUrl = String.format(SKIN_DOWNLOAD_URL, new Object[] {StringUtils.stripControlCodes(textureString)});
             }
             object = new ModThreadDownloadImageData((File)null, downloadUrl, AbstractClientPlayer.locationStevePng, new ImageBufferDownload(), playerTexture);
             texturemanager.loadTexture(resourceLocation, (ITextureObject)object);
