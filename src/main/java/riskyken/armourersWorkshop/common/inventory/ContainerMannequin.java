@@ -10,7 +10,6 @@ import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotMannequin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerMannequin extends Container {
@@ -42,7 +41,6 @@ public class ContainerMannequin extends Container {
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
-            ModLogger.log(slotId);
             if (slotId > 35) {
                 // Moving from mannequin to player.
                 if (!this.mergeItemStack(stack, 9, 36, false)) {
@@ -53,14 +51,21 @@ public class ContainerMannequin extends Container {
             } else {
                 // Moving from player to mannequin.
                 boolean slotted = false;
-                for (int i = 0; i < 7; i++) {
-                    int targetSlotId = i + 35;
+                for (int i = 0; i < TileEntityMannequin.INVENTORY_SIZE; i++) {
+                    int targetSlotId = i + 36;
                     Slot targetSlot = getSlot(targetSlotId);
+                    boolean handSlot = false;
+                    if (i % 7 == 4) {
+                        handSlot = true;
+                    }
+                    if (i % 7 == 5) {
+                        handSlot = true;
+                    }
                     
                     ISkinType skinType = SkinNBTHelper.getSkinTypeFromStack(stack);
                     
                     if (skinType != null && skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
-                        if (i != 4 & i != 5) {
+                        if (!handSlot) {
                             if (targetSlot.isItemValid(stack)) {
                                 if (this.mergeItemStack(stack, targetSlotId, targetSlotId + 1, false)) {
                                     slotted = true;

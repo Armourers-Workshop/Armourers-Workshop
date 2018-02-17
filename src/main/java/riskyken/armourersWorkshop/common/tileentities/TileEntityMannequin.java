@@ -42,7 +42,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     public static final int INVENTORY_ROW_SIZE = 7;
     public static final int INVENTORY_ROWS_COUNT = 5;
-    private static final int INVENTORY_SIZE = INVENTORY_ROW_SIZE * INVENTORY_ROWS_COUNT;
+    public static final int INVENTORY_SIZE = INVENTORY_ROW_SIZE * INVENTORY_ROWS_COUNT;
     
     private GameProfile gameProfile = null;
     private GameProfile newProfile = null;
