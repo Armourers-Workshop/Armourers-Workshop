@@ -89,7 +89,9 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         if (parentTe.hasLinkedBlock()) {
             BlockLocation loc = parentTe.getLinkedBlock();
             Block block = world.getBlock(loc.x, loc.y, loc.z);
-            return block.onBlockActivated(world, loc.x, loc.y, loc.z, player, side, xHit, yHit, zHit);
+            if (!(block instanceof BlockSkinnable)) {
+                return block.onBlockActivated(world, loc.x, loc.y, loc.z, player, side, xHit, yHit, zHit);
+            }
         }
         
         if (skin == null) {

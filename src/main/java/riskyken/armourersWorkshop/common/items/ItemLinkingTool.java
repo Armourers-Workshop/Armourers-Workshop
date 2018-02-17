@@ -63,9 +63,15 @@ public class ItemLinkingTool extends AbstractModItem {
         }
         if (!world.isRemote) {
             if (!hasLinkLocation(stack)) {
-                setLinkLocation(stack, new BlockLocation(x, y, z));
-                player.addChatMessage(new ChatComponentTranslation("chat.armourersworkshop:linkingTool.start", (Object)null));
-                return true;
+                Block block = world.getBlock(x, y, z);
+                if (!(block instanceof BlockSkinnable)) {
+                    setLinkLocation(stack, new BlockLocation(x, y, z));
+                    player.addChatMessage(new ChatComponentTranslation("chat.armourersworkshop:linkingTool.start", (Object)null));
+                    return true;
+                } else {
+                    player.addChatMessage(new ChatComponentTranslation("chat.armourersworkshop:linkingTool.linkedToSkinnable", (Object)null));
+                    return true;
+                }
             } else {
                 BlockLocation loc = getLinkLocation(stack);
                 Block block = world.getBlock(x, y, z);

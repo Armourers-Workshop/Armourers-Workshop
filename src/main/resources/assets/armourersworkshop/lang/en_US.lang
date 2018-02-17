@@ -490,6 +490,7 @@ chat.armourersworkshop:slotUnlockedFailed=%s skin slots are at maximum.
 chat.armourersworkshop:linkingTool.start=Started linking.
 chat.armourersworkshop:linkingTool.finish=Link created.
 chat.armourersworkshop:linkingTool.fail=Linking failed.
+chat.armourersworkshop:linkingTool.linkedToSkinnable=Can not link two skin blocks together.
 
 # Death Messages
 death.attack.victorious=%1$s was stabbed to death by Vic's crown.
