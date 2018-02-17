@@ -196,9 +196,10 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 
             } else {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
+                int speed = 60;
+                int frames = 18;
                 
-                int frame = (int) ((System.currentTimeMillis() / (long)100) % 12);
-                
+                int frame = (int) ((System.currentTimeMillis() / (long)speed) % frames);
                 int u = MathHelper.floor_double(frame / 9);
                 int v = frame - u * 9;
                 
