@@ -17,8 +17,8 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RenderItemEquipmentSkin implements IItemRenderer {
 
-    private final RenderItem renderItem;
-    private final Minecraft mc;
+    protected final RenderItem renderItem;
+    protected final Minecraft mc;
 
     public RenderItemEquipmentSkin() {
         renderItem = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);

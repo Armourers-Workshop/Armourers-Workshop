@@ -2,12 +2,8 @@ package riskyken.armourersWorkshop.client.render.item;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
@@ -20,23 +16,21 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class RenderItemSwordSkin implements IItemRenderer {
-
-    private final RenderItem renderItem;
-    private final Minecraft mc;
+public class RenderItemSwordSkin extends RenderItemEquipmentSkin {
     
-    public RenderItemSwordSkin() {
-        renderItem = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
-        mc = Minecraft.getMinecraft();
+    private final IItemRenderer itemRenderer;
+    
+    public RenderItemSwordSkin(IItemRenderer itemRenderer) {
+        super();
+        this.itemRenderer = itemRenderer;
     }
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
-                if (render != null) {
-                    return render.handleRenderType(stack, type);
+                if (itemRenderer != null) {
+                    return itemRenderer.handleRenderType(stack, type);
                 } else {
                     return false;
                 }
@@ -44,8 +38,8 @@ public class RenderItemSwordSkin implements IItemRenderer {
                 return true;
             }
         } else {
-            if (render != null) {
-                return render.handleRenderType(stack, type);
+            if (itemRenderer != null) {
+                return itemRenderer.handleRenderType(stack, type);
             } else {
                 return false;
             }
@@ -54,11 +48,10 @@ public class RenderItemSwordSkin implements IItemRenderer {
 
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
-                if (render != null) {
-                    return render.shouldUseRenderHelper(type, stack, helper);
+                if (itemRenderer != null) {
+                    return itemRenderer.shouldUseRenderHelper(type, stack, helper);
                 } else {
                     return false;
                 }
@@ -66,8 +59,8 @@ public class RenderItemSwordSkin implements IItemRenderer {
                 return type == ItemRenderType.ENTITY;
             }
         } else {
-            if (render != null) {
-                return render.shouldUseRenderHelper(type, stack, helper);
+            if (itemRenderer != null) {
+                return itemRenderer.shouldUseRenderHelper(type, stack, helper);
             } else {
                 return false;
             }
@@ -139,9 +132,8 @@ public class RenderItemSwordSkin implements IItemRenderer {
             }
 
         } else {
-            IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
-            if (render != null) {
-                render.renderItem(type, stack, data);
+            if (itemRenderer != null) {
+                itemRenderer.renderItem(type, stack, data);
             } else {
                 renderNomalIcon(stack);
             }

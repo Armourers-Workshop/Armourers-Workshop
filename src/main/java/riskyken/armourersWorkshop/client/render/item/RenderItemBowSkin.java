@@ -2,12 +2,8 @@ package riskyken.armourersWorkshop.client.render.item;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -20,30 +16,27 @@ import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class RenderItemBowSkin implements IItemRenderer {
+public class RenderItemBowSkin extends RenderItemEquipmentSkin {
     
-    private final RenderItem renderItem;
-    private final Minecraft mc;
+    private final IItemRenderer itemRenderer;
     
-    public RenderItemBowSkin() {
-        renderItem = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
-        mc = Minecraft.getMinecraft();
+    public RenderItemBowSkin(IItemRenderer itemRenderer) {
+        super();
+        this.itemRenderer = itemRenderer;
     }
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
-        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
-                if (render != null) {
-                    return render.handleRenderType(stack, type);
+                if (itemRenderer != null) {
+                    return itemRenderer.handleRenderType(stack, type);
                 } else {
                     return false;
                 }
@@ -51,8 +44,8 @@ public class RenderItemBowSkin implements IItemRenderer {
                 return true;
             }
         } else {
-            if (render != null) {
-                return render.handleRenderType(stack, type);
+            if (itemRenderer != null) {
+                return itemRenderer.handleRenderType(stack, type);
             } else {
                 return false;
             }
@@ -61,11 +54,10 @@ public class RenderItemBowSkin implements IItemRenderer {
     
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack stack, ItemRendererHelper helper) {
-        IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
-                if (render != null) {
-                    return render.shouldUseRenderHelper(type, stack, helper);
+                if (itemRenderer != null) {
+                    return itemRenderer.shouldUseRenderHelper(type, stack, helper);
                 } else {
                     return false;
                 }
@@ -73,8 +65,8 @@ public class RenderItemBowSkin implements IItemRenderer {
                 return type == ItemRenderType.ENTITY;
             }
         } else {
-            if (render != null) {
-                return render.shouldUseRenderHelper(type, stack, helper);
+            if (itemRenderer != null) {
+                return itemRenderer.shouldUseRenderHelper(type, stack, helper);
             } else {
                 return false;
             }
@@ -189,9 +181,8 @@ public class RenderItemBowSkin implements IItemRenderer {
             }
 
         } else {
-            IItemRenderer render = ModAddonManager.getItemRenderer(stack, type);
-            if (render != null) {
-                render.renderItem(type, stack, data);
+            if (itemRenderer != null) {
+                itemRenderer.renderItem(type, stack, data);
             } else {
                 renderNomalIcon(stack);
             }

@@ -5,8 +5,6 @@ import java.util.IdentityHashMap;
 
 import org.apache.logging.log4j.Level;
 
-import com.google.common.collect.Maps;
-
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -16,13 +14,13 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
 import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
+import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ModAddonManager {
     
-    private static IdentityHashMap<Item, IItemRenderer> customItemRenderers = Maps.newIdentityHashMap();
     private static ArrayList<ModAddon> loadedAddons = new ArrayList<ModAddon>(); 
     
     public static ArrayList<String> itemOverrides = new ArrayList<String>();
@@ -201,22 +199,23 @@ public final class ModAddonManager {
         if (item != null) {
             ItemStack stack = new ItemStack(item);
             IItemRenderer renderer = getItemRenderer(stack);
-            ModLogger.log("Overriding render on - " + modId + ":" + itemName);
-            if (renderer != null) {
-                ModLogger.log("Storing custom item renderer for: " + itemName);
-                customItemRenderers.put(item, renderer);
-            }
-            switch (renderType) {
-            case SWORD:
-                MinecraftForgeClient.registerItemRenderer(item, new RenderItemSwordSkin());
-                break;
-            case BOW:
-                MinecraftForgeClient.registerItemRenderer(item, new RenderItemBowSkin());
-                break;
+            
+            if (renderer != null && renderer instanceof RenderItemEquipmentSkin) {
+                ModLogger.log(Level.WARN, String.format("Tried to override the render on %s:%s but it has already been overridden.", modId, itemName));
+                return;
             }
             
+            ModLogger.log(String.format("Overriding render on %s:%s.", modId, itemName));
+            switch (renderType) {
+            case SWORD:
+                MinecraftForgeClient.registerItemRenderer(item, new RenderItemSwordSkin(renderer));
+                break;
+            case BOW:
+                MinecraftForgeClient.registerItemRenderer(item, new RenderItemBowSkin(renderer));
+                break;
+            }
         } else {
-            ModLogger.log(Level.WARN, "Unable to override item renderer for: " + modId + " - " + itemName);
+            ModLogger.log(Level.WARN, String.format("Unable to override item renderer for %s:%s. Can not find item.", modId, itemName));
         }
     }
     
@@ -229,14 +228,6 @@ public final class ModAddonManager {
                 return renderer;
             }
         } catch (Exception e) {
-        }
-        return null;
-    }
-    
-    public static IItemRenderer getItemRenderer(ItemStack item, ItemRenderType type) {
-        IItemRenderer renderer = customItemRenderers.get(item.getItem());
-        if (renderer != null && renderer.handleRenderType(item, type)) {
-            return renderer;
         }
         return null;
     }
