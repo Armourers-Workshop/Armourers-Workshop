@@ -1,12 +1,9 @@
 package riskyken.armourersWorkshop.common.config;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.UUID;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
 
@@ -181,22 +178,6 @@ public class ConfigHandler {
                 .get(CATEGORY_COMPATIBILITY, "allowModsToRegisterWithAPI", true,
                 "Allow other mods to register with the Armourer's Workshop API.")
                 .getBoolean(true);
-        
-        
-        Property prop = config.get(CATEGORY_COMPATIBILITY, "itemOverrides", ModAddonManager.getDefaultOverrides());
-        prop.setLanguageKey("itemOverrides");
-        prop.comment = "List of items that can have skins applied.\n"
-                + "Format [override type:mod id:item name]\n"
-                + "Valid override types are:\n"
-                + "sword\n"
-                + "item\n"
-                + "pickaxe\n"
-                + "axe\n"
-                + "shovel\n"
-                + "hoe\n"
-                + "bow";
-        ModAddonManager.itemOverrides.clear();
-        ModAddonManager.itemOverrides.addAll(Arrays.asList(prop.getStringList()));
     }
     
 

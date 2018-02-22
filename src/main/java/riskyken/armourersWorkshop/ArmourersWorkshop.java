@@ -20,6 +20,7 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerOverrides;
 import riskyken.armourersWorkshop.common.config.ConfigSynchronizeHandler;
 import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
@@ -86,6 +87,7 @@ public class ArmourersWorkshop {
         ModAddonManager.preInit();
         ConfigHandler.init(new File(configDir, "common.cfg"));
         ConfigHandlerClient.init(new File(configDir, "client.cfg"));
+        ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
         
         EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
         
