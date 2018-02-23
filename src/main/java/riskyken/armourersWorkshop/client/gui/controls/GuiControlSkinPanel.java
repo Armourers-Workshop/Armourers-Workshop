@@ -16,8 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -179,8 +179,15 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 float scale = iconSize / 2;
                 GL11.glPushMatrix();
                 GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-                GL11.glTranslatef(x + iconSize / 2, y + iconSize / 2 - 4, 200.0F);
-                GL11.glScalef((float)(-scale), (float)scale, (float)scale);
+                if (showName) {
+                    GL11.glTranslatef(x + iconSize / 2, y + iconSize / 2 - 4, 200.0F);
+                } else {
+                    GL11.glTranslatef(x + iconSize / 2, y + iconSize / 2, 200.0F);
+                }
+                GL11.glScalef((float)(-10), (float)10, (float)10);
+                if (mouseOver(x, y, mouseX, mouseY, iconSize)) {
+                    GL11.glScalef(1.5F, 1.5F, 1.5F);
+                }
                 GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
                 float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
@@ -190,7 +197,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GL11.glEnable(GL11.GL_NORMALIZE);
                 GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                 ModRenderHelper.enableAlphaBlend();
-                ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
+                SkinItemRenderHelper.renderSkinAsItem(skin, new SkinPointer(skin), true, false, iconSize, iconSize);
+                //ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
                 GL11.glPopAttrib();
                 GL11.glPopMatrix();
                 

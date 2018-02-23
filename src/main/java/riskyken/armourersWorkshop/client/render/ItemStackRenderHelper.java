@@ -28,6 +28,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 @SideOnly(Side.CLIENT)
 public final class ItemStackRenderHelper {
 
+    @Deprecated
     public static void renderItemAsArmourModel(ItemStack stack, boolean showSkinPaint) {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
@@ -35,11 +36,12 @@ public final class ItemStackRenderHelper {
         }
     }
     
+    @Deprecated
     public static void renderItemModelFromSkinPointer(ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
         renderItemModelFromSkin(ClientSkinCache.INSTANCE.getSkin(skinPointer), skinPointer, showSkinPaint, doLodLoading);
     }
     
-    
+    @Deprecated
     public static void renderItemModelFromSkin(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
         if (skin == null) {
             return;

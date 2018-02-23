@@ -23,8 +23,8 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
@@ -357,8 +357,8 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             float scale = iconSize / 2;
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-            GL11.glTranslatef(boxX + boxWidth / 2, boxY + boxHeight / 2, 200.0F);
-            GL11.glScalef((float)(-scale), (float)scale, (float)scale);
+            GL11.glTranslatef(boxX + boxWidth / 2, boxY + boxHeight / 2, 500.0F);
+            GL11.glScalef((float)(-10), (float)10, (float)10);
             GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
             float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
@@ -368,7 +368,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             GL11.glEnable(GL11.GL_NORMALIZE);
             GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             ModRenderHelper.enableAlphaBlend();
-            ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
+            SkinItemRenderHelper.renderSkinAsItem(skin, new SkinPointer(skin), true, false, boxWidth, boxHeight);
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }

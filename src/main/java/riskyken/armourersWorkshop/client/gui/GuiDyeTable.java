@@ -12,8 +12,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotDyeBottle;
@@ -77,12 +77,12 @@ public class GuiDyeTable extends GuiContainer {
             GL11.glPushMatrix();
             GL11.glColor4f(1F, 1F, 1F, 1F);
             RenderHelper.enableStandardItemLighting();
-            float boxX = 210.5F;
+            float boxX = 205F;
             float boxY = 56;
-            float scale = 40F;
+            float scale = 10F;
             
-            GL11.glTranslatef((float)boxX, (float)boxY, 50.0F);
-            GL11.glScalef(-scale, scale, scale);
+            GL11.glTranslatef((float)boxX, (float)boxY, 500.0F);
+            GL11.glScalef(-10, 10, 10);
             float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
             float fade = (float) ((double)System.currentTimeMillis() / 400 % Math.PI * 2);
             float change = (float) Math.sin(fade);
@@ -102,7 +102,8 @@ public class GuiDyeTable extends GuiContainer {
             if (dyeSlot != -1) {
                 GL11.glPushMatrix();
                 //GL11.glEnable(GL11.GL_CULL_FACE);
-                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 80, 80);
+                //ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
                 GL11.glPopMatrix();
                 GL11.glPopMatrix();
                 Color c = new Color(198,198,198, (int)(240));
@@ -124,10 +125,10 @@ public class GuiDyeTable extends GuiContainer {
                     }
                 }
                 GL11.glColor3f(1F, 1F, 1F);
-                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 80, 80);
             } else {
                 ModRenderHelper.enableAlphaBlend();
-                ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 120, 90);
             }
             
             

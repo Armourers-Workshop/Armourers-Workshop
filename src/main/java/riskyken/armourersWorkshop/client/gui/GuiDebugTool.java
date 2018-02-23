@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
+import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 
 @SideOnly(Side.CLIENT)
@@ -21,6 +22,7 @@ public class GuiDebugTool extends GuiScreen {
     private GuiCheckBox checkShowLodLevel;
     private GuiCheckBox checkShowSkinBlockBounds;
     private GuiCheckBox checkShowSkinRenderBounds;
+    private GuiCheckBox checkDebugItemRenders;
     
     public GuiDebugTool() {
         this.guiWidth = 180;
@@ -49,11 +51,15 @@ public class GuiDebugTool extends GuiScreen {
         checkShowSkinRenderBounds = new GuiCheckBox(-1, guiLeft + 5, guiTop + 45, "show skin render bounds", ConfigHandlerClient.showSkinRenderBounds);
         checkShowSkinRenderBounds.setTextColour(0xFFEEEEEE);
         
+        checkDebugItemRenders = new GuiCheckBox(-1, guiLeft + 5, guiTop + 55, "show item debug renders", SkinItemRenderHelper.debugShowFullBounds);
+        checkDebugItemRenders.setTextColour(0xFFEEEEEE);
+        
         buttonList.add(checkWireframe);
         buttonList.add(checkArmourerDebugRenders);
         buttonList.add(checkShowLodLevel);
         buttonList.add(checkShowSkinBlockBounds);
         buttonList.add(checkShowSkinRenderBounds);
+        buttonList.add(checkDebugItemRenders);
     }
     
     @Override
@@ -72,6 +78,12 @@ public class GuiDebugTool extends GuiScreen {
         }
         if (button == checkShowSkinRenderBounds) {
             ConfigHandlerClient.showSkinRenderBounds = checkShowSkinRenderBounds.isChecked();
+        }
+        if (button == checkDebugItemRenders) {
+            SkinItemRenderHelper.debugShowFullBounds = checkDebugItemRenders.isChecked();
+            SkinItemRenderHelper.debugShowPartBounds = checkDebugItemRenders.isChecked();
+            SkinItemRenderHelper.debugShowTextureBounds = checkDebugItemRenders.isChecked();
+            SkinItemRenderHelper.debugShowTargetBounds = checkDebugItemRenders.isChecked();
         }
     }
     

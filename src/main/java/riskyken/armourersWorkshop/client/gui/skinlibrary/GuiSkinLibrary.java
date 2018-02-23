@@ -41,8 +41,8 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiScrollbar;
 import riskyken.armourersWorkshop.client.gui.controls.IGuiListItem;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
@@ -705,12 +705,33 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     float scale = 1F;
                     scale = 1 * Math.min(xSize, ySize);
                     
+                    ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+                    
+                    int startX = listRight + PADDING;
+                    int startY = listTop + PADDING;
+                    
+                    int tarW = (int) (x + xSize);
+                    int tarH = (int) (y + ySize);
+                    
+                    drawRect(startX, startY, tarW, tarH, 0x77777777);
+                    
+
+                    
+                    //ModLogger.log(scaledResolution.getScaleFactor());
+                    
                     if (scale > 8) {
                         GL11.glPushMatrix();
                         GL11.glTranslatef((float)x, (float)y, 500.0F);
-                        GL11.glScalef((float)(-scale), (float)scale, (float)scale);
-                        GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-                        GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+                        
+                        GL11.glScalef(10, 10, -10);
+                        
+                        //GL11.glRotatef(30, 1, 0, 0);
+                        GL11.glRotatef(45, 0, 1, 0);
+                        
+                        
+                        //GL11.glScalef((float)(-1), (float)1, (float)1);
+                        //GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+                        //GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
                         float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
                         GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
                         RenderHelper.enableStandardItemLighting();
@@ -719,7 +740,11 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                         GL11.glEnable(GL11.GL_NORMALIZE);
                         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                         ModRenderHelper.enableAlphaBlend();
-                        ItemStackRenderHelper.renderItemModelFromSkin(skin, skinPointer, true, false);
+                        SkinItemRenderHelper.renderSkinAsItem(skin, skinPointer, true, false,
+                                tarW - startX,
+                                tarH - startY
+                                );
+                        //ItemStackRenderHelper.renderItemModelFromSkin(skin, skinPointer, true, false);
                         GL11.glPopAttrib();
                         GL11.glPopMatrix();
                     }

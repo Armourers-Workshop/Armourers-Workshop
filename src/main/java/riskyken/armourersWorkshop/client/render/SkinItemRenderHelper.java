@@ -22,6 +22,7 @@ import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
@@ -30,9 +31,8 @@ public final class SkinItemRenderHelper {
     public static boolean debugShowFullBounds;
     public static boolean debugShowPartBounds;
     public static boolean debugShowTextureBounds;
-    public static boolean debugShowScaleBounds;
     public static boolean debugShowTargetBounds;
-    public static boolean debugShowOriginPoint;
+    public static boolean debugSpin;
     
     private SkinItemRenderHelper() {}
     
@@ -55,7 +55,6 @@ public final class SkinItemRenderHelper {
         float blockScale = 16F;
         float mcScale = 1F / blockScale;
         
-        
         ArrayList<IRectangle3D> boundsParts = new ArrayList<IRectangle3D>();
         ArrayList<IRectangle3D> boundsTextures = new ArrayList<IRectangle3D>();
         
@@ -63,14 +62,12 @@ public final class SkinItemRenderHelper {
         
         for (int i = 0; i < skin.getPartCount(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            Rectangle3D bounds = skinPart.getPartBounds();
-            IPoint3D offset = skinPart.getPartType().getItemRenderOffset();
-            
-            Rectangle3D rec = new Rectangle3D(bounds.getX() + offset.getX(), bounds.getY() + offset.getY(), bounds.getZ() + offset.getZ(), bounds.getWidth(), bounds.getHeight(), bounds.getDepth());
-            
-            boundsParts.add(rec);
-            
-
+            if (!(skin.getSkinType() == SkinTypeRegistry.skinBow && i > 0)) {
+                Rectangle3D bounds = skinPart.getPartBounds();
+                IPoint3D offset = skinPart.getPartType().getItemRenderOffset();
+                Rectangle3D rec = new Rectangle3D(bounds.getX() + offset.getX(), bounds.getY() + offset.getY(), bounds.getZ() + offset.getZ(), bounds.getWidth(), bounds.getHeight(), bounds.getDepth());
+                boundsParts.add(rec);
+            }
         }
         
         if (skin.hasPaintData()) {
@@ -81,22 +78,19 @@ public final class SkinItemRenderHelper {
                     if (part.getItemRenderTextureBounds() != null) {
                         boundsTextures.add(part.getItemRenderTextureBounds());
                     }
-                    
                 }
             }
         }
         
-        int minX = 128;
-        int minY = 128;
-        int minZ = 128;
-        int maxX = -128;
-        int maxY = -128;
-        int maxZ = -128;
+        int minX = 256;
+        int minY = 256;
+        int minZ = 256;
+        int maxX = -256;
+        int maxY = -256;
+        int maxZ = -256;
         
         for (int i = 0; i < boundsParts.size(); i++) {
-            
             IRectangle3D rec = boundsParts.get(i);
-            //ModLogger.log(rec);
             minX = Math.min(minX, rec.getX());
             minY = Math.min(minY, rec.getY());
             minZ = Math.min(minZ, rec.getZ());
@@ -105,7 +99,6 @@ public final class SkinItemRenderHelper {
             maxY = Math.max(maxY, rec.getHeight() + rec.getY());
             maxZ = Math.max(maxZ, rec.getDepth() + rec.getZ());
         }
-        
         for (int i = 0; i < boundsTextures.size(); i++) {
             IRectangle3D rec = boundsTextures.get(i);
             minX = Math.min(minX, rec.getX());
@@ -117,37 +110,36 @@ public final class SkinItemRenderHelper {
             maxZ = Math.max(maxZ, rec.getDepth() + rec.getZ());
         }
         
-        //ModLogger.log("min x: " + minX);
-        //ModLogger.log("max x: " + maxX);
-        
-        
         Rectangle3D maxBounds = new Rectangle3D(minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ);
-        
-        //ModLogger.log(maxBounds);
-        
         
         
         GL11.glPushMatrix();
         
-        float angle = (((System.currentTimeMillis() / 10) % 360));
-        
         //GL11.glRotatef(-45, 0, 1, 0);
         //GL11.glRotatef(-30, 1, 0, 0);
         
-        //GL11.glRotatef(angle, 0, 1, 0);
-        
-        //GL11.glScalef(2, 2, 2);
+        if (debugSpin) {
+            float angle = (((System.currentTimeMillis() / 10) % 360));
+            
+
+            
+            GL11.glRotatef(angle, 0, 1, 0);
+        }
         
         //Target bounds
-        //drawBounds(new Rectangle3D(-8, -8, -8, targetWidth, targetHeight, targetWidth), 0, 0, 255);
-        
+        if (debugShowTargetBounds) {
+            drawBounds(new Rectangle3D(-targetWidth / 2, -targetHeight / 2, -targetWidth / 2, targetWidth, targetHeight, targetWidth), 0, 0, 255);
+        }
         
         int biggerSize = Math.max(maxBounds.getWidth(), maxBounds.getHeight());
         biggerSize = Math.max(biggerSize, maxBounds.getDepth());
         
-        //ModLogger.log(biggerSize);
         
-        float newScale = 16F / biggerSize;
+        float newScaleW = (float)targetWidth / Math.max(maxBounds.getWidth(), maxBounds.getDepth());
+        float newScaleH = (float)targetHeight / maxBounds.getHeight();
+        
+        float newScale = Math.min(newScaleW, newScaleH);
+        
         GL11.glScalef(newScale, newScale, newScale);
         
         
@@ -156,23 +148,21 @@ public final class SkinItemRenderHelper {
         GL11.glTranslated(0, -(maxBounds.getHeight() / 2F + maxBounds.getY()) * mcScale, 0);
         GL11.glTranslated(0, 0, -(maxBounds.getDepth() / 2F + maxBounds.getZ()) * mcScale);
         
-
-
-        
-        
         renderSkinWithHelper(skin, skinPointer, showSkinPaint, doLodLoading);
         
-        
-        
-        //drawBounds(maxBounds, 255, 255, 0);
-        
-        for (int i = 0; i < boundsParts.size(); i++) {
-            //drawBounds(boundsParts.get(i), 255, 0, 0);
+        if (debugShowFullBounds) {
+            drawBounds(maxBounds, 255, 255, 0);
         }
-        for (int i = 0; i < boundsTextures.size(); i++) {
-            //drawBounds(boundsTextures.get(i), 0, 255, 0);
+        if (debugShowPartBounds) {
+            for (int i = 0; i < boundsParts.size(); i++) {
+                drawBounds(boundsParts.get(i), 255, 0, 0);
+            }
         }
-        
+        if (debugShowTextureBounds) {
+            for (int i = 0; i < boundsTextures.size(); i++) {
+                drawBounds(boundsTextures.get(i), 0, 255, 0);
+            }
+        }
         
         GL11.glPopMatrix();
     }

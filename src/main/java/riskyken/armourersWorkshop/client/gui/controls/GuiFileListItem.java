@@ -10,8 +10,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
-import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
@@ -62,7 +62,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier, true);
                     if (skin != null) {
                         SkinPointer skinPointer = new SkinPointer(identifier);
-                        float scale = 8F;
+                        float scale = 10F;
                         GL11.glPushMatrix();
                         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
                         GL11.glTranslatef((float)x + 5, (float)y + 6, 50.0F);
@@ -76,7 +76,11 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                         GL11.glEnable(GL11.GL_NORMALIZE);
                         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
                         ModRenderHelper.enableAlphaBlend();
-                        ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                        //ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                        SkinItemRenderHelper.renderSkinAsItem(skin, skinPointer, true, false,
+                                16,
+                                16
+                                );
                         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                         GL11.glPopAttrib();
                         GL11.glPopMatrix();
