@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
@@ -51,5 +52,17 @@ public class SkinChestPartBase extends AbstractSkinPartTypeBase implements ISkin
     @Override
     public IPoint3D getTextureModelSize() {
         return new Point3D(8, 12, 4);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IPoint3D getItemRenderOffset() {
+        return new Point3D(0, 0, 0);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IRectangle3D getItemRenderTextureBounds() {
+        return new Rectangle3D(-4, 0, -2, 8, 12, 4);
     }
 }

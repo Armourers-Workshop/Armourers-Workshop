@@ -70,4 +70,10 @@ public interface ISkinPartType {
      * @return
      */
     public boolean isPartRequired();
+    
+    @SideOnly(Side.CLIENT)
+    public IPoint3D getItemRenderOffset();
+    
+    @SideOnly(Side.CLIENT)
+    public IRectangle3D getItemRenderTextureBounds();
 }
