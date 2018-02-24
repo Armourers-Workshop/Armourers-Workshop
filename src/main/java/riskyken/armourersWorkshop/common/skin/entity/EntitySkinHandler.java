@@ -151,13 +151,14 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         if (ConfigHandler.enitiySpawnWithSkinsChance <= 0) {
             return;
         }
-        int rnd = entityEquipmentData.getEntity().worldObj.rand.nextInt(99) + 1;
-        if (rnd >= ConfigHandler.enitiySpawnWithSkinsChance) {
-            return;
-        }
+
         
         ArrayList<ISkinType> skinTypes = entityEquipmentData.getSkinInventory().getSkinTypes();
         for (int i = 0; i < skinTypes.size(); i++) {
+            int rnd = entityEquipmentData.getEntity().worldObj.rand.nextInt(99) + 1;
+            if (rnd >= ConfigHandler.enitiySpawnWithSkinsChance) {
+                continue;
+            }
             ISkinType skinType = skinTypes.get(i);
             LibraryFile libraryFile = getRandomSkinOfType(skinType);
             if (libraryFile == null) {
