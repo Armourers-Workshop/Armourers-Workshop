@@ -125,7 +125,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             return;
         }
         int rnd = entity.worldObj.rand.nextInt(99) + 1;
-        if (rnd >= ConfigHandler.entityDropSkinChance) {
+        if (rnd <= ConfigHandler.entityDropSkinChance) {
             ExPropsEntityEquipmentData entityEquipmentData = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
             if (entityEquipmentData != null) {
                 ArrayList<ISkinType> skinTypes = entityEquipmentData.getSkinInventory().getSkinTypes();
