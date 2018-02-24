@@ -12,7 +12,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
+import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
@@ -116,7 +118,8 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         }
         ModRenderHelper.enableAlphaBlend();
         
-        ItemStackRenderHelper.renderSkinWithoutHelper(skinPointer, true);
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+        ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, true, false);
         
         GL11.glPopMatrix();
         if (tileEntity.isShowRotationPoint()) {
