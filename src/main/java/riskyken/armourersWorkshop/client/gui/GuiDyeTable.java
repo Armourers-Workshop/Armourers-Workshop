@@ -32,7 +32,7 @@ public class GuiDyeTable extends GuiContainer {
     public GuiDyeTable(InventoryPlayer invPlayer, TileEntityDyeTable tileEntity) {
         super(new ContainerDyeTable(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
-        this.xSize = 256;
+        this.xSize = 320;
         this.ySize = 190;
         rolloverDyes = new SkinDye[8];
         for (int i = 0; i < 8; i++) {
@@ -53,7 +53,10 @@ public class GuiDyeTable extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float f1, int mouseX, int mouseY) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(texture);
-        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        
+        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 256, this.ySize);
+        drawTexturedModalRect(this.guiLeft + 182 + 56, this.guiTop, 174, 0, 82, this.ySize);
+        //drawRect(guiLeft, guiTop, guiLeft + xSize, guiTop + ySize, 0x88FFFFFF);
         if (ConfigHandler.lockDyesOnSkins) {
             ModRenderHelper.enableAlphaBlend();
             for (int i = 0; i < 8; i++) {
@@ -77,12 +80,12 @@ public class GuiDyeTable extends GuiContainer {
             GL11.glPushMatrix();
             GL11.glColor4f(1F, 1F, 1F, 1F);
             RenderHelper.enableStandardItemLighting();
-            float boxX = 205F;
-            float boxY = 56;
-            float scale = 10F;
+            float boxX = 242.5F;
+            float boxY = 102;
+            float scale = 11F;
             
             GL11.glTranslatef((float)boxX, (float)boxY, 500.0F);
-            GL11.glScalef(-10, 10, 10);
+            GL11.glScalef(-scale, scale, scale);
             float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
             float fade = (float) ((double)System.currentTimeMillis() / 400 % Math.PI * 2);
             float change = (float) Math.sin(fade);
@@ -102,7 +105,7 @@ public class GuiDyeTable extends GuiContainer {
             if (dyeSlot != -1) {
                 GL11.glPushMatrix();
                 //GL11.glEnable(GL11.GL_CULL_FACE);
-                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 80, 80);
+                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 140, 176);
                 //ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
                 GL11.glPopMatrix();
                 GL11.glPopMatrix();
@@ -125,13 +128,11 @@ public class GuiDyeTable extends GuiContainer {
                     }
                 }
                 GL11.glColor3f(1F, 1F, 1F);
-                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 80, 80);
+                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 140, 176);
             } else {
                 ModRenderHelper.enableAlphaBlend();
-                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 120, 90);
+                SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 140, 176);
             }
-            
-            
             GL11.glPopMatrix();
         }
         
