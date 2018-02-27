@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
@@ -95,7 +96,52 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
             angleZ = (System.currentTimeMillis() % speedZ);
             angleZ = angleZ / speedZ * 360F;
         }
-        
+        if (!tileEntity.isGlowing()) {
+            ForgeDirection dir = ForgeDirection.getOrientation(tileEntity.getBlockMetadata());
+            float xLight = tileEntity.xCoord;
+            float yLight = tileEntity.yCoord;
+            float zLight = tileEntity.zCoord;
+            
+            float offsetX = tileEntity.getOffsetX();
+            float offsetY = tileEntity.getOffsetY();
+            float offsetZ = tileEntity.getOffsetZ();
+            
+            switch (dir) {
+            case UP:
+                xLight += offsetX * scale;
+                yLight += offsetY * scale;
+                zLight += offsetZ * scale;
+                break;
+            case DOWN:
+                xLight += -offsetX * scale;
+                yLight += -offsetY * scale;
+                zLight += offsetZ * scale;
+                break;
+            case EAST:
+                xLight += offsetY * scale;
+                yLight += -offsetX * scale;
+                zLight += offsetZ * scale;
+                break;
+            case WEST:
+                xLight += -offsetY * scale;
+                yLight += offsetX * scale;
+                zLight += offsetZ * scale;
+                break;
+            case NORTH:
+                xLight += offsetX * scale;
+                yLight += -offsetZ * scale;
+                zLight += -offsetY * scale;
+                break;
+            case SOUTH:
+                xLight += -offsetX * scale;
+                yLight += offsetY * scale;
+                zLight += offsetZ * scale;
+                break;
+            default:
+                break;
+            }
+            ModRenderHelper.setLightingForBlock(tileEntity.getWorldObj(), (int)(xLight + 0.5F), (int)(yLight + 0.5F), (int)(zLight + 0.5F));
+        }
 
         GL11.glPushMatrix();
         
@@ -139,7 +185,6 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
             AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, scale, scale, scale);
             renderBox(aabb, 1F, 0F, 1F);
         }
-        //ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, true);
         
         ModRenderHelper.disableAlphaBlend();
         if (tileEntity.isGlowing()) {
