@@ -475,6 +475,10 @@ inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Rotation Speed
 inventory.armourersworkshop:hologramProjector.tab.extra=Extra
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Show Rotation Point?
 inventory.armourersworkshop:hologramProjector.glowing=Glowing?
+inventory.armourersworkshop:hologramProjector.label.powerMode=Redstone Power Mode:
+inventory.armourersworkshop:hologramProjector.powerMode.ignored=Ignored
+inventory.armourersworkshop:hologramProjector.powerMode.high=High
+inventory.armourersworkshop:hologramProjector.powerMode.low=Low
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=No more undos

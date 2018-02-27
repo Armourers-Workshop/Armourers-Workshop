@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import java.util.Random;
+
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -91,6 +93,11 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
     }
     
     @Override
+    public void onPostBlockPlaced(World world, int x, int y, int z, int p_149714_5_) {
+        updatePoweredState(world, x, y, z);
+    }
+    
+    @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityHologramProjector();
     }
@@ -110,5 +117,24 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
     public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
         world.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 2);
         return true;
+    }
+    
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborBlock) {
+        updatePoweredState(world, x, y, z);
+    }
+    
+    @Override
+    public void updateTick(World world, int x, int y, int z, Random random) {
+        updatePoweredState(world, x, y, z);
+    }
+    
+    private void updatePoweredState(World world, int x, int y, int z) {
+        if (!world.isRemote) {
+            TileEntity tileEntity = world.getTileEntity(x, y, z);
+            if (tileEntity != null && tileEntity instanceof TileEntityHologramProjector) {
+                ((TileEntityHologramProjector)tileEntity).updatePoweredState();
+            }
+        }
     }
 }

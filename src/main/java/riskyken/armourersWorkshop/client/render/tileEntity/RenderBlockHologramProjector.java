@@ -17,12 +17,25 @@ import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
 
     public void renderTileEntityAt(TileEntityHologramProjector tileEntity, double x, double y, double z, float partialTickTime) {
+        if (tileEntity.getPowerMode() != PowerMode.IGNORED) {
+            if (tileEntity.getPowerMode() == PowerMode.HIGH) {
+                if (!tileEntity.isPowered()) {
+                    return;
+                }
+            } else {
+                if (tileEntity.isPowered()) {
+                    return;
+                }
+            }
+        }
+
         ItemStack itemStack = tileEntity.getStackInSlot(0);
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(itemStack);
         if (skinPointer == null) {

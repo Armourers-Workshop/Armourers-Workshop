@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import riskyken.armourersWorkshop.common.inventory.ContainerHologramProjector;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 
 public class MessageClientGuiHologramProjector implements IMessage, IMessageHandler<MessageClientGuiHologramProjector, IMessage> {
 
@@ -33,6 +34,9 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
     
     private boolean hasGlowing = false;
     private boolean glowing = false;
+    
+    private boolean hasPowerMode = false;
+    private PowerMode powerMode = PowerMode.IGNORED;
     
     public MessageClientGuiHologramProjector() {
     }
@@ -70,6 +74,11 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
         hasGlowing = true;
     }
     
+    public void setPowerMode(PowerMode powerMode) {
+        this.powerMode = powerMode;
+        hasPowerMode = true;
+    }
+    
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(hasOffsets);
@@ -102,6 +111,10 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
         buf.writeBoolean(hasGlowing);
         if (hasGlowing) {
             buf.writeBoolean(glowing);
+        }
+        buf.writeBoolean(hasPowerMode);
+        if (hasPowerMode) {
+            buf.writeByte(powerMode.ordinal());
         }
      }
 
@@ -138,6 +151,10 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             glowing = buf.readBoolean();
             hasGlowing = true;
         }
+        if (buf.readBoolean()) {
+            powerMode = PowerMode.values()[buf.readByte()];
+            hasPowerMode = true;
+        }
     }
 
 
@@ -165,6 +182,9 @@ public class MessageClientGuiHologramProjector implements IMessage, IMessageHand
             }
             if (message.hasGlowing) {
                 tileEntity.setGlowing(message.glowing);
+            }
+            if (message.hasPowerMode) {
+                tileEntity.setPowerMode(message.powerMode);
             }
         }
         return null;

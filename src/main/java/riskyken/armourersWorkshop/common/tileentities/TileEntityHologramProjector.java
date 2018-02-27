@@ -32,6 +32,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     private static final String TAG_ROTATION_SPEED_Z = "rotationSpeedZ";
     
     private static final String TAG_GLOWING = "glowing";
+    private static final String TAG_POWER_MODE = "powerMode";
+    private static final String TAG_POWERED = "powered";
     
     private int offsetX = 0;
     private int offsetY = 16;
@@ -50,6 +52,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     private int rotationSpeedZ = 0;
     
     private boolean glowing = true;
+    private PowerMode powerMode = PowerMode.IGNORED;
+    private boolean powered = false;
     
     private static boolean showRotationPoint;
     
@@ -179,6 +183,48 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    public PowerMode getPowerMode() {
+        return powerMode;
+    }
+    
+    public void setPowerMode(PowerMode powerMode) {
+        this.powerMode = powerMode;
+        markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    private int readIntFromCompound(NBTTagCompound compound, String key, int defaultValue) {
+        if (compound.hasKey(key, NBT.TAG_INT)) {
+            return compound.getInteger(key);
+        }
+        return defaultValue;
+    }
+    
+    private boolean readBoolFromCompound(NBTTagCompound compound, String key, Boolean defaultValue) {
+        if (compound.hasKey(key, NBT.TAG_BYTE)) {
+            return compound.getBoolean(key);
+        }
+        return defaultValue;
+    }
+    
+    public void updatePoweredState() {
+        if (worldObj != null) {
+            setPoweredState(worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0);
+        }
+    }
+    
+    public void setPoweredState(boolean powered) {
+        if (this.powered != powered) {
+            this.powered = powered;
+            markDirty();
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
+    
+    public boolean isPowered() {
+        return powered;
+    }
+    
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
@@ -199,6 +245,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         compound.setInteger(TAG_ROTATION_SPEED_Z, rotationSpeedZ);
         
         compound.setBoolean(TAG_GLOWING, glowing);
+        compound.setByte(TAG_POWER_MODE, (byte) powerMode.ordinal());
+        compound.setBoolean(TAG_POWERED, powered);
     }
     
     @Override
@@ -221,27 +269,21 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         rotationSpeedZ = readIntFromCompound(compound, TAG_ROTATION_SPEED_Z, 0);
         
         glowing = readBoolFromCompound(compound, TAG_GLOWING, true);
-    }
-    
-    private int readIntFromCompound(NBTTagCompound compound, String key, int defaultValue) {
-        if (compound.hasKey(key, NBT.TAG_INT)) {
-            return compound.getInteger(key);
+        if (compound.hasKey(TAG_POWER_MODE, NBT.TAG_BYTE)) {
+            int powerByte = compound.getByte(TAG_POWER_MODE);
+            if (powerByte >= 0 & powerByte < PowerMode.values().length) {
+                powerMode = PowerMode.values()[powerByte];
+            }
+        } else {
+            powerMode = PowerMode.IGNORED;
         }
-        return defaultValue;
-    }
-    
-    private boolean readBoolFromCompound(NBTTagCompound compound, String key, Boolean defaultValue) {
-        if (compound.hasKey(key, NBT.TAG_BYTE)) {
-            return compound.getBoolean(key);
-        }
-        return defaultValue;
+        powered = readBoolFromCompound(compound, TAG_POWERED, false);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(-2, -2, -2, 3, 3, 3);
-        //bb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
         ForgeDirection dir = ForgeDirection.getOrientation(getBlockMetadata());
         bb.offset(xCoord, yCoord, zCoord);
         
@@ -282,5 +324,11 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
             break;
         }
         return bb;
+    }
+    
+    public static enum PowerMode {
+        IGNORED,
+        HIGH,
+        LOW
     }
 }
