@@ -475,6 +475,10 @@ inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=旋转速度
 inventory.armourersworkshop:hologramProjector.tab.extra=副加
 inventory.armourersworkshop:hologramProjector.showRotationPoint=是否显示中心点
 inventory.armourersworkshop:hologramProjector.glowing=发光?
+inventory.armourersworkshop:hologramProjector.label.powerMode=红石模式:
+inventory.armourersworkshop:hologramProjector.powerMode.ignored=无效
+inventory.armourersworkshop:hologramProjector.powerMode.high=高
+inventory.armourersworkshop:hologramProjector.powerMode.low=低
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=没有更多步撤销
