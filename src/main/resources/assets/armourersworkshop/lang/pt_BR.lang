@@ -472,9 +472,11 @@ inventory.armourersworkshop:hologramProjector.tab.offset=Deslocamentos
 inventory.armourersworkshop:hologramProjector.tab.angle=Ângulos
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Afastamento de Rotação
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Velocidade de Rotação
-inventory.armourersworkshop:hologramProjector.tab.extra=Extra
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Mostrar Ponto de Rotação?
-inventory.armourersworkshop:hologramProjector.glowing=Brilhar?
+inventory.armourersworkshop:hologramProjector.label.powerMode=Modo de Energia de Pedra Vermelha:
+inventory.armourersworkshop:hologramProjector.powerMode.ignored=Ignorado
+inventory.armourersworkshop:hologramProjector.powerMode.high=Alto
+inventory.armourersworkshop:hologramProjector.powerMode.low=Baixo
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=Não dá para desfazer mais
