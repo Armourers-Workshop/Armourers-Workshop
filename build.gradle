@@ -39,12 +39,12 @@ minecraft {
 
     replaceIn "common/lib/LibModInfo.java"
     replace "@VERSION@", project.version
-	
-	if (!devBuild) {
-		replaceIn "common/lib/LibModInfo.java"
-		replace "DEVELOPMENT_VERSION = true", "DEVELOPMENT_VERSION = false"
-	}
-	
+    
+    if (!devBuild.toBoolean()) {
+        replaceIn "common/lib/LibModInfo.java"
+        replace "DEVELOPMENT_VERSION = true", "DEVELOPMENT_VERSION = false"
+    }
+    
     replaceIn "api/common/lib/LibApi.java"
     replace "@API_VERSION@", apiVersion
 }
