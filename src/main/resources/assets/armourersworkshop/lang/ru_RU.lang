@@ -250,6 +250,7 @@ inventory.armourersworkshop:dyeTable.name=Красящий Стол
 inventory.armourersworkshop:skinnable.name=Блок-Скин
 inventory.armourersworkshop:hologramProjector.name=Голографический Проектор
 
+
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Поиск:
 inventory.armourersworkshop:armourLibrary.label.filename=Имя Файла:
@@ -475,6 +476,10 @@ inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Скорость
 inventory.armourersworkshop:hologramProjector.tab.extra=Дополнительно
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Показать центр вращения
 inventory.armourersworkshop:hologramProjector.glowing=Светится
+inventory.armourersworkshop:hologramProjector.label.powerMode=Реагирует на сигнал красного камня:
+inventory.armourersworkshop:hologramProjector.powerMode.ignored=Нет
+inventory.armourersworkshop:hologramProjector.powerMode.high=Сильный
+inventory.armourersworkshop:hologramProjector.powerMode.low=Слабый
 
 # Chat Messages
 chat.armourersworkshop:undo.outOfUndos=Отмен не осталось
@@ -490,6 +495,7 @@ chat.armourersworkshop:slotUnlockedFailed=Достигнут максимум я
 chat.armourersworkshop:linkingTool.start=Привязка начата.
 chat.armourersworkshop:linkingTool.finish=Привязка успешно создана.
 chat.armourersworkshop:linkingTool.fail=Ошибка привязки.
+chat.armourersworkshop:linkingTool.linkedToSkinnable=Два Блок-скина связать нельзя.
 
 # Death Messages
 death.attack.victorious=%1$s был зарезан короной Vic'а.
