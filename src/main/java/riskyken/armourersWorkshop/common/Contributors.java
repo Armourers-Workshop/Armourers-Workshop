@@ -26,6 +26,7 @@ public class Contributors {
         addContributor("a865907c-6b83-47b2-a088-35688169dc6a", "EzerArch", 255, 255, 255);
         addContributor("d7d977c8-b264-49a3-ac6e-2fae419c8191", "Thundercat_", 74, 89, 169);
         addContributor("41dfb793-40df-4f14-aecc-9c6d265f2813", "BredFace", 40, 214, 63);
+        addContributor("4dbf2d3c-884a-4db2-a050-ed0dfedcc1e3", "Equine0x", 128, 0, 0);
     }
     
     private void addContributor(String uuid, String username, int r, int g, int b) {
