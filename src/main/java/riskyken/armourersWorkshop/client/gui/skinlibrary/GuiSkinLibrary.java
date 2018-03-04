@@ -715,23 +715,15 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     
                     drawRect(startX, startY, tarW, tarH, 0x77777777);
                     
-
-                    
-                    //ModLogger.log(scaledResolution.getScaleFactor());
-                    
                     if (scale > 8) {
                         GL11.glPushMatrix();
                         GL11.glTranslatef((float)x, (float)y, 500.0F);
                         
                         GL11.glScalef(10, 10, -10);
                         
-                        //GL11.glRotatef(30, 1, 0, 0);
+                        GL11.glRotatef(30, 1, 0, 0);
                         GL11.glRotatef(45, 0, 1, 0);
                         
-                        
-                        //GL11.glScalef((float)(-1), (float)1, (float)1);
-                        //GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-                        //GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
                         float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
                         GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
                         RenderHelper.enableStandardItemLighting();
@@ -744,7 +736,6 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                                 tarW - startX,
                                 tarH - startY
                                 );
-                        //ItemStackRenderHelper.renderItemModelFromSkin(skin, skinPointer, true, false);
                         GL11.glPopAttrib();
                         GL11.glPopMatrix();
                     }
