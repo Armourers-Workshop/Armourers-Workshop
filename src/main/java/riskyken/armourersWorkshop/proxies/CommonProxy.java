@@ -6,51 +6,104 @@ import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.addons.ModAddonManager;
+import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
+import riskyken.armourersWorkshop.common.blocks.ModBlocks;
+import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerOverrides;
+import riskyken.armourersWorkshop.common.config.ConfigSynchronizeHandler;
+import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
+import riskyken.armourersWorkshop.common.items.ModItems;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.CommonLibraryManager;
 import riskyken.armourersWorkshop.common.library.ILibraryCallback;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileType;
 import riskyken.armourersWorkshop.common.library.global.permission.PermissionSystem;
+import riskyken.armourersWorkshop.common.network.GuiHandler;
+import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel.AdminPanelCommand;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.skin.SkinExtractor;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
+import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
+import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 public class CommonProxy implements ILibraryCallback {
     
+    private static ModItems modItems;
+    private static ModBlocks modBlocks;
     public ILibraryManager libraryManager;
     private PermissionSystem permissionSystem;
     
-    public void preInit() {
+    public void preInit(FMLPreInitializationEvent event) {
+        File configDir = event.getSuggestedConfigurationFile().getParentFile();
+        configDir = new File(configDir, LibModInfo.ID);
+        if (!configDir.exists()) {
+            configDir.mkdirs();
+        }
         
+        ModAddonManager.preInit();
+        ConfigHandler.init(new File(configDir, "common.cfg"));
+        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
+        ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
+        
+        EntityRegistry.registerModEntity(Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
+        
+        SkinIOUtils.makeLibraryDirectory();
+        UpdateCheck.checkForUpdates();
+        SkinExtractor.extractSkins();
+        
+        SkinTypeRegistry.init();
+        CubeRegistry.init();
+        
+        modItems = new ModItems();
+        modBlocks = new ModBlocks();
     }
     
     public void initLibraryManager() {
         libraryManager = new CommonLibraryManager();
     }
     
-    public void initRenderers() {
-        
-    }
+    public void initRenderers() {}
     
-    public void init() {
+    public void init(FMLInitializationEvent event) {
+        modBlocks.registerTileEntities();
+        CraftingManager.init();
+        new GuiHandler();
+        new ConfigSynchronizeHandler();
+        
+        PacketHandler.init();
+        EntityEquipmentDataManager.init();
+        EntitySkinHandler.init();
         permissionSystem = new PermissionSystem();
+        ModAddonManager.init();
     }
     
-    public void postInit() {
-        
+    public void postInit(FMLPostInitializationEvent event) {
+        ModAddonManager.postInit();
+        libraryManager.reloadLibrary();
     }
     
     public PermissionSystem getPermissionSystem() {

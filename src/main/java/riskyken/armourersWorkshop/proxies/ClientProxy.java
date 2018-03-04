@@ -9,6 +9,9 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -111,8 +114,8 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void preInit() {
-        super.preInit();
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
         enableCrossModSupport();
         spamSillyMessages();
     }
@@ -156,8 +159,8 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void init() {
-        super.init();
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
         equipmentWardrobeHandler = new EquipmentWardrobeHandler();
         playerTextureHandler = new PlayerTextureHandler();
         playerTextureDownloader = new PlayerTextureDownloader();
@@ -167,8 +170,8 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void postInit() {
-        super.postInit();
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
         ModAddonManager.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
         if (HolidayHelper.valentins.isHolidayActive()) {

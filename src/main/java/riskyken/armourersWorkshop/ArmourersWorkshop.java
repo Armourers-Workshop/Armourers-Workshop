@@ -1,8 +1,8 @@
 package riskyken.armourersWorkshop;
 
-import java.io.File;
-
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -11,33 +11,14 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.addons.ModAddonManager;
-import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
-import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.command.CommandArmourers;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
-import riskyken.armourersWorkshop.common.config.ConfigHandlerOverrides;
-import riskyken.armourersWorkshop.common.config.ConfigSynchronizeHandler;
-import riskyken.armourersWorkshop.common.crafting.CraftingManager;
 import riskyken.armourersWorkshop.common.creativetab.CreativeTabArmourersWorkshop;
-import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.network.GuiHandler;
-import riskyken.armourersWorkshop.common.network.PacketHandler;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
-import riskyken.armourersWorkshop.common.skin.SkinExtractor;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.update.UpdateCheck;
 import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
-import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class ArmourersWorkshop {
@@ -63,7 +44,7 @@ public class ArmourersWorkshop {
      * SkinPartType - Each skin part has a part type examples; left arm, left leg and right arm.
      */
     
-    @Mod.Instance(LibModInfo.ID)
+    @Instance(LibModInfo.ID)
     public static ArmourersWorkshop instance;
 
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
@@ -71,80 +52,39 @@ public class ArmourersWorkshop {
 
     public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
 
-    private static ModItems modItems;
-    private static ModBlocks modBlocks;
+
     
-    @Mod.EventHandler
+    @EventHandler
     public void perInit(FMLPreInitializationEvent event) {
         ModLogger.log(String.format("Loading %s version %s", LibModInfo.NAME, LibModInfo.VERSION));
-        
-        File configDir = event.getSuggestedConfigurationFile().getParentFile();
-        configDir = new File(configDir, LibModInfo.ID);
-        if (!configDir.exists()) {
-            configDir.mkdirs();
-        }
-        
-        ModAddonManager.preInit();
-        ConfigHandler.init(new File(configDir, "common.cfg"));
-        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
-        ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
-        
-        EntityRegistry.registerModEntity(Seat.class, "seat", 1, instance, 10, 20, false);
-        
-        proxy.preInit();
-        
-        SkinIOUtils.makeLibraryDirectory();
-        UpdateCheck.checkForUpdates();
-        SkinExtractor.extractSkins();
-        
-        SkinTypeRegistry.init();
-        CubeRegistry.init();
-        
-        modItems = new ModItems();
-        modBlocks = new ModBlocks();
-        
+        proxy.preInit(event);
         proxy.initLibraryManager();
     }
 
-    @Mod.EventHandler
+    @EventHandler
     public void load(FMLInitializationEvent event) {
-        CraftingManager.init();
-
-        modBlocks.registerTileEntities();
-
-        new GuiHandler();
-        new ConfigSynchronizeHandler();
-        
-        PacketHandler.init();
-        EntityEquipmentDataManager.init();
-        EntitySkinHandler.init();
-        
-        proxy.init();
+        proxy.init(event);
         proxy.registerKeyBindings();
         proxy.initRenderers();
-        
-        ModAddonManager.init();
     }
     
-    @Mod.EventHandler
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInit();
-        ModAddonManager.postInit();
-        proxy.libraryManager.reloadLibrary();
+        proxy.postInit(event);
     }
     
-    @Mod.EventHandler
+    @EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandArmourers());
         CommonSkinCache.INSTANCE.serverStarted();
     }
     
-    @Mod.EventHandler
+    @EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         CommonSkinCache.INSTANCE.serverStopped();
     }
     
-    @Mod.EventHandler
+    @EventHandler
     public void processIMC(FMLInterModComms.IMCEvent event) {
         for (IMCMessage imcMessage : event.getMessages()) {
             if (!imcMessage.isStringMessage()) continue;
@@ -161,5 +101,9 @@ public class ArmourersWorkshop {
     
     public static CommonProxy getProxy() {
         return proxy;
+    }
+    
+    public static ArmourersWorkshop getInstance() {
+        return instance;
     }
 }

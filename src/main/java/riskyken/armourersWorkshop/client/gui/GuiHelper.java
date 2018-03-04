@@ -89,31 +89,31 @@ public final class GuiHelper {
             //RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
-            int k = 0;
+            int textWidth = 0;
             Iterator iterator = textList.iterator();
 
             while (iterator.hasNext()) {
-                String s = (String)iterator.next();
-                int sWidth = font.getStringWidth(s);
-                if (sWidth > k) {
-                    k = sWidth;
+                String line = (String)iterator.next();
+                int sWidth = font.getStringWidth(line);
+                if (sWidth > textWidth) {
+                    textWidth = sWidth;
                 }
             }
 
             int renderX = xPos + 12;
             int renderY = yPos - 12;
-            int i1 = 8;
+            int textHeight = 8;
 
             if (textList.size() > 1) {
-                i1 += 2 + (textList.size() - 1) * 10;
+                textHeight += 2 + (textList.size() - 1) * 10;
             }
 
-            if (renderX + k > width - 2) {
-                renderX -= 28 + k;
+            if (renderX + textWidth > width - 2) {
+                renderX -= 28 + textWidth;
             }
 
-            if (renderY + i1 + 6 > height) {
-                renderY = height - i1 - 6;
+            if (renderY + textHeight + 6 > height) {
+                renderY = height - textHeight - 6;
             }
             
             if (renderY < 5) {
@@ -122,21 +122,21 @@ public final class GuiHelper {
 
             zLevel = 300.0F;
             int j1 = -267386864;
-            drawGradientRect(renderX - 3, renderY - 4, renderX + k + 3, renderY - 3, j1, j1, zLevel);
-            drawGradientRect(renderX - 3, renderY + i1 + 3, renderX + k + 3, renderY + i1 + 4, j1, j1, zLevel);
-            drawGradientRect(renderX - 3, renderY - 3, renderX + k + 3, renderY + i1 + 3, j1, j1, zLevel);
-            drawGradientRect(renderX - 4, renderY - 3, renderX - 3, renderY + i1 + 3, j1, j1, zLevel);
-            drawGradientRect(renderX + k + 3, renderY - 3, renderX + k + 4, renderY + i1 + 3, j1, j1, zLevel);
+            drawGradientRect(renderX - 3, renderY - 4, renderX + textWidth + 3, renderY - 3, j1, j1, zLevel);
+            drawGradientRect(renderX - 3, renderY + textHeight + 3, renderX + textWidth + 3, renderY + textHeight + 4, j1, j1, zLevel);
+            drawGradientRect(renderX - 3, renderY - 3, renderX + textWidth + 3, renderY + textHeight + 3, j1, j1, zLevel);
+            drawGradientRect(renderX - 4, renderY - 3, renderX - 3, renderY + textHeight + 3, j1, j1, zLevel);
+            drawGradientRect(renderX + textWidth + 3, renderY - 3, renderX + textWidth + 4, renderY + textHeight + 3, j1, j1, zLevel);
             int k1 = 1347420415;
             int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
-            drawGradientRect(renderX - 3, renderY - 3 + 1, renderX - 3 + 1, renderY + i1 + 3 - 1, k1, l1, zLevel);
-            drawGradientRect(renderX + k + 2, renderY - 3 + 1, renderX + k + 3, renderY + i1 + 3 - 1, k1, l1, zLevel);
-            drawGradientRect(renderX - 3, renderY - 3, renderX + k + 3, renderY - 3 + 1, k1, k1, zLevel);
-            drawGradientRect(renderX - 3, renderY + i1 + 2, renderX + k + 3, renderY + i1 + 3, l1, l1, zLevel);
+            drawGradientRect(renderX - 3, renderY - 3 + 1, renderX - 3 + 1, renderY + textHeight + 3 - 1, k1, l1, zLevel);
+            drawGradientRect(renderX + textWidth + 2, renderY - 3 + 1, renderX + textWidth + 3, renderY + textHeight + 3 - 1, k1, l1, zLevel);
+            drawGradientRect(renderX - 3, renderY - 3, renderX + textWidth + 3, renderY - 3 + 1, k1, k1, zLevel);
+            drawGradientRect(renderX - 3, renderY + textHeight + 2, renderX + textWidth + 3, renderY + textHeight + 3, l1, l1, zLevel);
 
             for (int i2 = 0; i2 < textList.size(); ++i2) {
-                String s1 = (String)textList.get(i2);
-                font.drawStringWithShadow(s1, renderX, renderY, -1);
+                String line = (String)textList.get(i2);
+                font.drawStringWithShadow(line, renderX, renderY, -1);
                 if (i2 == 0) {
                     renderY += 2;
                 }
