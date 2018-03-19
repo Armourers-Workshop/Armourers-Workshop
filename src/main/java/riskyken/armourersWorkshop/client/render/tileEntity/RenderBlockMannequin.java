@@ -118,7 +118,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         ResourceLocation rl;
         boolean slimModel = false;
         boolean download;
-        
         PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(te);
         rl = playerTexture.getResourceLocation();
         slimModel = playerTexture.isSlimModel();

@@ -14,6 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -354,11 +355,12 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
         if (skin != null) {
             int iconSize = Math.min(boxWidth, boxHeight);
-            float scale = iconSize / 2;
+            ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            float scale = 10 - scaledResolution.getScaleFactor();
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glTranslatef(boxX + boxWidth / 2, boxY + boxHeight / 2, 500.0F);
-            GL11.glScalef((float)(-10), (float)10, (float)10);
+            GL11.glScalef((float)(-scale), (float)scale, (float)scale);
             GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
             float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);

@@ -1,62 +1,108 @@
 package riskyken.armourersWorkshop.utils;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.StringUtils;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StringUtils;
+
 public final class GameProfileUtils {
     
-    public static void updateProfileData(GameProfile gameProfile, IGameProfileCallback callback) {
-        Thread t = (new Thread(new ProfileUpdateThread(gameProfile, callback),LibModInfo.NAME + " profile update thread."));
-        t.setPriority(Thread.MIN_PRIORITY);
-        t.start();
-    }
+    private static final ExecutorService profileDownloader = Executors.newFixedThreadPool(2);
+    private static final HashMap<String, GameProfile> downloadedCache = new HashMap<String, GameProfile>();
+    private static final Cache<String, Boolean> submitted = CacheBuilder.newBuilder().expireAfterWrite(20, TimeUnit.MINUTES).build();
     
-    public static GameProfile getGameProfileForUserName(String userName) {
-        GameProfile gameProfile;
-        gameProfile = MinecraftServer.getServer().func_152358_ax().func_152655_a(userName);
-        if (gameProfile == null) {
-            ModLogger.log("profile was null");
-            gameProfile = new GameProfile(null, userName);
+    public static GameProfile getGameProfile(String name, IGameProfileCallback callback) {
+        if (StringUtils.isNullOrEmpty(name)) {
+            return null;
         }
-        return gameProfile;
+        return getGameProfile(new GameProfile(null, name), callback);
     }
     
-    public static class ProfileUpdateThread implements Runnable {
+    public static GameProfile getGameProfile(GameProfile gameProfile, IGameProfileCallback callback) {
+        if (gameProfile == null) {
+            return null;
+        }
+        if (StringUtils.isNullOrEmpty(gameProfile.getName())) {
+            return null;
+        }
+        
+        GameProfile cachedProfile = null;
+        synchronized (downloadedCache) {
+            cachedProfile = downloadedCache.get(gameProfile.getName());
+        }
+        if (cachedProfile != null) {
+            return cachedProfile;
+        }
+        
+        synchronized (submitted) {
+            if (!submitted.asMap().containsKey(gameProfile.getName())) {
+                submitted.put(gameProfile.getName(), true);
+                profileDownloader.submit(new ProfileDownloadThread(gameProfile, callback));
+            }
+        }
+
+        return null;
+    }
+    
+    public static class ProfileDownloadThread implements Runnable {
 
         private GameProfile gameProfile;
         private IGameProfileCallback callback;
         
-        public ProfileUpdateThread(GameProfile gameProfile, IGameProfileCallback callback) {
+        public ProfileDownloadThread(GameProfile gameProfile, IGameProfileCallback callback) {
             this.gameProfile = gameProfile;
             this.callback = callback;
         }
         
         @Override
         public void run() {
-            if (this.gameProfile != null && !StringUtils.isNullOrEmpty(this.gameProfile.getName())) {
-                if (!this.gameProfile.isComplete() || !this.gameProfile.getProperties().containsKey("textures")) {
-                    GameProfile newGameProfile = MinecraftServer.getServer().func_152358_ax().func_152655_a(this.gameProfile.getName());
-                    if (newGameProfile != null) {
-                        Property property = (Property)Iterables.getFirst(newGameProfile.getProperties().get("textures"), (Object)null);
-                        if (property == null) {
-                            newGameProfile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(newGameProfile, true);
-                        }
-                        if (callback != null) {
-                            callback.profileUpdated(newGameProfile);
-                        }
+            GameProfile newProfile = fillProfileProperties(gameProfile);
+            if (newProfile != null) {
+                synchronized (downloadedCache) {
+                    downloadedCache.put(newProfile.getName(), newProfile);
+                }
+                if (callback != null) {
+                    callback.profileDownloaded(newProfile);
+                }
+            }
+        }
+        
+        private GameProfile fillProfileProperties(GameProfile gameProfile) {
+            if (!gameProfile.isComplete()) {
+                gameProfile = MinecraftServer.getServer().func_152358_ax().func_152655_a(gameProfile.getName());
+            }
+            
+            if (gameProfile == null) {
+                return null;
+            }
+            
+            if (gameProfile.isComplete()) {
+                Minecraft minecraft = Minecraft.getMinecraft();
+                Map map = minecraft.func_152342_ad().func_152788_a(gameProfile);
+                if (!gameProfile.getProperties().containsKey("textures")) {
+                    Property property = (Property)Iterables.getFirst(gameProfile.getProperties().get("textures"), (Object)null);
+                    if (property == null) {
+                        gameProfile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameProfile, false);
+                        return gameProfile;
                     }
                 }
             }
+            return gameProfile;
         }
     }
     
     public interface IGameProfileCallback {
-        
-        public void profileUpdated(GameProfile gameProfile);
+        public void profileDownloaded(GameProfile gameProfile);
     }
 }

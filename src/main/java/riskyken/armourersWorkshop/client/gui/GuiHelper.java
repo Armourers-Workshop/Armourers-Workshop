@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -28,19 +29,18 @@ public final class GuiHelper {
     
     public static void drawPlayerHead(int x, int y, int size, String username) {
         
-        
         ResourceLocation rl = AbstractClientPlayer.locationStevePng;
-        if (username != null) {
+        if (!StringUtils.isNullOrEmpty(username)) {
             PlayerTexture playerTexture = getPlayerTexture(username, TextureType.USER);
-            rl = playerTexture.getResourceLocation();
+            rl = playerTexture.getResourceLocation();  
         }
         Minecraft.getMinecraft().renderEngine.bindTexture(rl);
         
         int sourceSize = 8;
         
-        //Face
+        // Face
         Gui.func_152125_a(x + 1, y + 1, 8, 8, sourceSize, sourceSize, size, size, 64, 32);
-        //Overlay
+        // Overlay
         Gui.func_152125_a(x, y, 40, 8, sourceSize, sourceSize, size + 2, size + 2, 64, 32);
     }
     

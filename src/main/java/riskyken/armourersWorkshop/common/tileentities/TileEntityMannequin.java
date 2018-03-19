@@ -309,6 +309,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     public GameProfile getGameProfile() {
+        if (newProfile != null) {
+            gameProfile = newProfile;
+            newProfile = null;
+        }
         return gameProfile;
     }
     
@@ -329,7 +333,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
     
     private void updateProfileData(){
-        GameProfileUtils.updateProfileData(gameProfile, this);
+        GameProfile newProfile = GameProfileUtils.getGameProfile(gameProfile, this);
+        if (newProfile != null) {
+            profileDownloaded(newProfile);
+        }
     }
     
     @Override
@@ -458,9 +465,11 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
 
     @Override
-    public void profileUpdated(GameProfile gameProfile) {
+    public void profileDownloaded(GameProfile gameProfile) {
         newProfile = gameProfile;
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (worldObj != null) {
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
     }
 }

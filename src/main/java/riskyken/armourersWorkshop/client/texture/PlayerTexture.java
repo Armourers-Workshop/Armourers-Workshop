@@ -1,12 +1,24 @@
 package riskyken.armourersWorkshop.client.texture;
 
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.codec.binary.Base64;
+
+import com.google.common.collect.Iterables;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
+import com.mojang.authlib.properties.Property;
+
+import net.minecraft.client.resources.SkinManager.SkinAvailableCallback;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
-public class PlayerTexture {
+public class PlayerTexture implements SkinAvailableCallback {
     
     private static final String TAG_TEXTURE_STRING = "string";
     private static final String TAG_TEXTURE_TYPE = "type";
@@ -39,6 +51,29 @@ public class PlayerTexture {
         }
         downloadTime = System.currentTimeMillis();
         downloaded = true;
+    }
+    
+    public void setModelTypeFromProfile(GameProfile gameProfile) {
+        if (gameProfile != null) {
+            if (gameProfile.getProperties().containsKey("textures")) {
+                Property property = (Property)Iterables.getFirst(gameProfile.getProperties().get("textures"), (Object)null);
+                try {
+                    String json = new String(Base64.decodeBase64(property.getValue()), Charsets.UTF_8);
+                    //ModLogger.log("Full json: " + json);
+                    JsonParser parser = new JsonParser();
+                    JsonElement jsonElement = parser.parse(json);
+                    JsonObject jsonObject = jsonElement.getAsJsonObject();
+                    
+                    JsonObject jsonTextures = jsonObject.getAsJsonObject("textures");
+                    JsonObject jsonSkin = jsonTextures.getAsJsonObject("SKIN");
+                    if (jsonSkin != null && jsonSkin.has("metadata")) {
+                        slimModel = true;
+                    }
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                }
+            }
+        }
     }
     
     public String getTextureString() {
@@ -107,5 +142,14 @@ public class PlayerTexture {
         if (textureType != other.textureType)
             return false;
         return true;
+    }
+
+    @Override
+    public void func_152121_a(Type type, ResourceLocation resourceLocation) {
+        if (type == Type.SKIN) {
+            this.resourceLocation = resourceLocation;
+            downloadTime = System.currentTimeMillis();
+            downloaded = true;
+        }
     }
 }
