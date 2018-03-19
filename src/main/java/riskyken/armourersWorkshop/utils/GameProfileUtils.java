@@ -13,8 +13,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 
 public final class GameProfileUtils {
     
@@ -80,7 +80,7 @@ public final class GameProfileUtils {
         
         private GameProfile fillProfileProperties(GameProfile gameProfile) {
             if (!gameProfile.isComplete()) {
-                gameProfile = MinecraftServer.getServer().func_152358_ax().func_152655_a(gameProfile.getName());
+                gameProfile = ArmourersWorkshop.getProxy().getServer().func_152358_ax().func_152655_a(gameProfile.getName());
             }
             
             if (gameProfile == null) {
@@ -93,7 +93,7 @@ public final class GameProfileUtils {
                 if (!gameProfile.getProperties().containsKey("textures")) {
                     Property property = (Property)Iterables.getFirst(gameProfile.getProperties().get("textures"), (Object)null);
                     if (property == null) {
-                        gameProfile = MinecraftServer.getServer().func_147130_as().fillProfileProperties(gameProfile, false);
+                        gameProfile = ArmourersWorkshop.getProxy().getServer().func_147130_as().fillProfileProperties(gameProfile, false);
                         return gameProfile;
                     }
                 }
