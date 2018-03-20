@@ -16,12 +16,13 @@ import net.minecraftforge.common.util.Constants;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
+import riskyken.armourersWorkshop.common.GameProfileCache;
+import riskyken.armourersWorkshop.common.GameProfileCache.IGameProfileCallback;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.utils.GameProfileUtils;
-import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
+import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -332,8 +333,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         return fakePlayer;
     }
     
-    private void updateProfileData(){
-        GameProfile newProfile = GameProfileUtils.getGameProfile(gameProfile, this);
+    private void updateProfileData() {
+        GameProfile newProfile = GameProfileCache.getGameProfile(gameProfile, this);
         if (newProfile != null) {
             profileDownloaded(newProfile);
         }
@@ -466,6 +467,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
 
     @Override
     public void profileDownloaded(GameProfile gameProfile) {
+        ModLogger.log("got profile update");
         newProfile = gameProfile;
         markDirty();
         if (worldObj != null) {

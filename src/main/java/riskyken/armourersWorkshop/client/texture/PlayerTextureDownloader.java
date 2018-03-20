@@ -17,9 +17,9 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.SkinManager.SkinAvailableCallback;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.common.GameProfileCache;
+import riskyken.armourersWorkshop.common.GameProfileCache.IGameProfileCallback;
 import riskyken.armourersWorkshop.common.data.TextureType;
-import riskyken.armourersWorkshop.utils.GameProfileUtils;
-import riskyken.armourersWorkshop.utils.GameProfileUtils.IGameProfileCallback;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
@@ -85,11 +85,14 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
     private PlayerTexture getPlayerTextureFromName(String username) {
         GameProfile gameProfile = getGameProfile(username);
         if (gameProfile != null) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            PlayerTexture playerTexture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
-            playerTexture.setModelTypeFromProfile(gameProfile);
-            minecraft.func_152342_ad().func_152790_a(gameProfile, new DownloadWrapper(playerTexture), false);
-            playerTextureMap.put(gameProfile.getName(), playerTexture);
+            if (!playerTextureMap.containsKey(gameProfile.getName())) {
+                ModLogger.log("Asking for texture " + gameProfile);
+                Minecraft minecraft = Minecraft.getMinecraft();
+                PlayerTexture playerTexture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
+                playerTexture.setModelTypeFromProfile(gameProfile);
+                minecraft.func_152342_ad().func_152790_a(gameProfile, new DownloadWrapper(playerTexture), false);
+                playerTextureMap.put(gameProfile.getName(), playerTexture);
+            }
         }
         return NO_TEXTURE;
     }
@@ -98,7 +101,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         if (!StringUtils.isNullOrEmpty(username)) {
             Minecraft minecraft = Minecraft.getMinecraft();
             
-            GameProfile filledProfile = GameProfileUtils.getGameProfile(username, this);
+            GameProfile filledProfile = GameProfileCache.getGameProfileClient(username, this);
             if (filledProfile != null) {
                 return filledProfile;
             }
@@ -142,6 +145,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         @Override
         public void func_152121_a(Type type, ResourceLocation resourceLocation) {
             if (type == Type.SKIN) {
+                ModLogger.log("Got for texture " + playerTexture.getTextureString());
                 playerTexture.setResourceLocation(resourceLocation);
             }
         }

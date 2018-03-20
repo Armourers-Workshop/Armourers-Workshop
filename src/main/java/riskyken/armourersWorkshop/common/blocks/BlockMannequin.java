@@ -383,5 +383,11 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     @Override
     public void getDebugHoverText(World world, int x, int y, int z, ArrayList<String> textLines) {
         textLines.add("top=" + isTopOfMannequin(world, x, y, z));
+        TileEntityMannequin te = getMannequinTileEntity(world, x, y, z);
+        if (te != null && te.getGameProfile() != null) {
+            textLines.add("profile=" + te.getGameProfile().getName() + ":" + te.getGameProfile().getId());
+        } else {
+            textLines.add("profile=null");
+        }
     }
 }
