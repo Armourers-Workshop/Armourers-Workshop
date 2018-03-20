@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.SkinManager.SkinAvailableCallback;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.common.data.TextureType;
@@ -86,7 +88,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
             Minecraft minecraft = Minecraft.getMinecraft();
             PlayerTexture playerTexture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
             playerTexture.setModelTypeFromProfile(gameProfile);
-            minecraft.func_152342_ad().func_152790_a(gameProfile, playerTexture, false);
+            minecraft.func_152342_ad().func_152790_a(gameProfile, new DownloadWrapper(playerTexture), false);
             playerTextureMap.put(gameProfile.getName(), playerTexture);
         }
         return NO_TEXTURE;
@@ -109,7 +111,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         Minecraft minecraft = Minecraft.getMinecraft();
         PlayerTexture playerTexture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
         playerTexture.setModelTypeFromProfile(gameProfile);
-        minecraft.func_152342_ad().func_152790_a(gameProfile, playerTexture, false);
+        minecraft.func_152342_ad().func_152790_a(gameProfile, new DownloadWrapper(playerTexture), false);
         synchronized (playerTextureMap) {
             playerTextureMap.put(gameProfile.getName(), playerTexture);
         }
@@ -127,5 +129,21 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
             texturemanager.loadTexture(resourceLocation, (ITextureObject)object);
         }
         return (ThreadDownloadImageData)object;
+    }
+    
+    private static class DownloadWrapper implements SkinAvailableCallback {
+        
+        private final PlayerTexture playerTexture;
+        
+        public DownloadWrapper(PlayerTexture playerTexture) {
+            this.playerTexture = playerTexture;
+        }
+        
+        @Override
+        public void func_152121_a(Type type, ResourceLocation resourceLocation) {
+            if (type == Type.SKIN) {
+                playerTexture.setResourceLocation(resourceLocation);
+            }
+        }
     }
 }
