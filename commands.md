@@ -36,9 +36,10 @@ Commands can run with the prefix /armourers.
   Result:
 
 #### Spawning
+```
 /give @p armourersWorkshop:equipmentSkin 1 0 {armourersWorkshop:{skinType:"armourers:wings", identifier:{libraryFile:"Angel Wings"}}}
 /give @p armourersWorkshop:equipmentSkin 1 0 {armourersWorkshop:{skinType:"armourers:wings", identifier:{localId:-1559653466}}}
 /give @p armourersWorkshop:equipmentSkin 1 0 {armourersWorkshop:{skinType:"armourers:wings", identifier:{globalId:293}}}
-
+```
 
 #### Admin Panel
