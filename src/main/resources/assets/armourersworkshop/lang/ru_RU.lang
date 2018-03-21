@@ -250,7 +250,6 @@ inventory.armourersworkshop:dyeTable.name=Красящий Стол
 inventory.armourersworkshop:skinnable.name=Блок-Скин
 inventory.armourersworkshop:hologramProjector.name=Голографический Проектор
 
-
 # Inventory controls
 inventory.armourersworkshop:armourLibrary.label.search=Поиск:
 inventory.armourersworkshop:armourLibrary.label.filename=Имя Файла:
@@ -317,6 +316,7 @@ inventory.armourersworkshop:armourerBrain.bed=Кровать
 inventory.armourersworkshop:armourerBrain.inventory=С инвентарём
 inventory.armourersworkshop:armourerBrain.enderInventory=С эндер-инвентарём
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Замещает
+inventory.armourersworkshop:armourerBrain.hideOverlay=Скрывает второй слой головы
 inventory.armourersworkshop:armourerBrain.tab.main=Основное
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Настройки Отображения
 inventory.armourersworkshop:armourerBrain.tab.skinSettings=Свойства Скина
@@ -501,13 +501,14 @@ chat.armourersworkshop:linkingTool.linkedToSkinnable=Два Блок-скина 
 death.attack.victorious=%1$s был зарезан короной Vic'а.
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable>
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable | setWardrobeOption>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [R,G,B] | [0xRRGGBB]
 commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
 commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
+commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
 commands.armourers.fileNotFound=Файл %1$s не Был Найден.
 commands.armourers.invalidDyeFormat=%1$s - неправильный формат цвета.
 
