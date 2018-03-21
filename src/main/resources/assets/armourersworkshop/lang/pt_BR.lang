@@ -316,6 +316,7 @@ inventory.armourersworkshop:armourerBrain.bed=Cama?
 inventory.armourersworkshop:armourerBrain.inventory=Inventário?
 inventory.armourersworkshop:armourerBrain.enderInventory=Inventário do Ender?
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=Substituir?
+inventory.armourersworkshop:armourerBrain.hideOverlay=Ocultar Detalhes da Cabeça?
 inventory.armourersworkshop:armourerBrain.tab.main=Principal
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Configuração de Exibição 
 inventory.armourersworkshop:armourerBrain.tab.skinSettings=Configuração de Visual
@@ -472,6 +473,7 @@ inventory.armourersworkshop:hologramProjector.tab.offset=Deslocamentos
 inventory.armourersworkshop:hologramProjector.tab.angle=Ângulos
 inventory.armourersworkshop:hologramProjector.tab.rotationOffset=Afastamento de Rotação
 inventory.armourersworkshop:hologramProjector.tab.rotationSpeed=Velocidade de Rotação
+inventory.armourersworkshop:hologramProjector.tab.extra=Extra
 inventory.armourersworkshop:hologramProjector.showRotationPoint=Mostrar Ponto de Rotação?
 inventory.armourersworkshop:hologramProjector.label.powerMode=Modo de Energia de Pedra Vermelha:
 inventory.armourersworkshop:hologramProjector.powerMode.ignored=Ignorado
@@ -492,20 +494,22 @@ chat.armourersworkshop:slotUnlockedFailed=O total de espaços de visuais para %s
 chat.armourersworkshop:linkingTool.start=Começando conexão.
 chat.armourersworkshop:linkingTool.finish=Conexão criada.
 chat.armourersworkshop:linkingTool.fail=Conexão falhada.
+chat.armourersworkshop:linkingTool.linkedToSkinnable=Não é possível conectar dois blocos visuais.
 
 # Death Messages
 death.attack.victorious=%1$s foi esfaqueado até a morte pela coroa de Vic.
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setSkinColumnCount> <player> [skinName | value]
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable | setWardrobeOption>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
-commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>
+commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [R,G,B] | [0xRRGGBB]
 commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
 commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
-commands.armourers.fileNotFound=O arquivo %1$s não foi encontrado.
-commands.armourers.invalidDyeFormat=%1$s não é um formato de corante válido.
+commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
+commands.armourers.fileNotFound=O arquivo %1$s não foi encontrando.
+commands.armourers.invalidDyeFormat=%1$s não é um formato de tintura válido.
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop
