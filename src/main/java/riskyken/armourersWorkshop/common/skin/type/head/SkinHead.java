@@ -56,6 +56,7 @@ public class SkinHead extends AbstractSkinTypeBase {
     public ArrayList<ISkinProperty<?>> getProperties() {
         ArrayList<ISkinProperty<?>> properties = super.getProperties();
         properties.add(SkinProperties.PROP_ARMOUR_OVERRIDE);
+        properties.add(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY);
         return properties;
     }
 }

@@ -51,6 +51,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
     private GuiCustomSlider sliderWingMaxAngle;
     
     private GuiCheckBox checkArmourOverrideBodyPart;
+    private GuiCheckBox checkArmourHideOverlay;
     private GuiDropDownList dropDownList;
     
     private boolean resetting;
@@ -110,6 +111,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         sliderWingMaxAngle.setFineTuneButtons(true);
         
         checkArmourOverrideBodyPart = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps));
+        checkArmourHideOverlay = new GuiCheckBox(15, 10, 35, GuiHelper.getLocalizedControlName(guiName, "hideOverlay"), SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skinProps));
         
         MovementType skinMovmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skinProps));
         dropDownList = new GuiDropDownList(0, 10, 125, 50, "", this);
@@ -139,6 +141,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         buttonList.add(sliderWingMaxAngle);
         
         buttonList.add(checkArmourOverrideBodyPart);
+        buttonList.add(checkArmourHideOverlay);
         buttonList.add(dropDownList);
     }
     
@@ -183,8 +186,9 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         
-        if (button == checkArmourOverrideBodyPart) {
+        if (button == checkArmourOverrideBodyPart | button == checkArmourHideOverlay) {
             SkinProperties.PROP_ARMOUR_OVERRIDE.setValue(skinProps, checkArmourOverrideBodyPart.isChecked());
+            SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.setValue(skinProps, checkArmourHideOverlay.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         
@@ -214,6 +218,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         sliderWingFlyingSpeed.updateSlider();
         
         checkArmourOverrideBodyPart.setIsChecked(SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProperties));
+        checkArmourHideOverlay.setIsChecked(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skinProperties));
         
         MovementType skinMovmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skinProperties));
         for (int i = 0; i < MovementType.values().length; i++) {
@@ -248,6 +253,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         dropDownList.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         
         checkArmourOverrideBodyPart.visible = tileEntity.getSkinType().getVanillaArmourSlotId() != -1;
+        checkArmourHideOverlay.visible = tileEntity.getSkinType().getVanillaArmourSlotId() != -1;
     }
     
     @Override

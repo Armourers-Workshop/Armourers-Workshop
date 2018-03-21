@@ -219,6 +219,9 @@ public final class SkinModelRenderer {
                         if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
                             return true;
                         }
+                        if (SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skin.getProperties())) {
+                            return true;
+                        }
                     }
                 }
             }
