@@ -22,7 +22,6 @@ import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
     
@@ -467,7 +466,6 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
 
     @Override
     public void profileDownloaded(GameProfile gameProfile) {
-        ModLogger.log("got profile update");
         newProfile = gameProfile;
         markDirty();
         if (worldObj != null) {

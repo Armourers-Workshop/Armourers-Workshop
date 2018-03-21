@@ -54,12 +54,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
                         playerTextureMap.put(textureString, playerTexture);
                         downloadTexture(textureString, playerTexture, textureType);
                     } else {
-                        //lastSkinDownload = System.currentTimeMillis();
-                        playerTexture = getPlayerTextureFromName(textureString);
-                        if (playerTexture != NO_TEXTURE) {
-                            ModLogger.log("Setting profile " + textureString);
-                            //playerTextureMap.put(textureString, playerTexture);
-                        }
+                        getPlayerTextureFromName(textureString);
                     }
                 }
             }
@@ -86,7 +81,6 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         GameProfile gameProfile = getGameProfile(username);
         if (gameProfile != null) {
             if (!playerTextureMap.containsKey(gameProfile.getName())) {
-                ModLogger.log("Asking for texture " + gameProfile);
                 Minecraft minecraft = Minecraft.getMinecraft();
                 PlayerTexture playerTexture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
                 playerTexture.setModelTypeFromProfile(gameProfile);
@@ -145,7 +139,6 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         @Override
         public void func_152121_a(Type type, ResourceLocation resourceLocation) {
             if (type == Type.SKIN) {
-                ModLogger.log("Got for texture " + playerTexture.getTextureString());
                 playerTexture.setResourceLocation(resourceLocation);
             }
         }

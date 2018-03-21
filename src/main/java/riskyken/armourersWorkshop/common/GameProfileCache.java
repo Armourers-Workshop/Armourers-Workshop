@@ -18,7 +18,6 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestGameProfile;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerGameProfile;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class GameProfileCache {
     
@@ -43,7 +42,6 @@ public final class GameProfileCache {
         synchronized (clientRequests) {
             if (!clientRequests.asMap().containsKey(name)) {
                 clientRequests.put(name, true);
-                ModLogger.log("Asking server for profile.");
                 PacketHandler.networkWrapper.sendToServer(new MessageClientRequestGameProfile(new GameProfile(null, name)));
             }
         }
@@ -68,7 +66,6 @@ public final class GameProfileCache {
         
         synchronized (submitted) {
             if (!submitted.asMap().containsKey(gameProfile.getName())) {
-                ModLogger.log("Asking for profile " + gameProfile);
                 submitted.put(gameProfile.getName(), true);
                 profileDownloader.submit(new ProfileDownloadThread(gameProfile, callback));
             }
@@ -78,7 +75,6 @@ public final class GameProfileCache {
     }
     
     public static void onServerSentProfile(GameProfile gameProfile) {
-        ModLogger.log("Got profile from server " + gameProfile);
         synchronized (clientProfileCache) {
             clientProfileCache.put(gameProfile.getName(), gameProfile);
         }
@@ -164,7 +160,6 @@ public final class GameProfileCache {
                 if (!gameProfile.getProperties().containsKey("textures")) {
                     Property property = (Property)Iterables.getFirst(gameProfile.getProperties().get("textures"), (Object)null);
                     if (property == null) {
-                        ModLogger.log("Getting profile properties " + gameProfile);
                         gameProfile = ArmourersWorkshop.getProxy().getServer().func_147130_as().fillProfileProperties(gameProfile, false);
                         return gameProfile;
                     }
