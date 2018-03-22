@@ -316,6 +316,7 @@ inventory.armourersworkshop:armourerBrain.bed=是否为床
 inventory.armourersworkshop:armourerBrain.inventory=是否是箱子?
 inventory.armourersworkshop:armourerBrain.enderInventory=是否是末影箱？
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=隐藏皮肤层?
+inventory.armourersworkshop:armourerBrain.hideOverlay=隐藏双层皮肤? 
 inventory.armourersworkshop:armourerBrain.tab.main=主菜单
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=显示设定
 inventory.armourersworkshop:armourerBrain.tab.skinSettings=时装设定
@@ -494,18 +495,20 @@ chat.armourersworkshop:slotUnlockedFailed=%s 时装栏栏位达到最大数量.
 chat.armourersworkshop:linkingTool.start=方块开始连接.
 chat.armourersworkshop:linkingTool.finish=方块连接成功.
 chat.armourersworkshop:linkingTool.fail=方块连接失败.
+chat.armourersworkshop:linkingTool.linkedToSkinnable=不能连接两个时装方块.
 
 # Death Messages
 death.attack.victorious=%1$s 脚被刺穿了（恭喜你发现了彩蛋）
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable> 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模型数据| 设置皮肤栏数|重新同步衣柜|管理员面板|设置物品可加载时装> 
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable| setWardrobeOption> 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模型数据| 设置皮肤栏数|重新同步衣柜|管理员面板|设置物品可加载时装|设置模特相关> 
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>
 commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
 commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
+commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | 
 commands.armourers.fileNotFound=文件 %1$s 没有找到.
 commands.armourers.invalidDyeFormat=%1$s 不是有效的染料格式.
 
