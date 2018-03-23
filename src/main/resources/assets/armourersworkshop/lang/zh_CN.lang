@@ -340,6 +340,9 @@ inventory.armourersworkshop:colourMixer.label.hex=十六进制
 inventory.armourersworkshop:colourMixer.label.presets=预设
 inventory.armourersworkshop:colourMixer.label.paintType=颜色类型
 
+inventory.armourersworkshop:equipmentWardrobe.tab.skins=时装
+inventory.armourersworkshop:equipmentWardrobe.tab.displaySettings=显示设置
+inventory.armourersworkshop:equipmentWardrobe.tab.colourSettings=颜色设置
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=皮肤颜色
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=头发颜色
 inventory.armourersworkshop:equipmentWardrobe.selectSkin=挑选皮肤颜色
