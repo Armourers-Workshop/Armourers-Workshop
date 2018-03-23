@@ -23,6 +23,7 @@ public class GuiDialogClear extends AbstractGuiDialog {
     private GuiDropDownList dropDownParts;
     private GuiCheckBox checkClearBlocks;
     private GuiCheckBox checkClearPaint;
+    private GuiCheckBox checkClearMarkers;
     private final ISkinType skinType;
     private final SkinProperties skinProperties;
     
@@ -61,12 +62,14 @@ public class GuiDialogClear extends AbstractGuiDialog {
         dropDownParts.setListSelectedIndex(0);
         checkClearBlocks = new GuiCheckBox(0, x + 10, y  + height - 60, GuiHelper.getLocalizedControlName(name, "clearBlocks"), true);
         checkClearPaint = new GuiCheckBox(0, x + 10, y  + height - 50, GuiHelper.getLocalizedControlName(name, "clearPaint"), true);
+        checkClearMarkers = new GuiCheckBox(0, x + 10, y  + height - 70, GuiHelper.getLocalizedControlName(name, "clearMarkers"), true);
         
         buttonList.add(buttonClose);
         buttonList.add(buttonClear);
         buttonList.add(dropDownParts);
         buttonList.add(checkClearBlocks);
         buttonList.add(checkClearPaint);
+        buttonList.add(checkClearMarkers);
     }
     
     private void addPartToDropDown(GuiDropDownList dropDown, ISkinPartType partType) {
@@ -85,6 +88,10 @@ public class GuiDialogClear extends AbstractGuiDialog {
     
     public boolean isClearPaint() {
         return checkClearPaint.isChecked();
+    }
+    
+    public boolean isClearMarkers() {
+        return checkClearMarkers.isChecked();
     }
     
     @Override

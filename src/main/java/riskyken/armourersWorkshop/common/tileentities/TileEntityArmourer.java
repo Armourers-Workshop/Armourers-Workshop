@@ -294,6 +294,16 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
     }
     
+    public void clearMarkers(ISkinPartType partType) {
+        if (skinType != null) {
+            ArmourerWorldHelper.clearMarkers(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps, partType);
+            SkinProperties newSkinProps = new SkinProperties();
+            SkinProperties.PROP_BLOCK_MULTIBLOCK.setValue(newSkinProps, SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps));
+            setSkinProps(newSkinProps);
+            dirtySync();
+        }
+    }
+    
     protected void removeBoundingBoxes() {
         if (skinType != null) {
             ArmourerWorldHelper.removeBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);

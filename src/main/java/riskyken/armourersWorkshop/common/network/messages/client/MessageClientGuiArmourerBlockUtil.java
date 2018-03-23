@@ -19,16 +19,18 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
     private ISkinPartType partType2;
     private boolean option1;
     private boolean option2;
+    private boolean option3;
     
     public MessageClientGuiArmourerBlockUtil() {
     }
     
-    public MessageClientGuiArmourerBlockUtil(String utilType, ISkinPartType part1, ISkinPartType part2, boolean option1, boolean option2) {
+    public MessageClientGuiArmourerBlockUtil(String utilType, ISkinPartType part1, ISkinPartType part2, boolean option1, boolean option2, boolean option3) {
         this.utilType = utilType;
         this.partType1 = part1;
         this.partType2 = part2;
         this.option1 = option1;
         this.option2 = option2;
+        this.option3 = option3;
     }
 
 
@@ -45,6 +47,7 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
         }
         buf.writeBoolean(option1);
         buf.writeBoolean(option2);
+        buf.writeBoolean(option3);
     }
 
     @Override
@@ -60,6 +63,7 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
         }
         this.option1 = buf.readBoolean();
         this.option2 = buf.readBoolean();
+        this.option3 = buf.readBoolean();
     }
 
 
@@ -74,12 +78,18 @@ public class MessageClientGuiArmourerBlockUtil implements IMessage, IMessageHand
             TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
             boolean clearBlocks = message.option1;
             boolean clearPaint = message.option2;
+            boolean clearMarkers = message.option3;
             if (message.utilType.equals("clear")) {
                 if (clearBlocks) {
                     armourerBrain.clearArmourCubes(message.partType1);
                 }
                 if (clearPaint) {
                     armourerBrain.clearPaintData(true);
+                }
+                if (clearMarkers) {
+                    if (!clearBlocks) {
+                        armourerBrain.clearMarkers(message.partType1);
+                    }
                 }
             }
             

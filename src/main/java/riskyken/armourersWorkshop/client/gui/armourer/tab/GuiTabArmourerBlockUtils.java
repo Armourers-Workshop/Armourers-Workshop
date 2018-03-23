@@ -76,8 +76,9 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
                     ISkinPartType partType = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(tag);
                     boolean clearBlocks = ((GuiDialogClear)dialog).isClearBlocks();
                     boolean clearPaint = ((GuiDialogClear)dialog).isClearPaint();
+                    boolean clearMarkers = ((GuiDialogClear)dialog).isClearMarkers();
                     MessageClientGuiArmourerBlockUtil message;
-                    message = new MessageClientGuiArmourerBlockUtil("clear", partType, null, clearBlocks, clearPaint);
+                    message = new MessageClientGuiArmourerBlockUtil("clear", partType, null, clearBlocks, clearPaint, clearMarkers);
                     PacketHandler.networkWrapper.sendToServer(message);
                 }
             }
@@ -86,7 +87,7 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
                 ISkinPartType desPart  = ((GuiDialogCopy)dialog).getDesPart();
                 boolean mirror  = ((GuiDialogCopy)dialog).isMirror();
                 MessageClientGuiArmourerBlockUtil message;
-                message = new MessageClientGuiArmourerBlockUtil("copy", srcPart, desPart, mirror, false);
+                message = new MessageClientGuiArmourerBlockUtil("copy", srcPart, desPart, mirror, false, false);
                 PacketHandler.networkWrapper.sendToServer(message);
             }
         }

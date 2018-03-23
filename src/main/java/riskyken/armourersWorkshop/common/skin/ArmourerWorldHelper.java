@@ -395,6 +395,58 @@ public final class ArmourerWorldHelper {
         return clearEquipmentCubes(world, x, y, z, skinType, skinProps, null);
     }
     
+    public static int clearMarkers(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
+        int blockCount = 0;
+        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+            ISkinPartType skinPart = skinType.getSkinParts().get(i);
+            if (partType != null) {
+                if (partType != skinPart) {
+                    continue;
+                }
+            }
+            if (skinType == SkinTypeRegistry.skinBlock) {
+                boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps);
+                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
+                    blockCount += clearMarkersForSkinPart(world, x, y, z, skinPart);
+                }
+                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock & multiblock) {
+                    blockCount += clearMarkersForSkinPart(world, x, y, z, skinPart);
+                }
+            } else {
+                blockCount += clearMarkersForSkinPart(world, x, y, z, skinPart);
+            }
+        }
+        return blockCount;
+    }
+    
+    private static int clearMarkersForSkinPart(World world, int x, int y, int z, ISkinPartType skinPart) {
+        IRectangle3D buildSpace = skinPart.getBuildingSpace();
+        IPoint3D offset = skinPart.getOffset();
+        int blockCount = 0;
+        
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    int xTar = x + ix + -offset.getX() + buildSpace.getX();
+                    int yTar = y + iy + -offset.getY();
+                    int zTar = z + iz + offset.getZ() + buildSpace.getZ();
+                    
+                    if (world.blockExists(xTar, yTar, zTar)) {
+                        Block block = world.getBlock(xTar, yTar, zTar);
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
+                            if (world.getBlockMetadata(xTar, yTar, zTar) != 0) {
+                                world.setBlockMetadataWithNotify(xTar, yTar, zTar, 0, 2);
+                                blockCount++;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }
+        return blockCount;
+    }
+    
     public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
