@@ -159,7 +159,7 @@ item.armourersworkshop:rollover.skinPaintData=&eHas Paint Data:&7 %s
 item.armourersworkshop:rollover.skinMarkerCount=&eMarker Count:&7 %d
 item.armourersworkshop:rollover.skinDyeCount=&eDye Count:&7 %d/8
 item.armourersworkshop:rollover.skindownloading=Downloading skin ID: %d
-item.armourersworkshop:rollover.skinOpenWardrobe=Press the &a%s&7 key to open the &aEquipment Wardrobe
+item.armourersworkshop:rollover.skinOpenWardrobe=Press the &a%s&7 key to open the &aWardrobe
 item.armourersworkshop:rollover.skinOldType=&cOld skin type, place in crafting grid to update.
 item.armourersworkshop:rollover.skinInvalidItem=&cError: Invalid equipment skin, please delete.
 item.armourersworkshop:rollover.skinIdError1=&cWarning: This skin is using an old file format.
@@ -240,7 +240,7 @@ inventory.armourersworkshop:colourMixer.name=Colour Mixer
 inventory.armourersworkshop:armourerBrain.name=Armourer
 inventory.armourersworkshop:armourLibrary0.name=Equipment Library
 inventory.armourersworkshop:armourLibrary1.name=Equipment Library - (Creative)
-inventory.armourersworkshop:equipmentWardrobe.name=Equipment Wardrobe
+inventory.armourersworkshop:equipmentWardrobe.name=Wardrobe
 inventory.armourersworkshop:mannequin.name=Mannequin
 inventory.armourersworkshop:doll.name=Doll
 inventory.armourersworkshop:miniArmourer.name=Mini Armourer - (WIP)
@@ -520,7 +520,7 @@ itemGroup.armourersworkshop=Armourer's Workshop
 
 # Keybindings
 keys.armourersworkshop:category=Armourer's Workshop
-keys.armourersworkshop.equipmentWardrobe=Equipment Wardrobe
+keys.armourersworkshop.equipmentWardrobe=Wardrobe
 keys.armourersworkshop.undo=Undo
 
 # Notes to translators.
@@ -543,7 +543,7 @@ book.armourersworkshop:guideBook.armourer.paragraph2=Select the type of equipmen
 
 # Chapter 4
 book.armourersworkshop:guideBook.equipmentTemplates.name=Equipment Templates
-book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=Equipment templates are what equipment skins are saved on simply place the equipment skin into the equipment wardrobe to apply the skin.
+book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=Equipment templates are what equipment skins are saved on simply place the equipment skin into the wardrobe to apply the skin.
 
 # Chapter 5
 book.armourersworkshop:guideBook.paintingTools.name=Painting Tools
@@ -553,7 +553,7 @@ book.armourersworkshop:guideBook.paintingTools.paragraph3=Burn Tool&nMakes an Eq
 book.armourersworkshop:guideBook.paintingTools.paragraph4=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
 
 # Chapter 6
-book.armourersworkshop:guideBook.equipmentWardrobe.name=Equipment Wardrobe
+book.armourersworkshop:guideBook.equipmentWardrobe.name=Wardrobe
 book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=WIP
 book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
 
