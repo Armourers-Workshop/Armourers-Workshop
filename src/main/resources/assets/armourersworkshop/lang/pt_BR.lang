@@ -326,6 +326,7 @@ inventory.armourersworkshop:armourerBrain.dialog.clear.close=Fechar
 inventory.armourersworkshop:armourerBrain.dialog.clear.clear=Limpar
 inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=Limpar cubos de equipamento?
 inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=Limpar pintura de visual?
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearMarkers=Limpar marcadores?
 inventory.armourersworkshop:armourerBrain.dialog.copy.title=Copiar
 inventory.armourersworkshop:armourerBrain.dialog.copy.close=Fechar
 inventory.armourersworkshop:armourerBrain.dialog.copy.copy=Copiar
