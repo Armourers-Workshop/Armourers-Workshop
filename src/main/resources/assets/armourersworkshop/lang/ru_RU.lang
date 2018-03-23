@@ -324,8 +324,9 @@ inventory.armourersworkshop:armourerBrain.tab.blockUtils=Разное
 inventory.armourersworkshop:armourerBrain.dialog.clear.title=Очистить
 inventory.armourersworkshop:armourerBrain.dialog.clear.close=Закрыть
 inventory.armourersworkshop:armourerBrain.dialog.clear.clear=Очистить
-inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=Очистить кубы снаряжения
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=Удалить кубы снаряжения
 inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=Очистить краску на скине
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearMarkers=Удалить маркеры
 inventory.armourersworkshop:armourerBrain.dialog.copy.title=Копировать
 inventory.armourersworkshop:armourerBrain.dialog.copy.close=Закрыть
 inventory.armourersworkshop:armourerBrain.dialog.copy.copy=Копировать
@@ -340,6 +341,9 @@ inventory.armourersworkshop:colourMixer.label.hex=Hex
 inventory.armourersworkshop:colourMixer.label.presets=Пресеты
 inventory.armourersworkshop:colourMixer.label.paintType=Тип Краски
 
+inventory.armourersworkshop:equipmentWardrobe.tab.skins=Скины
+inventory.armourersworkshop:equipmentWardrobe.tab.displaySettings=Настройки Отображения
+inventory.armourersworkshop:equipmentWardrobe.tab.colourSettings=Настройки Цветов
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Цвет Кожи
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Цвет Волос
 inventory.armourersworkshop:equipmentWardrobe.selectSkin=Подобрать Цвет Кожи
@@ -550,7 +554,7 @@ book.armourersworkshop:guideBook.paintingTools.paragraph3=Инструмент "
 book.armourersworkshop:guideBook.paintingTools.paragraph4=Инструмент "Теневой Шум"&nПрименяет случайный шейдинг к Кубам Снаряжения.&pНекоторые инструменты могут быть настроены нажатием ПКМ в присесте.
 
 # Chapter 6
-book.armourersworkshop:guideBook.equipmentWardrobe.name=Гардероб Снаряжения
+book.armourersworkshop:guideBook.equipmentWardrobe.name=Гардероб
 book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=В Разработке
 book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=Как только так сразу!
 
