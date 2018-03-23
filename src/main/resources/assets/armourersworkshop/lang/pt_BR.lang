@@ -159,7 +159,7 @@ item.armourersworkshop:rollover.skinPaintData=&ePossui Informação de Pintura:&
 item.armourersworkshop:rollover.skinMarkerCount=&eContagem de Marcadores:&7 %d
 item.armourersworkshop:rollover.skinDyeCount=&eContagem de Corantes:&7 %d/8
 item.armourersworkshop:rollover.skindownloading=Baixando ID de visual: %d
-item.armourersworkshop:rollover.skinOpenWardrobe=Pressione a tecla &a%s&7 para abrir o &aGuarda-Roupa de Equipamentos
+item.armourersworkshop:rollover.skinOpenWardrobe=Pressione a tecla &a%s&7 para abrir o &aGuarda-Roupa.
 item.armourersworkshop:rollover.skinOldType=&cTipo de visual antigo, coloque na grade de criação para atualizar.
 item.armourersworkshop:rollover.skinInvalidItem=&cErro: Visual de equipamento inválida, favor excluir.
 item.armourersworkshop:rollover.skinIdError1=&cAviso: este visual está usando um formato de arquivo antigo.
@@ -240,7 +240,7 @@ inventory.armourersworkshop:colourMixer.name=Misturador de Cores
 inventory.armourersworkshop:armourerBrain.name=Armeiro
 inventory.armourersworkshop:armourLibrary0.name=Biblioteca de Equipamentos
 inventory.armourersworkshop:armourLibrary1.name=Biblioteca de Equipamentos - (Criativo)
-inventory.armourersworkshop:equipmentWardrobe.name=Guarda-Roupa de Equipamentos
+inventory.armourersworkshop:equipmentWardrobe.name=Guarda-Roupa
 inventory.armourersworkshop:mannequin.name=Manequim
 inventory.armourersworkshop:doll.name=Boneco
 inventory.armourersworkshop:miniArmourer.name=Mini Armeiro - (TEMP)
@@ -340,6 +340,9 @@ inventory.armourersworkshop:colourMixer.label.hex=Hex
 inventory.armourersworkshop:colourMixer.label.presets=Padrões
 inventory.armourersworkshop:colourMixer.label.paintType=Tipo de Pintura
 
++inventory.armourersworkshop:equipmentWardrobe.tab.skins=Visuais
++inventory.armourersworkshop:equipmentWardrobe.tab.displaySettings=Configuraçãos de Visualização
++inventory.armourersworkshop:equipmentWardrobe.tab.colourSettings=Configurações de Cores
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Cor da Pele
 inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Cor do Cabelo
 inventory.armourersworkshop:equipmentWardrobe.selectSkin=Cor da Pele
@@ -516,7 +519,7 @@ itemGroup.armourersworkshop=Armourer's Workshop
 
 # Keybindings
 keys.armourersworkshop:category=Armourer's Workshop
-keys.armourersworkshop.equipmentWardrobe=Guarda-Roupa de Equipamentos
+keys.armourersworkshop.equipmentWardrobe=Guarda-Roupa
 keys.armourersworkshop.undo=Desfazer
 
 # Guide Book
