@@ -84,6 +84,11 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     public void mouseClicked(int mouseX, int mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         textItemName.mouseClicked(mouseX, mouseY, button);
+        if (button == 1) {
+            if (textItemName.isFocused()) {
+                textItemName.setText("");
+            }
+        }
     }
     
     int fidgCount = 0;
@@ -144,8 +149,10 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     public void resetValues(SkinProperties skinProperties) {
         resetting = true;
         String newText = skinProperties.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
-        if (!newText.equals(textItemName.getText())) {
+        if (!textItemName.getText().startsWith(newText)) {
+            int cur = textItemName.getCursorPosition();
             textItemName.setText(newText);
+            textItemName.setCursorPosition(cur);
         }
         resetting = false;
     }
