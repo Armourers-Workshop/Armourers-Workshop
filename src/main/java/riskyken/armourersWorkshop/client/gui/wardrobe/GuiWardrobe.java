@@ -61,7 +61,8 @@ public class GuiWardrobe extends GuiTabbed {
     public GuiWardrobe(InventoryPlayer inventory, ExPropsPlayerSkinData customEquipmentData) {
         super(new ContainerSkinWardrobe(inventory, customEquipmentData), false, TEXTURE_TAB);
         
-        this.xSize = 256;
+        //Tab size 21
+        this.xSize = 236;
         this.ySize = 240;
         
         this.player = inventory.player;
