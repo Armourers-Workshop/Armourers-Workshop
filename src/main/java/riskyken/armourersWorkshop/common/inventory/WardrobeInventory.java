@@ -7,12 +7,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public class WardrobeInventory implements IInventory {
     
-    private ItemStack[] wardrobeItemStacks = new ItemStack[ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
+    private ItemStack[] wardrobeItemStacks = new ItemStack[ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
     private boolean inventoryChanged;
     private final IInventorySlotUpdate callback;
     private final ISkinType skinType;

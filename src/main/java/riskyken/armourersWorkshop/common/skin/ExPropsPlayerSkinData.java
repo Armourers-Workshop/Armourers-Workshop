@@ -24,7 +24,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
+public class ExPropsPlayerSkinData implements IExtendedEntityProperties, IInventorySlotUpdate {
 
     public static final int MAX_SLOTS_PER_SKIN_TYPE = 8;
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
@@ -48,7 +48,7 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     public int lastXmasYear;
     private boolean allowNetworkUpdates;
     
-    public ExPropsPlayerEquipmentData(EntityPlayer player) {
+    public ExPropsPlayerSkinData(EntityPlayer player) {
         allowNetworkUpdates = true;
         this.player = player;
         //An array of all the skins that can be placed in the players wardrobe.
@@ -66,11 +66,11 @@ public class ExPropsPlayerEquipmentData implements IExtendedEntityProperties, II
     }
     
     public static final void register(EntityPlayer player) {
-        player.registerExtendedProperties(ExPropsPlayerEquipmentData.TAG_EXT_PROP_NAME, new ExPropsPlayerEquipmentData(player));
+        player.registerExtendedProperties(ExPropsPlayerSkinData.TAG_EXT_PROP_NAME, new ExPropsPlayerSkinData(player));
     }
     
-    public static final ExPropsPlayerEquipmentData get(EntityPlayer player) {
-        return (ExPropsPlayerEquipmentData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
+    public static final ExPropsPlayerSkinData get(EntityPlayer player) {
+        return (ExPropsPlayerSkinData) player.getExtendedProperties(TAG_EXT_PROP_NAME);
     }
     
     /**

@@ -97,5 +97,9 @@ public class GuiHologramProjector extends GuiTabbed {
                 tab.drawForegroundLayer(mouseX, mouseY);
             }
         }
+        GL11.glPushMatrix();
+        GL11.glTranslatef(-guiLeft, -guiTop, 0F);
+        tabController.drawHoverText(mc, mouseX, mouseY);
+        GL11.glPopMatrix();
     }
 }

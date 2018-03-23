@@ -8,7 +8,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.StringUtils;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class CommandSetUnlockedWardrobeSlots extends ModCommand {
@@ -58,6 +58,6 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
             throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
         }
         
-        ExPropsPlayerEquipmentData.get(player).setSkinColumnCount(skinType, count);
+        ExPropsPlayerSkinData.get(player).setSkinColumnCount(skinType, count);
     }
 }

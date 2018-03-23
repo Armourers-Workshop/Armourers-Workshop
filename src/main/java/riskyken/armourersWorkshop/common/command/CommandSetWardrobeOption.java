@@ -6,7 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 
 public class CommandSetWardrobeOption extends ModCommand {
 
@@ -54,7 +54,7 @@ public class CommandSetWardrobeOption extends ModCommand {
             throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
         }
         
-        ExPropsPlayerEquipmentData playerEquipmentData = ExPropsPlayerEquipmentData.get(player);
+        ExPropsPlayerSkinData playerEquipmentData = ExPropsPlayerSkinData.get(player);
         if (playerEquipmentData != null) {
             EquipmentWardrobeData ewd = playerEquipmentData.getEquipmentWardrobeData();
             if (subOptionIndex < 4) {

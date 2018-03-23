@@ -131,6 +131,23 @@ public class GuiTabController extends GuiButtonExt {
             yOffset = 5;
         }
         
+        int count = 0;
+        for (int i = 0; i < tabs.size(); i++) {
+            GuiTab tab = tabs.get(i);
+            if (tab.visible) {
+                tab.render(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
+                count++;
+            }
+        }
+    }
+    
+    public void drawHoverText(Minecraft mc, int mouseX, int mouseY) {
+        int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * tabSpacing) / 2F);
+        
+        if (!fullscreen) {
+            yOffset = 5;
+        }
+        
         GuiTab hoverTab = null;
         int count = 0;
         for (int i = 0; i < tabs.size(); i++) {
@@ -139,7 +156,6 @@ public class GuiTabController extends GuiButtonExt {
                 if (tab.isMouseOver(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY)) {
                     hoverTab = tab;
                 }
-                tab.render(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
                 count++;
             }
         }
@@ -147,7 +163,7 @@ public class GuiTabController extends GuiButtonExt {
         if (hoverTab != null) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(hoverTab.getName());
-            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, width, height, zLevel);
+            GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
         }
     }
 }

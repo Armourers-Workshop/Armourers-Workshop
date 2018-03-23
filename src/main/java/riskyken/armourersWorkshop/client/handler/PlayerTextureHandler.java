@@ -20,7 +20,7 @@ import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -71,16 +71,16 @@ public class PlayerTextureHandler {
             textureInfo.updateTexture(player.getLocationSkin());
             textureInfo.updateHairColour(ewd.hairColour);
             textureInfo.updateSkinColour(ewd.skinColour);
-            Skin[] skins = new Skin[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
+            Skin[] skins = new Skin[4 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
             
-            for (int skinIndex = 0; skinIndex < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
+            for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
                 skins[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                 skins[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                 skins[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                 skins[3 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
             }
-            ISkinDye[] dyes = new ISkinDye[4 * ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE];
-            for (int skinIndex = 0; skinIndex < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
+            ISkinDye[] dyes = new ISkinDye[4 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
+            for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
                 dyes[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                 dyes[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                 dyes[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);

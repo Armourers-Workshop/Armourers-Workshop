@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.crafting.ItemSkinningRecipes;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
@@ -25,7 +25,7 @@ public class SkinDataHandler implements ISkinDataHandler {
     
     @Override
     public void setSkinOnPlayer(EntityPlayer player, ItemStack stack, int index) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerSkinData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.setEquipmentStack(stack, index);
     }
     
@@ -38,7 +38,7 @@ public class SkinDataHandler implements ISkinDataHandler {
     
     @Override
     public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType, int index) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerSkinData entityProps = getExtendedPropsPlayerForPlayer(player);
         return entityProps.getEquipmentStack(skinType, index);
     }
     
@@ -50,7 +50,7 @@ public class SkinDataHandler implements ISkinDataHandler {
     
     @Override
     public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType, int index) {
-        ExPropsPlayerEquipmentData entityProps = getExtendedPropsPlayerForPlayer(player);
+        ExPropsPlayerSkinData entityProps = getExtendedPropsPlayerForPlayer(player);
         entityProps.clearEquipmentStack(skinType, index);
     }
     
@@ -110,7 +110,7 @@ public class SkinDataHandler implements ISkinDataHandler {
     
     @Override
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId) {
-        ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
+        ExPropsPlayerSkinData entityProps = ExPropsPlayerSkinData.get(player);
         BitSet armourOverride = entityProps.getArmourOverride();
         if (slotId < 4 & slotId >= 0) {
             return armourOverride.get(slotId);
@@ -118,12 +118,12 @@ public class SkinDataHandler implements ISkinDataHandler {
         return false;
     }
     
-    private ExPropsPlayerEquipmentData getExtendedPropsPlayerForPlayer(EntityPlayer player) {
-        ExPropsPlayerEquipmentData entityProps = ExPropsPlayerEquipmentData.get(player);
+    private ExPropsPlayerSkinData getExtendedPropsPlayerForPlayer(EntityPlayer player) {
+        ExPropsPlayerSkinData entityProps = ExPropsPlayerSkinData.get(player);
         if (entityProps == null) {
-            ExPropsPlayerEquipmentData.register(player);
+            ExPropsPlayerSkinData.register(player);
         }
-        return ExPropsPlayerEquipmentData.get(player);
+        return ExPropsPlayerSkinData.get(player);
     }
 
     @Override

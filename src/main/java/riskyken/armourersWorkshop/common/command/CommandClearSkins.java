@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 
 public class CommandClearSkins extends ModCommand {
 
@@ -32,6 +32,6 @@ public class CommandClearSkins extends ModCommand {
         if (player == null) {
             return;
         }
-        ExPropsPlayerEquipmentData.get(player).clearAllEquipmentStacks();
+        ExPropsPlayerSkinData.get(player).clearAllEquipmentStacks();
     }
 }

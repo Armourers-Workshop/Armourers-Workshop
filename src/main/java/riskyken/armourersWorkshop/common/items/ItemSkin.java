@@ -33,7 +33,7 @@ import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
@@ -233,7 +233,7 @@ public class ItemSkin extends AbstractModItem {
     }
     
     private boolean equipSkin(EntityPlayer player, ItemStack itemStack) {
-        ExPropsPlayerEquipmentData equipmentData = ExPropsPlayerEquipmentData.get(player);
+        ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(player);
         if (equipmentData.setStackInNextFreeSlot(itemStack)) {
             return true;
         }
@@ -385,7 +385,7 @@ public class ItemSkin extends AbstractModItem {
                 EntityLivingBase entitylivingbase = (EntityLivingBase)list.get(i);
                 if (entitylivingbase instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) entitylivingbase;
-                    ExPropsPlayerEquipmentData equipmentData = ExPropsPlayerEquipmentData.get(player);
+                    ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(player);
                     if (equipmentData.setStackInNextFreeSlot(itemStack.copy())) {
                         --itemStack.stackSize;
                         return itemStack;

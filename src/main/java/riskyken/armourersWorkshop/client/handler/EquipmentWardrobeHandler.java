@@ -17,7 +17,7 @@ import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
@@ -46,7 +46,7 @@ public final class EquipmentWardrobeHandler {
         EntityPlayer localPlayer = Minecraft.getMinecraft().thePlayer;
         PlayerPointer localPointer = new PlayerPointer(localPlayer);
         if (playerPointer.equals(localPointer)) {
-            ExPropsPlayerEquipmentData.get(localPlayer).setSkinInfo(ewd, false);
+            ExPropsPlayerSkinData.get(localPlayer).setSkinInfo(ewd, false);
         }
     }
     

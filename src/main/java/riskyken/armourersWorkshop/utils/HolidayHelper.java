@@ -9,7 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 
 public final class HolidayHelper {
     
@@ -63,7 +63,7 @@ public final class HolidayHelper {
     
     public static void giftPlayer(EntityPlayerMP player) {
         if (christmas_season.isHolidayActive()) {
-            ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get(player);
+            ExPropsPlayerSkinData playerData = ExPropsPlayerSkinData.get(player);
             if (playerData.lastXmasYear < getYear()) {
                 ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);
                 if (!player.inventory.addItemStackToInventory(giftSack)) {

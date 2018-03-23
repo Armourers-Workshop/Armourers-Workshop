@@ -15,7 +15,6 @@ import riskyken.armourersWorkshop.client.gui.GuiDebugTool;
 import riskyken.armourersWorkshop.client.gui.GuiDyeTable;
 import riskyken.armourersWorkshop.client.gui.GuiEntityEquipment;
 import riskyken.armourersWorkshop.client.gui.GuiGuideBook;
-import riskyken.armourersWorkshop.client.gui.GuiSkinWardrobe;
 import riskyken.armourersWorkshop.client.gui.GuiSkinnable;
 import riskyken.armourersWorkshop.client.gui.GuiSkinningTable;
 import riskyken.armourersWorkshop.client.gui.GuiToolOptions;
@@ -26,6 +25,7 @@ import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourer;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
 import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
+import riskyken.armourersWorkshop.client.gui.wardrobe.GuiWardrobe;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourLibrary;
 import riskyken.armourersWorkshop.common.inventory.ContainerArmourer;
 import riskyken.armourersWorkshop.common.inventory.ContainerColourMixer;
@@ -42,7 +42,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
@@ -88,7 +88,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
+                ExPropsPlayerSkinData customEquipmentData = ExPropsPlayerSkinData.get(player);
                 return new ContainerSkinWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.MANNEQUIN:
                 if (te instanceof TileEntityMannequin) {
@@ -178,8 +178,8 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                ExPropsPlayerEquipmentData customEquipmentData = ExPropsPlayerEquipmentData.get(player);
-                return new GuiSkinWardrobe(player.inventory, customEquipmentData);
+                ExPropsPlayerSkinData customEquipmentData = ExPropsPlayerSkinData.get(player);
+                return new GuiWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getCurrentEquippedItem().getItem() instanceof IConfigurableTool) {
                     return new GuiToolOptions(player.getCurrentEquippedItem());

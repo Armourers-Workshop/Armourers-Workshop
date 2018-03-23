@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 public class ItemSkinUnlock extends AbstractModItem {
@@ -85,13 +85,13 @@ public class ItemSkinUnlock extends AbstractModItem {
         }
         ISkinType skinType = getSkinTypeFormStack(itemStack);
         
-        ExPropsPlayerEquipmentData equipmentData = ExPropsPlayerEquipmentData.get(player);
+        ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(player);
         int count = equipmentData.getEquipmentWardrobeData().getUnlockedSlotsForSkinType(skinType);
         count++;
         
         String localizedSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
         
-        if (count <= ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE) {
+        if (count <= ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE) {
             equipmentData.setSkinColumnCount(skinType, count);
             player.addChatComponentMessage(new ChatComponentTranslation("chat.armourersworkshop:slotUnlocked", localizedSkinName.toLowerCase(), Integer.toString(count)));
             itemStack.stackSize--;

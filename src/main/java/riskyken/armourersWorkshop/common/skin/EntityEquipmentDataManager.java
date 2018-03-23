@@ -59,7 +59,7 @@ public final class EntityEquipmentDataManager {
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == Side.SERVER & event.type == Type.PLAYER & event.phase == Phase.END) {
             EntityPlayer player = event.player;
-            ExPropsPlayerEquipmentData props = ExPropsPlayerEquipmentData.get(player);
+            ExPropsPlayerSkinData props = ExPropsPlayerSkinData.get(player);
             if (props == null) {
                 return;
             }
@@ -67,7 +67,7 @@ public final class EntityEquipmentDataManager {
         }
     }
     
-    private void updateWeaponNBT(EntityPlayer player, ExPropsPlayerEquipmentData props) {
+    private void updateWeaponNBT(EntityPlayer player, ExPropsPlayerSkinData props) {
         InventoryPlayer inventory = player.inventory;
         EntityEquipmentData equipmentData = props.getEquipmentData();
         ItemStack stack = inventory.getCurrentItem();
@@ -121,7 +121,7 @@ public final class EntityEquipmentDataManager {
     public void onStartTracking(PlayerEvent.StartTracking event) {
         if (event.target instanceof EntityPlayerMP) {
             EntityPlayerMP targetPlayer = (EntityPlayerMP) event.target;
-            ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer(targetPlayer);
+            ExPropsPlayerSkinData.get((EntityPlayer) event.entity).sendCustomArmourDataToPlayer(targetPlayer);
         }
     }
     
@@ -136,15 +136,15 @@ public final class EntityEquipmentDataManager {
     
     @SubscribeEvent
     public void onEntityConstructing(EntityConstructing event) {
-        if (event.entity instanceof EntityPlayer && ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity) == null) {
-            ExPropsPlayerEquipmentData.register((EntityPlayer) event.entity);
+        if (event.entity instanceof EntityPlayer && ExPropsPlayerSkinData.get((EntityPlayer) event.entity) == null) {
+            ExPropsPlayerSkinData.register((EntityPlayer) event.entity);
         }
     }
     
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP) {
-            ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
+            ExPropsPlayerSkinData playerData = ExPropsPlayerSkinData.get((EntityPlayer) event.entity);
             playerData.sendCustomArmourDataToPlayer((EntityPlayerMP) event.entity);
             HolidayHelper.giftPlayer((EntityPlayerMP) event.entity);
         }
@@ -176,7 +176,7 @@ public final class EntityEquipmentDataManager {
                 break;
             }
 
-            ExPropsPlayerEquipmentData playerData = ExPropsPlayerEquipmentData.get((EntityPlayer) event.entity);
+            ExPropsPlayerSkinData playerData = ExPropsPlayerSkinData.get((EntityPlayer) event.entity);
             if (dropSkins) {
                 playerData.getWardrobeInventoryContainer().dropItems((EntityPlayer) event.entity);
             }
@@ -190,8 +190,8 @@ public final class EntityEquipmentDataManager {
     @SubscribeEvent
     public void onLivingDeathEvent (PlayerEvent.Clone  event) {
         NBTTagCompound compound = new NBTTagCompound();
-        ExPropsPlayerEquipmentData oldProps = ExPropsPlayerEquipmentData.get(event.original);
-        ExPropsPlayerEquipmentData newProps = ExPropsPlayerEquipmentData.get(event.entityPlayer);
+        ExPropsPlayerSkinData oldProps = ExPropsPlayerSkinData.get(event.original);
+        ExPropsPlayerSkinData newProps = ExPropsPlayerSkinData.get(event.entityPlayer);
         oldProps.saveNBTData(compound);
         newProps.loadNBTData(compound);
     }

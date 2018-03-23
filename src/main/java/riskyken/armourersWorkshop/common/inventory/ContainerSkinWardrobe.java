@@ -9,17 +9,17 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotSkin;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerSkinWardrobe extends Container {
     
-    private ExPropsPlayerEquipmentData customEquipmentData;
+    private ExPropsPlayerSkinData customEquipmentData;
     private int slotsUnlocked;
     private int skinSlots = 0;
     
-    public ContainerSkinWardrobe(InventoryPlayer invPlayer, ExPropsPlayerEquipmentData customEquipmentData) {
+    public ContainerSkinWardrobe(InventoryPlayer invPlayer, ExPropsPlayerSkinData customEquipmentData) {
         this.customEquipmentData = customEquipmentData;
         
         EquipmentWardrobeData ewd = customEquipmentData.getEquipmentWardrobeData();
@@ -34,36 +34,36 @@ public class ContainerSkinWardrobe extends Container {
         WardrobeInventory bowInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinBow);
         WardrobeInventory wingInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinWings);
         
-        for (int i = 0; i < ExPropsPlayerEquipmentData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
+        for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
             if (i < ewd.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinHead)) {
-                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 88 + i * 19, 18));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 68 + i * 20, 18));
                 skinSlots += 1;
             }
             if (i < ewd.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinChest)) {
-                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinChest, chestInv, i, 88 + i * 19, 37));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinChest, chestInv, i, 68 + i * 20, 37));
                 skinSlots += 1;
             }
             if (i < ewd.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinLegs)) {
-                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinLegs, legsInv, i, 88 + i * 19, 56));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinLegs, legsInv, i, 68 + i * 20, 56));
                 skinSlots += 1;
             }
             if (i < ewd.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinFeet)) {
-                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinFeet, feetInv, i, 88 + i * 19, 75));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinFeet, feetInv, i, 68 + i * 20, 75));
                 skinSlots += 1;
             }
             if (i < ewd.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinWings)) {
-                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinWings, wingInv, i, 88 + i * 19, 94));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinWings, wingInv, i, 68 + i * 20, 94));
                 skinSlots += 1;
             }
         }
         
         
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 29, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 49, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 1, 69, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 2, 89, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 3, 109, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 4, 129, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 8, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 28, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 1, 48, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 2, 68, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 3, 88, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 4, 108, 113));
         skinSlots += 6;
         
         for (int x = 0; x < 9; x++) {
@@ -75,6 +75,10 @@ public class ContainerSkinWardrobe extends Container {
                 addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 54 + 18 * x, 174 + y * 18));
             }
         }
+    }
+    
+    public int getSkinSlots() {
+        return skinSlots;
     }
 
     @Override

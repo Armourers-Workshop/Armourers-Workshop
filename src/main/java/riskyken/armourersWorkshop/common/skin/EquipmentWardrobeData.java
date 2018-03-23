@@ -47,7 +47,7 @@ public class EquipmentWardrobeData {
         headOverlay = false;
         limitLimbs = true;
         slotsUnlocked = new HashMap<String, Integer>();
-        ISkinType[] validSkins = ExPropsPlayerEquipmentData.validSkins;
+        ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
         for (int i = 0; i < validSkins.length; i++) {
             ISkinType skinType = validSkins[i];
             slotsUnlocked.put(skinType.getRegistryName(), getUnlockedSlotsForSkinType(skinType));
@@ -91,7 +91,7 @@ public class EquipmentWardrobeData {
         compound.setBoolean(TAG_LIMIT_LIMBS, this.limitLimbs);
         
         NBTTagList slotsList = new NBTTagList();
-        ISkinType[] validSkins = ExPropsPlayerEquipmentData.validSkins;
+        ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
         for (int i = 0; i < validSkins.length; i++) {
             ISkinType skinType = validSkins[i];
             NBTTagCompound slotCount = new NBTTagCompound();
@@ -141,7 +141,7 @@ public class EquipmentWardrobeData {
         }
         this.headOverlay = buf.readBoolean();
         this.limitLimbs = buf.readBoolean();
-        for (int i = 0; i < ExPropsPlayerEquipmentData.validSkins.length; i++) {
+        for (int i = 0; i < ExPropsPlayerSkinData.validSkins.length; i++) {
             String key = ByteBufUtils.readUTF8String(buf);
             int value = buf.readInt();
             slotsUnlocked.put(key, value);
@@ -157,7 +157,7 @@ public class EquipmentWardrobeData {
         buf.writeBoolean(this.headOverlay);
         buf.writeBoolean(this.limitLimbs);
         
-        ISkinType[] validSkins = ExPropsPlayerEquipmentData.validSkins;
+        ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
         for (int i = 0; i < validSkins.length; i++) {
             ISkinType skinType = validSkins[i];
             ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());

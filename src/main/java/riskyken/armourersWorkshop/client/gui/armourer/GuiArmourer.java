@@ -153,6 +153,10 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
             dialog.draw(oldMouseX, oldMouseY, 0);
             GL11.glTranslatef(guiLeft, guiTop, 0);
         }
+        GL11.glPushMatrix();
+        GL11.glTranslatef(-guiLeft, -guiTop, 0F);
+        tabController.drawHoverText(mc, mouseX, mouseY);
+        GL11.glPopMatrix();
     }
     
     @Override

@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -87,6 +89,10 @@ public class GuiMannequin extends GuiTabbed {
                 tab.drawForegroundLayer(mouseX, mouseY);
             }
         }
+        GL11.glPushMatrix();
+        GL11.glTranslatef(-guiLeft, -guiTop, 0F);
+        tabController.drawHoverText(mc, mouseX, mouseY);
+        GL11.glPopMatrix();
     }
     
     @Override

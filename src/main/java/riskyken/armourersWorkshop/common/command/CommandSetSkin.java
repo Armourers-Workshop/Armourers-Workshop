@@ -12,7 +12,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerEquipmentData;
+import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
@@ -135,7 +135,7 @@ public class CommandSetSkin extends ModCommand {
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinPointer(skinIdentifier, skinDye));
-        ExPropsPlayerEquipmentData.get(player).setEquipmentStack(skinStack, slotNum - 1);
+        ExPropsPlayerSkinData.get(player).setEquipmentStack(skinStack, slotNum - 1);
     }
     
     private boolean isValidHex (String colorStr) {
