@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -218,5 +220,17 @@ public class CommonProxy implements ILibraryCallback {
         for (int i = 0; i < clearFiles.size(); i++) {
             CommonSkinCache.INSTANCE.clearFileNameIdLink(clearFiles.get(i));
         }
+    }
+    
+    public boolean isLocalPlayer(String username) {
+        return false;
+    }
+    
+    public boolean haveFullLocalProfile() {
+        return false;
+    }
+    
+    public GameProfile getLocalGameProfile() {
+        return null;
     }
 }

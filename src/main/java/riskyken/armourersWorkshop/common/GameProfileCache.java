@@ -18,6 +18,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientRequestGameProfile;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerGameProfile;
+import riskyken.armourersWorkshop.proxies.CommonProxy;
 
 public final class GameProfileCache {
     
@@ -53,6 +54,14 @@ public final class GameProfileCache {
             return null;
         }
         if (StringUtils.isNullOrEmpty(gameProfile.getName())) {
+            return null;
+        }
+        
+        CommonProxy proxy = ArmourersWorkshop.getProxy();
+        if (proxy.isLocalPlayer(gameProfile.getName())) {
+            if (proxy.haveFullLocalProfile()) {
+                return proxy.getLocalGameProfile();
+            }
             return null;
         }
         

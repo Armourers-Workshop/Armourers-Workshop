@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 
 import org.apache.logging.log4j.Level;
 
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -28,6 +30,7 @@ import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -382,6 +385,33 @@ public class ClientProxy extends CommonProxy {
             return Minecraft.getMinecraft().getIntegratedServer();
         }
         return super.getServer();
+    }
+    
+    @Override
+    public boolean isLocalPlayer(String username) {
+        GameProfile gameProfile = getLocalGameProfile();
+        if (gameProfile != null && !StringUtils.isNullOrEmpty(gameProfile.getName())) {
+            if (username.equals(gameProfile.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean haveFullLocalProfile() {
+        GameProfile gameProfile = getLocalGameProfile();
+        if (gameProfile.isComplete()) {
+            if (gameProfile.getProperties().containsKey("textures")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public GameProfile getLocalGameProfile() {
+        return Minecraft.getMinecraft().thePlayer.getGameProfile();
     }
     
     public static enum SkinRenderType {

@@ -17,9 +17,11 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.SkinManager.SkinAvailableCallback;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.GameProfileCache;
 import riskyken.armourersWorkshop.common.GameProfileCache.IGameProfileCallback;
 import riskyken.armourersWorkshop.common.data.TextureType;
+import riskyken.armourersWorkshop.proxies.CommonProxy;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
@@ -93,8 +95,13 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
     
     private GameProfile getGameProfile(String username) {
         if (!StringUtils.isNullOrEmpty(username)) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            
+            CommonProxy proxy = ArmourersWorkshop.getProxy();
+            if (proxy.isLocalPlayer(username)) {
+                if (proxy.haveFullLocalProfile()) {
+                    return proxy.getLocalGameProfile();
+                }
+                return null;
+            }
             GameProfile filledProfile = GameProfileCache.getGameProfileClient(username, this);
             if (filledProfile != null) {
                 return filledProfile;
@@ -112,10 +119,6 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         synchronized (playerTextureMap) {
             playerTextureMap.put(gameProfile.getName(), playerTexture);
         }
-    }
-    
-    private GameProfile getLocalGameProfile() {
-        return Minecraft.getMinecraft().thePlayer.getGameProfile();
     }
     
     private ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocation, String textureString, PlayerTexture playerTexture, TextureType textureType) {
