@@ -6,6 +6,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotSkin;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -66,13 +67,16 @@ public class ContainerSkinWardrobe extends Container {
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 4, 108, 113));
         skinSlots += 6;
         
+        
+        int playerInvX = 38;
+        int playerInvY = 158;
+        int hotBarY = playerInvY + 58;
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 54 + 18 * x, 232));
+            addSlotToContainer(new SlotHidable(invPlayer, x, playerInvX + 18 * x, hotBarY));
         }
-
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 54 + 18 * x, 174 + y * 18));
+                addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, playerInvX + 18 * x, playerInvY + y * 18));
             }
         }
     }
