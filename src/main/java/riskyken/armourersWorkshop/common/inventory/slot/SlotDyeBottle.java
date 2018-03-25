@@ -10,6 +10,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
+import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class SlotDyeBottle extends Slot {
     
@@ -33,7 +34,7 @@ public class SlotDyeBottle extends Slot {
     @Override
     public boolean isItemValid(ItemStack stack) {
         ItemStack skinStack = inventory.getStackInSlot(0);
-        if (skinStack != null && skinStack.getItem() == ModItems.equipmentSkin) {
+        if (skinStack != null && SkinNBTHelper.stackHasSkinData(skinStack)) {
             if (stack.getItem() == ModItems.dyeBottle) {
                 if (PaintingHelper.getToolHasPaint(stack)) {
                     return true;
