@@ -7,6 +7,7 @@ import net.minecraftforge.common.config.Configuration;
 public class ConfigHandlerClient {
     
     public static String CATEGORY_CLIENT = "client";
+    public static String CATEGORY_SKIN_PREVIEW = "skin-preview";
     public static String CATEGORY_DEBUG = "debug";
     
     public static int clientModelCacheTime = 600000;
@@ -21,7 +22,15 @@ public class ConfigHandlerClient {
     public static int skinLoadAnimationTime = 500;
     public static int maxLodLevels = 4;
     
-    //debug
+    // Skin preview
+    public static boolean skinPreEnabled = false;
+    public static boolean skinPreDrawBackground = true;
+    public static float skinPreSize = 96F;
+    public static float skinPreLocHorizontal = 1F;
+    public static float skinPreLocVertical = 0.5F;
+    public static boolean skinPreLocFollowMouse = false;
+    
+    // Debug
     public static boolean skinTextureRenderOverride;
     public static int skinRenderType;
     public static boolean showF3DebugInfo;
@@ -47,6 +56,7 @@ public class ConfigHandlerClient {
     
     public static void loadConfigFile() {
         loadCategoryClient();
+        loadCategorySkinPreview();
         loadCategoryDebug();
         if (config.hasChanged()) {
             config.save();
@@ -95,6 +105,25 @@ public class ConfigHandlerClient {
         
         maxLodLevels = config.getInt("maxLodLevels", CATEGORY_CLIENT, 4, 0, 4,
                 "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.");
+    }
+    
+    private static void loadCategorySkinPreview() {
+        skinPreEnabled = config.getBoolean("skinPreEnabled", CATEGORY_SKIN_PREVIEW, true,
+                "Enables a larger skin preview box when hovering the mouse over a skin.");
+        
+        skinPreDrawBackground = config.getBoolean("skinPreDrawBackground", CATEGORY_SKIN_PREVIEW, true,
+                "Draw a background box for the skin preview.");
+        
+        skinPreSize = config.getFloat("skinPreSize", CATEGORY_SKIN_PREVIEW, 96F, 16F, 256F,
+                "Size of the skin preview.");
+        
+        skinPreLocHorizontal = config.getFloat("skinPreLocHorizontal", CATEGORY_SKIN_PREVIEW, 1F, 0F, 1F,
+                "Horizontal location of the skin preview: 0 = left, 1 = right.");
+        
+        skinPreLocVertical = config.getFloat("skinPreLocVertical", CATEGORY_SKIN_PREVIEW, 0.5F, 0F, 1F,
+                "Vertical location of the skin preview: 0 = top, 1 = bottom.");
+        
+        //skinPreLocFollowMouse = config.getBoolean("skinPreLocFollowMouse", CATEGORY_SKIN_PREVIEW, true, "");
     }
     
     private static void loadCategoryDebug() {

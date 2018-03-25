@@ -42,6 +42,7 @@ import riskyken.armourersWorkshop.client.handler.EquipmentWardrobeHandler;
 import riskyken.armourersWorkshop.client.handler.ItemTooltipHandler;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
+import riskyken.armourersWorkshop.client.handler.SkinPreviewHandler;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.library.ClientLibraryManager;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
@@ -134,6 +135,7 @@ public class ClientProxy extends CommonProxy {
         EntitySkinRenderHandler.init();
         new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
+        new SkinPreviewHandler();
         Render arrowRender = new RenderSkinnedArrow();
         arrowRender.setRenderManager(RenderManager.instance);
         RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);

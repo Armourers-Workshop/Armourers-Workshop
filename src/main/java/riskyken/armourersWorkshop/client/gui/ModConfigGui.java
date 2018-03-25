@@ -48,6 +48,10 @@ public class ModConfigGui extends GuiConfig {
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandlerClient.config
+                .getCategory(ConfigHandlerClient.CATEGORY_SKIN_PREVIEW))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config
                 .getCategory(ConfigHandlerClient.CATEGORY_DEBUG))
                 .getChildElements());
         
