@@ -117,13 +117,14 @@ public class ConfigHandlerClient {
         skinPreSize = config.getFloat("skinPreSize", CATEGORY_SKIN_PREVIEW, 96F, 16F, 256F,
                 "Size of the skin preview.");
         
-        skinPreLocHorizontal = config.getFloat("skinPreLocHorizontal", CATEGORY_SKIN_PREVIEW, 1F, 0F, 1F,
+        skinPreLocHorizontal = config.getFloat("skinPreLocHorizontal", CATEGORY_SKIN_PREVIEW, 0F, 0F, 1F,
                 "Horizontal location of the skin preview: 0 = left, 1 = right.");
         
         skinPreLocVertical = config.getFloat("skinPreLocVertical", CATEGORY_SKIN_PREVIEW, 0.5F, 0F, 1F,
                 "Vertical location of the skin preview: 0 = top, 1 = bottom.");
         
-        //skinPreLocFollowMouse = config.getBoolean("skinPreLocFollowMouse", CATEGORY_SKIN_PREVIEW, true, "");
+        skinPreLocFollowMouse = config.getBoolean("skinPreLocFollowMouse", CATEGORY_SKIN_PREVIEW, true,
+                "Skin preview will be rendered next to the mouse.");
     }
     
     private static void loadCategoryDebug() {
