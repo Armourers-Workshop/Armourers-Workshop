@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
@@ -20,8 +21,14 @@ public class SlotDyeableSkin extends Slot {
     @Override
     public boolean isItemValid(ItemStack stack) {
         SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
-        if (sp != null && sp.lockSkin) {
-            return true;
+        if (sp != null) {
+            if (stack.getItem() == ModItems.equipmentSkin) {
+                return true;
+            } else {
+                if (sp.lockSkin) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -38,8 +45,14 @@ public class SlotDyeableSkin extends Slot {
             container.skinRemoved();
         } else {
             SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (sp != null && sp.lockSkin) {
-                container.skinAdded(stack);
+            if (sp != null) {
+                if (stack.getItem() == ModItems.equipmentSkin) {
+                    container.skinAdded(stack);
+                } else {
+                    if (sp.lockSkin) {
+                        container.skinAdded(stack);
+                    }
+                }
             }
         }
         super.onSlotChanged();
