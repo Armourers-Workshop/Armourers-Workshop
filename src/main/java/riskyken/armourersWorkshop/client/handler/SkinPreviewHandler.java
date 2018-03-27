@@ -31,8 +31,8 @@ public final class SkinPreviewHandler {
     
     private final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.SKIN_PREVIEW);
     
-    private SkinPointer skinPointer;
-    private List<String> list;
+    private SkinPointer lastSkinPointer;
+    private List<String> lastList;
     
     public SkinPreviewHandler() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -46,7 +46,14 @@ public final class SkinPreviewHandler {
         if (!ConfigHandlerClient.skinPreLocFollowMouse) {
             return;
         }
-        if (skinPointer != null) {
+        
+        SkinPointer skinPointer = lastSkinPointer;
+        List<String> list = lastList;
+        
+        lastSkinPointer = null;
+        lastList = null;
+        
+        if (skinPointer != null & list != null) {
             Minecraft mc = Minecraft.getMinecraft();
             
             float skinPreSize = ConfigHandlerClient.skinPreSize;
@@ -64,9 +71,7 @@ public final class SkinPreviewHandler {
                 y = mc.currentScreen.height - (int)skinPreSize;
             }
             
-            drawSkinBox(mc, x, y, skinPreSize);
-            
-            skinPointer = null;
+            drawSkinBox(mc, x, y, skinPreSize, skinPointer);
         }
     }
     
@@ -78,7 +83,14 @@ public final class SkinPreviewHandler {
         if (ConfigHandlerClient.skinPreLocFollowMouse) {
             return;
         }
-        if (skinPointer != null) {
+        
+        SkinPointer skinPointer = lastSkinPointer;
+        List<String> list = lastList;
+        
+        lastSkinPointer = null;
+        lastList = null;
+        
+        if (skinPointer != null & list != null) {
             Minecraft mc = Minecraft.getMinecraft();
             
             float skinPreSize = ConfigHandlerClient.skinPreSize;
@@ -92,13 +104,13 @@ public final class SkinPreviewHandler {
             int x = MathHelper.ceiling_double_int(widthClip * skinPreLocHorizontal);
             int y = MathHelper.ceiling_double_int(heightClip * skinPreLocVertical);
             
-            drawSkinBox(mc, x, y, skinPreSize);
+            drawSkinBox(mc, x, y, skinPreSize, skinPointer);
             
             skinPointer = null;
         }
     }
     
-    private void drawSkinBox(Minecraft mc, int x, int y, float skinPreSize) {
+    private void drawSkinBox(Minecraft mc, int x, int y, float skinPreSize, SkinPointer skinPointer) {
         boolean skinPreDrawBackground = ConfigHandlerClient.skinPreDrawBackground;
         if (skinPreDrawBackground) {
             RenderHelper.disableStandardItemLighting();
@@ -199,8 +211,8 @@ public final class SkinPreviewHandler {
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         if (ConfigHandlerClient.skinPreEnabled) {
-            skinPointer = SkinNBTHelper.getSkinPointerFromStack(event.itemStack);
-            list = event.toolTip;
+            lastSkinPointer = SkinNBTHelper.getSkinPointerFromStack(event.itemStack);
+            lastList = event.toolTip;
         }
     }
 }
