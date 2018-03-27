@@ -170,7 +170,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         this.fontRenderer.drawString(itemNameLabel, 64, 48, 4210752);
         
         int versionWidth = fontRenderer.getStringWidth(versionLabel);
-        this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 4, this.height - 96, 4210752);
+        this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 7, this.height - 96 + 2, 4210752);
     }
     
     @Override
