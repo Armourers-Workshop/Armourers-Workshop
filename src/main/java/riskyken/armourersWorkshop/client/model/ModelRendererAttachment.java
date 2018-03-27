@@ -25,7 +25,9 @@ import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
 import riskyken.armourersWorkshop.utils.SkinUtils;
@@ -94,7 +96,9 @@ public class ModelRendererAttachment extends ModelRenderer {
                 continue;
             }
             ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType, skinIndex);
-
+            
+            MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(data.getProperties()));
+            
             int size = data.getParts().size();
             for (int i = 0; i < size; i++) {
                 SkinPart partData = data.getParts().get(i);
@@ -124,54 +128,33 @@ public class ModelRendererAttachment extends ModelRenderer {
                         
                         GL11.glTranslated(scale * 0.5F, scale * 0.5F, scale * 0.5F);
                         GL11.glTranslated(scale * point.getX(), scale * point.getY(), scale * point.getZ());
-                        if (skinPart.getRegistryName().equals("armourers:wings.leftWing")) {
-                            switch (axis) {
-                            case UP:
-                                GL11.glRotated(angle, 0, 1, 0);
-                                break;
-                            case DOWN:
-                                GL11.glRotated(angle, 0, 1, 0);
-                                break;
-                            case NORTH:
-                                GL11.glRotated(-angle, 0, 0, 1);
-                                break;
-                            case EAST:
-                                GL11.glRotated(angle, 1, 0, 0);
-                                break;
-                            case SOUTH:
-                                GL11.glRotated(angle, 0, 0, 1);
-                                break;
-                            case WEST:
-                                GL11.glRotated(-angle, 1, 0, 0);
-                                break;
-                            case UNKNOWN:
-                                break;
-                            }
-                        } else {
+                        
+                        if (skinPart.getRegistryName().equals("armourers:wings.rightWing")) {
                             angle = -angle;
-                            switch (axis) {
-                            case UP:
-                                GL11.glRotated(angle, 0, 1, 0);
-                                break;
-                            case DOWN:
-                                GL11.glRotated(angle, 0, 1, 0);
-                                break;
-                            case NORTH:
-                                GL11.glRotated(-angle, 0, 0, 1);
-                                break;
-                            case EAST:
-                                GL11.glRotated(angle, 1, 0, 0);
-                                break;
-                            case SOUTH:
-                                GL11.glRotated(angle, 0, 0, 1);
-                                break;
-                            case WEST:
-                                GL11.glRotated(-angle, 1, 0, 0);
-                                break;
-                            case UNKNOWN:
-                                break;
-                            }
                         }
+                        switch (axis) {
+                        case UP:
+                            GL11.glRotated(angle, 0, 1, 0);
+                            break;
+                        case DOWN:
+                            GL11.glRotated(angle, 0, -1, 0);
+                            break;
+                        case SOUTH:
+                            GL11.glRotated(angle, 0, 0, -1);
+                            break;
+                        case NORTH:
+                            GL11.glRotated(angle, 0, 0, 1);
+                            break;
+                        case EAST:
+                            GL11.glRotated(angle, 1, 0, 0);
+                            break;
+                        case WEST:
+                            GL11.glRotated(angle, -1, 0, 0);
+                            break;
+                        case UNKNOWN:
+                            break;
+                        }
+                        
                         GL11.glTranslated(scale * -point.getX(), scale * -point.getY(), scale * -point.getZ());
                         GL11.glTranslated(scale * -0.5F, scale * -0.5F, scale * -0.5F);
                     }

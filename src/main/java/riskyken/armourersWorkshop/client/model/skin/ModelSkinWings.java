@@ -12,7 +12,9 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.SkinUtils;
 
@@ -55,6 +57,8 @@ public class ModelSkinWings extends AbstractModelSkin  {
             
             double angle = 45D;
             
+            MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
+            
             angle = SkinUtils.getFlapAngleForWings(entity, skin);
             
             if (isSneak) {
@@ -62,10 +66,10 @@ public class ModelSkinWings extends AbstractModelSkin  {
             }
             
             if (part.getPartType().getPartName().equals("leftWing")) {
-                renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading);
+                renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading, movmentType);
             }
             if (part.getPartType().getPartName().equals("rightWing")) {
-                renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle, doLodLoading);
+                renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle, doLodLoading, movmentType);
             }
             GL11.glPopMatrix();
         }
@@ -73,7 +77,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading) {
+    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
@@ -85,7 +89,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
+        //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
@@ -95,23 +99,24 @@ public class ModelSkinWings extends AbstractModelSkin  {
             GL11.glRotated(angle, 0, 1, 0);
             break;
         case DOWN:
-            GL11.glRotated(angle, 0, 1, 0);
+            GL11.glRotated(angle, 0, -1, 0);
+            break;
+        case SOUTH:
+            GL11.glRotated(angle, 0, 0, -1);
             break;
         case NORTH:
-            GL11.glRotated(-angle, 0, 0, 1);
+            GL11.glRotated(angle, 0, 0, 1);
             break;
         case EAST:
             GL11.glRotated(angle, 1, 0, 0);
             break;
-        case SOUTH:
-            GL11.glRotated(angle, 0, 0, 1);
-            break;
         case WEST:
-            GL11.glRotated(-angle, 1, 0, 0);
+            GL11.glRotated(angle, -1, 0, 0);
             break;
         case UNKNOWN:
             break;
         }
+        
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
@@ -119,7 +124,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glPopMatrix();
     }
     
-    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading) {
+    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
         ForgeDirection axis = ForgeDirection.DOWN;
@@ -130,32 +135,34 @@ public class ModelSkinWings extends AbstractModelSkin  {
         }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
+        //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
+        
         switch (axis) {
         case UP:
             GL11.glRotated(angle, 0, 1, 0);
             break;
         case DOWN:
-            GL11.glRotated(angle, 0, 1, 0);
+            GL11.glRotated(angle, 0, -1, 0);
+            break;
+        case SOUTH:
+            GL11.glRotated(angle, 0, 0, -1);
             break;
         case NORTH:
-            GL11.glRotated(-angle, 0, 0, 1);
+            GL11.glRotated(angle, 0, 0, 1);
             break;
         case EAST:
             GL11.glRotated(angle, 1, 0, 0);
             break;
-        case SOUTH:
-            GL11.glRotated(angle, 0, 0, 1);
-            break;
         case WEST:
-            GL11.glRotated(-angle, 1, 0, 0);
+            GL11.glRotated(angle, -1, 0, 0);
             break;
         case UNKNOWN:
             break;
         }
+        
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
