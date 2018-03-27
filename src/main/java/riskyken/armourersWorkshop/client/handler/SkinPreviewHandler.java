@@ -104,7 +104,7 @@ public final class SkinPreviewHandler {
             RenderHelper.disableStandardItemLighting();
             mc.renderEngine.bindTexture(TEXTURE);
             ModRenderHelper.enableAlphaBlend();
-            GuiUtils.drawContinuousTexturedBox(x, y, 0, 0, (int) skinPreSize, (int) skinPreSize, 62, 62, 4, 200);
+            GuiUtils.drawContinuousTexturedBox(x, y, 0, 0, (int) skinPreSize, (int) skinPreSize, 62, 62, 4, 400);
         }
         GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glPushMatrix();
@@ -112,7 +112,7 @@ public final class SkinPreviewHandler {
         GL11.glEnable(GL11.GL_NORMALIZE);
         RenderHelper.enableGUIStandardItemLighting();
         
-        GL11.glTranslatef(-10F, -5F, 500);
+        GL11.glTranslatef(-10F, -5F, 600);
         
         GL11.glTranslatef(
                 (skinPreSize / 2F) + x,
