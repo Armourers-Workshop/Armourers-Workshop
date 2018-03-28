@@ -25,7 +25,6 @@ import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ModClientFMLEventHandler {
     
-    private static final String DOWNLOAD_URL = "https://minecraft.curseforge.com/projects/armourers-workshop/files";
     private boolean shownUpdateInfo = false;
     private boolean showmDevWarning;
     public static float renderTickTime;
@@ -49,7 +48,7 @@ public class ModClientFMLEventHandler {
             updateURL.getChatStyle().setUnderlined(true);
             updateURL.getChatStyle().setColor(EnumChatFormatting.BLUE);
             updateURL.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(TranslateUtils.translate("chat.armourersworkshop:updateDownloadRollover"))));
-            updateURL.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, DOWNLOAD_URL));
+            updateURL.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, LibModInfo.DOWNLOAD_URL));
             updateMessage.appendSibling(updateURL);
             player.addChatMessage(updateMessage);
         }

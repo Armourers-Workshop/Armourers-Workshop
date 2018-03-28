@@ -7,6 +7,7 @@ public class LibModInfo {
     public static final String CHANNEL = "armsWS";
     public static final String DEPENDENCIES = "required-after:plushieWrapper";
     public static final boolean DEVELOPMENT_VERSION = true;
+    public static final String DOWNLOAD_URL = "https://minecraft.curseforge.com/projects/armourers-workshop/files";
 
     public static final String PROXY_CLIENT_CLASS = "riskyken.armourersWorkshop.proxies.ClientProxy";
     public static final String PROXY_COMMNON_CLASS = "riskyken.armourersWorkshop.proxies.CommonProxy";
