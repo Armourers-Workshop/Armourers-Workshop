@@ -92,7 +92,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             ICubeColour colour = ((IPantableBlock)block).getColour(world, x, y, z);
             
             boolean rendered = false;
-            
+            renderer.renderAllFaces = false;
             if (light > 1) {
                 rendered = renderFaces(world, x, y, z, colour, block, renderer);
             } else {
@@ -101,6 +101,7 @@ public class RenderBlockGlowing implements ISimpleBlockRenderingHandler {
             
             return rendered;
         } else {
+            renderer.renderAllFaces = false;
             return renderer.renderStandardBlock(block, x, y, z);
         }
     }
