@@ -491,7 +491,13 @@ chat.armourersworkshop:inventoryFull=Seu inventário está cheio
 chat.armourersworkshop:inventoryGiftFail=Alguém tentou lhe dar um presente, mas você não tinha lugar para colocá-lo!
 chat.armourersworkshop:updateAvailable=Atualização do Armourer's Workshop %s está disponível.
 chat.armourersworkshop:updateDownload=[Download]
-chat.armourersworkshop:updateDownloadRollover=Clique para ir à página de download
+
+chat.armourersworkshop:updateDownloadRollover=Clique para abrir a página de download.
+chat.armourersworkshop:invalidJar=Armourer's Workshop detectou um arquivo .jar inválido. Porfavor, clique %s para abrir a página de download oficial ou clique %s para aprender mais sobre reupload ilegal de mods.
+chat.armourersworkshop:invalidJarDownload=[Aqui]
+chat.armourersworkshop:invalidJarDownloadTooltip=Clique para abrir a página de download.
+chat.armourersworkshop:invalidJarStopModReposts=[Aqui]
+chat.armourersworkshop:invalidJarStopModRepostsTooltip=Clique para abrir a página do "Stop Mod Reposts".
 chat.armourersworkshop:devWarning=Aviso: você está usando uma versão de desenvolvimento do Armourer's Workshop. As versões de desenvolvimento são apenas para testes e não recomendadas para uso público.
 chat.armourersworkshop:slotUnlocked=Espaço de visual para %s foi destravado. Agora são %s slots.
 chat.armourersworkshop:slotUnlockedFailed=O total de espaços de visuais para %s está no máximo.
