@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.gui.wardrobe.GuiWardrobe;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
@@ -125,31 +126,6 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         if (newEwd != null) {
             equipmentWardrobeData = newEwd;
         }
-        // Skin colour slots
-        // this.drawTexturedModalRect(this.guiLeft + 90, this.guiTop + 34, 238,
-        // 194, sloImageSize, sloImageSize);
-        // this.drawTexturedModalRect(this.guiLeft + 126, this.guiTop + 30, 230,
-        // 212, 26, 26);
-        
-        // Hair colour slots
-        // this.drawTexturedModalRect(this.guiLeft + 90, this.guiTop + 86, 238,
-        // 194, sloImageSize, sloImageSize);
-        // this.drawTexturedModalRect(this.guiLeft + 126, this.guiTop + 82, 230,
-        // 212, 26, 26);
-        
-        this.skinColour = new Color(equipmentWardrobeData.skinColour);
-        this.hairColour = new Color(equipmentWardrobeData.hairColour);
-        
-        // Draw player preview.
-        if (selectingSkinColour) {
-            skinColour = ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, true);
-        } else if (selectingHairColour) {
-            hairColour = ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, true);
-        } else {
-            ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, false);
-        }
-        
-        
         
         float skinR = (float) skinColour.getRed() / 255;
         float skinG = (float) skinColour.getGreen() / 255;
@@ -184,5 +160,24 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         
         String labelHairColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.hairColour");
         fontRenderer.drawString(labelHairColour + ":", 70, 70, 4210752); 
+        
+        this.skinColour = new Color(equipmentWardrobeData.skinColour);
+        this.hairColour = new Color(equipmentWardrobeData.hairColour);
+        
+        GL11.glPushMatrix();
+        GL11.glTranslated(-x, -y, 0);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        ModRenderHelper.enableAlphaBlend();
+        // Draw player preview.
+        if (selectingSkinColour) {
+            skinColour = ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, true);
+        } else if (selectingHairColour) {
+            hairColour = ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, true);
+        } else {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            ModRenderHelper.enableAlphaBlend();
+            ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, false);
+        }
+        GL11.glPopMatrix();
     }
 }

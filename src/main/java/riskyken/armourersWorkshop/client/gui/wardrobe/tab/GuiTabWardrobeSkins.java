@@ -20,7 +20,6 @@ public class GuiTabWardrobeSkins extends GuiTabPanel {
     
     public GuiTabWardrobeSkins(int tabId, GuiScreen parent) {
         super(tabId, parent, false);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -44,8 +43,15 @@ public class GuiTabWardrobeSkins extends GuiTabPanel {
                     this.y + slot.yDisplayPosition - 1,
                     238, 194, sloImageSize, sloImageSize);
         }
-        
+    }
+    
+    @Override
+    public void drawForegroundLayer(int mouseX, int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
         // Draw player preview.
+        GL11.glPushMatrix();
+        GL11.glTranslated(-x, -y, 0);
         ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY);
+        GL11.glPopMatrix();
     }
 }

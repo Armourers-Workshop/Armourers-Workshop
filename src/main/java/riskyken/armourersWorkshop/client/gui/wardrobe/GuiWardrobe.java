@@ -28,6 +28,7 @@ import riskyken.armourersWorkshop.client.gui.wardrobe.tab.GuiTabWardrobeColourSe
 import riskyken.armourersWorkshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
 import riskyken.armourersWorkshop.client.gui.wardrobe.tab.GuiTabWardrobeSkins;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
+import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinWardrobe;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
@@ -61,7 +62,7 @@ public class GuiWardrobe extends GuiTabbed {
     public GuiWardrobe(InventoryPlayer inventory, ExPropsPlayerSkinData customEquipmentData) {
         super(new ContainerSkinWardrobe(inventory, customEquipmentData), false, TEXTURE_TAB);
         
-        //Tab size 21
+        // Tab size 21
         this.xSize = 236;
         this.ySize = 240;
         
@@ -106,7 +107,7 @@ public class GuiWardrobe extends GuiTabbed {
         super.tabChanged();
         setSlotVisibility(activeTab == 0);
     }
-
+    
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         // Title label.
@@ -171,9 +172,30 @@ public class GuiWardrobe extends GuiTabbed {
         Color colour = new Color(255, 255, 255);
         // 3D player preview
         float boxX = x + 36.5F;
-        float boxY = y + 95F;
+        float boxY = y + 100F;
         float lookX = boxX - mouseX;
         float lookY = boxY - 50 - mouseY;
+        
+        
+        /*
+        drawGradientRect(
+                x + 8,
+                y + 18,
+                x + 8 + 57,
+                y + 18 + 92,
+                0xFFFFFFFF, 0xFFFFFFFF);
+        */
+        boolean overPlayerBox = false;
+        if (mouseX >= x + 8 & mouseX < x + 8 + 57) {
+            if (mouseY >= y + 18 & mouseY < y + 18 + 92) {
+                overPlayerBox = true;
+            }
+        }
+        
+        if (!overPlayerBox) {
+            ModRenderHelper.enableScissorScaled(x + 8, y + 18, 57, 92);
+        }
+        
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glTranslatef(boxX, boxY, 50);
@@ -187,6 +209,12 @@ public class GuiWardrobe extends GuiTabbed {
         GuiInventory.func_147046_a(0, 0, 35, 0, 0, this.mc.thePlayer);
         GL11.glPopAttrib();
         GL11.glPopMatrix();
+        
+        if (!overPlayerBox) {
+            ModRenderHelper.disableScissor();
+        }
+        
+        
         return colour;
     }
     
@@ -203,6 +231,7 @@ public class GuiWardrobe extends GuiTabbed {
         float f6 = entity.rotationYawHead;
         GL11.glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
         RenderHelper.disableStandardItemLighting();
+        ModRenderHelper.disableLighting();
         GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(-((float) Math.atan((double) (pitch / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
         entity.renderYawOffset = (float) Math.atan((double) (yaw / 40.0F)) * 20.0F;

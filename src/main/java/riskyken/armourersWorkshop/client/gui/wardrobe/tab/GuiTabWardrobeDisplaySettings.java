@@ -98,8 +98,15 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
         
         //Bottom half of GUI. (player inventory)
         this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
-        
+    }
+    
+    @Override
+    public void drawForegroundLayer(int mouseX, int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
         // Draw player preview.
+        GL11.glPushMatrix();
+        GL11.glTranslated(-x, -y, 0);
         ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY);
+        GL11.glPopMatrix();
     }
 }

@@ -104,6 +104,7 @@ public class SkinPartRenderer extends ModelBase {
                     if (skinModel.haveList[i]) {
                         if (skinModel.displayList[i].isCompiled()) {
                             if (glowing) {
+                                GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
                                 GL11.glDisable(GL11.GL_LIGHTING);
                                 ModRenderHelper.disableLighting();
                             }
@@ -118,6 +119,7 @@ public class SkinPartRenderer extends ModelBase {
                             if (glowing) {
                                 ModRenderHelper.enableLighting();
                                 GL11.glEnable(GL11.GL_LIGHTING);
+                                GL11.glPopAttrib();
                             }
                         }
                     }
