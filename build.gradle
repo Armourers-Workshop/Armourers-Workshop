@@ -24,14 +24,17 @@ repositories {
 
 apply plugin: 'forge'
 
-if (System.env.BUILD_NUMBER != null) {
-    version = "$minecraftVersion-$modVersion.$System.env.BUILD_NUMBER"
-} else {
-    version = "$minecraftVersion-$modVersion"
-}
 
+version = "$minecraftVersion-$modVersion"
 group= "riskyken.armourersWorkshop"
 archivesBaseName = "Armourers-Workshop"
+
+if (devBuild.toBoolean()) {
+    archivesBaseName = "Armourers-Workshop-Dev"
+    if (System.env.BUILD_NUMBER != null) {
+        version = "$minecraftVersion-$modVersion.$System.env.BUILD_NUMBER"
+    }
+}
 
 minecraft {
     version = "$minecraftVersion-$forgeVersion"
