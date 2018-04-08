@@ -59,6 +59,9 @@ public final class RehostedJarHandler {
         if (validJar) {
             return;
         }
+        if (LibModInfo.DEVELOPMENT_VERSION) {
+            return;
+        }
         if (event.side != Side.CLIENT) {
             return;
         }
