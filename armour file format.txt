@@ -1,0 +1,57 @@
+Armour file format
+
+------Skin File------
+int					file version				current version is 13
+ascii-string		skin header					should read "AW-SKIN-START"
+ascii-string		properties header			should read "PROPS-START"
+Skin poperties see below
+ascii-string		properties footer			should read "PROPS-END"
+ascii-string		skin type header			should read "TYPE-START"
+utf8-string			skin type registry name		should be something like "armourers:head"
+ascii-string		skin type footer			should read "TYPE-END"
+ascii-string		skin paint header			should read "PAINT-START"
+boolean				have paint
+if have paint was true
+	2048*int 		rgbt pixel data				first 3 bytes are rbg last byte is for paint type
+ascii-string		skin paint footer			should read "PAINT-END"
+int					number of skin parts
+for each skin part
+	Skin part see below
+ascii-string		skin footer					should read "AW-SKIN-END"
+---------------------
+
+
+---Skin Properties---
+int							properties count		number of properties to read
+for each property
+	utf8-string				property key
+	byte					data type			0 = string, 1 = int, 2 = double, 3 = boolean
+	type from last byte		property value
+---------------------
+
+
+------Skin Part------
+ascii-string		skin part header					should read "PART-START"
+ascii-string		skin part registry name				should be something like "armourers:legs.left"
+int					number of skin cubes
+for each skin cube
+	byte			cube id								0 = normal, 1 = glowing, 2 = glass, 3 = glassGlowing
+	byte			x									x position relative to part origin
+	byte			y									y position relative to part origin
+	byte			z									z position relative to part origin
+	for each cube side (*6)
+		byte		red									red
+		byte		green								green
+		byte		blue								blue
+		byte		paint type							see
+int					number of markers
+for each markers
+	byte				x
+	byte				y
+	byte				z
+	byte				face
+ascii-string		skin part footer					should read "PART-END"
+---------------------
+
+Please remember java uses big endian byte order!
+All strings start with an unsigned short that holds the string length in bytes.

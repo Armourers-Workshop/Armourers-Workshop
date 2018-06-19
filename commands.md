@@ -28,7 +28,7 @@ Commands can run with the prefix /armourers.
   Result:
 
 * setSkin
-  Usage: ```/armourers setSkin <player> <skin name>```
+  Usage: ```/armourers setSkin <player> <slot id> "<skin name>"```
   Result:
 
 * setUnlockedWardrobeSlots
