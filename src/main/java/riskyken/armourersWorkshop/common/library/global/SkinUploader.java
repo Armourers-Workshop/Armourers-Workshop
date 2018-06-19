@@ -55,16 +55,12 @@ public final class SkinUploader {
     }
     
     private static String doSkinUpload(byte[] file, String name, String userId, String description, String accessToken) throws IOException {
-        
-        ModLogger.log("Upload Test Started " + "name" + name +  "userId" + userId +  "description" + description +  "accessToken" + accessToken);
         MultipartForm multipartForm = new MultipartForm(UPLOAD_URL);
-        
         multipartForm.addText("name", name);
         multipartForm.addText("userId", userId);
         multipartForm.addText("description", description);
         multipartForm.addText("accessToken", accessToken);
         multipartForm.addFile("fileToUpload", name, file);
-        
         return multipartForm.upload();
     }
 }
