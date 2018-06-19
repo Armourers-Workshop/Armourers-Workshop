@@ -2,6 +2,7 @@ package riskyken.armourersWorkshop.common.blocks;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
@@ -49,6 +50,8 @@ import riskyken.armourersWorkshop.utils.UtilItems;
 public class BlockMannequin extends AbstractModBlockContainer implements IDebug {
 
     public static DamageSource victoriousDamage = new DamageSource("victorious");
+    public static GameProfile vicProfile = new GameProfile(UUID.fromString("b027a4f4-d480-426c-84a3-a9cb029f4b72"), "VicNightfall");
+    
     private static final String TAG_OWNER = "owner";
     private static final String TAG_IMAGE_URL = "imageUrl";
     private final boolean isValentins;
@@ -230,7 +233,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         if (te != null && te instanceof TileEntityMannequin) {
             TileEntityMannequin teMan = (TileEntityMannequin) te;
             if (teMan.getGameProfile() != null) {
-                if (teMan.getGameProfile().getName().equals("victorious3")) {
+                if (teMan.getGameProfile().getId() == vicProfile.getId()) {
                     entityLiving.attackEntityFrom(victoriousDamage, 2.0F);
                 }
             }
