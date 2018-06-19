@@ -10,6 +10,7 @@ public class LibItemNames {
     public static final String DODGE_TOOL = "dodgeTool";
     public static final String COLOUR_NOISE_TOOL = "colourNoiseTool";
     public static final String SHADE_NOISE_TOOL = "shadeNoiseTool";
+    public static final String PAINTBALL_GUN = "paintballGun";
     public static final String GUIDE_BOOK = "guideBook";
     public static final String MANNEQUIN_TOOL = "mannequinTool";
     public static final String ARMOUR_CONTAINER = "armourContainer";

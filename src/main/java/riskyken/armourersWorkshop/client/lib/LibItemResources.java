@@ -60,6 +60,8 @@ public final class LibItemResources {
     public static final String DYE_BOTTLE = PREFIX_RESOURCE + "dye";
     public static final String DYE_BOTTLE_PAINT = PREFIX_RESOURCE + "dyePaint";
     public static final String BLEND_TOOL = PREFIX_RESOURCE + "blendTool";
+    public static final String PAINTBALL_GUN = PREFIX_RESOURCE + "paintball-gun";
+    public static final String PAINTBALL_GUN_TIP = PREFIX_RESOURCE + "paintball-gun-tip";
     
     //Slots
     public static final String SLOT_SKIN_HEAD = PREFIX_RESOURCE + "slot/skinHead";

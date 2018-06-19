@@ -11,6 +11,7 @@ import riskyken.armourersWorkshop.common.items.paintingtool.ItemColourPicker;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemDodgeTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemHueTool;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemPaintRoller;
+import riskyken.armourersWorkshop.common.items.paintingtool.ItemPaintballGun;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemPaintbrush;
 import riskyken.armourersWorkshop.common.items.paintingtool.ItemShadeNoiseTool;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -31,6 +32,7 @@ public class ModItems {
     public static Item hueTool;
     public static Item blendingTool;
     public static Item blockMarker;
+    public static Item paintballGun;
     
     public static Item mannequinTool;
     public static Item wandOfStyle;
@@ -61,6 +63,7 @@ public class ModItems {
         hueTool = new ItemHueTool();
         blockMarker = new ItemBlockMarker();
         blendingTool = new ItemBlendingTool();
+        paintballGun = new ItemPaintballGun();
         
         mannequinTool = new ItemMannequinTool();
         wandOfStyle = new ItemWandOfStyle();
