@@ -19,6 +19,10 @@ public class SkinDye implements ISkinDye {
     private static final String TAG_SKIN_DYE = "dyeData";
     private static final String TAG_DYE = "dye";
     private static final String TAG_NAME = "name";
+    private static final String TAG_RED = "r";
+    private static final String TAG_GREEN = "g";
+    private static final String TAG_BLUE = "b";
+    private static final String TAG_TYPE = "t";
     
     private byte[][] dyes;
     private boolean[] hasDye;
@@ -149,7 +153,10 @@ public class SkinDye implements ISkinDye {
         NBTTagCompound dyeCompound = new NBTTagCompound();
         for (int i = 0; i < MAX_SKIN_DYES; i++) {
             if (hasDye[i]) {
-                dyeCompound.setByteArray(TAG_DYE + i, dyes[i]);
+                dyeCompound.setByte(TAG_DYE + i + TAG_RED, dyes[i][0]);
+                dyeCompound.setByte(TAG_DYE + i + TAG_GREEN, dyes[i][1]);
+                dyeCompound.setByte(TAG_DYE + i + TAG_BLUE, dyes[i][2]);
+                dyeCompound.setByte(TAG_DYE + i + TAG_TYPE, dyes[i][3]);
                 if (!StringUtils.isNullOrEmpty(names[i])) {
                     dyeCompound.setString(TAG_NAME + i, names[i]);
                 }
@@ -161,8 +168,10 @@ public class SkinDye implements ISkinDye {
     public void readFromCompound(NBTTagCompound compound) {
         NBTTagCompound dyeCompound = compound.getCompoundTag(TAG_SKIN_DYE);
         for (int i = 0; i < MAX_SKIN_DYES; i++) {
+            // Load old dye code.
             if (dyeCompound.hasKey(TAG_DYE + i, Constants.NBT.TAG_BYTE_ARRAY)) {
                 dyes[i] = dyeCompound.getByteArray(TAG_DYE + i);
+                
                 if (dyes[i].length == 4) {
                     hasDye[i] = true;
                 } else {
@@ -170,6 +179,24 @@ public class SkinDye implements ISkinDye {
                 }
                 if (dyeCompound.hasKey(TAG_NAME + i, NBT.TAG_STRING)) {
                     names[i] = dyeCompound.getString(TAG_NAME + i);
+                }
+            }
+            // End old dye loading code.
+            if (dyeCompound.hasKey(TAG_DYE + i + TAG_RED, Constants.NBT.TAG_BYTE)) {
+                if (dyeCompound.hasKey(TAG_DYE + i + TAG_GREEN, Constants.NBT.TAG_BYTE)) {
+                    if (dyeCompound.hasKey(TAG_DYE + i + TAG_BLUE, Constants.NBT.TAG_BYTE)) {
+                        if (dyeCompound.hasKey(TAG_DYE + i + TAG_TYPE, Constants.NBT.TAG_BYTE)) {
+                            dyes[i] = new byte[] {0,0,0,0};
+                            hasDye[i] = true;
+                            dyes[i][0] = dyeCompound.getByte(TAG_DYE + i + TAG_RED);
+                            dyes[i][1] = dyeCompound.getByte(TAG_DYE + i + TAG_GREEN);
+                            dyes[i][2] = dyeCompound.getByte(TAG_DYE + i + TAG_BLUE);
+                            dyes[i][3] = dyeCompound.getByte(TAG_DYE + i + TAG_TYPE);
+                            if (dyeCompound.hasKey(TAG_NAME + i, NBT.TAG_STRING)) {
+                                names[i] = dyeCompound.getString(TAG_NAME + i);
+                            }
+                        }
+                    }
                 }
             }
         }
