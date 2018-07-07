@@ -27,6 +27,9 @@ public class EquipmentWardrobeData {
     private static final String TAG_SLOT_KEY = "slotKey";
     private static final String TAG_SLOT_VALUE = "slotValue";
     
+    private static final Color COLOUR_SKIN_DEFAULT = Color.decode("#F9DFD2");
+    private static final Color COLOUR_HAIR_DEFAULT = Color.decode("#804020");
+    
     /** Colour of the players skin */
     public int skinColour;
     /** Colour of the players hair */
@@ -41,8 +44,8 @@ public class EquipmentWardrobeData {
     public HashMap<String, Integer> slotsUnlocked;
     
     public EquipmentWardrobeData() {
-        skinColour = Color.decode("#F9DFD2").getRGB();
-        hairColour = Color.decode("#804020").getRGB();
+        skinColour = COLOUR_SKIN_DEFAULT.getRGB();
+        hairColour = COLOUR_HAIR_DEFAULT.getRGB();
         armourOverride = new BitSet(4);
         headOverlay = false;
         limitLimbs = true;
@@ -166,13 +169,16 @@ public class EquipmentWardrobeData {
     }
     
     public int autoColourHair(AbstractClientPlayer player) {
-        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(player);
+        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
+        if (playerTexture == null) {
+            return COLOUR_HAIR_DEFAULT.getRGB();
+        }
         
         int r = 0, g = 0, b = 0;
         
         for (int ix = 0; ix < 2; ix++) {
             for (int iy = 0; iy < 1; iy++) {
-                Color c = new Color(playerSkin.getRGB(ix + 11, iy + 3));
+                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 3));
                 r += c.getRed();
                 g += c.getGreen();
                 b += c.getBlue();
@@ -186,13 +192,16 @@ public class EquipmentWardrobeData {
     }
     
     public int autoColourSkin(AbstractClientPlayer player) {
-        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(player);
+        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
+        if (playerTexture == null) {
+            return COLOUR_SKIN_DEFAULT.getRGB();
+        }
         
         int r = 0, g = 0, b = 0;
         
         for (int ix = 0; ix < 2; ix++) {
             for (int iy = 0; iy < 1; iy++) {
-                Color c = new Color(playerSkin.getRGB(ix + 11, iy + 13));
+                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 13));
                 r += c.getRed();
                 g += c.getGreen();
                 b += c.getBlue();
