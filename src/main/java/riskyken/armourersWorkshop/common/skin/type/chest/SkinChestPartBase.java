@@ -19,7 +19,7 @@ public class SkinChestPartBase extends AbstractSkinPartTypeBase implements ISkin
     
     public SkinChestPartBase(ISkinType baseType) {
         super(baseType);
-        this.buildingSpace = new Rectangle3D(-6, -24, -14, 12, 35, 28);
+        this.buildingSpace = new Rectangle3D(-6, -24, -30, 12, 38, 60);
         this.guideSpace = new Rectangle3D(-4, -12, -2, 8, 12, 4);
         this.offset = new Point3D(0, -1, 0);
     }
