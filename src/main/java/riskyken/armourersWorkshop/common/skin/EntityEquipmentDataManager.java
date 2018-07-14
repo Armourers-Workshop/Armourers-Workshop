@@ -44,13 +44,10 @@ public final class EntityEquipmentDataManager {
     }
     
     public boolean isRenderItem(ItemOverrideType  type, Item item) {
-        String itemName = item.itemRegistry.getNameForObject(item);
-        if (itemName != null && !itemName.equals("")) {
-            for (int i = 0; i < ModAddonManager.itemOverrides.size(); i++) {
-                if (ModAddonManager.itemOverrides.get(i).equals(type.toString().toLowerCase() + ":" + itemName)) {
-                    return true;
-                }
-            }
+        String itemName = Item.itemRegistry.getNameForObject(item);
+        if (itemName != null && !itemName.isEmpty()) {
+            String overrideToFind = type.toString().toLowerCase() + ":" + itemName;
+            return ModAddonManager.itemOverrides.contains(overrideToFind);
         }
         return false;
     }
