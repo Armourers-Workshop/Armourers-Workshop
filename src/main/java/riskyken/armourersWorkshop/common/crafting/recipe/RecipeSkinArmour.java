@@ -84,7 +84,7 @@ public class RecipeSkinArmour extends RecipeItemSkinning {
     @Override
     public void onCraft(IInventory inventory) {
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
-            inventory.setInventorySlotContents(slotId, null);
+            inventory.decrStackSize(slotId, 1);
         }
     }
 }

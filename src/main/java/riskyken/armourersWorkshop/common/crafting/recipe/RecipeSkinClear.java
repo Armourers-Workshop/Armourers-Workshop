@@ -58,7 +58,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
             if (stack.getItem() != ModItems.soap) {
-                inventory.setInventorySlotContents(slotId, null);
+                inventory.decrStackSize(slotId, 1);
             }
         }
     }
