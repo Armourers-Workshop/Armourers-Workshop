@@ -28,6 +28,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -64,6 +65,24 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public Block setBlockName(String name) {
         GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
         return super.setBlockName(name);
+    }
+    
+    @Override
+    public boolean canDropFromExplosion(Explosion explosion) {
+        return false;
+    }
+    
+    @Override
+    public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+        if (!world.isRemote) {
+            TileEntitySkinnable te = getTileEntity(world, x, y, z);
+            if (te != null && te.getInventory() != null) {
+                BlockUtils.dropInventoryBlocks(world, te.getInventory(), x, y, z);
+            }
+            dropSkin(world, x, y, z, false);
+        }
+        world.removeTileEntity(x, y, z);
+        super.onBlockExploded(world, x, y, z, explosion);
     }
     
     @Override
