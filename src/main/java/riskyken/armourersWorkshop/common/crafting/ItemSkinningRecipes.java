@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinBow;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinClear;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinCopy;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinPickaxe;
+import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinRecover;
 import riskyken.armourersWorkshop.common.crafting.recipe.RecipeSkinSword;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
@@ -26,6 +27,7 @@ public class ItemSkinningRecipes {
         recipes.add(new RecipeSkinPickaxe());
         recipes.add(new RecipeSkinCopy());
         recipes.add(new RecipeSkinClear());
+        recipes.add(new RecipeSkinRecover());
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinHead));
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinChest));
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinLegs));

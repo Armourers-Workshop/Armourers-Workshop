@@ -22,6 +22,7 @@ public class ConfigHandler {
     public static boolean disableDollRecipe;
     public static boolean disableSkinningRecipes;
     public static boolean hideDollFromCreativeTabs;
+    public static boolean enableRecoveringSkins;
     
     //server
     public static int serverModelCacheTime = 600000;
@@ -171,6 +172,11 @@ public class ConfigHandler {
                 .get(CATEGORY_RECIPE, "hideDollFromCreativeTabs", true,
                 "Hides the doll block from the creative tab and NEI.")
                 .getBoolean(true);
+        
+        enableRecoveringSkins = config
+                .get(CATEGORY_RECIPE, "enableRecoveringSkins", false,
+                "Enable copying the skin off an item in the skinning table.")
+                .getBoolean(false);
     }
     
     private static void loadCategoryCompatibility() {

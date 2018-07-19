@@ -27,6 +27,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private boolean libraryShowsModelPreviews;
     private boolean lockDyesOnSkins;
     private boolean instancedDyeTable;
+    private boolean enableRecoveringSkins;
     private UUID playerId;
     
     public MessageServerSyncConfig(EntityPlayer player) {
@@ -41,6 +42,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
         this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
         this.instancedDyeTable = ConfigHandler.instancedDyeTable;
+        this.enableRecoveringSkins = ConfigHandler.enableRecoveringSkins;
     }
     
     @Override
@@ -51,6 +53,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         buf.writeBoolean(libraryShowsModelPreviews);
         buf.writeBoolean(lockDyesOnSkins);
         buf.writeBoolean(instancedDyeTable);
+        buf.writeBoolean(enableRecoveringSkins);
         if (playerId == null) {
             buf.writeBoolean(false);
         } else {
@@ -68,6 +71,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         libraryShowsModelPreviews = buf.readBoolean();
         lockDyesOnSkins = buf.readBoolean();
         instancedDyeTable = buf.readBoolean();
+        enableRecoveringSkins = buf.readBoolean();
         if (buf.readBoolean()) {
             playerId = ByteBufHelper.readUUID(buf);
         }
@@ -89,5 +93,6 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;
         ConfigHandler.remotePlayerId = message.playerId;
         ConfigHandler.instancedDyeTable = message.instancedDyeTable;
+        ConfigHandler.enableRecoveringSkins = message.enableRecoveringSkins ;
     }
 }
