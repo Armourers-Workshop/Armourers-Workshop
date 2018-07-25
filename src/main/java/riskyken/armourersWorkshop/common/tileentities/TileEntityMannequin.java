@@ -11,6 +11,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.Constants;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -24,6 +25,8 @@ import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
+    
+    public static final int CONS_OFFSET_MAX = 3;
     
     private static final String TAG_OWNER = "owner";
     private static final String TAG_ROTATION = "rotation";
@@ -351,9 +354,15 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (compound.hasKey(TAG_HAIR_COLOUR, 3)) {
             this.hairColour = compound.getInteger(TAG_HAIR_COLOUR);
         }
+        
         this.offsetX = compound.getFloat(TAG_OFFSET_X);
         this.offsetY = compound.getFloat(TAG_OFFSET_Y);
         this.offsetZ = compound.getFloat(TAG_OFFSET_Z);
+        
+        offsetX = MathHelper.clamp_float(offsetX, -CONS_OFFSET_MAX, CONS_OFFSET_MAX);
+        offsetY = MathHelper.clamp_float(offsetY, -CONS_OFFSET_MAX, CONS_OFFSET_MAX);
+        offsetZ = MathHelper.clamp_float(offsetZ, -CONS_OFFSET_MAX, CONS_OFFSET_MAX);
+        
         if (compound.hasKey(TAG_RENDER_EXTRAS)) {
             this.renderExtras = compound.getBoolean(TAG_RENDER_EXTRAS);
         }

@@ -45,9 +45,9 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
         resetOffsetButton = new GuiButtonExt(0, 0, TAB_HEIGHT - 18 - 8, 50, 18, GuiHelper.getLocalizedControlName(inventoryName, "reset"));
         resetOffsetButton.width = fontRenderer.getStringWidth(resetOffsetButton.displayString) + fontRenderer.getStringWidth(" ") * 4;
         resetOffsetButton.xPosition = this.width / 2  - TAB_WIDTH / 2 + TAB_WIDTH - 10 - resetOffsetButton.width;
-        bipedOffsetXslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25, TAB_WIDTH - 20, 10, "X: ", "", -1D, 1D, 0D, true, true, this);
-        bipedOffsetYslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 12, TAB_WIDTH - 20, 10, "Y: ", "", -1D, 1D, 0D, true, true, this);
-        bipedOffsetZslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 24, TAB_WIDTH - 20, 10, "Z: ", "", -1D, 1D, 0D, true, true, this);
+        bipedOffsetXslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25, TAB_WIDTH - 20, 10, "X: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
+        bipedOffsetYslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 12, TAB_WIDTH - 20, 10, "Y: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
+        bipedOffsetZslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 24, TAB_WIDTH - 20, 10, "Z: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
         setSliderValue(bipedOffsetXslider, tileEntity.getOffsetX());
         setSliderValue(bipedOffsetYslider, tileEntity.getOffsetY());
         setSliderValue(bipedOffsetZslider, tileEntity.getOffsetZ());
