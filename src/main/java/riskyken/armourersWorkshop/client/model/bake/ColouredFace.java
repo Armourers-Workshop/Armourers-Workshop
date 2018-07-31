@@ -7,17 +7,17 @@ import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 
 public class ColouredFace {
     
-    private final byte x;
-    private final byte y;
-    private final byte z;
+    public final byte x;
+    public final byte y;
+    public final byte z;
     
-    private final byte r;
-    private final byte g;
-    private final byte b;
+    public final byte r;
+    public final byte g;
+    public final byte b;
     private final byte a;
     
     private final byte t;
-    private final byte face;
+    public final byte face;
     private final byte lodLevel;
     
     public ColouredFace(byte x, byte y, byte z, byte r, byte g, byte b, byte a, byte paintType, byte face, byte lodLevel) {
