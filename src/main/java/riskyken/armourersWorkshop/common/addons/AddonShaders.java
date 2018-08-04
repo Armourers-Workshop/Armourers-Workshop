@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.common.addons;
 
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+
 public class AddonShaders extends ModAddon {
 
     public AddonShaders() {
@@ -8,10 +10,12 @@ public class AddonShaders extends ModAddon {
 
     @Override
     protected boolean setIsModLoaded() {
-        try {
-            Class.forName("shadersmodcore.client.Shaders");
-            return true;
-        } catch (Exception e) {
+        if (!ArmourersWorkshop.isDedicated()) {
+            try {
+                Class.forName("shadersmodcore.client.Shaders");
+                return true;
+            } catch (Exception e) {
+            }
         }
         return false;
     }
