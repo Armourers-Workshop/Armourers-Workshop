@@ -32,7 +32,7 @@ import riskyken.armourersWorkshop.common.Contributors;
 import riskyken.armourersWorkshop.common.Contributors.Contributor;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
+import riskyken.armourersWorkshop.common.items.block.ModItemBlockNoStack;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -55,7 +55,7 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @Override
     public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
+        GameRegistry.registerBlock(this, ModItemBlockNoStack.class, "block." + name);
         return super.setBlockName(name);
     }
     
