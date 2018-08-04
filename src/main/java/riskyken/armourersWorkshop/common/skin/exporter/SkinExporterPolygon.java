@@ -19,9 +19,9 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 public class SkinExporterPolygon implements ISkinExporter {
 
     @Override
-    public void exportSkin(Skin skin, File file) {
+    public void exportSkin(Skin skin, File file, float scale) {
         try {
-            exportPart(skin.getParts().get(0), skin, file, 1F / 8F);
+            exportPart(skin.getParts().get(0), skin, file, scale);
         } catch (IOException e) {
             e.printStackTrace();
         }

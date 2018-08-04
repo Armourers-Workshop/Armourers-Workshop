@@ -520,6 +520,7 @@ commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobe
 commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
 commands.armourers.fileNotFound=The file %1$s was not found.
 commands.armourers.invalidDyeFormat=%1$s is not a valid dye format.
+commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
 
 # Creative tab
 itemGroup.armourersworkshop=Armourer's Workshop

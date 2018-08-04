@@ -6,5 +6,5 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 
 public interface ISkinExporter {
     
-    public void exportSkin(Skin skin, File file);
+    public void exportSkin(Skin skin, File file, float scale);
 }

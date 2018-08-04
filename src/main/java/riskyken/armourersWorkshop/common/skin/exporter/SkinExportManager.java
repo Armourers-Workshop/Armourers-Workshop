@@ -11,19 +11,30 @@ public final class SkinExportManager {
     
     private SkinExportManager() {}
     
-    public static void exportSkin(Skin skin, String skinExporter, File file) {
-        if (skinExporter.equalsIgnoreCase("obj")) {
-            //exportSkin(skin, new SkinExporterWavefrontObj(), file);
-            return;
+    
+    public static ISkinExporter getSkinExporter(String fileExtension) {
+        if (fileExtension == null) {
+            return null;
         }
-        if (skinExporter.equalsIgnoreCase("ply")) {
-            exportSkin(skin, new SkinExporterPolygon(), file);
-            return;
+        if (fileExtension.equalsIgnoreCase("obj")) {
+            //return new SkinExporterWavefrontObj(), file);
         }
-        ModLogger.log(Level.ERROR, String.format("Could not export to %s format.", skinExporter));
+        if (fileExtension.equalsIgnoreCase("ply")) {
+            return new SkinExporterPolygon();
+        }
+        return null;
     }
     
-    public static void exportSkin(Skin skin, ISkinExporter skinExporter, File file) {
-        skinExporter.exportSkin(skin, file);
+    public static void exportSkin(Skin skin, String fileExtension, File file, float scale) {
+        ISkinExporter skinExporter = getSkinExporter(fileExtension);
+        if (skinExporter != null) {
+            exportSkin(skin, skinExporter, file, scale);
+        } else {
+            ModLogger.log(Level.ERROR, String.format("Could not export to %s format.", skinExporter));
+        }
+    }
+    
+    public static void exportSkin(Skin skin, ISkinExporter skinExporter, File file, float scale) {
+        skinExporter.exportSkin(skin, file, scale);
     }
 }
