@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
@@ -159,9 +160,6 @@ public class CommonProxy implements ILibraryCallback {
     }
 
     public void skinLibraryCommand(EntityPlayerMP player, SkinLibraryCommand command, LibraryFile file, boolean publicList) {
-        if (!publicList) {
-            //file = new LibraryFile(file.fileName, "/private/" + player.getUniqueID().toString() + file.filePath, file.skinType, file.isDirectory());
-        }
         switch (command) {
         case DELETE:
             if (!publicList) {
@@ -172,6 +170,10 @@ public class CommonProxy implements ILibraryCallback {
                     dir = new File(dir, file.fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
                 }
                 if (dir.isDirectory() == file.isDirectory()) {
+                    if (!SkinIOUtils.isInLibraryDir(dir)) {
+                        ModLogger.log(Level.WARN, String.format("Player '%s' tried to delete the file/folder '%s' that is outside the library directory.", player.getGameProfile().toString(), dir.getAbsolutePath()));
+                        return;
+                    }
                     if (dir.exists()) {
                         if (file.isDirectory()) {
                             try {
@@ -197,8 +199,11 @@ public class CommonProxy implements ILibraryCallback {
         case NEW_FOLDER:
             if (!publicList) {
                 File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), file.filePath);
-                ModLogger.log(dir.getAbsolutePath());
                 dir = new File(dir, file.fileName);
+                if (!SkinIOUtils.isInLibraryDir(dir)) {
+                    ModLogger.log(Level.WARN, String.format("Player '%s' tried to make the folder '%s' that is outside the library directory.", player.getGameProfile().toString(), dir.getAbsolutePath()));
+                    return;
+                }
                 if (!dir.exists()) {
                     dir.mkdir();
                 }

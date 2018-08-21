@@ -53,6 +53,10 @@ public final class SkinIOUtils {
         return filePath; //filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
     }
     
+    public static boolean isInLibraryDir(File file) {
+        return isInSubDirectory(file, getSkinLibraryDirectory());
+    }
+    
     public static boolean saveSkinToFile(File file, Skin skin) {
         File dir = file.getParentFile();
         if (!dir.exists()) {
