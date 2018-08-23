@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.common.library.global;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,9 +34,12 @@ public final class SkinDownloader {
         
         InputStream in = null;
         String data = null;
+        ByteArrayInputStream byteIn = null;
         try {
             in = new URL(String.format("http://plushie.moe/armourers_workshop/download-skin.php?skinid=%d&skinFileName=%s", serverId, fileName)).openStream();
-            skin = SkinIOUtils.loadSkinFromStream(new BufferedInputStream(in));
+            byte[] skinData = IOUtils.toByteArray(in);
+            byteIn = new ByteArrayInputStream(skinData);
+            skin = SkinIOUtils.loadSkinFromStream(byteIn);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
