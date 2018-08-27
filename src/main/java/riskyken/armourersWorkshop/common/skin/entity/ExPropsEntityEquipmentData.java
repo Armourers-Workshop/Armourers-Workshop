@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.skin.entity;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;

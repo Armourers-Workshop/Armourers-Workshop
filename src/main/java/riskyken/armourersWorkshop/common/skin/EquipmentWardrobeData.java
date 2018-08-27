@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.BitSet;
 import java.util.HashMap;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.nbt.NBTTagCompound;

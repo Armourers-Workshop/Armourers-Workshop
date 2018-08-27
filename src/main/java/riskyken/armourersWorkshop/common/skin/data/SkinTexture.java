@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;

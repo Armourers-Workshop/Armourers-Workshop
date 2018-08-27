@@ -5,26 +5,19 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.config.GuiUtils;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
 public final class SkinPreviewHandler {
@@ -37,7 +30,7 @@ public final class SkinPreviewHandler {
     public SkinPreviewHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
-    
+    /*
     @SubscribeEvent
     public void onDrawScreenPre(DrawScreenEvent.Post event) {
         if (!ConfigHandlerClient.skinPreEnabled) {
@@ -74,7 +67,8 @@ public final class SkinPreviewHandler {
             drawSkinBox(mc, x, y, skinPreSize, skinPointer);
         }
     }
-    
+    */
+    /*
     @SubscribeEvent
     public void onDrawScreenPost(DrawScreenEvent.Pre event) {
         if (!ConfigHandlerClient.skinPreEnabled) {
@@ -109,7 +103,7 @@ public final class SkinPreviewHandler {
             skinPointer = null;
         }
     }
-    
+    */
     private void drawSkinBox(Minecraft mc, int x, int y, float skinPreSize, SkinPointer skinPointer) {
         boolean skinPreDrawBackground = ConfigHandlerClient.skinPreDrawBackground;
         if (skinPreDrawBackground) {
@@ -207,7 +201,7 @@ public final class SkinPreviewHandler {
         }
         return false;
     }
-    
+    /*
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         if (ConfigHandlerClient.skinPreEnabled) {
@@ -215,4 +209,5 @@ public final class SkinPreviewHandler {
             lastList = event.toolTip;
         }
     }
+    */
 }

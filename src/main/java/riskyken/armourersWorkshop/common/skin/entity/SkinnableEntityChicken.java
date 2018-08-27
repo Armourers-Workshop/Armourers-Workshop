@@ -2,8 +2,8 @@ package riskyken.armourersWorkshop.common.skin.entity;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;

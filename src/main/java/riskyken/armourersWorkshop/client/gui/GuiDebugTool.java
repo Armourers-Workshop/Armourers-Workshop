@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.client.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;

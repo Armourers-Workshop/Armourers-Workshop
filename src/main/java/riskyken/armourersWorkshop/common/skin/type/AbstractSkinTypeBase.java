@@ -2,8 +2,8 @@ package riskyken.armourersWorkshop.common.skin.type;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperty;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;

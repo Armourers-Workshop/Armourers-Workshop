@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common.library;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.api.common.library.ILibraryFile;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;

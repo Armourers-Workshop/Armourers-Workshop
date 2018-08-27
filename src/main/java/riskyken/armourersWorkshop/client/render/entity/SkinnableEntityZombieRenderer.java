@@ -2,8 +2,8 @@ package riskyken.armourersWorkshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelZombieVillager;
 import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;

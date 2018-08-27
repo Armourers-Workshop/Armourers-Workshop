@@ -5,19 +5,19 @@ import java.nio.charset.CharsetEncoder;
 
 import org.apache.commons.io.Charsets;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
@@ -75,22 +75,22 @@ public final class RehostedJarHandler {
             return;
         }
         lastMessagePost = System.currentTimeMillis();
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = Minecraft.getMinecraft().player;
         
-        ChatComponentTranslation downloadLink = new ChatComponentTranslation("chat.armourersworkshop:invalidJarDownload", (Object)null);
-        downloadLink.getChatStyle().setUnderlined(true);
-        downloadLink.getChatStyle().setColor(EnumChatFormatting.BLUE);
-        downloadLink.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentTranslation("chat.armourersworkshop:invalidJarDownloadTooltip", (Object)null)));
-        downloadLink.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, LibModInfo.DOWNLOAD_URL));
+        TextComponentTranslation downloadLink = new TextComponentTranslation("chat.armourersworkshop:invalidJarDownload", (Object)null);
+        downloadLink.getStyle().setUnderlined(true);
+        downloadLink.getStyle().setColor(TextFormatting.BLUE);
+        downloadLink.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.armourersworkshop:invalidJarDownloadTooltip", (Object)null)));
+        downloadLink.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, LibModInfo.DOWNLOAD_URL));
         
-        ChatComponentTranslation stopModRepostsLink = new ChatComponentTranslation("chat.armourersworkshop:invalidJarStopModReposts", (Object)null);
-        stopModRepostsLink.getChatStyle().setUnderlined(true);
-        stopModRepostsLink.getChatStyle().setColor(EnumChatFormatting.BLUE);
-        stopModRepostsLink.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentTranslation("chat.armourersworkshop:invalidJarStopModRepostsTooltip", (Object)null)));
-        stopModRepostsLink.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, STOP_MOD_REPOSTS_URL));
+        TextComponentTranslation stopModRepostsLink = new TextComponentTranslation("chat.armourersworkshop:invalidJarStopModReposts", (Object)null);
+        stopModRepostsLink.getStyle().setUnderlined(true);
+        stopModRepostsLink.getStyle().setColor(TextFormatting.BLUE);
+        stopModRepostsLink.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.armourersworkshop:invalidJarStopModRepostsTooltip", (Object)null)));
+        stopModRepostsLink.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, STOP_MOD_REPOSTS_URL));
         
-        ChatComponentTranslation updateMessage = new ChatComponentTranslation("chat.armourersworkshop:invalidJar", downloadLink, stopModRepostsLink);
-        updateMessage.getChatStyle().setColor(EnumChatFormatting.RED);
-        player.addChatMessage(updateMessage);
+        TextComponentTranslation updateMessage = new TextComponentTranslation("chat.armourersworkshop:invalidJar", downloadLink, stopModRepostsLink);
+        updateMessage.getStyle().setColor(TextFormatting.RED);
+        player.sendMessage(updateMessage);
     }
 }

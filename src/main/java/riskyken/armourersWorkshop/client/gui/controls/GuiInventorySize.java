@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;

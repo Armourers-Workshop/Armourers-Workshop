@@ -2,13 +2,13 @@ package riskyken.armourersWorkshop.client.helper;
 
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -31,7 +31,7 @@ public final class MannequinTextureHelper {
         if (itemStack.hasTagCompound()) {
             NBTTagCompound compound = itemStack.getTagCompound();
             if (compound.hasKey(TAG_OWNER, Constants.NBT.TAG_COMPOUND)) {
-                gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
             }
             if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
                 imageUrl = compound.getString(TAG_IMAGE_URL);

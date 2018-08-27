@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.config.GuiSlider;
-import cpw.mods.fml.client.config.GuiUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 
 @SideOnly(Side.CLIENT)

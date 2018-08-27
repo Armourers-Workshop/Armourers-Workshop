@@ -1,27 +1,16 @@
 package riskyken.armourersWorkshop.client.handler;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
+import net.minecraftforge.fml.relauncher.Side;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
-import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientKeyPress;
-import riskyken.armourersWorkshop.common.update.UpdateCheck;
-import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ModClientFMLEventHandler {
     
@@ -30,7 +19,7 @@ public class ModClientFMLEventHandler {
     public static float renderTickTime;
     public static int skinRendersThisTick = 0;
     public static int skinRenderLastTick = 0;
-    
+    /*
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
         if (eventArgs.modID.equals(LibModInfo.ID)) {
@@ -59,7 +48,7 @@ public class ModClientFMLEventHandler {
             showmDevWarning = true;
         }
     }
-    
+    */
     @SubscribeEvent
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
         if (Keybindings.openCustomArmourGui.isPressed() & ConfigHandler.allowEquipmentWardrobe) {
@@ -75,7 +64,7 @@ public class ModClientFMLEventHandler {
         if (event.side == Side.CLIENT) {
             if (event.type == Type.PLAYER) {
                 if (event.phase == Phase.END) {
-                    onPlayerTickEndEvent();
+                    //onPlayerTickEndEvent();
                 }
             }
         }

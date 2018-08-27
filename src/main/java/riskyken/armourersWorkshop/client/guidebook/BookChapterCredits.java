@@ -3,9 +3,9 @@ package riskyken.armourersWorkshop.client.guidebook;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.util.StatCollector;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BookChapterCredits extends BookChapterBase {
@@ -36,7 +36,7 @@ public class BookChapterCredits extends BookChapterBase {
     private void addCategoryPage(String pageName, String[] people) {
         Arrays.sort(people);
         ArrayList<String> lines = new ArrayList<String>();
-        lines.add(StatCollector.translateToLocal(getUnlocalizedName() + "." + pageName));
+        lines.add(I18n.format(getUnlocalizedName() + "." + pageName));
         lines.add("");
         for (int i = 0; i < people.length; i++) {
             lines.add(people[i]);

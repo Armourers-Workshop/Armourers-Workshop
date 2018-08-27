@@ -1,11 +1,11 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
-import cpw.mods.fml.client.config.GuiButtonExt;
-import cpw.mods.fml.client.config.GuiSlider;
-import cpw.mods.fml.client.config.GuiSlider.ISlider;
-import cpw.mods.fml.client.config.GuiUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;

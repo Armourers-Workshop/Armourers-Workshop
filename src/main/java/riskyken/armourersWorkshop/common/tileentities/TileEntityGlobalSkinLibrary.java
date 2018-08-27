@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;

@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Level;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;

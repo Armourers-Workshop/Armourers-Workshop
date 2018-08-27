@@ -1,44 +1,30 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
-repositories {
-    ivy {
-        name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-    }
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+if (System.env.BUILD_NUMBER != null) {
+    version = "$minecraftVersion-$modVersion.$System.env.BUILD_NUMBER"
+} else {
+    version = "$minecraftVersion-$modVersion"
 }
 
-apply plugin: 'forge'
-
-
-version = "$minecraftVersion-$modVersion"
 group= "riskyken.armourersWorkshop"
 archivesBaseName = "Armourers-Workshop"
 
-if (devBuild.toBoolean()) {
-    archivesBaseName = "Armourers-Workshop-Dev"
-    if (System.env.BUILD_NUMBER != null) {
-        version = "$minecraftVersion-$modVersion.$System.env.BUILD_NUMBER"
-    }
-}
-
 minecraft {
-    version = "$minecraftVersion-$forgeVersion"
-    runDir = "eclipse"
+    version = "$project.minecraftVersion-$project.forgeVersion"
+    runDir = "run"
 
     replaceIn "common/lib/LibModInfo.java"
     replace "@VERSION@", project.version
@@ -53,7 +39,7 @@ minecraft {
 }
 
 dependencies {
-    compile name: "buildcraft", version: "${buildcraftVersion}", classifier: "dev"
+    // compile name: "buildcraft", version: "${buildcraftVersion}", classifier: "dev"
 }
 
 processResources {

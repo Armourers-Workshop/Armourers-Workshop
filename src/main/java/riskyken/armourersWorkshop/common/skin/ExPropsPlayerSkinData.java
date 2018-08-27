@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 import java.util.BitSet;
 
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

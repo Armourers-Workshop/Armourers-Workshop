@@ -1,41 +1,11 @@
 package riskyken.armourersWorkshop.client.handler;
 
-import java.util.ArrayList;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.DrawBlockHighlightEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
-import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import riskyken.armourersWorkshop.utils.UtilPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BlockHighlightRenderHandler {
-
+/*
     public BlockHighlightRenderHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -218,4 +188,5 @@ public class BlockHighlightRenderHandler {
             }
         }
     }
+    */
 }

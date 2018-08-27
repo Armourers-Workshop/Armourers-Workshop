@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.common.addons;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.Loader;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;

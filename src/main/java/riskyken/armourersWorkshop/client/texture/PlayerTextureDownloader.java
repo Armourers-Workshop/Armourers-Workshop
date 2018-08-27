@@ -4,19 +4,20 @@ import java.io.File;
 import java.util.HashMap;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager.SkinAvailableCallback;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.GameProfileCache;
 import riskyken.armourersWorkshop.common.GameProfileCache.IGameProfileCallback;
@@ -86,7 +87,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
                 Minecraft minecraft = Minecraft.getMinecraft();
                 PlayerTexture playerTexture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
                 playerTexture.setModelTypeFromProfile(gameProfile);
-                minecraft.func_152342_ad().func_152790_a(gameProfile, new DownloadWrapper(playerTexture), false);
+                minecraft.getSkinManager().loadProfileTextures(gameProfile, new DownloadWrapper(playerTexture), false);
                 playerTextureMap.put(gameProfile.getName(), playerTexture);
             }
         }
@@ -115,7 +116,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         Minecraft minecraft = Minecraft.getMinecraft();
         PlayerTexture playerTexture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
         playerTexture.setModelTypeFromProfile(gameProfile);
-        minecraft.func_152342_ad().func_152790_a(gameProfile, new DownloadWrapper(playerTexture), false);
+        minecraft.getSkinManager().loadProfileTextures(gameProfile, new DownloadWrapper(playerTexture), false);
         synchronized (playerTextureMap) {
             playerTextureMap.put(gameProfile.getName(), playerTexture);
         }
@@ -125,7 +126,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
         Object object = texturemanager.getTexture(resourceLocation);
         if (object == null) {
-            object = new ModThreadDownloadImageData((File)null, textureString, AbstractClientPlayer.locationStevePng, new ImageBufferDownload(), playerTexture);
+            object = new ModThreadDownloadImageData((File)null, textureString, DefaultPlayerSkin.getDefaultSkinLegacy(), new ImageBufferDownload(), playerTexture);
             texturemanager.loadTexture(resourceLocation, (ITextureObject)object);
         }
         return (ThreadDownloadImageData)object;
@@ -140,9 +141,9 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         }
         
         @Override
-        public void func_152121_a(Type type, ResourceLocation resourceLocation) {
-            if (type == Type.SKIN) {
-                playerTexture.setResourceLocation(resourceLocation);
+        public void skinAvailable(Type typeIn, ResourceLocation location, MinecraftProfileTexture profileTexture) {
+            if (typeIn == Type.SKIN) {
+                playerTexture.setResourceLocation(location);
             }
         }
     }

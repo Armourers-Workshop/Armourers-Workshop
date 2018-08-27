@@ -3,9 +3,9 @@ package riskyken.armourersWorkshop.common.items;
 import org.lwjgl.opengl.GL11;
 
 import buildcraft.api.robots.IRobotOverlayItem;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;

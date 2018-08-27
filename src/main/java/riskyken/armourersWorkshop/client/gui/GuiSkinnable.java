@@ -2,7 +2,7 @@ package riskyken.armourersWorkshop.client.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;

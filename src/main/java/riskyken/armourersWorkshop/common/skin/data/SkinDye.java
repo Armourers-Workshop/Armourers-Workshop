@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StringUtils;

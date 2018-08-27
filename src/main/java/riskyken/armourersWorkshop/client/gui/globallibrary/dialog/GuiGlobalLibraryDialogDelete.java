@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary.dialog;
 
-import cpw.mods.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;

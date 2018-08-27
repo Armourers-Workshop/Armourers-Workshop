@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
