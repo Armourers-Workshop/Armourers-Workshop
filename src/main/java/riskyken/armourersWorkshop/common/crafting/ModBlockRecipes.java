@@ -52,7 +52,7 @@ public final class ModBlockRecipes {
             'b', "dyeBlue",
             'c', ModBlocks.colourable,
             's', "stone"});
-        
+        /*
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.armourerBrain, 1, 0), new Object[] {
             "ses",
             "dcd",
@@ -61,7 +61,7 @@ public final class ModBlockRecipes {
             'c', ModBlocks.colourable,
             'e', Items.ender_pearl,
             'd', "gemDiamond"});
-        
+        */
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.mannequin, 1, 0), new Object[] {
             " p ",
             "wcw",
