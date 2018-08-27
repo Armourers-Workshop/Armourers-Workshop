@@ -28,6 +28,7 @@ import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.exception.SkinSaveException;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
+import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.painting.IBlockPainter;
@@ -116,19 +117,27 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (stackInput == null) {
-            return;
+        if (!player.capabilities.isCreativeMode) {
+            if (stackInput == null) {
+                return;
+            }
         }
+        
         if (stackOutput != null) {
             return;
         }
-        if (!(stackInput.getItem() instanceof ISkinHolder)) {
-            return;
+        
+        ISkinHolder inputItem = null;
+        if (!player.capabilities.isCreativeMode) {
+            if (!(stackInput.getItem() instanceof ISkinHolder)) {
+                return;
+            }
+            inputItem = (ISkinHolder)stackInput.getItem();
+        } else {
+            inputItem = (ISkinHolder) ModItems.equipmentSkinTemplate;
         }
-        ISkinHolder inputItem = (ISkinHolder)stackInput.getItem();
-        
+
         Skin armourItemData = null;
-        
         SkinProperties skinProps = new SkinProperties();
         skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getCommandSenderName());
         if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
@@ -174,8 +183,9 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (stackOutput == null) {
             return;
         }
-        
-        this.decrStackSize(0, 1);
+        if (!player.capabilities.isCreativeMode) {
+            this.decrStackSize(0, 1);
+        }
         setInventorySlotContents(1, stackOutput);
     }
 
