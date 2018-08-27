@@ -53,7 +53,6 @@ import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
 import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.client.render.entity.EntitySkinRenderHandler;
 import riskyken.armourersWorkshop.client.render.entity.RenderSkinnedArrow;
-import riskyken.armourersWorkshop.client.render.item.RenderItemBlockMiniArmourer;
 import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
 import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockArmourer;
@@ -156,7 +155,7 @@ public class ClientProxy extends CommonProxy {
         ModelMannequin modelSteve = new ModelMannequin(false);
         ModelMannequin modelAlex = new ModelMannequin(true);
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
+        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelSteve, modelAlex));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelSteve, modelAlex));
         
