@@ -136,6 +136,15 @@ public final class ModItemRecipes {
                 'i', "ingotIron",
                 's', "stickWood"});
         
+        CraftingManager.addShapedRecipe(new ItemStack(ModItems.linkingTool, 1, 0), new Object[] {
+                " iw",
+                " ci",
+                "s  ",
+                'w', ModBlocks.colourable,
+                'i', "ingotIron",
+                'c', Blocks.chest,
+                's', "stickWood"});
+        
         CraftingManager.addShapelessRecipe(new ItemStack(ModItems.guideBook, 1, 0), new Object[] {
             new ItemStack(Items.book, 1),
             new ItemStack(ModBlocks.colourable, 1)});
