@@ -29,6 +29,7 @@ public class ItemLinkingTool extends AbstractModItem {
     
     public ItemLinkingTool() {
         super(LibItemNames.LINKING_TOOL);
+        setSortPriority(7);
     }
     
     @SideOnly(Side.CLIENT)
