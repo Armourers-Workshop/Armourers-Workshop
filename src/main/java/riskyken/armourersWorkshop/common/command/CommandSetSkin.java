@@ -43,7 +43,6 @@ public class CommandSetSkin extends ModCommand {
             throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
         }
         
-        
         String playerName = currentCommand[1];
         EntityPlayerMP player = getPlayer(commandSender, playerName);
         if (player == null) {
@@ -52,7 +51,6 @@ public class CommandSetSkin extends ModCommand {
         
         int slotNum = 0;
         slotNum = parseIntBounded(commandSender, currentCommand[2], 1, 8);
-        
 
         String skinName = currentCommand[3];
         if (!skinName.substring(0, 1).equals("\"")) {
@@ -62,7 +60,7 @@ public class CommandSetSkin extends ModCommand {
         int usedCommands = 3;
         
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
-            for (int i = 3; i < currentCommand.length; i++) {
+            for (int i = 4; i < currentCommand.length; i++) {
                 skinName += " " + currentCommand[i];
                 if (skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
                     usedCommands = i;
