@@ -4,15 +4,15 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
@@ -75,7 +75,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         buttonList.add(new GuiButtonExt(13, 86, 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
         buttonList.add(new GuiButtonExt(14, 86, 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
-        textItemName = new GuiTextField(fontRenderer, x + 64, y + 58, 103, 16);
+        textItemName = new GuiTextField(-1, fontRenderer, x + 64, y + 58, 103, 16);
         textItemName.setMaxStringLength(40);
         textItemName.setText(tileEntity.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
     }

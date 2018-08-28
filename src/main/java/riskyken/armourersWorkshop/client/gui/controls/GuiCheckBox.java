@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
 
 @SideOnly(Side.CLIENT)
 public class GuiCheckBox extends net.minecraftforge.fml.client.config.GuiCheckBox {
@@ -24,10 +24,10 @@ public class GuiCheckBox extends net.minecraftforge.fml.client.config.GuiCheckBo
     }
     
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
         if (this.visible) {
-            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.boxWidth && mouseY < this.yPosition + this.height;
-            GuiUtils.drawContinuousTexturedBox(buttonTextures, this.xPosition, this.yPosition, 0, 46, this.boxWidth, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.boxWidth && mouseY < this.y + this.height;
+            GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y, 0, 46, this.boxWidth, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
             this.mouseDragged(mc, mouseX, mouseY);
             int color = this.textColour;
             
@@ -38,9 +38,9 @@ public class GuiCheckBox extends net.minecraftforge.fml.client.config.GuiCheckBo
             }
             
             if (this.isChecked()) {
-                this.drawCenteredString(mc.fontRenderer, "x", this.xPosition + this.boxWidth / 2 + 1, this.yPosition, 0xFFCCCCCC);
+                this.drawCenteredString(mc.fontRenderer, "x", this.x + this.boxWidth / 2 + 1, this.y, 0xFFCCCCCC);
             }  
-            mc.fontRenderer.drawString(displayString, xPosition + this.boxWidth + 2, yPosition + 1, color, false);
+            mc.fontRenderer.drawString(displayString, x + this.boxWidth + 2, y + 1, color, false);
         }
     }
 }

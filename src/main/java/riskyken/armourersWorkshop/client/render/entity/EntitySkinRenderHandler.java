@@ -3,14 +3,14 @@ package riskyken.armourersWorkshop.client.render.entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -59,7 +59,7 @@ public final class EntitySkinRenderHandler {
     
     @SubscribeEvent
     public void onRenderLivingEvent(RenderLivingEvent.Post event) {
-        EntityLivingBase entity = event.entity;
+        EntityLivingBase entity = event.getEntity();
         if (entity instanceof EntityPlayer) {
             return;
         }
@@ -71,7 +71,7 @@ public final class EntitySkinRenderHandler {
             }
             Minecraft.getMinecraft().mcProfiler.startSection("wandOfStyleRender");
             ModRenderHelper.enableAlphaBlend();
-            renderer.render(entity, event.renderer, event.x, event.y, event.z, props.getEquipmentData());
+            renderer.render(entity, event.getRenderer(), event.getX(), event.getY(), event.getZ(), props.getEquipmentData());
             ModRenderHelper.disableAlphaBlend();
             Minecraft.getMinecraft().mcProfiler.endSection();
         }

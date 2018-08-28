@@ -1,14 +1,14 @@
 package riskyken.armourersWorkshop.client.gui.armourer.tab;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
@@ -118,7 +118,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         for (int i = 0; i < MovementType.values().length; i++) {
             MovementType movementType = MovementType.values()[i];
             String unlocalizedName = "movmentType." + LibModInfo.ID.toLowerCase() + ":" + movementType.name().toLowerCase();
-            String localizedName = StatCollector.translateToLocal(unlocalizedName);
+            String localizedName = I18n.format(unlocalizedName);
             dropDownList.addListItem(localizedName, movementType.name(), true);
             if (movementType == skinMovmentType) {
                 dropDownList.setListSelectedIndex(i);
@@ -276,7 +276,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
             String labelInventorySize = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.inventorySize");
             
             String labelInventorySlots = "inventory." + LibModInfo.ID.toLowerCase() + ":" + tileEntity.getInventoryName() + ".label.inventorySlots";
-            labelInventorySlots = StatCollector.translateToLocalFormatted(labelInventorySlots, inventorySize.getSelectionWidth() * inventorySize.getSelectionHeight(), inventorySize.getSelectionWidth(), inventorySize.getSelectionHeight());
+            labelInventorySlots = I18n.format(labelInventorySlots, inventorySize.getSelectionWidth() * inventorySize.getSelectionHeight(), inventorySize.getSelectionWidth(), inventorySize.getSelectionHeight());
             
             this.fontRenderer.drawString(labelInventorySize, 10, 140, 4210752);
             this.fontRenderer.drawString(labelInventorySlots, 10, 150, 4210752);

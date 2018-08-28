@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -212,7 +212,7 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glScalef(-1, -1, 1);
         
         RenderHelper.enableStandardItemLighting();
-        mc.renderEngine.bindTexture(mc.thePlayer.getLocationSkin());
+        mc.renderEngine.bindTexture(mc.player.getLocationSkin());
         
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);

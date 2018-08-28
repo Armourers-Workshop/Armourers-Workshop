@@ -1,13 +1,13 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
@@ -44,7 +44,7 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
         guiLoaded = false;
         resetOffsetButton = new GuiButtonExt(0, 0, TAB_HEIGHT - 18 - 8, 50, 18, GuiHelper.getLocalizedControlName(inventoryName, "reset"));
         resetOffsetButton.width = fontRenderer.getStringWidth(resetOffsetButton.displayString) + fontRenderer.getStringWidth(" ") * 4;
-        resetOffsetButton.xPosition = this.width / 2  - TAB_WIDTH / 2 + TAB_WIDTH - 10 - resetOffsetButton.width;
+        resetOffsetButton.x = this.width / 2  - TAB_WIDTH / 2 + TAB_WIDTH - 10 - resetOffsetButton.width;
         bipedOffsetXslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25, TAB_WIDTH - 20, 10, "X: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
         bipedOffsetYslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 12, TAB_WIDTH - 20, 10, "Y: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
         bipedOffsetZslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 24, TAB_WIDTH - 20, 10, "Z: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);

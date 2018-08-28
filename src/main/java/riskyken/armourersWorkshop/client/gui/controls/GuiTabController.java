@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 
 @SideOnly(Side.CLIENT)
@@ -42,13 +42,13 @@ public class GuiTabController extends GuiButtonExt {
     
     public void initGui(int xPos, int yPos, int width, int height) {
         if (fullscreen) {
-            this.xPosition = 0;
-            this.yPosition = 0;
+            this.x = 0;
+            this.y = 0;
             this.width = parent.width;
             this.height = parent.height;
         } else {
-            this.xPosition = xPos;
-            this.yPosition = yPos;
+            this.x = xPos;
+            this.y = yPos;
             this.width = width;
             this.height = height;
         }
@@ -109,7 +109,7 @@ public class GuiTabController extends GuiButtonExt {
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
             if (tab.visible) {
-                if (tab.isMouseOver(this.xPosition - 4, this.yPosition + count * tabSpacing  + yOffset, mouseX, mouseY)) {
+                if (tab.isMouseOver(this.x - 4, this.y + count * tabSpacing  + yOffset, mouseX, mouseY)) {
                     if (tab.enabled) {
                         activeTab = i;
                         return true;
@@ -122,7 +122,7 @@ public class GuiTabController extends GuiButtonExt {
     }
     
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
         mc.renderEngine.bindTexture(texture);
         GL11.glColor4f(1, 1, 1, 1);
         int yOffset = (int) ((float)height / 2F - ((float)tabs.size() * tabSpacing) / 2F);
@@ -135,7 +135,7 @@ public class GuiTabController extends GuiButtonExt {
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
             if (tab.visible) {
-                tab.render(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
+                tab.render(this.x - 4, this.y + count * tabSpacing + yOffset, mouseX, mouseY, activeTab == i);
                 count++;
             }
         }
@@ -153,7 +153,7 @@ public class GuiTabController extends GuiButtonExt {
         for (int i = 0; i < tabs.size(); i++) {
             GuiTab tab = tabs.get(i);
             if (tab.visible) {
-                if (tab.isMouseOver(this.xPosition - 4, this.yPosition + count * tabSpacing + yOffset, mouseX, mouseY)) {
+                if (tab.isMouseOver(this.x - 4, this.y + count * tabSpacing + yOffset, mouseX, mouseY)) {
                     hoverTab = tab;
                 }
                 count++;

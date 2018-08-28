@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.client.gui.mannequin;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
@@ -78,9 +78,9 @@ public class GuiMannequin extends GuiTabbed {
             append = tileEntity.getGameProfile().getName();
         }
         if (tileEntity.getIsDoll()) {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, "doll", append, 4210752);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, "doll", append, 4210752);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName(), append, 4210752);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getInventoryName(), append, 4210752);
         }
         
         for (int i = 0; i < tabList.size(); i++) {

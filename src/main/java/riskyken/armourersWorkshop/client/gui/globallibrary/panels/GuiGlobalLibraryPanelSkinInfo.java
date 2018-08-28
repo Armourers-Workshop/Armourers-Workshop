@@ -9,15 +9,15 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
@@ -242,7 +242,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     }
     
     private boolean authenticateUser () {
-        GameProfile gameProfile = mc.thePlayer.getGameProfile();
+        GameProfile gameProfile = mc.player.getGameProfile();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         if (!plushieSession.isAuthenticated()) {
             JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
@@ -291,7 +291,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             user = GlobalSkinLibraryUtils.getUserInfo(userId);
         }
         if (user != null) {
-            drawString(fontRenderer, StatCollector.translateToLocalFormatted(fullName + "uploader", user.getUsername()), boxX + 28, boxY + 5, 0xFFEEEEEE);
+            drawString(fontRenderer, I18n.format(fullName + "uploader", user.getUsername()), boxX + 28, boxY + 5, 0xFFEEEEEE);
             GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, user.getUsername());
         } else {
             GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, null);
@@ -313,11 +313,11 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             //drawString(fontRenderer, "file id: " + skinJson.get("file_name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
             //yOffset += 12;
             if (skinJson.has("downloads")) {
-                drawString(fontRenderer, StatCollector.translateToLocalFormatted(fullName + "downloads", skinJson.get("downloads").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, I18n.format(fullName + "downloads", skinJson.get("downloads").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12 + 6;
             }
             if (skinJson.has("likes")) {
-                drawString(fontRenderer, StatCollector.translateToLocalFormatted(fullName + "likes", skinJson.get("likes").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
+                drawString(fontRenderer, I18n.format(fullName + "likes", skinJson.get("likes").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
                 yOffset += 12 + 6;
             }
             /*
@@ -355,7 +355,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
         if (skin != null) {
             int iconSize = Math.min(boxWidth, boxHeight);
-            ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            ScaledResolution scaledResolution = new ScaledResolution(mc);
             float scale = 10 - scaledResolution.getScaleFactor();
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);

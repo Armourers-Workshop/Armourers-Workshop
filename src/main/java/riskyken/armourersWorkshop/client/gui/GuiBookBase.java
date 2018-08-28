@@ -1,18 +1,20 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.io.IOException;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiBookButton;
 import riskyken.armourersWorkshop.client.guidebook.BookPage;
 import riskyken.armourersWorkshop.client.guidebook.BookPageBase;
@@ -78,10 +80,10 @@ public abstract class GuiBookBase extends GuiScreen {
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) {
+    protected void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
         if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-            this.mc.thePlayer.closeScreen();
+            this.mc.player.closeScreen();
         }
     }
     
@@ -120,7 +122,7 @@ public abstract class GuiBookBase extends GuiScreen {
             int yOffset = guiTop + BookPageBase.PAGE_MARGIN_TOP;
             //yOffset -= 50;
             GL11.glTranslatef(xOffset, yOffset, 0);
-            bookPage.renderPage(fontRendererObj, mouseX, mouseY, turning, page);
+            bookPage.renderPage(fontRenderer, mouseX, mouseY, turning, page);
             GL11.glPopMatrix();
         } else {
             ModLogger.log("page was null");
@@ -146,7 +148,7 @@ public abstract class GuiBookBase extends GuiScreen {
             //GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
             //GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
             //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            bookPage.renderPage(fontRendererObj, 0, 0, true, turningPageNumber);
+            bookPage.renderPage(fontRenderer, 0, 0, true, turningPageNumber);
             //ModRenderHelper.disableAlphaBlend();
             disablePageFramebuffer();
             
@@ -177,7 +179,7 @@ public abstract class GuiBookBase extends GuiScreen {
     protected void enablePageFramebuffer() {
         mc.getFramebuffer().unbindFramebuffer();
         
-        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution reso = new ScaledResolution(mc);
         
         double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
         double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();

@@ -3,7 +3,7 @@ package riskyken.armourersWorkshop.common.tileentities;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
 
 public class TileEntityGlobalSkinLibrary extends TileEntity implements IButtonPress  {

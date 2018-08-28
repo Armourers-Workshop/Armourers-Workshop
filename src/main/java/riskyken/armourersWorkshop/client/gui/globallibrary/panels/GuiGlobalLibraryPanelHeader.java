@@ -2,12 +2,12 @@ package riskyken.armourersWorkshop.client.gui.globallibrary.panels;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
@@ -120,7 +120,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         // TODO look in YggdrasilMinecraftSessionService
         
         String username = "player";
-        GameProfile gameProfile = mc.thePlayer.getGameProfile();
+        GameProfile gameProfile = mc.player.getGameProfile();
         if (gameProfile != null) {
             username = gameProfile.getName();
             GuiHelper.drawPlayerHead(x + 4, y + 4, 16, username);

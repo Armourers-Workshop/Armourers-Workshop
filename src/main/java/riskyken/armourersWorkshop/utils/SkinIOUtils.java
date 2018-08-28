@@ -17,8 +17,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.DimensionManager;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.exception.InvalidCubeTypeException;
@@ -300,7 +300,7 @@ public final class SkinIOUtils {
     }
     
     public static void recoverSkins(EntityPlayer player) {
-        player.addChatComponentMessage(new ChatComponentText("Starting skin recovery."));
+        player.sendMessage(new TextComponentString("Starting skin recovery."));
         File skinDir = getSkinDatabaseDirectory();
         if (skinDir.exists() & skinDir.isDirectory()) {
             File recoverDir = new File(System.getProperty("user.dir"), "recovered-skins");
@@ -308,8 +308,8 @@ public final class SkinIOUtils {
                 recoverDir.mkdirs();
             }
             File[] skinFiles = skinDir.listFiles();
-            player.addChatComponentMessage(new ChatComponentText(String.format("Found %d skins to be recovered.", skinFiles.length)));
-            player.addChatComponentMessage(new ChatComponentText("Working..."));
+            player.sendMessage(new TextComponentString(String.format("Found %d skins to be recovered.", skinFiles.length)));
+            player.sendMessage(new TextComponentString("Working..."));
             int unnamedSkinCount = 0;
             int successCount = 0;
             int failCount = 0;
@@ -361,17 +361,17 @@ public final class SkinIOUtils {
                     failCount++;
                 }
             }
-            player.addChatComponentMessage(new ChatComponentText("Finished skin recovery."));
-            player.addChatComponentMessage(new ChatComponentText(String.format("%d skins were recovered and %d fail recovery.", successCount, failCount)));
+            player.sendMessage(new TextComponentString("Finished skin recovery."));
+            player.sendMessage(new TextComponentString(String.format("%d skins were recovered and %d fail recovery.", successCount, failCount)));
         } else {
-            player.addChatComponentMessage(new ChatComponentText("No skins found to recover."));
+            player.sendMessage(new TextComponentString("No skins found to recover."));
         }
     }
     
     public static void updateSkins(EntityPlayer player) {
         File updateDir = new File(System.getProperty("user.dir"), "skin-update");
         if (!updateDir.exists() & updateDir.isDirectory()) {
-            player.addChatComponentMessage(new ChatComponentText("Directory skin-update not found."));
+            player.sendMessage(new TextComponentString("Directory skin-update not found."));
             return;
         }
         
@@ -380,8 +380,8 @@ public final class SkinIOUtils {
             outputDir.mkdir();
         }
         File[] skinFiles = updateDir.listFiles();
-        player.addChatComponentMessage(new ChatComponentText(String.format("Found %d skins to be updated.", skinFiles.length)));
-        player.addChatComponentMessage(new ChatComponentText("Working..."));
+        player.sendMessage(new TextComponentString(String.format("Found %d skins to be updated.", skinFiles.length)));
+        player.sendMessage(new TextComponentString("Working..."));
         int successCount = 0;
         int failCount = 0;
         
@@ -402,8 +402,8 @@ public final class SkinIOUtils {
                 }
             }
         }
-        player.addChatComponentMessage(new ChatComponentText("Finished skin update."));
-        player.addChatComponentMessage(new ChatComponentText(String.format("%d skins were updated and %d failed.", successCount, failCount)));
+        player.sendMessage(new TextComponentString("Finished skin update."));
+        player.sendMessage(new TextComponentString(String.format("%d skins were updated and %d failed.", successCount, failCount)));
     }
     
     public static boolean isInSubDirectory(File dir, File file) {

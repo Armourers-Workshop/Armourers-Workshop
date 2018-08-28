@@ -7,15 +7,15 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
@@ -50,8 +50,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
     }
     
     public void init(int x, int y, int width, int height) {
-        this.xPosition = x;
-        this.yPosition = y;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         this.panelPadding = 2;
@@ -88,17 +88,17 @@ public class GuiControlSkinPanel extends GuiButtonExt {
     }
     
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
         if (visible) {
-            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            int hover = this.getHoverState(this.field_146123_n);
-            drawGradientRect(xPosition, yPosition, xPosition + this.width, yPosition + height, 0xC0222222, 0xD0333333);
+            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+            int hover = this.getHoverState(this.hovered);
+            drawGradientRect(x, y, x + this.width, y + height, 0xC0222222, 0xD0333333);
             
             for (int i = 0; i < iconList.size(); i++) {
                 int x = i % rowCount;
                 int y = (int) (i / rowCount);
-                int iconX = xPosition + x * (iconSize + iconPadding) + panelPadding;
-                int iconY = yPosition + y * (iconSize + iconPadding) + panelPadding;
+                int iconX = x + x * (iconSize + iconPadding) + panelPadding;
+                int iconY = y + y * (iconSize + iconPadding) + panelPadding;
                 
                 SkinIcon skinIcon = iconList.get(i);
                 if (y < colCount) {
@@ -113,8 +113,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         for (int i = 0; i < iconList.size(); i++) {
             int x = i % rowCount;
             int y = (int) (i / rowCount);
-            int iconX = xPosition + x * (iconSize + iconPadding) + panelPadding;
-            int iconY = yPosition + y * (iconSize + iconPadding) + panelPadding;
+            int iconX = x + x * (iconSize + iconPadding) + panelPadding;
+            int iconY = y + y * (iconSize + iconPadding) + panelPadding;
             
             SkinIcon skinIcon = iconList.get(i);
             if (y < colCount) {

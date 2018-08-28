@@ -9,8 +9,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -20,6 +18,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
@@ -111,7 +111,7 @@ public class GuiWardrobe extends GuiTabbed {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         // Title label.
-        GuiHelper.renderLocalizedGuiName(fontRendererObj, this.xSize, "equipmentWardrobe");
+        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, "equipmentWardrobe");
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
@@ -119,7 +119,7 @@ public class GuiWardrobe extends GuiTabbed {
             }
         }
         // Player inventory label.
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 36, this.ySize - 96 + 2, 4210752);
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 36, this.ySize - 96 + 2, 4210752);
         GL11.glPushMatrix();
         GL11.glTranslatef(-guiLeft, -guiTop, 0F);
         tabController.drawHoverText(mc, mouseX, mouseY);
@@ -203,10 +203,10 @@ public class GuiWardrobe extends GuiTabbed {
         GL11.glRotatef(playerRotation, 0, 1, 0);
         GL11.glTranslatef(0, 0, -50);
         if (selectingColour) {
-            renderEntityWithoutLighting(0, 0, 35, 0, 0, this.mc.thePlayer);
+            renderEntityWithoutLighting(0, 0, 35, 0, 0, this.mc.player);
             colour = getColourAtPos(Mouse.getX(), Mouse.getY());
         }
-        GuiInventory.func_147046_a(0, 0, 35, 0, 0, this.mc.thePlayer);
+        GuiInventory.func_147046_a(0, 0, 35, 0, 0, this.mc.player);
         GL11.glPopAttrib();
         GL11.glPopMatrix();
         
@@ -239,7 +239,7 @@ public class GuiWardrobe extends GuiTabbed {
         entity.rotationPitch = -((float) Math.atan((double) (pitch / 40.0F))) * 20.0F;
         entity.rotationYawHead = entity.rotationYaw;
         entity.prevRotationYawHead = entity.rotationYaw;
-        GL11.glTranslatef(0.0F, entity.yOffset, 0.0F);
+        GL11.glTranslatef(0.0F, (float) entity.getYOffset(), 0.0F);
         RenderManager.instance.playerViewY = 180.0F;
         RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
         entity.renderYawOffset = f2;

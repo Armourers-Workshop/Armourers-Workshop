@@ -1,16 +1,15 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
 public class GuiScrollbar  extends GuiButton {
@@ -50,7 +49,7 @@ public class GuiScrollbar  extends GuiButton {
 	}
 	
 	@Override
-	public void drawButton(Minecraft minecraft, int x, int y) {
+	public void drawButton(Minecraft minecraft, int x, int y, float partial) {
         if (this.visible)
         {
             updateMouse();
@@ -79,20 +78,20 @@ public class GuiScrollbar  extends GuiButton {
 		
 		
 		//arrows
-		this.drawHover(this.xPosition, this.yPosition, sourceX, sourceY, 10, 10, x, y);
-		this.drawHover(this.xPosition + (this.width - 10) * xOffset, this.yPosition + (this.height - 10) * yOffset, sourceX + 10, sourceY, 10, 10, x, y);
+		this.drawHover(this.x, this.y, sourceX, sourceY, 10, 10, x, y);
+		this.drawHover(this.x + (this.width - 10) * xOffset, this.y + (this.height - 10) * yOffset, sourceX + 10, sourceY, 10, 10, x, y);
 		
 		
 		//gutter sides
-		this.drawTexturedModalRect(this.xPosition + (10 * xOffset), this.yPosition + (10 * yOffset), sourceX, 20, 10, 10);
-		this.drawTexturedModalRect(this.xPosition + (this.width - 20) * xOffset, this.yPosition + (this.height - 20) * yOffset, sourceX + 10, 20, 10, 10);
+		this.drawTexturedModalRect(this.x + (10 * xOffset), this.y + (10 * yOffset), sourceX, 20, 10, 10);
+		this.drawTexturedModalRect(this.x + (this.width - 20) * xOffset, this.y + (this.height - 20) * yOffset, sourceX + 10, 20, 10, 10);
 		
 		//gutter fill
 		int gutterSize = sliderMaxValue - 30 + 10;
-		this.drawTexturedModalRect(this.xPosition + (20 * xOffset), this.yPosition + (20 * yOffset), 246 * yOffset, 246 * xOffset, 10 + gutterSize * xOffset, 10 + gutterSize * yOffset);
+		this.drawTexturedModalRect(this.x + (20 * xOffset), this.y + (20 * yOffset), 246 * yOffset, 246 * xOffset, 10 + gutterSize * xOffset, 10 + gutterSize * yOffset);
 		
 		//grip
-		this.drawHover(this.xPosition + ((sliderValue + 10) * xOffset), this.yPosition + ((sliderValue + 10) * yOffset), 40, sourceY, 10, 10, x, y);
+		this.drawHover(this.x + ((sliderValue + 10) * xOffset), this.y + ((sliderValue + 10) * yOffset), 40, sourceY, 10, 10, x, y);
 	}
 	
 	private void drawHover(int x, int y, int sourceX, int sourceY, int width, int height, int mouseX, int mouseY) {
@@ -131,8 +130,8 @@ public class GuiScrollbar  extends GuiButton {
 	public boolean mousePressed(Minecraft par1Minecraft, int x, int y) {
 		if (super.mousePressed(par1Minecraft, x, y)) {
 			
-			if (!isHovering(x, y, this.xPosition, this.yPosition, 10, 10)) {
-				if (!isHovering(x, y, this.xPosition + xOffset * (this.width - 10), this.yPosition + yOffset * (this.height - 10), 10, 10)) {
+			if (!isHovering(x, y, this.x, this.y, 10, 10)) {
+				if (!isHovering(x, y, this.x + xOffset * (this.width - 10), this.y + yOffset * (this.height - 10), 10, 10)) {
 					this.dragging = true;
 				}
 				else {
@@ -154,10 +153,10 @@ public class GuiScrollbar  extends GuiButton {
 	protected void mouseDragged(Minecraft par1Minecraft, int x, int y) {
 		if (this.dragging) {
 			if (horizontal) {
-				setValue(x - this.xPosition - 15);
+				setValue(x - this.x - 15);
 				//sliderValue = (x - this.xPosition - 15);
 			} else {
-				setValue(y - this.yPosition - 15);
+				setValue(y - this.y - 15);
 				//sliderValue = (y - this.yPosition - 15);
 			}
 		}

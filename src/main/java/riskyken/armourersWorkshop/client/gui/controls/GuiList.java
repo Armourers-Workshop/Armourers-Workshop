@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
@@ -15,6 +12,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
@@ -68,7 +68,7 @@ public class GuiList extends Gui {
         GuiUtils.drawContinuousTexturedBox(texture, this.x, this.y, 0, 0, width, height, 11, 11, 1, this.zLevel);
         //this.drawTexturedModalRect(x, y, 0, 0, width, height);
         
-        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution reso = new ScaledResolution(mc);
         
         double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
         double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();

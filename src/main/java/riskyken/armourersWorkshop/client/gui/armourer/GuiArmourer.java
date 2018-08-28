@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.client.gui.armourer;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.DialogResult;
@@ -141,7 +141,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(fontRendererObj, this.xSize, tileEntity.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, tileEntity.getInventoryName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {

@@ -48,7 +48,7 @@ public class PlushieAuth {
     
     public static void doRemoteUserCheck() {
         startedRemoteUserCheck = true;
-        GameProfile gameProfile = Minecraft.getMinecraft().thePlayer.getGameProfile();
+        GameProfile gameProfile = Minecraft.getMinecraft().player.getGameProfile();
         taskBetaCheck = PlushieAuth.isPlayerInBeta(gameProfile.getId());
     }
     

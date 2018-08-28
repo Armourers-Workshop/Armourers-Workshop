@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.client.gui.hologramprojector;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTab;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
@@ -90,7 +90,7 @@ public class GuiHologramProjector extends GuiTabbed {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getInventoryName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {

@@ -6,12 +6,12 @@ import java.util.concurrent.FutureTask;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
@@ -71,7 +71,7 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
                     boolean valid = jsonObject.get("valid").getAsBoolean();
                     if (action.equals("beta-code-check")) {
                         if (valid) {
-                            GameProfile gameProfile = mc.thePlayer.getGameProfile();
+                            GameProfile gameProfile = mc.player.getGameProfile();
                             joinState = STATE_JOINING_BETA;
                             taskBetaJoinJson = PlushieAuth.joinBeta(gameProfile.getName(), gameProfile.getId().toString(), textBetaCode.getText());
                         } else {

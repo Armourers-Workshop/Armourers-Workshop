@@ -1,17 +1,14 @@
 package riskyken.armourersWorkshop.client.gui.controls;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.common.lib.LibSounds;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
 @SideOnly(Side.CLIENT)
 public class GuiBookButton extends GuiButtonExt {
@@ -29,21 +26,21 @@ public class GuiBookButton extends GuiButtonExt {
     }
     
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
         if (!this.visible) { return; }
-        this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-        int hoverState = this.getHoverState(this.field_146123_n);
+        this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        int hoverState = this.getHoverState(this.hovered);
         int xOffset = 0;
         if (hoverState == 2) {
             xOffset = 23;
         }
         GL11.glColor4f(1F, 1F, 1F, 1F);
         mc.renderEngine.bindTexture(texture);
-        drawTexturedModalRect(this.xPosition, this.yPosition, srcX + xOffset, srcY, this.width, this.height);
+        drawTexturedModalRect(this.x, this.y, srcX + xOffset, srcY, this.width, this.height);
     }
     
     @Override
-    public void func_146113_a(SoundHandler soundHandler) {
-        soundHandler.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(LibSounds.PAGE_TURN), 1.0F));
+    public void playPressSound(SoundHandler soundHandler) {
+        //soundHandler.playSound(PositionedSoundRecord.getMasterRecord(new ResourceLocation(LibSounds.PAGE_TURN), 1.0F));
     }
 }

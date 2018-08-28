@@ -8,11 +8,11 @@ import org.apache.logging.log4j.Level;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.DialogResult;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.IDialogCallback;
@@ -186,7 +186,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     }
     
     private boolean authenticateUser () {
-        GameProfile gameProfile = mc.thePlayer.getGameProfile();
+        GameProfile gameProfile = mc.player.getGameProfile();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         if (!plushieSession.isAuthenticated()) {
             JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());

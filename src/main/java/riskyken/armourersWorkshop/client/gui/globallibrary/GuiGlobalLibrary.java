@@ -6,13 +6,13 @@ import java.util.concurrent.Executors;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialogContainer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
 import riskyken.armourersWorkshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoinBeta;
@@ -71,7 +71,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
         super(new ContainerGlobalSkinLibrary(inventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
-        this.player = Minecraft.getMinecraft().thePlayer;
+        this.player = Minecraft.getMinecraft().player;
         this.panelList = new ArrayList<GuiPanel>();
         
         panelHeader = new GuiGlobalLibraryPanelHeader(this, 2, 2, width - 4, 26);
@@ -111,7 +111,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     
     @Override
     public void initGui() {
-        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution reso = new ScaledResolution(mc);
         this.xSize = reso.getScaledWidth();
         this.ySize = reso.getScaledHeight();
         super.initGui();

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 
 @SideOnly(Side.CLIENT)
@@ -55,13 +55,13 @@ public class GuiIconButton extends GuiButtonExt {
     }
     
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        super.drawButton(mc, mouseX, mouseY);
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
+        super.drawButton(mc, mouseX, mouseY, partial);
         if (!this.visible) {
             return;
         }
-        this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-        int hoverState = this.getHoverState(this.field_146123_n);
+        this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        int hoverState = this.getHoverState(this.hovered);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         int xPos = iconPosX;
         //disabled
@@ -77,16 +77,16 @@ public class GuiIconButton extends GuiButtonExt {
             //xPos += (iconWidth + 1) * 2;
         }
         mc.renderEngine.bindTexture(iconTexture);
-        drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2, yPosition + height / 2 - iconHeight / 2, xPos, iconPosY, iconWidth, iconHeight);
+        drawTexturedModalRect(x + width / 2 - iconWidth / 2, y + height / 2 - iconHeight / 2, xPos, iconPosY, iconWidth, iconHeight);
     }
     
     public void drawRollover(Minecraft mc, int mouseX, int mouseY) {
         if (!this.visible) {
             return;
         }
-        this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-        int hoverState = this.getHoverState(this.field_146123_n);
-        if (hoverState == 0 & this.field_146123_n) {
+        this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        int hoverState = this.getHoverState(this.hovered);
+        if (hoverState == 0 & this.hovered) {
             if (!StringUtils.isNullOrEmpty(disableText)) {
                 ArrayList<String> textList = new ArrayList<String>();
                 textList.add(disableText);

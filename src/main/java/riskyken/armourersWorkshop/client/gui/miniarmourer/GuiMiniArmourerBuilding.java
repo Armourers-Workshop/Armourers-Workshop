@@ -6,15 +6,14 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -80,7 +79,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 0) {
-            this.mc.thePlayer.closeScreen();
+            this.mc.player.closeScreen();
         }
     }
     
@@ -123,7 +122,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         
         String guiName = tileEntity.getInventoryName();
         String localizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".name";
-        localizedName = StatCollector.translateToLocal(localizedName);
+        localizedName = I18n.format(localizedName);
         
         drawTextCentered(localizedName, this.width / 2, 2, UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT));
         drawTextCentered("WARNING - This block is unfinished.", this.width / 2, 12, 0xFF0000);
@@ -163,12 +162,12 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     }
     
     private void drawTextCentered(String text, int x, int y, int colour) {
-        int stringWidth = fontRendererObj.getStringWidth(text);
-        fontRendererObj.drawString(text, x - (stringWidth / 2), y, colour);
+        int stringWidth = fontRenderer.getStringWidth(text);
+        fontRenderer.drawString(text, x - (stringWidth / 2), y, colour);
     }
     
     private void renderItemInGUI(ItemStack stack, int x, int y) {
-        itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.renderEngine, stack, x, y);
+        itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
     }
     
     @Override
@@ -180,7 +179,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     protected void keyTyped(char key, int keyCode) {
         super.keyTyped(key, keyCode);
         if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-            this.mc.thePlayer.closeScreen();
+            this.mc.player.closeScreen();
         }
     }
     

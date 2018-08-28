@@ -1,12 +1,12 @@
 package riskyken.armourersWorkshop.client.gui.mannequin;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -38,7 +38,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.user"), TextureType.USER.toString(), true);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.url"), TextureType.URL.toString(), true);
         textureTypeList.setListSelectedIndex(tileEntity.getTextureType().ordinal());
-        nameTextbox = new GuiTextField(fontRenderer, width / 2 - 110 + 55, 25, 165, 14);
+        nameTextbox = new GuiTextField(-1, fontRenderer, width / 2 - 110 + 55, 25, 165, 14);
         nameTextbox.setMaxStringLength(300);
         if (tileEntity.getTextureType() == TextureType.USER) {
             if (tileEntity.getGameProfile() != null) {
@@ -52,7 +52,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
 
         setNameButton = new GuiButtonExt(0, width / 2 + 60, 45, 50, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "set"));
         setNameButton.width = fontRenderer.getStringWidth(setNameButton.displayString + "  ");
-        setNameButton.xPosition = width / 2 + TAB_WIDTH / 2 - setNameButton.width - 10;
+        setNameButton.x = width / 2 + TAB_WIDTH / 2 - setNameButton.width - 10;
         
         buttonList.add(textureTypeList);
         buttonList.add(setNameButton);

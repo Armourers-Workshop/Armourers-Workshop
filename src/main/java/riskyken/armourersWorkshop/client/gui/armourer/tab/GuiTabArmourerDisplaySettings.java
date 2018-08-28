@@ -1,13 +1,13 @@
 package riskyken.armourersWorkshop.client.gui.armourer.tab;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.armourer.GuiArmourer;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
@@ -52,7 +52,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         checkShowHelper = new GuiCheckBox(6, 10, 110, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
         
         buttonList.add(new GuiButtonExt(8, width - 36 - 5, 70, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
-        textUserSkin = new GuiTextField(fontRenderer, x + 10, y + 70, 120, 16);
+        textUserSkin = new GuiTextField(-1, fontRenderer, x + 10, y + 70, 120, 16);
         textUserSkin.setMaxStringLength(300);
         textUserSkin.setText(tileEntity.getTexture().getTextureString());
         
@@ -106,7 +106,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         int checkY = 110;
         if (tileEntity.getSkinType() != null) {
             checkShowOverlay.visible = tileEntity.getSkinType().showSkinOverlayCheckbox();
-            checkShowOverlay.yPosition = checkY;
+            checkShowOverlay.y = checkY;
             if (checkShowOverlay.visible) {
                 checkY += 16;
             }
@@ -116,7 +116,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         
         if (tileEntity.getSkinType() != null) {
             checkShowHelper.visible = tileEntity.getSkinType().showHelperCheckbox();
-            checkShowHelper.yPosition = checkY;
+            checkShowHelper.y = checkY;
         } else {
             checkShowHelper.visible = false;
         }

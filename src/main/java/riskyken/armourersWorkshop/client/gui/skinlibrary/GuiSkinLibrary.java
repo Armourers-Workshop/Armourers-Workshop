@@ -10,10 +10,6 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
@@ -23,10 +19,14 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
@@ -116,7 +116,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     
     @Override
     public void initGui() {
-        ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution reso = new ScaledResolution(mc);
         this.xSize = reso.getScaledWidth();
         this.ySize = reso.getScaledHeight();
         super.initGui();
@@ -135,22 +135,22 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         //Move player inventory slots.
         for (int x = 0; x < 9; x++) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
-            slot.yDisplayPosition = this.height + 1 - PADDING - slotSize - neiBump;
+            slot.yPos = this.height + 1 - PADDING - slotSize - neiBump;
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
-                slot.yDisplayPosition = this.height + 1 - INVENTORY_HEIGHT - PADDING + y * slotSize - neiBump;
+                slot.yPos = this.height + 1 - INVENTORY_HEIGHT - PADDING + y * slotSize - neiBump;
             }
         }
         
         //Move library inventory slots.
         Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
-        slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
-        slot.xDisplayPosition = PADDING + 1;
+        slot.yPos = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
+        slot.xPos = PADDING + 1;
         slot = (Slot) inventorySlots.inventorySlots.get(37);
-        slot.yDisplayPosition = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
-        slot.xDisplayPosition = PADDING + INVENTORY_WIDTH - slotSize - 3;
+        slot.yPos = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
+        slot.xPos = PADDING + INVENTORY_WIDTH - slotSize - 3;
         
         buttonList.clear();
         
@@ -202,11 +202,11 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         loadSaveButton = new GuiButtonExt(BUTTON_ID_LOAD_SAVE, PADDING * 2 + 18, this.height - INVENTORY_HEIGHT - PADDING * 2 - 2 - 20 - neiBump, 108, 20, "----LS--->");
         buttonList.add(loadSaveButton);
         
-        filenameTextbox = new GuiLabeledTextField(fontRendererObj, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
+        filenameTextbox = new GuiLabeledTextField(fontRenderer, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
         filenameTextbox.setMaxStringLength(100);
         filenameTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.enterFileName"));
         
-        searchTextbox = new GuiLabeledTextField(fontRendererObj, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
+        searchTextbox = new GuiLabeledTextField(fontRenderer, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
         searchTextbox.setMaxStringLength(100);
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
@@ -438,7 +438,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         case SERVER_PUBLIC:
             return libraryManager.getServerPublicFileList();
         case SERVER_PRIVATE:
-            return libraryManager.getServerPrivateFileList(mc.thePlayer);
+            return libraryManager.getServerPrivateFileList(mc.player);
         }
         return null;
     }
@@ -623,7 +623,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         
         if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
-            files = libraryManager.getServerPrivateFileList(mc.thePlayer).getFileList();
+            files = libraryManager.getServerPrivateFileList(mc.player).getFileList();
         }
         
         String typeFilter = dropDownList.getListSelectedItem().tag;
@@ -705,7 +705,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     float scale = 1F;
                     scale = 1 * Math.min(xSize, ySize);
                     
-                    ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+                    ScaledResolution scaledResolution = new ScaledResolution(mc);
                     
                     int startX = listRight + PADDING;
                     int startY = listTop + PADDING;
@@ -891,9 +891,9 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (armourLibrary.isCreativeLibrary()) {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "1", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, armourLibrary.getInventoryName() + "1", 0xCCCCCC);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, armourLibrary.getInventoryName() + "0", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, armourLibrary.getInventoryName() + "0", 0xCCCCCC);
         }
         
         String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");

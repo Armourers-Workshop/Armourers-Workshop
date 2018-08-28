@@ -10,13 +10,13 @@ import org.apache.logging.log4j.Level;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiLabeledTextField;
 import riskyken.armourersWorkshop.client.gui.controls.GuiPanel;
@@ -174,7 +174,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == buttonUpload) {
-            GameProfile gameProfile = mc.thePlayer.getGameProfile();
+            GameProfile gameProfile = mc.player.getGameProfile();
             PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
             if (!plushieSession.isAuthenticated()) {
                 JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
@@ -192,7 +192,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     }
     
     public void uploadSkin(Skin skin) {
-        GameProfile gameProfile = mc.thePlayer.getGameProfile();
+        GameProfile gameProfile = mc.player.getGameProfile();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SkinIOUtils.saveSkinToStream(outputStream, skin);

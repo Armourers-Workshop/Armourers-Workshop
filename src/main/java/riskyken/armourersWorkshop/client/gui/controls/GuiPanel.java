@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.client.gui.controls;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -11,6 +9,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiPanel extends Gui {
@@ -89,11 +89,11 @@ public abstract class GuiPanel extends Gui {
                     if (MinecraftForge.EVENT_BUS.post(event)) {
                         break;
                     }
-                    this.selectedButton = event.button;
-                    event.button.func_146113_a(this.mc.getSoundHandler());
-                    this.actionPerformed(event.button);
+                    this.selectedButton = event.getButton();
+                    event.getButton().playPressSound(this.mc.getSoundHandler());
+                    this.actionPerformed(event.getButton());
                     if (parent.equals(this.mc.currentScreen)) {
-                        MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(parent, event.button, this.buttonList));
+                        MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(parent, event.getButton(), this.buttonList));
                     }
                 }
             }
