@@ -4,22 +4,22 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
@@ -36,7 +36,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.utils.ModConstants;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class TileEntitySkinnable extends TileEntity {
+public class TileEntitySkinnable extends ModTileEntity {
 
     private static final String TAG_HAS_SKIN = "hasSkin";
     private static final String TAG_RELATED_BLOCKS = "relatedBlocks";
@@ -110,7 +110,7 @@ public class TileEntitySkinnable extends TileEntity {
         haveBlockBounds = false;
     }
 
-    public void setBoundsOnBlock(Block block, int xOffset, int yOffset, int zOffset) {
+    public void setBoundsOnBlock(Block block, BlockPos offset) {
         if (haveBlockBounds) {
             //TODO change before release!!!
             //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);

@@ -2,13 +2,13 @@ package riskyken.armourersWorkshop.common.network.messages.server;
 
 import java.util.ArrayList;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.gui.GuiScreen;
 import riskyken.armourersWorkshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 
@@ -48,7 +48,7 @@ public class MessageServerMiniArmourerSkinData implements IMessage, IMessageHand
     
     @Override
     public IMessage onMessage(MessageServerMiniArmourerSkinData message, MessageContext ctx) {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         Minecraft mc = Minecraft.getMinecraft();
         
         GuiScreen screen = mc.currentScreen;

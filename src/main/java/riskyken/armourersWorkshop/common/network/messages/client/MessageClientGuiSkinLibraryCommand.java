@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 
@@ -58,7 +58,7 @@ public class MessageClientGuiSkinLibraryCommand implements IMessage, IMessageHan
     
     @Override
     public IMessage onMessage(MessageClientGuiSkinLibraryCommand message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.skinLibraryCommand(ctx.getServerHandler().playerEntity, message.command, message.file, message.publicList);
+        ArmourersWorkshop.proxy.skinLibraryCommand(ctx.getServerHandler().player, message.command, message.file, message.publicList);
         return null;
     }
     

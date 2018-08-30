@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 
 public class MessageClientGuiAdminPanel implements IMessage, IMessageHandler<MessageClientGuiAdminPanel, IMessage> {
@@ -29,7 +29,7 @@ public class MessageClientGuiAdminPanel implements IMessage, IMessageHandler<Mes
 
     @Override
     public IMessage onMessage(MessageClientGuiAdminPanel message, MessageContext ctx) {
-        ArmourersWorkshop.instance.proxy.receivedAdminPanelCommand(ctx.getServerHandler().playerEntity, message.command);
+        ArmourersWorkshop.instance.proxy.receivedAdminPanelCommand(ctx.getServerHandler().player, message.command);
         return null;
     }
     

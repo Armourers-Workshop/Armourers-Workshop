@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.common.skin.type.block;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperty;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
@@ -35,10 +34,6 @@ public class SkinBlock extends AbstractSkinTypeBase {
     @Override
     public String getName() {
         return "block";
-    }
-
-    @Override
-    public void registerIcon(IIconRegister register) {
     }
     
     @Override

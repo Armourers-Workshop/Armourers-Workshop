@@ -112,7 +112,7 @@ public class ItemBlockMannequin extends ModItemBlock {
         {
             return false;
         }
-        else if (y == 255 && this.field_150939_a.getMaterial().isSolid())
+        else if (y == 255 && this.block.getMaterial().isSolid())
         {
             return false;
         }

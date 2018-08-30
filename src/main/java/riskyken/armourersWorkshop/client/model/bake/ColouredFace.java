@@ -1,6 +1,6 @@
 package riskyken.armourersWorkshop.client.model.bake;
 
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.IRenderBuffer;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
@@ -100,9 +100,9 @@ public class ColouredFace {
         int nG = (int) (average + (dyeColour[1] & 0xFF) - modelAverage);
         int nB = (int) (average + (dyeColour[2] & 0xFF) - modelAverage);
         
-        nR = MathHelper.clamp_int(nR, 0, 255);
-        nG = MathHelper.clamp_int(nG, 0, 255);
-        nB = MathHelper.clamp_int(nB, 0, 255);
+        nR = MathHelper.clamp(nR, 0, 255);
+        nG = MathHelper.clamp(nG, 0, 255);
+        nB = MathHelper.clamp(nB, 0, 255);
         return new byte [] {(byte)nR, (byte)nG, (byte)nB};
     }
 }

@@ -17,12 +17,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -181,10 +182,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             
             return true;
         } else {
-            if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
-                player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.noSleep", new Object[0]));
-            } else if (enumstatus == EntityPlayer.EnumStatus.NOT_SAFE) {
-                player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.notSafe", new Object[0]));
+            if (enumstatus == EntityPlayer.SleepResult.NOT_POSSIBLE_NOW) {
+                player.sendMessage(new TextComponentTranslation("tile.bed.noSleep", new Object[0]));
+            } else if (enumstatus == EntityPlayer.SleepResult.NOT_SAFE) {
+                player.sendMessage(new TextComponentTranslation("tile.bed.notSafe", new Object[0]));
             }
             return true;
         }
@@ -484,7 +485,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
     }
     
-    public EnumFacing getFacingDirection(IBlockAccess world, int x, int y, int z) {
+    public EnumFacing getFacingDirection(IBlockAccess world, BlockPos pos) {
         return getFacingDirection(world.getBlockMetadata(x, y, z));
     }
     

@@ -2,9 +2,9 @@ package riskyken.armourersWorkshop.common.undo;
 
 import java.util.HashMap;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
@@ -20,18 +20,18 @@ public final class UndoManager {
     private static HashMap<String, PlayerUndoData> playerUndoData = new HashMap<String, PlayerUndoData>();
 
     public static void begin(EntityPlayer player) {
-        if (!playerUndoData.containsKey(player.getCommandSenderName())) {
-            playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
+        if (!playerUndoData.containsKey(player.getName())) {
+            playerUndoData.put(player.getName(), new PlayerUndoData(player));
         }
-        PlayerUndoData playerData = playerUndoData.get(player.getCommandSenderName());
+        PlayerUndoData playerData = playerUndoData.get(player.getName());
         playerData.begin();
     }
     
     public static void end(EntityPlayer player) {
-        if (!playerUndoData.containsKey(player.getCommandSenderName())) {
-            playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
+        if (!playerUndoData.containsKey(player.getName())) {
+            playerUndoData.put(player.getName(), new PlayerUndoData(player));
         }
-        PlayerUndoData playerData = playerUndoData.get(player.getCommandSenderName());
+        PlayerUndoData playerData = playerUndoData.get(player.getName());
         playerData.end();
     }
     
@@ -45,26 +45,26 @@ public final class UndoManager {
     }
     
     public static void blockPainted(EntityPlayer player, World world, int x, int y, int z, byte[] oldrgb, byte oldPaintType, int side) {
-        UndoData undoData = new UndoData(x, y, z, world.provider.dimensionId, oldrgb, oldPaintType, side);
-        if (!playerUndoData.containsKey(player.getCommandSenderName())) {
-            playerUndoData.put(player.getCommandSenderName(), new PlayerUndoData(player));
+        UndoData undoData = new UndoData(x, y, z, world.provider.getDimension(), oldrgb, oldPaintType, side);
+        if (!playerUndoData.containsKey(player.getName())) {
+            playerUndoData.put(player.getName(), new PlayerUndoData(player));
         }
         
-        PlayerUndoData playerData = playerUndoData.get(player.getCommandSenderName());
+        PlayerUndoData playerData = playerUndoData.get(player.getName());
         playerData.addUndoData(undoData);
     }
     
     public static void undoPressed(EntityPlayer player) {
-        String key = player.getCommandSenderName();
+        String key = player.getName();
         if (!playerUndoData.containsKey(key)) {
-            String outOfUndosText = StatCollector.translateToLocal("chat." + LibModInfo.ID.toLowerCase() + ":undo.outOfUndos");
-            player.addChatMessage(new ChatComponentText(outOfUndosText));
+            String outOfUndosText = I18n.format("chat." + LibModInfo.ID.toLowerCase() + ":undo.outOfUndos");
+            player.sendMessage(new TextComponentString(outOfUndosText));
             return;
         }
         PlayerUndoData playerData = playerUndoData.get(key);
-        World world = player.worldObj;
-        String undoText = StatCollector.translateToLocal("chat." + LibModInfo.ID.toLowerCase() + ":undo.undoing");
-        player.addChatMessage(new ChatComponentText(undoText));
+        World world = player.getEntityWorld();
+        String undoText = I18n.format("chat." + LibModInfo.ID.toLowerCase() + ":undo.undoing");
+        player.sendMessage(new TextComponentString(undoText));
         playerData.playerPressedUndo(world);
         if (playerData.getAvalableUndos() < 1) {
             playerUndoData.remove(key);

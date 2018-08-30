@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import riskyken.armourersWorkshop.common.network.ByteBufHelper;
 import riskyken.armourersWorkshop.common.network.SkinUploadHelper;
 
@@ -44,7 +44,7 @@ public class MessageClientSkinPart implements IMessage, IMessageHandler<MessageC
     
     @Override
     public IMessage onMessage(MessageClientSkinPart message, MessageContext ctx) {
-        SkinUploadHelper.gotSkinPartFromClient(message.skinId, message.packetId, message.data, ctx.getServerHandler().playerEntity);
+        SkinUploadHelper.gotSkinPartFromClient(message.skinId, message.packetId, message.data, ctx.getServerHandler().player);
         return null;
     }
 }

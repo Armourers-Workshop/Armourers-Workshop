@@ -2,31 +2,10 @@ package riskyken.armourersWorkshop.common.skin.type;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperty;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
 public abstract class AbstractSkinTypeBase implements ISkinType {
-    
-    @SideOnly(Side.CLIENT)
-    protected IIcon icon;
-    
-    @SideOnly(Side.CLIENT)
-    protected IIcon emptySlotIcon;
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon() {
-        return this.icon;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getEmptySlotIcon() {
-        return this.emptySlotIcon;
-    }
     
     @Override
     public boolean showSkinOverlayCheckbox() {

@@ -10,12 +10,10 @@ import org.lwjgl.opengl.GL12;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -28,6 +26,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
@@ -292,20 +292,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             } else {
                 renderModel(te, model, fakePlayer);
             }
-        }
-        
-        mc.mcProfiler.endStartSection("earRender");
-        if (te.getGameProfile() != null && te.getGameProfile().getName().equals("deadmau5")) {
-            GL11.glPushMatrix();
-            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleZ), 0, 0, 1);
-            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleY), 0, 1, 0);
-            GL11.glRotated(Math.toDegrees(model.bipedHead.rotateAngleX), 1, 0, 0);
-            GL11.glTranslated(-5.5F * SCALE, 0, 0);
-            GL11.glTranslated(0, -6.5F * SCALE, 0);
-            model.bipedEars.render(SCALE);
-            GL11.glTranslated(11F * SCALE, 0, 0);
-            model.bipedEars.render(SCALE);
-            GL11.glPopMatrix();
         }
         
         mc.mcProfiler.endStartSection("magicCircle");

@@ -7,11 +7,14 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Level;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -25,39 +28,39 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 public class CommandGiveSkin extends ModCommand {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "giveSkin";
     }
     
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
-        if (currentCommand.length == 2) {
-            return getListOfStringsMatchingLastWord(currentCommand, getPlayers());
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
+        if (args.length == 2) {
+            return getListOfStringsMatchingLastWord(args, getPlayers());
         }
         return null;
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] currentCommand) {
-        if (currentCommand.length < 3) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length < 3) {
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
-        String playerName = currentCommand[1];
-        EntityPlayerMP player = getPlayer(commandSender, playerName);
+        String playerName = args[1];
+        EntityPlayerMP player = getPlayer(server, sender, playerName);
         if (player == null) {
             return;
         }
         
-        String skinName = currentCommand[2];
+        String skinName = args[2];
         if (!skinName.substring(0, 1).equals("\"")) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+            throw new WrongUsageException(getUsage(sender), (Object)skinName);
         }
         
         int usedCommands = 2;
         
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
-            for (int i = 3; i < currentCommand.length; i++) {
-                skinName += " " + currentCommand[i];
+            for (int i = 3; i < args.length; i++) {
+                skinName += " " + args[i];
                 if (skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
                     usedCommands = i;
                     break;
@@ -66,28 +69,28 @@ public class CommandGiveSkin extends ModCommand {
         }        
         
         ModLogger.log("usedCommands used: " + usedCommands);
-        ModLogger.log("total commands used: " + currentCommand.length);
+        ModLogger.log("total commands used: " + args.length);
         
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+            throw new WrongUsageException(getUsage(sender), (Object)skinName);
         }
         
         skinName = skinName.replace("\"", "");
         SkinDye skinDye = new SkinDye();
         
-        for (int i = usedCommands + 1; i < currentCommand.length; i++) {
-            String dyeCommand = currentCommand[i];
+        for (int i = usedCommands + 1; i < args.length; i++) {
+            String dyeCommand = args[i];
             ModLogger.log("Command dye: " + dyeCommand);
             
             if (!dyeCommand.contains("-")) {
-                throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+                throw new WrongUsageException(getUsage(sender), (Object)skinName);
             }
             String commandSplit[] = dyeCommand.split("-");
             if (commandSplit.length != 2) {
-                throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+                throw new WrongUsageException(getUsage(sender), (Object)skinName);
             }
             
-            int dyeIndex = parseIntBounded(commandSender, commandSplit[0], 1, 8) - 1;
+            int dyeIndex = parseInt(commandSplit[0], 1, 8) - 1;
             String dye = commandSplit[1];
             
             if (dye.startsWith("#") && dye.length() == 7) {
@@ -104,11 +107,11 @@ public class CommandGiveSkin extends ModCommand {
             } else if (dye.length() >= 5 & dye.contains(",")) {
                 String dyeValues[] = dye.split(",");
                 if (dyeValues.length != 3) {
-                    throw new WrongUsageException(getCommandUsage(commandSender), (Object)skinName);
+                    throw new WrongUsageException(getUsage(sender), (Object)skinName);
                 }
-                int r = parseIntBounded(commandSender, dyeValues[0], 0, 255);
-                int g = parseIntBounded(commandSender, dyeValues[1], 0, 255);
-                int b = parseIntBounded(commandSender, dyeValues[2], 0, 255);
+                int r = parseInt(dyeValues[0], 0, 255);
+                int g = parseInt(dyeValues[1], 0, 255);
+                int b = parseInt(dyeValues[2], 0, 255);
                 skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)255});
             } else {
                 throw new WrongUsageException("commands.armourers.invalidDyeFormat", (Object)dye);
@@ -131,8 +134,8 @@ public class CommandGiveSkin extends ModCommand {
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinPointer(skinIdentifier, skinDye));
         EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
-        entityItem.delayBeforeCanPickup = 0;
-        entityItem.func_145797_a(player.getCommandSenderName());
+        entityItem.setNoPickupDelay();
+        entityItem.setOwner(player.getName());
     }
     
     private boolean isValidHex (String colorStr) {

@@ -1,18 +1,17 @@
 package riskyken.armourersWorkshop.common.items;
 
-import buildcraft.api.tools.IToolWrench;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fml.common.Optional;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 
-@Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")
-public class ItemArmourersHammer extends AbstractModItem implements IToolWrench {
+/*@Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")*/
+public class ItemArmourersHammer extends AbstractModItem /*implements IToolWrench*/ {
 
     public ItemArmourersHammer() {
         super(LibItemNames.ARMOURERS_HAMMER);
@@ -20,12 +19,12 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
     }
     
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world,
-            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        /*
         Block block = world.getBlock(x, y, z);
         if (block != null) {
             if (block instanceof BlockBed) {
-                rotateBed(world, x, y, z, (BlockBed) block, ForgeDirection.getOrientation(side));
+                rotateBed(world, x, y, z, (BlockBed) block, EnumFacing.getOrientation(side));
                 player.swingItem();
                 return !world.isRemote;
             }
@@ -34,7 +33,7 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
                 return false;
             }
             
-            ForgeDirection dir = ForgeDirection.getOrientation(side);
+            EnumFacing dir = EnumFacing.getOrientation(side);
             if (player.isSneaking()) {
                 dir = dir.getOpposite();
             }
@@ -43,9 +42,10 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
                 return !world.isRemote;
             }
         }
-        return false;
+        */
+        return EnumActionResult.PASS;
     }
-    
+    /*
     private boolean rotateBed(World world, int x, int y, int z, BlockBed block, ForgeDirection axis) {
         int meta = world.getBlockMetadata(x, y, z);
         ForgeDirection[] bedRots = {
@@ -79,7 +79,8 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
         }
         return false;
     }
-    
+    */
+    /*
     @Optional.Method(modid = "BuildCraft|Core")
     @Override
     public boolean canWrench(EntityPlayer player, int x, int y, int z) {
@@ -91,9 +92,9 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
     public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
         player.swingItem();
     }
-    
+    */
     @Override
-    public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {
+    public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
         return true;
     }
 }

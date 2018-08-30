@@ -2,12 +2,13 @@ package riskyken.armourersWorkshop.common.network;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.GuiAdminPanel;
 import riskyken.armourersWorkshop.client.gui.GuiColourMixer;
@@ -66,8 +67,10 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = null;
+        
         if (ID != LibGuiIds.ENTITY_SKIN_INVENTORY) {
-            te = world.getTileEntity(x, y, z);
+            BlockPos pos = new BlockPos(x, y, z);
+            te = world.getTileEntity(pos);
         }
         
         switch (ID)
@@ -105,7 +108,7 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerMiniArmourerBuilding((TileEntityMiniArmourer)te);
                 }
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
-                Entity entity = player.worldObj.getEntityByID(x);
+                Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
                     ExPropsEntityEquipmentData entityProps = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
                     if (entityProps == null) {
@@ -151,8 +154,10 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = null;
+        
         if (ID != LibGuiIds.ENTITY_SKIN_INVENTORY) {
-            te = world.getTileEntity(x, y, z);
+            BlockPos pos = new BlockPos(x, y, z);
+            te = world.getTileEntity(pos);
         }
         
         switch (ID)
@@ -200,7 +205,7 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiMiniArmourerBuilding((TileEntityMiniArmourer)te);
                 }
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
-                Entity entity = player.worldObj.getEntityByID(x);
+                Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
                     ExPropsEntityEquipmentData entityProps = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
                     if (entityProps == null) {

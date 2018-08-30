@@ -7,6 +7,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
@@ -24,26 +25,19 @@ public class TileEntityBoundingBox extends TileEntity {
     private static final String TAG_GUIDE_Z = "guideZ";
     private static final String TAG_SKIN_PART = "skinPart";
     
-    private int parentX;
-    private int parentY;
-    private int parentZ;
+    private BlockPos parent;
     private byte guideX;
     private byte guideY;
     private byte guideZ;
     private ISkinPartType skinPart;
     
+    
     public TileEntityBoundingBox() {
         setParent(0, 0, 0, (byte) 0, (byte) 0, (byte) 0, null);
     }
     
-    public TileEntityBoundingBox(int parentX, int parentY, int parentZ,
-            byte guideX, byte guideY, byte guideZ, ISkinPartType skinPart) {
-        setParent(parentX, parentY, parentZ, guideX, guideY, guideZ, skinPart);
-    }
-    
-    @Override
-    public boolean canUpdate() {
-        return false;
+    public TileEntityBoundingBox(BlockPos parent, byte guideX, byte guideY, byte guideZ, ISkinPartType skinPart) {
+        setParent(parent, guideX, guideY, guideZ, skinPart);
     }
     
     @Override
@@ -105,11 +99,8 @@ public class TileEntityBoundingBox extends TileEntity {
         return this.skinPart;
     }
     
-    public void setParent(int x, int y, int z,byte guideX, byte guideY, byte guideZ,
-            ISkinPartType skinPart) {
-        this.parentX = x;
-        this.parentY = y;
-        this.parentZ = z;
+    public void setParent(BlockPos parent, byte guideX, byte guideY, byte guideZ, ISkinPartType skinPart) {
+        this.parent = parent;
         this.guideX = guideX;
         this.guideY = guideY;
         this.guideZ = guideZ;

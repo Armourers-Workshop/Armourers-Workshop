@@ -1,12 +1,13 @@
 package riskyken.armourersWorkshop.common.network.messages.client;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.undo.UndoManager;
@@ -51,10 +52,11 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
     @SuppressWarnings("deprecation")
     @Override
     public IMessage onMessage(MessageClientToolPaintBlock message, MessageContext ctx) {
-        EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+        EntityPlayerMP player = ctx.getServerHandler().player;
         if (player != null && player.getEntityWorld() != null) {
             World world = player.getEntityWorld();
-            Block block = world.getBlock(message.x, message.y, message.z);
+            BlockPos pos = new BlockPos(message.x, message.y, message.z);
+            Block block = world.getBlockState(pos).getBlock();
             if (block instanceof IPantableBlock) {
                 UndoManager.begin(player);
                 IPantableBlock paintable = (IPantableBlock) block;

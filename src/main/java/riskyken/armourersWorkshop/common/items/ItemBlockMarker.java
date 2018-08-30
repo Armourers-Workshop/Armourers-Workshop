@@ -1,8 +1,11 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
@@ -15,10 +18,11 @@ public class ItemBlockMarker extends AbstractModItem {
     }
     
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        Block block = world.getBlock(x, y, z);
-        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
-            if (!world.isRemote) {
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState state = worldIn.getBlockState(pos);
+        if (CubeRegistry.INSTANCE.isBuildingBlock(state.getBlock())) {
+            if (!worldIn.isRemote) {
+                //state.getBlock().getMetaFromState(state)
                 int meta = world.getBlockMetadata(x, y, z);
                 int newMeta = side + 1;
                 if (newMeta == meta) {
@@ -28,8 +32,8 @@ public class ItemBlockMarker extends AbstractModItem {
                     world.setBlockMetadataWithNotify(x, y, z, newMeta, 2);
                 }
             }
-            return true;
+            return EnumActionResult.SUCCESS;
         }
-        return false;
+        return EnumActionResult.PASS;
     }
 }

@@ -2,13 +2,13 @@ package riskyken.armourersWorkshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.lib.LibGuiIds;
-import riskyken.armourersWorkshop.common.undo.UndoManager;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import riskyken.armourersWorkshop.ArmourersWorkshop;
+import riskyken.armourersWorkshop.common.lib.LibGuiIds;
+import riskyken.armourersWorkshop.common.undo.UndoManager;
 
 public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageClientKeyPress, IMessage> {
 
@@ -33,10 +33,10 @@ public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageC
     
     @Override
     public IMessage onMessage(MessageClientKeyPress message, MessageContext ctx) {
-        EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+        EntityPlayerMP player = ctx.getServerHandler().player;
         switch (message.keyId) {
         case 0:
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.CUSTOM_ARMOUR_INVENTORY, player.worldObj, 0, 0, 0);
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.CUSTOM_ARMOUR_INVENTORY, player.getEntityWorld(), 0, 0, 0);
             break;
         case 1:
             UndoManager.undoPressed(player);

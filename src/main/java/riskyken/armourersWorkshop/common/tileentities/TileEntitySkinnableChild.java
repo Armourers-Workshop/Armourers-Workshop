@@ -5,7 +5,8 @@ import org.apache.logging.log4j.Level;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnableChild;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
@@ -15,42 +16,37 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
     private static final String TAG_PARENT_Y = "parentY";
     private static final String TAG_PARENT_Z = "parentZ";
     
-    public int parentX;
-    public int parentY;
-    public int parentZ;
+    private BlockPos parentPos;
     
     public boolean isParentValid() {
         return getParent() != null;
     }
     
-    public void setParentLocation(int x, int y, int z) {
-        parentX = x;
-        parentY = y;
-        parentZ = z;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    public void setParentLocation(BlockPos parentPos) {
+        this.parentPos = parentPos;
+        dirtySync();
     }
     
     @Override
-    public void setBoundsOnBlock(Block block, int xOffset, int yOffset, int zOffset) {
-        int x = xCoord - parentX;
-        int y = yCoord - parentY;
-        int z = zCoord - parentZ;
+    public void setBoundsOnBlock(Block block, BlockPos offset) {
+        int x = getPos().getX() - parentPos.getX();
+        int y = getPos().getY() - parentPos.getY();
+        int z = getPos().getZ() - parentPos.getZ();
         
         int widthOffset = x;
         int heightOffset = y;
         int depthOffset = z;
         
         if (block != null && !(block instanceof BlockSkinnableChild)) {
-            ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", xOffset, yOffset, zOffset));
-            if (worldObj != null) {
-                worldObj.removeTileEntity(xOffset, yOffset, zOffset);
+            ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", offset.getX(), offset.getY(), offset.getZ()));
+            if (getWorld() != null) {
+                getWorld().removeTileEntity(offset);
             }
             return;
         }
         
         BlockSkinnableChild child = (BlockSkinnableChild) getBlockType();
-        ForgeDirection dir = child.getFacingDirection(getWorldObj(), xCoord, yCoord, zCoord);
+        EnumFacing dir = child.getFacingDirection(getWorld(), getPos());
         
         switch (dir) {
         case NORTH:
@@ -73,15 +69,12 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
             break;
         }
         
-        //ModLogger.log(depthOffset);
-        
-        
-        super.setBoundsOnBlock(block, widthOffset, heightOffset, depthOffset);
+        super.setBoundsOnBlock(block, new BlockPos(widthOffset, heightOffset, depthOffset));
     }
     
     @Override
     public TileEntitySkinnable getParent() {
-        TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
+        TileEntity te = getWorld().getTileEntity(parentPos);
         if (te != null && te instanceof TileEntitySkinnable) {
             return (TileEntitySkinnable) te;
         }
@@ -91,16 +84,16 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        parentX = compound.getInteger(TAG_PARENT_X);
-        parentY = compound.getInteger(TAG_PARENT_Y);
-        parentZ = compound.getInteger(TAG_PARENT_Z);
+        parentPos = new BlockPos(compound.getInteger(TAG_PARENT_X), compound.getInteger(TAG_PARENT_Y), compound.getInteger(TAG_PARENT_Z));
     }
     
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger(TAG_PARENT_X, parentX);
-        compound.setInteger(TAG_PARENT_Y, parentY);
-        compound.setInteger(TAG_PARENT_Z, parentZ);
+        if (parentPos != null) {
+            compound.setInteger(TAG_PARENT_X, parentPos.getX());
+            compound.setInteger(TAG_PARENT_Y, parentPos.getY());
+            compound.setInteger(TAG_PARENT_Z, parentPos.getZ());
+        }
     }
 }

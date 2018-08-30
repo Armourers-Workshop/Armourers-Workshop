@@ -2,14 +2,13 @@ package riskyken.armourersWorkshop.common.skin.entity;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
@@ -20,7 +19,7 @@ import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
-public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {
+public class ExPropsEntityEquipmentData implements /*IExtendedEntityProperties,*/ IInventorySlotUpdate {
     
     private static final String TAG_EXT_PROP_NAME = "entityCustomEquipmentData";
     private static final String TAG_ADDED_SPAWN_ITEMS = "addedSpawnItems";
@@ -42,7 +41,7 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     
     @Override
     public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {
-        if (entity.worldObj.isRemote) {
+        if (entity.getEntityWorld().isRemote) {
             return;
         }
         if (stack == null) {
@@ -83,12 +82,12 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
         this.equipmentData = equipmentData;
     }
     
-    @Override
+    //@Override
     public void saveNBTData(NBTTagCompound compound) {
         this.skinInventory.saveItemsToNBT(compound);
     }
 
-    @Override
+    //@Override
     public void loadNBTData(NBTTagCompound compound) {
         allowNetworkUpdates = false;
         equipmentData.clear();
@@ -97,22 +96,23 @@ public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, II
     }
     
     private void addSpawnItems() {
-        if (entity.worldObj != null && !entity.worldObj.isRemote) {
+        if (entity.getEntityWorld() != null && !entity.getEntityWorld().isRemote) {
             EntitySkinHandler.INSTANCE.giveRandomSkin(this);
         }
     }
     
-    @Override
+    //@Override
     public void init(Entity entity, World world) {
         addSpawnItems();
     }
     
     public static final void register(Entity entity, ISkinnableEntity skinnableEntity) {
-        entity.registerExtendedProperties(TAG_EXT_PROP_NAME, new ExPropsEntityEquipmentData(entity, skinnableEntity));
+        //entity.registerExtendedProperties(TAG_EXT_PROP_NAME, new ExPropsEntityEquipmentData(entity, skinnableEntity));
     }
     
     private static final ExPropsEntityEquipmentData get(Entity entity) {
-        return (ExPropsEntityEquipmentData) entity.getExtendedProperties(TAG_EXT_PROP_NAME);
+        //return (ExPropsEntityEquipmentData) entity.getExtendedProperties(TAG_EXT_PROP_NAME);
+        return null;
     }
     
     public static final ExPropsEntityEquipmentData getExtendedPropsForEntity(Entity entity) {

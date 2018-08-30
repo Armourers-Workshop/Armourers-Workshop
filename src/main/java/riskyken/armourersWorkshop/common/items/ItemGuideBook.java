@@ -2,6 +2,8 @@ package riskyken.armourersWorkshop.common.items;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -14,10 +16,10 @@ public class ItemGuideBook extends AbstractModItem {
     }
     
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
-        if (world.isRemote) {
-            entityPlayer.openGui(ArmourersWorkshop.instance, LibGuiIds.GUIDE_BOOK, world, 0, 0, 0);
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        if (worldIn.isRemote) {
+            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.GUIDE_BOOK, worldIn, 0, 0, 0);
         }
-        return itemStack;
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 }

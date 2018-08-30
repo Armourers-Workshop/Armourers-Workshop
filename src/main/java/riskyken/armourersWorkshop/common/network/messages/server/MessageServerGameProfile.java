@@ -2,13 +2,13 @@ package riskyken.armourersWorkshop.common.network.messages.server;
 
 import com.mojang.authlib.GameProfile;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
 import riskyken.armourersWorkshop.common.GameProfileCache;
 
 public class MessageServerGameProfile  implements IMessage, IMessageHandler<MessageServerGameProfile, IMessage> {
@@ -24,14 +24,14 @@ public class MessageServerGameProfile  implements IMessage, IMessageHandler<Mess
     @Override
     public void toBytes(ByteBuf buf) {
         NBTTagCompound profileTag = new NBTTagCompound();
-        NBTUtil.func_152460_a(profileTag, this.gameProfile);
+        NBTUtil.writeGameProfile(profileTag, this.gameProfile);
         ByteBufUtils.writeTag(buf, profileTag);
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
         NBTTagCompound profileTag = ByteBufUtils.readTag(buf);
-        gameProfile = NBTUtil.func_152459_a(profileTag);
+        gameProfile = NBTUtil.readGameProfileFromNBT(profileTag);
     }
 
     @Override

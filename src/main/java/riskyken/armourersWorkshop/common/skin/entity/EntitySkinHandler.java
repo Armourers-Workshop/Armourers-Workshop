@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,6 +14,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.entity.IEntitySkinHandler;
@@ -72,14 +72,14 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
-        if (event.entity.worldObj.isRemote) {
+        if (event.getEntity().getEntityWorld().isRemote) {
             return;
         }
         
-        Entity entity = event.target;
+        Entity entity = event.getTarget();
         ExPropsEntityEquipmentData props = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
         if (props != null) {
-            props.sendEquipmentDataToPlayer((EntityPlayerMP) event.entityPlayer);
+            props.sendEquipmentDataToPlayer((EntityPlayerMP) event.getEntityPlayer());
         }
     }
     
@@ -103,7 +103,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     
     @SubscribeEvent
     public void onEntityConstructing(EntityConstructing event) {
-        Entity entity = event.entity;
+        Entity entity = event.getEntity();
         if (isValidEntity(entity)) {
             ISkinnableEntity skinnableEntity = entityMap.get(entity.getClass());
             ExPropsEntityEquipmentData.register(entity, skinnableEntity);
@@ -112,9 +112,9 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     
     @SubscribeEvent
     public void onLivingDeathEvent(LivingDeathEvent event) {
-        Entity entity = event.entity;
+        Entity entity = event.getEntity();
         if (isValidEntity(entity)) {
-            if (entity.worldObj != null && !entity.worldObj.isRemote) {
+            if (entity.getEntityWorld() != null && !entity.getEntityWorld().isRemote) {
                 dropEntitySkins(entity); 
             }
         }
@@ -124,7 +124,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         if (ConfigHandler.entityDropSkinChance <= 0) {
             return;
         }
-        int rnd = entity.worldObj.rand.nextInt(99) + 1;
+        int rnd = entity.getEntityWorld().rand.nextInt(99) + 1;
         if (rnd <= ConfigHandler.entityDropSkinChance) {
             ExPropsEntityEquipmentData entityEquipmentData = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
             if (entityEquipmentData != null) {
@@ -155,7 +155,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         
         ArrayList<ISkinType> skinTypes = entityEquipmentData.getSkinInventory().getSkinTypes();
         for (int i = 0; i < skinTypes.size(); i++) {
-            int rnd = entityEquipmentData.getEntity().worldObj.rand.nextInt(99) + 1;
+            int rnd = entityEquipmentData.getEntity().getEntityWorld().rand.nextInt(99) + 1;
             if (rnd >= ConfigHandler.enitiySpawnWithSkinsChance) {
                 continue;
             }
@@ -204,7 +204,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
     
     @SideOnly(Side.CLIENT)
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
-        World world = Minecraft.getMinecraft().theWorld;
+        World world = Minecraft.getMinecraft().world;
         Entity entity = world.getEntityByID(entityId);
         if (entity != null) {
             ExPropsEntityEquipmentData props = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);

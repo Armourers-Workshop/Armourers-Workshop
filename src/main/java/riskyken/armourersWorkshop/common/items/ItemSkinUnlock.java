@@ -1,12 +1,13 @@
 package riskyken.armourersWorkshop.common.items;
 
-import java.util.List;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -30,20 +31,24 @@ public class ItemSkinUnlock extends AbstractModItem {
     }
     
     @Override
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list) {
-        for (int i = 0; i < VALID_SKINS.length;i++) {
-            list.add(new ItemStack(this, 1, i));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (this.isInCreativeTab(tab)) {
+            for (int i = 0; i < VALID_SKINS.length;i++) {
+                items.add(new ItemStack(this, 1, i));
+            } 
         }
     }
     
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (world.isRemote) {
-            return itemStack;
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack itemStack = playerIn.getHeldItem(handIn);
+        if (worldIn.isRemote) {
+            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
         }
-        ISkinType skinType = getSkinTypeFormStack(itemStack);
         
-        ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(player);
+        ISkinType skinType = getSkinTypeFormStack(playerIn.getHeldItem(handIn));
+        
+        ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(playerIn);
         int count = equipmentData.getEquipmentWardrobeData().getUnlockedSlotsForSkinType(skinType);
         count++;
         
@@ -51,13 +56,12 @@ public class ItemSkinUnlock extends AbstractModItem {
         
         if (count <= ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE) {
             equipmentData.setSkinColumnCount(skinType, count);
-            player.addChatComponentMessage(new ChatComponentTranslation("chat.armourersworkshop:slotUnlocked", localizedSkinName.toLowerCase(), Integer.toString(count)));
-            itemStack.stackSize--;
+            playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:slotUnlocked", localizedSkinName.toLowerCase(), Integer.toString(count)));
+            itemStack.shrink(1);
         } else {
-            player.addChatComponentMessage(new ChatComponentTranslation("chat.armourersworkshop:slotUnlockedFailed", localizedSkinName));
+            playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:slotUnlockedFailed", localizedSkinName));
         }
-        
-        return itemStack;
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
     
     private ISkinType getSkinTypeFormStack(ItemStack itemStack) {

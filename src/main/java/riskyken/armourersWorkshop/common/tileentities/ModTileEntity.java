@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public abstract class ModTileEntity extends TileEntity {
@@ -18,9 +17,5 @@ public abstract class ModTileEntity extends TileEntity {
     public void dirtySync() {
         markDirty();
         syncWithClients();
-    }
-    
-    public NBTTagCompound getUpdateTag() {
-        return null;
     }
 }

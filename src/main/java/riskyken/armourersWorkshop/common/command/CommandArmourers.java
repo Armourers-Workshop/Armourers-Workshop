@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 public class CommandArmourers extends CommandBase {
     
@@ -61,38 +63,38 @@ public class CommandArmourers extends CommandBase {
     }
     
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
-        if (currentCommand.length == 1) {
-            return getListOfStringsMatchingLastWord(currentCommand, getSubCommandNames());
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
+        if (args.length == 1) {
+            return getListOfStringsMatchingLastWord(args, getSubCommandNames());
         }
-        if (currentCommand.length > 1) {
-            String commandName = currentCommand[0];
+        if (args.length > 1) {
+            String commandName = args[0];
             ModCommand command = getSubCommand(commandName);
             if (command != null) {
-                return command.addTabCompletionOptions(commandSender, currentCommand);
+                return command.getTabCompletions(server, sender, args, targetPos);
             }
         }
-        return null;
+        return super.getTabCompletions(server, sender, args, targetPos);
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] currentCommand) {
-        if (currentCommand == null) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args == null) {
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
-        if (currentCommand.length < 1) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+        if (args.length < 1) {
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
-        String commandName = currentCommand[0];
+        String commandName = args[0];
         ModCommand command = getSubCommand(commandName);
         if (command != null) {
-            command.processCommand(commandSender, currentCommand);
+            command.execute(server, sender, args);
             return;
         }
-        throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+        throw new WrongUsageException(getUsage(sender), (Object)args);
     }
     
-    private String[] getPlayers() {
-        return MinecraftServer.getServer().getOnlinePlayerNames();
+    private String[] getPlayers(MinecraftServer server) {
+        return server.getOnlinePlayerNames();
     }
 }

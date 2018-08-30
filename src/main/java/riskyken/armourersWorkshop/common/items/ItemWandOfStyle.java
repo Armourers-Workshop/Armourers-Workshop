@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -34,17 +35,16 @@ public class ItemWandOfStyle extends AbstractModItem {
     }
     
     @Override
-    public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer entityPlayer, EntityLivingBase entityLivingBase) {
-        ModLogger.log(entityLivingBase.getClass());
-        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entityLivingBase)) {
-            if (entityLivingBase.getEntityWorld().isRemote) {
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
+        ModLogger.log(target.getClass());
+        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(target)) {
+            if (target.getEntityWorld().isRemote) {
                 return true;
             }
-            FMLNetworkHandler.openGui(entityPlayer, ArmourersWorkshop.instance,
-                    LibGuiIds.ENTITY_SKIN_INVENTORY, entityLivingBase.getEntityWorld(),
-                    entityLivingBase.getEntityId(), 0, 0);
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance,
+                    LibGuiIds.ENTITY_SKIN_INVENTORY, target.getEntityWorld(),
+                    target.getEntityId(), 0, 0);
         }
-        
         return false;
     }
 }

@@ -1,12 +1,14 @@
 package riskyken.armourersWorkshop.common.command;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -14,13 +16,13 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 public class CommandSetItemAsSkinnable extends ModCommand {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "setItemAsSkinnable";
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] currentCommand) {
-        EntityPlayerMP player = getCommandSenderAsPlayer(commandSender);
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         if (player == null) {
             return;
         }

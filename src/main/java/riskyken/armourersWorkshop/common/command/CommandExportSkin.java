@@ -2,10 +2,12 @@ package riskyken.armourersWorkshop.common.command;
 
 import java.io.File;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -16,16 +18,16 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 public class CommandExportSkin extends ModCommand {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "exportSkin";
     }
 
     @Override
-    public void processCommand(ICommandSender commandSender, String[] currentCommand) {
-        if (currentCommand.length < 3) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length < 3) {
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
-        EntityPlayerMP player = getCommandSenderAsPlayer(commandSender);
+        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         if (player == null) {
             return;
         }
@@ -34,26 +36,26 @@ public class CommandExportSkin extends ModCommand {
         ItemStack stack = player.getCurrentEquippedItem();
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer == null) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         
         
         // Get export file extension.
-        String fileExtension = currentCommand[1];
+        String fileExtension = args[1];
         ISkinExporter skinExporter = SkinExportManager.getSkinExporter(fileExtension);
         if (skinExporter == null) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         
         // Get export file name.
-        String exportName = currentCommand[2];
+        String exportName = args[2];
         if (!exportName.substring(0, 1).equals("\"")) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)exportName);
+            throw new WrongUsageException(getUsage(sender), (Object)exportName);
         }
         int usedCommands = 2;
         if (!exportName.substring(exportName.length() - 1, exportName.length()).equals("\"")) {
-            for (int i = 3; i < currentCommand.length; i++) {
-                exportName += " " + currentCommand[i];
+            for (int i = 3; i < args.length; i++) {
+                exportName += " " + args[i];
                 if (exportName.substring(exportName.length() - 1, exportName.length()).equals("\"")) {
                     usedCommands = i;
                     break;
@@ -61,21 +63,21 @@ public class CommandExportSkin extends ModCommand {
             }
         }   
         if (!exportName.substring(exportName.length() - 1, exportName.length()).equals("\"")) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)exportName);
+            throw new WrongUsageException(getUsage(sender), (Object)exportName);
         }
         exportName = exportName.replace("\"", "");
         
         // Add the scale
         float scale = 0.0625F;
-        if (currentCommand.length > usedCommands + 1) {
-            scale = (float) parseDouble(commandSender, currentCommand[usedCommands + 1]);
+        if (args.length > usedCommands + 1) {
+            scale = (float) parseDouble(args[usedCommands + 1]);
         }
         
         // Get the skin from the cache.
         // TODO Fix client call.
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         
         // Creating the export directory.
