@@ -64,7 +64,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        String guiName = tileEntity.getInventoryName();
+        String guiName = tileEntity.getName();
         
         buttonList.clear();
         
@@ -261,10 +261,10 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         super.drawForegroundLayer(mouseX, mouseY);
         
         if (tileEntity.getSkinType() == SkinTypeRegistry.skinWings) {
-            String idleSpeedLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.idleSpeed");
-            String flyingSpeedLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.flyingSpeed");
-            String minAngleLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.minAngle");
-            String maxAngleLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.maxAngle");
+            String idleSpeedLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.idleSpeed");
+            String flyingSpeedLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.flyingSpeed");
+            String minAngleLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.minAngle");
+            String maxAngleLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.maxAngle");
             
             this.fontRenderer.drawString(idleSpeedLabel, 10, 36, 4210752);
             this.fontRenderer.drawString(flyingSpeedLabel, 10, 56, 4210752);
@@ -273,9 +273,9 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         }
         
         if (tileEntity.getSkinType() == SkinTypeRegistry.skinBlock & checkBlockInventory.isChecked()) {
-            String labelInventorySize = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.inventorySize");
+            String labelInventorySize = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.inventorySize");
             
-            String labelInventorySlots = "inventory." + LibModInfo.ID.toLowerCase() + ":" + tileEntity.getInventoryName() + ".label.inventorySlots";
+            String labelInventorySlots = "inventory." + LibModInfo.ID.toLowerCase() + ":" + tileEntity.getName() + ".label.inventorySlots";
             labelInventorySlots = I18n.format(labelInventorySlots, inventorySize.getSelectionWidth() * inventorySize.getSelectionHeight(), inventorySize.getSelectionWidth(), inventorySize.getSelectionHeight());
             
             this.fontRenderer.drawString(labelInventorySize, 10, 140, 4210752);

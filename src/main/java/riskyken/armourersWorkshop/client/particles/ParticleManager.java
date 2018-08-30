@@ -1,8 +1,5 @@
 package riskyken.armourersWorkshop.client.particles;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,7 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ParticleManager {
 
 	public static final ParticleManager INSTANCE = new ParticleManager();
-	
+	/*
 	public void spawnParticle(World world, EntityFX particle) {
 		spawnParticle(world, particle, false);
 	}
@@ -41,7 +38,5 @@ public class ParticleManager {
 			}
 		}
 	}
-	
-	
-	
+	*/
 }

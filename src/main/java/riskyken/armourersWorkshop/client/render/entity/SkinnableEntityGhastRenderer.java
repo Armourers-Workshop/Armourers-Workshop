@@ -2,27 +2,20 @@ package riskyken.armourersWorkshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.entity.RenderEntity;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
-import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
 @SideOnly(Side.CLIENT)
 public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer<EntityGhast> {
 
-    @Override
-    public void render(EntityGhast entity, RendererLivingEntity renderer,
+    //@Override
+    public void render(EntityGhast entity, RenderEntity renderer,
             double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
@@ -35,7 +28,7 @@ public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer<En
         
         if (entity.deathTime > 0) {
             float angle = ((float)entity.deathTime + ModClientFMLEventHandler.renderTickTime - 1.0F) / 20.0F * 1.6F;
-            angle = MathHelper.sqrt_float(angle);
+            angle = MathHelper.sqrt(angle);
             if (angle > 1.0F) {
                 angle = 1.0F;
             }
@@ -49,10 +42,10 @@ public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer<En
         
         float headScale = 9.01F;
         GL11.glScalef(headScale, headScale, headScale);
-        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
+        //renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         GL11.glPopMatrix();
     }
-    
+    /*
     private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
         if (equipmentData.haveEquipment(skinType, 0)) {
             ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
@@ -67,5 +60,5 @@ public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer<En
             }
             GL11.glDisable(GL11.GL_NORMALIZE);
         }
-    }
+    }*/
 }

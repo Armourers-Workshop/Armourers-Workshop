@@ -44,7 +44,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
         if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
             return false;
         }
-        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.dye) {
+        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.DYE) {
             if (world.isRemote) { return true; }
             this.setColour(world, x, y, z, UtilColour.getMinecraftColor(-player.getCurrentEquippedItem().getItemDamage() + 15, ColourFamily.MINECRAFT), side);
             return true;

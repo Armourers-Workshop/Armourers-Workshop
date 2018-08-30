@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -28,10 +28,10 @@ public class ModelSkinSword extends AbstractModelSkin {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
-            this.heldItemRight = 0;
+            /*this.heldItemRight = 0;
             if (player.getHeldItem() != null) {
                 this.heldItemRight = 1;
-            }
+            }*/
         }
         
         if (ClientProxy.isJrbaClientLoaded()) {

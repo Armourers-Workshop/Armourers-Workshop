@@ -36,6 +36,8 @@ minecraft {
     
     replaceIn "api/common/lib/LibApi.java"
     replace "@API_VERSION@", apiVersion
+    
+    mappings = "snapshot_20171003"
 }
 
 dependencies {

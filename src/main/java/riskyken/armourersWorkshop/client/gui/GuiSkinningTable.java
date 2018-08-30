@@ -1,13 +1,12 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -34,8 +33,8 @@ public class GuiSkinningTable extends GuiContainer {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, LibBlockNames.SKINNING_TABLE, 0x282216);
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 0x282216);
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, LibBlockNames.SKINNING_TABLE, 0x282216);
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 0x282216);
     }
 
     @Override

@@ -18,13 +18,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -181,7 +179,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
         int typeSwitchWidth = 80;
         
-        listWidth = MathHelper.clamp_int(listWidth, 0, 200);
+        listWidth = MathHelper.clamp(listWidth, 0, 200);
         
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
         
@@ -254,11 +252,6 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             return false;
         }
         return true;
-    }
-    
-    private boolean isPlayerOp(EntityPlayer player) {
-        MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
-        return minecraftServer.getConfigurationManager().func_152596_g(player.getGameProfile());
     }
     
     private void setFileSwitchType(LibraryFileType type) {
@@ -691,7 +684,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     SkinPointer skinPointer = new SkinPointer(identifier);
                     
                     int listRight = this.width - INVENTORY_WIDTH - PADDING * 5;
-                    listRight = MathHelper.clamp_int(listRight, 0, 200);
+                    listRight = MathHelper.clamp(listRight, 0, 200);
                     listRight += INVENTORY_WIDTH + PADDING * 2 + 10;
                     
                     int listTop = TITLE_HEIGHT + 14 + PADDING * 2;

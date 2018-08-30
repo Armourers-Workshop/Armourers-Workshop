@@ -8,8 +8,8 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -152,14 +152,14 @@ public class TileEntitySkinnable extends ModTileEntity {
         }
     }
     
-    public static float[] getBlockBounds(Skin skin, int gridX, int gridY, int gridZ, ForgeDirection dir) {
+    public static float[] getBlockBounds(Skin skin, int gridX, int gridY, int gridZ, EnumFacing dir) {
         float[] bounds = new float[6];
         float scale = 0.0625F;
         SkinPart skinPart = skin.getParts().get(0);
         
-        gridX = MathHelper.clamp_int(gridX, 0, 2);
-        gridY = MathHelper.clamp_int(gridY, 0, 2);
-        gridZ = MathHelper.clamp_int(gridZ, 0, 2);
+        gridX = MathHelper.clamp(gridX, 0, 2);
+        gridY = MathHelper.clamp(gridY, 0, 2);
+        gridZ = MathHelper.clamp(gridZ, 0, 2);
         
         Rectangle3D rec = skinPart.getBlockBounds(gridX, gridY, gridZ);
         switch (dir) {
@@ -197,7 +197,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         return bounds;
     }
     
-    private static float[] rotateBlockBounds(float[] bounds, ForgeDirection dir) {
+    private static float[] rotateBlockBounds(float[] bounds, EnumFacing dir) {
         float[] rotatedBounds = new float[6];
         for (int i = 0; i < bounds.length; i++) {
             rotatedBounds[i] = bounds[i];
@@ -237,7 +237,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     }
     
     public Skin getSkin(ISkinPointer skinPointer) {
-        if (getWorldObj().isRemote) {
+        if (getWorld().isRemote) {
             return getSkinClient(skinPointer);
         } else {
             return getSkinServer(skinPointer);
@@ -273,37 +273,33 @@ public class TileEntitySkinnable extends ModTileEntity {
         return inventory;
     }
     
+    
     @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, compound);
+        return new SPacketUpdateTileEntity(getPos(), 0, compound);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        NBTTagCompound compound = packet.func_148857_g();
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.getNbtCompound();
         readFromNBT(compound);
     }
     
-    @Override
-    public boolean canUpdate() {
-        return false;
-    }
-    
-    public void setRotation(ForgeDirection rotation) {
+    public void setRotation(EnumFacing rotation) {
         worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, rotation.ordinal(), 2);
     }
     
-    public ForgeDirection getRotation() {
+    public EnumFacing getRotation() {
         if (getBlockType() instanceof BlockSkinnable) {
-            return ((BlockSkinnable)getBlockType()).getFacingDirection(getWorldObj(), xCoord, yCoord, zCoord);
+            return ((BlockSkinnable)getBlockType()).getFacingDirection(getWorld(), getPos());
         }
-        return ForgeDirection.UNKNOWN;
+        return null;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setBoolean(TAG_HAS_SKIN, hasSkin());
         compound.setInteger(ModConstants.Tags.TAG_NBT_VERSION, NBT_VERSION);
@@ -332,6 +328,7 @@ public class TileEntitySkinnable extends ModTileEntity {
                 compound.setBoolean(TAG_BLOCK_INVENTORY, false);
             }
         }
+        return compound;
     }
     
     @Override

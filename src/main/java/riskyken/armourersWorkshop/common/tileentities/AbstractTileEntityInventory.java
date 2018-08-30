@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public abstract class AbstractTileEntityInventory extends ModTileEntity implements IInventory {
@@ -114,5 +115,77 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     
     public void readItemsFromNBT(NBTTagCompound compound) {
         NBTHelper.readStackArrayFromNBT(compound, TAG_ITEMS, items);
+    }
+    
+    @Override
+    public int getField(int id) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    
+    @Override
+    public void clear() {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void closeInventory(EntityPlayer player) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void openInventory(EntityPlayer player) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void setField(int id, int value) {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public int getFieldCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+    
+    @Override
+    public String getName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    @Override
+    public boolean hasCustomName() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    @Override
+    public ITextComponent getDisplayName() {
+        // TODO Auto-generated method stub
+        return super.getDisplayName();
+    }
+    
+    @Override
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    @Override
+    public boolean isUsableByPlayer(EntityPlayer player) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public class MannequinFakePlayer extends AbstractClientPlayer {
@@ -79,7 +80,7 @@ public class MannequinFakePlayer extends AbstractClientPlayer {
         return new ChunkCoordinates(0,0,0);
     }
 
-    @Override public void addChatComponentMessage(IChatComponent chatmessagecomponent){}
+    @Override public void addChatComponentMessage(ITextComponent chatmessagecomponent){}
     @Override public void addStat(StatBase par1StatBase, int par2){}
     @Override public void openGui(Object mod, int modGuiId, World world, int x, int y, int z){}
     @Override public boolean isEntityInvulnerable(){ return true; }

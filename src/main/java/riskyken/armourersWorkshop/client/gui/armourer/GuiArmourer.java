@@ -47,7 +47,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     public GuiArmourer(InventoryPlayer invPlayer, TileEntityArmourer tileEntity) {
         super(new ContainerArmourer(invPlayer, tileEntity), false, textureTabs);
         this.tileEntity = tileEntity;
-        this.inventoryName = tileEntity.getInventoryName();
+        this.inventoryName = tileEntity.getName();
         
         tabMain = new GuiTabArmourerMain(0, this);
         tabDisplaySettings = new GuiTabArmourerDisplaySettings(1, this);
@@ -141,7 +141,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, tileEntity.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, tileEntity.getName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {

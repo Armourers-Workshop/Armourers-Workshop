@@ -1,8 +1,8 @@
 package riskyken.armourersWorkshop.client.gui;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiAdminPanel.AdminPanelCommand;
@@ -43,7 +43,7 @@ public class GuiAdminPanel extends GuiScreen {
     @Override
     protected void keyTyped(char key, int keycode) {
         if (keycode == 1 || keycode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-            this.mc.thePlayer.closeScreen();
+            this.mc.player.closeScreen();
         }
         super.keyTyped(key, keycode);
     }

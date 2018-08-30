@@ -2,14 +2,14 @@ package riskyken.armourersWorkshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelZombieVillager;
+import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderZombie;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -24,8 +24,8 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 @SideOnly(Side.CLIENT)
 public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<EntityZombie> {
     
-    @Override
-    public void render(EntityZombie entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
+    //@Override
+    public void render(EntityZombie entity, RenderBiped renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
         
@@ -37,7 +37,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<E
         
         if (entity.deathTime > 0) {
             float angle = ((float)entity.deathTime + ModClientFMLEventHandler.renderTickTime - 1.0F) / 20.0F * 1.6F;
-            angle = MathHelper.sqrt_float(angle);
+            angle = MathHelper.sqrt(angle);
             if (angle > 1.0F) {
                 angle = 1.0F;
             }
@@ -58,12 +58,12 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<E
         GL11.glPopMatrix();
     }
     
-    private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
+    private void renderEquipmentType(EntityLivingBase entity, RenderBiped renderer, ISkinType skinType, IEntityEquipment equipmentData) {
         float scale = 0.0625F;
         if (renderer instanceof RenderZombie) {
             RenderZombie rz = (RenderZombie) renderer;
             boolean isZombieVillager = false;
-            isZombieVillager = rz.modelBipedMain instanceof ModelZombieVillager;
+            isZombieVillager = rz.getMainModel() instanceof ModelZombieVillager;
             if (!equipmentData.haveEquipment(skinType, 0)) {
                 return;
             }
@@ -84,7 +84,7 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<E
             }
             //GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
             //GL11.glPolygonOffset(-1F, -1F);
-            model.render(entity, rz.modelBipedMain, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
+            //model.render(entity, rz.getMainModel(), skin, false, skinPointer.getSkinDye(), null, false, 0, false);
             //GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
             GL11.glPopMatrix();
         }

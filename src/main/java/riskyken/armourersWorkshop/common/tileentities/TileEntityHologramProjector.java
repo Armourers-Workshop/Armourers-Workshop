@@ -1,14 +1,14 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 
 public class TileEntityHologramProjector extends AbstractTileEntityInventory {
@@ -87,38 +87,33 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         this.offsetX = x;
         this.offsetY = y;
         this.offsetZ = z;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public void setAngle(int x, int y, int z) {
         this.angleX = x;
         this.angleY = y;
         this.angleZ = z;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public void setRotationOffset(int x, int y, int z) {
         this.rotationOffsetX = x;
         this.rotationOffsetY = y;
         this.rotationOffsetZ = z;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public void setRotationSpeed(int x, int y, int z) {
         this.rotationSpeedX = x;
         this.rotationSpeedY = y;
         this.rotationSpeedZ = z;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public void setShowRotationPoint(boolean showRotationPoint) {
         this.showRotationPoint = showRotationPoint;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public int getOffsetX() {
@@ -179,8 +174,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     
     public void setGlowing(boolean glowing) {
         this.glowing = glowing;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public PowerMode getPowerMode() {
@@ -189,8 +183,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     
     public void setPowerMode(PowerMode powerMode) {
         this.powerMode = powerMode;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     private int readIntFromCompound(NBTTagCompound compound, String key, int defaultValue) {
@@ -216,8 +209,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     public void setPoweredState(boolean powered) {
         if (this.powered != powered) {
             this.powered = powered;
-            markDirty();
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            dirtySync();
         }
     }
     
@@ -283,9 +275,9 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(-2, -2, -2, 3, 3, 3);
-        ForgeDirection dir = ForgeDirection.getOrientation(getBlockMetadata());
-        bb.offset(xCoord, yCoord, zCoord);
+        AxisAlignedBB bb = new AxisAlignedBB(-2, -2, -2, 3, 3, 3);
+        EnumFacing dir = EnumFacing.getFront(getBlockMetadata());
+        bb.offset(getPos());
         
         float scale = 0.0625F;
         

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -14,6 +11,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
@@ -78,14 +78,14 @@ public class GuiToolOptions extends GuiScreen {
         int borderSize = 4;
         GuiUtils.drawContinuousTexturedBox(guiLeft, guiTop, 0, 0, guiWidth, guiHeight, textureWidth, textureHeight, borderSize, zLevel);
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
-        renderGuiTitle(fontRendererObj, guiName);
+        renderGuiTitle(fontRenderer, guiName);
     }
     
     @Override
     protected void keyTyped(char key, int keyCode) {
         super.keyTyped(key, keyCode);
         if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-            this.mc.thePlayer.closeScreen();
+            this.mc.player.closeScreen();
         }
     }
     

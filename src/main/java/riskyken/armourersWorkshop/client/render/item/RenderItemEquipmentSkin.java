@@ -1,22 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.render.SkinItemRenderHelper;
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-
-public class RenderItemEquipmentSkin implements IItemRenderer {
-
+public class RenderItemEquipmentSkin /*implements IItemRenderer*/ {
+/*
     protected final RenderItem renderItem;
     protected final Minecraft mc;
 
@@ -97,5 +82,5 @@ public class RenderItemEquipmentSkin implements IItemRenderer {
             renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
         }
 
-    }
+    }*/
 }

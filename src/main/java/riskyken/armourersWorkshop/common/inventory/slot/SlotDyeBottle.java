@@ -4,12 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.inventory.ContainerDyeTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
-import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class SlotDyeBottle extends Slot {
@@ -64,9 +62,9 @@ public class SlotDyeBottle extends Slot {
         }
         super.onSlotChanged();
     }
-    
+    /*
     @Override
     public IIcon getBackgroundIconIndex() {
         return ClientProxy.dyeBottleSlotIcon;
-    }
+    }*/
 }

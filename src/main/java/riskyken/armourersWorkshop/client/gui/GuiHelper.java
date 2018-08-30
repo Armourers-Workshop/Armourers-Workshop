@@ -6,17 +6,17 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -29,7 +29,7 @@ public final class GuiHelper {
     
     public static void drawPlayerHead(int x, int y, int size, String username) {
         
-        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+        ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
         if (!StringUtils.isNullOrEmpty(username)) {
             PlayerTexture playerTexture = getPlayerTexture(username, TextureType.USER);
             rl = playerTexture.getResourceLocation();  
@@ -39,9 +39,9 @@ public final class GuiHelper {
         int sourceSize = 8;
         
         // Face
-        Gui.func_152125_a(x + 1, y + 1, 8, 8, sourceSize, sourceSize, size, size, 64, 32);
+        Gui.drawScaledCustomSizeModalRect(x + 1, y + 1, 8, 8, sourceSize, sourceSize, size, size, 64, 32);
         // Overlay
-        Gui.func_152125_a(x, y, 40, 8, sourceSize, sourceSize, size + 2, size + 2, 64, 32);
+        Gui.drawScaledCustomSizeModalRect(x, y, 40, 8, sourceSize, sourceSize, size + 2, size + 2, 64, 32);
     }
     
     private static PlayerTexture getPlayerTexture(String textureString, TextureType textureType) {
@@ -62,7 +62,7 @@ public final class GuiHelper {
     
     public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name, String append, int colour) {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + name + ".name";
-        String localizedName = StatCollector.translateToLocal(unlocalizedName);
+        String localizedName = I18n.format(unlocalizedName);
         String renderText = unlocalizedName;
         if (!unlocalizedName.equals(localizedName)){
             renderText = localizedName;
@@ -76,7 +76,7 @@ public final class GuiHelper {
     
     public static String getLocalizedControlName(String guiName, String controlName) {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + controlName;
-        String localizedName = StatCollector.translateToLocal(unlocalizedName);
+        String localizedName = I18n.format(unlocalizedName);
         if (!unlocalizedName.equals(localizedName)){
             return localizedName;
         }

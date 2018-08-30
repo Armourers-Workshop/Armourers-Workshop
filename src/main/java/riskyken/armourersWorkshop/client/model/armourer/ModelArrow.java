@@ -1,17 +1,11 @@
 package riskyken.armourersWorkshop.client.model.armourer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.entity.RenderArrow;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderArrow;
-import net.minecraft.util.ResourceLocation;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.utils.UtilRender;
 
 @SideOnly(Side.CLIENT)
 public class ModelArrow {
@@ -35,6 +29,7 @@ public class ModelArrow {
     }
     
     public void render(float scale, boolean ghost) {
+        /*
         if (displayList == -1) {
             buildDisplayList();
         }
@@ -54,8 +49,9 @@ public class ModelArrow {
         }
         ModRenderHelper.disableAlphaBlend();
         GL11.glPopMatrix();
+        */
     }
-    
+    /*
     private void buildDisplayList() {
         this.displayList = GLAllocation.generateDisplayLists(1);
         GL11.glNewList(this.displayList, GL11.GL_COMPILE);
@@ -103,5 +99,5 @@ public class ModelArrow {
 
         //GL11.glPopMatrix();
         GL11.glEndList();
-    }
+    }*/
 }

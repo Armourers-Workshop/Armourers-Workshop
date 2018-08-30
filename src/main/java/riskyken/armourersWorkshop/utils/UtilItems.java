@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.common.lib.LibCommonTags;
 
@@ -29,7 +30,11 @@ public final class UtilItems {
     }
     
     public static void spawnItemAtEntity(Entity entity, ItemStack stack) {
-        spawnItemInWorld(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
+        spawnItemInWorld(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack);
+    }
+    
+    public static void spawnItemInWorld(World world, BlockPos pos, ItemStack stack) {
+        spawnItemInWorld(world, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
     
     public static void spawnItemInWorld(World world, double x, double y, double z, ItemStack stack) {
@@ -38,6 +43,6 @@ public final class UtilItems {
         double yV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
         double zV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
         EntityItem entityitem = new EntityItem(world, x + xV, y + yV, z + zV, stack);
-        world.spawnEntityInWorld(entityitem);
+        world.spawnEntity(entityitem);
     }
 }

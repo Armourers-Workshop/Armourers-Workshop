@@ -206,7 +206,7 @@ public class GuiWardrobe extends GuiTabbed {
             renderEntityWithoutLighting(0, 0, 35, 0, 0, this.mc.player);
             colour = getColourAtPos(Mouse.getX(), Mouse.getY());
         }
-        GuiInventory.func_147046_a(0, 0, 35, 0, 0, this.mc.player);
+        GuiInventory.drawEntityOnScreen(0, 0, 35, 0, 0, this.mc.player);
         GL11.glPopAttrib();
         GL11.glPopMatrix();
         

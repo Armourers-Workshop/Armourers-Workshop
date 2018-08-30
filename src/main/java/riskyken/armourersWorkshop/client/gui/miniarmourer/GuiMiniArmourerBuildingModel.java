@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
@@ -190,7 +190,7 @@ public class GuiMiniArmourerBuildingModel {
                 MiniCube tarCube = renderCubes.get(cubeId - 1);
                 
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
-                ForgeDirection dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
+                EnumFacing dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
                 newCube.setX((byte) (tarCube.getX() + dir.offsetX));
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
@@ -254,7 +254,7 @@ public class GuiMiniArmourerBuildingModel {
             if (button == 0) {
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
                 newCube.setColour(0xFFFFFFFF);
-                ForgeDirection dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
+                EnumFacing dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
                 newCube.setX((byte) (tarCube.getX() + dir.offsetX));
                 newCube.setY((byte) (tarCube.getY() + dir.offsetY));
                 newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));

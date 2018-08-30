@@ -2,12 +2,15 @@ package riskyken.armourersWorkshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.renderer.entity.RenderArrow;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.renderer.entity.RenderArrow;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -24,14 +27,15 @@ public class RenderSkinnedArrow extends RenderArrow {
     
     private final SkinModelRenderer equipmentModelRenderer;
     
-    public RenderSkinnedArrow() {
+    public RenderSkinnedArrow(RenderManager renderManager) {
+        super(renderManager);
         this.equipmentModelRenderer = SkinModelRenderer.INSTANCE;
     }
     
     @Override
     public void doRender(EntityArrow entityArrow, double x, double y, double z, float yaw, float partialTickTime) {
-        if (entityArrow.shootingEntity != null && entityArrow.shootingEntity instanceof EntityClientPlayerMP) {
-            EntityClientPlayerMP player = (EntityClientPlayerMP) entityArrow.shootingEntity;
+        if (entityArrow.shootingEntity != null && entityArrow.shootingEntity instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) entityArrow.shootingEntity;
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
             if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
                 ISkinPointer skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinBow, 0);
@@ -74,5 +78,11 @@ public class RenderSkinnedArrow extends RenderArrow {
         GL11.glScalef(-1, -1, 1);
         SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinDye, null, true);
         GL11.glPopMatrix();
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(Entity entity) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

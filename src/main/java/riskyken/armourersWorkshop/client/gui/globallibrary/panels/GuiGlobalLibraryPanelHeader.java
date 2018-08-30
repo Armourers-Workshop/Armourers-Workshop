@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -134,7 +135,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     }
     
     private void drawPlayerHead(String username) {
-        ResourceLocation rl = AbstractClientPlayer.locationStevePng;
+        ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
         rl = AbstractClientPlayer.getLocationSkin(username);
         AbstractClientPlayer.getDownloadImageSkin(rl, username);
         mc.renderEngine.bindTexture(rl);
@@ -142,7 +143,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         int sourceSize = 8;
         int targetSize = 16;
         
-        this.func_152125_a(this.x + 5, this.y + 5, 8, 8, sourceSize, sourceSize, targetSize, targetSize, 64, 32);
-        this.func_152125_a(this.x + 4, this.y + 4, 40, 8, sourceSize, sourceSize, targetSize + 2, targetSize + 2, 64, 32);
+        this.drawScaledCustomSizeModalRect(this.x + 5, this.y + 5, 8, 8, sourceSize, sourceSize, targetSize, targetSize, 64, 32);
+        this.drawScaledCustomSizeModalRect(this.x + 4, this.y + 4, 40, 8, sourceSize, sourceSize, targetSize + 2, targetSize + 2, 64, 32);
     }
 }

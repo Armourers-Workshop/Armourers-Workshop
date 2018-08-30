@@ -62,7 +62,7 @@ public class GuiDyeTable extends GuiContainer {
             for (int i = 0; i < 8; i++) {
                 SlotDyeBottle dyeSlot = (SlotDyeBottle) inventorySlots.getSlot(37 + i);
                 if (dyeSlot.isLocked()) {
-                    drawRect(this.guiLeft + dyeSlot.xDisplayPosition, this.guiTop + dyeSlot.yDisplayPosition, this.guiLeft + dyeSlot.xDisplayPosition + 16, this.guiTop + dyeSlot.yDisplayPosition + 16, 0x88FF0000);
+                    drawRect(this.guiLeft + dyeSlot.xPos, this.guiTop + dyeSlot.yPos, this.guiLeft + dyeSlot.xPos + 16, this.guiTop + dyeSlot.yPos + 16, 0x88FF0000);
                 }
             }
         }
@@ -70,8 +70,8 @@ public class GuiDyeTable extends GuiContainer {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntity.getInventoryName());
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 46, this.ySize - 96 + 2, 4210752);
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getInventoryName());
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 46, this.ySize - 96 + 2, 4210752);
         Slot slot = (Slot) inventorySlots.inventorySlots.get(45);
         ItemStack skinStack = slot.getStack();
         ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
@@ -143,8 +143,8 @@ public class GuiDyeTable extends GuiContainer {
     private int mouseOverDyeSlot(int mouseX, int mouseY) {
         for (int i = 0; i < 8; i++) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(37 + i);
-            if (mouseX - guiLeft >= slot.xDisplayPosition & mouseX - guiLeft <= slot.xDisplayPosition + 16) {
-                if (mouseY - guiTop >= slot.yDisplayPosition & mouseY - guiTop <= slot.yDisplayPosition + 16) {
+            if (mouseX - guiLeft >= slot.xPos & mouseX - guiLeft <= slot.xPos + 16) {
+                if (mouseY - guiTop >= slot.yPos & mouseY - guiTop <= slot.yPos + 16) {
                     return i;
                 }
             }

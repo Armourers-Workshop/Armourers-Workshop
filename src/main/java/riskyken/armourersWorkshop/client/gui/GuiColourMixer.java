@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -15,6 +13,8 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiColourSelector;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -62,7 +62,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         buttonList.add(slidersHSB[0]);
         buttonList.add(slidersHSB[1]);
         buttonList.add(slidersHSB[2]);
-        colourHex = new GuiTextField(fontRendererObj, this.guiLeft + 5, this.guiTop + 90, 50, 10);
+        colourHex = new GuiTextField(-1, fontRenderer, this.guiLeft + 5, this.guiTop + 90, 50, 10);
         colourHex.setMaxStringLength(7);
         updateHexTextbox();
         colourSelector = new GuiColourSelector(3, this.guiLeft + 5, this.guiTop + 110, 82, 22, 10, 10, 8, guiTexture);
@@ -184,8 +184,8 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntityColourMixer.getInventoryName());
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntityColourMixer.getInventoryName());
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
         
         String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hue");
         String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.saturation");
@@ -194,12 +194,12 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.presets");
         String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.paintType");
         
-        this.fontRendererObj.drawString(labelHue + ":", 5, 21, 4210752);
-        this.fontRendererObj.drawString(labelSaturation + ":", 5, 41, 4210752);
-        this.fontRendererObj.drawString(labelBrightness + ":", 5, 61, 4210752);
-        this.fontRendererObj.drawString(labelHex + ":", 5, 81, 4210752);
-        this.fontRendererObj.drawString(labelPresets + ":", 5, 101, 4210752);
-        this.fontRendererObj.drawString(labelPaintType + ":", 171, 21, 4210752);
+        this.fontRenderer.drawString(labelHue + ":", 5, 21, 4210752);
+        this.fontRenderer.drawString(labelSaturation + ":", 5, 41, 4210752);
+        this.fontRenderer.drawString(labelBrightness + ":", 5, 61, 4210752);
+        this.fontRenderer.drawString(labelHex + ":", 5, 81, 4210752);
+        this.fontRenderer.drawString(labelPresets + ":", 5, 101, 4210752);
+        this.fontRenderer.drawString(labelPaintType + ":", 171, 21, 4210752);
     }
     
     @Override

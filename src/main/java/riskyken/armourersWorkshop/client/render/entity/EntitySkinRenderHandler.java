@@ -71,7 +71,7 @@ public final class EntitySkinRenderHandler {
             }
             Minecraft.getMinecraft().mcProfiler.startSection("wandOfStyleRender");
             ModRenderHelper.enableAlphaBlend();
-            renderer.render(entity, event.getRenderer(), event.getX(), event.getY(), event.getZ(), props.getEquipmentData());
+            //renderer.render(entity, event.getRenderer(), event.getX(), event.getY(), event.getZ(), props.getEquipmentData());
             ModRenderHelper.disableAlphaBlend();
             Minecraft.getMinecraft().mcProfiler.endSection();
         }

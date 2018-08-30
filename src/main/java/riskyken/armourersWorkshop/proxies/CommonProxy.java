@@ -9,10 +9,8 @@ import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -150,14 +148,6 @@ public class CommonProxy implements ILibraryCallback {
     
     public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin, SendType sendType) {
         
-    }
-    
-    public int getBlockRenderType(Block block) {
-        return 0;
-    }
-    
-    public MinecraftServer getServer() {
-        return MinecraftServer.getServer();
     }
 
     public void skinLibraryCommand(EntityPlayerMP player, SkinLibraryCommand command, LibraryFile file, boolean publicList) {

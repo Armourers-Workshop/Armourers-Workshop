@@ -1,38 +1,17 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
-import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
-import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
-import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-
-public class RenderItemBowSkin extends RenderItemEquipmentSkin {
-    
-    private final IItemRenderer itemRenderer;
+public class RenderItemBowSkin/* extends RenderItemEquipmentSkin*/ {
+    /*
+    //private final IItemRenderer itemRenderer;
     
     public RenderItemBowSkin(IItemRenderer itemRenderer) {
         super();
-        this.itemRenderer = itemRenderer;
+        //this.itemRenderer = itemRenderer;
     }
     
     @Override
     public boolean handleRenderType(ItemStack stack, ItemRenderType type) {
+        
         if (canRenderModel(stack)) {
             if (type == ItemRenderType.INVENTORY) {
                 if (itemRenderer != null) {
@@ -50,6 +29,8 @@ public class RenderItemBowSkin extends RenderItemEquipmentSkin {
                 return false;
             }
         }
+        
+        return false;
     }
     
     @Override
@@ -90,11 +71,12 @@ public class RenderItemBowSkin extends RenderItemEquipmentSkin {
             boolean hasArrow = false;
             
             if (data.length >= 2) {
+                
                 if (data[1] instanceof AbstractClientPlayer & data[0] instanceof RenderBlocks) {
-                    RenderBlocks renderBlocks = (RenderBlocks) data[0];
+                    //RenderBlocks renderBlocks = (RenderBlocks) data[0];
                     player = (AbstractClientPlayer) data[1];
-                    useCount = player.getItemInUseDuration();
-                    hasArrow = player.inventory.hasItem(Items.arrow);
+                    //useCount = player.getItemInUseCount();
+                    //hasArrow = player.inventory.hasItem(Items.ARROW);
                     IEntityEquipment entityEquipment = SkinModelRenderer.INSTANCE.getPlayerCustomEquipmentData(player);
                     if (!hasArrow) {
                         if (player.capabilities.isCreativeMode) {
@@ -102,6 +84,7 @@ public class RenderItemBowSkin extends RenderItemEquipmentSkin {
                         }
                     }
                 }
+                
             }
             
             float scale = 0.0625F;
@@ -219,5 +202,5 @@ public class RenderItemBowSkin extends RenderItemEquipmentSkin {
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
         icon = stack.getItem().getIcon(stack, 1);
         renderItem.renderIcon(0, 0, icon, icon.getIconWidth(), icon.getIconHeight());
-    }
+    }*/
 }

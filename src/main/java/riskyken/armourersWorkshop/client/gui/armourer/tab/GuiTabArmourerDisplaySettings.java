@@ -43,7 +43,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        String guiName = tileEntity.getInventoryName();
+        String guiName = tileEntity.getName();
         
         buttonList.clear();
         
@@ -57,8 +57,8 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         textUserSkin.setText(tileEntity.getTexture().getTextureString());
         
         textureTypeList = new GuiDropDownList(0, 10, 30, 50, "", this);
-        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.user"), TextureType.USER.toString(), true);
-        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.url"), TextureType.URL.toString(), true);
+        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.user"), TextureType.USER.toString(), true);
+        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.url"), TextureType.URL.toString(), true);
         textureTypeList.setListSelectedIndex(tileEntity.getTexture().getTextureType().ordinal());
         
         buttonList.add(checkShowGuides);
@@ -124,9 +124,9 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
     
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY) {
-        String labelSkinType = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.skinType");
-        String usernameLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.username");
-        String urlLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.url");
+        String labelSkinType = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.skinType");
+        String usernameLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.username");
+        String urlLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.url");
         this.fontRenderer.drawString(labelSkinType, 10, 20, 4210752);
         if (textureTypeList.getListSelectedIndex() == 0) {
             this.fontRenderer.drawString(usernameLabel, 10, 60, 4210752);

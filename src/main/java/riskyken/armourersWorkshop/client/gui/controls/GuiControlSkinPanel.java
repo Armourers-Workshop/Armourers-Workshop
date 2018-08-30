@@ -208,7 +208,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 int frames = 18;
                 
                 int frame = (int) ((System.currentTimeMillis() / (long)speed) % frames);
-                int u = MathHelper.floor_double(frame / 9);
+                int u = MathHelper.floor(frame / 9);
                 int v = frame - u * 9;
                 
                 Gui.drawScaledCustomSizeModalRect(

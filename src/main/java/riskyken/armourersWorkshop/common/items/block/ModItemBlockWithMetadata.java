@@ -3,16 +3,16 @@ package riskyken.armourersWorkshop.common.items.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlockWithMetadata;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.common.creativetab.ISortOrder;
 
-public class ModItemBlockWithMetadata extends ItemBlockWithMetadata implements ISortOrder {
+public class ModItemBlockWithMetadata extends ItemBlock implements ISortOrder {
 
     public ModItemBlockWithMetadata(Block block) {
-        super(block, block);
+        super(block);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ModItemBlockWithMetadata extends ItemBlockWithMetadata implements I
 
     @Override
     public String getUnlocalizedName(ItemStack itemstack) {
-        return field_150939_a.getUnlocalizedName() + itemstack.getItemDamage();
+        return block.getUnlocalizedName() + itemstack.getItemDamage();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ModItemBlockWithMetadata extends ItemBlockWithMetadata implements I
         String localized;
 
         unlocalized = itemStack.getUnlocalizedName() + ".flavour";
-        localized = StatCollector.translateToLocal(unlocalized);
+        localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");
@@ -48,8 +48,8 @@ public class ModItemBlockWithMetadata extends ItemBlockWithMetadata implements I
 
     @Override
     public int getSortPriority() {
-        if (field_150939_a instanceof ISortOrder) {
-            return ((ISortOrder)field_150939_a).getSortPriority();
+        if (block instanceof ISortOrder) {
+            return ((ISortOrder)block).getSortPriority();
         }
         return 100;
     }

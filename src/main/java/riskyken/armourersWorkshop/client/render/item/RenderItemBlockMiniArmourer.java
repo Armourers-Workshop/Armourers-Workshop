@@ -1,13 +1,7 @@
 package riskyken.armourersWorkshop.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
-import riskyken.armourersWorkshop.client.model.block.ModelBlockArmourer;
-
-public class RenderItemBlockMiniArmourer implements IItemRenderer {
-
+public class RenderItemBlockMiniArmourer /*implements IItemRenderer*/ {
+/*
     private static final ModelBlockArmourer modelArmourer = new ModelBlockArmourer();
     
     @Override
@@ -33,5 +27,5 @@ public class RenderItemBlockMiniArmourer implements IItemRenderer {
         }
         modelArmourer.render(null, 0, scale);
         GL11.glPopMatrix();
-    }
+    }*/
 }

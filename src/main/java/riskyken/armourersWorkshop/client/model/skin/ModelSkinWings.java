@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.common.ApiRegistrar;
@@ -32,10 +32,10 @@ public class ModelSkinWings extends AbstractModelSkin  {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
-            this.heldItemRight = 0;
+            /*this.heldItemRight = 0;
             if (player.getHeldItem() != null) {
                 this.heldItemRight = 1;
-            }
+            }*/
         }
         
         if (ClientProxy.isJrbaClientLoaded()) {
@@ -81,7 +81,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
-        ForgeDirection axis = ForgeDirection.DOWN;
+        EnumFacing axis = EnumFacing.DOWN;
         
         if (part.getMarkerCount() > 0) {
             point = part.getMarker(0);
@@ -112,8 +112,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
             break;
         case WEST:
             GL11.glRotated(angle, -1, 0, 0);
-            break;
-        case UNKNOWN:
             break;
         }
         
@@ -127,7 +125,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
     private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
-        ForgeDirection axis = ForgeDirection.DOWN;
+        EnumFacing axis = EnumFacing.DOWN;
         
         if (part.getMarkerCount() > 0) {
             point = part.getMarker(0);
@@ -158,8 +156,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
             break;
         case WEST:
             GL11.glRotated(angle, -1, 0, 0);
-            break;
-        case UNKNOWN:
             break;
         }
         

@@ -50,7 +50,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        String guiName = tileEntity.getInventoryName();
+        String guiName = tileEntity.getName();
         
         buttonList.clear();
         
@@ -162,9 +162,9 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         super.drawForegroundLayer(mouseX, mouseY);
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.height - 96 + 2, 4210752);
     
-        String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.itemName");
+        String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.itemName");
         
-        String cloneLabel = GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "label.clone");
+        String cloneLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.clone");
         String versionLabel = "Beta: " + LibModInfo.VERSION;
         
         this.fontRenderer.drawString(itemNameLabel, 64, 48, 4210752);

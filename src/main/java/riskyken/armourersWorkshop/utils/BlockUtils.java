@@ -7,10 +7,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.common.blocks.BlockColourable;
@@ -24,18 +24,18 @@ public final class BlockUtils {
     
     public static int determineOrientation(int x, int y, int z, EntityLivingBase entity) {
         if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
-            double d0 = entity.posY + entity.getEyeHeight() - (double) entity.yOffset;
+            double d0 = entity.posY + entity.getEyeHeight() - (double) entity.getYOffset();
 
             if (d0 - (double) y > 2.0D) { return 1; }
             if ((double) y - d0 > 0.0D) { return 0; }
         }
 
-        int l = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int l = MathHelper.floor((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
     }
     
     public static int determineOrientationSide(EntityLivingBase entity) {
-        int rotation = MathHelper.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int rotation = MathHelper.floor((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         rotation = determineOrientationSideMeta(rotation);
         return rotation;
     }
@@ -50,16 +50,16 @@ public final class BlockUtils {
         return metadata == 0 ? 3 : (metadata == 3 ? 5 : (metadata == 1 ? 4 : 2));
     }
     
-    public static ForgeDirection determineDirectionSideMeta(int metadata) {
-        return ForgeDirection.getOrientation(determineOrientationSideMeta(metadata));
+    public static EnumFacing determineDirectionSideMeta(int metadata) {
+        return EnumFacing.getFront(determineOrientationSideMeta(metadata));
     }
     
-    public static ForgeDirection determineDirectionSide(EntityLivingBase entity) {
-        return ForgeDirection.getOrientation(determineOrientationSide(entity));
+    public static EnumFacing determineDirectionSide(EntityLivingBase entity) {
+        return EnumFacing.getFront(determineOrientationSide(entity));
     }
     
-    public static int getColourFromTileEntity(World world, int x, int y, int z, int side) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    public static int getColourFromTileEntity(World world, BlockPos pos, int side) {
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour(side);
         }
@@ -74,39 +74,30 @@ public final class BlockUtils {
         return new CubeColour();
     }
     
-   @Deprecated
-    public static ICubeColour getColourFromTileEntity(World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-        if (te != null & te instanceof IPantable) {
-            return ((IPantable)te).getColour();
-        }
-        return new CubeColour();
-    }
-    
-    public static void dropInventoryBlocks(World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    public static void dropInventoryBlocks(World world, BlockPos pos) {
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IInventory) {
-            dropInventoryBlocks(world, (IInventory)te, x, y, z);
+            dropInventoryBlocks(world, (IInventory)te, pos);
         }
     }
     
-    public static void dropInventoryBlocks(World world, IInventory inventory, int x, int y, int z) {
+    public static void dropInventoryBlocks(World world, IInventory inventory, BlockPos pos) {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (stack != null) {
-                UtilItems.spawnItemInWorld(world, x, y, z, stack);
+                UtilItems.spawnItemInWorld(world, pos, stack);
             }
         }
     }
     
     public static ArrayList<BlockLocation> findTouchingBlockFaces(World world, int x, int y, int z, int side, int radius) {
-        ForgeDirection dir = ForgeDirection.getOrientation(side);
+        EnumFacing dir = EnumFacing.getFront(side);
         ArrayList<BlockLocation> blockFaces = new ArrayList<BlockLocation>();
         ArrayList<BlockLocation> openList = new ArrayList<BlockLocation>();
         ArrayList<BlockLocation> closedList = new ArrayList<BlockLocation>();
         
         openList.add(new BlockLocation(x, y ,z).offset(dir));
-        ForgeDirection[] sides = ForgeDirection.VALID_DIRECTIONS;
+        EnumFacing[] sides = EnumFacing.VALUES;
         
         while (!openList.isEmpty()) {
             BlockLocation loc = openList.get(0);

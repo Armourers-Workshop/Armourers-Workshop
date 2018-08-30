@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.model.SkinModel;
@@ -36,8 +36,8 @@ public class SkinPartRenderer extends ModelBase {
     }
     
     public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
-        int lod = MathHelper.floor_double(distance / ConfigHandlerClient.lodDistance);
-        lod = MathHelper.clamp_int(lod, 0, ConfigHandlerClient.maxLodLevels);
+        int lod = MathHelper.floor(distance / ConfigHandlerClient.lodDistance);
+        lod = MathHelper.clamp(lod, 0, ConfigHandlerClient.maxLodLevels);
         renderPart(skinPart, scale, skinDye, extraColour, lod, doLodLoading);
     }
     

@@ -7,8 +7,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -53,17 +53,18 @@ public class TileEntityBoundingBox extends TileEntity {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger(TAG_PARENT_X, this.parentX);
-        compound.setInteger(TAG_PARENT_Y, this.parentY);
-        compound.setInteger(TAG_PARENT_Z, this.parentZ);
+        compound.setInteger(TAG_PARENT_X, this.parent.getX());
+        compound.setInteger(TAG_PARENT_Y, this.parent.getY());
+        compound.setInteger(TAG_PARENT_Z, this.parent.getZ());
         compound.setByte(TAG_GUIDE_X, this.guideX);
         compound.setByte(TAG_GUIDE_Y, this.guideY);
         compound.setByte(TAG_GUIDE_Z, this.guideZ);
         if (this.skinPart != null) {
             compound.setString(TAG_SKIN_PART, this.skinPart.getRegistryName());
         }
+        return compound;
     }
     
     @Override
@@ -121,8 +122,8 @@ public class TileEntityBoundingBox extends TileEntity {
     }
     
     public boolean isPaintableSide(int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
-        if (worldObj.getBlock(xCoord + sideBlock.offsetX, yCoord + sideBlock.offsetY, zCoord + sideBlock.offsetZ) == getBlockType()) {
+        EnumFacing sideBlock = EnumFacing.getFront(side);
+        if (getWorld().getBlock(xCoord + sideBlock.offsetX, yCoord + sideBlock.offsetY, zCoord + sideBlock.offsetZ) == getBlockType()) {
             return false;
         }
         return true;

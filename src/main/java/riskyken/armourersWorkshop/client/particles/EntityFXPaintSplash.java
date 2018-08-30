@@ -1,24 +1,11 @@
 package riskyken.armourersWorkshop.client.particles;
 
-import java.awt.Color;
-
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.client.render.IRenderBuffer;
-import riskyken.armourersWorkshop.client.render.RenderBridge;
-import riskyken.armourersWorkshop.common.lib.LibModInfo;
-import riskyken.armourersWorkshop.utils.UtilRender;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntityFXPaintSplash extends EntityFX {
-    
+public class EntityFXPaintSplash /*extends EntityFX*/ {
+    /*
     private static final ResourceLocation paintSplashTextures = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/particles/paintSplash.png");
     private static final ResourceLocation particleTextures = ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "field_110737_b", "b");
     
@@ -115,5 +102,5 @@ public class EntityFXPaintSplash extends EntityFX {
         renderBuffer.draw();
         UtilRender.bindTexture(particleTextures);
         renderBuffer.startDrawingQuads();
-    }
+    }*/
 }

@@ -2,11 +2,11 @@ package riskyken.armourersWorkshop.client.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinnable;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -46,12 +46,12 @@ public class GuiSkinnable extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
         if (tileEntity.hasCustomName()) {
             String name = tileEntity.getCustomName();
-            int width = fontRendererObj.getStringWidth(name);
-            fontRendererObj.drawString(name, this.xSize / 2 - width / 2, 6, 4210752);
+            int width = fontRenderer.getStringWidth(name);
+            fontRenderer.drawString(name, this.xSize / 2 - width / 2, 6, 4210752);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, LibBlockNames.SKINNABLE);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, LibBlockNames.SKINNABLE);
         }
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
     }
 
     @Override

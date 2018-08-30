@@ -12,12 +12,7 @@ public class TileEntityDyeTable extends AbstractTileEntityInventory {
     }
     
     @Override
-    public boolean canUpdate() {
-        return false;
-    }
-    
-    @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.DYE_TABLE;
     }
     

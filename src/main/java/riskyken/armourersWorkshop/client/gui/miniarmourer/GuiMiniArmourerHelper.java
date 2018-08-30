@@ -6,9 +6,9 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.common.util.ForgeDirection;
 
 @SideOnly(Side.CLIENT)
 public final class GuiMiniArmourerHelper {
@@ -51,29 +51,26 @@ public final class GuiMiniArmourerHelper {
         return new Color(r, g, b);
     }
     
-    public static ForgeDirection getDirectionForCubeFace(int cubeFace) {
-        ForgeDirection dir;
+    public static EnumFacing getDirectionForCubeFace(int cubeFace) {
+        EnumFacing dir = null;
         switch (cubeFace) {
         case 1:
-            dir = ForgeDirection.EAST;
+            dir = EnumFacing.EAST;
             break;
         case 0:
-            dir = ForgeDirection.WEST;
+            dir = EnumFacing.WEST;
             break;
         case 4:
-            dir = ForgeDirection.DOWN;
+            dir = EnumFacing.DOWN;
             break;
         case 5:
-            dir = ForgeDirection.UP;
+            dir = EnumFacing.UP;
             break;
         case 3:
-            dir = ForgeDirection.NORTH;
+            dir = EnumFacing.NORTH;
             break;
         case 2:
-            dir = ForgeDirection.SOUTH;
-            break;
-        default:
-            dir = ForgeDirection.UNKNOWN;
+            dir = EnumFacing.SOUTH;
             break;
         }
         return dir;

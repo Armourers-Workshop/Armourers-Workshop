@@ -6,30 +6,20 @@ import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.item.Item;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ICrashCallable;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,17 +33,10 @@ import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
 import riskyken.armourersWorkshop.client.handler.PlayerTextureHandler;
 import riskyken.armourersWorkshop.client.handler.RehostedJarHandler;
 import riskyken.armourersWorkshop.client.handler.SkinPreviewHandler;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.library.ClientLibraryManager;
-import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.client.render.block.RenderBlockColourMixer;
-import riskyken.armourersWorkshop.client.render.block.RenderBlockGlowing;
 import riskyken.armourersWorkshop.client.render.entity.EntitySkinRenderHandler;
-import riskyken.armourersWorkshop.client.render.entity.RenderSkinnedArrow;
-import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
-import riskyken.armourersWorkshop.client.render.item.RenderItemMannequin;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockArmourer;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockColourable;
 import riskyken.armourersWorkshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
@@ -65,12 +48,8 @@ import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.client.texture.PlayerTextureDownloader;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
-import riskyken.armourersWorkshop.common.blocks.BlockColourMixer;
-import riskyken.armourersWorkshop.common.blocks.BlockColourable;
-import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
@@ -82,7 +61,6 @@ import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
-import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
@@ -130,31 +108,36 @@ public class ClientProxy extends CommonProxy {
         new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
         new SkinPreviewHandler();
+        /*
         Render arrowRender = new RenderSkinnedArrow();
         arrowRender.setRenderManager(RenderManager.instance);
         RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
-        
+        */
         //Register tile entity renderers.
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourer.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMiniArmourer.class, new RenderBlockMiniArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockColourable());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockColourable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
         
         //Register item renderers.
+        /*
         ModelMannequin modelSteve = new ModelMannequin(false);
         ModelMannequin modelAlex = new ModelMannequin(true);
+        
         MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
         //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelSteve, modelAlex));
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelSteve, modelAlex));
         
+        
         //Register block renderers.
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
+        */
     }
     
     @Override
@@ -196,17 +179,6 @@ public class ClientProxy extends CommonProxy {
                 return "Armourer's Workshop";
             }
         });
-    }
-    
-    @SubscribeEvent
-    public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-        if (event.getMap().getTextureType() == 1) {
-            dyeBottleSlotIcon = event.map.registerIcon(LibItemResources.SLOT_DYE_BOTTLE);
-            iconSkinPickaxe = event.map.registerIcon(LibItemResources.SLOT_SKIN_PICKAXE);
-            iconSkinAxe = event.map.registerIcon(LibItemResources.SLOT_SKIN_AXE);
-            iconSkinHoe = event.map.registerIcon(LibItemResources.SLOT_SKIN_HOE);
-            iconSkinShovel = event.map.registerIcon(LibItemResources.SLOT_SKIN_SHOVEL);
-        }
     }
     
     private void enableValentinsClouds() {
@@ -362,25 +334,6 @@ public class ClientProxy extends CommonProxy {
             }
             break;
         }
-    }
-    
-    @Override
-    public int getBlockRenderType(Block block) {
-        if (block instanceof BlockColourable) {
-            return RenderBlockGlowing.renderId;
-        }
-        if (block instanceof BlockColourMixer) {
-            return RenderBlockColourMixer.renderId;
-        }
-        return super.getBlockRenderType(block);
-    }
-    
-    @Override
-    public MinecraftServer getServer() {
-        if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
-            return Minecraft.getMinecraft().getIntegratedServer();
-        }
-        return super.getServer();
     }
     
     @Override

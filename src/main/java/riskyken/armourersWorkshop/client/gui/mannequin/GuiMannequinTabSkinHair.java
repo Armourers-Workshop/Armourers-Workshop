@@ -5,14 +5,14 @@ import java.awt.image.BufferedImage;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
@@ -143,7 +143,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     private BufferedImage getBufferedImage(ResourceLocation rl) {
         BufferedImage buff = SkinHelper.getBufferedImageSkin(rl);
         if (buff == null) {
-            buff = SkinHelper.getBufferedImageSkin(AbstractClientPlayer.locationStevePng);
+            buff = SkinHelper.getBufferedImageSkin(DefaultPlayerSkin.getDefaultSkinLegacy());
         }
         return buff;
     }

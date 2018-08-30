@@ -1,10 +1,10 @@
 package riskyken.armourersWorkshop.common.items.paintingtool;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.client.particles.EntityFXPaintSplash;
 import riskyken.armourersWorkshop.client.particles.ParticleManager;
@@ -33,7 +33,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     protected void spawnPaintParticles (World world, int x, int y, int z, int side, int colour) {
         for (int i = 0; i < 3; i++) {
             EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
-                    colour, ForgeDirection.getOrientation(side));
+                    colour, EnumFacing.getFront(side));
             ParticleManager.INSTANCE.spawnParticle(world, particle);
         }
     }

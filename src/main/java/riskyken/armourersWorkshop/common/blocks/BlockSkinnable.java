@@ -9,6 +9,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
@@ -17,13 +18,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -39,7 +38,6 @@ import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
@@ -65,25 +63,25 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+    public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
         if (!world.isRemote) {
-            TileEntitySkinnable te = getTileEntity(world, x, y, z);
+            TileEntitySkinnable te = getTileEntity(world, pos);
             if (te != null && te.getInventory() != null) {
-                BlockUtils.dropInventoryBlocks(world, te.getInventory(), x, y, z);
+                BlockUtils.dropInventoryBlocks(world, te.getInventory(), pos);
             }
-            dropSkin(world, x, y, z, false);
+            dropSkin(world, pos, false);
         }
-        world.removeTileEntity(x, y, z);
-        super.onBlockExploded(world, x, y, z, explosion);
+        world.removeTileEntity(pos);
+        super.onBlockExploded(world, pos, explosion);
     }
     
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntitySkinnable te = getTileEntity(worldIn, pos);
         if (te != null && te.getInventory() != null) {
-            BlockUtils.dropInventoryBlocks(world, te.getInventory(), x, y, z);
+            BlockUtils.dropInventoryBlocks(worldIn, te.getInventory(), x, y, z);
         }
-        super.breakBlock(world, x, y, z, block, meta);
+        super.breakBlock(worldIn, pos, state);
     }
     
     @Override
@@ -125,7 +123,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     private boolean sitOnSeat(World world, int x, int y, int z, EntityPlayer player, Skin skin) {
-        List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1));
+        List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1));
         if (seats.size() == 0) {
             Point3D point = null;
             if (skin.getParts().get(0).getMarkerCount() > 0) {
@@ -136,14 +134,14 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             int rotation = world.getBlockMetadata(x, y, z);
             skin.getParts().get(0).getMarker(0);
             Seat seat = new Seat(world, x, y, z, point, rotation);
-            world.spawnEntityInWorld(seat);
+            world.spawnEntity(seat);
             player.mountEntity(seat);                   
             return true;
         }
         return false;
     }
-    
-    private boolean sleepInBed(World world, int x, int y, int z, EntityPlayer player, Skin skin, ForgeDirection direction, TileEntitySkinnable tileEntity) {
+    /*
+    private boolean sleepInBed(World world, BlockPos pos, EntityPlayer player, Skin skin, EnumFacing direction, TileEntitySkinnable tileEntity) {
         if (world.isRemote) {
             return true;
         }
@@ -155,20 +153,20 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             point = new Point3D(0, 0, 16);
         }
         
-        int xBlockOffset = MathHelper.floor_double(((double)point.getX() + 8) / 16D);
-        int zBlockOffset = MathHelper.floor_double(((double)point.getZ() + 8) / 16D);
+        int xBlockOffset = MathHelper.floor(((double)point.getX() + 8) / 16D);
+        int zBlockOffset = MathHelper.floor(((double)point.getZ() + 8) / 16D);
         
         int xOffset = (point.getX() + 8) - x * 16;
         int zOffset = (point.getY() + 8) - y * 16;
         
-        x -= xBlockOffset * direction.offsetZ + zBlockOffset * direction.offsetX;;
-        z -= zBlockOffset * direction.offsetZ + xBlockOffset * direction.offsetX;
+        x -= xBlockOffset * direction.getFrontOffsetZ() + zBlockOffset * direction.getFrontOffsetX();;
+        z -= zBlockOffset * direction.getFrontOffsetZ() + xBlockOffset * direction.getFrontOffsetX();
         
         float scale = 1F / 16F;
         
-        EntityPlayer.EnumStatus enumstatus = player.sleepInBedAt(x, y, z);
+        EntityPlayer.SleepResult enumstatus = player.trySleep(pos);
 
-        if (enumstatus == EntityPlayer.EnumStatus.OK) {
+        if (enumstatus == EntityPlayer.SleepResult.OK) {
             tileEntity.setBedOccupied(true);
             ModLogger.log("sleeping!");
             
@@ -189,7 +187,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             }
             return true;
         }
-    }
+    }*/
     /*
     private EntityPlayer.EnumStatus putPlayerToSleep(EntityPlayer player, int x, int y, int z) {
         PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(player, x, y, z);
@@ -264,9 +262,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         return EntityPlayer.EnumStatus.OK;
     }
     */
+    /*
     @Override
-    public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player) {
-        Skin skin = getSkin(world, x, y, z);
+    public boolean isBed(IBlockAccess world, BlockPos pos, EntityLivingBase player) {
+        Skin skin = getSkin(world, pos);
         if (skin != null) {
             return SkinProperties.PROP_BLOCK_BED.getValue(skin.getProperties());
         }
@@ -274,16 +273,16 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public void setBedOccupied(IBlockAccess world, int x, int y, int z, EntityPlayer player, boolean occupied) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+    public void setBedOccupied(IBlockAccess world, BlockPos pos, EntityPlayer player, boolean occupied) {
+        TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
             te.setBedOccupied(occupied);
         }
     }
     
     @Override
-    public int getBedDirection(IBlockAccess world, int x, int y, int z) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+    public int getBedDirection(IBlockAccess world, BlockPos pos) {
+        TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
             switch (te.getRotation()) {
             case NORTH:
@@ -312,7 +311,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
         return false;
     }
-    
+    */
     @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
         if (entity instanceof Seat) {
@@ -355,7 +354,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public boolean canCollideCheck(int meta, boolean holdingBoat) {
+    public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
         if (!ArmourersWorkshop.isDedicated()) {
             return !checkCameraCollide();
         }
@@ -364,8 +363,8 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     
     @SideOnly(Side.CLIENT)
     public boolean checkCameraCollide() {
-        if (Minecraft.getMinecraft().thePlayer != null) {
-            if (!Minecraft.getMinecraft().thePlayer.isRiding()) {
+        if (Minecraft.getMinecraft().player != null) {
+            if (!Minecraft.getMinecraft().player.isRiding()) {
                 return false;
             }
         }
@@ -385,23 +384,23 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+    public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+        TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
-            ForgeDirection dir = getFacingDirection(world, x, y, z);
-            if (dir == ForgeDirection.NORTH) {
+            EnumFacing dir = getFacingDirection(world, x, y, z);
+            if (dir == EnumFacing.NORTH) {
                 te.setBoundsOnBlock(this, 1, 0, 0);
                 return;
             }
-            if (dir == ForgeDirection.EAST) {
+            if (dir == EnumFacing.EAST) {
                 te.setBoundsOnBlock(this, 0, 0, 1);
                 return;
             }
-            if (dir == ForgeDirection.SOUTH) {
+            if (dir == EnumFacing.SOUTH) {
                 te.setBoundsOnBlock(this, 1, 0, 2);
                 return;
             }
-            if (dir == ForgeDirection.WEST) {
+            if (dir == EnumFacing.WEST) {
                 te.setBoundsOnBlock(this, 2, 0, 1);
                 return;
             }
@@ -409,28 +408,28 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         setBlockBounds(0, 0, 0, 1, 1, 1);
     }
     
-    private TileEntitySkinnable getTileEntity(IBlockAccess world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    private TileEntitySkinnable getTileEntity(IBlockAccess world, BlockPos pos) {
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntitySkinnable) {
             return (TileEntitySkinnable) te;
         } else {
-            ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d has no tile entity.", x, y, z));
+            ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d has no tile entity.", pos.getX(), pos.getY(), pos.getZ()));
         }
         return null;
     }
     
-    private SkinPointer getSkinPointer(IBlockAccess world, int x, int y, int z) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+    private SkinPointer getSkinPointer(IBlockAccess world, BlockPos pos) {
+        TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
             return te.getSkinPointer();
         } else {
-            ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d has no skin data.", x, y, z));
+            ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d has no skin data.", pos.getX(), pos.getY(), pos.getZ()));
         }
         return null;
     }
     
-    private Skin getSkin(IBlockAccess world, int x, int y, int z) {
-        SkinPointer skinPointer = getSkinPointer(world, x, y, z);
+    private Skin getSkin(IBlockAccess world, BlockPos pos) {
+        SkinPointer skinPointer = getSkinPointer(world, pos);
         if (skinPointer != null) {
             return SkinUtils.getSkinDetectSide(skinPointer, true, true);
         }
@@ -438,8 +437,8 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
-        Skin skin = getSkin(world, x, y, z);
+    public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity) {
+        Skin skin = getSkin(world, pos);
         if (skin != null) {
             return SkinProperties.PROP_BLOCK_LADDER.getValue(skin.getProperties());
         }
@@ -447,40 +446,39 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
-        SkinPointer skinPointer = getSkinPointer(world, x, y, z);
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        SkinPointer skinPointer = getSkinPointer(world, pos);
         if (skinPointer != null) {
             ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
             return returnStack;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
     
     @Override
-    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-        return new ArrayList<ItemStack>();
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
     }
     
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-        dropSkin(world, x, y, z, player.capabilities.isCreativeMode);
-        return super.removedByPlayer(world, player, x, y, z, willHarvest);
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        dropSkin(world, pos, player.capabilities.isCreativeMode);
+        return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
     
-    private void dropSkin(World world, int x, int y, int z, boolean isCreativeMode) {
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+    private void dropSkin(World world, BlockPos pos, boolean isCreativeMode) {
+        TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
             SkinPointer skinPointer = te.getSkinPointer();
             if (skinPointer != null) {
                 if (!isCreativeMode) {
                     ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);
                     SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
-                    UtilItems.spawnItemInWorld(world, x, y, z, skinStack);
+                    UtilItems.spawnItemInWorld(world, pos, skinStack);
                 }
                 te.killChildren(world);
             } else {
-                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", x, y, z));
+                ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d had no skin data.", pos.getX(), pos.getY(), pos.getZ()));
             }
         }
     }
@@ -489,11 +487,11 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         return getFacingDirection(world.getBlockMetadata(x, y, z));
     }
     
-    public ForgeDirection getFacingDirection(int metadata) {
+    public EnumFacing getFacingDirection(int metadata) {
         return convertMetadataToDirection(metadata);
     }
     
-    public void setFacingDirection(World world, int x, int y, int z, ForgeDirection direction) {
+    public void setFacingDirection(World world, int x, int y, int z, EnumFacing direction) {
         setFacingDirection(world, x, y, z, direction.ordinal());
     }
     
@@ -501,25 +499,25 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
     }
     
-    public int convertDirectionToMetadata(ForgeDirection direction) {
+    public int convertDirectionToMetadata(EnumFacing direction) {
         int meta = direction.ordinal();
         return meta == 2 ? 4 : (meta == 3 ? 2 : (meta == 4 ? 3 : (meta == 5 ? 5 : 2)));
     }
     
-    public ForgeDirection convertMetadataToDirection(int metadata) {
+    public EnumFacing convertMetadataToDirection(int metadata) {
         if (metadata == 5) {
-            return ForgeDirection.EAST;
+            return EnumFacing.EAST;
         }
         if (metadata == 4) {
-            return ForgeDirection.NORTH;
+            return EnumFacing.NORTH;
         }
         if (metadata == 3) {
-            return ForgeDirection.WEST;
+            return EnumFacing.WEST;
         }
         if (metadata == 2) {
-            return ForgeDirection.SOUTH;
+            return EnumFacing.SOUTH;
         }
-        return ForgeDirection.EAST;
+        return EnumFacing.EAST;
     }
     
     @Override
@@ -548,7 +546,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+    public boolean rotateBlock(World world, int x, int y, int z, EnumFacing axis) {
         if (world.isRemote) {
             return false;
         }

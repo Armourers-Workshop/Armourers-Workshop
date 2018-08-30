@@ -2,15 +2,13 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.render.ItemStackRenderHelper;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
@@ -25,6 +23,14 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
 
     public void renderTileEntityAt(TileEntityHologramProjector tileEntity, double x, double y, double z, float partialTickTime) {
+        if (ConfigHandlerClient.showSkinRenderBounds) {
+            /*
+            AxisAlignedBB aabb = new tileEntity.
+            aabb.offset(tileEntity.getPos());
+            renderBox(aabb, 1.0F, 1.0F, 0.0F);
+            */
+        }
+        
         if (tileEntity.getPowerMode() != PowerMode.IGNORED) {
             if (tileEntity.getPowerMode() == PowerMode.HIGH) {
                 if (!tileEntity.isPowered()) {
@@ -97,10 +103,10 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
             angleZ = angleZ / speedZ * 360F;
         }
         if (!tileEntity.isGlowing()) {
-            ForgeDirection dir = ForgeDirection.getOrientation(tileEntity.getBlockMetadata());
-            float xLight = tileEntity.xCoord;
-            float yLight = tileEntity.yCoord;
-            float zLight = tileEntity.zCoord;
+            EnumFacing dir = EnumFacing.getFront(tileEntity.getBlockMetadata());
+            float xLight = tileEntity.getPos().getX();
+            float yLight = tileEntity.getPos().getY();
+            float zLight = tileEntity.getPos().getZ();
             
             float offsetX = tileEntity.getOffsetX();
             float offsetY = tileEntity.getOffsetY();
@@ -137,10 +143,8 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
                 yLight += offsetY * scale;
                 zLight += offsetZ * scale;
                 break;
-            default:
-                break;
             }
-            ModRenderHelper.setLightingForBlock(tileEntity.getWorldObj(), (int)(xLight + 0.5F), (int)(yLight + 0.5F), (int)(zLight + 0.5F));
+            ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), (int)(xLight + 0.5F), (int)(yLight + 0.5F), (int)(zLight + 0.5F));
         }
 
         GL11.glPushMatrix();
@@ -182,7 +186,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         
         GL11.glPopMatrix();
         if (tileEntity.isShowRotationPoint()) {
-            AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, scale, scale, scale);
+            AxisAlignedBB aabb = new AxisAlignedBB(0, 0, 0, scale, scale, scale);
             renderBox(aabb, 1F, 0F, 1F);
         }
         
@@ -192,19 +196,6 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         }
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
-    }
-
-    @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
-        renderTileEntityAt((TileEntityHologramProjector)tileEntity, x, y, z, partialTickTime);
-        if (ConfigHandlerClient.showSkinRenderBounds) {
-            if (tileEntity != null && !(tileEntity instanceof TileEntityHologramProjector)) {
-                return;
-            }
-            AxisAlignedBB aabb = tileEntity.getRenderBoundingBox().copy();
-            aabb.offset(x - tileEntity.xCoord, y - tileEntity.yCoord, z - tileEntity.zCoord);
-            renderBox(aabb, 1.0F, 1.0F, 0.0F);
-        }
     }
     
     private void renderBox(AxisAlignedBB aabb, float r, float g, float b) {
@@ -219,7 +210,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
         
-        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
+        //RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
         
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_DEPTH_TEST);

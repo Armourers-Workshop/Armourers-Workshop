@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
@@ -31,7 +32,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
             EntityPlayer player = (EntityPlayer)entity;
             TileEntity te = world.getTileEntity(x, y, z);
             if (te != null && te instanceof TileEntityArmourer) {
-                ForgeDirection direction = BlockUtils.determineDirectionSide(entity).getOpposite();
+                EnumFacing direction = BlockUtils.determineDirectionSide(entity).getOpposite();
                 ((TileEntityArmourer)te).setDirection(ForgeDirection.NORTH);
                 if (!world.isRemote) {
                     ((TileEntityArmourer)te).setTexture(new PlayerTexture(player.getCommandSenderName(), TextureType.USER));

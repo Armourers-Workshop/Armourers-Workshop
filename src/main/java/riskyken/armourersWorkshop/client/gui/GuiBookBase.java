@@ -184,8 +184,8 @@ public abstract class GuiBookBase extends GuiScreen {
         double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
         double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
         
-        int fboScaledWidth = MathHelper.ceiling_double_int(256 * scaleWidth);
-        int fboScaledHeight = MathHelper.ceiling_double_int(256 * scaleHeight);
+        int fboScaledWidth = MathHelper.ceil(256 * scaleWidth);
+        int fboScaledHeight = MathHelper.ceil(256 * scaleHeight);
         
         if (fbo == null) {
             fbo = new Framebuffer(fboScaledWidth, fboScaledHeight, true);

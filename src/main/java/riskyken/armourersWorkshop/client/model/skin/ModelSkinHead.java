@@ -2,11 +2,11 @@ package riskyken.armourersWorkshop.client.model.skin;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinPaintCache;
@@ -30,10 +30,10 @@ public class ModelSkinHead extends AbstractModelSkin {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
-            this.heldItemRight = 0;
+            /*this.heldItemRight = 0;
             if (player.getHeldItem() != null) {
                 this.heldItemRight = 1;
-            }
+            }*/
         }
         
         if (ClientProxy.isJrbaClientLoaded()) {

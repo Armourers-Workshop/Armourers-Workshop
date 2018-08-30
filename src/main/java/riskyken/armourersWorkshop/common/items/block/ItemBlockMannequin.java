@@ -44,7 +44,7 @@ public class ItemBlockMannequin extends ModItemBlock {
             NBTTagCompound compound = stack.getTagCompound();
             GameProfile gameProfile = null;
             if (compound.hasKey(TAG_OWNER, 10)) {
-                gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
                 String user = TranslateUtils.translate("item.armourersworkshop:rollover.user", gameProfile.getName());
                 list.add(user);
             }
@@ -116,15 +116,15 @@ public class ItemBlockMannequin extends ModItemBlock {
         {
             return false;
         }
-        else if (world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, player, stack))
+        else if (world.canPlaceEntityOnSide(this.block, x, y, z, false, side, player, stack))
         {
             int i1 = this.getMetadata(stack.getItemDamage());
-            int j1 = this.field_150939_a.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, i1);
+            int j1 = this.block.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, i1);
             
             if (place) {
                 if (placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, j1))
                 {
-                    world.playSoundEffect((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), this.field_150939_a.stepSound.func_150496_b(), (this.field_150939_a.stepSound.getVolume() + 1.0F) / 2.0F, this.field_150939_a.stepSound.getPitch() * 0.8F);
+                    world.playSoundEffect((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), this.block.stepSound.func_150496_b(), (this.block.stepSound.getVolume() + 1.0F) / 2.0F, this.block.stepSound.getPitch() * 0.8F);
                     --stack.stackSize;
                 }
             }

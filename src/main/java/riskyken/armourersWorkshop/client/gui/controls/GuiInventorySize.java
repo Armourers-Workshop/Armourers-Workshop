@@ -49,11 +49,11 @@ public class GuiInventorySize extends GuiButtonExt {
     
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
-        int hoverWidth = MathHelper.ceiling_float_int((float)(mouseX - z) / (float)BUTTON_WIDTH);
-        int hoverHeight = MathHelper.ceiling_float_int((float)(mouseY - y) / (float)BUTTON_HEIGHT);
+        int hoverWidth = MathHelper.ceil((float)(mouseX - x) / (float)BUTTON_WIDTH);
+        int hoverHeight = MathHelper.ceil((float)(mouseY - y) / (float)BUTTON_HEIGHT);
         if (visible) {
             mc.renderEngine.bindTexture(texture);
-            this.hovered = mouseX >= this.z && mouseY >= this.y && mouseX < this.z + this.width && mouseY < this.y + this.height;
+            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             int k = this.getHoverState(this.hovered);
             GL11.glColor4f(1F, 1F, 1F, 1F);
             for (int ix = 0; ix < maxWidth; ix++) {
@@ -76,8 +76,8 @@ public class GuiInventorySize extends GuiButtonExt {
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
-            int selectionWidth = MathHelper.ceiling_float_int((float)(mouseX - x) / (float)BUTTON_WIDTH);
-            int selectionHeight = MathHelper.ceiling_float_int((float)(mouseY - y) / (float)BUTTON_HEIGHT);
+            int selectionWidth = MathHelper.ceil((float)(mouseX - x) / (float)BUTTON_WIDTH);
+            int selectionHeight = MathHelper.ceil((float)(mouseY - y) / (float)BUTTON_HEIGHT);
             setSelection(selectionWidth, selectionHeight);
             return true;
         }

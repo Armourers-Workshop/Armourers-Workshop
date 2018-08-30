@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
@@ -51,8 +52,8 @@ public class ContainerMiniArmourerBuilding extends Container {
         }
         MessageServerMiniArmourerSkinData message;
         message = new MessageServerMiniArmourerSkinData(tileEntity.getSkinParts());
-        for (int i = 0; i < crafters.size(); i++) {
-            ICrafting crafter = (ICrafting) crafters.get(i);
+        for (int i = 0; i < listeners.size(); i++) {
+            IContainerListener crafter = (IContainerListener) listeners.get(i);
             PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) crafter);
         }
         skinType = tileEntity.getSkinType();
@@ -97,8 +98,8 @@ public class ContainerMiniArmourerBuilding extends Container {
         }
         */
         //Send the cube update to all the players that have the GUI open.
-        for (int i = 0; i < crafters.size(); i++) {
-            ICrafting crafter = (ICrafting) crafters.get(i);
+        for (int i = 0; i < listeners.size(); i++) {
+            IContainerListener crafter = (IContainerListener) listeners.get(i);
             MessageServerMiniArmourerCubeEdit message;
             message = new MessageServerMiniArmourerCubeEdit(skinPartType, cube, remove);
             PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) crafter);

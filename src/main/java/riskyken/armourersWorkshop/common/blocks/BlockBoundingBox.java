@@ -5,30 +5,31 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
@@ -90,20 +91,14 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         return true;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
+    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
     }
     
     @Override
@@ -149,7 +144,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        EnumFacing sideBlock = EnumFacing.getFront(side);
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return false;
         }
@@ -181,7 +176,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
 
     @Override
     public int getColour(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        EnumFacing sideBlock = EnumFacing.getFront(side);
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return 0x00FFFFFF;
         }
@@ -215,7 +210,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        EnumFacing sideBlock = EnumFacing.getFront(side);
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return false;
         }
@@ -238,7 +233,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        EnumFacing sideBlock = EnumFacing.getFront(side);
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return;
         }
@@ -262,7 +257,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection sideBlock = ForgeDirection.getOrientation(side);
+        EnumFacing sideBlock = EnumFacing.getFront(side);
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return PaintType.NORMAL;
         }

@@ -1,13 +1,13 @@
 package riskyken.armourersWorkshop.client.gui.armourer.tab;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.DialogResult;
@@ -41,7 +41,7 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        String guiName = tileEntity.getInventoryName();
+        String guiName = tileEntity.getName();
         buttonClear = new GuiButtonExt(10, 10, 20, 70, 16, GuiHelper.getLocalizedControlName(guiName, "clear"));
         buttonCopy = new GuiButtonExt(11, 10, 40, 70, 16, GuiHelper.getLocalizedControlName(guiName, "copy"));
         
@@ -51,7 +51,7 @@ public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCall
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        String guiName = tileEntity.getInventoryName();
+        String guiName = tileEntity.getName();
         if (button == buttonClear) {
             ((GuiArmourer)parent).openDialog(new GuiDialogClear(parent, guiName + ".dialog.clear", (IDialogCallback) parent, 190, 140, tileEntity.getSkinType(), tileEntity.getSkinProps()));
         }

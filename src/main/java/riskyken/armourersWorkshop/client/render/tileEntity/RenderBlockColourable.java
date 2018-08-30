@@ -2,17 +2,16 @@ package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.client.render.IRenderBuffer;
@@ -26,7 +25,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityBoundingBox;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockColourable extends TileEntitySpecialRenderer {
+public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityColourable> {
     
     private static final ResourceLocation MARKERS = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/tileEntities/markers.png");
     private final IRenderBuffer renderer;
@@ -40,7 +39,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
     }
     
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
+    public void render(TileEntityColourable tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (lastWorldTimeUpdate != tileEntity.getWorldObj().getTotalWorldTime()) {
             lastWorldTimeUpdate = tileEntity.getWorldObj().getTotalWorldTime();
             if (isPlayerHoldingPaintingTool()) {
@@ -75,7 +74,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
-                ForgeDirection dir = ForgeDirection.getOrientation(i);
+                EnumFacing dir = EnumFacing.getOrientation(i);
                 int paintType = cubeColour.getPaintType(i) & 0xFF;
                 if (paintType != 255) {
                     bindTexture(MARKERS);
@@ -103,7 +102,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
                 if (tileEntity.isPaintableSide(i)) {
-                    ForgeDirection dir = ForgeDirection.getOrientation(i);
+                    EnumFacing dir = EnumFacing.getFront(i);
                     PaintType paintType = tileEntity.getPaintType(i);
                     if (paintType != PaintType.NONE) {
                         bindTexture(MARKERS);
@@ -120,7 +119,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
         RenderHelper.enableStandardItemLighting();
     }
     
-    private void renderFaceWithMarker(double x, double y, double z, ForgeDirection face, int marker) {
+    private void renderFaceWithMarker(double x, double y, double z, EnumFacing face, int marker) {
         float tileScale = 0.25F;
         float ySrc = (float) Math.floor((double)marker / 4F);
         float xSrc = marker - (ySrc * 4);
@@ -178,13 +177,11 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer {
             renderer.addVertexWithUV(x + 1 + offset, y + 1F, z + 1F, xStart, yStart);
             //renderer.draw();
             break;
-        default:
-            break;
         }
     }
     
     private boolean isPlayerHoldingPaintingTool() {
-        EntityClientPlayerMP player = mc.thePlayer;
+        EntityPlayerSP player = mc.player;
         ItemStack stack = player.getCurrentEquippedItem();
         if (stack != null) {
             Item item = stack.getItem();
