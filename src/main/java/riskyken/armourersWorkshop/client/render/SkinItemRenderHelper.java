@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -169,7 +169,7 @@ public final class SkinItemRenderHelper {
     
     public static void drawBounds(IRectangle3D rec, int r, int g, int b) {
         float scale = 1F / 16F;
-        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
+        AxisAlignedBB aabb = new AxisAlignedBB(
                 rec.getX() * scale, rec.getY() * scale, rec.getZ() * scale,
                 (rec.getX() + rec.getWidth()) * scale, (rec.getY() + rec.getHeight()) * scale, (rec.getZ() + rec.getDepth()) * scale);
         GL11.glEnable(GL11.GL_BLEND);

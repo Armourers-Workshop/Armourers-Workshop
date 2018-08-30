@@ -1,8 +1,5 @@
 package riskyken.armourersWorkshop.common.inventory;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +9,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.skinlibrary.GuiSkinLibrary;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
@@ -70,13 +70,13 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
                 }
             }
 
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onPickupFromSlot(player, stack);
+            slot.onTake(player, stack);
 
             return result;
         }
@@ -129,7 +129,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (Object player : crafters) {
+        for (Object player : listeners) {
             if (player instanceof EntityPlayerMP) {
                 EntityPlayerMP playerMp = (EntityPlayerMP) player;
                 ArmourersWorkshop.proxy.libraryManager.syncLibraryWithPlayer(playerMp);

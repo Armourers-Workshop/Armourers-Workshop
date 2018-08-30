@@ -2,16 +2,14 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -26,12 +24,6 @@ public class ItemMannequinTool extends AbstractModItem {
     public ItemMannequinTool() {
         super(LibItemNames.MANNEQUIN_TOOL);
         setSortPriority(10);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.MANNEQUIN_TOOL);
     }
     
     @Override

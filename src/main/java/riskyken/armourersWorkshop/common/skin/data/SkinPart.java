@@ -2,10 +2,10 @@ package riskyken.armourersWorkshop.common.skin.data;
 
 import java.util.ArrayList;
 
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPart;
@@ -98,9 +98,9 @@ public class SkinPart implements ISkinPart {
         blockGrid = new Rectangle3D[3][3][3];
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             byte[] loc = cubeData.getCubeLocation(i);
-            int x = MathHelper.floor_float((float)(loc[0] + 8) / 16F);
-            int y = MathHelper.floor_float((float)(loc[1] + 8) / 16F);
-            int z = MathHelper.floor_float((float)(loc[2] + 8) / 16F);
+            int x = MathHelper.floor((float)(loc[0] + 8) / 16F);
+            int y = MathHelper.floor((float)(loc[1] + 8) / 16F);
+            int z = MathHelper.floor((float)(loc[2] + 8) / 16F);
             setupBlockBounds(x, y, z, loc[0] - x * 16, loc[1] - y * 16, loc[2] - z * 16);
         }
         for (int ix = 0; ix < 3; ix++) {
@@ -168,10 +168,10 @@ public class SkinPart implements ISkinPart {
     }
     
     @Override
-    public ForgeDirection getMarkerSide(int index) {
+    public EnumFacing getMarkerSide(int index) {
         if (index >= 0 & index < markerBlocks.size()) {
             CubeMarkerData cmd = markerBlocks.get(index);
-            return  ForgeDirection.getOrientation(cmd.meta - 1);
+            return  EnumFacing.getFront(cmd.meta - 1);
         }
         return null;
     }

@@ -6,17 +6,12 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntitySpellParticleFX;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,15 +21,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.Contributors;
 import riskyken.armourersWorkshop.common.Contributors.Contributor;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
@@ -275,12 +273,6 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     @Override
     public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
         return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE);
     }
     
     @Override

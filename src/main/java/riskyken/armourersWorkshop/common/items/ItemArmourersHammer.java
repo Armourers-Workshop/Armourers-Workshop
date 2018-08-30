@@ -1,18 +1,14 @@
 package riskyken.armourersWorkshop.common.items;
 
 import buildcraft.api.tools.IToolWrench;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import net.minecraftforge.fml.common.Optional;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 
 @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")
@@ -21,12 +17,6 @@ public class ItemArmourersHammer extends AbstractModItem implements IToolWrench 
     public ItemArmourersHammer() {
         super(LibItemNames.ARMOURERS_HAMMER);
         setSortPriority(9);
-    }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.ARMOURERS_HAMMER);
     }
     
     @Override

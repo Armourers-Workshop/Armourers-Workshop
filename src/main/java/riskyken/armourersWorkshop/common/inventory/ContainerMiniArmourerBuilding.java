@@ -46,7 +46,7 @@ public class ContainerMiniArmourerBuilding extends Container {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        if (skinType == tileEntity.getSkinType() & !tileEntity.getWorldObj().isRemote) {
+        if (skinType == tileEntity.getSkinType() & !tileEntity.getWorld().isRemote) {
             return;
         }
         MessageServerMiniArmourerSkinData message;

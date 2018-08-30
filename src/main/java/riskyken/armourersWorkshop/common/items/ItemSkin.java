@@ -5,27 +5,22 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.BlockLocation;
@@ -70,7 +65,7 @@ public class ItemSkin extends AbstractModItem {
     }
     
     public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, boolean showAdvancedItemTooltips) {
-        String cRed = EnumChatFormatting.RED.toString();
+        String cRed = TextFormatting.RED.toString();
         
         boolean isEquipmentSkin = stack.getItem() == ModItems.equipmentSkin;
         boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;
@@ -171,34 +166,6 @@ public class ItemSkin extends AbstractModItem {
     @Override
     public boolean requiresMultipleRenderPasses() {
         return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon loadingIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        this.itemIcon = register.registerIcon(LibItemResources.TEMPLATE_BLANK);
-        this.loadingIcon = register.registerIcon(LibItemResources.TEMPLATE_LOADING);
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 1) {
-            return this.loadingIcon;
-        }
-        
-        if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
-            if (skinData.getIdentifier().getSkinType() != null) {
-                if (skinData.getIdentifier().getSkinType().getIcon() != null) {
-                    return skinData.getIdentifier().getSkinType().getIcon();
-                }
-            }
-        }
-        
-        return this.itemIcon;
     }
     
     @Override

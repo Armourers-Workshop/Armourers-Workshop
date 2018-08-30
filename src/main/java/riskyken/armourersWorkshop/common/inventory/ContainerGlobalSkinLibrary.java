@@ -50,7 +50,7 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
     @Override
     public void onContainerClosed(EntityPlayer entityPlayer) {
         super.onContainerClosed(entityPlayer);
-        if (!tileEntity.getWorldObj().isRemote) {
+        if (!tileEntity.getWorld().isRemote) {
             Slot slot = getSlot(36);
             if (slot.getHasStack()) {
                 entityPlayer.dropPlayerItemWithRandomChoice(slot.getStack(), false);
@@ -96,13 +96,13 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
                 }
             }
             
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onPickupFromSlot(entityPlayer, stack);
+            slot.onTake(entityPlayer, stack);
             
             return result;
         }
@@ -112,7 +112,7 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
     @Override
     public void buttonPressed(byte buttonId) {
         if (buttonId == 0) {
-            if (!tileEntity.getWorldObj().isRemote) {
+            if (!tileEntity.getWorld().isRemote) {
                 if (!getSlot(37).getHasStack()) {
                     ItemStack itemStack = getSlot(36).getStack();
                     SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(itemStack);

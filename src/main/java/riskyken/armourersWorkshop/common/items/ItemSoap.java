@@ -1,14 +1,10 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.BlockBoundingBox;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -19,12 +15,6 @@ public class ItemSoap extends AbstractModItem {
 
     public ItemSoap() {
         super(LibItemNames.SOAP);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister iconRegister) {
-        itemIcon = iconRegister.registerIcon(LibItemResources.SOAP);
     }
     
     @Override

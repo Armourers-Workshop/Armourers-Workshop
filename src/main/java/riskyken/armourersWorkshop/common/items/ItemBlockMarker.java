@@ -1,13 +1,9 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 
@@ -16,12 +12,6 @@ public class ItemBlockMarker extends AbstractModItem {
     public ItemBlockMarker() {
         super(LibItemNames.BLOCK_MARKER);
         setSortPriority(12);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister iconRegister) {
-        itemIcon = iconRegister.registerIcon(LibItemResources.BLOCK_MARKER);
     }
     
     @Override

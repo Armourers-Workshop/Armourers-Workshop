@@ -7,10 +7,10 @@ import org.apache.logging.log4j.Level;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -28,16 +28,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -58,13 +55,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     public BlockSkinnable(String name) {
-        super(name, Material.iron, soundTypeMetal, false);
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
+        super(name, Material.IRON, SoundType.METAL, false);
     }
     
     @Override
@@ -417,25 +408,6 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         setBlockBounds(0, 0, 0, 1, 1, 1);
     }
     
-    @SideOnly(Side.CLIENT)
-    private IIcon cubeIcon;
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.SKINNABLE);
-        cubeIcon = register.registerIcon(LibBlockResources.CUBE);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        if (meta == 4) {
-            return cubeIcon;
-        }
-        return blockIcon;
-    }
-    
     private TileEntitySkinnable getTileEntity(IBlockAccess world, int x, int y, int z) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinnable) {
@@ -512,7 +484,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
     }
     
-    public ForgeDirection getFacingDirection(IBlockAccess world, int x, int y, int z) {
+    public EnumFacing getFacingDirection(IBlockAccess world, int x, int y, int z) {
         return getFacingDirection(world.getBlockMetadata(x, y, z));
     }
     

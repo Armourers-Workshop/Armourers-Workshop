@@ -1,17 +1,14 @@
 package riskyken.armourersWorkshop.common.items.paintingtool;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -19,9 +16,6 @@ import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.painting.PaintingHelper;
 
 public class ItemPaintballGun extends AbstractModItem implements IPaintingTool {
-
-    @SideOnly(Side.CLIENT)
-    private IIcon tipIcon;
     
     public ItemPaintballGun() {
         super(LibItemNames.PAINTBALL_GUN);
@@ -63,21 +57,6 @@ public class ItemPaintballGun extends AbstractModItem implements IPaintingTool {
             return true;
         }
         return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.PAINTBALL_GUN);
-        tipIcon = register.registerIcon(LibItemResources.PAINTBALL_GUN_TIP);
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 0) {
-            return itemIcon;
-        }
-        return tipIcon;
     }
     
     @Override

@@ -8,9 +8,6 @@ import java.util.WeakHashMap;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -20,6 +17,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
@@ -231,11 +231,11 @@ public final class SkinModelRenderer {
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
-        EntityPlayer player = event.entityPlayer;
+        EntityPlayer player = event.getEntityPlayer();
         targetPlayer = player;
         
         if (ClientProxy.getSkinRenderType() == SkinRenderType.MODEL_ATTACHMENT) {
-            attachModelsToBiped(event.renderer.modelBipedMain, event.renderer);
+            attachModelsToBiped(event.getRenderer().getMainModel(), event.getRenderer());
         }
         
         
@@ -287,8 +287,8 @@ public final class SkinModelRenderer {
         if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_EVENT) {
             return;
         }
-        EntityPlayer player = event.entityPlayer;
-        RenderPlayer render = event.renderer;
+        EntityPlayer player = event.getEntityPlayer();
+        RenderPlayer render = event.getRenderer();
         if (player.getGameProfile() == null) {
             return;
         }
@@ -297,7 +297,7 @@ public final class SkinModelRenderer {
             return;
         }
         
-        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+        double distance = Minecraft.getMinecraft().player.getDistance(
                 player.posX,
                 player.posY,
                 player.posZ);
@@ -326,42 +326,42 @@ public final class SkinModelRenderer {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
                     if (data != null) {
-                        customHead.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                        customHead.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
                     if (data != null) {
-                        customChest.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                        customChest.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
                     if (data != null) {
-                        customLegs.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                        customLegs.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinSkirt, skinIndex);
                     if (data != null) {
-                        customSkirt.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                        customSkirt.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
                     if (data != null) {
-                        customFeet.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                        customFeet.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
                     }
                 }
                 if (slot == 0) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, skinIndex);
                     if (data != null) {
-                        customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                        customWings.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
                     }
                 }
             }

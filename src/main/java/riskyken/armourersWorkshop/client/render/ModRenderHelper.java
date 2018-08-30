@@ -2,8 +2,6 @@ package riskyken.armourersWorkshop.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -11,8 +9,10 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class ModRenderHelper {
@@ -57,14 +57,14 @@ public final class ModRenderHelper {
     
     public static void enableScissorScaled(int x, int y, int width, int height) {
         Minecraft mc = Minecraft.getMinecraft();
-        ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution sr = new ScaledResolution(mc);
         double scaledWidth = (double)mc.displayWidth / sr.getScaledWidth_double();
         double scaledHeight = (double)mc.displayHeight / sr.getScaledHeight_double();
         enableScissor(
-                MathHelper.floor_double(x * scaledWidth),
-                mc.displayHeight - MathHelper.floor_double((double)(y + height) * scaledHeight),
-                MathHelper.floor_double(width * scaledWidth),
-                MathHelper.floor_double(height * scaledHeight));
+                MathHelper.floor((double)x * scaledWidth),
+                mc.displayHeight - MathHelper.floor((double)((double)y + (double)height) * scaledHeight),
+                MathHelper.floor((double)width * scaledWidth),
+                MathHelper.floor((double)height * scaledHeight));
     }
     
     public static void enableScissor(int x, int y, int width, int height) {

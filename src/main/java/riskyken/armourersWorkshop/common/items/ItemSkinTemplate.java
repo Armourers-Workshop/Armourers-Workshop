@@ -1,22 +1,17 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.ISkinHolder;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
     
@@ -26,16 +21,6 @@ public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
         super(LibItemNames.EQUIPMENT_SKIN_TEMPLATE);
         setMaxStackSize(64);
         setHasSubtypes(true);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    IIcon giftIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.TEMPLATE_BLANK);
-        giftIcon = register.registerIcon(LibItemResources.GIFT_SACK);
     }
     
     @Override
@@ -50,19 +35,11 @@ public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
                 if (player.inventory.addItemStackToInventory(giftStack)) {
                     stack.stackSize--;
                 } else {
-                    player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("chat.armourersworkshop:inventoryFull")));
+                    player.sendMessage(new TextComponentString(I18n.format("chat.armourersworkshop:inventoryFull")));
                 }
             }
         }
         return super.onItemRightClick(stack, world, player);
-    }
-    
-    @Override
-    public IIcon getIconFromDamage(int damage) {
-        if (damage == 1000) {
-            return giftIcon;
-        }
-        return super.getIconFromDamage(damage);
     }
 
     @Override

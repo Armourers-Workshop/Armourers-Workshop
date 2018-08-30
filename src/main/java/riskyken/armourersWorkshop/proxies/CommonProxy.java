@@ -9,14 +9,15 @@ import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable.Seat;
@@ -72,7 +73,7 @@ public class CommonProxy implements ILibraryCallback {
         ConfigHandlerClient.init(new File(configDir, "client.cfg"));
         ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
         
-        EntityRegistry.registerModEntity(Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
         
         SkinIOUtils.makeLibraryDirectory();
         UpdateCheck.checkForUpdates();

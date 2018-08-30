@@ -1,20 +1,15 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.data.TextureType;
 import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
@@ -76,31 +71,6 @@ public class BlockArmourer extends AbstractModBlockContainer {
             FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ARMOURER, world, x, y, z);
         }
         return true;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon iconTop;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconBottom;
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.ARMOURER_SIDE);
-        iconTop = register.registerIcon(LibBlockResources.ARMOURER_TOP);
-        iconBottom = register.registerIcon(LibBlockResources.ARMOURER_BOTTOM);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        if (side == 0) {
-            return iconBottom;
-        }
-        if (side == 1) {
-            return iconTop;
-        }
-        return blockIcon;
     }
 
     @Override

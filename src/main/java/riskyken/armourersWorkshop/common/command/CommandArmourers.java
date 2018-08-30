@@ -33,19 +33,19 @@ public class CommandArmourers extends CommandBase {
     }
     
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "armourers";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender commandSender) {
+    public String getUsage(ICommandSender commandSender) {
         return "commands.armourers.usage";
     }
     
     private String[] getSubCommandNames() {
         String[] subCommandNames = new String[subCommands.size()];
         for (int i = 0; i < subCommandNames.length; i++) {
-            subCommandNames[i] = subCommands.get(i).getCommandName();
+            subCommandNames[i] = subCommands.get(i).getName();
         }
         Arrays.sort(subCommandNames);
         return subCommandNames;
@@ -53,7 +53,7 @@ public class CommandArmourers extends CommandBase {
     
     private ModCommand getSubCommand(String name) {
         for (int i = 0; i < subCommands.size(); i++) {
-            if (subCommands.get(i).getCommandName().equals(name)) {
+            if (subCommands.get(i).getName().equals(name)) {
                 return subCommands.get(i);
             }
         }
@@ -93,6 +93,6 @@ public class CommandArmourers extends CommandBase {
     }
     
     private String[] getPlayers() {
-        return MinecraftServer.getServer().getAllUsernames();
+        return MinecraftServer.getServer().getOnlinePlayerNames();
     }
 }

@@ -9,7 +9,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerCl
 public class CommandAdminPanel extends ModCommand {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "adminPanel";
     }
 

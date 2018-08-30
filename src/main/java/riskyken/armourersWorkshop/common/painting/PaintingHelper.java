@@ -2,11 +2,11 @@ package riskyken.armourersWorkshop.common.painting;
 
 import java.awt.Color;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
@@ -136,7 +136,7 @@ public final class PaintingHelper {
     
     @SideOnly(Side.CLIENT)
     public static int getLocalPlayersSkinColour() {
-        PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().thePlayer);
+        PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().player);
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd != null) {
             return ewd.skinColour;
@@ -146,7 +146,7 @@ public final class PaintingHelper {
     
     @SideOnly(Side.CLIENT)
     public static int getLocalPlayersHairColour() {
-        PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().thePlayer);
+        PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().player);
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd != null) {
             return ewd.hairColour;

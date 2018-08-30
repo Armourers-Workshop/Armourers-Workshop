@@ -159,7 +159,7 @@ public final class GameProfileCache {
         
         private GameProfile fillProfileProperties(GameProfile gameProfile) {
             if (!gameProfile.isComplete()) {
-                gameProfile = ArmourersWorkshop.getProxy().getServer().func_152358_ax().func_152655_a(gameProfile.getName());
+                gameProfile = ArmourersWorkshop.getProxy().getServer().getPlayerProfileCache().getGameProfileForUsername(gameProfile.getName());
             }
             if (gameProfile == null) {
                 return null;
@@ -169,7 +169,7 @@ public final class GameProfileCache {
                 if (!gameProfile.getProperties().containsKey("textures")) {
                     Property property = (Property)Iterables.getFirst(gameProfile.getProperties().get("textures"), (Object)null);
                     if (property == null) {
-                        gameProfile = ArmourersWorkshop.getProxy().getServer().func_147130_as().fillProfileProperties(gameProfile, false);
+                        gameProfile = ArmourersWorkshop.getProxy().getServer().getMinecraftSessionService().fillProfileProperties(gameProfile, false);
                         return gameProfile;
                     }
                 }

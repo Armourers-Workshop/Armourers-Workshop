@@ -4,19 +4,14 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -34,19 +29,9 @@ import riskyken.armourersWorkshop.utils.TranslateUtils;
 
 public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTool {
     
-    @SideOnly(Side.CLIENT)
-    private IIcon tipIcon;
-    
     public ItemHueTool() {
         super(LibItemNames.HUE_TOOL);
         setSortPriority(13);
-    }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.HUE_TOOL);
-        tipIcon = register.registerIcon(LibItemResources.HUE_TOOL_TIP);
     }
     
     @Override
@@ -196,14 +181,6 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         list.add(hexText);
         list.add(paintText);
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 0) {
-            return itemIcon;
-        }
-        return tipIcon;
     }
 
     @Override

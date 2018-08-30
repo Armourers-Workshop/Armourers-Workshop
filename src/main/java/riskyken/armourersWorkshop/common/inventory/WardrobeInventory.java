@@ -41,7 +41,7 @@ public class WardrobeInventory implements IInventory {
         ItemStack itemstack = getStackInSlot(slot);
         
         if (itemstack != null) {
-            if (itemstack.stackSize <= count){
+            if (itemstack.getCount() <= count){
                 setInventorySlotContents(slot, null);
             }else{
                 itemstack = itemstack.splitStack(count);
@@ -61,7 +61,7 @@ public class WardrobeInventory implements IInventory {
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         wardrobeItemStacks[slot] = stack;
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+        if (stack != null && stack.getCount() > getInventoryStackLimit()) {
             stack.stackSize = getInventoryStackLimit();
         }
         callback.setInventorySlotContents(this, slot, stack);

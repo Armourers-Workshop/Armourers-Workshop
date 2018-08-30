@@ -75,13 +75,13 @@ public class ContainerEntityEquipment extends Container {
                 }
             }
 
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onPickupFromSlot(entityPlayer, stack);
+            slot.onTake(entityPlayer, stack);
 
             return result;
         }

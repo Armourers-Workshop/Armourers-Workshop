@@ -72,7 +72,7 @@ public class ContainerDyeTable extends Container {
     
     public void skinAdded(ItemStack stack) {
         updateLockedSlots(stack);
-        if (tileEntity.getWorldObj().isRemote) {
+        if (tileEntity.getWorld().isRemote) {
             return;
         }
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
@@ -87,7 +87,7 @@ public class ContainerDyeTable extends Container {
     @Override
     public void onContainerClosed(EntityPlayer entityPlayer) {
         super.onContainerClosed(entityPlayer);
-        if (!tileEntity.getWorldObj().isRemote & instanced) {
+        if (!tileEntity.getWorld().isRemote & instanced) {
             // Drop dye bottles.
             /*
             for (int i = 0; i < 8; i++) {
@@ -106,7 +106,7 @@ public class ContainerDyeTable extends Container {
     }
     
     public void skinRemoved() {
-        if (!tileEntity.getWorldObj().isRemote) {
+        if (!tileEntity.getWorld().isRemote) {
             for (int i = 0; i < 8; i++) {
                 SlotDyeBottle slot = (SlotDyeBottle) getSlot(37 + i);
                 if (!slot.isLocked()) {
@@ -148,7 +148,7 @@ public class ContainerDyeTable extends Container {
      * Reads the output slot and adds dye bottles to their slots.
      */
     private void putDyesInSlots() {
-        if (tileEntity.getWorldObj().isRemote) {
+        if (tileEntity.getWorld().isRemote) {
             return;
         }
         ItemStack outStack = getSlot(45).getStack();
@@ -244,13 +244,13 @@ public class ContainerDyeTable extends Container {
                 }
             }
             
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onPickupFromSlot(player, stack);
+            slot.onTake(player, stack);
             
             return result;
         }

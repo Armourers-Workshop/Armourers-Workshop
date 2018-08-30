@@ -14,32 +14,32 @@ public final class ModBlockRecipes {
             "www",
             "wiw",
             "www",
-            'w', Blocks.wool,
+            'w', Blocks.WOOL,
             'i', "ingotIron"});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.armourLibrary, 1, 0), new Object[] {
             "srs",
             "bcb",
             "sss",
-            'r', new ItemStack(Blocks.wool, 1, 14),
+            'r', new ItemStack(Blocks.WOOL, 1, 14),
             's', "stone",
             'c', ModBlocks.colourable,
-            'b', Items.book});
+            'b', Items.BOOK});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.globalSkinLibrary, 1, 0), new Object[] {
             "srs",
             "bcb",
             "sss",
-            'r', Items.ender_pearl,
+            'r', Items.ENDER_PEARL,
             's', "stone",
             'c', ModBlocks.colourable,
-            'b', Items.book});
+            'b', Items.BOOK});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.hologramProjector, 1, 0), new Object[] {
             "igi",
             "ici",
             "iii",
-            'i', Items.iron_ingot,
+            'i', Items.IRON_INGOT,
             'g', "blockGlassLightBlue",
             'c', ModBlocks.colourable});
         
@@ -67,14 +67,14 @@ public final class ModBlockRecipes {
             "wcw",
             " w ",
             'w', "plankWood",
-            'p', Blocks.pumpkin,
+            'p', Blocks.PUMPKIN,
             'c', ModBlocks.colourable});
         
         CraftingManager.addShapedRecipe(new ItemStack(ModBlocks.skinningTable, 1, 0), new Object[] {
             "srs",
             "tct",
             "sss",
-            'r', new ItemStack(Blocks.wool, 1, 14),
+            'r', new ItemStack(Blocks.WOOL, 1, 14),
             's', "stone",
             'c', ModBlocks.colourable,
             't', ModItems.equipmentSkinTemplate});
@@ -90,7 +90,7 @@ public final class ModBlockRecipes {
         
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlowing, 1, 0), new Object[] {
             new ItemStack(ModBlocks.colourable, 1),
-            new ItemStack(Items.glowstone_dust, 1)});
+            new ItemStack(Items.GLOWSTONE_DUST, 1)});
         /*
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.miniArmourer, 1, 0), new Object[] {
             new ItemStack(ModBlocks.armourerBrain, 1)});
@@ -114,6 +114,6 @@ public final class ModBlockRecipes {
         
         CraftingManager.addShapelessRecipe(new ItemStack(ModBlocks.colourableGlassGlowing, 1, 0), new Object[] {
                 new ItemStack(ModBlocks.colourableGlass, 1),
-                new ItemStack(Items.glowstone_dust, 1)});
+                new ItemStack(Items.GLOWSTONE_DUST, 1)});
     }
 }

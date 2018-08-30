@@ -7,7 +7,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
@@ -65,8 +66,17 @@ public final class BlockUtils {
         return UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
     }
     
+    public static ICubeColour getColourFromTileEntity(World world, BlockPos pos) {
+        TileEntity te = world.getTileEntity(pos);
+        if (te != null & te instanceof IPantable) {
+            return ((IPantable)te).getColour();
+        }
+        return new CubeColour();
+    }
+    
+   @Deprecated
     public static ICubeColour getColourFromTileEntity(World world, int x, int y, int z) {
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour();
         }

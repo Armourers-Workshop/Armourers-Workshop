@@ -97,7 +97,7 @@ public class SkinCacheGlobal {
                 }
             } else {
                 if (requestMessage.getPlayer() != null) {
-                    ModLogger.log(Level.ERROR, "Skin [" + identifier.toString() + "] was requested by " + requestMessage.getPlayer().getCommandSenderName() + " but was not found.");
+                    ModLogger.log(Level.ERROR, "Skin [" + identifier.toString() + "] was requested by " + requestMessage.getPlayer().getName() + " but was not found.");
                 } else {
                     ModLogger.log(Level.ERROR, "Skin [" + identifier.toString() + "] was requested but was not found.");
                 }

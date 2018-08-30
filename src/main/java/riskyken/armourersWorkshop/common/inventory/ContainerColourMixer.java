@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.common.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -57,13 +58,13 @@ public class ContainerColourMixer extends Container {
                 }
             }
 
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onPickupFromSlot(player, stack);
+            slot.onTake(player, stack);
 
             return result;
         }
@@ -83,10 +84,10 @@ public class ContainerColourMixer extends Container {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (int i = 0; i < crafters.size(); i++) {
-            ICrafting crafter = (ICrafting) crafters.get(i);
+        for (int i = 0; i < listeners.size(); i++) {
+            IContainerListener crafter = (IContainerListener) listeners.get(i);
             if (lastColourFamily != tileEntityColourMixer.getColourFamily()) {
-                crafter.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
+                crafter.sendWindowProperty(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
             }
         }
         lastColourFamily = tileEntityColourMixer.getColourFamily();

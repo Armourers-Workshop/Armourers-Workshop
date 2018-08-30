@@ -74,7 +74,7 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
                 return cacheMapDatabase.get(skinId);
             } else {
                 if (requestMessage.getPlayer() != null) {
-                    ModLogger.log(Level.ERROR, "Equipment id:" + String.valueOf(skinId) +" was requested by " + requestMessage.getPlayer().getCommandSenderName() + " but was not found.");
+                    ModLogger.log(Level.ERROR, "Equipment id:" + String.valueOf(skinId) +" was requested by " + requestMessage.getPlayer().getName() + " but was not found.");
                 } else {
                     ModLogger.log(Level.ERROR, "Equipment id:" + String.valueOf(skinId) +" was requested but was not found.");
                 }

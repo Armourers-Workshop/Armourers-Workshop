@@ -4,19 +4,14 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -35,22 +30,6 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     public ItemPaintRoller() {
         super(LibItemNames.PAINT_ROLLER);
         setSortPriority(19);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon tipIcon;
-    @SideOnly(Side.CLIENT)
-    private IIcon faceModeIcon;
-    @SideOnly(Side.CLIENT)
-    private IIcon faceModeTipIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.PAINT_ROLLER);
-        tipIcon = register.registerIcon(LibItemResources.PAINT_ROLLER_TIP);
-        faceModeIcon = register.registerIcon(LibItemResources.PAINT_ROLLER_FACE_MODE);
-        faceModeTipIcon = register.registerIcon(LibItemResources.PAINT_ROLLER_FACE_MODE_TIP);
     }
     
     @Override
@@ -189,21 +168,6 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         list.add(paintText);
         list.add(radiusText);
         list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
-            if (pass == 0) {
-                return itemIcon;
-            }
-            return tipIcon;
-        } else {
-            if (pass == 0) {
-                return faceModeIcon;
-            }
-            return faceModeTipIcon;
-        }
     }
     
     @Override

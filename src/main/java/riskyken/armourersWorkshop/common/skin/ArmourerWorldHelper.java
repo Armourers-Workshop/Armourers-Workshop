@@ -3,9 +3,11 @@ package riskyken.armourersWorkshop.common.skin;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
@@ -55,8 +57,7 @@ public final class ArmourerWorldHelper {
      * @throws InvalidCubeTypeException
      * @throws SkinSaveException
      */
-    public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData,
-            int xCoord, int yCoord, int zCoord, ForgeDirection direction) throws SkinSaveException {
+    public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData, BlockPos pos, EnumFacing direction) throws SkinSaveException {
         
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         
@@ -66,14 +67,14 @@ public final class ArmourerWorldHelper {
                 partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
             }
             
-            SkinPart skinPart = saveArmourPart(world, partType, xCoord, yCoord, zCoord, direction, true);
+            SkinPart skinPart = saveArmourPart(world, partType, pos, direction, true);
             if (skinPart != null) {
                 parts.add(skinPart);
             }
         } else {
             for (int i = 0; i < skinType.getSkinParts().size(); i++) {
                 ISkinPartType partType = skinType.getSkinParts().get(i);
-                SkinPart skinPart = saveArmourPart(world, partType, xCoord, yCoord, zCoord, direction, true);
+                SkinPart skinPart = saveArmourPart(world, partType, pos, direction, true);
                 if (skinPart != null) {
                     parts.add(skinPart);
                 }
@@ -115,7 +116,7 @@ public final class ArmourerWorldHelper {
         
         //Check if multiblock is valid.
         if (skinType == SkinTypeRegistry.skinBlock & SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps)) {
-            SkinPart testPart = saveArmourPart(world, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, xCoord, yCoord, zCoord, direction, true);
+            SkinPart testPart = saveArmourPart(world, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, pos, direction, true);
             if (testPart == null) {
                 throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveExceptionType.INVALID_MULTIBLOCK);
             }
@@ -124,9 +125,9 @@ public final class ArmourerWorldHelper {
         return skin;
     }
     
-    private static SkinPart saveArmourPart(World world, ISkinPartType skinPart, int xCoord, int yCoord, int zCoord, ForgeDirection direction, boolean markerCheck) throws SkinSaveException {
+    private static SkinPart saveArmourPart(World world, ISkinPartType skinPart, BlockPos pos, EnumFacing direction, boolean markerCheck) throws SkinSaveException {
         
-        int cubeCount = getNumberOfCubesInPart(world, xCoord, yCoord, zCoord, skinPart);
+        int cubeCount = getNumberOfCubesInPart(world, pos, skinPart);
         if (cubeCount < 1) {
             return null;
         }
@@ -142,19 +143,18 @@ public final class ArmourerWorldHelper {
         for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
             for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    BlockPos target = pos.add(ix + -offset.getX() + buildSpace.getX(), iy + -offset.getY(), iz + offset.getZ() + buildSpace.getZ());
                     
-                    int x = xCoord + ix + -offset.getX() + buildSpace.getX();
-                    int y = yCoord + iy + -offset.getY();
-                    int z = zCoord + iz + offset.getZ() + buildSpace.getZ();
+                    BlockPos origin = new BlockPos(-ix + -buildSpace.getX(), -iy + -buildSpace.getY(), -iz + -buildSpace.getZ());
                     
                     int xOrigin = -ix + -buildSpace.getX();
                     int yOrigin = -iy + -buildSpace.getY();
                     int zOrigin = -iz + -buildSpace.getZ();
                     
-                    if (!world.isAirBlock(x, y, z)) {
-                        Block block = world.getBlock(x, y, z);
-                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
-                            saveArmourBlockToList(world, x, y, z,
+                    if (!world.isAirBlock(target)) {
+                        IBlockState blockState = world.getBlockState(target);
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(blockState.getBlock())) {
+                            saveArmourBlockToList(world, target,
                                     xOrigin - 1,
                                     yOrigin - 1,
                                     -zOrigin,
@@ -180,16 +180,15 @@ public final class ArmourerWorldHelper {
         return new SkinPart(cubeData, skinPart, markerBlocks);
     }
     
-    private static void saveArmourBlockToList(World world, int x, int y, int z, int ix, int iy, int iz,
-            SkinCubeData cubeData, int index, ArrayList<CubeMarkerData> markerBlocks, ForgeDirection direction) {
-        Block block = world.getBlock(x, y, z);
-        if (!CubeRegistry.INSTANCE.isBuildingBlock(block)) {
+    private static void saveArmourBlockToList(World world, BlockPos pos, int ix, int iy, int iz, SkinCubeData cubeData, int index, ArrayList<CubeMarkerData> markerBlocks, EnumFacing direction) {
+        IBlockState blockState = world.getBlockState(pos);
+        if (!CubeRegistry.INSTANCE.isBuildingBlock(blockState.getBlock())) {
             return;
         }
             
-        int meta = world.getBlockMetadata(x, y, z);
-        ICubeColour c = BlockUtils.getColourFromTileEntity(world, x, y, z);
-        byte cubeType = CubeRegistry.INSTANCE.getCubeFromBlock(block).getId();
+        int meta = blockState.getBlock().getMetaFromState(blockState);
+        ICubeColour c = BlockUtils.getColourFromTileEntity(world, pos);
+        byte cubeType = CubeRegistry.INSTANCE.getCubeFromBlock(blockState.getBlock()).getId();
         
         cubeData.setCubeId(index, cubeType);
         cubeData.setCubeLocation(index, (byte) ix, (byte) iy, (byte) iz);
@@ -211,15 +210,15 @@ public final class ArmourerWorldHelper {
      * @param skin The skin to load.
      * @param direction The direction the armourer is facing.
      */
-    public static void loadSkinIntoWorld(World world, int x, int y, int z, Skin skin, ForgeDirection direction) {
+    public static void loadSkinIntoWorld(World world, BlockPos pos, Skin skin, EnumFacing direction) {
         ArrayList<SkinPart> parts = skin.getParts();
         
         for (int i = 0; i < parts.size(); i++) {
-            loadSkinPartIntoWorld(world, parts.get(i), x, y, z, direction, false);
+            loadSkinPartIntoWorld(world, parts.get(i), pos, direction, false);
         }
     }
     
-    private static void loadSkinPartIntoWorld(World world, SkinPart partData, int xCoord, int yCoord, int zCoord, ForgeDirection direction, boolean mirror) {
+    private static void loadSkinPartIntoWorld(World world, SkinPart partData, BlockPos pos, EnumFacing direction, boolean mirror) {
         ISkinPartType skinPart = partData.getPartType();
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
@@ -236,20 +235,14 @@ public final class ArmourerWorldHelper {
                     break;
                 }
             }
+            BlockPos origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
             
-            int xOrigin = -offset.getX();
-            int yOrigin = -offset.getY() + -buildSpace.getY();
-            int zOrigin = offset.getZ();
-            
-            loadSkinBlockIntoWorld(world, xCoord, yCoord, zCoord, xOrigin, yOrigin, zOrigin, blockData, direction, meta, cubeData, i, mirror);
+            loadSkinBlockIntoWorld(world, pos, origin, blockData, direction, meta, cubeData, i, mirror);
         }
         
     }
     
-    private static void loadSkinBlockIntoWorld(World world, int x, int y, int z,
-            int xOrigin, int yOrigin, int zOrigin, ICube blockData,
-            ForgeDirection direction, int meta, SkinCubeData cubeData, int index, boolean mirror) {
-        
+    private static void loadSkinBlockIntoWorld(World world, BlockPos pos, BlockPos origin, ICube blockData, EnumFacing direction, int meta, SkinCubeData cubeData, int index, boolean mirror) {
         byte[] loc = cubeData.getCubeLocation(index);
         
         int shiftX = -loc[0] - 1;
@@ -259,20 +252,19 @@ public final class ArmourerWorldHelper {
             shiftX = loc[0];
         }
         
-        int targetX = x + shiftX + xOrigin;
-        int targetY = y + yOrigin - shiftY;
-        int targetZ = z + shiftZ + zOrigin;
+        BlockPos target = pos.add(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
         
-        if (world.getBlock(targetX, targetY, targetZ) == ModBlocks.boundingBox) {
-            world.setBlockToAir(targetX, targetY, targetZ);
-            world.removeTileEntity(targetX, targetY, targetZ);
+        if (world.getBlockState(target).getBlock() == ModBlocks.boundingBox) {
+            world.setBlockToAir(target);
+            world.removeTileEntity(target);
         }
         
-        if (world.isAirBlock(targetX, targetY, targetZ)) {
+        if (world.isAirBlock(target)) {
             Block targetBlock = blockData.getMinecraftBlock();
-            world.setBlock(targetX, targetY, targetZ, targetBlock);
-            world.setBlockMetadataWithNotify(targetX, targetY, targetZ, meta, 2);
-            TileEntity te = world.getTileEntity(targetX, targetY, targetZ);
+            IBlockState targetState = targetBlock.getStateFromMeta(meta);
+            
+            world.setBlockState(target, targetState, 2);
+            TileEntity te = world.getTileEntity(target);
             if (te != null && te instanceof TileEntityColourable) {
                 CubeColour cc = new CubeColour();
                 for (int i = 0; i < 6; i++) {
@@ -299,14 +291,14 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void createBoundingBoxes(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinType skinType) {
+    public static void createBoundingBoxes(World world, BlockPos pos, BlockPos parentPos, ISkinType skinType) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            createBoundingBoxesForSkinPart(world, x, y, z, parentX, parentY, parentZ, skinPart);
+            createBoundingBoxesForSkinPart(world, pos, parentPos, skinPart);
         }
     }
     
-    private static void createBoundingBoxesForSkinPart(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinPartType skinPart) {
+    private static void createBoundingBoxesForSkinPart(World world, BlockPos pos, BlockPos parentPos, ISkinPartType skinPart) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IRectangle3D guideSpace = skinPart.getGuideSpace();
         IPoint3D offset = skinPart.getOffset();
@@ -318,9 +310,10 @@ public final class ArmourerWorldHelper {
         for (int ix = 0; ix < guideSpace.getWidth(); ix++) {
             for (int iy = 0; iy < guideSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
-                    int xTar = x + ix + -offset.getX() + guideSpace.getX();
-                    int yTar = y + iy + -offset.getY() + guideSpace.getY() - buildSpace.getY();
-                    int zTar = z + iz + offset.getZ() + guideSpace.getZ();
+                    BlockPos target = pos.add(
+                            ix + -offset.getX() + guideSpace.getX(),
+                            iy + -offset.getY() + guideSpace.getY() - buildSpace.getY(),
+                            iz + offset.getZ() + guideSpace.getZ());
                     
                     //TODO Set skinPart to left and right legs for skirt.
                     ISkinPartType guidePart = skinPart;
@@ -328,17 +321,15 @@ public final class ArmourerWorldHelper {
                     byte guideY = (byte) iy;
                     byte guideZ = (byte) iz;
                     
-                    if (world.isAirBlock(xTar, yTar, zTar)) {
-                        world.setBlock(xTar, yTar, zTar, ModBlocks.boundingBox);
+                    if (world.isAirBlock(target)) {
+                        world.setBlockState(target, ModBlocks.boundingBox.getDefaultState());
                         TileEntity te = null;
-                        te = world.getTileEntity(xTar, yTar, zTar);
+                        te = world.getTileEntity(target);
                         if (te != null && te instanceof TileEntityBoundingBox) {
-                            ((TileEntityBoundingBox)te).setParent(parentX, parentY, parentZ,
-                                    guideX, guideY, guideZ, guidePart);
+                            ((TileEntityBoundingBox)te).setParent(parentPos, guideX, guideY, guideZ, guidePart);
                         } else {
-                            te = new TileEntityBoundingBox(parentX, parentY, parentZ,
-                                    guideX, guideY, guideZ, guidePart);
-                            world.setTileEntity(xTar, yTar, zTar, te);
+                            te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
+                            world.setTileEntity(target, te);
                         }
                     }
                     
@@ -347,14 +338,14 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void removeBoundingBoxes(World world, int x, int y, int z, ISkinType skinType) {
+    public static void removeBoundingBoxes(World world, BlockPos pos, ISkinType skinType) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            removeBoundingBoxesForSkinPart(world, x, y, z, skinPart);
+            removeBoundingBoxesForSkinPart(world, pos, skinPart);
         }
     }
     
-    private static void removeBoundingBoxesForSkinPart(World world, int x, int y, int z, ISkinPartType skinPart) {
+    private static void removeBoundingBoxesForSkinPart(World world, BlockPos pos, ISkinPartType skinPart) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IRectangle3D guideSpace = skinPart.getGuideSpace();
         IPoint3D offset = skinPart.getOffset();
@@ -366,13 +357,14 @@ public final class ArmourerWorldHelper {
         for (int ix = 0; ix < guideSpace.getWidth(); ix++) {
             for (int iy = 0; iy < guideSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
-                    int xTar = x + ix + -offset.getX() + guideSpace.getX();
-                    int yTar = y + iy + -offset.getY() + guideSpace.getY() - buildSpace.getY();
-                    int zTar = z + iz + offset.getZ() + guideSpace.getZ();
+                    BlockPos target = pos.add(
+                            ix + -offset.getX() + guideSpace.getX(),
+                            iy + -offset.getY() + guideSpace.getY() - buildSpace.getY(),
+                            iz + offset.getZ() + guideSpace.getZ());
                     
-                    if (world.blockExists(xTar, yTar, zTar)) {
-                        if (world.getBlock(xTar, yTar, zTar) == ModBlocks.boundingBox) {
-                            world.setBlockToAir(xTar, yTar, zTar);
+                    if (world.isValid(pos)) {
+                        if (world.getBlockState(target).getBlock() == ModBlocks.boundingBox) {
+                            world.setBlockToAir(target);
                         }
                     }
                     
@@ -382,20 +374,20 @@ public final class ArmourerWorldHelper {
     }
     
 
-    public static void copySkinCubes(World world, int x, int y, int z, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) throws SkinSaveException {
+    public static void copySkinCubes(World world, BlockPos pos, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) throws SkinSaveException {
         ArrayList<BlockLocation> blList = new ArrayList<BlockLocation>();
-        SkinPart skinPart = saveArmourPart(world, srcPart, x, y, z, ForgeDirection.UNKNOWN, false);
+        SkinPart skinPart = saveArmourPart(world, srcPart, pos, null, false);
         if (skinPart != null) {
             skinPart.setSkinPart(desPart);
-            loadSkinPartIntoWorld(world, skinPart, x, y, z, ForgeDirection.UNKNOWN, mirror);
+            loadSkinPartIntoWorld(world, skinPart, pos, null, mirror);
         }
     }
     
-    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps) {
-        return clearEquipmentCubes(world, x, y, z, skinType, skinProps, null);
+    public static int clearEquipmentCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps) {
+        return clearEquipmentCubes(world, pos, skinType, skinProps, null);
     }
     
-    public static int clearMarkers(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
+    public static int clearMarkers(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
@@ -407,19 +399,19 @@ public final class ArmourerWorldHelper {
             if (skinType == SkinTypeRegistry.skinBlock) {
                 boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps);
                 if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
-                    blockCount += clearMarkersForSkinPart(world, x, y, z, skinPart);
+                    blockCount += clearMarkersForSkinPart(world, pos, skinPart);
                 }
                 if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock & multiblock) {
-                    blockCount += clearMarkersForSkinPart(world, x, y, z, skinPart);
+                    blockCount += clearMarkersForSkinPart(world, pos, skinPart);
                 }
             } else {
-                blockCount += clearMarkersForSkinPart(world, x, y, z, skinPart);
+                blockCount += clearMarkersForSkinPart(world, pos, skinPart);
             }
         }
         return blockCount;
     }
     
-    private static int clearMarkersForSkinPart(World world, int x, int y, int z, ISkinPartType skinPart) {
+    private static int clearMarkersForSkinPart(World world, BlockPos pos, ISkinPartType skinPart) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
         int blockCount = 0;
@@ -427,13 +419,14 @@ public final class ArmourerWorldHelper {
         for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
             for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-                    int xTar = x + ix + -offset.getX() + buildSpace.getX();
-                    int yTar = y + iy + -offset.getY();
-                    int zTar = z + iz + offset.getZ() + buildSpace.getZ();
+                    BlockPos target = pos.add(
+                            ix + -offset.getX() + buildSpace.getX(),
+                            iy + -offset.getY(),
+                            iz + offset.getZ() + buildSpace.getZ());
                     
-                    if (world.blockExists(xTar, yTar, zTar)) {
-                        Block block = world.getBlock(xTar, yTar, zTar);
-                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
+                    if (world.isValid(target)) {
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(world.getBlockState(target).getBlock())) {
+                            
                             if (world.getBlockMetadata(xTar, yTar, zTar) != 0) {
                                 world.setBlockMetadataWithNotify(xTar, yTar, zTar, 0, 2);
                                 blockCount++;
@@ -447,7 +440,7 @@ public final class ArmourerWorldHelper {
         return blockCount;
     }
     
-    public static int clearEquipmentCubes(World world, int x, int y, int z, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
+    public static int clearEquipmentCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
@@ -459,19 +452,19 @@ public final class ArmourerWorldHelper {
             if (skinType == SkinTypeRegistry.skinBlock) {
                 boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps);
                 if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
-                    blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+                    blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
                 }
                 if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock & multiblock) {
-                    blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+                    blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
                 }
             } else {
-                blockCount += clearEquipmentCubesForSkinPart(world, x, y, z, skinPart);
+                blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
             }
         }
         return blockCount;
     }
     
-    private static int clearEquipmentCubesForSkinPart(World world, int x, int y, int z, ISkinPartType skinPart) {
+    private static int clearEquipmentCubesForSkinPart(World world, BlockPos pos, ISkinPartType skinPart) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
         int blockCount = 0;
@@ -498,16 +491,16 @@ public final class ArmourerWorldHelper {
         return blockCount;
     }
 
-    public static ArrayList<BlockLocation> getListOfPaintableCubes(World world, int x, int y, int z, ISkinType skinType) {
+    public static ArrayList<BlockLocation> getListOfPaintableCubes(World world, BlockPos pos, ISkinType skinType) {
         ArrayList<BlockLocation> blList = new ArrayList<BlockLocation>();
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            getBuildingCubesForPart(world, x, y, z, skinPart, blList);
+            getBuildingCubesForPart(world, pos, skinPart, blList);
         }
         return blList;
     }
     
-    private static void getBuildingCubesForPart(World world, int x, int y, int z, ISkinPartType skinPart, ArrayList<BlockLocation> blList) {
+    private static void getBuildingCubesForPart(World world, BlockPos pos, ISkinPartType skinPart, ArrayList<BlockLocation> blList) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
         
@@ -529,20 +522,19 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    private static int getNumberOfCubesInPart(World world, int x, int y, int z, ISkinPartType skinPart) {
+    private static int getNumberOfCubesInPart(World world, BlockPos pos, ISkinPartType skinPart) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
         int cubeCount = 0;
         for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
             for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-                    int xTar = x + ix + -offset.getX() + buildSpace.getX();
-                    int yTar = y + iy + -offset.getY();
-                    int zTar = z + iz + offset.getZ() + buildSpace.getZ();
+
+                    BlockPos target = pos.add(ix + -offset.getX() + buildSpace.getX(), iy + -offset.getY(), iz + offset.getZ() + buildSpace.getZ());
                     
-                    if (world.blockExists(xTar, yTar, zTar)) {
-                        Block block = world.getBlock(xTar, yTar, zTar);
-                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
+                    if (world.isValid(target)) {
+                        IBlockState blockState = world.getBlockState(target);
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(blockState.getBlock())) {
                             cubeCount++;
                         }
                     }

@@ -4,17 +4,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
@@ -39,12 +37,6 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
     public ItemDodgeTool() {
         super(LibItemNames.DODGE_TOOL);
         setSortPriority(17);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.DODGE_TOOL);
     }
 
     @Override

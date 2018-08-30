@@ -2,19 +2,16 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
@@ -24,37 +21,9 @@ public class ItemLinkingTool extends AbstractModItem {
 
     private static final String TAG_LINK_LOCATION = "linkLocation";
     
-    @SideOnly(Side.CLIENT)
-    private IIcon linkIcon;
-    
     public ItemLinkingTool() {
         super(LibItemNames.LINKING_TOOL);
         setSortPriority(7);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister iconRegister) {
-        itemIcon = iconRegister.registerIcon(LibItemResources.LINKING_TOOL);
-        linkIcon = iconRegister.registerIcon(LibItemResources.LINKING_TOOL_LINK);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIconIndex(ItemStack stack) {
-        if (hasLinkLocation(stack)) {
-            return linkIcon;
-        }
-        return itemIcon;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (hasLinkLocation(stack)) {
-            return linkIcon;
-        }
-        return itemIcon;
     }
     
     @Override
@@ -67,10 +36,10 @@ public class ItemLinkingTool extends AbstractModItem {
                 Block block = world.getBlock(x, y, z);
                 if (!(block instanceof BlockSkinnable)) {
                     setLinkLocation(stack, new BlockLocation(x, y, z));
-                    player.addChatMessage(new ChatComponentTranslation("chat.armourersworkshop:linkingTool.start", (Object)null));
+                    player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.start", (Object)null));
                     return true;
                 } else {
-                    player.addChatMessage(new ChatComponentTranslation("chat.armourersworkshop:linkingTool.linkedToSkinnable", (Object)null));
+                    player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.linkedToSkinnable", (Object)null));
                     return true;
                 }
             } else {
@@ -80,14 +49,14 @@ public class ItemLinkingTool extends AbstractModItem {
                     TileEntity te = world.getTileEntity(x, y, z);
                     if (te != null && te instanceof TileEntitySkinnable) {
                         ((TileEntitySkinnable)te).getParent().setLinkedBlock(loc);
-                        player.addChatMessage(new ChatComponentTranslation("chat.armourersworkshop:linkingTool.finish", (Object)null));
+                        player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.finish", (Object)null));
                         removeLinkLocation(stack);
                         return true;
                     }
                 }
             }
             removeLinkLocation(stack);
-            player.addChatMessage(new ChatComponentTranslation("chat.armourersworkshop:linkingTool.fail", (Object)null));
+            player.addChatMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.fail", (Object)null));
         }
         return true;
     }

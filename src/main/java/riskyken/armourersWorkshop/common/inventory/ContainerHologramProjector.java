@@ -56,13 +56,13 @@ public class ContainerHologramProjector extends Container {
                 }
             }
             
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onPickupFromSlot(player, stack);
+            slot.onTake(player, stack);
             
             return result;
         }

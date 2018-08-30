@@ -2,13 +2,13 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.common.creativetab.ISortOrder;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -38,7 +38,7 @@ public abstract class AbstractModItem extends Item implements ISortOrder {
         String localized;
 
         unlocalized = itemStack.getUnlocalizedName() + ".flavour";
-        localized = StatCollector.translateToLocal(unlocalized);
+        localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");

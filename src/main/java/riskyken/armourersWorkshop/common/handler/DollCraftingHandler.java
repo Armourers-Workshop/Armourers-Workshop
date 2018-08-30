@@ -1,26 +1,13 @@
 package riskyken.armourersWorkshop.common.handler;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IWorldAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
-import riskyken.armourersWorkshop.common.blocks.BlockMannequin;
-import riskyken.armourersWorkshop.common.blocks.ModBlocks;
-import riskyken.armourersWorkshop.utils.ModLogger;
 
-public class DollCraftingHandler implements IWorldAccess {
+public class DollCraftingHandler /*implements IWorldAccess*/ {
 
     public DollCraftingHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
-    
+    /*
     @SubscribeEvent
     public void onLoadWorld(WorldEvent.Load event) {
         ModLogger.log(String.format("Adding world access to world %s", event.world.toString()));
@@ -91,5 +78,5 @@ public class DollCraftingHandler implements IWorldAccess {
 
     @Override
     public void onStaticEntitiesChanged() {
-    }
+    }*/
 }

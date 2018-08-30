@@ -133,7 +133,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         } else if (identifier.hasGlobalId()) {
             sendGlobalDatabaseSkinToClient(queueMessage);
         } else {
-            ModLogger.log(Level.ERROR, "Player " + player.getCommandSenderName() + " requested a skin with no vaid ID:" + identifier.toString());
+            ModLogger.log(Level.ERROR, "Player " + player.getName() + " requested a skin with no vaid ID:" + identifier.toString());
         }
     }
     

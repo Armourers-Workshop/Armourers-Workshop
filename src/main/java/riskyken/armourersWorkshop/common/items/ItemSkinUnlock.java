@@ -2,18 +2,13 @@ package riskyken.armourersWorkshop.common.items;
 
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
@@ -38,43 +33,6 @@ public class ItemSkinUnlock extends AbstractModItem {
     public void getSubItems(Item item, CreativeTabs creativeTabs, List list) {
         for (int i = 0; i < VALID_SKINS.length;i++) {
             list.add(new ItemStack(this, 1, i));
-        }
-    }
-    
-    @SideOnly(Side.CLIENT)
-    IIcon iconChest;
-    @SideOnly(Side.CLIENT)
-    IIcon iconLegs;
-    @SideOnly(Side.CLIENT)
-    IIcon iconFeet;
-    @SideOnly(Side.CLIENT)
-    IIcon iconWings;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.SKIN_UNLOCK_HEAD);
-        iconChest = register.registerIcon(LibItemResources.SKIN_UNLOCK_CHEST);
-        iconLegs = register.registerIcon(LibItemResources.SKIN_UNLOCK_LEGS);
-        iconFeet = register.registerIcon(LibItemResources.SKIN_UNLOCK_FEET);
-        iconWings = register.registerIcon(LibItemResources.SKIN_UNLOCK_WINGS);
-    }
-    
-    @Override
-    public IIcon getIconFromDamage(int damage) {
-        switch (damage) {
-        case 0:
-            return itemIcon;
-        case 1:
-            return iconChest;
-        case 2:
-            return iconLegs;
-        case 3:
-            return iconFeet;
-        case 4:
-            return iconWings;
-        default:
-            return itemIcon;
         }
     }
     

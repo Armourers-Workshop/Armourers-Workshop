@@ -1,11 +1,9 @@
 package riskyken.armourersWorkshop.common.blocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.world.IBlockAccess;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
 
 public class BlockColourableGlass extends BlockColourable {
 
@@ -15,14 +13,6 @@ public class BlockColourableGlass extends BlockColourable {
         if (glowing) {
             setSortPriority(120);
         }
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.COLOURABLE_GLASS);
-        markerOverlay = register.registerIcon(LibBlockResources.COLOURABLE_MARKER);
-        noTexture = register.registerIcon(LibBlockResources.COLOURABLE_NO_TEXTURE);
     }
     
     @SideOnly(Side.CLIENT)

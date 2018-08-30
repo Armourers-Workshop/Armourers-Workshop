@@ -6,6 +6,21 @@ import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.item.Item;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -18,22 +33,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.item.Item;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary;
 import riskyken.armourersWorkshop.client.handler.BlockHighlightRenderHandler;
@@ -102,12 +101,6 @@ public class ClientProxy extends CommonProxy {
     public static PlayerTextureDownloader playerTextureDownloader;
     
     public static int renderPass;
-    
-    public static IIcon dyeBottleSlotIcon;
-    public static IIcon iconSkinPickaxe;
-    public static IIcon iconSkinAxe;
-    public static IIcon iconSkinHoe;
-    public static IIcon iconSkinShovel;
     
     public static boolean isJrbaClientLoaded() {
         return ModAddonManager.addonJBRAClient.isModLoaded();
@@ -207,7 +200,7 @@ public class ClientProxy extends CommonProxy {
     
     @SubscribeEvent
     public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-        if (event.map.getTextureType() == 1) {
+        if (event.getMap().getTextureType() == 1) {
             dyeBottleSlotIcon = event.map.registerIcon(LibItemResources.SLOT_DYE_BOTTLE);
             iconSkinPickaxe = event.map.registerIcon(LibItemResources.SLOT_SKIN_PICKAXE);
             iconSkinAxe = event.map.registerIcon(LibItemResources.SLOT_SKIN_AXE);
@@ -338,7 +331,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void receivedCommandFromSever(CommandType command) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = Minecraft.getMinecraft().player;
         switch (command) {
         case CLEAR_MODEL_CACHE:
             ClientSkinCache.INSTANCE.clearCache();
@@ -414,7 +407,7 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public GameProfile getLocalGameProfile() {
-        return Minecraft.getMinecraft().thePlayer.getGameProfile();
+        return Minecraft.getMinecraft().player.getGameProfile();
     }
     
     public static enum SkinRenderType {

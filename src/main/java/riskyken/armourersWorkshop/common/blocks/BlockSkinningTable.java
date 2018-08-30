@@ -1,18 +1,11 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.lib.LibBlockResources;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
@@ -26,25 +19,6 @@ public class BlockSkinningTable extends AbstractModBlockContainer {
     }
     
     @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon iconTop;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconBottom;
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister register) {
-        blockIcon = register.registerIcon(LibBlockResources.SKINNING_TABLE_SIDE);
-        iconTop = register.registerIcon(LibBlockResources.SKINNING_TABLE_TOP);
-        iconBottom = register.registerIcon(LibBlockResources.SKINNING_TABLE_BOTTOM);
-    }
-    
-    @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         TileEntity te = world.getTileEntity(x, y, z);
         if (te != null && te instanceof TileEntitySkinningTable) {
@@ -52,18 +26,6 @@ public class BlockSkinningTable extends AbstractModBlockContainer {
             BlockUtils.dropInventoryBlocks(world, tileEntity.getCraftingInventory(), x, y, z);
         }
         super.breakBlock(world, x, y, z, block, meta);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        if (side == 1) {
-            return iconTop;
-        }
-        if (side == 0) {
-            return iconBottom;
-        }
-        return blockIcon;
     }
     
     @Override

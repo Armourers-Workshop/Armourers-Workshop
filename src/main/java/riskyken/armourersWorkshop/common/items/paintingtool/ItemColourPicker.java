@@ -4,21 +4,18 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.items.AbstractModItem;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
@@ -38,16 +35,6 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     public ItemColourPicker() {
         super(LibItemNames.COLOUR_PICKER);
         setSortPriority(12);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon tipIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.COLOUR_PICKER);
-        tipIcon = register.registerIcon(LibItemResources.COLOUR_PICKER_TIP);
     }
     
     @SideOnly(Side.CLIENT)
@@ -159,17 +146,6 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             return super.getColorFromItemStack(stack, pass);
         }
         return getToolColour(stack);
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (!getToolHasColour(stack)) {
-            return itemIcon;
-        }
-        if (pass == 0) {
-            return itemIcon;
-        }
-        return tipIcon;
     }
     
     @Override

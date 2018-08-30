@@ -1,15 +1,11 @@
 package riskyken.armourersWorkshop.common.items;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
@@ -23,20 +19,14 @@ public class ItemWandOfStyle extends AbstractModItem {
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconRegister) {
-        itemIcon = iconRegister.registerIcon(LibItemResources.WAND_OF_STYLE);
-    }
-    
-    @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
         ModLogger.log(entity.getClass());
         if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entity)) {
-            if (entity.worldObj.isRemote) {
+            if (entity.getEntityWorld().isRemote) {
                 return true;
             }
             FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance,
-                    LibGuiIds.ENTITY_SKIN_INVENTORY, entity.worldObj,
+                    LibGuiIds.ENTITY_SKIN_INVENTORY, entity.getEntityWorld(),
                     entity.getEntityId(), 0, 0);
         }
         
@@ -47,11 +37,11 @@ public class ItemWandOfStyle extends AbstractModItem {
     public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer entityPlayer, EntityLivingBase entityLivingBase) {
         ModLogger.log(entityLivingBase.getClass());
         if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entityLivingBase)) {
-            if (entityLivingBase.worldObj.isRemote) {
+            if (entityLivingBase.getEntityWorld().isRemote) {
                 return true;
             }
             FMLNetworkHandler.openGui(entityPlayer, ArmourersWorkshop.instance,
-                    LibGuiIds.ENTITY_SKIN_INVENTORY, entityLivingBase.worldObj,
+                    LibGuiIds.ENTITY_SKIN_INVENTORY, entityLivingBase.getEntityWorld(),
                     entityLivingBase.getEntityId(), 0, 0);
         }
         

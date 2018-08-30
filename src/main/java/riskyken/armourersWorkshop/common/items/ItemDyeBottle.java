@@ -3,18 +3,13 @@ package riskyken.armourersWorkshop.common.items;
 import java.awt.Color;
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
-import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.blocks.ModBlocks;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -26,15 +21,6 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     public ItemDyeBottle() {
         super(LibItemNames.DYE_BOTTLE);
         setSortPriority(11);
-    }
-    
-    private IIcon paintIcon;
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibItemResources.DYE_BOTTLE);
-        paintIcon = register.registerIcon(LibItemResources.DYE_BOTTLE_PAINT);
     }
     
     @Override
@@ -95,18 +81,6 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
             return PaintingHelper.getToolPaintColourRGB(stack);
         }
         return super.getColorFromItemStack(stack, pass);
-    }
-    
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        if (pass == 0) {
-            if (PaintingHelper.getToolHasPaint(stack)) {
-                return paintIcon;
-            } else {
-                return itemIcon;
-            }
-        }
-        return itemIcon;
     }
 
     @Override

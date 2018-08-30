@@ -211,7 +211,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 int u = MathHelper.floor_double(frame / 9);
                 int v = frame - u * 9;
                 
-                Gui.func_152125_a(
+                Gui.drawScaledCustomSizeModalRect(
                         x + 8, y + 8,
                         u * 28, v * 28,
                         27, 27,

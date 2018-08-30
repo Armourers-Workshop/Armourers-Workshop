@@ -1,14 +1,11 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
@@ -37,12 +34,6 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
             }
         }
         return true;
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
     }
 
     @Override
