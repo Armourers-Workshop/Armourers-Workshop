@@ -17,7 +17,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
@@ -86,8 +85,7 @@ public class TileEntitySkinnable extends ModTileEntity {
                 inventory = new ModInventory(LibBlockNames.SKINNABLE, size, this);
             }
         }
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     public BlockLocation getLinkedBlock() {
@@ -100,8 +98,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     
     public void setLinkedBlock(BlockLocation linkedBlock) {
         this.linkedBlock = linkedBlock;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     @Override
@@ -118,9 +115,9 @@ public class TileEntitySkinnable extends ModTileEntity {
         }
         
         if (block != null && !(block instanceof BlockSkinnable)) {
-            ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", xOffset, yOffset, zOffset));
-            if (worldObj != null) {
-                worldObj.removeTileEntity(xOffset, yOffset, zOffset);
+            ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", offset.getX(), offset.getY(), offset.getZ()));
+            if (getWorld() != null) {
+                getWorld().removeTileEntity(offset);
             }
             return;
         }
@@ -130,8 +127,8 @@ public class TileEntitySkinnable extends ModTileEntity {
             Skin skin = null;
             skin = getSkin(skinPointer);
             if (skin != null) {
-                ForgeDirection dir = blockSkinnable.getFacingDirection(getBlockMetadata());
-                float[] bounds = getBlockBounds(skin, xOffset, yOffset, zOffset, dir);
+                EnumFacing dir = blockSkinnable.getFacingDirection(getBlockMetadata());
+                float[] bounds = getBlockBounds(skin, offset.getX(), offset.getY(), offset.getZ(), dir);
                 if (bounds != null) {
                     minX = bounds[0];
                     minY = bounds[1];
@@ -140,15 +137,15 @@ public class TileEntitySkinnable extends ModTileEntity {
                     maxY = bounds[4];
                     maxZ = bounds[5];
                     haveBlockBounds = true;
-                    block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+                    //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
                 }
                 return;
             }
         }
         if (haveBlockBounds) {
-            block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+            //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
         } else {
-            block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
+            //block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
         }
     }
     
@@ -288,7 +285,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     }
     
     public void setRotation(EnumFacing rotation) {
-        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, rotation.ordinal(), 2);
+        //worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, rotation.ordinal(), 2);
     }
     
     public EnumFacing getRotation() {
@@ -378,7 +375,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         } else {
             skinPointer = null;
             relatedBlocks = null;
-            ModLogger.log(Level.WARN, String.format("Skinnable tile at X:%d Y:%d Z:%d has no skin data.", xCoord, yCoord, zCoord));
+            ModLogger.log(Level.WARN, String.format("Skinnable tile at X:%d Y:%d Z:%d has no skin data.", getPos().getX(), getPos().getY(), getPos().getZ()));
         }
     }
 
@@ -386,21 +383,24 @@ public class TileEntitySkinnable extends ModTileEntity {
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         if (renderBounds == null) {
+            int xCoord = getPos().getX();
+            int yCoord = getPos().getY();
+            int zCoord = getPos().getZ();
             if (hasSkin()) {
                 Skin skin = getSkin(getSkinPointer());
                 if (skin != null) {
                     if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
-                        renderBounds = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
-                        ForgeDirection dir = getRotation().getOpposite();
-                        renderBounds.offset(dir.offsetX, 0, dir.offsetZ);
+                        renderBounds = new AxisAlignedBB(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
+                        EnumFacing dir = getRotation().getOpposite();
+                        renderBounds.offset(dir.getFrontOffsetX(), 0, dir.getFrontOffsetZ());
                     } else {
-                        renderBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                        renderBounds = new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
                     }
                 } else {
-                    return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                    return new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
                 } 
             } else {
-                return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                return new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
             }
         }
         return renderBounds;
@@ -416,6 +416,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         if (relatedBlocks != null) {
             for (int i = 0; i < relatedBlocks.size(); i++) {
                 BlockLocation loc = relatedBlocks.get(i);
+                /*
                 if (!(xCoord == loc.x & yCoord == loc.y & zCoord == loc.z)) {
                     ModLogger.log("Removing child: " + loc.toString());
                     world.setBlockToAir(loc.x, loc.y, loc.z);
@@ -423,6 +424,7 @@ public class TileEntitySkinnable extends ModTileEntity {
                 } else {
                     ModLogger.log("Skipping child: " + loc.toString());
                 }
+                */
             }
         }
     }

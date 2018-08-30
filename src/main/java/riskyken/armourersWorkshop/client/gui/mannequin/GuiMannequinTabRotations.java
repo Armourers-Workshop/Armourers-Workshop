@@ -4,14 +4,14 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCustomSlider;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
@@ -206,8 +206,8 @@ public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         /*
         String headRotationLabel = GuiHelper.getLocalizedControlName(inventoryName, "label.headRotation");
         String leftArmRotationLabel = GuiHelper.getLocalizedControlName(inventoryName, "label.leftArmRotation");

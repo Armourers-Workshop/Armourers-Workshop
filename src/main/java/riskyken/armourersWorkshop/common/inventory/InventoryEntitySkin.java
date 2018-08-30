@@ -42,7 +42,7 @@ public class InventoryEntitySkin implements IInventory {
     public ItemStack decrStackSize(int slotId, int count) {
         ItemStack itemstack = getStackInSlot(slotId);
         if (itemstack != null) {
-            if (itemstack.stackSize <= count){
+            if (itemstack.getCount() <= count){
                 setInventorySlotContents(slotId, null);
             }else{
                 itemstack = itemstack.splitStack(count);

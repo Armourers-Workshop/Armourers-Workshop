@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -41,7 +43,7 @@ public class GuiAdminPanel extends GuiScreen {
     }
     
     @Override
-    protected void keyTyped(char key, int keycode) {
+    protected void keyTyped(char key, int keycode) throws IOException {
         if (keycode == 1 || keycode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
             this.mc.player.closeScreen();
         }

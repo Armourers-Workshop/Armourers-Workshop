@@ -40,8 +40,8 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
     
     @Override
     public void render(TileEntityColourable tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        if (lastWorldTimeUpdate != tileEntity.getWorldObj().getTotalWorldTime()) {
-            lastWorldTimeUpdate = tileEntity.getWorldObj().getTotalWorldTime();
+        if (lastWorldTimeUpdate != tileEntity.getWorld().getTotalWorldTime()) {
+            lastWorldTimeUpdate = tileEntity.getWorld().getTotalWorldTime();
             if (isPlayerHoldingPaintingTool()) {
                 markerAlpha += 0.25F;
                 if (markerAlpha > 1F) {
@@ -58,14 +58,6 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             return;
         }
         
-        if (tileEntity instanceof TileEntityColourable) {
-            renderTileEntityAt((TileEntityColourable)tileEntity, x, y, z, partialTickTime);
-        } else if (tileEntity instanceof TileEntityBoundingBox) {
-            renderTileEntityAt((TileEntityBoundingBox)tileEntity, x, y, z, partialTickTime);
-        }
-    }
-    
-    public void renderTileEntityAt(TileEntityColourable tileEntity, double x, double y, double z, float partialTickTime) {
         ICubeColour cubeColour = tileEntity.getColour();
         //ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -74,7 +66,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
         renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
-                EnumFacing dir = EnumFacing.getOrientation(i);
+                EnumFacing dir = EnumFacing.getFront(i);
                 int paintType = cubeColour.getPaintType(i) & 0xFF;
                 if (paintType != 255) {
                     bindTexture(MARKERS);
@@ -182,7 +174,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
     
     private boolean isPlayerHoldingPaintingTool() {
         EntityPlayerSP player = mc.player;
-        ItemStack stack = player.getCurrentEquippedItem();
+        ItemStack stack = player.getHeldItemMainhand();
         if (stack != null) {
             Item item = stack.getItem();
             if (item instanceof IBlockPainter) {

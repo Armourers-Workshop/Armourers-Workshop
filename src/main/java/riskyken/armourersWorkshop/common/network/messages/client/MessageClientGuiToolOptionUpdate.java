@@ -38,7 +38,7 @@ public class MessageClientGuiToolOptionUpdate implements IMessage, IMessageHandl
     public IMessage onMessage(MessageClientGuiToolOptionUpdate message, MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().player;
         if (player != null) {
-            ItemStack stack = player.getCurrentEquippedItem();
+            ItemStack stack = player.getHeldItemMainhand();
             Item item = stack.getItem();
             
             if (item instanceof IConfigurableTool) {

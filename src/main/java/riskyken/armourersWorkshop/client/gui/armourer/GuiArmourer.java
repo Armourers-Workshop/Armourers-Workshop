@@ -1,5 +1,7 @@
 package riskyken.armourersWorkshop.client.gui.armourer;
 
+import java.io.IOException;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.entity.player.InventoryPlayer;
@@ -145,7 +147,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.drawForegroundLayer(mouseX, mouseY);
+                tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
         if (isDialogOpen()) {
@@ -160,7 +162,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (isDialogOpen()) {
             dialog.mouseClicked(mouseX, mouseY, button);
         } else {
@@ -178,16 +180,16 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
         if (isDialogOpen()) {
-            dialog.mouseMovedOrUp(mouseX, mouseY, button);
+            dialog.mouseMovedOrUp(mouseX, mouseY, state);
         } else {
-            super.mouseMovedOrUp(mouseX, mouseY, button);
+            super.mouseReleased(mouseX, mouseY, state);
         }
     }
     
     @Override
-    protected void keyTyped(char c, int keycode) {
+    protected void keyTyped(char c, int keycode) throws IOException {
         if (isDialogOpen()) {
             dialog.keyTyped(c, keycode);
         } else {

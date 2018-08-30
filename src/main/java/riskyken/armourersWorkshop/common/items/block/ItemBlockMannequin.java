@@ -63,11 +63,11 @@ public class ItemBlockMannequin extends ModItemBlock {
         
         Block block = world.getBlock(x, y, z);
 
-        if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, z) & 7) < 1)
+        if (block == Blocks.SNOW_LAYER && (world.getBlockMetadata(x, y, z) & 7) < 1)
         {
             side = 1;
         }
-        else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, z))
+        else if (block != Blocks.VINE && block != Blocks.TALLGRASS && block != Blocks.DEADBUSH && !block.isReplaceable(world, x, y, z))
         {
             if (side == 0)
             {

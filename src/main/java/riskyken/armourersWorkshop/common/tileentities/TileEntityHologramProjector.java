@@ -2,8 +2,7 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -62,25 +61,20 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.HOLOGRAM_PROJECTOR;
     }
     
     @Override
-    public boolean canUpdate() {
-        return false;
-    }
-    
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.func_148857_g());
-    }
-    
-    @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
+        return new SPacketUpdateTileEntity(getPos(), 5, compound);
+    }
+    
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        readFromNBT(pkt.getNbtCompound());
     }
     
     public void setOffset(int x, int y, int z) {
@@ -201,8 +195,8 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     }
     
     public void updatePoweredState() {
-        if (worldObj != null) {
-            setPoweredState(worldObj.getStrongestIndirectPower(xCoord, yCoord, zCoord) > 0);
+        if (getWorld() != null) {
+            setPoweredState(getWorld().getStrongPower(getPos()) > 0);
         }
     }
     
@@ -218,7 +212,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setInteger(TAG_OFFSET_X, offsetX);
         compound.setInteger(TAG_OFFSET_Y, offsetY);
@@ -239,6 +233,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         compound.setBoolean(TAG_GLOWING, glowing);
         compound.setByte(TAG_POWER_MODE, (byte) powerMode.ordinal());
         compound.setBoolean(TAG_POWERED, powered);
+        return compound;
     }
     
     @Override

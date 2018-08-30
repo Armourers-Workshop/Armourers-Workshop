@@ -4,12 +4,12 @@ import java.util.BitSet;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
@@ -101,8 +101,8 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         // Draw player preview.
         GL11.glPushMatrix();
         GL11.glTranslated(-x, -y, 0);

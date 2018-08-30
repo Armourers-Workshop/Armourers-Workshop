@@ -465,9 +465,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeCommonToNBT(compound);
+        return compound;
     }
     
     @Override

@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
@@ -67,9 +66,11 @@ public final class EquipmentWardrobeHandler {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.getEntityPlayer();
+        /*
         if (player instanceof MannequinFakePlayer) {
             return;
         }
+        */
         if (player.getGameProfile() == null) {
             return;
         }
@@ -95,9 +96,9 @@ public final class EquipmentWardrobeHandler {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
         EntityPlayer player = event.getEntityPlayer();
-        if (player instanceof MannequinFakePlayer) {
+        /*if (player instanceof MannequinFakePlayer) {
             return;
-        }
+        }*/
         if (player.getGameProfile() == null) {
             return;
         }
@@ -120,9 +121,9 @@ public final class EquipmentWardrobeHandler {
             return;
         }
         EntityPlayer player = event.getEntityPlayer();
-        if (player instanceof MannequinFakePlayer) {
+        /*if (player instanceof MannequinFakePlayer) {
             return;
-        }
+        }*/
         if (player.getGameProfile() == null) {
             return;
         }

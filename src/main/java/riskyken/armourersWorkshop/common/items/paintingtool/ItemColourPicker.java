@@ -53,7 +53,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         
-        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBTBool(stack.stackTagCompound);
+        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBTBool(stack.getTagCompound());
         PaintType paintType = getToolPaintType(stack);
         
         if (player.isSneaking() & block == ModBlocks.colourMixer & getToolHasColour(stack)) {

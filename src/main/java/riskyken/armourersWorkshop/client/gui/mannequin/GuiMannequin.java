@@ -33,7 +33,7 @@ public class GuiMannequin extends GuiTabbed {
     public GuiMannequin(InventoryPlayer invPlayer, TileEntityMannequin tileEntity) {
         super(new ContainerMannequin(invPlayer, tileEntity), true, textureTabs);
         this.tileEntity = tileEntity;
-        this.inventoryName = tileEntity.getInventoryName();
+        this.inventoryName = tileEntity.getName();
         
         tabInventory = new GuiMannequinTabInventory(0, this, tileEntity);
         tabRotations = new GuiMannequinTabRotations(1, this, inventoryName, tileEntity.getBipedRotations());
@@ -80,13 +80,13 @@ public class GuiMannequin extends GuiTabbed {
         if (tileEntity.getIsDoll()) {
             GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, "doll", append, 4210752);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getInventoryName(), append, 4210752);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName(), append, 4210752);
         }
         
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.drawForegroundLayer(mouseX, mouseY);
+                tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
         GL11.glPushMatrix();

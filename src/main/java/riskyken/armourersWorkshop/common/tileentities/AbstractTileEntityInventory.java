@@ -31,7 +31,7 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
         ItemStack itemstack = getStackInSlot(i);
         
         if (itemstack != null) {
-            if (itemstack.stackSize <= count){
+            if (itemstack.getCount() <= count){
                 setInventorySlotContents(i, null);
             }else{
                 itemstack = itemstack.splitStack(count);
@@ -41,31 +41,20 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
         return itemstack;
     }
 
-    @Override
+    /*@Override
     public ItemStack getStackInSlotOnClosing(int i) {
         ItemStack item = getStackInSlot(i);
         setInventorySlotContents(i, null);
         return item;
-    }
+    }*/
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         items[i] = itemstack;
-        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
-            itemstack.stackSize = getInventoryStackLimit();
+        if (itemstack != null && itemstack.getCount() > getInventoryStackLimit()) {
+            itemstack.setCount(getInventoryStackLimit());
         }
         markDirty();
-    }
-    
-    @Override
-    public void openInventory() {}
-
-    @Override
-    public void closeInventory() {}
-    
-    @Override
-    public boolean hasCustomInventoryName() {
-        return false;
     }
 
     @Override
@@ -74,19 +63,15 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     }
     
     @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-        return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) <= 64;
-    }
-
-    @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
         return true;
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeItemsToNBT(compound);
+        return compound;
     }
     
     @Override
@@ -180,6 +165,7 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
         // TODO Auto-generated method stub
+        //return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) <= 64;
         return false;
     }
     

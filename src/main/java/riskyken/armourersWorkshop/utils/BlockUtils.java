@@ -2,7 +2,6 @@ package riskyken.armourersWorkshop.utils;
 
 import java.util.ArrayList;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -13,7 +12,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
-import riskyken.armourersWorkshop.common.blocks.BlockColourable;
 import riskyken.armourersWorkshop.common.blocks.BlockLocation;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
@@ -95,7 +93,7 @@ public final class BlockUtils {
         ArrayList<BlockLocation> blockFaces = new ArrayList<BlockLocation>();
         ArrayList<BlockLocation> openList = new ArrayList<BlockLocation>();
         ArrayList<BlockLocation> closedList = new ArrayList<BlockLocation>();
-        
+        /*
         openList.add(new BlockLocation(x, y ,z).offset(dir));
         EnumFacing[] sides = EnumFacing.VALUES;
         
@@ -135,7 +133,7 @@ public final class BlockUtils {
                 break;
             }
         }
-        
+        */
         return blockFaces;
     }
     

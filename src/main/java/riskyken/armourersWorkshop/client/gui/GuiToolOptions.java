@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
@@ -82,7 +83,7 @@ public class GuiToolOptions extends GuiScreen {
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) {
+    protected void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
         if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
             this.mc.player.closeScreen();

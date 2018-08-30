@@ -62,7 +62,7 @@ public class ContainerMiniArmourerBuilding extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return tileEntity.isUseableByPlayer(entityPlayer);
+        return tileEntity.isUsableByPlayer(entityPlayer);
     }
     
     public TileEntityMiniArmourer getTileEntity() {

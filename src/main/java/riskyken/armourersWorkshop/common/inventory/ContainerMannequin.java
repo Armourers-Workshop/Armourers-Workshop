@@ -102,7 +102,7 @@ public class ContainerMannequin extends Container {
     
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return tileEntity.isUseableByPlayer(player);
+        return tileEntity.isUsableByPlayer(player);
     }
     
     public TileEntityMannequin getTileEntity() {

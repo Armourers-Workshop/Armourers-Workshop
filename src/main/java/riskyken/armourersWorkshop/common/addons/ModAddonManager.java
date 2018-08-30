@@ -1,22 +1,10 @@
 package riskyken.armourersWorkshop.common.addons;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 
 import org.apache.logging.log4j.Level;
 
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import net.minecraftforge.client.MinecraftForgeClient;
-import riskyken.armourersWorkshop.client.render.item.RenderItemBowSkin;
-import riskyken.armourersWorkshop.client.render.item.RenderItemEquipmentSkin;
-import riskyken.armourersWorkshop.client.render.item.RenderItemSwordSkin;
-import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class ModAddonManager {
@@ -137,12 +125,6 @@ public final class ModAddonManager {
         }
     }
     
-    public static void onWeaponRender(ItemRenderType type, EventState state) {
-        for (int i = 0; i < loadedAddons.size(); i++) {
-            loadedAddons.get(i).onWeaponRender(type, state);
-        }
-    }
-    
     public static void initRenderers() {
         checkForDuplicateItemOverrides();
         overrideItemRenders();
@@ -195,6 +177,7 @@ public final class ModAddonManager {
     }
     
     private static void overrideItemRenderer(String modId, String itemName, RenderType renderType) {
+        /*
         Item item = GameRegistry.findItem(modId, itemName);
         if (item != null) {
             ItemStack stack = new ItemStack(item);
@@ -217,8 +200,9 @@ public final class ModAddonManager {
         } else {
             ModLogger.log(Level.WARN, String.format("Unable to override item renderer for %s:%s. Can not find item.", modId, itemName));
         }
+        */
     }
-    
+    /*
     private static IItemRenderer getItemRenderer(ItemStack stack) {
         try {
             IdentityHashMap<Item, IItemRenderer> customItemRenderers = null;
@@ -230,7 +214,7 @@ public final class ModAddonManager {
         } catch (Exception e) {
         }
         return null;
-    }
+    }*/
     
     public static enum RenderType {
         SWORD,

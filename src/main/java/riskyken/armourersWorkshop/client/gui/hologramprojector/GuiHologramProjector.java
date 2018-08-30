@@ -37,7 +37,7 @@ public class GuiHologramProjector extends GuiTabbed {
     public GuiHologramProjector(InventoryPlayer invPlayer, TileEntityHologramProjector tileEntity) {
         super(new ContainerHologramProjector(invPlayer, tileEntity), true, textureTabs);
         this.tileEntity = tileEntity;
-        this.inventoryName = tileEntity.getInventoryName();
+        this.inventoryName = tileEntity.getName();
         
         tabInventory = new GuiHologramProjectorTabInventory(0, this);
         tabOffset = new GuiHologramProjectorTabOffset(1, this, inventoryName, tileEntity);
@@ -90,11 +90,11 @@ public class GuiHologramProjector extends GuiTabbed {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.drawForegroundLayer(mouseX, mouseY);
+                tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
         GL11.glPushMatrix();

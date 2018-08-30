@@ -1,9 +1,9 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockColourableGlass extends BlockColourable {
 
@@ -15,15 +15,26 @@ public class BlockColourableGlass extends BlockColourable {
         }
     }
     
-    @SideOnly(Side.CLIENT)
     @Override
-    public int getRenderBlockPass() {
-        return 1;
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
     
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
+    }
+    
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return false;
+    }
+    
+    /*@Override
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+            EnumFacing side) {
+        // TODO Auto-generated method stub
+        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
     
     @Override
@@ -33,10 +44,5 @@ public class BlockColourableGlass extends BlockColourable {
             return false;
         }
         return true;
-    }
-    
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
+    }*/
 }

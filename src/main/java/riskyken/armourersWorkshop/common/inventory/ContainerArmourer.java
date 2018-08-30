@@ -77,7 +77,7 @@ public class ContainerArmourer extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return armourerBrain.isUseableByPlayer(player);
+        return armourerBrain.isUsableByPlayer(player);
     }
 
     public TileEntityArmourer getTileEntity() {

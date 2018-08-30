@@ -119,7 +119,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
     
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return tileEntity.isUseableByPlayer(player);
+        return tileEntity.isUsableByPlayer(player);
     }
     
     public TileEntitySkinLibrary getTileEntity() {

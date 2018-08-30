@@ -10,9 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlockWithMetadata;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
@@ -23,12 +21,6 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     public BlockSkinLibrary() {
         super(LibBlockNames.ARMOUR_LIBRARY);
         setSortPriority(198);
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlockWithMetadata.class, "block." + name);
-        return super.setBlockName(name);
     }
     
     @Override

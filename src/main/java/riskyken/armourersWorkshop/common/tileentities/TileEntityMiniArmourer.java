@@ -2,13 +2,12 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.data.MiniCube;
@@ -96,22 +95,21 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
             */
         }
         if (update) {
-            this.markDirty();
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+            dirtySync();
         }
     }
     
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        readFromNBT(packet.func_148857_g());
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound compound = new NBTTagCompound();
+        writeToNBT(compound);
+        return new SPacketUpdateTileEntity(getPos(), 5, compound);
     }
     
     @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound compound = new NBTTagCompound();
-        writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        readFromNBT(packet.getNbtCompound());
+        syncWithClients();
     }
     
     @Override
@@ -140,7 +138,7 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         if (skinType != null) {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
@@ -153,18 +151,16 @@ public class TileEntityMiniArmourer extends AbstractTileEntityInventory {
             }
             */
         }
+        return compound;
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return AxisAlignedBB.getBoundingBox(
-                xCoord, yCoord, zCoord,
-                xCoord + 1, yCoord + 2, zCoord + 1
-                );
+        return new AxisAlignedBB(getPos()).expand(0, 1, 0);
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.MINI_ARMOURER;
     }
 }

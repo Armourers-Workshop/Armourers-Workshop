@@ -20,8 +20,8 @@ public class SlotHidable extends Slot {
         this.xDisplayPositionNormal = x;
         this.yDisplayPositionNormal = y;
         if (visible) {
-            this.xDisplayPosition = x;
-            this.yDisplayPosition = y;
+            this.xPos = x;
+            this.yPos = y;
         }
     }
 
@@ -32,11 +32,11 @@ public class SlotHidable extends Slot {
     public void setVisible(boolean visible) {
         this.visible = visible;
         if (this.visible) {
-            this.xDisplayPosition = xDisplayPositionNormal;
-            this.yDisplayPosition = yDisplayPositionNormal;
+            this.xPos = xDisplayPositionNormal;
+            this.yPos = yDisplayPositionNormal;
         } else {
-            this.xDisplayPosition = 100000;
-            this.yDisplayPosition = 100000;
+            this.xPos = 100000;
+            this.yPos = 100000;
         }
     }
 }

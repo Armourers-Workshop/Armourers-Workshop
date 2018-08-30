@@ -5,8 +5,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotOutput;
+import riskyken.armourersWorkshop.common.inventory.slot.SlotSkinTemplate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 
 public class ContainerMiniArmourer extends Container {
@@ -38,7 +38,7 @@ public class ContainerMiniArmourer extends Container {
     
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return tileEntity.isUseableByPlayer(entityPlayer);
+        return tileEntity.isUsableByPlayer(entityPlayer);
     }
     
     public TileEntityMiniArmourer getTileEntity() {

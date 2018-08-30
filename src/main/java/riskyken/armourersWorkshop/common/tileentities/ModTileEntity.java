@@ -8,7 +8,7 @@ public abstract class ModTileEntity extends TileEntity {
      * Sync the tile entity with the clients.
      */
     public void syncWithClients() {
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     /**

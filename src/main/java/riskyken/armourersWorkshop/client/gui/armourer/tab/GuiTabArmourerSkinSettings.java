@@ -257,8 +257,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         
         if (tileEntity.getSkinType() == SkinTypeRegistry.skinWings) {
             String idleSpeedLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.idleSpeed");

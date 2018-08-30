@@ -1,29 +1,5 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import java.util.ArrayList;
-
-import org.lwjgl.opengl.GL11;
-
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToAccessFieldException;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
-import net.minecraft.entity.EntityLivingBase;
-import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
-import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
-import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
-import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
-import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
-import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
-import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-
 public class AddonMinecraftComesAlive extends ModAddon {
 
     public AddonMinecraftComesAlive() {
@@ -33,10 +9,10 @@ public class AddonMinecraftComesAlive extends ModAddon {
     @Override
     public void init() {
         if (isModLoaded()) {
-            EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityEntityHuman());
+            //EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityEntityHuman());
         }
     }
-    
+    /*
     public static class SkinnableEntityEntityHuman implements ISkinnableEntity {
 
         @Override
@@ -131,5 +107,5 @@ public class AddonMinecraftComesAlive extends ModAddon {
                 model.render(entity, null, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
             }
         }
-    }
+    }*/
 }

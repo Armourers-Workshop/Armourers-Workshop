@@ -6,7 +6,6 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -91,7 +90,7 @@ public class GuiList extends Gui {
             if (mouseY >= y & mouseY <= y + height - 2) {
                 if (listItems.get(i).mousePressed(fontRenderer, x + 2, yLocation, mouseX, mouseY, button, width)) {
                     SoundHandler sh = mc.getSoundHandler();
-                    sh.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+                    //sh.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
                     selectedIndex = i;
                     return true;
                 }

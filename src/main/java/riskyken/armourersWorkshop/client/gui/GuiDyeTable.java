@@ -70,7 +70,7 @@ public class GuiDyeTable extends GuiContainer {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName());
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 46, this.ySize - 96 + 2, 4210752);
         Slot slot = (Slot) inventorySlots.inventorySlots.get(45);
         ItemStack skinStack = slot.getStack();

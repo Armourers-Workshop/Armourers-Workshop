@@ -1,10 +1,5 @@
 package riskyken.armourersWorkshop.common.addons;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import riskyken.armourersWorkshop.utils.EventState;
-
 public class AddonBattlegear2 extends ModAddon {
     
     public AddonBattlegear2() {
@@ -31,8 +26,8 @@ public class AddonBattlegear2 extends ModAddon {
         addItemOverride(ItemOverrideType.SWORD, "spear.diamond");
         addItemOverride(ItemOverrideType.SWORD, "spear.gold");
     }
-    
-    @Override
+
+    /* @Override
     public void onWeaponRender(ItemRenderType type, EventState state) {
         if (isBattlegearRender()) {
             if (state == EventState.PRE) {
@@ -42,14 +37,14 @@ public class AddonBattlegear2 extends ModAddon {
                 double XScale = Math.sqrt(fb.get(0)*fb.get(0)+fb.get(6)*fb.get(6)+fb.get(3)*fb.get(3));
                 double YScale = Math.sqrt(fb.get(1)*fb.get(1)+fb.get(4)*fb.get(4)+fb.get(7)*fb.get(7));
                 //ModLogger.log(XScale);
-                */
+                *
                 GL11.glScalef(-1F, 1F, 1F);
             }
             if (state == EventState.POST) {
                 GL11.glScalef(-1F, 1F, 1F);
             }
         }
-    }
+    } */
 
     public static boolean isBattlegearRender() {
         String bgRenderHelper = "mods.battlegear2.client.utils.BattlegearRenderHelper";

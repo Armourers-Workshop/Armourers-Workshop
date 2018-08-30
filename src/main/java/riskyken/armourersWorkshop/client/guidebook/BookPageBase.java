@@ -4,12 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.utils.UtilColour;
 import riskyken.armourersWorkshop.utils.UtilColour.ColourFamily;
@@ -64,6 +62,7 @@ public abstract class BookPageBase implements IBookPage {
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(1F, 1F, 1F, 1F);
+        /*
         Tessellator tess = new Tessellator().instance;
         tess.startDrawingQuads();
         
@@ -86,6 +85,7 @@ public abstract class BookPageBase implements IBookPage {
         
         tess.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        */
     }
     
     protected void renderTestRec(int x, int y, int width, int height, float r, float g, float b) {
@@ -95,6 +95,7 @@ public abstract class BookPageBase implements IBookPage {
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor4f(1F, 1F, 1F, 1F);
+        /*
         Tessellator tess = new Tessellator().instance;
         tess.startDrawingQuads();
         tess.setColorRGBA_F(r, g, b, 1F);
@@ -107,10 +108,11 @@ public abstract class BookPageBase implements IBookPage {
         //Top Left
         tess.addVertex(x, y, zLevel);
         tess.draw();
+        */
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
     }
-    
+    /*
     protected void drawTexturedRec(int x, int y, int u, int v, int width, int height) {
         double zLevel = 0D;
         float textureFraction = 0.00390625F;
@@ -139,5 +141,5 @@ public abstract class BookPageBase implements IBookPage {
         //Top Left
         tess.addVertexWithUV(x, y, zLevel, 0, 0);
         tess.draw();
-    }
+    }*/
 }

@@ -3,11 +3,15 @@ package riskyken.armourersWorkshop.utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public final class NBTHelper {
     
     private static final String TAG_SLOT = "slot";
+    private static final String TAG_POS_X = "posX";
+    private static final String TAG_POS_Y = "posY";
+    private static final String TAG_POS_Z = "posZ";
     
     private NBTHelper() {}
     
@@ -54,8 +58,29 @@ public final class NBTHelper {
             NBTTagCompound item = (NBTTagCompound)items.getCompoundTagAt(i);
             int slot = item.getByte(TAG_SLOT);
             if (slot >= 0 && slot < itemStacks.length) {
-                itemStacks[slot] = ItemStack.loadItemStackFromNBT(item);
+                //itemStacks[slot] = ItemStack.loadItemStackFromNBT(item);
             }
+        }
+    }
+    
+    public static void writeBlockPosToNBT(NBTTagCompound compound, String key, BlockPos pos) {
+        if (pos == null) {
+            return;
+        }
+        compound.setInteger(TAG_POS_X + key, pos.getX());
+        compound.setInteger(TAG_POS_Y + key, pos.getY());
+        compound.setInteger(TAG_POS_Z + key, pos.getZ());
+    }
+    
+    public static BlockPos readBlockPosFromNBT(NBTTagCompound compound, String key) {
+        return readBlockPosFromNBT(compound, key);
+    }
+    
+    public static BlockPos readBlockPosFromNBT(NBTTagCompound compound, String key, BlockPos defaultReturn) {
+        if (compound.hasKey(TAG_POS_X + key, NBT.TAG_INT) & compound.hasKey(TAG_POS_Y + key, NBT.TAG_INT) & compound.hasKey(TAG_POS_Z + key, NBT.TAG_INT)) {
+            return new BlockPos(compound.getInteger(TAG_POS_X + key), compound.getInteger(TAG_POS_Y + key), compound.getInteger(TAG_POS_Z + key));
+        } else {
+            return defaultReturn;
         }
     }
 }

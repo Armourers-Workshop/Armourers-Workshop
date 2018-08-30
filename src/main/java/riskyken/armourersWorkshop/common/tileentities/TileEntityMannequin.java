@@ -411,9 +411,10 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeCommonToNBT(compound);
+        return compound;
     }
 
     @Override
@@ -440,6 +441,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         if (fakePlayer != null) {
             return;
         }
+        /*
         fakePlayer = new MannequinFakePlayer(worldObj, new GameProfile(null, "[Mannequin]"));
         fakePlayer.posX = xCoord;
         fakePlayer.posY = yCoord;
@@ -447,17 +449,19 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         fakePlayer.prevPosX = xCoord;
         fakePlayer.prevPosY = yCoord;
         fakePlayer.prevPosZ = zCoord;
+        */
     }
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = INFINITE_EXTENT_AABB;
-        bb = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
+        bb = new AxisAlignedBB(-1, 0, -1, 2, 3, 2);
+        bb.offset(getPos());
         return bb;
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.MANNEQUIN;
     }
 

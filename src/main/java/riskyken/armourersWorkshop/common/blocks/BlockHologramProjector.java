@@ -10,9 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
@@ -23,12 +21,6 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
     public BlockHologramProjector() {
         super(LibBlockNames.HOLOGRAM_PROJECTOR);
         setSortPriority(150);
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
     }
     
     @Override

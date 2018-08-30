@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Level;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -35,7 +34,7 @@ public class CommandGiveSkin extends ModCommand {
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
-            return getListOfStringsMatchingLastWord(args, getPlayers());
+            return getListOfStringsMatchingLastWord(args, getPlayers(server));
         }
         return null;
     }
@@ -133,9 +132,10 @@ public class CommandGiveSkin extends ModCommand {
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinPointer(skinIdentifier, skinDye));
+        /*
         EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
         entityItem.setNoPickupDelay();
-        entityItem.setOwner(player.getName());
+        entityItem.setOwner(player.getName());*/
     }
     
     private boolean isValidHex (String colorStr) {

@@ -96,11 +96,11 @@ public final class SkinModelRenderer {
         //Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
-            ItemStack armourStack = player.getCurrentArmor(slot);
+            /*ItemStack armourStack = player.getCurrentArmor(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
                 return getCustomArmourItemData(sp);
-            }
+            }*/
         }
         
         //No skinned armour found checking the equipment wardrobe.
@@ -127,11 +127,13 @@ public final class SkinModelRenderer {
         //Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
+            /*
             ItemStack armourStack = player.getCurrentArmor(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
                 return sp.getSkinDye();
             }
+            */
         }
         
         //No skinned armour found checking the equipment wardrobe.

@@ -9,8 +9,6 @@ import org.lwjgl.opengl.GL12;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -151,8 +149,8 @@ public final class GuiHelper {
         }
     }
     
-    private static void drawGradientRect(int p_73733_1_, int p_73733_2_, int p_73733_3_, int p_73733_4_, int p_73733_5_, int p_73733_6_, float zLevel)
-    {
+    private static void drawGradientRect(int p_73733_1_, int p_73733_2_, int p_73733_3_, int p_73733_4_, int p_73733_5_, int p_73733_6_, float zLevel) {
+        /*
         float f = (float)(p_73733_5_ >> 24 & 255) / 255.0F;
         float f1 = (float)(p_73733_5_ >> 16 & 255) / 255.0F;
         float f2 = (float)(p_73733_5_ >> 8 & 255) / 255.0F;
@@ -179,5 +177,6 @@ public final class GuiHelper {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        */
     }
 }

@@ -6,11 +6,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
@@ -22,12 +20,6 @@ public class BlockColourMixer extends AbstractModBlockContainer {
     public BlockColourMixer() {
         super(LibBlockNames.COLOUR_MIXER);
         setSortPriority(124);
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
     }
     
     @Override
@@ -56,11 +48,6 @@ public class BlockColourMixer extends AbstractModBlockContainer {
             }
         }
         return 0xFFFFFFFF;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return ArmourersWorkshop.proxy.getBlockRenderType(this);
     }
     
     @Override

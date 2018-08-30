@@ -3,8 +3,6 @@ package riskyken.armourersWorkshop.common.addons;
 import java.util.ArrayList;
 
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import riskyken.armourersWorkshop.utils.EventState;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 
@@ -54,8 +52,6 @@ public abstract class ModAddon {
     protected void addItemOverride(ItemOverrideType type, String itemName) {
         overrrides.add(type.toString().toLowerCase() + ":" + getModId() + ":" + itemName);
     }
-    
-    public void onWeaponRender(ItemRenderType type, EventState state) {};
     
     public static enum ItemOverrideType {
         SWORD,

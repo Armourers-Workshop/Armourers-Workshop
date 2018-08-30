@@ -191,9 +191,9 @@ public class GuiMiniArmourerBuildingModel {
                 
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
                 EnumFacing dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
-                newCube.setX((byte) (tarCube.getX() + dir.offsetX));
-                newCube.setY((byte) (tarCube.getY() + dir.offsetY));
-                newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
+                newCube.setX((byte) (tarCube.getX() + dir.getFrontOffsetX()));
+                newCube.setY((byte) (tarCube.getY() + dir.getFrontOffsetY()));
+                newCube.setZ((byte) (tarCube.getZ() + dir.getFrontOffsetZ()));
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -255,9 +255,9 @@ public class GuiMiniArmourerBuildingModel {
                 MiniCube newCube = new MiniCube(CubeRegistry.INSTANCE.getCubeFormId((byte) 0));
                 newCube.setColour(0xFFFFFFFF);
                 EnumFacing dir = GuiMiniArmourerHelper.getDirectionForCubeFace(cubeFace);
-                newCube.setX((byte) (tarCube.getX() + dir.offsetX));
-                newCube.setY((byte) (tarCube.getY() + dir.offsetY));
-                newCube.setZ((byte) (tarCube.getZ() + dir.offsetZ));
+                newCube.setX((byte) (tarCube.getX() + dir.getFrontOffsetX()));
+                newCube.setY((byte) (tarCube.getY() + dir.getFrontOffsetY()));
+                newCube.setZ((byte) (tarCube.getZ() + dir.getFrontOffsetZ()));
                 cubes.add(newCube);
                 //newCube.setId((byte) 0);
                 

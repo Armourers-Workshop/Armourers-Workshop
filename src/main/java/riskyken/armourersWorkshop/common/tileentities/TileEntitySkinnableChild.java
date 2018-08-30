@@ -88,12 +88,13 @@ public class TileEntitySkinnableChild extends TileEntitySkinnable {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         if (parentPos != null) {
             compound.setInteger(TAG_PARENT_X, parentPos.getX());
             compound.setInteger(TAG_PARENT_Y, parentPos.getY());
             compound.setInteger(TAG_PARENT_Z, parentPos.getZ());
         }
+        return compound;
     }
 }

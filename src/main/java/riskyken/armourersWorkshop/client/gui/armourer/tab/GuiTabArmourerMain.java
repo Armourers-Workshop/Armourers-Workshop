@@ -158,8 +158,8 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.height - 96 + 2, 4210752);
     
         String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.itemName");

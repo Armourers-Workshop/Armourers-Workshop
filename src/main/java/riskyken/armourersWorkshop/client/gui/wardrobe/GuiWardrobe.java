@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.gui.wardrobe;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.apache.logging.log4j.Level;
@@ -12,7 +13,6 @@ import org.lwjgl.opengl.GL12;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -115,7 +115,7 @@ public class GuiWardrobe extends GuiTabbed {
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.drawForegroundLayer(mouseX, mouseY);
+                tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
         // Player inventory label.
@@ -149,7 +149,7 @@ public class GuiWardrobe extends GuiTabbed {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (button == 1) {
             rotatingPlayer = true;
         }
@@ -157,9 +157,9 @@ public class GuiWardrobe extends GuiTabbed {
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        super.mouseMovedOrUp(mouseX, mouseY, button);
-        if (button == 1) {
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
+        if (state == 1) {
             rotatingPlayer = false;
         }
     }
@@ -240,8 +240,10 @@ public class GuiWardrobe extends GuiTabbed {
         entity.rotationYawHead = entity.rotationYaw;
         entity.prevRotationYawHead = entity.rotationYaw;
         GL11.glTranslatef(0.0F, (float) entity.getYOffset(), 0.0F);
+        /*
         RenderManager.instance.playerViewY = 180.0F;
         RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+        */
         entity.renderYawOffset = f2;
         entity.rotationYaw = f3;
         entity.rotationPitch = f4;

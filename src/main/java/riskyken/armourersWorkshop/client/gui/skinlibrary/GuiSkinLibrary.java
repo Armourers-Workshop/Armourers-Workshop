@@ -119,7 +119,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         this.ySize = reso.getScaledHeight();
         super.initGui();
         
-        String guiName = armourLibrary.getInventoryName();
+        String guiName = armourLibrary.getName();
         
         int slotSize = 18;
         
@@ -291,7 +291,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (listItem != null && !listItem.getDisplayName().equals("../")) {
                 deleteButton.enabled = true;
             } else {
-                deleteButton.setDisableText(GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "rollover.deleteSkinSelect"));
+                deleteButton.setDisableText(GuiHelper.getLocalizedControlName(armourLibrary.getName(), "rollover.deleteSkinSelect"));
             }
         }
         
@@ -309,7 +309,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (listItem != null && !listItem.getDisplayName().equals("../")) {
                 deleteButton.enabled = true;
             } else {
-                deleteButton.setDisableText(GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "rollover.deleteSkinSelect"));
+                deleteButton.setDisableText(GuiHelper.getLocalizedControlName(armourLibrary.getName(), "rollover.deleteSkinSelect"));
             }
         }
     }
@@ -346,12 +346,12 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         if (button == deleteButton) {
             if (fileList.getSelectedListEntry() != null) {
                 GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
-                openDialog(new GuiDialogDelete(this, armourLibrary.getInventoryName() + ".dialog.delete", this, 190, 100, item.getFile().isDirectory(), item.getDisplayName()));
+                openDialog(new GuiDialogDelete(this, armourLibrary.getName() + ".dialog.delete", this, 190, 100, item.getFile().isDirectory(), item.getDisplayName()));
             }
         }
         
         if (button == newFolderButton) {
-            openDialog(new GuiDialogNewFolder(this, armourLibrary.getInventoryName() + ".dialog.newFolder", this, 190, 120));
+            openDialog(new GuiDialogNewFolder(this, armourLibrary.getName() + ".dialog.newFolder", this, 190, 120));
         }
         
         if (button == checkBoxTrack) {
@@ -392,7 +392,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (!filename.isEmpty()) {
                 if (!isLoading()) {
                     if (fileExists(currentFolder, filename)) {
-                        openDialog(new GuiDialogOverwrite(this, armourLibrary.getInventoryName() + ".dialog.overwrite", this, 190, 100, filename));
+                        openDialog(new GuiDialogOverwrite(this, armourLibrary.getName() + ".dialog.overwrite", this, 190, 100, filename));
                         return;
                     }
                     if (clientLoad) {
@@ -588,13 +588,13 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         loadSaveButton.enabled = true;
         
         if (isLoading()) {
-            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "load");
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "load");
             if (fileList.getSelectedListEntry() == null || ((GuiFileListItem)fileList.getSelectedListEntry()).getFile().directory) {
                 loadSaveButton.displayString = "";
                 loadSaveButton.enabled = false;
             }
         } else {
-            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "save");
+            loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "save");
         }
         if (!((Slot) inventorySlots.inventorySlots.get(36)).getHasStack() & !armourLibrary.isCreativeLibrary()) {
             loadSaveButton.displayString = "";
@@ -764,7 +764,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (!isDialogOpen()) {
             searchTextbox.mouseClicked(mouseX, mouseY, button);
             filenameTextbox.mouseClicked(mouseX, mouseY, button);
@@ -818,18 +818,18 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
-        super.mouseMovedOrUp(mouseX, mouseY, button);
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
         if (!isDialogOpen()) {
             if (!dropDownList.getIsDroppedDown()) {
-                fileList.mouseMovedOrUp(mouseX, mouseY, button);
+                fileList.mouseMovedOrUp(mouseX, mouseY, state);
             }
             scrollbar.mouseReleased(mouseX, mouseY);
         }
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) {
+    protected void keyTyped(char key, int keyCode) throws IOException {
         if (keyCode == mc.gameSettings.keyBindScreenshot.getKeyCode()) {
             mc.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(mc.mcDataDir, mc.displayWidth, mc.displayHeight, mc.getFramebuffer()));
         }
@@ -884,14 +884,14 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (armourLibrary.isCreativeLibrary()) {
-            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, armourLibrary.getInventoryName() + "1", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, armourLibrary.getName() + "1", 0xCCCCCC);
         } else {
-            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, armourLibrary.getInventoryName() + "0", 0xCCCCCC);
+            GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, armourLibrary.getName() + "0", 0xCCCCCC);
         }
         
-        String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");
-        String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.filename");
-        String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.search");
+        String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.files");
+        String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.filename");
+        String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.search");
         /*
         this.fontRendererObj.drawString(filesLabel, 7, 55, 4210752);
         this.fontRendererObj.drawString(filenameLabel, 152, 27, 4210752);

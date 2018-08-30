@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL14;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -168,7 +166,7 @@ public abstract class GuiBookBase extends GuiScreen {
             //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
             int xOffset = guiLeft + BookPageBase.PAGE_MARGIN_LEFT;
             int yOffset = guiTop + BookPageBase.PAGE_MARGIN_TOP;
-            drawFboRec(xOffset, yOffset, 256, 256);
+            //drawFboRec(xOffset, yOffset, 256, 256);
             ModRenderHelper.disableAlphaBlend();
             unbindFramebufferTexture();
         }
@@ -197,7 +195,8 @@ public abstract class GuiBookBase extends GuiScreen {
             ModLogger.log("resizing fbo to scale: " + scaleHeight);
         }
         
-        OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
+        //OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, fbo.framebufferObject);
+        
         GL11.glClearColor(0F, 0F, 0F, 0F);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearDepth(1.0D);
@@ -237,7 +236,7 @@ public abstract class GuiBookBase extends GuiScreen {
     protected void unbindFramebufferTexture() {
         fbo.unbindFramebufferTexture();
     }
-    
+    /*
     private void drawFboRec(int x, int y, int width, int height) {
         double zLevel = 1D;
         Tessellator tess = new Tessellator().instance;
@@ -259,4 +258,5 @@ public abstract class GuiBookBase extends GuiScreen {
         
         tess.draw();
     }
+    */
 }

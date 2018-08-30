@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.client.gui;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -132,15 +133,15 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
         colourHex.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int which) {
-        super.mouseMovedOrUp(mouseX, mouseY, which);
-        if (which != 0) {
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
+        if (state != 0) {
             return;
         }
         updateColour();
@@ -159,7 +160,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     }
     
     @Override
-    protected void keyTyped(char key, int keyCode) {
+    protected void keyTyped(char key, int keyCode) throws IOException {
         if (!colourHex.textboxKeyTyped(key, keyCode)) {
             super.keyTyped(key, keyCode);
         } else {
@@ -184,15 +185,15 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntityColourMixer.getInventoryName());
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntityColourMixer.getName());
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
         
-        String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hue");
-        String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.saturation");
-        String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.brightness");
-        String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.hex");
-        String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.presets");
-        String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getInventoryName(), "label.paintType");
+        String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.hue");
+        String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.saturation");
+        String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.brightness");
+        String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.hex");
+        String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.presets");
+        String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.paintType");
         
         this.fontRenderer.drawString(labelHue + ":", 5, 21, 4210752);
         this.fontRenderer.drawString(labelSaturation + ":", 5, 41, 4210752);

@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -86,11 +88,12 @@ public class PlayerUndoData {
             return;
         }
         UndoData undoData = undos.get(undos.size() - 1);
-        if (world.provider.dimensionId != undoData.dimensionId) {
+        if (world.provider.getDimension() != undoData.dimensionId) {
             return;
         }
         
-        Block block = world.getBlock(undoData.blockX, undoData.blockY, undoData.blockZ);
+        IBlockState state = world.getBlockState(new BlockPos(undoData.blockX, undoData.blockY, undoData.blockZ));
+        Block block = state.getBlock();
         if (block instanceof IPantableBlock) {
             Color c = new Color(undoData.rgb[0] & 0xFF, undoData.rgb[1] & 0xFF, undoData.rgb[2] & 0xFF);
             int rgb = c.getRGB();

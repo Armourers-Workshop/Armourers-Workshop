@@ -26,7 +26,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
@@ -601,10 +600,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         @Override
         public void updateRiderPosition() {
             if (this.riddenByEntity != null) {
-                ForgeDirection[] rotMatrix =  {ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.EAST};
+                EnumFacing[] rotMatrix =  {EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.EAST};
                 float scale = 0.0625F;
                 
-                ForgeDirection dir = rotMatrix[rotation & 3];
+                EnumFacing dir = rotMatrix[rotation & 3];
                 
                 float offsetX = (offset.getX() * scale) * dir.offsetZ + (-offset.getZ() * scale) * dir.offsetX;
                 float offsetY = offset.getY() * scale;

@@ -33,7 +33,7 @@ public class CommandExportSkin extends ModCommand {
         }
         
         // Check if the player is holding a valid skin.
-        ItemStack stack = player.getCurrentEquippedItem();
+        ItemStack stack = player.getHeldItemMainhand();
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer == null) {
             throw new WrongUsageException(getUsage(sender), (Object)args);

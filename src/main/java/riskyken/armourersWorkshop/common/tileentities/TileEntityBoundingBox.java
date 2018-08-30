@@ -4,8 +4,7 @@ import java.awt.Point;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -14,12 +13,11 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.SkinTextureHelper;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.NBTHelper;
 
-public class TileEntityBoundingBox extends TileEntity {
+public class TileEntityBoundingBox extends ModTileEntity {
     
-    private static final String TAG_PARENT_X = "parentX";
-    private static final String TAG_PARENT_Y = "parentY";
-    private static final String TAG_PARENT_Z = "parentZ";
+    private static final String TAG_PARENT = "parent";
     private static final String TAG_GUIDE_X = "guideX";
     private static final String TAG_GUIDE_Y = "guideY";
     private static final String TAG_GUIDE_Z = "guideZ";
@@ -33,7 +31,7 @@ public class TileEntityBoundingBox extends TileEntity {
     
     
     public TileEntityBoundingBox() {
-        setParent(0, 0, 0, (byte) 0, (byte) 0, (byte) 0, null);
+        setParent(null, (byte) 0, (byte) 0, (byte) 0, null);
     }
     
     public TileEntityBoundingBox(BlockPos parent, byte guideX, byte guideY, byte guideZ, ISkinPartType skinPart) {
@@ -43,9 +41,7 @@ public class TileEntityBoundingBox extends TileEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        this.parentX = compound.getInteger(TAG_PARENT_X);
-        this.parentY = compound.getInteger(TAG_PARENT_Y);
-        this.parentZ = compound.getInteger(TAG_PARENT_Z);
+        this.parent = NBTHelper.readBlockPosFromNBT(compound, TAG_PARENT);
         this.guideX = compound.getByte(TAG_GUIDE_X);
         this.guideY = compound.getByte(TAG_GUIDE_Y);
         this.guideZ = compound.getByte(TAG_GUIDE_Z);
@@ -55,9 +51,7 @@ public class TileEntityBoundingBox extends TileEntity {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setInteger(TAG_PARENT_X, this.parent.getX());
-        compound.setInteger(TAG_PARENT_Y, this.parent.getY());
-        compound.setInteger(TAG_PARENT_Z, this.parent.getZ());
+        NBTHelper.writeBlockPosToNBT(compound, TAG_PARENT, parent);
         compound.setByte(TAG_GUIDE_X, this.guideX);
         compound.setByte(TAG_GUIDE_Y, this.guideY);
         compound.setByte(TAG_GUIDE_Z, this.guideZ);
@@ -68,30 +62,34 @@ public class TileEntityBoundingBox extends TileEntity {
     }
     
     @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
+        return new SPacketUpdateTileEntity(getPos(), 5, compound);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        readFromNBT(packet.func_148857_g());
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        readFromNBT(packet.getNbtCompound());
+        syncWithClients();
     }
     
     public TileEntityArmourer getParent() {
-        TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
-        if (te != null && te instanceof TileEntityArmourer) {
-            return (TileEntityArmourer)te;
+        if (parent != null) {
+            TileEntity te = getWorld().getTileEntity(parent);
+            if (te != null && te instanceof TileEntityArmourer) {
+                return (TileEntityArmourer)te;
+            }
         }
         return null;
     }
     
     public boolean isParentValid() {
-        TileEntity te = worldObj.getTileEntity(parentX, parentY, parentZ);
-        if (te != null && te instanceof TileEntityArmourer) {
-            return true;
+        if (parent != null) {
+            TileEntity te = getWorld().getTileEntity(parent);
+            if (te != null && te instanceof TileEntityArmourer) {
+                return true;
+            }
         }
         return false;
     }
@@ -123,7 +121,7 @@ public class TileEntityBoundingBox extends TileEntity {
     
     public boolean isPaintableSide(int side) {
         EnumFacing sideBlock = EnumFacing.getFront(side);
-        if (getWorld().getBlock(xCoord + sideBlock.offsetX, yCoord + sideBlock.offsetY, zCoord + sideBlock.offsetZ) == getBlockType()) {
+        if (getWorld().getBlockState(getPos().offset(sideBlock)).getBlock() == getBlockType()) {
             return false;
         }
         return true;

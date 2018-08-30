@@ -173,8 +173,8 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.GUIDE_BOOK:
-                if (player.getCurrentEquippedItem().getItem() == ModItems.guideBook) {
-                    return new GuiGuideBook(player.getCurrentEquippedItem());
+                if (player.getHeldItemMainhand().getItem() == ModItems.guideBook) {
+                    return new GuiGuideBook(player.getHeldItemMainhand());
                 }
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
@@ -186,8 +186,8 @@ public class GuiHandler implements IGuiHandler {
                 ExPropsPlayerSkinData customEquipmentData = ExPropsPlayerSkinData.get(player);
                 return new GuiWardrobe(player.inventory, customEquipmentData);
             case LibGuiIds.TOOL_OPTIONS:
-                if (player.getCurrentEquippedItem().getItem() instanceof IConfigurableTool) {
-                    return new GuiToolOptions(player.getCurrentEquippedItem());
+                if (player.getHeldItemMainhand().getItem() instanceof IConfigurableTool) {
+                    return new GuiToolOptions(player.getHeldItemMainhand());
                 }
                 break;
             case LibGuiIds.MANNEQUIN:

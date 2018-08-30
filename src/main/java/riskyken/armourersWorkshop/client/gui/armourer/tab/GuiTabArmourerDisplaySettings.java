@@ -123,7 +123,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         String labelSkinType = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.skinType");
         String usernameLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.username");
         String urlLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.url");
@@ -133,7 +133,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         } else {
             this.fontRenderer.drawString(urlLabel, 10, 60, 4210752);
         }
-        super.drawForegroundLayer(mouseX, mouseY);
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
     }
 
     @Override

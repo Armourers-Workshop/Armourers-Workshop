@@ -1,35 +1,23 @@
 package riskyken.armourersWorkshop.client.render.tileEntity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
-import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
-import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
-import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
@@ -44,32 +32,34 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
+        /*
         Minecraft mc = Minecraft.getMinecraft();
         mc.mcProfiler.startSection("renderListSort");
         Collections.sort(renderList);
         mc.mcProfiler.endSection();
-        mc.entityRenderer.enableLightmap(event.partialTicks);
+        mc.entityRenderer.enableLightmap();
         RenderHelper.enableStandardItemLighting();
         ModRenderHelper.enableAlphaBlend();
         Minecraft.getMinecraft().mcProfiler.startSection("skinnableBlock");
         for (int i = 0; i < renderList.size(); i++) {
             RenderLast rl = renderList.get(i);
-            renderTileEntityAt((TileEntitySkinnable)rl.tileEntity, rl.x, rl.y, rl.z, event.partialTicks);
+            renderTileEntityAt((TileEntitySkinnable)rl.tileEntity, rl.x, rl.y, rl.z, event.getPartialTicks());
         }
         Minecraft.getMinecraft().mcProfiler.endSection();
         RenderHelper.disableStandardItemLighting();
         renderList.clear();
         ModRenderHelper.disableAlphaBlend();
-        mc.entityRenderer.disableLightmap(event.partialTicks);
+        mc.entityRenderer.disableLightmap();
+        */
     }
     
     public void renderTileEntityAt(TileEntitySkinnable tileEntity, double x, double y, double z, float partialTickTime) {
-        ModRenderHelper.setLightingForBlock(tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+        //ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         SkinPointer skinPointer = tileEntity.getSkinPointer();
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
-                renderSkin(tileEntity, x, y, z, skin);
+                //renderSkin(tileEntity, x, y, z, skin);
             } else {
                 ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
                 GL11.glPushMatrix();
@@ -79,10 +69,11 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             }
         }
     }
-    
+    /*
     private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, Skin skin) {
         int rotation = tileEntity.getBlockMetadata();
-        double distance = Minecraft.getMinecraft().thePlayer.getDistance(
+        
+        double distance = Minecraft.getMinecraft().player.getDistance(
                 tileEntity.xCoord + 0.5F,
                 tileEntity.yCoord + 0.5F,
                 tileEntity.zCoord + 0.5F);
@@ -195,7 +186,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
             GL11.glDisable(GL11.GL_BLEND);
         }
     }
-    
+    */
     private class RenderLast implements Comparable<RenderLast> {
         public final TileEntity tileEntity;
         public final double x;
@@ -211,16 +202,16 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
 
         @Override
         public int compareTo(RenderLast o) {
-            EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
             double dist = getDistanceFrom(player.posX, player.posY + player.getEyeHeight(), player.posZ);
             double otherDist = o.getDistanceFrom(player.posX, player.posY + player.getEyeHeight(), player.posZ);
             return (int) ((otherDist - dist) * 128);
         }
         
         public double getDistanceFrom(double x, double y, double z) {
-            double d3 = (double)tileEntity.xCoord + 0.5D - x;
-            double d4 = (double)tileEntity.yCoord + 0.5D - y;
-            double d5 = (double)tileEntity.zCoord + 0.5D - z;
+            double d3 = (double)tileEntity.getPos().getX() + 0.5D - x;
+            double d4 = (double)tileEntity.getPos().getY() + 0.5D - y;
+            double d5 = (double)tileEntity.getPos().getZ() + 0.5D - z;
             return d3 * d3 + d4 * d4 + d5 * d5;
         }
     }

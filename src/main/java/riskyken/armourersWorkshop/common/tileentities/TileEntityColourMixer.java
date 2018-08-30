@@ -2,13 +2,12 @@ package riskyken.armourersWorkshop.common.tileentities;
 
 import java.awt.Color;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
@@ -52,11 +51,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     }
     
     @Override
-    public boolean canUpdate() {
-        return false;
-    }
-    
-    @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
         checkForPaintBrush();
@@ -94,7 +88,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     }
 
     @Override
-    public String getInventoryName() {
+    public String getName() {
         return LibBlockNames.COLOUR_MIXER;
     }
 
@@ -104,15 +98,14 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     }
     
     public void setColour(int colour, boolean item){
-        if (worldObj.isRemote) {
+        if (getWorld().isRemote) {
             return;
         }
         if (item) {
             itemUpdate = true;
         }
         this.colour = colour;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     @Override
@@ -128,32 +121,33 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
         compound.setInteger(TAG_COLOUR_FAMILY, colourFamily.ordinal());
         compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
+        return compound;
     }
-
+    
     @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
         compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
         compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
         if (itemUpdate) { itemUpdate = false; }
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 3, compound);
+        return new SPacketUpdateTileEntity(getPos(), 3, compound);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        NBTTagCompound compound = packet.func_148857_g();
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.getNbtCompound();
         readBaseFromNBT(compound);
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
         paintType = PaintType.getPaintTypeFromUKey(compound.getInteger(TAG_PAINT_TYPE));
         itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
         colourUpdate = true;
     }
     
@@ -202,8 +196,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     @Override
     public void setPaintType(PaintType paintType, int side) {
         this.paintType = paintType;
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        dirtySync();
     }
     
     @Override

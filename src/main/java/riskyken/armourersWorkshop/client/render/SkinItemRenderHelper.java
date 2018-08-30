@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
@@ -179,7 +178,7 @@ public final class SkinItemRenderHelper {
         GL11.glLineWidth(1.0F);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         //GL11.glDepthMask(false);
-        RenderGlobal.drawOutlinedBoundingBox(aabb, -1);
+        //RenderGlobal.drawOutlinedBoundingBox(aabb, -1);
         //GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_LIGHTING);

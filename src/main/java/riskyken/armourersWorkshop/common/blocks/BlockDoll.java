@@ -5,6 +5,7 @@ import java.util.Random;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +27,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -33,7 +34,6 @@ import riskyken.armourersWorkshop.common.Contributors;
 import riskyken.armourersWorkshop.common.Contributors.Contributor;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlockNoStack;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -47,17 +47,11 @@ public class BlockDoll extends AbstractModBlockContainer {
     private final boolean isValentins;
     
     public BlockDoll() {
-        super(LibBlockNames.DOLL, Material.rock, soundTypeMetal, !ConfigHandler.hideDollFromCreativeTabs);
+        super(LibBlockNames.DOLL, Material.ROCK, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
         setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
         setSortPriority(198);
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlockNoStack.class, "block." + name);
-        return super.setBlockName(name);
     }
     
     @Override
@@ -175,10 +169,10 @@ public class BlockDoll extends AbstractModBlockContainer {
             if (stack != null && stack.getItem() == ModItems.mannequinTool) {
                 return false;
             }
-            if (stack != null && stack.getItem() == Items.name_tag) {
+            if (stack != null && stack.getItem() == Items.NAME_TAG) {
                 TileEntity te = world.getTileEntity(x, y, z);;
                 if (te != null && te instanceof TileEntityMannequin) {
-                    if (stack.getItem() == Items.name_tag) {
+                    if (stack.getItem() == Items.NAME_TAG) {
                         ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
                     }
                 }
@@ -193,32 +187,17 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
     
     @Override
-    public int quantityDropped(int meta, int fortune, Random random) {
+    public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
     }
-
+    
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
         return new TileEntityMannequin(true);
     }
     
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-    
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return -1;
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 }

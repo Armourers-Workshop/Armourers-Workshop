@@ -4,14 +4,14 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.gui.wardrobe.GuiWardrobe;
@@ -150,8 +150,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         String labelSkinColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinColour");
         fontRenderer.drawString(labelSkinColour + ":", 70, 18, 4210752); 
         

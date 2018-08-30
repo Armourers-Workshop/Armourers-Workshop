@@ -2,12 +2,12 @@ package riskyken.armourersWorkshop.client.gui.wardrobe.tab;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.gui.wardrobe.GuiWardrobe;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
@@ -39,15 +39,15 @@ public class GuiTabWardrobeSkins extends GuiTabPanel {
         
         for (int i = 0; i <  skinWardrobe.getSkinSlots(); i++) {
             Slot slot = (Slot) skinWardrobe.inventorySlots.get(i);
-            this.drawTexturedModalRect(this.x + slot.xDisplayPosition - 1,
-                    this.y + slot.yDisplayPosition - 1,
+            this.drawTexturedModalRect(this.x + slot.xPos - 1,
+                    this.y + slot.yPos - 1,
                     238, 194, sloImageSize, sloImageSize);
         }
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         // Draw player preview.
         GL11.glPushMatrix();
         GL11.glTranslated(-x, -y, 0);

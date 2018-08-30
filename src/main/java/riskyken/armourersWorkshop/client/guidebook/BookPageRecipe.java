@@ -6,31 +6,22 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BookPageRecipe extends BookPageBase {
     
     private static final int TEXT_COLOUR = 0xFF000000;
-    private static RenderItem itemRender = new RenderItem();
+    //private static RenderItem itemRender = new RenderItem();
     
     private Item item;
     private List<IRecipe> validRecipes;
@@ -43,6 +34,7 @@ public class BookPageRecipe extends BookPageBase {
         super(parentBook);
         this.item = item;
         validRecipes = new ArrayList<IRecipe>();
+        /*
         List<IRecipe> recipeList = CraftingManager.getInstance().getRecipeList();
         for (int i = 0; i < recipeList.size(); i++) {
             IRecipe recipe = recipeList.get(i);
@@ -53,6 +45,7 @@ public class BookPageRecipe extends BookPageBase {
                 }
             }
         }
+        */
     }
     
     @Override
@@ -92,12 +85,14 @@ public class BookPageRecipe extends BookPageBase {
             ShapedRecipes shapedRecipe = (ShapedRecipes) recipe;
             for (int ix = 0; ix < shapedRecipe.recipeWidth; ix++) {
                 for (int iy = 0; iy < shapedRecipe.recipeHeight; iy++) {
+                    /*
                     itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
                             shapedRecipe.recipeItems[0], x, y + 10);
+                    */
                 }
             }
         }
-        
+        /*
         if (recipe instanceof ShapedOreRecipe) {
             ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe) recipe;
             Object[] input = shapedOreRecipe.getInput();
@@ -165,10 +160,11 @@ public class BookPageRecipe extends BookPageBase {
         
         itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
                 recipe.getRecipeOutput(), x + 50, y + 100);
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);*/
     }
     
     public void drawTexturedModalRect(int p_73729_1_, int p_73729_2_, int p_73729_3_, int p_73729_4_, int p_73729_5_, int p_73729_6_) {
+        /*
         float zLevel = 1.0F;
         float f = 0.00390625F;
         float f1 = 0.00390625F;
@@ -179,6 +175,7 @@ public class BookPageRecipe extends BookPageBase {
         tessellator.addVertexWithUV((double)(p_73729_1_ + p_73729_5_), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + p_73729_5_) * f), (double)((float)(p_73729_4_ + 0) * f1));
         tessellator.addVertexWithUV((double)(p_73729_1_ + 0), (double)(p_73729_2_ + 0), (double)zLevel, (double)((float)(p_73729_3_ + 0) * f), (double)((float)(p_73729_4_ + 0) * f1));
         tessellator.draw();
+        */
     }
 
     @Override

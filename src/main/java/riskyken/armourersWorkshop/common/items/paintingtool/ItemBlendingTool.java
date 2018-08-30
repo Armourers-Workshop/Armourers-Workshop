@@ -82,9 +82,9 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         ArrayList<BlockLocation> blockSamples = BlockUtils.findTouchingBlockFaces(world, x, y, z, side, radiusSample);
         ArrayList<BlockLocation> blockEffects = BlockUtils.findTouchingBlockFaces(world, x, y, z, side, radiusEffect);
         
-        double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks;
-        double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks;
-        double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks;
+        double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.getPartialTicks();
+        double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.getPartialTicks();
+        double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.getPartialTicks();
         float f1 = 0.002F;
         
         for (int i = 0; i < blockSamples.size(); i++) {

@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.gui.miniarmourer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
@@ -121,7 +122,7 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
         String guiSizeLabel = "Gui Size: " + this.width  + " * " + this.height;
         String zoomLabel = "Zoom: " + model.zoom;
         
-        String guiName = tileEntity.getInventoryName();
+        String guiName = tileEntity.getName();
         String localizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".name";
         localizedName = I18n.format(localizedName);
         
@@ -168,16 +169,16 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     }
     
     private void renderItemInGUI(ItemStack stack, int x, int y) {
-        itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
+        //itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
     }
     
     @Override
-    protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_) {
+    protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_) throws IOException {
         super.mouseClicked(p_73864_1_, p_73864_2_, p_73864_3_);
     }
 
     @Override
-    protected void keyTyped(char key, int keyCode) {
+    protected void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
         if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
             this.mc.player.closeScreen();

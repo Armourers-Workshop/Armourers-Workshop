@@ -119,9 +119,9 @@ public abstract class GuiPanel extends Gui {
         return false;
     }
     
-    protected void drawbuttons(int mouseX, int mouseY) {
+    protected void drawbuttons(int mouseX, int mouseY, float partialTickTime) {
         for (int i = 0; i < buttonList.size(); i++) {
-            buttonList.get(i).drawButton(mc, mouseX, mouseY);
+            buttonList.get(i).drawButton(mc, mouseX, mouseY, partialTickTime);
         }
         for (int i = 0; i < buttonList.size(); i++) {
             if (buttonList.get(i) instanceof GuiIconButton) {
@@ -134,7 +134,7 @@ public abstract class GuiPanel extends Gui {
         if (!this.visible) {
             return;
         }
-        drawbuttons(mouseX, mouseY);
+        drawbuttons(mouseX, mouseY, partialTickTime);
     }
     
     public void update() {

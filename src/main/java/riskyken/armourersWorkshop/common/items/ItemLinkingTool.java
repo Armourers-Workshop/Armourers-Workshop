@@ -56,7 +56,7 @@ public class ItemLinkingTool extends AbstractModItem {
                 }
             }
             removeLinkLocation(stack);
-            player.addChatMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.fail", (Object)null));
+            player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.fail", (Object)null));
         }
         return true;
     }

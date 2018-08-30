@@ -29,7 +29,7 @@ public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
             if (stack.getItemDamage() == 1000) {
                 ItemStack giftStack = new ItemStack(ModBlocks.doll, 1);
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.func_152460_a(profileTag, player.getGameProfile());
+                NBTUtil.writeGameProfile(profileTag, player.getGameProfile());
                 giftStack.setTagCompound(new NBTTagCompound());
                 giftStack.getTagCompound().setTag(TAG_OWNER, profileTag);
                 if (player.inventory.addItemStackToInventory(giftStack)) {

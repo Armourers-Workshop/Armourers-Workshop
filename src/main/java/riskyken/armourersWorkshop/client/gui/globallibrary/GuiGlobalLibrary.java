@@ -1,5 +1,6 @@
 package riskyken.armourersWorkshop.client.gui.globallibrary;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -276,7 +277,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (!isDialogOpen()) {
             for (int i = 0; i < panelList.size(); i++) {
                 panelList.get(i).mouseClicked(mouseX, mouseY, button);
@@ -286,17 +287,17 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
         if (!isDialogOpen()) {
             for (int i = 0; i < panelList.size(); i++) {
-                panelList.get(i).mouseMovedOrUp(mouseX, mouseY, button);
+                panelList.get(i).mouseMovedOrUp(mouseX, mouseY, state);
             }
         }
-        super.mouseMovedOrUp(mouseX, mouseY, button);
+        super.mouseReleased(mouseX, mouseY, state);
     }
     
     @Override
-    protected void keyTyped(char c, int keycode) {
+    protected void keyTyped(char c, int keycode) throws IOException {
         boolean keyTyped = false;
         if (!isDialogOpen()) {
             for (int i = 0; i < panelList.size(); i++) {

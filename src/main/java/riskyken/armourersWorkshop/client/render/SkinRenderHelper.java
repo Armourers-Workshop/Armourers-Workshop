@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.client.render;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -138,7 +137,7 @@ public final class SkinRenderHelper {
         default:
             break;
         }
-        
+        /*
         tessellator.setBrightness(15728880);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         
@@ -148,7 +147,7 @@ public final class SkinRenderHelper {
         tessellator.addVertexWithUV(sizeX * scale, sizeY * scale, 0, sizeY, sizeX);
         tessellator.addVertexWithUV(sizeX * scale, 0, 0, 0, sizeX);
         tessellator.draw();
-        
+        */
         ModRenderHelper.disableAlphaBlend();
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();

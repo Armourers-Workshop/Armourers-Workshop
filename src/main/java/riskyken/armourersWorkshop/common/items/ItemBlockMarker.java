@@ -23,6 +23,7 @@ public class ItemBlockMarker extends AbstractModItem {
         if (CubeRegistry.INSTANCE.isBuildingBlock(state.getBlock())) {
             if (!worldIn.isRemote) {
                 //state.getBlock().getMetaFromState(state)
+                /*
                 int meta = world.getBlockMetadata(x, y, z);
                 int newMeta = side + 1;
                 if (newMeta == meta) {
@@ -31,6 +32,7 @@ public class ItemBlockMarker extends AbstractModItem {
                 } else {
                     world.setBlockMetadataWithNotify(x, y, z, newMeta, 2);
                 }
+                */
             }
             return EnumActionResult.SUCCESS;
         }

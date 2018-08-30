@@ -3,7 +3,6 @@ package riskyken.armourersWorkshop.common.command;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
 
 public abstract class ModCommand extends CommandBase {
 
@@ -12,8 +11,7 @@ public abstract class ModCommand extends CommandBase {
         return "commands.armourers." + getName() + ".usage";
     }
     
-    protected String[] getPlayers() {
-        MinecraftServer server = ArmourersWorkshop.proxy.getServer();
+    protected String[] getPlayers(MinecraftServer server) {
         return server.getOnlinePlayerNames();
     }
 }

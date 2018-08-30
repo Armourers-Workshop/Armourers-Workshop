@@ -19,7 +19,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.settings.Keybindings;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
@@ -46,7 +45,7 @@ public class ItemSkin extends AbstractModItem {
 
     public ItemSkin() {
         super(LibItemNames.EQUIPMENT_SKIN, false);
-        BlockDispenser.dispenseBehaviorRegistry.putObject(this, dispenserBehavior);
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, dispenserBehavior);
     }
     
     public ISkinType getSkinType(ItemStack stack) {
@@ -159,23 +158,13 @@ public class ItemSkin extends AbstractModItem {
     }
     
     @Override
-    public int getRenderPasses(int metadata) {
-        return 2;
-    }
-    
-    @Override
-    public boolean requiresMultipleRenderPasses() {
-        return true;
-    }
-    
-    @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer != null && skinPointer.getIdentifier().getSkinType() == SkinTypeRegistry.skinBlock) {
             Skin skin = SkinUtils.getSkinDetectSide(skinPointer, false, true);
             if (skin != null) {
-                ForgeDirection dir = ForgeDirection.getOrientation(side);
+                EnumFacing dir = EnumFacing.getFront(side);
                 Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
                 if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
                     placeSkinAtLocation(world, player, side, stack, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, skinPointer);
@@ -225,7 +214,7 @@ public class ItemSkin extends AbstractModItem {
     }
     
     private boolean canPlaceChildren(World world, EntityPlayer player, int side, ItemStack stack, int x, int y, int z, Skin skin, SkinPointer skinPointer, ArrayList<BlockLocation> relatedBlocks) {
-        ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
+        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
@@ -257,7 +246,7 @@ public class ItemSkin extends AbstractModItem {
             return false;
         }
         
-        ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
+        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
         
         
         Skin skin = SkinUtils.getSkinDetectSide(stack, false, true);
@@ -305,7 +294,7 @@ public class ItemSkin extends AbstractModItem {
     }
     
     private void placeChild(World world, EntityPlayer player, int side, int x, int y, int z, int ix, int iy, int iz, Skin skin, SkinPointer skinPointer, ArrayList<BlockLocation> relatedBlocks) {
-        ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
+        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
         
         BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnableChild;
         

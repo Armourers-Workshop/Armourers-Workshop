@@ -20,9 +20,10 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjecto
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
+public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<TileEntityHologramProjector> {
 
-    public void renderTileEntityAt(TileEntityHologramProjector tileEntity, double x, double y, double z, float partialTickTime) {
+    @Override
+    public void render(TileEntityHologramProjector tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (ConfigHandlerClient.showSkinRenderBounds) {
             /*
             AxisAlignedBB aabb = new tileEntity.
@@ -144,7 +145,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer {
                 zLight += offsetZ * scale;
                 break;
             }
-            ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), (int)(xLight + 0.5F), (int)(yLight + 0.5F), (int)(zLight + 0.5F));
+            //ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), (int)(xLight + 0.5F), (int)(yLight + 0.5F), (int)(zLight + 0.5F));
         }
 
         GL11.glPushMatrix();

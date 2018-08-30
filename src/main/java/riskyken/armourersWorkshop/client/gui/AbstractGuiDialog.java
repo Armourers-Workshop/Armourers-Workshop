@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -15,6 +12,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.controls.GuiIconButton;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 
@@ -64,7 +64,7 @@ public abstract class AbstractGuiDialog extends Gui {
                 GuiButton guiButton = this.buttonList.get(i);
                 if (guiButton.mousePressed(this.mc, mouseX, mouseY)) {
                     this.selectedButton = guiButton;
-                    guiButton.func_146113_a(this.mc.getSoundHandler());
+                    //guiButton.func_146113_a(this.mc.getSoundHandler());
                     this.actionPerformed(guiButton);
                 }
             }
@@ -101,9 +101,9 @@ public abstract class AbstractGuiDialog extends Gui {
         drawGradientRect(0, 0, this.parent.width, this.parent.height, 0xC0101010, 0xD0101010);
     }
     
-    protected void drawbuttons(int mouseX, int mouseY) {
+    protected void drawbuttons(int mouseX, int mouseY, float partialTickTime) {
         for (int i = 0; i < buttonList.size(); i++) {
-            buttonList.get(i).drawButton(mc, mouseX, mouseY);
+            buttonList.get(i).drawButton(mc, mouseX, mouseY, partialTickTime);
         }
         for (int i = 0; i < buttonList.size(); i++) {
             if (buttonList.get(i) instanceof GuiIconButton) {
@@ -135,7 +135,7 @@ public abstract class AbstractGuiDialog extends Gui {
     }
     
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
-        drawbuttons(mouseX, mouseY);
+        drawbuttons(mouseX, mouseY, partialTickTime);
     }
     
     protected void drawTitle() {

@@ -90,9 +90,9 @@ public abstract class GuiTabPanel extends Gui {
         }
     }
     
-    public void drawForegroundLayer(int mouseX, int mouseY) {
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         for (int i = 0; i < buttonList.size(); i++) {
-            buttonList.get(i).drawButton(mc, mouseX - x, mouseY - y);
+            buttonList.get(i).drawButton(mc, mouseX - x, mouseY - y, partialTickTime);
         }
     }
     

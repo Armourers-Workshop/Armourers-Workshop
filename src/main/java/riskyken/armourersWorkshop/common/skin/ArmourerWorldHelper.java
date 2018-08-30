@@ -427,10 +427,13 @@ public final class ArmourerWorldHelper {
                     if (world.isValid(target)) {
                         if (CubeRegistry.INSTANCE.isBuildingBlock(world.getBlockState(target).getBlock())) {
                             
-                            if (world.getBlockMetadata(xTar, yTar, zTar) != 0) {
+                            //TODO fix with block states
+                            
+                            /*if (world.getBlockMetadata(xTar, yTar, zTar) != 0) {
                                 world.setBlockMetadataWithNotify(xTar, yTar, zTar, 0, 2);
                                 blockCount++;
-                            }
+                            }*/
+                            
                         }
                     }
                     
@@ -472,15 +475,17 @@ public final class ArmourerWorldHelper {
         for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
             for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-                    int xTar = x + ix + -offset.getX() + buildSpace.getX();
-                    int yTar = y + iy + -offset.getY();
-                    int zTar = z + iz + offset.getZ() + buildSpace.getZ();
+                    BlockPos target = pos.add(
+                            ix + -offset.getX() + buildSpace.getX(),
+                            iy + -offset.getY(),
+                            iz + offset.getZ() + buildSpace.getZ());
                     
-                    if (world.blockExists(xTar, yTar, zTar)) {
-                        Block block = world.getBlock(xTar, yTar, zTar);
+                    if (world.isValid(target)) {
+                        IBlockState state = world.getBlockState(target);
+                        Block block = state.getBlock();
                         if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
-                            world.setBlockToAir(xTar, yTar, zTar);
-                            world.removeTileEntity(xTar, yTar, zTar);
+                            world.setBlockToAir(target);
+                            world.removeTileEntity(target);
                             blockCount++;
                         }
                     }
@@ -507,14 +512,15 @@ public final class ArmourerWorldHelper {
         for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
             for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-                    int xTar = x + ix + -offset.getX() + buildSpace.getX();
-                    int yTar = y + iy + -offset.getY();
-                    int zTar = z + iz + offset.getZ() + buildSpace.getZ();
+                    BlockPos target = pos.add(
+                            ix + -offset.getX() + buildSpace.getX(),
+                            iy + -offset.getY(),
+                            iz + offset.getZ() + buildSpace.getZ());
                     
-                    if (world.blockExists(xTar, yTar, zTar)) {
-                        Block block = world.getBlock(xTar, yTar, zTar);
-                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
-                            blList.add(new BlockLocation(xTar, yTar, zTar));
+                    if (world.isValid(target)) {
+                        IBlockState state = world.getBlockState(target);
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(state.getBlock())) {
+                            blList.add(new BlockLocation(target.getX(), target.getY(), target.getZ()));
                         }
                     }
                 }

@@ -35,8 +35,8 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
         textureTypeList = new GuiDropDownList(0, width / 2 - 110, 25, 50, "", this);
-        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.user"), TextureType.USER.toString(), true);
-        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "dropdown.url"), TextureType.URL.toString(), true);
+        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.user"), TextureType.USER.toString(), true);
+        textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.url"), TextureType.URL.toString(), true);
         textureTypeList.setListSelectedIndex(tileEntity.getTextureType().ordinal());
         nameTextbox = new GuiTextField(-1, fontRenderer, width / 2 - 110 + 55, 25, 165, 14);
         nameTextbox.setMaxStringLength(300);
@@ -50,7 +50,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
             }
         }
 
-        setNameButton = new GuiButtonExt(0, width / 2 + 60, 45, 50, 14, GuiHelper.getLocalizedControlName(tileEntity.getInventoryName(), "set"));
+        setNameButton = new GuiButtonExt(0, width / 2 + 60, 45, 50, 14, GuiHelper.getLocalizedControlName(tileEntity.getName(), "set"));
         setNameButton.width = fontRenderer.getStringWidth(setNameButton.displayString + "  ");
         setNameButton.x = width / 2 + TAB_WIDTH / 2 - setNameButton.width - 10;
         
@@ -88,8 +88,8 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         nameTextbox.drawTextBox();
     }
 

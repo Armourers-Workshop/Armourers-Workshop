@@ -10,8 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntitySpellParticleFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,7 +21,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,9 +30,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
@@ -40,7 +38,6 @@ import riskyken.armourersWorkshop.common.Contributors;
 import riskyken.armourersWorkshop.common.Contributors.Contributor;
 import riskyken.armourersWorkshop.common.items.ItemDebugTool.IDebug;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.items.block.ItemBlockMannequin;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
@@ -63,12 +60,6 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
         setSortPriority(199);
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ItemBlockMannequin.class, "block." + name);
-        return super.setBlockName(name);
     }
     
     @Override
@@ -95,7 +86,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                     NBTTagCompound compound = stack.getTagCompound();
                     GameProfile gameProfile = null;
                     if (compound.hasKey(TAG_OWNER, 10)) {
-                        gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
+                        gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
                         ((TileEntityMannequin)te).setGameProfile(gameProfile);
                     }
                     if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
@@ -121,7 +112,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                 Contributor contributor = Contributors.INSTANCE.getContributor(te.getGameProfile());
                 if (contributor != null & te.isVisible()) {
                     for (int i = 0; i < 4; i++) {
-                        EntityFX entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
+                        Particle entityfx = new EntitySpellParticleFX(world,  x - 1 + random.nextFloat() * 3F, y - 1D, z - 1 + random.nextFloat() * 3F, 0, 0, 0);
                         ((EntitySpellParticleFX)entityfx).setBaseSpellTextureIndex(144);
                         entityfx.setRBGColorF((float)(contributor.r & 0xFF) / 255F, (float)(contributor.g & 0xFF) / 255F, (float)(contributor.b & 0xFF) / 255F);
                         Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
@@ -180,7 +171,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+    public boolean rotateBlock(World world, int x, int y, int z, EnumFacing axis) {
         if (world.isRemote) {
             return false;
         }
@@ -254,7 +245,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             TileEntityMannequin teMan = (TileEntityMannequin) te;
             if (teMan.getGameProfile() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.func_152460_a(profileTag, teMan.getGameProfile());
+                NBTUtil.writeGameProfile(profileTag, teMan.getGameProfile());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
@@ -308,10 +299,10 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                 yOffset = -1;
             }
             ItemStack stack = player.getCurrentEquippedItem();
-            if (stack != null && stack.getItem() == Items.name_tag) {
+            if (stack != null && stack.getItem() == Items.NAME_TAG) {
                 TileEntity te = world.getTileEntity(x, y + yOffset, z);;
                 if (te != null && te instanceof TileEntityMannequin) {
-                    if (stack.getItem() == Items.name_tag) {
+                    if (stack.getItem() == Items.NAME_TAG) {
                         ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
                     }
                 }
@@ -340,7 +331,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public int quantityDropped(int meta, int fortune, Random random) {
+    public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
     }
     
@@ -359,23 +350,8 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-    
-    @Override
-    public boolean isNormalCube() {
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return -1;
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override

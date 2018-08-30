@@ -1,19 +1,18 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.texture.PlayerTexture;
 import riskyken.armourersWorkshop.common.data.TextureType;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.lib.LibBlockNames;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
@@ -27,15 +26,15 @@ public class BlockArmourer extends AbstractModBlockContainer {
     }
     
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            TileEntity te = world.getTileEntity(x, y, z);
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        if (placer instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer)placer;
+            TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof TileEntityArmourer) {
-                EnumFacing direction = BlockUtils.determineDirectionSide(entity).getOpposite();
-                ((TileEntityArmourer)te).setDirection(ForgeDirection.NORTH);
-                if (!world.isRemote) {
-                    ((TileEntityArmourer)te).setTexture(new PlayerTexture(player.getCommandSenderName(), TextureType.USER));
+                EnumFacing direction = BlockUtils.determineDirectionSide(placer).getOpposite();
+                ((TileEntityArmourer)te).setDirection(EnumFacing.NORTH);
+                if (!worldIn.isRemote) {
+                    ((TileEntityArmourer)te).setTexture(new PlayerTexture(player.getName(), TextureType.USER));
                     ((TileEntityArmourer)te).onPlaced();
                 }
             }
@@ -43,44 +42,38 @@ public class BlockArmourer extends AbstractModBlockContainer {
     }
     
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        BlockUtils.dropInventoryBlocks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        BlockUtils.dropInventoryBlocks(worldIn, pos);
+        super.breakBlock(worldIn, pos, state);
     }
     
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof TileEntityArmourer) {
             ((TileEntityArmourer)te).preRemove();
         }
-        return super.removedByPlayer(world, player, x, y, z, willHarvest);
+        return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
-
+    
     @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
             return false;
         }
-        if (!world.isRemote) {
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ARMOURER, world, x, y, z);
+        if (!worldIn.isRemote) {
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.ARMOURER, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
     }
-
+    
     @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
-        return null;
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileEntityArmourer();
     }
 
     @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        return new TileEntityArmourer();
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        return null;
     }
 }

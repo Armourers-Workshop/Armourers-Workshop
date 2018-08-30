@@ -1,7 +1,7 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 
 public class BlockLocation {
 
@@ -15,8 +15,8 @@ public class BlockLocation {
         this.z = z;
     }
     
-    public BlockLocation offset(ForgeDirection direction) {
-        return new BlockLocation(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ); 
+    public BlockLocation offset(EnumFacing direction) {
+        return new BlockLocation(x + direction.getFrontOffsetX(), y + direction.getFrontOffsetY(), z + direction.getFrontOffsetZ()); 
     }
     
     @Override
@@ -28,7 +28,7 @@ public class BlockLocation {
         double disX = this.x - x;
         double disY = this.y - y;
         double disZ = this.z - z;
-        return (double)MathHelper.sqrt_double(disX * disX + disY * disY + disZ * disZ);
+        return (double)MathHelper.sqrt(disX * disX + disY * disY + disZ * disZ);
     }
     
     public double getDistance(BlockLocation blockLocation) {

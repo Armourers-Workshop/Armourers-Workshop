@@ -6,8 +6,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -141,15 +141,7 @@ public class GuiHSBSlider extends GuiSlider {
     }
     
     public void drawTexturedModalRectScaled (int x, int y, int u, int v, int srcWidth, int srcHeight, int tarWidth, int tarHeight) {
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV((double)(x + 0), (double)(y + tarHeight), (double)this.zLevel, (double)((float)(u + 0) * f), (double)((float)(v + srcHeight) * f1));
-        tessellator.addVertexWithUV((double)(x + tarWidth), (double)(y + tarHeight), (double)this.zLevel, (double)((float)(u + srcWidth) * f), (double)((float)(v + srcHeight) * f1));
-        tessellator.addVertexWithUV((double)(x + tarWidth), (double)(y + 0), (double)this.zLevel, (double)((float)(u + srcWidth) * f), (double)((float)(v + 0) * f1));
-        tessellator.addVertexWithUV((double)(x + 0), (double)(y + 0), (double)this.zLevel, (double)((float)(u + 0) * f), (double)((float)(v + 0) * f1));
-        tessellator.draw();
+        Gui.drawModalRectWithCustomSizedTexture(x, y, u, v, srcWidth, srcHeight, tarWidth, tarHeight);
     }
     
     public enum HSBSliderType {

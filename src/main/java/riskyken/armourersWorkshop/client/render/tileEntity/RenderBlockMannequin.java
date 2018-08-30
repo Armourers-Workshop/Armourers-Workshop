@@ -4,48 +4,25 @@ import java.awt.Color;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
-import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequin;
-import riskyken.armourersWorkshop.client.gui.mannequin.GuiMannequinTabSkinHair;
-import riskyken.armourersWorkshop.client.helper.MannequinTextureHelper;
 import riskyken.armourersWorkshop.client.model.ModelHelper;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
-import riskyken.armourersWorkshop.client.render.EntityTextureInfo;
 import riskyken.armourersWorkshop.client.render.IRenderBuffer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.RenderBridge;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
-import riskyken.armourersWorkshop.client.texture.PlayerTexture;
-import riskyken.armourersWorkshop.common.ApiRegistrar;
-import riskyken.armourersWorkshop.common.Contributors;
-import riskyken.armourersWorkshop.common.Contributors.Contributor;
-import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.BipedRotations;
 import riskyken.armourersWorkshop.common.inventory.MannequinSlotType;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
@@ -57,7 +34,7 @@ import riskyken.armourersWorkshop.utils.HolidayHelper;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockMannequin extends TileEntitySpecialRenderer {
+public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMannequin> {
     
     private static final ResourceLocation circle = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanohaCircle.png");
     
@@ -68,23 +45,26 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     private static long lastTextureBuild = 0;
     private final ModelMannequin modelSteve;
     private final ModelMannequin modelAlex;
-    private MannequinFakePlayer mannequinFakePlayer;
-    private final RenderPlayer renderPlayer;
+    //private MannequinFakePlayer mannequinFakePlayer;
+    //private final RenderPlayer renderPlayer;
     private final Minecraft mc;
     
     public RenderBlockMannequin() {
-        renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
+        //renderPlayer = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
         mc = Minecraft.getMinecraft();
         modelSteve = new ModelMannequin(false);
         modelAlex = new ModelMannequin(true);
     }
     
-    public void renderTileEntityAt(TileEntityMannequin te, double x, double y, double z, float partialTickTime) {
+    @Override
+    public void render(TileEntityMannequin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         mc.mcProfiler.startSection("armourersMannequin");
         mc.mcProfiler.startSection("holidayCheck");
         isHalloweenSeason = HolidayHelper.halloween_season.isHolidayActive();
         isHalloween = HolidayHelper.halloween.isHolidayActive();
-        MannequinFakePlayer fakePlayer = te.getFakePlayer();
+        //MannequinFakePlayer fakePlayer = te.getFakePlayer();
+        
+        /*
         mc.mcProfiler.endStartSection("move");
         
         GL11.glPushMatrix();
@@ -270,7 +250,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             tabSkinHair.hoverColour = getColourAtPos(Mouse.getX(), Mouse.getY());
             GL11.glEnable(GL11.GL_LIGHTING);
         }
-        
+        */
+        /*
         mc.mcProfiler.endStartSection("modelRender");
         if (te.isVisible() & !(te.getGameProfile() != null && te.getGameProfile().getName().equalsIgnoreCase("null"))) {
             long time = System.currentTimeMillis();
@@ -334,7 +315,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glPopAttrib();
         GL11.glPopMatrix();
         mc.mcProfiler.endSection();
-        mc.mcProfiler.endSection();
+        mc.mcProfiler.endSection();*/
     }
     
     private void renderMagicCircle(byte r, byte g, byte b, float partialTickTime, int offset, boolean isChild) {
@@ -349,7 +330,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
         GL11.glTranslatef(0F, 1.48F, 0F);
         float circleScale = 2.0F;
         GL11.glScalef(circleScale, circleScale, circleScale);
-        float rotation = (float)((double)(mc.theWorld.getTotalWorldTime() + offset) / 0.8F % 360) + partialTickTime;
+        float rotation = (float)((double)(mc.world.getTotalWorldTime() + offset) / 0.8F % 360) + partialTickTime;
         GL11.glRotatef(rotation, 0, 1, 0);
         ModRenderHelper.disableLighting();
         ModRenderHelper.enableAlphaBlend();
@@ -412,6 +393,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     }
     
     private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelMannequin targetBiped, double distance) {
+        /*
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         MannequinFakePlayer renderEntity = fakePlayer;
         if (renderEntity == null) {
@@ -440,7 +422,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
                     }
                 }
             }
-        }
+        }*/
     }
     
     public ItemStack getStackInMannequinSlot(IInventory inventory, MannequinSlotType slot) {
@@ -468,7 +450,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     }
     
     private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelMannequin targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
-        Item targetItem = stack.getItem();
+        /*Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         slot = slot % 7;
         String[] slotName = {"head", "chest", "legs", "unused", "feet", "rightArm", "leftArm"};
@@ -529,7 +511,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
             ModelHelper.disableChildModelScale();
         }
         GL11.glPopMatrix();
-        mc.mcProfiler.endSection();
+        mc.mcProfiler.endSection();*/
     }
     
     private ISkinPointer[] getSkinPointers(TileEntityMannequin te) {
@@ -551,10 +533,5 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer {
     
     private ISkinPointer getSkinPointerForSlot(TileEntityMannequin te, int slotIndex) {
         return SkinNBTHelper.getSkinPointerFromStack(te.getStackInSlot(slotIndex));
-    }
-    
-    @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
-        renderTileEntityAt((TileEntityMannequin)tileEntity, x, y, z, partialTickTime);
     }
 }

@@ -3,12 +3,12 @@ package riskyken.armourersWorkshop.client.guidebook;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BookChapter extends BookChapterBase {
@@ -24,7 +24,7 @@ public class BookChapter extends BookChapterBase {
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         List<String> lines = fontRenderer.listFormattedStringToWidth(text, PAGE_WIDTH);
         ArrayList<IBookPage> pages = new ArrayList<IBookPage>();
-        int linesPerPage = MathHelper.floor_double(PAGE_HEIGHT / fontRenderer.FONT_HEIGHT);
+        int linesPerPage = MathHelper.floor(PAGE_HEIGHT / fontRenderer.FONT_HEIGHT);
         
         ArrayList<String> pageLines = new ArrayList<String>();
         for (int i = 0; i < lines.size(); i++) {
@@ -65,6 +65,6 @@ public class BookChapter extends BookChapterBase {
     }
     
     private String getLocalizedText(String unlocalizedText) {
-        return StatCollector.translateToLocal(unlocalizedText);
+        return I18n.format(unlocalizedText);
     }
 }

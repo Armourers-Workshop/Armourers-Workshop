@@ -1,9 +1,11 @@
 package riskyken.armourersWorkshop.client.gui;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.io.IOException;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.DialogResult;
 import riskyken.armourersWorkshop.client.gui.AbstractGuiDialog.IDialogCallback;
 
@@ -34,7 +36,7 @@ public abstract class AbstractGuiDialogContainer extends GuiContainer implements
     }
     
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (isDialogOpen()) {
             dialog.mouseClicked(mouseX, mouseY, button);
         } else {
@@ -52,16 +54,16 @@ public abstract class AbstractGuiDialogContainer extends GuiContainer implements
     }
     
     @Override
-    protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
         if (isDialogOpen()) {
-            dialog.mouseMovedOrUp(mouseX, mouseY, button);
+            dialog.mouseMovedOrUp(mouseX, mouseY, state);
         } else {
-            super.mouseMovedOrUp(mouseX, mouseY, button);
+            super.mouseReleased(mouseX, mouseY, state);
         }
     }
     
     @Override
-    protected void keyTyped(char c, int keycode) {
+    protected void keyTyped(char c, int keycode) throws IOException {
         if (isDialogOpen()) {
             dialog.keyTyped(c, keycode);
         } else {

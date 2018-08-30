@@ -1,17 +1,13 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.api.common.painting.IPantable;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
 import riskyken.armourersWorkshop.api.common.skin.cubes.ICubeColour;
-import riskyken.armourersWorkshop.common.items.block.ModItemBlock;
 import riskyken.armourersWorkshop.common.painting.PaintType;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeColour;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourable;
@@ -31,12 +27,6 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
         if (glowing) {
             setSortPriority(122);
         }
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ModItemBlock.class, "block." + name);
-        return super.setBlockName(name);
     }
     
     @Override
@@ -116,10 +106,5 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     @Override
     public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side) {
         return false;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return ArmourersWorkshop.proxy.getBlockRenderType(this);
     }
 }

@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.api.common.painting.IPaintingTool;
@@ -75,9 +74,9 @@ public class ContainerColourMixer extends Container {
     private ColourFamily lastColourFamily;
     
     @Override
-    public void addCraftingToCrafters(ICrafting crafter) {
-        super.addCraftingToCrafters(crafter);
-        crafter.sendProgressBarUpdate(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
+    public void addListener(IContainerListener listener) {
+        super.addListener(listener);
+        listener.sendWindowProperty(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
         lastColourFamily = tileEntityColourMixer.getColourFamily();
     }
     
@@ -102,7 +101,7 @@ public class ContainerColourMixer extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return tileEntityColourMixer.isUseableByPlayer(player);
+        return tileEntityColourMixer.isUsableByPlayer(player);
     }
 
     public TileEntityColourMixer getTileEntity() {

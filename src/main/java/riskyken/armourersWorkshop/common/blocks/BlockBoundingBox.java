@@ -3,27 +3,25 @@ package riskyken.armourersWorkshop.common.blocks;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.painting.IPantableBlock;
@@ -44,14 +42,14 @@ import riskyken.armourersWorkshop.utils.BitwiseUtils;
 public class BlockBoundingBox extends AbstractModBlockContainer implements IPantableBlock {
 
     protected BlockBoundingBox() {
-        super(LibBlockNames.BOUNDING_BOX, Material.cloth, soundTypeCloth, false);
+        super(LibBlockNames.BOUNDING_BOX, Material.CLOTH, SoundType.CLOTH, false);
         setBlockUnbreakable();
         setResistance(6000000.0F);
         setLightOpacity(0);
     }
     
     @Override
-    public void getSubBlocks(Item p_149666_1_, CreativeTabs p_149666_2_, List p_149666_3_) {
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
     }
     
     @Override
@@ -60,32 +58,32 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p_149689_5_, ItemStack p_149689_6_) {
-        world.setBlockToAir(x, y, z);
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        worldIn.setBlockToAir(pos);
     }
     
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-        return null;
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return ItemStack.EMPTY;
     }
     
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (world.isRemote) {
             return true;
         }
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityBoundingBox) {
             if (((TileEntityBoundingBox)tileEntity).isParentValid()) {
                 tileEntity.markDirty();
-                world.markBlockForUpdate(x, y, z);
+                //world.markBlockForUpdate(pos);
                 return false;
             } else {
-                world.setBlockToAir(x, y, z);
+                world.setBlockToAir(pos);
                 return true;
             }
         }
-        world.setBlockToAir(x, y, z);
+        world.setBlockToAir(pos);
         return true;
     }
     
@@ -102,24 +100,18 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public int getRenderType() {
-        return -1;
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
     }
     
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
     
     @Override
-    public boolean renderAsNormalBlock() {
+    public boolean isBlockNormalCube(IBlockState state) {
         return false;
-    }
-    
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, "block." + name);
-        return super.setBlockName(name);
     }
     
     @Override
@@ -133,7 +125,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return null;
     }
 

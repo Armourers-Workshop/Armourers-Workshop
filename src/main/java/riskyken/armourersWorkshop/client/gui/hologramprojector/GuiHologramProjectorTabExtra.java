@@ -1,8 +1,8 @@
 package riskyken.armourersWorkshop.client.gui.hologramprojector;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import riskyken.armourersWorkshop.client.gui.GuiHelper;
 import riskyken.armourersWorkshop.client.gui.controls.GuiCheckBox;
 import riskyken.armourersWorkshop.client.gui.controls.GuiDropDownList;
@@ -61,8 +61,8 @@ public class GuiHologramProjectorTabExtra extends GuiTabPanel implements IDropDo
     }
     
     @Override
-    public void drawForegroundLayer(int mouseX, int mouseY) {
-        super.drawForegroundLayer(mouseX, mouseY);
+    public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
+        super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         String labelPowerMode = GuiHelper.getLocalizedControlName(inventoryName, "label.powerMode");
         fontRenderer.drawString(labelPowerMode, (int)((width / 2F) - (200 / 2F)) + 10, 45, 4210752);
     }

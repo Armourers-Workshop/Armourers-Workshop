@@ -24,7 +24,7 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
-            return getListOfStringsMatchingLastWord(args, getPlayers());
+            return getListOfStringsMatchingLastWord(args, getPlayers(server));
         }
         if (args.length == 3) {
             ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();

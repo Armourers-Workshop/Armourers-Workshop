@@ -1,6 +1,5 @@
 package riskyken.armourersWorkshop.common.blocks;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -15,10 +14,6 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
     public BlockMiniArmourer() {
         super(LibBlockNames.MINI_ARMOURER);
         setSortPriority(-1);
-    }
-    
-    @Override
-    public void registerBlockIcons(IIconRegister iconRegister) {
     }
     
     @Override
