@@ -1,9 +1,15 @@
 {
     "forge_marker": 1,
     "variants": {
-		"normal": { "model": "armourers_workshop:armour-library-normal" },
-		"inventory": { "model": "armourers_workshop:armour-library-creative" },
-        "type=normal": { "model": "armourers_workshop:armour-library-normal" },
-        "type=creative": { "model": "armourers_workshop:armour-library-creative" }
+		"normal": [{"model": "armourers_workshop:armour-library-normal"}],
+		"inventory": { "model": "armourers_workshop:armour-library-normal" },
+		"facing=north,type=normal": {"model": "armourers_workshop:armour-library-normal"},
+		"facing=east,type=normal": {"model": "armourers_workshop:armour-library-normal", "y": 90},
+		"facing=south,type=normal": {"model": "armourers_workshop:armour-library-normal", "y": 180},
+		"facing=west,type=normal": {"model": "armourers_workshop:armour-library-normal", "y": 270},
+        "facing=north,type=creative": {"model": "armourers_workshop:armour-library-creative"},
+		"facing=east,type=creative": {"model": "armourers_workshop:armour-library-creative", "y": 90},
+		"facing=south,type=creative": {"model": "armourers_workshop:armour-library-creative", "y": 180},
+		"facing=west,type=creative": {"model": "armourers_workshop:armour-library-creative", "y": 270}
     }
 }

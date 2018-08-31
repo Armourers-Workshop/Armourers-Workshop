@@ -33,21 +33,33 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
         setUnlocalizedName(name);
         ModBlocks.BLOCKS.add(this);
     }
-    
+
     @Override
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
-    
+
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-    
+
     @Override
     public boolean isBlockNormalCube(IBlockState state) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    private static int getBit(int value, int index) {
+        return (value >> index) & 1;
+    }
+
+    private static int setBit(int value, int index, boolean on) {
+        if (on) {
+            return value | (1 << index);
+        } else {
+            return value & ~(1 << index);
+        }
     }
 
     @Override
@@ -55,16 +67,6 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
         super.setUnlocalizedName(name);
         setRegistryName(new ResourceLocation(LibModInfo.ID, "tile." + name));
         return this;
-    }
-
-    @Override
-    public String getUnlocalizedName() {
-        return super.getUnlocalizedName();
-    }
-
-    protected String getModdedUnlocalizedName(String unlocalizedName) {
-        String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-        return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
     }
 
     public AbstractModBlock setSortPriority(int sortPriority) {

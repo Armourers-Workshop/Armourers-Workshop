@@ -87,7 +87,11 @@ public class ModBlocks {
     public void registerItemBlocks(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> reg = event.getRegistry();
         for (int i = 0; i < BLOCKS.size(); i++) {
-            reg.register(new ItemBlock(BLOCKS.get(i)).setRegistryName(BLOCKS.get(i).getRegistryName()));
+            if (BLOCKS.get(i) == armourLibrary) {
+                reg.register(new ItemBlock(BLOCKS.get(i)).setRegistryName(BLOCKS.get(i).getRegistryName()).setHasSubtypes(true));
+            } else {
+                reg.register(new ItemBlock(BLOCKS.get(i)).setRegistryName(BLOCKS.get(i).getRegistryName()));
+            }
         }
     }
 
