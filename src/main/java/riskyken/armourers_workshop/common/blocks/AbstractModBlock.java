@@ -50,11 +50,15 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
         return false;
     }
 
-    private static int getBit(int value, int index) {
+    protected static boolean getBitBool(int value, int index) {
+        return getBit(value, index) == 1;
+    }
+    
+    protected static int getBit(int value, int index) {
         return (value >> index) & 1;
     }
 
-    private static int setBit(int value, int index, boolean on) {
+    protected static int setBit(int value, int index, boolean on) {
         if (on) {
             return value | (1 << index);
         } else {

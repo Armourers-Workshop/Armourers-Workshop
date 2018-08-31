@@ -36,16 +36,6 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
         return new BlockStateContainer(this, new IProperty[] {STATE_FACING, STATE_TYPE});
     }
 
-    @Override
-    public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.SOLID;
-    }
-
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
     public IBlockState getStateFromMeta(int meta) {
         boolean typeBit = getBitBool(meta, 0);
         boolean northSouthBit = getBitBool(meta, 1);
@@ -98,6 +88,16 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
             return 1;
         }
         return 0;
+    }
+    
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.SOLID;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
 
     /*

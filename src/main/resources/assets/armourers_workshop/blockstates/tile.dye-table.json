@@ -1,6 +1,10 @@
 {
     "forge_marker": 1,
     "variants": {
-        "normal": { "model": "armourers_workshop:dye-table" }
+        "normal": { "model": "armourers_workshop:dye-table" },
+        "facing=north": {"model": "armourers_workshop:dye-table"},
+		"facing=east": {"model": "armourers_workshop:dye-table", "y": 90},
+		"facing=south": {"model": "armourers_workshop:dye-table", "y": 180},
+		"facing=west": {"model": "armourers_workshop:dye-table", "y": 270}
     }
 }

@@ -1,6 +1,10 @@
 {
     "forge_marker": 1,
     "variants": {
-        "normal": { "model": "armourers_workshop:global-skin-library" }
+        "normal": { "model": "armourers_workshop:global-skin-library" },
+		"facing=north": {"model": "armourers_workshop:global-skin-library"},
+		"facing=east": {"model": "armourers_workshop:global-skin-library", "y": 90},
+		"facing=south": {"model": "armourers_workshop:global-skin-library", "y": 180},
+		"facing=west": {"model": "armourers_workshop:global-skin-library", "y": 270}
     }
 }

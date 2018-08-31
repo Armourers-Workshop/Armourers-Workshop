@@ -1,6 +1,7 @@
 {
     "forge_marker": 1,
     "variants": {
-        "normal": { "model": "armourers_workshop:armour-library" }
+        "normal": { "model": "armourers_workshop:armour-library" },
+		"inventory": { "model": "armourers_workshop:armour-library" }
     }
 }
