@@ -41,7 +41,7 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
 
     @Override
     public String getUnlocalizedName() {
-        return getModdedUnlocalizedName(super.getUnlocalizedName());
+        return super.getUnlocalizedName();
     }
 
     protected String getModdedUnlocalizedName(String unlocalizedName) {

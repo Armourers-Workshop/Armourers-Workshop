@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "side": "armourers_workshop:blocks/skinningTableSide",
+        "top": "armourers_workshop:blocks/skinningTableTop",
+        "bottom": "armourers_workshop:blocks/skinningTableBottom"
+    }
+}

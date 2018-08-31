@@ -57,6 +57,7 @@ import riskyken.armourers_workshop.common.addons.ModAddonManager;
 import riskyken.armourers_workshop.common.blocks.ModBlocks;
 import riskyken.armourers_workshop.common.config.ConfigHandlerClient;
 import riskyken.armourers_workshop.common.data.PlayerPointer;
+import riskyken.armourers_workshop.common.items.ModItems;
 import riskyken.armourers_workshop.common.lib.LibGuiIds;
 import riskyken.armourers_workshop.common.lib.LibModInfo;
 import riskyken.armourers_workshop.common.library.LibraryFile;
@@ -97,6 +98,10 @@ public class ClientProxy extends CommonProxy {
         for (int i = 0; i < ModBlocks.BLOCKS.size(); i++) {
             ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.BLOCKS.get(i)), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, ModBlocks.BLOCKS.get(i).getUnlocalizedName()), "inventory"));
         }
+        for (int i = 0; i < ModItems.ITEM_LIST.size(); i++) {
+            ModelLoader.setCustomModelResourceLocation(ModItems.ITEM_LIST.get(i), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, ModItems.ITEM_LIST.get(i).getUnlocalizedName()), "inventory"));
+        }
+        
     }
     
     @Override

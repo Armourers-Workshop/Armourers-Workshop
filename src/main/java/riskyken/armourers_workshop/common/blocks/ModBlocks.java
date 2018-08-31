@@ -53,25 +53,25 @@ public class ModBlocks {
     
     public ModBlocks() {
         MinecraftForge.EVENT_BUS.register(this);
-        //armourerBrain = new BlockArmourer();
+        armourerBrain = new BlockArmourer();
         //miniArmourer = new BlockMiniArmourer();
-        //armourLibrary = new BlockSkinLibrary();
-        //globalSkinLibrary = new BlockGlobalSkinLibrary();
-        //boundingBox = new BlockBoundingBox();
-        //colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
-        //colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
-        //colourableGlass = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS, false);
-        //colourableGlassGlowing = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS_GLOWING, true);
+        armourLibrary = new BlockSkinLibrary();
+        globalSkinLibrary = new BlockGlobalSkinLibrary();
+        boundingBox = new BlockBoundingBox();
+        colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
+        colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
+        colourableGlass = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS, false);
+        colourableGlassGlowing = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS_GLOWING, true);
         colourMixer = new BlockColourMixer();
-        //mannequin = new BlockMannequin();
-        //doll = new BlockDoll();
-        //skinningTable = new BlockSkinningTable();
-        //skinnable = new BlockSkinnable();
-        //skinnableGlowing = new BlockSkinnableGlowing();
-        //skinnableChild = new BlockSkinnableChild();
-        //skinnableChildGlowing = new BlockSkinnableChildGlowing();
-        //dyeTable = new BlockDyeTable();
-        //hologramProjector = new BlockHologramProjector();
+        mannequin = new BlockMannequin();
+        doll = new BlockDoll();
+        skinningTable = new BlockSkinningTable();
+        skinnable = new BlockSkinnable();
+        skinnableGlowing = new BlockSkinnableGlowing();
+        skinnableChild = new BlockSkinnableChild();
+        skinnableChildGlowing = new BlockSkinnableChildGlowing();
+        dyeTable = new BlockDyeTable();
+        hologramProjector = new BlockHologramProjector();
     }
     
 

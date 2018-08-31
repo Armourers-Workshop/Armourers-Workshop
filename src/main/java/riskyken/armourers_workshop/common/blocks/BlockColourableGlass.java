@@ -17,7 +17,7 @@ public class BlockColourableGlass extends BlockColourable {
     
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.CUTOUT;
+        return BlockRenderLayer.TRANSLUCENT;
     }
     
     @Override

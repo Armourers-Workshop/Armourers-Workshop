@@ -1,9 +1,15 @@
 package riskyken.armourers_workshop.common.items;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.Level;
 
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 import riskyken.armourers_workshop.common.addons.ModAddonManager;
 import riskyken.armourers_workshop.common.items.paintingtool.ItemBlendingTool;
 import riskyken.armourers_workshop.common.items.paintingtool.ItemBurnTool;
@@ -18,6 +24,8 @@ import riskyken.armourers_workshop.common.lib.LibItemNames;
 import riskyken.armourers_workshop.utils.ModLogger;
 
 public class ModItems {
+    
+    public static ArrayList<Item> ITEM_LIST = new ArrayList<Item>();
     
     public static Item equipmentSkinTemplate;
     public static Item equipmentSkin;
@@ -49,6 +57,7 @@ public class ModItems {
     
     
     public ModItems() {
+        MinecraftForge.EVENT_BUS.register(this);
         equipmentSkinTemplate = new ItemSkinTemplate();
         setEquipmentSkinType();
         
@@ -81,6 +90,14 @@ public class ModItems {
         armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, EntityEquipmentSlot.CHEST);
         armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, EntityEquipmentSlot.LEGS);
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, EntityEquipmentSlot.FEET);
+    }
+    
+    @SubscribeEvent
+    public void registerItems(RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> reg = event.getRegistry();
+        for (int i = 0; i < ITEM_LIST.size(); i++) {
+            reg.register(ITEM_LIST.get(i));
+        }
     }
     
     private void setEquipmentSkinType() {

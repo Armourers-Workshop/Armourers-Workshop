@@ -1,0 +1,7 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "armourers_workshop:items/paintbrush",
+        "layer1": "armourers_workshop:items/paintbrush-tip"
+    }
+}

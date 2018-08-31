@@ -7,8 +7,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,6 +35,14 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder {
         setUnlocalizedName(name);
         setHasSubtypes(false);
         setMaxStackSize(1);
+        ModItems.ITEM_LIST.add(this);
+    }
+    
+    @Override
+    public Item setUnlocalizedName(String unlocalizedName) {
+        super.setUnlocalizedName(unlocalizedName);
+        setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + unlocalizedName));
+        return this;
     }
     
     @SideOnly(Side.CLIENT)
@@ -51,16 +61,6 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder {
             }
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public String getUnlocalizedName() {
-        return getModdedUnlocalizedName(super.getUnlocalizedName());
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack itemStack) {
-        return getModdedUnlocalizedName(super.getUnlocalizedName(itemStack), itemStack);
     }
 
     protected String getModdedUnlocalizedName(String unlocalizedName) {
