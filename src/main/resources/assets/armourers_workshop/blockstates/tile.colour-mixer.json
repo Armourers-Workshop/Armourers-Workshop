@@ -1,0 +1,7 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "normal": { "model": "armourers_workshop:colour-mixer" },
+		"inventory": { "model": "armourers_workshop:colour-mixer" }
+    }
+}
