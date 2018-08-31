@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "armourers_workshop:items/templateBlank"
+        "layer0": "armourers_workshop:items/wand-of-style"
     }
 }

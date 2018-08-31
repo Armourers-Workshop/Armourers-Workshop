@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "armourers_workshop:items/colourPicker",
+        "layer0": "armourers_workshop:items/colour-picker",
         "layer1": "armourers_workshop:items/colour-picker-tip"
     }
 }

@@ -1,0 +1,8 @@
+{
+    "parent": "block/cube_bottom_top",
+    "textures": {
+        "side": "armourers_workshop:blocks/hologram-projector/hologram-projector-side",
+        "top": "armourers_workshop:blocks/hologram-projector/hologram-projector-top",
+        "bottom": "armourers_workshop:blocks/hologram-projector/hologram-projector-bottom"
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "armourers_workshop:items/hue-tool",
+        "layer1": "armourers_workshop:items/hue-tool-tip"
+    }
+}
