@@ -36,7 +36,7 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
     
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.SOLID;
+        return BlockRenderLayer.CUTOUT;
     }
     
     @Override

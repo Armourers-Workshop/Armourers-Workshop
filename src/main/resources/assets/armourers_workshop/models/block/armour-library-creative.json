@@ -7,8 +7,8 @@
 		"Clay": "blocks/hardened_clay",
 		"spruce": "blocks/planks_spruce",
 		"redstone": "blocks/redstone_block",
-		"library": "blocks/creativelibrary1",
-		"library2": "blocks/creativelibrary2"
+		"library": "armourers_workshop:blocks/creativelibrary1",
+		"library2": "armourers_workshop:blocks/creativelibrary2"
 	},
 	"elements": [ 	 
 		{

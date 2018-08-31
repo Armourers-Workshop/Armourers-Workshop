@@ -38,7 +38,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.SOLID;
+        return BlockRenderLayer.CUTOUT;
     }
     
     @Override
