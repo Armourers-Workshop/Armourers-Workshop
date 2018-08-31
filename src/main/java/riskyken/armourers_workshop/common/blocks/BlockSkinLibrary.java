@@ -1,6 +1,8 @@
 package riskyken.armourers_workshop.common.blocks;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.World;
 import riskyken.armourers_workshop.common.lib.LibBlockNames;
 import riskyken.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
@@ -10,6 +12,16 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     public BlockSkinLibrary() {
         super(LibBlockNames.ARMOUR_LIBRARY);
         setSortPriority(198);
+    }
+    
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.SOLID;
+    }
+    
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
     /*
     @Override

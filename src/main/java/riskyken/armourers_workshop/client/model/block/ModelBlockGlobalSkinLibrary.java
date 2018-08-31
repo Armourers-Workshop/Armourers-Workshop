@@ -12,7 +12,7 @@ import riskyken.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibra
 
 public class ModelBlockGlobalSkinLibrary extends ModelBase {
     
-    private static final ResourceLocation MODEL_TEXTURE = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/tileEntities/globalSkinLibrary.png");
+    private static final ResourceLocation MODEL_TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/tile-entities/global-skin-library.png");
     
     public ModelRenderer globe;
     
