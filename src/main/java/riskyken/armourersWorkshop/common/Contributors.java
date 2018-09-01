@@ -29,6 +29,7 @@ public class Contributors {
         addContributor("41dfb793-40df-4f14-aecc-9c6d265f2813", "BredFace", EnumSet.of(ContributionFlags.TRANSLATOR), 40, 214, 63);
         addContributor("4dbf2d3c-884a-4db2-a050-ed0dfedcc1e3", "Equine0x", EnumSet.of(ContributionFlags.TRANSLATOR), 128, 0, 0);
         addContributor("7a84e9dd-6703-4eda-8208-bc5df8b51a61", "_Hoppang_", EnumSet.of(ContributionFlags.TRANSLATOR), 12, 67, 155);
+        addContributor("f4977a7f-2a96-4641-a351-b3044d9866a2", "IS_Jump", EnumSet.of(ContributionFlags.TRANSLATOR), 178, 152, 231);
     }
     
     private void addContributor(String uuid, String username, EnumSet<ContributionFlags> contributions, int r, int g, int b) {
