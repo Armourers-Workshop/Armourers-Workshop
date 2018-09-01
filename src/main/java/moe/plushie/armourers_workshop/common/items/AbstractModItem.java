@@ -3,18 +3,21 @@ package moe.plushie.armourers_workshop.common.items;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class AbstractModItem extends Item implements ISortOrder {
+public abstract class AbstractModItem extends Item implements ISortOrder, ICustomModel {
 
     private int sortPriority = 0;
     
@@ -87,5 +90,11 @@ public abstract class AbstractModItem extends Item implements ISortOrder {
     @Override
     public int getSortPriority() {
         return sortPriority;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModels() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
     }
 }

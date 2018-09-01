@@ -15,6 +15,7 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -28,6 +29,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class BlockBoundingBox extends AbstractModBlockContainer implements IPantableBlock {
 
@@ -150,6 +152,13 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
         */
         return false;
     }
+    
+    @Override
+    public void registerItemBlock(IForgeRegistry<Item> registry) {}
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModels() {}
     
     @Override
     public boolean setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side) {

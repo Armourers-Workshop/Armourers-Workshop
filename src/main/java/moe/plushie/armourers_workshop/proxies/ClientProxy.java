@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.client.handler.PlayerTextureHandler;
 import moe.plushie.armourers_workshop.client.handler.RehostedJarHandler;
 import moe.plushie.armourers_workshop.client.handler.SkinPreviewHandler;
 import moe.plushie.armourers_workshop.client.library.ClientLibraryManager;
+import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
@@ -55,16 +56,15 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -95,13 +95,18 @@ public class ClientProxy extends CommonProxy {
     
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
-        for (int i = 0; i < ModBlocks.BLOCKS.size(); i++) {
-            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.BLOCKS.get(i)), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, ModBlocks.BLOCKS.get(i).getUnlocalizedName()), "inventory"));
+        for (int i = 0; i < ModBlocks.BLOCK_LIST.size(); i++) {
+            Block block = ModBlocks.BLOCK_LIST.get(i);
+            if (block instanceof ICustomModel) {
+                ((ICustomModel)block).registerModels();
+            }
         }
         for (int i = 0; i < ModItems.ITEM_LIST.size(); i++) {
-            ModelLoader.setCustomModelResourceLocation(ModItems.ITEM_LIST.get(i), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, ModItems.ITEM_LIST.get(i).getUnlocalizedName()), "inventory"));
+            Item item = ModItems.ITEM_LIST.get(i);
+            if (item instanceof ICustomModel) {
+                ((ICustomModel)item).registerModels();
+            }
         }
-        
     }
     
     @Override

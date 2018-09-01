@@ -1,16 +1,24 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
-public abstract class AbstractModBlock extends Block implements ISortOrder {
+public abstract class AbstractModBlock extends Block implements ISortOrder, ICustomItemBlock, ICustomModel {
 
     private int sortPriority = 100;
 
@@ -20,7 +28,7 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
         setHardness(3.0F);
         setSoundType(SoundType.METAL);
         setUnlocalizedName(name);
-        ModBlocks.BLOCKS.add(this);
+        ModBlocks.BLOCK_LIST.add(this);
     }
 
     public AbstractModBlock(String name, Material material, SoundType soundType, boolean addCreativeTab) {
@@ -31,7 +39,7 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
         setHardness(3.0F);
         setSoundType(soundType);
         setUnlocalizedName(name);
-        ModBlocks.BLOCKS.add(this);
+        ModBlocks.BLOCK_LIST.add(this);
     }
 
     @Override
@@ -46,7 +54,6 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
 
     @Override
     public boolean isBlockNormalCube(IBlockState state) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -81,5 +88,16 @@ public abstract class AbstractModBlock extends Block implements ISortOrder {
     @Override
     public int getSortPriority() {
         return sortPriority;
+    }
+    
+    @Override
+    public void registerItemBlock(IForgeRegistry<Item> registry) {
+        registry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModels() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
     }
 }

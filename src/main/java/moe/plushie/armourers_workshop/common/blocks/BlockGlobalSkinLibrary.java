@@ -25,7 +25,6 @@ public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEnt
         setDefaultState(this.blockState.getBaseState().withProperty(STATE_FACING, EnumFacing.NORTH));
         setSortPriority(197);
     }
-    
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[] {STATE_FACING});
@@ -63,7 +62,7 @@ public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEnt
     
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.SOLID;
+        return BlockRenderLayer.TRANSLUCENT;
     }
     
     @Override

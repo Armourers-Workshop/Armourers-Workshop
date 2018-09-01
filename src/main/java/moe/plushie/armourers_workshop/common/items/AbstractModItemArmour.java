@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.items;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
@@ -11,6 +12,7 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,10 +22,11 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class AbstractModItemArmour extends ItemArmor implements ISortOrder {
+public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICustomModel {
 
     private int sortPriority = 0;
     
@@ -116,5 +119,11 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder {
     @Override
     public int getSortPriority() {
         return sortPriority;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModels() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
     }
 }

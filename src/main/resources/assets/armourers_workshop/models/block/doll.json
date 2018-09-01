@@ -1,8 +1,40 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "armourers_workshop:blocks/armourerSide",
-		"top": "armourers_workshop:blocks/armourerTopBottom",
-        "bottom": "armourers_workshop:blocks/armourerTopBottom"
+  "parent": "builtin/entity",
+  "display": {
+    "gui": {
+      "rotation": [ 30, 135, 0 ],
+      "translation": [ 0, 7, 0],
+      "scale":[ 0.7, 0.7, 0.7 ]
+    },
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 8, 14, 8],
+      "scale":[ 1, 1, 1 ]
+    },
+    "fixed": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, 0],
+      "scale":[ 1, 1, 1 ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [ 75, -45, 0 ],
+      "translation": [ 0, -6, 8],
+      "scale": [ 1, 1, 1 ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [ 75, -45, 0 ],
+      "translation": [ -10, 4, 5],
+      "scale": [ 1, 1, 1 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 0, 90, 0 ],
+      "translation": [ 2, 5, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ 0, 90, 0 ],
+      "translation": [ 1.5, 5, 7 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
     }
+  }
 }

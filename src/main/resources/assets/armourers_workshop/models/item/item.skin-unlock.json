@@ -1,7 +1,0 @@
-{
-    "parent": "item/handheld",
-    "textures": {
-        "layer0": "armourers_workshop:items/scroll-head",
-		"layer1": "armourers_workshop:items/scroll-head"
-    }
-}

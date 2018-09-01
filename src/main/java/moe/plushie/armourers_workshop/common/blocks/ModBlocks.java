@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnableChi
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinningTable;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,7 +28,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
 
-    public static ArrayList<Block> BLOCKS = new ArrayList<Block>();
+    public static ArrayList<Block> BLOCK_LIST = new ArrayList<Block>();
     
     public static Block armourerBrain;
     //public static Block miniArmourer;
@@ -78,19 +77,18 @@ public class ModBlocks {
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> reg = event.getRegistry();
-        for (int i = 0; i < BLOCKS.size(); i++) {
-            reg.register(BLOCKS.get(i));
+        for (int i = 0; i < BLOCK_LIST.size(); i++) {
+            reg.register(BLOCK_LIST.get(i));
         }
     }
     
     @SubscribeEvent
     public void registerItemBlocks(RegistryEvent.Register<Item> event) {
-        IForgeRegistry<Item> reg = event.getRegistry();
-        for (int i = 0; i < BLOCKS.size(); i++) {
-            if (BLOCKS.get(i) == armourLibrary) {
-                reg.register(new ItemBlock(BLOCKS.get(i)).setRegistryName(BLOCKS.get(i).getRegistryName()).setHasSubtypes(true));
-            } else {
-                reg.register(new ItemBlock(BLOCKS.get(i)).setRegistryName(BLOCKS.get(i).getRegistryName()));
+        IForgeRegistry<Item> registry = event.getRegistry();
+        for (int i = 0; i < BLOCK_LIST.size(); i++) {
+            Block block = BLOCK_LIST.get(i);
+            if (block instanceof ICustomItemBlock) {
+                ((ICustomItemBlock)block).registerItemBlock(registry);
             }
         }
     }
