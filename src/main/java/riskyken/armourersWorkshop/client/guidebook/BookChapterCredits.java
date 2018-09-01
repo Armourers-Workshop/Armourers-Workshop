@@ -30,7 +30,8 @@ public class BookChapterCredits extends BookChapterBase {
                 "Flummie2000 (de_DE)",
                 "V972 (ru_RU)",
                 "BredFace (pt_BR)",
-                "Equine0x (fr_FR)"});
+                "Equine0x (fr_FR)",
+                "_Hoppang_ (ko_KR)"});
     }
     
     private void addCategoryPage(String pageName, String[] people) {
