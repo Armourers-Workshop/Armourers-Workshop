@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -136,8 +137,8 @@ public class SkinPartRenderer extends ModelBase {
     }
     
     private void renderVertexList(ArrayList<ColouredFace> vertexList, float scale, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd) {
-        IRenderBuffer renderBuffer = new RenderBridge().INSTANCE;
-        renderBuffer.startDrawingQuads();
+        IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
+        renderBuffer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         for (int i = 0; i < vertexList.size(); i++) {
             ColouredFace cVert = vertexList.get(i);
             cVert.renderVertex(renderBuffer, skinDye, extraColour, cspd, ClientProxy.useSafeTextureRender());

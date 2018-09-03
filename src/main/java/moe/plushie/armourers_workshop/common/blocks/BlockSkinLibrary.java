@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
 import net.minecraft.block.BlockHorizontal;
@@ -12,6 +14,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -25,6 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -39,10 +43,10 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
         this.setDefaultState(this.blockState.getBaseState().withProperty(STATE_FACING, EnumFacing.NORTH).withProperty(STATE_TYPE, EnumLibraryType.NORMAL));
         setSortPriority(198);
     }
-    
+
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {STATE_FACING, STATE_TYPE});
+        return new BlockStateContainer(this, new IProperty[] { STATE_FACING, STATE_TYPE });
     }
 
     public IBlockState getStateFromMeta(int meta) {
@@ -55,9 +59,17 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
         }
         EnumFacing facing = EnumFacing.EAST;
         if (northSouthBit) {
-            if (posNegBit) { facing = EnumFacing.SOUTH; } else { facing = EnumFacing.NORTH; }
+            if (posNegBit) {
+                facing = EnumFacing.SOUTH;
+            } else {
+                facing = EnumFacing.NORTH;
+            }
         } else {
-            if (posNegBit) { facing = EnumFacing.EAST; } else { facing = EnumFacing.WEST; }
+            if (posNegBit) {
+                facing = EnumFacing.EAST;
+            } else {
+                facing = EnumFacing.WEST;
+            }
         }
         return this.getDefaultState().withProperty(STATE_FACING, facing).withProperty(STATE_TYPE, type);
     }
@@ -74,7 +86,7 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
         }
         return meta;
     }
-    
+
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         EnumFacing enumfacing = placer.getHorizontalFacing().getOpposite();
@@ -84,13 +96,13 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
         }
         return getDefaultState().withProperty(STATE_FACING, enumfacing).withProperty(STATE_TYPE, type);
     }
-    
+
     @Override
     public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         items.add(new ItemStack(this, 1, 0));
         items.add(new ItemStack(this, 1, 1));
     }
-    
+
     @Override
     public int damageDropped(IBlockState state) {
         if (state.getValue(STATE_TYPE) == EnumLibraryType.CREATIVE) {
@@ -98,7 +110,7 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
         }
         return 0;
     }
-    
+
     @Override
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.SOLID;
@@ -108,12 +120,12 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-    
+
     @Override
     public void registerItemBlock(IForgeRegistry<Item> registry) {
         registry.register(new ItemBlock(this).setRegistryName(getRegistryName()).setHasSubtypes(true));
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
@@ -125,16 +137,21 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
      * 
      * @Override public int damageDropped(int meta) { return meta; }
      * 
-     * @Override public void breakBlock(World world, int x, int y, int z, Block
-     * block, int meta) { BlockUtils.dropInventoryBlocks(world, x, y, z);
-     * super.breakBlock(world, x, y, z, block, meta); }
+     * @Override public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+     * BlockUtils.dropInventoryBlocks(world, x, y,z);
+     * super.breakBlock(world, x, y, z, block, meta);
+     * }
      * 
-     * @Override public boolean onBlockActivated(World world, int x, int y, int z,
-     * EntityPlayer player, int side, float xHit, float yHit, float zHit) { if
-     * (!world.isRemote) { FMLNetworkHandler.openGui(player,
-     * ArmourersWorkshop.instance, LibGuiIds.ARMOUR_LIBRARY, world, x, y, z); }
-     * return true; }
      */
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!worldIn.isRemote) {
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), LibGuiIds.ARMOUR_LIBRARY, worldIn, pos.getX(), pos.getY(), pos.getZ()); 
+        }
+        return true;
+    }
+
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinLibrary();

@@ -12,12 +12,10 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.bake.FaceRenderer;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
-import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.data.MiniCube;
-import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -198,9 +196,9 @@ public class GuiMiniArmourerBuildingModel {
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
                 IRenderBuffer buff = RenderBridge.INSTANCE;
-                buff.startDrawingQuads();
-                renderArmourBlock((byte)newCube.getX(), (byte)newCube.getY(), (byte)newCube.getZ(), newCube.getColour(), scale, true);
-                buff.draw();
+                //buff.startDrawingQuads();
+                //renderArmourBlock((byte)newCube.getX(), (byte)newCube.getY(), (byte)newCube.getZ(), newCube.getColour(), scale, true);
+                //buff.draw();
                 GL11.glEnable(GL11.GL_TEXTURE_2D);
                 GL11.glDisable(GL11.GL_BLEND);
             }
@@ -332,6 +330,7 @@ public class GuiMiniArmourerBuildingModel {
         
         renderCubes.addAll(cubes);
         IRenderBuffer buff = RenderBridge.INSTANCE;
+        /*
         buff.startDrawingQuads();
         for (int i = 0; i < renderCubes.size(); i++) {
             MiniCube cube = renderCubes.get(i);
@@ -362,6 +361,7 @@ public class GuiMiniArmourerBuildingModel {
             colourId += 6;
         }
         buff.draw();
+        */
         if (fake) {
             GL11.glEnable(GL11.GL_LIGHTING);
         }

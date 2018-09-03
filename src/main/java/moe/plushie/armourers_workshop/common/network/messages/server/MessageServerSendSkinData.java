@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.common.network.messages.server;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.common.network.ByteBufHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinIdentifierSerializer;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Sent from server to client. Contains skin model information.
@@ -57,7 +57,7 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
         private ByteBuf buf;
         
         public DownloadThread(ByteBuf buf) {
-            this.buf = buf;
+            this.buf = buf.retain();
         }
         
         @Override

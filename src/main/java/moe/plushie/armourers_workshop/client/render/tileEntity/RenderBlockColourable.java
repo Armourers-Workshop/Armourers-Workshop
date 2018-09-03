@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -62,7 +63,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
         //ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         ModRenderHelper.enableAlphaBlend();
-        renderer.startDrawingQuads();
+        renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {
@@ -89,7 +90,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
         }
         GL11.glDisable(GL11.GL_LIGHTING);
         ModRenderHelper.enableAlphaBlend();
-        renderer.startDrawingQuads();
+        renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         renderer.setColourRGBA_F(0.7F, 0.7F, 0.7F, markerAlpha);
         if (markerAlpha > 0F) {
             for (int i = 0; i < 6; i++) {

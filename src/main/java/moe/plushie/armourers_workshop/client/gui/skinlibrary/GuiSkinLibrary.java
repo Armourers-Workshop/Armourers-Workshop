@@ -13,9 +13,9 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialogContainer;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiFileListItem;
@@ -39,8 +39,8 @@ import moe.plushie.armourers_workshop.common.library.LibraryFileType;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.SkinUploadHelper;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
@@ -67,7 +67,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiSkinLibrary extends AbstractGuiDialogContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armourLibrary.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armour-library.png");
     private static final int BUTTON_ID_LOAD_SAVE = 0;
     
     private static final int TITLE_HEIGHT = 15;

@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiHSBSlider extends GuiSlider {
 
-    private static final ResourceLocation sliderTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/sliderHue.png");
+    private static final ResourceLocation sliderTexture = new ResourceLocation(LibModInfo.ID, "textures/gui/controls/slider-hue.png");
     
     private HSBSliderType type;
     private IHSBSliderCallback callback = null;

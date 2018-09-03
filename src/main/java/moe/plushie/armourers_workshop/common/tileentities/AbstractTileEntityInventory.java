@@ -14,6 +14,9 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     
     public AbstractTileEntityInventory(int inventorySize) {
         this.items = new ItemStack[inventorySize];
+        for (int i = 0; i < items.length; i++) {
+            items[i] = ItemStack.EMPTY;
+        }
     }
     
     @Override
@@ -29,10 +32,9 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     @Override
     public ItemStack decrStackSize(int i, int count) {
         ItemStack itemstack = getStackInSlot(i);
-        
-        if (itemstack != null) {
+        if (itemstack != ItemStack.EMPTY) {
             if (itemstack.getCount() <= count){
-                setInventorySlotContents(i, null);
+                setInventorySlotContents(i, ItemStack.EMPTY);
             }else{
                 itemstack = itemstack.splitStack(count);
                 markDirty();
@@ -40,18 +42,18 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
         }
         return itemstack;
     }
-
-    /*@Override
-    public ItemStack getStackInSlotOnClosing(int i) {
-        ItemStack item = getStackInSlot(i);
-        setInventorySlotContents(i, null);
+    
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        ItemStack item = getStackInSlot(index);
+        setInventorySlotContents(index, ItemStack.EMPTY);
         return item;
-    }*/
+    }
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         items[i] = itemstack;
-        if (itemstack != null && itemstack.getCount() > getInventoryStackLimit()) {
+        if (itemstack != ItemStack.EMPTY && itemstack.getCount() > getInventoryStackLimit()) {
             itemstack.setCount(getInventoryStackLimit());
         }
         markDirty();
@@ -116,62 +118,44 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     
     @Override
     public void closeInventory(EntityPlayer player) {
-        // TODO Auto-generated method stub
-        
     }
     
     @Override
     public void openInventory(EntityPlayer player) {
-        // TODO Auto-generated method stub
-        
     }
     
     @Override
     public void setField(int id, int value) {
         // TODO Auto-generated method stub
-        
     }
     
     @Override
     public int getFieldCount() {
-        // TODO Auto-generated method stub
         return 0;
     }
     
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return "";
     }
     
     @Override
     public boolean hasCustomName() {
-        // TODO Auto-generated method stub
         return false;
     }
     
     @Override
     public ITextComponent getDisplayName() {
-        // TODO Auto-generated method stub
         return super.getDisplayName();
     }
     
     @Override
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
         return false;
     }
     
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
-        // TODO Auto-generated method stub
-        //return entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) <= 64;
-        return false;
-    }
-    
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        // TODO Auto-generated method stub
-        return null;
+        return player.getDistanceSq(getPos()) <= 64;
     }
 }

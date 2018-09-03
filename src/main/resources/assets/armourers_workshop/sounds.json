@@ -28,7 +28,7 @@
 	"burn":
 	{"category": "master","sounds":
 	[
-	{"name": paint/burn","stream": false}
+	{"name": "paint/burn","stream": false}
 	]},
 	
 	"dodge":

@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.client.handler.SkinPreviewHandler;
 import moe.plushie.armourers_workshop.client.library.ClientLibraryManager;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
+import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockArmourer;
@@ -129,6 +130,7 @@ public class ClientProxy extends CommonProxy {
         new BlockHighlightRenderHandler();
         new ItemTooltipHandler();
         new SkinPreviewHandler();
+        RenderBridge.init();
         /*
         Render arrowRender = new RenderSkinnedArrow();
         arrowRender.setRenderManager(RenderManager.instance);
@@ -260,7 +262,7 @@ public class ClientProxy extends CommonProxy {
         if (ModAddonManager.addonColoredLights.isModLoaded()) {
             return true;
         }
-        return false;
+        return true;
     }
     
     public static boolean useTexturePainting() {

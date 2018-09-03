@@ -26,6 +26,7 @@ import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -337,7 +338,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         bindTexture(circle);
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         
-        renderBuffer.startDrawingQuads();
+        renderBuffer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX);
         renderBuffer.addVertexWithUV(-1, 0, -1, 1, 0);
         renderBuffer.addVertexWithUV(1, 0, -1, 0, 0);
         renderBuffer.addVertexWithUV(1, 0, 1, 0, 1);

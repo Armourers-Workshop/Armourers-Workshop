@@ -10,13 +10,13 @@ public class LibGuiResources {
     private static final String PREFIX_RESOURCE = LibModInfo.ID.toLowerCase() + ":textures/gui/";
     
     public static final String MANNEQUIN = PREFIX_RESOURCE + "mannequin.png";
-    public static final String MANNEQUIN_TABS = PREFIX_RESOURCE + "mannequinTabs.png";
+    public static final String MANNEQUIN_TABS = PREFIX_RESOURCE + "mannequin-tabs.png";
     public static final String ARMOURER = PREFIX_RESOURCE + "armourer.png";
-    public static final String ARMOURER_TABS = PREFIX_RESOURCE + "armourerTabs.png";
+    public static final String ARMOURER_TABS = PREFIX_RESOURCE + "armourer-tabs.png";
     public static final String WARDROBE = PREFIX_RESOURCE + "wardrobe.png";
     public static final String WARDROBE_TABS = PREFIX_RESOURCE + "wardrobeTabs.png";
-    public static final String HOLOGRAM_PROJECTOR = PREFIX_RESOURCE + "hologramProjector.png";
-    public static final String HOLOGRAM_PROJECTOR_TABS = PREFIX_RESOURCE + "hologramProjectorTabs.png";
+    public static final String HOLOGRAM_PROJECTOR = PREFIX_RESOURCE + "hologram-projector.png";
+    public static final String HOLOGRAM_PROJECTOR_TABS = PREFIX_RESOURCE + "hologram-projector-tabs.png";
     public static final String SKINNABLE = PREFIX_RESOURCE + "skinnable.png";
-    public static final String SKIN_PREVIEW = PREFIX_RESOURCE + "skinPreview.png";
+    public static final String SKIN_PREVIEW = PREFIX_RESOURCE + "skin-preview.png";
 }

@@ -22,7 +22,7 @@ public final class SkinExtractor {
     private SkinExtractor() {
     }
     
-    private static final String SKINS_ASSETS_LOCATION = "assets/armourersworkshop/skins/";
+    private static final String SKINS_ASSETS_LOCATION = "assets/armourers_workshop/skins/";
     private static final String[] SKIN_FILES = {
         "Angel Wings",
         "Arbalest",
