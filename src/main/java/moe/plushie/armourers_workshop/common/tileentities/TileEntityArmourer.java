@@ -26,6 +26,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -340,14 +341,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        AxisAlignedBB bb = super.getRenderBoundingBox();
-        
-        bb = INFINITE_EXTENT_AABB;
-        /*
-        bb = AxisAlignedBB.getBoundingBox(xCoord - 15, yCoord - 10, zCoord - 46,
-                xCoord + 30, yCoord + 40 + 23, zCoord + 35);
-        */
-        return bb;
+        return INFINITE_EXTENT_AABB;
     }
 
     public ISkinType getSkinType() {
@@ -438,11 +432,26 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         return super.getMaxRenderDistanceSquared() * 10;
     }
     
-    public Packet getDescriptionPacket() {
-        NBTTagCompound compound = new NBTTagCompound();
-        writeBaseToNBT(compound);
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
+    }
+    
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound compound = super.getUpdateTag();
         writeCommonToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), 5, compound);
+        return compound;
+    }
+    /*
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        // TODO Auto-generated method stub
+        super.handleUpdateTag(tag);
+    }*/
+    
+    public Packet getDescriptionPacket() {
+        return getUpdatePacket();
     }
     
     @Override
@@ -507,6 +516,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (skinType != null) {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
         }
+        ModLogger.log("send " + skinType);
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setBoolean(TAG_SHOW_HELPER, showHelper);
@@ -516,4 +526,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         compound.setTag(TAG_TEXTURE, textureCompound);
         compound.setIntArray(TAG_PAINT_DATA, this.paintData);
     }
+    
+    
 }

@@ -16,18 +16,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class MannequinTextureHelper {
-    
+
     private static final String TAG_OWNER = "owner";
     private static final String TAG_IMAGE_URL = "imageUrl";
     private static final PlayerTexture NO_TEXTURE = new PlayerTexture("", TextureType.USER);
-    
-    private MannequinTextureHelper() {}
-    
+
+    private MannequinTextureHelper() {
+    }
+
     public static PlayerTexture getMannequinTexture(ItemStack itemStack) {
         PlayerTexture playerTexture = NO_TEXTURE;
         GameProfile gameProfile = null;
         String imageUrl = null;
-        
+
         if (itemStack.hasTagCompound()) {
             NBTTagCompound compound = itemStack.getTagCompound();
             if (compound.hasKey(TAG_OWNER, Constants.NBT.TAG_COMPOUND)) {
@@ -37,7 +38,7 @@ public final class MannequinTextureHelper {
                 imageUrl = compound.getString(TAG_IMAGE_URL);
             }
         }
-        
+
         if (gameProfile != null) {
             playerTexture = getMannequinTexture(gameProfile.getName(), TextureType.USER);
         }
@@ -46,19 +47,19 @@ public final class MannequinTextureHelper {
         }
         return playerTexture;
     }
-    
+
     public static PlayerTexture getMannequinTexture(TileEntityMannequin tileEntity) {
         PlayerTexture playerTexture = NO_TEXTURE;
         if (tileEntity.getGameProfile() != null && tileEntity.getTextureType() == TextureType.USER) {
             String name = tileEntity.getGameProfile().getName();
             playerTexture = getMannequinTexture(name, TextureType.USER);
         }
-        if (!StringUtils.isNullOrEmpty(tileEntity.getImageUrl()) &&  tileEntity.getTextureType() == TextureType.URL) {
+        if (!StringUtils.isNullOrEmpty(tileEntity.getImageUrl()) && tileEntity.getTextureType() == TextureType.URL) {
             playerTexture = getMannequinTexture(tileEntity.getImageUrl(), TextureType.URL);
         }
         return playerTexture;
     }
-    
+
     private static PlayerTexture getMannequinTexture(String textureString, TextureType textureType) {
         return ClientProxy.playerTextureDownloader.getPlayerTexture(textureString, textureType);
     }

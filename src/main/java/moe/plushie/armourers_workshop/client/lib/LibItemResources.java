@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.client.lib;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 
 public final class LibItemResources {
-    
-    private static final String PREFIX_RESOURCE = LibModInfo.ID.toLowerCase() + ":";
-    
+
+    private static final String PREFIX_RESOURCE = LibModInfo.ID + ":";
+
     public static final String GUIDE_BOOK = PREFIX_RESOURCE + "guideBook";
     public static final String MANNEQUIN_TOOL = PREFIX_RESOURCE + "mannequinTool";
     public static final String ARMOUR_CONTAINER = PREFIX_RESOURCE + "armourContainer";
@@ -23,7 +23,7 @@ public final class LibItemResources {
     public static final String SKIN_UNLOCK_LEGS = PREFIX_RESOURCE + "scrollPants";
     public static final String SKIN_UNLOCK_FEET = PREFIX_RESOURCE + "scrollFeet";
     public static final String SKIN_UNLOCK_WINGS = PREFIX_RESOURCE + "scrollWings";
-    
+
     public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "templateHead";
     public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "templateChest";
     public static final String TEMPLATE_LEGS = PREFIX_RESOURCE + "templateLegs";
@@ -34,13 +34,13 @@ public final class LibItemResources {
     public static final String TEMPLATE_ARROW = PREFIX_RESOURCE + "templateArrow";
     public static final String TEMPLATE_WINGS = PREFIX_RESOURCE + "templateWings";
     public static final String TEMPLATE_LOADING = PREFIX_RESOURCE + "templateLoading";
-    
+
     public static final String TEMPLATE_BLANK = PREFIX_RESOURCE + "templateBlank";
     public static final String GIFT_SACK = PREFIX_RESOURCE + "giftSack";
     public static final String LINKING_TOOL = PREFIX_RESOURCE + "linkingTool";
     public static final String LINKING_TOOL_LINK = PREFIX_RESOURCE + "linkingToolLink";
-    
-    //Painting tools
+
+    // Painting tools
     public static final String PAINTBRUSH = PREFIX_RESOURCE + "paintbrush";
     public static final String PAINTBRUSH_TIP = PREFIX_RESOURCE + "paintbrush-tip";
     public static final String PAINTBRUSH_FACE_MODE = PREFIX_RESOURCE + "paintbrushFaceMode";
@@ -62,8 +62,8 @@ public final class LibItemResources {
     public static final String BLEND_TOOL = PREFIX_RESOURCE + "blendTool";
     public static final String PAINTBALL_GUN = PREFIX_RESOURCE + "paintball-gun";
     public static final String PAINTBALL_GUN_TIP = PREFIX_RESOURCE + "paintball-gun-tip";
-    
-    //Slots
+
+    // Slots
     public static final String SLOT_SKIN_HEAD = PREFIX_RESOURCE + "slot/skinHead";
     public static final String SLOT_SKIN_CHEST = PREFIX_RESOURCE + "slot/skinChest";
     public static final String SLOT_SKIN_LEGS = PREFIX_RESOURCE + "slot/skinLegs";
