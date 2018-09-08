@@ -32,7 +32,7 @@
 #
 # A new line can be inserted with %n. Please add/remove new lines to fit the localisations you are writing.
 #
-# The text %s will be replace with text. Example: "Author: %s" could become "Author: RiskyKen".  
+# The text %s will be replace with text. Example: "Author: %s" could become "Author: RiskyKen".
 # The text %d will be replace with a number. Example: "Radius: %d*%d*%d" could become "Radius: 3*3*3"
 #
 # That's all have "fun" translating!
@@ -235,7 +235,7 @@ skinPartType.armourers:wings.rightWing.name=右翼
 movmentType.armourersworkshop:ease=走路时缓慢煽动
 movmentType.armourersworkshop:linear=飞行时快速煽动
 
-# Inventory names 
+# Inventory names
 inventory.armourersworkshop:colourMixer.name=调色器
 inventory.armourersworkshop:armourerBrain.name=时装工坊
 inventory.armourersworkshop:armourLibrary0.name=资源库
@@ -316,7 +316,7 @@ inventory.armourersworkshop:armourerBrain.bed=是否为床
 inventory.armourersworkshop:armourerBrain.inventory=是否是箱子?
 inventory.armourersworkshop:armourerBrain.enderInventory=是否是末影箱？
 inventory.armourersworkshop:armourerBrain.overrideBodyPart=隐藏皮肤层?
-inventory.armourersworkshop:armourerBrain.hideOverlay=隐藏双层皮肤? 
+inventory.armourersworkshop:armourerBrain.hideOverlay=隐藏双层皮肤?
 inventory.armourersworkshop:armourerBrain.tab.main=主菜单
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=显示设定
 inventory.armourersworkshop:armourerBrain.tab.skinSettings=时装设定
@@ -326,7 +326,7 @@ inventory.armourersworkshop:armourerBrain.dialog.clear.close=关闭
 inventory.armourersworkshop:armourerBrain.dialog.clear.clear=清除
 inventory.armourersworkshop:armourerBrain.dialog.clear.clearBlocks=是否要清除造型方块?
 inventory.armourersworkshop:armourerBrain.dialog.clear.clearPaint=是否要清除画在皮肤上的颜色?
-inventory.armourersworkshop:armourerBrain.dialog.clear.clearMarkers=清除标记? 
+inventory.armourersworkshop:armourerBrain.dialog.clear.clearMarkers=清除标记?
 inventory.armourersworkshop:armourerBrain.dialog.copy.title=复制
 inventory.armourersworkshop:armourerBrain.dialog.copy.close=关闭
 inventory.armourersworkshop:armourerBrain.dialog.copy.copy=复制
@@ -447,15 +447,15 @@ inventory.armourersworkshop:globalSkinLibrary.joinBeta.enterBetaCode=输入邀�
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.closedBeta=上传功能还处于内测状态. 以后再试.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.buttonJoinBeta=加入（内测）
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.betaCode=邀请码:
-
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.checkCode=邀请码检查中.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.codeInvalid=无效的邀请码.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joiningBeta=正在登入.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedFailed=登入失败.
 inventory.armourersworkshop:globalSkinLibrary.joinBeta.joinedBeta=登入成功.
+inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=警告所有在内测期间上传的时装将在测试版结束时被清掉.
 
 # Global Skin Library (User Skins)
-inventory.armourersworkshop:globalSkinLibrary.upload.closedBetaWarning=警告所有在内测期间上传的时装将在测试版结束时被清掉.
+inventory.armourersworkshop:globalSkinLibrary.userSkins.results=时装上传者 %s: 页 %d / %d - 结果总共 %d .
 
 # Global Skin Library (Edit Skin)
 inventory.armourersworkshop:globalSkinLibrary.edit.name=编辑详情
@@ -492,12 +492,12 @@ chat.armourersworkshop:inventoryFull=你的背包满了
 chat.armourersworkshop:inventoryGiftFail=你收到了一份礼物,但你没有地方放!
 chat.armourersworkshop:updateAvailable=时装工坊 %s 已经可以更新.
 chat.armourersworkshop:updateDownload=[下载]
-chat.armourersworkshop:updateDownloadRollover=点击打开下载页. 
-chat.armourersworkshop:invalidJar=时装工坊已检测到无效的jar文件. 请点击 %s 打开官方下载页面 或点击 %s 了解更多关于非法mod转移的信息。. 
-chat.armourersworkshop:invalidJarDownload=[这里] 
-chat.armourersworkshop:invalidJarDownloadTooltip=点击打开下载页. 
-chat.armourersworkshop:invalidJarStopModReposts=[这里] 
-chat.armourersworkshop:invalidJarStopModRepostsTooltip=点击打开StopModReposts页. 
+chat.armourersworkshop:updateDownloadRollover=点击打开下载页.
+chat.armourersworkshop:invalidJar=时装工坊已检测到无效的jar文件. 请点击 %s 打开官方下载页面 或点击 %s 了解更多关于非法mod转移的信息。.
+chat.armourersworkshop:invalidJarDownload=[这里]
+chat.armourersworkshop:invalidJarDownloadTooltip=点击打开下载页.
+chat.armourersworkshop:invalidJarStopModReposts=[这里]
+chat.armourersworkshop:invalidJarStopModRepostsTooltip=点击打开StopModReposts页.
 chat.armourersworkshop:devWarning=警告，你正在使用时装工坊的开发版. 开发版仅用于测试，不推荐公开使用.
 chat.armourersworkshop:slotUnlocked=解锁了一个 %s 时装栏. 你现在有 %s 个栏位.
 chat.armourersworkshop:slotUnlockedFailed=%s 时装栏栏位达到最大数量.
@@ -510,16 +510,17 @@ chat.armourersworkshop:linkingTool.linkedToSkinnable=不能连接两个时装方
 death.attack.victorious=%1$s 脚被刺穿了（恭喜你发现了彩蛋）
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable| setWardrobeOption> 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模型数据| 设置皮肤栏数|重新同步衣柜|管理员面板|设置物品可加载时装|设置模特相关> 
+commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable| setWardrobeOption> 可以使用指令/armourers <送时装 | 清除时装 | 设置时装 | 清除模型数据| 设置皮肤栏数|重新同步衣柜|管理员面板|设置物品可加载时装|设置模特相关>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> <skin name>
 commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
 commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
-commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | 
+commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour |
 commands.armourers.fileNotFound=文件 %1$s 没有找到.
 commands.armourers.invalidDyeFormat=%1$s 不是有效的染料格式.
+commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
 
 # Creative tab
 itemGroup.armourersworkshop=时装工坊
@@ -567,7 +568,7 @@ book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=未完成
 book.armourersworkshop:guideBook.recipes.name=合成表
 
 # Chapter 8
-book.armourersworkshop:guideBook.credits.name=制作组
+book.armourersworkshop:guideBook.credits.name=制作
 book.armourersworkshop:guideBook.credits.programing=程序
 book.armourersworkshop:guideBook.credits.premade Skins=时装预制
 book.armourersworkshop:guideBook.credits.textures=材质

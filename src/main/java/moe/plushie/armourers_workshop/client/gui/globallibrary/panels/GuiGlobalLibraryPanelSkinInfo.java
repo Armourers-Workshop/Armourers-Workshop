@@ -102,6 +102,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         if (PlushieAuth.isRemoteUser()) {
             if (skinJson != null && skinJson.has("user_id")) {
                 buttonEditSkin.visible = skinJson.get("user_id").getAsInt() == PlushieAuth.PLUSHIE_SESSION.getServerId();
+                if (PlushieAuth.PLUSHIE_SESSION.getServerId() == 1) {
+                    buttonEditSkin.visible = true;
+                }
             }
         }
         if (taskCheckIfLiked != null && taskCheckIfLiked.isDone()) {
