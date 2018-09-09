@@ -51,6 +51,7 @@ import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -579,9 +580,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         if (isDialogOpen()) {
             mouseX = mouseY = 0;
         }
-        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        //GlStateManager.pushAttrib();
         super.drawScreen(mouseX, mouseY, partialTickTime);
-        GL11.glPopAttrib();
+        //GlStateManager.popAttrib();
+        RenderHelper.disableStandardItemLighting();
         ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
         ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
         
@@ -709,33 +711,35 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     drawRect(startX, startY, tarW, tarH, 0x77777777);
                     
                     if (scale > 8) {
-                        GL11.glPushMatrix();
+                        GlStateManager.pushMatrix();
                         GL11.glTranslatef((float)x, (float)y, 500.0F);
-                        
                         GL11.glScalef(10, 10, -10);
-                        
                         GL11.glRotatef(30, 1, 0, 0);
                         GL11.glRotatef(45, 0, 1, 0);
-                        
                         float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
                         GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                        RenderHelper.enableStandardItemLighting();
-                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-                        GL11.glEnable(GL11.GL_NORMALIZE);
-                        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                        
+                        GlStateManager.pushAttrib();
+                        RenderHelper.enableGUIStandardItemLighting();
+                        GlStateManager.color(1F, 1F, 1F, 1F);
+                        GlStateManager.enableRescaleNormal();
+                        GlStateManager.enableColorMaterial();
+                        GlStateManager.enableNormalize();
                         ModRenderHelper.enableAlphaBlend();
-                        SkinItemRenderHelper.renderSkinAsItem(skin, skinPointer, true, false,
-                                tarW - startX,
-                                tarH - startY
-                                );
-                        GL11.glPopAttrib();
-                        GL11.glPopMatrix();
+                        SkinItemRenderHelper.renderSkinAsItem(skin, skinPointer, true, false, tarW - startX, tarH - startY);
+                        ModRenderHelper.disableAlphaBlend();
+                        GlStateManager.disableNormalize();
+                        GlStateManager.disableColorMaterial();
+                        GlStateManager.disableRescaleNormal();
+                        RenderHelper.disableStandardItemLighting();
+                        GlStateManager.popAttrib();
+                        GlStateManager.popMatrix();
                     }
                 }
             }
         }
-        GL11.glColor4f(1, 1, 1, 1);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.resetColor();
         if (isDialogOpen()) {
             this.dialog.draw(oldMouseX, oldMouseY, partialTickTime);
         }
@@ -864,6 +868,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         if (isDialogOpen()) {
             mouseX = mouseY = 0;
         }
+        
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         
