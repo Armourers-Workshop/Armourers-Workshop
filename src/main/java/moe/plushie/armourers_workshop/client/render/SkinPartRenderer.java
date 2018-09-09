@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -65,7 +66,7 @@ public class SkinPartRenderer extends ModelBase {
         if (ClientProxy.useSafeTextureRender()) {
             mc.renderEngine.bindTexture(texture);
         } else {
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GlStateManager.disableTexture2D();
         }
         
         int startIndex = 0;
@@ -105,8 +106,8 @@ public class SkinPartRenderer extends ModelBase {
                     if (skinModel.haveList[i]) {
                         if (skinModel.displayList[i].isCompiled()) {
                             if (glowing) {
-                                GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-                                GL11.glDisable(GL11.GL_LIGHTING);
+                                GlStateManager.pushAttrib();
+                                GlStateManager.disableLighting();
                                 ModRenderHelper.disableLighting();
                             }
                             if (ConfigHandlerClient.wireframeRender) {
@@ -119,8 +120,8 @@ public class SkinPartRenderer extends ModelBase {
                             }
                             if (glowing) {
                                 ModRenderHelper.enableLighting();
-                                GL11.glEnable(GL11.GL_LIGHTING);
-                                GL11.glPopAttrib();
+                                GlStateManager.enableLighting();
+                                GlStateManager.popAttrib();
                             }
                         }
                     }
@@ -129,10 +130,9 @@ public class SkinPartRenderer extends ModelBase {
         }
         
         if (!ClientProxy.useSafeTextureRender()) {
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GlStateManager.enableTexture2D();
         }
-        
-        GL11.glColor3f(1F, 1F, 1F);
+        GlStateManager.resetColor();
         //mc.mcProfiler.endSection();
     }
     

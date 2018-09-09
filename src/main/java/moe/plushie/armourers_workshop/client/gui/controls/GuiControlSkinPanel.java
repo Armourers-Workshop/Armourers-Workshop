@@ -14,9 +14,11 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -50,6 +52,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
     }
     
     public void init(int x, int y, int width, int height) {
+        ModLogger.log("init " + y);
         this.x = x;
         this.y = y;
         this.width = width;
@@ -97,8 +100,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             for (int i = 0; i < iconList.size(); i++) {
                 int x = i % rowCount;
                 int y = (int) (i / rowCount);
-                int iconX = x + x * (iconSize + iconPadding) + panelPadding;
-                int iconY = y + y * (iconSize + iconPadding) + panelPadding;
+                int iconX = this.x + x * (iconSize + iconPadding) + panelPadding;
+                int iconY = this.y + y * (iconSize + iconPadding) + panelPadding;
                 
                 SkinIcon skinIcon = iconList.get(i);
                 if (y < colCount) {
@@ -113,8 +116,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         for (int i = 0; i < iconList.size(); i++) {
             int x = i % rowCount;
             int y = (int) (i / rowCount);
-            int iconX = x + x * (iconSize + iconPadding) + panelPadding;
-            int iconY = y + y * (iconSize + iconPadding) + panelPadding;
+            int iconX = this.x + x * (iconSize + iconPadding) + panelPadding;
+            int iconY = this.y + y * (iconSize + iconPadding) + panelPadding;
             
             SkinIcon skinIcon = iconList.get(i);
             if (y < colCount) {
@@ -177,8 +180,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 }
                 
                 float scale = iconSize / 2;
-                GL11.glPushMatrix();
-                GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+                GlStateManager.pushMatrix();
+                GlStateManager.pushAttrib();
                 if (showName) {
                     GL11.glTranslatef(x + iconSize / 2, y + iconSize / 2 - 4, 200.0F);
                 } else {
@@ -188,20 +191,25 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 if (mouseOver(x, y, mouseX, mouseY, iconSize)) {
                     GL11.glScalef(1.5F, 1.5F, 1.5F);
                 }
-                GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(20.0F, 1.0F, 0.0F, 0.0F);
                 float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
                 GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                RenderHelper.enableStandardItemLighting();
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                GL11.glEnable(GL11.GL_NORMALIZE);
-                GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+                RenderHelper.enableGUIStandardItemLighting();
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                GL11.glColor4f(1, 1, 1, 1);
+                GlStateManager.enableNormalize();
+                GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();
                 SkinItemRenderHelper.renderSkinAsItem(skin, new SkinPointer(skin), true, false, iconSize, iconSize);
-                //ItemStackRenderHelper.renderItemModelFromSkin(skin, new SkinPointer(skin), true, false);
-                GL11.glPopAttrib();
-                GL11.glPopMatrix();
+                ModRenderHelper.disableAlphaBlend();
+                GlStateManager.disableNormalize();
+                GlStateManager.disableColorMaterial();
                 
+                RenderHelper.disableStandardItemLighting();
+                GlStateManager.resetColor();
+                GlStateManager.popAttrib();
+                GlStateManager.popMatrix();
             } else {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
                 int speed = 60;

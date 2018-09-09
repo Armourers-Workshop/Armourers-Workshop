@@ -3,19 +3,18 @@ package moe.plushie.armourers_workshop.client.skin;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import org.lwjgl.opengl.GL11;
-
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class SkinModelTexture extends AbstractTexture {
@@ -104,6 +103,7 @@ public class SkinModelTexture extends AbstractTexture {
             getGlTextureId();
             TextureUtil.uploadTextureImage(glTextureId, texture);
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
+        //GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
+        GlStateManager.bindTexture(glTextureId);
     }
 }

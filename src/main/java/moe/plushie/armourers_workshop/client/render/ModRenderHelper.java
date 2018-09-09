@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,12 +40,12 @@ public final class ModRenderHelper {
     }
     
     public static void enableAlphaBlend(int sfactor, int dfactor) {
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(sfactor, dfactor);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(sfactor, dfactor);
     }
     
     public static void disableAlphaBlend() {
-        GL11.glDisable(GL11.GL_BLEND);
+        GlStateManager.disableBlend();
     }
     /*
     public static void renderItemStack(ItemStack stack) {

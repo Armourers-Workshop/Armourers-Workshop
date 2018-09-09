@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
@@ -9,12 +11,14 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
 public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEntityProvider {
 
@@ -75,14 +79,13 @@ public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEnt
         return false;
     }
     
-    /*
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!world.isRemote) {
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.GLOBAL_SKIN_LIBRARY, world, x, y, z);
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (worldIn.isRemote) {
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.GLOBAL_SKIN_LIBRARY, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
-    }*/
+    }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {

@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 
 public class ModInventory implements IInventory {
@@ -31,7 +32,7 @@ public class ModInventory implements IInventory {
     
     public ModInventory(String name, int slotCount, TileEntity parent, IInventorySlotUpdate callback) {
         this.name = name;
-        this.slots = new ItemStack[slotCount];
+        this.slots = NonNullList.<ItemStack>withSize(slotCount, ItemStack.EMPTY).toArray(new ItemStack[0]);
         this.parent = parent;
         this.callback = callback;
     }
