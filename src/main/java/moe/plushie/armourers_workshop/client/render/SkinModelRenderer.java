@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.ModelRendererAttachment;
 import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
@@ -30,7 +30,7 @@ import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
 import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -112,7 +112,7 @@ public final class SkinModelRenderer {
             return null;
         }
         
-        ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, slotIndex);
+        ISkinDescriptor skinPointer = equipmentData.getSkinPointer(skinType, slotIndex);
         return getCustomArmourItemData(skinPointer);
     }
     
@@ -173,7 +173,7 @@ public final class SkinModelRenderer {
         return playerEquipmentMap.size();
     }
     
-    public Skin getCustomArmourItemData(ISkinPointer skinPointer) {
+    public Skin getCustomArmourItemData(ISkinDescriptor skinPointer) {
         return ClientSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
@@ -194,7 +194,7 @@ public final class SkinModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(playerPointer);
         if (equipmentData != null) { 
             for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
-                ISkinPointer skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinLegs, i);
+                ISkinDescriptor skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinLegs, i);
                 if (skinPointer != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
                     if (skin != null) {
@@ -214,7 +214,7 @@ public final class SkinModelRenderer {
         EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
         if (equipmentData != null) {
             for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
-                ISkinPointer sp = equipmentData.getSkinPointer(SkinTypeRegistry.skinHead, i);
+                ISkinDescriptor sp = equipmentData.getSkinPointer(SkinTypeRegistry.skinHead, i);
                 if (sp != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(sp, false);
                     if (skin!= null) {
@@ -395,7 +395,7 @@ public final class SkinModelRenderer {
     }
     
     public boolean renderEquipmentPartFromStack(Entity entity, ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer == null) {
             return false;
         }
@@ -404,7 +404,7 @@ public final class SkinModelRenderer {
     }
     
     public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer == null) {
             return false;
         }
@@ -412,7 +412,7 @@ public final class SkinModelRenderer {
         return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
     }
     
-    public boolean renderEquipmentPartFromSkinPointer(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
+    public boolean renderEquipmentPartFromSkinPointer(ISkinDescriptor skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
         Skin data = getCustomArmourItemData(skinPointer);
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }

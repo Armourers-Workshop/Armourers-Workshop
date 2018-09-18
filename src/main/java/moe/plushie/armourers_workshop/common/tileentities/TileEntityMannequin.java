@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import com.mojang.authlib.GameProfile;
 
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.client.render.MannequinFakePlayer;
 import moe.plushie.armourers_workshop.common.GameProfileCache;
@@ -94,7 +94,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public EntityTextureInfo skinTexture;
     
     @SideOnly(Side.CLIENT)
-    public ISkinPointer[] sp;
+    public ISkinDescriptor[] sp;
     
     public TileEntityMannequin() {
         this(false);

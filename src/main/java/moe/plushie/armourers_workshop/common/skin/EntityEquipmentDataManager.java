@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.skin;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,42 +71,42 @@ public final class EntityEquipmentDataManager {
         if (stack != null) {
             if (isRenderItem(ItemOverrideType.SWORD, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 0)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 0));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinDescriptor) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 0));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.BOW, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinBow, 0));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinDescriptor) equipmentData.getSkinPointer(SkinTypeRegistry.skinBow, 0));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.PICKAXE, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 1)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 1));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinDescriptor) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 1));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.AXE, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 2)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 2));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinDescriptor) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 2));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.SHOVEL, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 3)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 3));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinDescriptor) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 3));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.HOE, stack.getItem())) {
                 if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 4)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 4));
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinDescriptor) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 4));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }

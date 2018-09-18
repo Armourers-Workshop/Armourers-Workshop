@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -24,11 +24,11 @@ public final class SkinUtils {
     }
     
     public static Skin getSkinDetectSide(ItemStack stack, boolean serverSoftLoad, boolean clientRequestSkin) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         return getSkinDetectSide(skinPointer, serverSoftLoad, clientRequestSkin);
     }
     
-    public static Skin getSkinDetectSide(SkinPointer skinPointer, boolean serverSoftLoad, boolean clientRequestSkin) {
+    public static Skin getSkinDetectSide(SkinDescriptor skinPointer, boolean serverSoftLoad, boolean clientRequestSkin) {
         if (skinPointer != null) {
             SkinIdentifier skinIdentifier = skinPointer.getIdentifier();
             return getSkinDetectSide(skinIdentifier, serverSoftLoad, clientRequestSkin);

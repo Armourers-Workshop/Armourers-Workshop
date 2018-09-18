@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.library.ILibraryFile;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
@@ -239,7 +239,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         //PacketHandler.networkWrapper.sendToAll(message);
     }
     
-    public Skin getSkin(ISkinPointer skinPointer) {
+    public Skin getSkin(ISkinDescriptor skinPointer) {
         return getSkin(skinPointer.getIdentifier());
     }
     

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.inventory.slot;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class SlotSkin extends SlotHidable {
     public boolean isItemValid(ItemStack stack) {
         if (stack.getItem() instanceof ItemSkin) {
             if (SkinNBTHelper.stackHasSkinData(stack)) {
-                SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
+                SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(stack);
                 if (this.skinType != null && this.skinType == skinData.getIdentifier().getSkinType()) {
                     return true;
                 }

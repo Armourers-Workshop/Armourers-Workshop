@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
@@ -427,7 +427,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         return null;
     }
     
-    private SkinPointer getSkinPointer(IBlockAccess world, BlockPos pos) {
+    private SkinDescriptor getSkinPointer(IBlockAccess world, BlockPos pos) {
         TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
             return te.getSkinPointer();
@@ -438,7 +438,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     private Skin getSkin(IBlockAccess world, BlockPos pos) {
-        SkinPointer skinPointer = getSkinPointer(world, pos);
+        SkinDescriptor skinPointer = getSkinPointer(world, pos);
         if (skinPointer != null) {
             return SkinUtils.getSkinDetectSide(skinPointer, true, true);
         }
@@ -456,7 +456,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        SkinPointer skinPointer = getSkinPointer(world, pos);
+        SkinDescriptor skinPointer = getSkinPointer(world, pos);
         if (skinPointer != null) {
             ItemStack returnStack = new ItemStack(ModItems.equipmentSkin, 1);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
@@ -478,7 +478,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     private void dropSkin(World world, BlockPos pos, boolean isCreativeMode) {
         TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
-            SkinPointer skinPointer = te.getSkinPointer();
+            SkinDescriptor skinPointer = te.getSkinPointer();
             if (skinPointer != null) {
                 if (!isCreativeMode) {
                     ItemStack skinStack = new ItemStack(ModItems.equipmentSkin, 1);

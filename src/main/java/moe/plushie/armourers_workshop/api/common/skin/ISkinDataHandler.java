@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.api.common.skin;
 
 import java.io.InputStream;
 
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -42,17 +42,17 @@ public interface ISkinDataHandler {
     
     public boolean stackHasSkinPointer(ItemStack stack);
     
-    public ISkinPointer getSkinPointerFromStack(ItemStack stack);
+    public ISkinDescriptor getSkinPointerFromStack(ItemStack stack);
     
-    public void saveSkinPointerOnStack(ISkinPointer skinPointer, ItemStack stack);
+    public void saveSkinPointerOnStack(ISkinDescriptor skinPointer, ItemStack stack);
     
     public boolean compoundHasSkinPointer(NBTTagCompound compound);
     
-    public ISkinPointer readSkinPointerFromCompound(NBTTagCompound compound);
+    public ISkinDescriptor readSkinPointerFromCompound(NBTTagCompound compound);
     
-    public void writeSkinPointerToCompound(ISkinPointer skinPointer, NBTTagCompound compound);
+    public void writeSkinPointerToCompound(ISkinDescriptor skinPointer, NBTTagCompound compound);
     
-    public ISkinPointer addSkinToCache(InputStream inputStream);
+    public ISkinDescriptor addSkinToCache(InputStream inputStream);
     
     /**
      * Checks if the armour render has been overridden for this slot.

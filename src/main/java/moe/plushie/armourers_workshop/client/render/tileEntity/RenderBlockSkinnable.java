@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.client.model.block.ModelBlockSkinnable;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -55,7 +55,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     
     public void renderTileEntityAt(TileEntitySkinnable tileEntity, double x, double y, double z, float partialTickTime) {
         //ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-        SkinPointer skinPointer = tileEntity.getSkinPointer();
+        SkinDescriptor skinPointer = tileEntity.getSkinPointer();
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {

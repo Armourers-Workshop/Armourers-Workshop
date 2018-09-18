@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
@@ -74,7 +74,7 @@ public class GuiDyeTable extends GuiContainer {
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 46, this.ySize - 96 + 2, 4210752);
         Slot slot = (Slot) inventorySlots.inventorySlots.get(45);
         ItemStack skinStack = slot.getStack();
-        ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+        ISkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
         
         if (skinPointer != null) {
             GL11.glPushMatrix();

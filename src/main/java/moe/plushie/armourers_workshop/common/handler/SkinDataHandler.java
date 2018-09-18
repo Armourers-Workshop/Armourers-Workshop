@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.BitSet;
 
 import moe.plushie.armourers_workshop.api.common.skin.ISkinDataHandler;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.crafting.ItemSkinningRecipes;
 import moe.plushie.armourers_workshop.common.items.ModItems;
@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -71,16 +71,16 @@ public class SkinDataHandler implements ISkinDataHandler {
     }
 
     @Override
-    public ISkinPointer getSkinPointerFromStack(ItemStack stack) {
-        return SkinNBTHelper.getSkinPointerFromStack(stack);
+    public ISkinDescriptor getSkinPointerFromStack(ItemStack stack) {
+        return SkinNBTHelper.getSkinDescriptorFromStack(stack);
     }
 
     @Override
-    public void saveSkinPointerOnStack(ISkinPointer skinPointer, ItemStack stack) {
+    public void saveSkinPointerOnStack(ISkinDescriptor skinPointer, ItemStack stack) {
         if (stack == null) {
             return;
         }
-        SkinPointer sp = new SkinPointer(skinPointer);
+        SkinDescriptor sp = new SkinDescriptor(skinPointer);
         SkinNBTHelper.addSkinDataToStack(stack, sp);
     }
     
@@ -90,21 +90,21 @@ public class SkinDataHandler implements ISkinDataHandler {
     }
 
     @Override
-    public ISkinPointer readSkinPointerFromCompound(NBTTagCompound compound) {
+    public ISkinDescriptor readSkinPointerFromCompound(NBTTagCompound compound) {
         if (!SkinNBTHelper.compoundHasSkinData(compound)) {
             return null;
         }
-        SkinPointer sp = new SkinPointer();
+        SkinDescriptor sp = new SkinDescriptor();
         sp.readFromCompound(compound);
         return sp;
     }
 
     @Override
-    public void writeSkinPointerToCompound(ISkinPointer skinPointer, NBTTagCompound compound) {
+    public void writeSkinPointerToCompound(ISkinDescriptor skinPointer, NBTTagCompound compound) {
         if (compound == null) {
             return;
         }
-        SkinPointer sp = new SkinPointer(skinPointer);
+        SkinDescriptor sp = new SkinDescriptor(skinPointer);
         sp.writeToCompound(compound);
     }
     
@@ -132,11 +132,11 @@ public class SkinDataHandler implements ISkinDataHandler {
     }
 
     @Override
-    public ISkinPointer addSkinToCache(InputStream inputStream) {
+    public ISkinDescriptor addSkinToCache(InputStream inputStream) {
         if (inputStream != null) {
             Skin skin = CommonSkinCache.INSTANCE.addSkinToCache(inputStream);
             if (skin != null) {
-                SkinPointer sp = new SkinPointer(new SkinIdentifier(skin), false);
+                SkinDescriptor sp = new SkinDescriptor(new SkinIdentifier(skin), false);
                 return sp;
             }
         }

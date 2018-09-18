@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -201,7 +201,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GlStateManager.enableNormalize();
                 GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();
-                SkinItemRenderHelper.renderSkinAsItem(skin, new SkinPointer(skin), true, false, iconSize, iconSize);
+                SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(skin), true, false, iconSize, iconSize);
                 ModRenderHelper.disableAlphaBlend();
                 GlStateManager.disableNormalize();
                 GlStateManager.disableColorMaterial();

@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap;
@@ -49,11 +49,11 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         FMLCommonHandler.instance().bus().register(this);
     }
     
-    public Skin getSkin(ISkinPointer skinPointer) {
+    public Skin getSkin(ISkinDescriptor skinPointer) {
         return getSkin(skinPointer.getIdentifier(), true);
     }
     
-    public Skin getSkin(ISkinPointer skinPointer, boolean requestSkin) {
+    public Skin getSkin(ISkinDescriptor skinPointer, boolean requestSkin) {
         return getSkin(skinPointer.getIdentifier(), requestSkin);
     }
     
@@ -73,7 +73,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         return null;
     }
     
-    public void requestSkinFromServer(ISkinPointer skinPointer) {
+    public void requestSkinFromServer(ISkinDescriptor skinPointer) {
         requestSkinFromServer(skinPointer.getIdentifier());
     }
     
@@ -86,7 +86,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         }
     }
     
-    public boolean isSkinInCache(ISkinPointer skinPointer) {
+    public boolean isSkinInCache(ISkinDescriptor skinPointer) {
         return isSkinInCache(skinPointer.getIdentifier());
     }
     

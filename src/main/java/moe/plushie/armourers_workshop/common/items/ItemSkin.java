@@ -12,8 +12,8 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -56,7 +56,7 @@ public class ItemSkin extends AbstractModItem {
         boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
+            SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(stack);
             SkinIdentifier identifier = skinData.getIdentifier();
             
             if (!isEquipmentSkin & !skinData.lockSkin & !isEquipmentContainer) {
@@ -133,13 +133,7 @@ public class ItemSkin extends AbstractModItem {
                 tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinOpenWardrobe", keyName));
             }
         } else {
-            if (SkinNBTHelper.stackHasLegacySkinData(stack)) {
-                tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinOldType"));
-            } else {
-                if (isEquipmentSkin) {
-                    tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinInvalidItem"));
-                }
-            }
+            tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.skinInvalidItem"));
         }
     }
     /*

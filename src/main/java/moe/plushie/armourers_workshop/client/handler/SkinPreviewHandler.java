@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
@@ -24,7 +24,7 @@ public final class SkinPreviewHandler {
     
     private final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.SKIN_PREVIEW);
     
-    private SkinPointer lastSkinPointer;
+    private SkinDescriptor lastSkinPointer;
     private List<String> lastList;
     
     public SkinPreviewHandler() {
@@ -104,7 +104,7 @@ public final class SkinPreviewHandler {
         }
     }
     */
-    private void drawSkinBox(Minecraft mc, int x, int y, float skinPreSize, SkinPointer skinPointer) {
+    private void drawSkinBox(Minecraft mc, int x, int y, float skinPreSize, SkinDescriptor skinPointer) {
         boolean skinPreDrawBackground = ConfigHandlerClient.skinPreDrawBackground;
         if (skinPreDrawBackground) {
             RenderHelper.disableStandardItemLighting();

@@ -43,7 +43,7 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -683,7 +683,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 SkinIdentifier identifier = new SkinIdentifier(0, new LibraryFile(item.getFile().getFullName()), 0, null);
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier, true);
                 if (skin != null) {
-                    SkinPointer skinPointer = new SkinPointer(identifier);
+                    SkinDescriptor skinPointer = new SkinDescriptor(identifier);
                     
                     int listRight = this.width - INVENTORY_WIDTH - PADDING * 5;
                     listRight = MathHelper.clamp(listRight, 0, 200);

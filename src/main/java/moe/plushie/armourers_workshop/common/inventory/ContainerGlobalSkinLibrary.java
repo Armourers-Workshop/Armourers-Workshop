@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -115,7 +115,7 @@ public class ContainerGlobalSkinLibrary extends Container implements IButtonPres
             if (!tileEntity.getWorld().isRemote) {
                 if (!getSlot(37).getHasStack()) {
                     ItemStack itemStack = getSlot(36).getStack();
-                    SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(itemStack);
+                    SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
                     if (skinPointer != null) {
                         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
                         if (skin != null) {

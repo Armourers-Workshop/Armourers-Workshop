@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutput;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.UtilPlayer;
@@ -75,7 +75,7 @@ public class ContainerDyeTable extends Container {
         if (tileEntity.getWorld().isRemote) {
             return;
         }
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
         skinRemoved();
         updateLockedSlots(stack);
@@ -127,7 +127,7 @@ public class ContainerDyeTable extends Container {
      * @param stack
      */
     private void updateLockedSlots(ItemStack stack) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         ISkinDye dye = skinPointer.getSkinDye();
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
@@ -152,7 +152,7 @@ public class ContainerDyeTable extends Container {
             return;
         }
         ItemStack outStack = getSlot(45).getStack();
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(outStack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(outStack);
         ISkinDye dye = skinPointer.getSkinDye();
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
@@ -184,7 +184,7 @@ public class ContainerDyeTable extends Container {
         if (skinStack == null) {
             return;
         }
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
         
         ISkinDye skinDye = skinPointer.getSkinDye();
         
@@ -203,7 +203,7 @@ public class ContainerDyeTable extends Container {
         if (skinStack == null) {
             return;
         }
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
         ISkinDye skinDye = skinPointer.getSkinDye();
         skinDye.removeDye(slotId);
         SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
@@ -230,7 +230,7 @@ public class ContainerDyeTable extends Container {
                 }
             } else {
               //Moving from player to tile entity.
-                SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(stack);
+                SkinDescriptor sp = SkinNBTHelper.getSkinDescriptorFromStack(stack);
                 if (sp!= null && (sp.lockSkin | stack.getItem() == ModItems.equipmentSkin)) {
                     if (!this.mergeItemStack(stack, 36, 37, false)) {
                         return null;

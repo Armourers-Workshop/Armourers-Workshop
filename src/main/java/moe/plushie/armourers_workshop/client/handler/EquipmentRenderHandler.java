@@ -4,7 +4,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import moe.plushie.armourers_workshop.api.client.render.ISkinRenderHandler;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkin;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.armourer.ModelHand;
@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.model.ModelBase;
@@ -48,7 +48,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        ISkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer == null) {
             return false;
         }
@@ -56,20 +56,20 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
     
     @Override
-    public boolean renderSkinWithHelper(ISkinPointer skinPointer) {
+    public boolean renderSkinWithHelper(ISkinDescriptor skinPointer) {
         // TODO Auto-generated method stub
         return false;
     }
     
     @Override
-    public boolean renderSkinWithHelper(ISkinPointer skinPointer,
+    public boolean renderSkinWithHelper(ISkinDescriptor skinPointer,
             ModelBiped modelBiped) {
         // TODO Auto-generated method stub
         return false;
     }
     
     @Override
-    public boolean renderSkinWithHelper(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
+    public boolean renderSkinWithHelper(ISkinDescriptor skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
         if (skinPointer == null) {
             return false;
         }
@@ -81,7 +81,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (stack == null) {
             return false;
         }
-        ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        ISkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer != null) {
             return renderSkin(skinPointer);
         }
@@ -89,7 +89,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
     
     @Override
-    public boolean renderSkin(ISkinPointer skinPointer) {
+    public boolean renderSkin(ISkinDescriptor skinPointer) {
         ISkinType skinType= skinPointer.getIdentifier().getSkinType();
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             //TODO Offset each part when rendering.
@@ -100,7 +100,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
     
     @Override
-    public boolean renderSkinPart(ISkinPointer skinPointer, ISkinPartType skinPartType) {
+    public boolean renderSkinPart(ISkinDescriptor skinPointer, ISkinPartType skinPartType) {
         if (skinPointer == null | skinPartType == null) {
             return false;
         }
@@ -123,12 +123,12 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return false;
         }
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         return isSkinInModelCache(skinPointer);
     }
     
     @Override
-    public boolean isSkinInModelCache(ISkinPointer skinPointer) {
+    public boolean isSkinInModelCache(ISkinDescriptor skinPointer) {
         if (skinPointer == null) {
             return false;
         }
@@ -140,12 +140,12 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         if (!SkinNBTHelper.stackHasSkinData(stack)) {
             return;
         }
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         requestSkinModelFromSever(skinPointer);
     }
 
     @Override
-    public void requestSkinModelFromSever(ISkinPointer skinPointer) {
+    public void requestSkinModelFromSever(ISkinDescriptor skinPointer) {
         if (skinPointer == null) {
             return;
         }
@@ -163,7 +163,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
 
     @Override
-    public ISkin getSkinFromModelCache(ISkinPointer skinPointer) {
+    public ISkin getSkinFromModelCache(ISkinDescriptor skinPointer) {
         if (skinPointer == null) {
             return null;
         }

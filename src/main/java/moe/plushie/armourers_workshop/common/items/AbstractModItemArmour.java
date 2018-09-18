@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -91,7 +91,7 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
             return null;
         }
         
-        SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(itemStack);
+        SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         
         AbstractModelSkin targetModel = null;
         SkinModelRenderer emr = SkinModelRenderer.INSTANCE;

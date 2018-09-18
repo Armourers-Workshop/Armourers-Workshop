@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.entity.IEntitySkinHandler;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.library.LibraryFileList;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.UtilItems;
@@ -130,9 +130,9 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             if (entityEquipmentData != null) {
                 ArrayList<ISkinType> skinTypes = entityEquipmentData.getSkinInventory().getSkinTypes();
                 for (int i = 0; i < skinTypes.size(); i++) {
-                    ISkinPointer skinPointer = entityEquipmentData.getEquipmentData().getSkinPointer(skinTypes.get(i), 0);
+                    ISkinDescriptor skinPointer = entityEquipmentData.getEquipmentData().getSkinPointer(skinTypes.get(i), 0);
                     if (skinPointer != null) {
-                        ItemStack stack = SkinNBTHelper.makeEquipmentSkinStack((SkinPointer) skinPointer);
+                        ItemStack stack = SkinNBTHelper.makeEquipmentSkinStack((SkinDescriptor) skinPointer);
                         UtilItems.spawnItemAtEntity(entity, stack);
                     }
                 }
@@ -165,7 +165,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
                 continue;
             }
             SkinIdentifier identifier = new SkinIdentifier(0, libraryFile, 0, skinType);
-            ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinPointer(identifier));
+            ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(identifier));
             
             if (skinStack == null) {
                 continue;

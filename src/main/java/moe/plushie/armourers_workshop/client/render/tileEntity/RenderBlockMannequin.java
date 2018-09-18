@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.model.ModelHelper;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.inventory.MannequinSlotType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.HolidayHelper;
@@ -440,7 +440,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         if (isHalloweenSeason) {
             return true;
         }
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
             if (skin != null) {
@@ -515,8 +515,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         mc.mcProfiler.endSection();*/
     }
     
-    private ISkinPointer[] getSkinPointers(TileEntityMannequin te) {
-        ISkinPointer[] skinPointers = new ISkinPointer[4 * TileEntityMannequin.INVENTORY_ROWS_COUNT];
+    private ISkinDescriptor[] getSkinPointers(TileEntityMannequin te) {
+        ISkinDescriptor[] skinPointers = new ISkinDescriptor[4 * TileEntityMannequin.INVENTORY_ROWS_COUNT];
         
         for (int i = 0; i < TileEntityMannequin.INVENTORY_ROWS_COUNT; i++) {
             skinPointers[0 + i * 4] = getSkinPointerForSlot(te, 0 + i * 7);
@@ -528,11 +528,11 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         return skinPointers;
     }
     
-    private ISkinPointer getSkinPointerForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
-        return SkinNBTHelper.getSkinPointerFromStack(getStackInMannequinSlot(te, slotType));
+    private ISkinDescriptor getSkinPointerForSlot(TileEntityMannequin te, MannequinSlotType slotType) {
+        return SkinNBTHelper.getSkinDescriptorFromStack(getStackInMannequinSlot(te, slotType));
     }
     
-    private ISkinPointer getSkinPointerForSlot(TileEntityMannequin te, int slotIndex) {
-        return SkinNBTHelper.getSkinPointerFromStack(te.getStackInSlot(slotIndex));
+    private ISkinDescriptor getSkinPointerForSlot(TileEntityMannequin te, int slotIndex) {
+        return SkinNBTHelper.getSkinDescriptorFromStack(te.getStackInSlot(slotIndex));
     }
 }

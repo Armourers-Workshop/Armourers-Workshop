@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkinTemplate;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
@@ -103,7 +103,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             if (stack == null) {
                 libScreen.setFileName("");
             } else {
-                SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+                SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
                 if (skinPointer != null) {
                     if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
                         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);

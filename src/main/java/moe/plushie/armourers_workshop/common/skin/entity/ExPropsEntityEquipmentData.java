@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.common.inventory.InventoryEntitySkin;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerEntitySkinData;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -48,7 +48,7 @@ public class ExPropsEntityEquipmentData implements /*IExtendedEntityProperties,*
             ISkinType skinType = getSkinTypeForSlot(slotId);
             equipmentData.removeEquipment(skinType, 0);
         } else {
-            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(stack);
+            SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(stack);
             equipmentData.addEquipment(skinData.getIdentifier().getSkinType(), 0, skinData);
         }
         sendEquipmentDataToPlayerToAllPlayersAround();

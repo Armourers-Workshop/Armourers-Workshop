@@ -20,7 +20,7 @@ import moe.plushie.armourers_workshop.common.skin.ArmourerWorldHelper;
 import moe.plushie.armourers_workshop.common.skin.ISkinHolder;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
@@ -207,7 +207,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (!(stackInput.getItem() instanceof ItemSkin)) {
             return;
         }
-        SkinPointer skinPointerInput = SkinNBTHelper.getSkinPointerFromStack(stackInput);
+        SkinDescriptor skinPointerInput = SkinNBTHelper.getSkinDescriptorFromStack(stackInput);
         if (skinPointerInput == null) {
             return;
         }

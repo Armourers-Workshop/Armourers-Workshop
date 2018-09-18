@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -45,7 +45,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         }
 
         ItemStack itemStack = tileEntity.getStackInSlot(0);
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(itemStack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         if (skinPointer == null) {
             return;
         }

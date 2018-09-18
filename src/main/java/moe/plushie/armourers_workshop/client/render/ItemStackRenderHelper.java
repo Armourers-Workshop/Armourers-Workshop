@@ -5,13 +5,13 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,18 +31,18 @@ public final class ItemStackRenderHelper {
     @Deprecated
     public static void renderItemAsArmourModel(ItemStack stack, boolean showSkinPaint) {
         if (SkinNBTHelper.stackHasSkinData(stack)) {
-            SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+            SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
             renderItemModelFromSkinPointer(skinPointer, showSkinPaint, false);
         }
     }
     
     @Deprecated
-    public static void renderItemModelFromSkinPointer(ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
+    public static void renderItemModelFromSkinPointer(ISkinDescriptor skinPointer, boolean showSkinPaint, boolean doLodLoading) {
         renderItemModelFromSkin(ClientSkinCache.INSTANCE.getSkin(skinPointer), skinPointer, showSkinPaint, doLodLoading);
     }
     
     @Deprecated
-    public static void renderItemModelFromSkin(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
+    public static void renderItemModelFromSkin(Skin skin, ISkinDescriptor skinPointer, boolean showSkinPaint, boolean doLodLoading) {
         if (skin == null) {
             return;
         }
@@ -99,7 +99,7 @@ public final class ItemStackRenderHelper {
         GL11.glPopMatrix();
     }
     
-    public static void renderSkinWithHelper(Skin skin, ISkinPointer skinPointer, boolean showSkinPaint, boolean doLodLoading) {
+    public static void renderSkinWithHelper(Skin skin, ISkinDescriptor skinPointer, boolean showSkinPaint, boolean doLodLoading) {
         ISkinType skinType = skinPointer.getIdentifier().getSkinType();
         if (skinType == null) {
             skinType = skin.getSkinType();
@@ -117,7 +117,7 @@ public final class ItemStackRenderHelper {
         targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true, 0, doLodLoading);
     }
     
-    public static void renderSkinWithoutHelper(ISkinPointer skinPointer, boolean doLodLoading) {
+    public static void renderSkinWithoutHelper(ISkinDescriptor skinPointer, boolean doLodLoading) {
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             return;

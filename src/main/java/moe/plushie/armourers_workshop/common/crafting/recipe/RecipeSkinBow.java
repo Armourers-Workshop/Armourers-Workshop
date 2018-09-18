@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.crafting.recipe;
 
 import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentDataManager;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.inventory.IInventory;
@@ -51,7 +51,7 @@ public class RecipeSkinBow extends RecipeItemSkinning {
         if (skinStack != null && bowStack != null) {
             ItemStack returnStack = bowStack.copy();
             
-            SkinPointer skinData = SkinNBTHelper.getSkinPointerFromStack(skinStack);
+            SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), skinData.getSkinDye(), true);
             
             return returnStack;

@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.common.skin.ISkinHolder;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -67,7 +67,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stackInput);
         
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
@@ -112,7 +112,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             return;
         }
         
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stackInput);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stackInput);
         if (skinPointer == null) {
             return;
         }

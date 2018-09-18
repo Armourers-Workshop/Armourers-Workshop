@@ -28,7 +28,7 @@ import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.client.gui.GuiButton;
@@ -373,7 +373,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             GL11.glEnable(GL11.GL_NORMALIZE);
             GL11.glEnable(GL11.GL_COLOR_MATERIAL);
             ModRenderHelper.enableAlphaBlend();
-            SkinItemRenderHelper.renderSkinAsItem(skin, new SkinPointer(skin), true, false, boxWidth, boxHeight);
+            SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(skin), true, false, boxWidth, boxHeight);
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }

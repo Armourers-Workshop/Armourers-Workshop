@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.utils.ModConstants;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -48,7 +48,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     private static final int NBT_VERSION = 1;
 
     private int nbtVersion;
-    private SkinPointer skinPointer;
+    private SkinDescriptor skinPointer;
     private boolean haveBlockBounds = false;
     private ArrayList<BlockLocation> relatedBlocks;
     private boolean bedOccupied;
@@ -71,11 +71,11 @@ public class TileEntitySkinnable extends ModTileEntity {
         return skinPointer != null;
     }
 
-    public SkinPointer getSkinPointer() {
+    public SkinDescriptor getSkinPointer() {
         return skinPointer;
     }
 
-    public void setSkinPointer(Skin skin, SkinPointer skinPointer) {
+    public void setSkinPointer(Skin skin, SkinDescriptor skinPointer) {
         this.skinPointer = skinPointer;
         if (skin != null & isParent()) {
             SkinProperties skinProps = skin.getProperties();
@@ -233,7 +233,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         this.bedOccupied = bedOccupied;
     }
     
-    public Skin getSkin(ISkinPointer skinPointer) {
+    public Skin getSkin(ISkinDescriptor skinPointer) {
         if (getWorld().isRemote) {
             return getSkinClient(skinPointer);
         } else {
@@ -242,11 +242,11 @@ public class TileEntitySkinnable extends ModTileEntity {
     }
 
     @SideOnly(Side.CLIENT)
-    private Skin getSkinClient(ISkinPointer skinPointer) {
+    private Skin getSkinClient(ISkinDescriptor skinPointer) {
         return ClientSkinCache.INSTANCE.getSkin(skinPointer);
     }
 
-    private Skin getSkinServer(ISkinPointer skinPointer) {
+    private Skin getSkinServer(ISkinDescriptor skinPointer) {
         return CommonSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
@@ -343,7 +343,7 @@ public class TileEntitySkinnable extends ModTileEntity {
             linkedBlock = null;
         }
         if (hasSkin) {
-            skinPointer = new SkinPointer();
+            skinPointer = new SkinDescriptor();
             skinPointer.readFromCompound(compound);
             if (compound.hasKey(TAG_RELATED_BLOCKS, Constants.NBT.TAG_LIST)) {
                 NBTTagList list = compound.getTagList(TAG_RELATED_BLOCKS, Constants.NBT.TAG_COMPOUND);

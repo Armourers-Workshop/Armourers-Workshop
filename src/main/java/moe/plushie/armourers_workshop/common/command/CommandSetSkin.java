@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -135,7 +135,7 @@ public class CommandSetSkin extends ModCommand {
         }
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
-        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinPointer(skinIdentifier, skinDye));
+        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skinIdentifier, skinDye));
         ExPropsPlayerSkinData.get(player).setEquipmentStack(skinStack, slotNum - 1);
     }
     

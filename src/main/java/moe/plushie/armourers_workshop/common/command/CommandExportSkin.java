@@ -4,7 +4,7 @@ import java.io.File;
 
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.exporter.ISkinExporter;
 import moe.plushie.armourers_workshop.common.skin.exporter.SkinExportManager;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -34,7 +34,7 @@ public class CommandExportSkin extends ModCommand {
         
         // Check if the player is holding a valid skin.
         ItemStack stack = player.getHeldItemMainhand();
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer == null) {
             throw new WrongUsageException(getUsage(sender), (Object)args);
         }

@@ -4,16 +4,15 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SkinNBTHelper {
     
     private static final String TAG_OLD_SKIN_DATA = "armourData";
-    private static final String TAG_OLD_SKIN_ID = "equpmentId";
     
     public static boolean stackHasSkinData(ItemStack stack) {
         if (stack == null) {
@@ -25,7 +24,7 @@ public class SkinNBTHelper {
         }
         
         NBTTagCompound itemCompound = stack.getTagCompound();
-        if (!itemCompound.hasKey(SkinPointer.TAG_SKIN_DATA)) {
+        if (!itemCompound.hasKey(SkinDescriptor.TAG_SKIN_DATA)) {
             return false;
         }
         
@@ -36,7 +35,7 @@ public class SkinNBTHelper {
         if (compound == null) {
             return false;
         }
-        if (!compound.hasKey(SkinPointer.TAG_SKIN_DATA)) {
+        if (!compound.hasKey(SkinDescriptor.TAG_SKIN_DATA)) {
             return false;
         }
         return true;
@@ -47,7 +46,7 @@ public class SkinNBTHelper {
             return;
         }
         
-        SkinPointer skinData = getSkinPointerFromStack(stack);
+        SkinDescriptor skinData = getSkinDescriptorFromStack(stack);
         if (skinData.lockSkin) {
             if (!overrideLock) {
                 return;
@@ -55,17 +54,17 @@ public class SkinNBTHelper {
         }
         
         NBTTagCompound itemCompound = stack.getTagCompound();
-        if (itemCompound.hasKey(SkinPointer.TAG_SKIN_DATA)) {
-            itemCompound.removeTag(SkinPointer.TAG_SKIN_DATA);
+        if (itemCompound.hasKey(SkinDescriptor.TAG_SKIN_DATA)) {
+            itemCompound.removeTag(SkinDescriptor.TAG_SKIN_DATA);
         }
     }
     
-    public static SkinPointer getSkinPointerFromStack(ItemStack stack) {
+    public static SkinDescriptor getSkinDescriptorFromStack(ItemStack stack) {
         if (!stackHasSkinData(stack)) {
             return null;
         }
         
-        SkinPointer skinData = new SkinPointer();
+        SkinDescriptor skinData = new SkinDescriptor();
         skinData.readFromCompound(stack.getTagCompound());
         
         return skinData;
@@ -76,7 +75,7 @@ public class SkinNBTHelper {
             return null;
         }
         
-        SkinPointer skinData = new SkinPointer();
+        SkinDescriptor skinData = new SkinDescriptor();
         skinData.readFromCompound(stack.getTagCompound());
         
         return skinData.getIdentifier().getSkinType();
@@ -87,7 +86,7 @@ public class SkinNBTHelper {
             return -1;
         }
         
-        SkinPointer skinData = new SkinPointer();
+        SkinDescriptor skinData = new SkinDescriptor();
         skinData.readFromCompound(stack.getTagCompound());
         
         return skinData.getIdentifier().getSkinLocalId();
@@ -98,75 +97,32 @@ public class SkinNBTHelper {
             return false;
         }
         
-        SkinPointer skinData = new SkinPointer();
+        SkinDescriptor skinData = new SkinDescriptor();
         skinData.readFromCompound(stack.getTagCompound());
         
         return skinData.lockSkin;
     }
     
     public static void addSkinDataToStack(ItemStack stack, SkinIdentifier identifier, ISkinDye skinDye, boolean lockSkin) {
-        SkinPointer skinData = new SkinPointer(identifier, skinDye, lockSkin);
+        SkinDescriptor skinData = new SkinDescriptor(identifier, skinDye, lockSkin);
         addSkinDataToStack(stack, skinData);
     }
     
     public static void addSkinDataToStack(ItemStack stack, SkinIdentifier identifier, boolean lockSkin, ISkinDye skinDye) {
-        SkinPointer skinData;
+        SkinDescriptor skinData;
         if (skinDye != null) {
-            skinData = new SkinPointer(identifier, skinDye, lockSkin);
+            skinData = new SkinDescriptor(identifier, skinDye, lockSkin);
         } else {
-            skinData = new SkinPointer(identifier, lockSkin);
+            skinData = new SkinDescriptor(identifier, lockSkin);
         }
         addSkinDataToStack(stack, skinData);
     }
     
-    public static void addSkinDataToStack(ItemStack stack, SkinPointer skinPointer) {
+    public static void addSkinDataToStack(ItemStack stack, SkinDescriptor skinPointer) {
         if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
         }
         skinPointer.writeToCompound(stack.getTagCompound());
-    }
-    
-    public static boolean stackHasLegacySkinData(ItemStack stack) {
-        if (stack == null) {
-            return false;
-        }
-        
-        if (!stack.hasTagCompound()) {
-            return false;
-        }
-        
-        NBTTagCompound itemCompound = stack.getTagCompound();
-        if (!itemCompound.hasKey(TAG_OLD_SKIN_DATA)) {
-            return false;
-        }
-        
-        NBTTagCompound skinDataCompound = itemCompound.getCompoundTag(TAG_OLD_SKIN_DATA);
-        if (!skinDataCompound.hasKey(TAG_OLD_SKIN_ID)) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    public static int getLegacyIdFromStack(ItemStack stack) {
-        if (stack == null) {
-            return -1;
-        }
-        if (!stack.hasTagCompound()) {
-            return -1;
-        }
-        
-        NBTTagCompound itemCompound = stack.getTagCompound();
-        if (!itemCompound.hasKey(TAG_OLD_SKIN_DATA)) {
-            return -1;
-        }
-        
-        NBTTagCompound skinDataCompound = itemCompound.getCompoundTag(TAG_OLD_SKIN_DATA);
-        if (!skinDataCompound.hasKey(TAG_OLD_SKIN_ID)) {
-            return -1;
-        }
-        
-        return skinDataCompound.getInteger(TAG_OLD_SKIN_ID);
     }
     
     public static ItemStack makeEquipmentSkinStack(Skin skin, ISkinDye skinDye) {
@@ -190,7 +146,7 @@ public class SkinNBTHelper {
         return stack;
     }
     
-    public static ItemStack makeEquipmentSkinStack(SkinPointer skinPointer) {
+    public static ItemStack makeEquipmentSkinStack(SkinDescriptor skinPointer) {
         ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, skinPointer.getIdentifier(), false, new SkinDye(skinPointer.getSkinDye()));
@@ -204,16 +160,16 @@ public class SkinNBTHelper {
         return stack;
     }
     
-    public static ItemStack makeArmouerContainerStack(SkinPointer skinPointer) {
+    public static ItemStack makeArmouerContainerStack(SkinDescriptor skinPointer) {
         ItemStack stack = new ItemStack(ModItems.armourContainer[skinPointer.getIdentifier().getSkinType().getVanillaArmourSlotId()], 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, skinPointer.getIdentifier(), false, new SkinDye(skinPointer.getSkinDye()));
         return stack;
     }
     
-    public static void addSkinPointerToStack(ItemStack stack, SkinPointer skinPointer) {
+    public static void addSkinPointerToStack(ItemStack stack, SkinDescriptor skinPointer) {
         if (stackHasSkinData(stack)) {
-            SkinPointer skinData = getSkinPointerFromStack(stack);
+            SkinDescriptor skinData = getSkinDescriptorFromStack(stack);
             if (!skinData.lockSkin) {
                 if (!skinData.getIdentifier().equals(skinPointer.getIdentifier()) | !skinData.skinDye.equals(skinPointer.getSkinDye())) {
                     addSkinDataToStack(stack, skinPointer);

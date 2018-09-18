@@ -19,7 +19,7 @@ import moe.plushie.armourers_workshop.common.data.MiniCube;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMiniArmourer;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
@@ -62,7 +62,7 @@ public class GuiMiniArmourerBuildingModel {
     public ISkinType currentSkinType;
     public ISkinPartType currentSkinPartType;
     public ItemStack stack;
-    public SkinPointer skinPointer;
+    public SkinDescriptor skinPointer;
     
     public GuiMiniArmourerBuildingModel(GuiScreen parent, Minecraft mc, TileEntityMiniArmourer tileEntity) {
         this.parent = parent;
@@ -76,7 +76,7 @@ public class GuiMiniArmourerBuildingModel {
     
     public void drawScreen(int mouseX, int mouseY) {
         if (stack != null) {
-            skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+            skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         }
         renderFakeCubes(mouseX, mouseY);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);

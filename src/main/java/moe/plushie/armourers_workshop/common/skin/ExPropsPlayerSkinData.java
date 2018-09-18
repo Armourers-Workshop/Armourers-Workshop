@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.common.inventory.WardrobeInventoryContaine
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -80,7 +80,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     }
     
     public void setEquipmentStack(ItemStack stack, int index) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer.getIdentifier().getSkinType() != null) {
             WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.getIdentifier().getSkinType());
             if (wi != null) {
@@ -90,7 +90,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     }
     
     public boolean setStackInNextFreeSlot(ItemStack stack) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer.getIdentifier().getSkinType() != null) {
             WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.getIdentifier().getSkinType());
             if (wi != null) {
@@ -133,7 +133,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
         }
     }
     
-    public void addCustomEquipment(ISkinType skinType, byte slotId, SkinPointer skinPointer) {
+    public void addCustomEquipment(ISkinType skinType, byte slotId, SkinDescriptor skinPointer) {
         equipmentData.addEquipment(skinType, slotId, skinPointer);
         updateEquipmentDataToPlayersAround();
     }
@@ -253,7 +253,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     }
     
     private void loadFromItemStack(ItemStack stack, byte slotId) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         addCustomEquipment(skinPointer.getIdentifier().getSkinType(), slotId, skinPointer);
     }
 

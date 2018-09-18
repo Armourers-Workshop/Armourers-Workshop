@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
@@ -38,7 +38,7 @@ public class RenderSkinnedArrow extends RenderArrow {
             EntityPlayerMP player = (EntityPlayerMP) entityArrow.shootingEntity;
             IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
             if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
-                ISkinPointer skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinBow, 0);
+                ISkinDescriptor skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinBow, 0);
                 if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
                     if (skin != null) {

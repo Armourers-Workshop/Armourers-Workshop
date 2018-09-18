@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.client.render.entity.ISkinnableEntityRenderer;
 import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
@@ -57,7 +57,7 @@ public class SkinnableEntitySlimeRenderer implements ISkinnableEntityRenderer<En
     
     private void renderEquipmentType(EntityLivingBase entity, RenderBiped renderer, ISkinType skinType, IEntityEquipment equipmentData) {
         if (equipmentData.haveEquipment(skinType, 0)) {
-            ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
+            ISkinDescriptor skinPointer = equipmentData.getSkinPointer(skinType, 0);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin == null) {
                 return;

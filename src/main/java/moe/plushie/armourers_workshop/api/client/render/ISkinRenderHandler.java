@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.api.client.render;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkin;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPointer;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -16,17 +16,17 @@ public interface ISkinRenderHandler {
     
     public boolean renderSkinWithHelper(ItemStack stack, float limb1, float limb2, float limb3, float headY, float headX);
     
-    public boolean renderSkinWithHelper(ISkinPointer skinPointer);
+    public boolean renderSkinWithHelper(ISkinDescriptor skinPointer);
     
-    public boolean renderSkinWithHelper(ISkinPointer skinPointer, ModelBiped modelBiped);
+    public boolean renderSkinWithHelper(ISkinDescriptor skinPointer, ModelBiped modelBiped);
     
-    public boolean renderSkinWithHelper(ISkinPointer skinPointer, float limb1, float limb2, float limb3, float headY, float headX);
+    public boolean renderSkinWithHelper(ISkinDescriptor skinPointer, float limb1, float limb2, float limb3, float headY, float headX);
     
     public boolean renderSkin(ItemStack stack);
     
-    public boolean renderSkin(ISkinPointer skinPointer);
+    public boolean renderSkin(ISkinDescriptor skinPointer);
     
-    public boolean renderSkinPart(ISkinPointer skinPointer, ISkinPartType skinPartType);
+    public boolean renderSkinPart(ISkinDescriptor skinPointer, ISkinPartType skinPartType);
     
     /**
      * Checks if the client has a skin in it's cache.
@@ -38,15 +38,15 @@ public interface ISkinRenderHandler {
      * Checks if the client has a skin in it's cache.
      * @return Returns true if the skin is in the cache.
      */
-    public boolean isSkinInModelCache(ISkinPointer skinPointer);
+    public boolean isSkinInModelCache(ISkinDescriptor skinPointer);
     
     public void requestSkinModelFromSever(ItemStack stack);
     
-    public void requestSkinModelFromSever(ISkinPointer skinPointer);
+    public void requestSkinModelFromSever(ISkinDescriptor skinPointer);
     
     public ModelBase getArmourerHandModel();
     
-    public ISkin getSkinFromModelCache(ISkinPointer skinPointer);
+    public ISkin getSkinFromModelCache(ISkinDescriptor skinPointer);
     
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId);
 }

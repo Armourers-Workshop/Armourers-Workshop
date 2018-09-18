@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPointer;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.UtilColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
@@ -62,7 +62,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                     SkinIdentifier identifier = new SkinIdentifier(0, new LibraryFile(file.getFullName()), 0, null);
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier, true);
                     if (skin != null) {
-                        SkinPointer skinPointer = new SkinPointer(identifier);
+                        SkinDescriptor skinPointer = new SkinDescriptor(identifier);
                         float scale = 10F;
                         GlStateManager.pushMatrix();
                         GL11.glTranslatef((float)x + 5, (float)y + 6, 50.0F);
